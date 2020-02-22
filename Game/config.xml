@@ -1,0 +1,96 @@
+<!-- Config file for the game -->
+
+<config>
+  <app>
+    <title>Game Development Testbed</title>
+    <organization>UPC</organization>
+  </app>
+	
+  <renderer>
+    <vsync value="true"/>
+  </renderer>
+
+  <scene>
+    <levelNum value="0"/>
+    <count value="0"/>
+  </scene>
+  
+  <window>
+    <resolution width="1024" height="768" scale="2"/>
+    <fullscreen value="false"/>
+    <borderless value="false"/>
+    <resizable value="false"/>
+    <fullscreen_window value="false"/>
+  </window>
+
+  <audio>
+    <path1 value ="audio/music/lvl1bgm.ogg" />
+    <path2 value ="audio/music/lvl2bgm.ogg" />
+  </audio>
+  
+  <map>
+    <folder>maps/</folder>
+  </map>
+
+  <player>
+    <folder path="textures/player.png" ></folder>
+
+    <animation name="idle" speed="0.05f" loop="true">
+      <frame x="0" y="0" w="20" h="40"/>
+      <frame x="20" y="0" w="20" h="40"/>
+      <frame x="42" y="0" w="20" h="40"/>
+      <frame x="59" y="0" w="20" h="40"/>
+    </animation>
+    <animation name="idleShoot" speed="0.1f" loop="true">
+      <frame x="0" y="116" w="21" h="37"/>
+      <frame x="22" y="116" w="21" h="37"/>
+      <frame x="42" y="0" w="21" h="37"/>
+    </animation>
+    <animation name="jump" speed="0.05f" loop="true">
+      <frame x="104" y="2" w="27" h="38"/>
+      <frame x="132" y="10" w="29" h="21"/>
+      <frame x="162" y="12" w="28" h="16"/>
+      <frame x="191" y="3" w="16" h="28"/>
+      <frame x="208" y="8" w="28" h="16"/>
+      <frame x="237" y="3" w="16" h="28"/>
+    </animation>
+    <animation name="run" speed="0.1f" loop="true">
+      <frame x="0" y="43" w="21" h="34"/>
+      <frame x="23" y="41" w="22" h="36"/>
+      <frame x="46" y="41" w="26" h="36"/>
+      <frame x="73" y="41" w="32" h="33"/>
+      <frame x="106" y="42" w="25" h="35"/>
+      <frame x="132" y="43" w="16" h="34"/>
+      <frame x="149" y="41" w="16" h="36"/>
+      <frame x="167" y="41" w="25" h="36"/>
+      <frame x="193" y="41" w="30" h="33"/>
+      <frame x="224" y="42" w="22" h="35"/>
+    </animation>
+    <animation name="runShoot" speed="0.05f" loop="true">
+      <frame x="0" y="81" w="26" h="34"/>
+      <frame x="27" y="79" w="25" h="36"/>
+      <frame x="53" y="79" w="31" h="36"/>
+      <frame x="85" y="80" w="35" h="33"/>
+      <frame x="121" y="81" w="30" h="35"/>
+      <frame x="152" y="82" w="24" h="24"/>
+    </animation>
+    <animation name="shootUp" speed="0.05f" loop="true">
+      <frame x="177" y="76" w="18" h="40"/>
+    </animation>
+    <animation name="duck" speed="0.05f" loop="true">
+      <frame x="80" y="16" w="23" h="24"/>
+    </animation>
+    <animation name="cling" speed="0.05f" loop="true">
+      <frame x="65" y="116" w="31" h="32"/>
+    </animation>
+    <animation name="hurt" speed="0.05f" loop="false">
+      <frame x="97" y="116" w="20" h="34"/>
+      <frame x="118" y="119" w="25" h="24"/>
+    </animation>
+    <position x = "417" y = "441" w="20" h="40" />
+    <size>w="20" h="40" </size>
+    <speed x = "2" y = "0"/>
+  </player>
+
+
+</config>
