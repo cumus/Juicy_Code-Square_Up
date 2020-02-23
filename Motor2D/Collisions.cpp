@@ -1,8 +1,8 @@
-#include "Log.h"
-#include "Input.h"
-#include "Render.h"
-#include "Application.h"
 #include "Collisions.h"
+#include "Application.h"
+#include "Render.h"
+#include "Input.h"
+#include "Log.h"
 
 Collisions::Collisions() : Module("collisions")
 {

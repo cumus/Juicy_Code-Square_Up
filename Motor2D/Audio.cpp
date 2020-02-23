@@ -1,11 +1,11 @@
-#include "SDL/include/SDL.h"
-#include "SDL_mixer\include\SDL_mixer.h"
-#pragma comment( lib, "SDL_mixer/libx86/SDL2_mixer.lib" )
+#include "Audio.h"
 #include "Defs.h"
 #include "Log.h"
 #include "Application.h"
-#include "Audio.h"
 
+#include "SDL/include/SDL.h"
+#include "SDL_mixer\include\SDL_mixer.h"
+#pragma comment( lib, "SDL_mixer/libx86/SDL2_mixer.lib" )
 
 Audio::Audio() : Module("audio")
 {

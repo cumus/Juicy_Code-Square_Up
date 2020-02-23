@@ -1,7 +1,6 @@
 #ifndef __FADETOBLACK_H
 #define __FADETOBLACK_H
 
-
 #include "Module.h"
 #include "SDL/include/SDL_rect.h"
 

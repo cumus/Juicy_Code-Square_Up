@@ -9,7 +9,9 @@
 #include "Collisions.h"
 #include "Module.h"
 
-#define MAX_COLLIDERS 100
+#define MAX_MAP_COLLIDERS 100
+
+struct SDL_Texture;
 
 struct Properties
 {
@@ -35,21 +37,21 @@ struct Properties
 // ----------------------------------------------------
 struct MapLayer
 {
-	std::string	name;
-	int			width;
-	int			height;
-	uint*		data;
-	Properties	properties;
+	std::string		name;
+	int				width;
+	int				height;
+	unsigned int*	data;
+	Properties		properties;
 
-	MapLayer() : data(NULL)
+	MapLayer() : data(nullptr)
 	{}
 
 	~MapLayer()
 	{
-		DEL(data);
+		//if (data != nullptr) delete data;
 	}
 
-	inline uint Get(int x, int y) const
+	inline unsigned int Get(int x, int y) const
 	{
 		return data[(y*width) + x];
 	}
@@ -58,8 +60,8 @@ struct MapLayer
 struct MapObject
 {
 	std::string name;
-	Collider* col[MAX_COLLIDERS] = { nullptr };
-	uint id = 0u;
+	Collider* col[MAX_MAP_COLLIDERS] = { nullptr };
+	unsigned int id = 0u;
 };
 
 // ----------------------------------------------------
@@ -98,7 +100,8 @@ struct MapData
 	int					tile_height;
 	SDL_Color			background_color;
 	MapTypes			type;
-	std::list<TileSet*>	tilesets;
+
+	std::list<TileSet*>		tilesets;
 	std::list<MapLayer*>	layers;
 	std::list<MapObject*>	objects;
 };

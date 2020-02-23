@@ -1,3 +1,4 @@
+#include "Scene.h"
 #include "Defs.h"
 #include "Log.h"
 #include "Application.h"
@@ -8,7 +9,6 @@
 #include "Window.h"
 #include "Map.h"
 #include "FadetoBlack.h"
-#include "Scene.h"
 
 Scene::Scene() : Module("scene")
 {}
@@ -66,7 +66,7 @@ bool Scene::Update(float dt)
 	title += "x";
 	title += App->map->data.tile_height;
 	title += " Tilesets : ";
-	title += App->map->data.tilesets.size();
+	title += (0 + App->map->data.tilesets.size());
 	title += " Tile : ";
 	title += map_coordinates.x;
 	title += ", ";

@@ -5,8 +5,8 @@
 #ifndef __POINT_H__
 #define __POINT_H__
 
-#include "Defs.h"
 #include <math.h>
+#include "Defs.h"
 
 template<class TYPE>
 class Point

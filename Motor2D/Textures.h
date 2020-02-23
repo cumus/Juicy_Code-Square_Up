@@ -1,8 +1,8 @@
 #ifndef __TEXTURES_H__
 #define __TEXTURES_H__
 
-#include "Module.h"
 #include <list>
+#include "Module.h"
 
 struct SDL_Texture;
 struct SDL_Surface;
@@ -30,7 +30,7 @@ public:
 	SDL_Texture* const	LoadSurface(SDL_Surface* surface);
 	bool				UnLoad(SDL_Texture* texture);
 
-	void				GetSize(const SDL_Texture* texture, uint& width, uint& height) const;
+	void				GetSize(const SDL_Texture* texture, unsigned int& width, unsigned int& height) const;
 
 public:
 

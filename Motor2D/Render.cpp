@@ -1,9 +1,9 @@
+#include "Render.h"
 #include "Defs.h"
 #include "Log.h"
 #include "Application.h"
 #include "Window.h"
 #include "Input.h"
-#include "Render.h"
 
 #define VSYNC true
 

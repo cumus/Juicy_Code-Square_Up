@@ -1,14 +1,18 @@
 #include <stdlib.h>
 
+#ifdef DEBUG
+//#pragma warning( disable : C4005 ) // Warning redefinition
+//#include "mmgr\mmgr.h"
+#endif
+
 #include "Defs.h"
 #include "Log.h"
 #include "Application.h"
 
-// This is needed here because SDL redefines main function
-// do not add any other libraries here, instead put them in their modules
 #include "SDL/include/SDL.h"
 #pragma comment( lib, "SDL/libx86/SDL2.lib" )
 #pragma comment( lib, "SDL/libx86/SDL2main.lib" )
+
 
 enum MainState
 {
@@ -104,6 +108,10 @@ int main(int argc, char* args[])
 			break;
 		}
 	}
+
+#ifdef _DEBUG
+	LOG("With %d memory leaks!\n", (m_getMemoryStatistics().totalAllocUnitCount));
+#endif
 
 	LOG("... Bye! :)\n");
 

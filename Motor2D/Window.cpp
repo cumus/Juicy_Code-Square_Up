@@ -1,8 +1,8 @@
+#include "Window.h"
 #include "SDL/include/SDL.h"
 #include "Defs.h"
 #include "Log.h"
 #include "Application.h"
-#include "Window.h"
 
 Window::Window() : Module("window")
 {

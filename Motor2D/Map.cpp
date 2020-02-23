@@ -1,11 +1,11 @@
-#include <math.h>
-#include "Defs.h"
-#include "Log.h"
+#include "Map.h"
 #include "Application.h"
 #include "Render.h"
-#include "Textures.h"
 #include "Collisions.h"
-#include "Map.h"
+#include "Textures.h"
+#include "Defs.h"
+#include "Log.h"
+#include <math.h>
 
 Map::Map() : Module("map"), map_loaded(false)
 {}
@@ -94,8 +94,8 @@ iPoint Map::MapToWorld(int x, int y) const
 	}
 	else if(data.type == MAPTYPE_ISOMETRIC)
 	{
-		ret.x = (x - y) * (data.tile_width * 0.5f);
-		ret.y = (x + y) * (data.tile_height * 0.5f);
+		ret.x = (x - y) * (data.tile_width / 2);
+		ret.y = (x + y) * (data.tile_height / 2);
 	}
 	else
 	{
@@ -152,19 +152,19 @@ bool Map::CleanUp()
 
 	// Remove all tilesets
 	for (std::list<TileSet*>::iterator it = data.tilesets.begin(); it != data.tilesets.end(); ++it)
-		delete *it;
+		DEL(*it);
 
 	data.tilesets.clear();
 
 	// Remove all layers
 	for (std::list<MapLayer*>::iterator it = data.layers.begin(); it != data.layers.end(); ++it)
-		delete *it;
+		DEL(*it);
 
 	data.layers.clear();
 
 	//remove colliders
 	for (std::list<MapObject*>::iterator it = data.objects.begin(); it != data.objects.end(); ++it)
-		delete *it;
+		DEL(*it);
 
 	data.objects.clear();
 
@@ -385,7 +385,7 @@ bool Map::LoadLayer(pugi::xml_node& node, MapLayer* layer)
 	LoadProperties(node, layer->properties);
 	pugi::xml_node layer_data = node.child("data");
 
-	if(layer_data == NULL)
+	if(!layer_data)
 	{
 		LOG("Error parsing map xml file: Cannot find 'layer/data' tag.");
 		ret = false;

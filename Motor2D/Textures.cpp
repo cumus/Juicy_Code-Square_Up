@@ -1,11 +1,14 @@
+#include "Textures.h"
+
+#include "Application.h"
+#include "Render.h"
+#include "Defs.h"
+#include "Log.h"
+
+#include "SDL/include/SDL_surface.h"
 #include "SDL_image/include/SDL_image.h"
 #pragma comment( lib, "SDL_image/libx86/SDL2_image.lib" )
 
-#include "Defs.h"
-#include "Log.h"
-#include "Application.h"
-#include "Render.h"
-#include "Textures.h"
 
 Textures::Textures() : Module("textures")
 {}
@@ -111,7 +114,7 @@ SDL_Texture* const Textures::LoadSurface(SDL_Surface* surface)
 }
 
 // Retrieve size of a texture
-void Textures::GetSize(const SDL_Texture* texture, uint& width, uint& height) const
+void Textures::GetSize(const SDL_Texture* texture, unsigned int& width, unsigned int& height) const
 {
 	SDL_QueryTexture((SDL_Texture*)texture, NULL, NULL, (int*) &width, (int*) &height);
 }

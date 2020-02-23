@@ -25,10 +25,10 @@ public:
 	void SetTitle(const char* new_title);
 
 	// Retrive window size
-	void GetWindowSize(uint& width, uint& height) const;
+	void GetWindowSize(unsigned int& width, unsigned int& height) const;
 
 	// Retrieve window scale
-	uint GetScale() const;
+	unsigned int GetScale() const;
 
 public:
 	//The window we'll be rendering to
@@ -37,13 +37,13 @@ public:
 	//The surface contained by the window
 	SDL_Surface* screen_surface = nullptr;
 
-	uint		width;
-	uint		height;
+	unsigned int	width;
+	unsigned int	height;
 
 private:
 
-	std::string	title;
-	uint		scale;
+	std::string		title;
+	unsigned int	scale;
 };
 
 #endif // __WINDOW_H__

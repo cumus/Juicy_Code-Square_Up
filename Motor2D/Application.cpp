@@ -1,3 +1,4 @@
+#include "Application.h"
 #include "Defs.h"
 #include "Log.h"
 #include "Window.h"
@@ -9,7 +10,6 @@
 #include "Map.h"
 #include "FadeToBlack.h"
 #include "Collisions.h"
-#include "Application.h"
 
 Application::Application(int argc, char* args[]) : argc(argc), args(args)
 {

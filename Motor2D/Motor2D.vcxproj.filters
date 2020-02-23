@@ -40,6 +40,9 @@
     <ClCompile Include="Application.cpp">
       <Filter>Source</Filter>
     </ClCompile>
+    <ClCompile Include="mmgr\mmgr.cpp">
+      <Filter>Source\3rd Party\mmgr</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="PugiXml\src\pugiconfig.hpp">
@@ -93,6 +96,12 @@
     <ClInclude Include="Application.h">
       <Filter>Source</Filter>
     </ClInclude>
+    <ClInclude Include="mmgr\mmgr.h">
+      <Filter>Source\3rd Party\mmgr</Filter>
+    </ClInclude>
+    <ClInclude Include="mmgr\nommgr.h">
+      <Filter>Source\3rd Party\mmgr</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Source">
@@ -118,6 +127,9 @@
     </Filter>
     <Filter Include="Source\3rd Party\PuguiXML">
       <UniqueIdentifier>{7cb78d67-17cc-45eb-af97-e2106becce7b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\3rd Party\mmgr">
+      <UniqueIdentifier>{bde4e9d6-afcb-4cb0-8b3d-042e1d8c6f2d}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

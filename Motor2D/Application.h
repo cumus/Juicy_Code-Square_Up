@@ -1,9 +1,9 @@
 #ifndef __APP_H__
 #define __APP_H__
 
-#include "PugiXml\src\pugixml.hpp"
 #include <list>
 #include <string>
+#include "PugiXml\src\pugixml.hpp"
 #include "Module.h"
 
 // Modules
@@ -66,7 +66,7 @@ public:
 
 private:
 	std::list<Module*>	modules;
-	uint				frames;
+	unsigned int		frames;
 	float				dt;
 	int					argc;
 	char**				args;

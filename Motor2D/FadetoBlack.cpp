@@ -1,3 +1,4 @@
+#include "FadeToBlack.h"
 #include <math.h>
 #include "SDL/include/SDL_render.h"
 #include "SDL/include/SDL_timer.h"
@@ -5,7 +6,6 @@
 #include "Render.h"
 #include "Window.h"
 #include "Application.h"
-#include "FadeToBlack.h"
 
 FadeToBlack::FadeToBlack() : Module("FadeToBlack")
 {}
