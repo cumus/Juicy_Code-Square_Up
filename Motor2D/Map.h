@@ -17,7 +17,7 @@ struct SDL_Texture;
 
 struct Properties
 {
-	~Properties();
+	//~Properties();
 
 	int Get(const char* name, int default_value = 0) const;
 
@@ -27,13 +27,13 @@ struct Properties
 		int value;
 	};
 
-	std::list<Property*>	list;
+	std::vector<Property> vector;
 };
 
 // ----------------------------------------------------
 struct MapLayer
 {
-	~MapLayer();
+	//~MapLayer();
 
 	inline unsigned int Get(int x, int y) const;
 
@@ -63,13 +63,13 @@ struct TileSet
 	int					spacing;
 	int					tile_width;
 	int					tile_height;
-	SDL_Texture*		texture;
 	int					tex_width;
 	int					tex_height;
 	int					num_tiles_width;
 	int					num_tiles_height;
 	int					offset_x;
 	int					offset_y;
+	SDL_Texture*		texture;
 };
 
 enum MapTypes
@@ -89,9 +89,9 @@ struct MapData
 	SDL_Color			background_color;
 	MapTypes			type;
 
-	std::list<TileSet*>		tilesets;
-	std::list<MapLayer*>	layers;
-	std::list<MapObject*>	objects;
+	std::list<TileSet>		tilesets;
+	std::list<MapLayer>	layers;
+	std::list<MapObject>	objects;
 };
 
 // ----------------------------------------------------
@@ -128,7 +128,7 @@ private:
 	bool LoadProperties(pugi::xml_node& node, Properties& properties);
 	bool LoadObjects(pugi::xml_node& node, MapObject* object);
 
-	TileSet* GetTilesetFromTileId(int id) const;
+	bool GetTilesetFromTileId(int id, TileSet& set) const;
 
 public:
 

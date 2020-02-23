@@ -28,67 +28,42 @@ void Map::Draw()
 	if(!map_loaded)
 		return;
 
-	for(std::list<MapLayer*>::iterator it = data.layers.begin(); it != data.layers.end(); ++it)
+	for(std::list<MapLayer>::iterator it = data.layers.begin(); it != data.layers.end(); ++it)
 	{
-		MapLayer* layer = *it;
-
-		if(layer->properties.Get("Nodraw") != 0)
+		if(it->properties.Get("Nodraw") != 0)
 			continue;
 
 		for(int y = 0; y < data.height; ++y)
 		{
 			for(int x = 0; x < data.width; ++x)
 			{
-				int tile_id = layer->Get(x, y);
-				if(tile_id > 0)
-				{
-					TileSet* tileset = GetTilesetFromTileId(tile_id);
+				int tile_id = it->Get(x, y);
 
-					SDL_Rect r = tileset->GetTileRect(tile_id);
+				TileSet tileset;
+				if(tile_id > 0 && GetTilesetFromTileId(tile_id, tileset))
+				{
+					SDL_Rect r = tileset.GetTileRect(tile_id);
 					iPoint pos = MapToWorld(x, y);
 
-					App->render->Blit(tileset->texture, pos.x, pos.y, &r);
+					App->render->Blit(tileset.texture, pos.x, pos.y, &r);
 				}
 			}
 		}
 	}
-
-	
 }
 
-Properties::~Properties()
+bool Map::GetTilesetFromTileId(int id, TileSet& set) const
 {
-	for (std::list<Property*>::iterator it = list.begin(); it != list.end(); ++it)
-		DEL(*it);
-
-	list.clear();
-}
-
-int Properties::Get(const char* value, int default_value) const
-{
-	for (std::list<Property*>::const_iterator it = list.begin(); it != list.end(); ++it)
+	set = data.tilesets.front();
+	for (std::list<TileSet>::const_iterator it = data.tilesets.begin(); it != data.tilesets.end(); ++it)
 	{
-		if((*it)->name == value)
-			return (*it)->value;
-	}
-
-	return default_value;
-}
-
-TileSet* Map::GetTilesetFromTileId(int id) const
-{
-	std::list<TileSet*>::const_iterator it = data.tilesets.begin();
-	TileSet* set = *it;
-
-	for (; it != data.tilesets.end(); ++it)
-	{
-		if(id < (*it)->firstgid)
-			break;
+		if(id < it->firstgid)
+			return true;
 
 		set = *it;
 	}
 
-	return set;
+	return false;
 }
 
 iPoint Map::MapToWorld(int x, int y) const
@@ -158,21 +133,21 @@ bool Map::CleanUp()
 {
 	LOG("Unloading map");
 
-	// Remove all tilesets
+	/*/ Remove all tilesets
 	for (std::list<TileSet*>::iterator it = data.tilesets.begin(); it != data.tilesets.end(); ++it)
-		DEL(*it);
+		DEL(*it);*/
 
 	data.tilesets.clear();
 
-	// Remove all layers
+	/*/ Remove all layers
 	for (std::list<MapLayer*>::iterator it = data.layers.begin(); it != data.layers.end(); ++it)
-		DEL(*it);
+		DEL(*it);*/
 
 	data.layers.clear();
 
-	//remove colliders
+	/*/remove colliders
 	for (std::list<MapObject*>::iterator it = data.objects.begin(); it != data.objects.end(); ++it)
-		DEL(*it);
+		DEL(*it);*/
 
 	data.objects.clear();
 
@@ -199,9 +174,9 @@ bool Map::Load(const char* file_name)
 		// Load all tilesets info
 		for (pugi::xml_node tileset_child = map_node.child("tileset"); tileset_child && ret; tileset_child = tileset_child.next_sibling("tileset"))
 		{
-			TileSet* tileset = new TileSet();
+			TileSet tileset;
 
-			if (LoadTilesetDetails(tileset_child, tileset) && LoadTilesetImage(tileset_child, tileset))
+			if (LoadTilesetDetails(tileset_child, &tileset) && LoadTilesetImage(tileset_child, &tileset))
 				data.tilesets.push_back(tileset);
 			else
 				ret = false;
@@ -210,9 +185,9 @@ bool Map::Load(const char* file_name)
 		// Load layer info
 		for (pugi::xml_node layer_child = map_node.child("layer"); layer_child && ret; layer_child = layer_child.next_sibling("layer"))
 		{
-			MapLayer* layer = new MapLayer();
+			MapLayer layer;
 
-			if (LoadLayer(layer_child, layer))
+			if (LoadLayer(layer_child, &layer))
 				data.layers.push_back(layer);
 			else
 				ret = false;
@@ -221,9 +196,9 @@ bool Map::Load(const char* file_name)
 		//Load object info (colliders)
 		for (pugi::xml_node object_child = map_node.child("objectgroup"); object_child && ret; object_child = object_child.next_sibling("objectgroup"))
 		{
-			MapObject* obj = new MapObject;
+			MapObject obj;
 
-			if (LoadObjects(object_child, obj))
+			if (LoadObjects(object_child, &obj))
 				data.objects.push_back(obj);
 			else
 				ret = false;
@@ -245,19 +220,19 @@ bool Map::Load(const char* file_name)
 		LOG("width: %d height: %d", data.width, data.height);
 		LOG("tile_width: %d tile_height: %d", data.tile_width, data.tile_height);
 
-		for (std::list<TileSet*>::iterator it = data.tilesets.begin(); it != data.tilesets.end(); ++it)
+		for (std::list<TileSet>::iterator it = data.tilesets.begin(); it != data.tilesets.end(); ++it)
 		{
 			LOG("Tileset ----");
-			LOG("name: %s firstgid: %d", (*it)->name.c_str(), (*it)->firstgid);
-			LOG("tile width: %d tile height: %d", (*it)->tile_width, (*it)->tile_height);
-			LOG("spacing: %d margin: %d", (*it)->spacing, (*it)->margin);
+			LOG("name: %s firstgid: %d", it->name.c_str(), it->firstgid);
+			LOG("tile width: %d tile height: %d", it->tile_width, it->tile_height);
+			LOG("spacing: %d margin: %d", it->spacing, it->margin);
 		}
 
-		for (std::list<MapLayer*>::iterator it = data.layers.begin(); it != data.layers.end(); ++it)
+		for (std::list<MapLayer>::iterator it = data.layers.begin(); it != data.layers.end(); ++it)
 		{
 			LOG("Layer ----");
-			LOG("name: %s", (*it)->name.c_str());
-			LOG("tile width: %d tile height: %d", (*it)->width, (*it)->height);
+			LOG("name: %s", it->name.c_str());
+			LOG("tile width: %d tile height: %d", it->width, it->height);
 		}
 	}
 	else
@@ -427,12 +402,12 @@ bool Map::LoadProperties(pugi::xml_node& node, Properties& properties)
 
 		for(prop = data.child("property"); prop; prop = prop.next_sibling("property"))
 		{
-			Properties::Property* p = new Properties::Property();
+			Properties::Property p;
 
-			p->name = prop.attribute("name").as_string();
-			p->value = prop.attribute("value").as_int();
+			p.name = prop.attribute("name").as_string();
+			p.value = prop.attribute("value").as_int();
 
-			properties.list.push_back(p);
+			properties.vector.push_back(p);
 		}
 	}
 
@@ -468,10 +443,24 @@ bool Map::LoadObjects(pugi::xml_node& node, MapObject* object)
 	return ret;
 }
 
-MapLayer::~MapLayer()
+/*Properties::~Properties()
+{
+	vector.clear();
+}*/
+
+int Properties::Get(const char* value, int default_value) const
+{
+	for (Property p : vector)
+		if (p.name == value)
+			return p.value;
+
+	return default_value;
+}
+
+/*MapLayer::~MapLayer()
 {
 	data.clear();
-}
+}*/
 
 inline unsigned int MapLayer::Get(int x, int y) const
 {
