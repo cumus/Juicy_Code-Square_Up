@@ -4,12 +4,6 @@
     <ClCompile Include="PugiXml\src\pugixml.cpp">
       <Filter>Source\3rd Party\PuguiXML</Filter>
     </ClCompile>
-    <ClCompile Include="Main.cpp">
-      <Filter>Source</Filter>
-    </ClCompile>
-    <ClCompile Include="Scene.cpp">
-      <Filter>Source\Scenes</Filter>
-    </ClCompile>
     <ClCompile Include="Log.cpp">
       <Filter>Source\Tools</Filter>
     </ClCompile>
@@ -17,9 +11,6 @@
       <Filter>Source</Filter>
     </ClCompile>
     <ClCompile Include="Window.cpp">
-      <Filter>Source\Modules</Filter>
-    </ClCompile>
-    <ClCompile Include="Textures.cpp">
       <Filter>Source\Modules</Filter>
     </ClCompile>
     <ClCompile Include="Render.cpp">
@@ -37,11 +28,23 @@
     <ClCompile Include="Audio.cpp">
       <Filter>Source\Modules</Filter>
     </ClCompile>
-    <ClCompile Include="Application.cpp">
-      <Filter>Source</Filter>
-    </ClCompile>
     <ClCompile Include="mmgr\mmgr.cpp">
       <Filter>Source\3rd Party\mmgr</Filter>
+    </ClCompile>
+    <ClCompile Include="Main.cpp">
+      <Filter>Source\Main</Filter>
+    </ClCompile>
+    <ClCompile Include="Application.cpp">
+      <Filter>Source\Main</Filter>
+    </ClCompile>
+    <ClCompile Include="TimeManager.cpp">
+      <Filter>Source\Independent Managers</Filter>
+    </ClCompile>
+    <ClCompile Include="Textures.cpp">
+      <Filter>Source\Independent Managers</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene.cpp">
+      <Filter>Source\Modules</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -53,12 +56,6 @@
     </ClInclude>
     <ClInclude Include="Animation.h">
       <Filter>Source\Components</Filter>
-    </ClInclude>
-    <ClInclude Include="Module.h">
-      <Filter>Source</Filter>
-    </ClInclude>
-    <ClInclude Include="Scene.h">
-      <Filter>Source\Scenes</Filter>
     </ClInclude>
     <ClInclude Include="Defs.h">
       <Filter>Source\Tools</Filter>
@@ -73,9 +70,6 @@
       <Filter>Source</Filter>
     </ClInclude>
     <ClInclude Include="Window.h">
-      <Filter>Source\Modules</Filter>
-    </ClInclude>
-    <ClInclude Include="Textures.h">
       <Filter>Source\Modules</Filter>
     </ClInclude>
     <ClInclude Include="Render.h">
@@ -93,9 +87,6 @@
     <ClInclude Include="Audio.h">
       <Filter>Source\Modules</Filter>
     </ClInclude>
-    <ClInclude Include="Application.h">
-      <Filter>Source</Filter>
-    </ClInclude>
     <ClInclude Include="mmgr\mmgr.h">
       <Filter>Source\3rd Party\mmgr</Filter>
     </ClInclude>
@@ -108,6 +99,21 @@
     <ClInclude Include="Optick\include\optick.h">
       <Filter>Source\3rd Party\Optick</Filter>
     </ClInclude>
+    <ClInclude Include="Module.h">
+      <Filter>Source\Main</Filter>
+    </ClInclude>
+    <ClInclude Include="Application.h">
+      <Filter>Source\Main</Filter>
+    </ClInclude>
+    <ClInclude Include="TimeManager.h">
+      <Filter>Source\Independent Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="Textures.h">
+      <Filter>Source\Independent Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene.h">
+      <Filter>Source\Modules</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Source">
@@ -115,9 +121,6 @@
     </Filter>
     <Filter Include="Source\Tools">
       <UniqueIdentifier>{42c748be-4a37-49de-970f-5be811d06b38}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\Scenes">
-      <UniqueIdentifier>{e07660eb-d36f-4cc9-af59-324d31c2f2f6}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source\Modules">
       <UniqueIdentifier>{244722d1-90ce-423d-8e7a-556211865a32}</UniqueIdentifier>
@@ -139,6 +142,12 @@
     </Filter>
     <Filter Include="Source\3rd Party\Optick">
       <UniqueIdentifier>{0951b2ed-c0d8-4291-93ac-a38ff8a0bde2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Main">
+      <UniqueIdentifier>{e1dfccd8-e8df-46de-9a8e-236bee9076ce}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Independent Managers">
+      <UniqueIdentifier>{705579a4-c897-4b70-8b5a-30a98cb90158}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
