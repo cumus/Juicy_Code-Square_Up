@@ -8,9 +8,7 @@
 #pragma comment( lib, "SDL_mixer/libx86/SDL2_mixer.lib" )
 
 Audio::Audio() : Module("audio")
-{
-	music = NULL;
-}
+{}
 
 // Destructor
 Audio::~Audio()
@@ -60,8 +58,7 @@ bool Audio::CleanUp()
 
 	LOG("Freeing sound FX, closing Mixer and Audio subsystem");
 
-	if(music != NULL)
-		Mix_FreeMusic(music);
+	if(music) Mix_FreeMusic(music);
 
 	for(std::vector<Mix_Chunk*>::iterator it = fx.begin(); it != fx.end(); ++it)
 		Mix_FreeChunk(*it);
@@ -83,7 +80,7 @@ bool Audio::PlayMusic(const char* path, float fade_time)
 	if(!active)
 		return false;
 
-	if(music != NULL)
+	if(music)
 	{
 		if(fade_time > 0.0f)
 			Mix_FadeOutMusic(int(fade_time * 1000.0f));
@@ -96,16 +93,11 @@ bool Audio::PlayMusic(const char* path, float fade_time)
 
 	music = Mix_LoadMUS(path);
 
-	if(music == NULL)
+	if(music)
 	{
-		LOG("Cannot load music %s. Mix_GetError(): %s\n", path, Mix_GetError());
-		ret = false;
-	}
-	else
-	{
-		if(fade_time > 0.0f)
+		if (fade_time > 0.0f)
 		{
-			if(Mix_FadeInMusic(music, -1, (int) (fade_time * 1000.0f)) < 0)
+			if (Mix_FadeInMusic(music, -1, (int)(fade_time * 1000.0f)) < 0)
 			{
 				LOG("Cannot fade in music %s. Mix_GetError(): %s", path, Mix_GetError());
 				ret = false;
@@ -113,12 +105,17 @@ bool Audio::PlayMusic(const char* path, float fade_time)
 		}
 		else
 		{
-			if(Mix_PlayMusic(music, -1) < 0)
+			if (Mix_PlayMusic(music, -1) < 0)
 			{
 				LOG("Cannot play in music %s. Mix_GetError(): %s", path, Mix_GetError());
 				ret = false;
 			}
 		}
+	}
+	else
+	{
+		LOG("Cannot load music %s. Mix_GetError(): %s\n", path, Mix_GetError());
+		ret = false;
 	}
 
 	LOG("Successfully playing %s", path);
@@ -135,14 +132,14 @@ unsigned int Audio::LoadFx(const char* path)
 
 	Mix_Chunk* chunk = Mix_LoadWAV(path);
 
-	if(chunk == NULL)
-	{
-		LOG("Cannot load wav %s. Mix_GetError(): %s", path, Mix_GetError());
-	}
-	else
+	if(chunk)
 	{
 		fx.push_back(chunk);
 		ret = fx.size();
+	}
+	else
+	{
+		LOG("Cannot load wav %s. Mix_GetError(): %s", path, Mix_GetError());
 	}
 
 	return ret;
@@ -151,12 +148,9 @@ unsigned int Audio::LoadFx(const char* path)
 // Play WAV
 bool Audio::PlayFx(unsigned int id, int repeat)
 {
-	bool ret = true;
+	bool ret = (active && id > 0 && id <= fx.size());
 
-	if (active && id > 0 && id <= fx.size())
-		Mix_PlayChannel(-1, fx[id - 1], repeat);
-	else
-		ret = false;
+	if (ret) Mix_PlayChannel(-1, fx[id - 1], repeat);
 
 	return ret;
 }

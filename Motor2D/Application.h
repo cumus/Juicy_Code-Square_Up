@@ -25,7 +25,7 @@ public:
 	virtual ~Application();
 
 	bool Init();
-	bool Update();
+	int Update();
 	bool CleanUp();
 
 	// Add a new module to handle

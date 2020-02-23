@@ -31,8 +31,6 @@ bool Scene::Awake(pugi::xml_node& config)
 // Called before the first frame
 bool Scene::Start()
 {
-	App->map->Load("level1.tmx");
-	App->audio->PlayMusic("audio/music/lvl1bgm.ogg");
 	return true;
 }
 

@@ -34,29 +34,37 @@ int main(int argc, char* args[])
 	{
 		LOG("Entering Application's Main Loop");
 
-		bool update_return = true;
+		int update_return = 1;
 
-		while (update_return)
+		while (update_return == 1)
 		{
 			OPTICK_FRAME("Main Thread");
 			update_return = App->Update();
 		}
 
-		LOG("Shuting Engine Systems");
-
-		if (App->CleanUp())
+		if (update_return == 0)
 		{
-			main_return = EXIT_SUCCESS;
+			LOG("Shuting Application Systems");
+
+			if (App->CleanUp())
+			{
+				DEL(App);
+				main_return = EXIT_SUCCESS;
 
 #ifdef DEBUG
-			LOG("EXIT SUCCESS: %d memory leaks!\n", (m_getMemoryStatistics().totalAllocUnitCount));
+				LOG("EXIT SUCCESS: %d memory leaks!\n", (m_getMemoryStatistics().totalAllocUnitCount));
 #else
-			LOG("EXIT SUCCESS");
+				LOG("EXIT SUCCESS");
 #endif
+			}
+			else
+			{
+				LOG("Application CleanUp exits with ERROR");
+			}
 		}
 		else
 		{
-			LOG("Application CleanUp exits with ERROR");
+			LOG("Application Main Loop ERROR");
 		}
 	}
 	else

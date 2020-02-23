@@ -3,13 +3,6 @@
 
 #include <stdio.h>
 
-//  NULL just in case ----------------------
-
-#ifdef NULL
-#undef NULL
-#endif
-#define NULL  0
-
 // Deletes a buffer
 #define DEL( x ) \
     {                        \

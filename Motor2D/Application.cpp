@@ -91,27 +91,35 @@ bool Application::Init()
 }
 
 // Called each loop iteration
-bool Application::Update()
+int Application::Update()
 {
-	bool ret = true;
+	int ret = 1;
 
 	PrepareUpdate();
 
-	if (ret = !input->GetWindowEvent(WE_QUIT))
+	if (input->GetWindowEvent(WE_QUIT))
+	{
+		LOG("WINDOW EVENT TRIGGERED SHUTDOWN");
+		ret = 0; // closing app
+	}
+	else
 	{
 		static std::list<Module*>::iterator it;
+		static bool no_error = true;
 
-		for (it = modules.begin(); it != modules.end() && ret; ++it)
-			ret = (*it)->PreUpdate();
+		for (it = modules.begin(); it != modules.end() && no_error; ++it)
+			no_error = (*it)->PreUpdate();
 
-		for (it = modules.begin(); it != modules.end() && ret; ++it)
-			ret = (*it)->Update(dt);
+		for (it = modules.begin(); it != modules.end() && no_error; ++it)
+			no_error = (*it)->Update(dt);
 
-		for (it = modules.begin(); it != modules.end() && ret; ++it)
-			ret = (*it)->PostUpdate();
+		for (it = modules.begin(); it != modules.end() && no_error; ++it)
+			no_error = (*it)->PostUpdate();
 
-		if (ret)
+		if (no_error)
 			FinishUpdate();
+		else
+			ret = -1; // error
 	}
 
 	return ret;
@@ -149,10 +157,7 @@ int Application::GetArgc() const
 // ---------------------------------------
 const char* Application::GetArgv(int index) const
 {
-	if(index < argc)
-		return args[index];
-	else
-		return nullptr;
+	return index < argc ? args[index] : nullptr;
 }
 
 // ---------------------------------------

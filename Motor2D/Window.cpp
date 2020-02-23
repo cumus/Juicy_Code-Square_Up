@@ -44,7 +44,7 @@ bool Window::Awake(pugi::xml_node& config)
 			SDL_WINDOWPOS_UNDEFINED,
 			width, height, flags);
 
-		if (window != NULL)
+		if (window)
 		{
 			screen_surface = SDL_GetWindowSurface(window);
 		}
@@ -69,7 +69,7 @@ bool Window::CleanUp()
 	LOG("Destroying SDL window and quitting all SDL systems");
 
 	//Destroy window
-	if(window != NULL) SDL_DestroyWindow(window);
+	if(window) SDL_DestroyWindow(window);
 
 	//Quit SDL subsystems
 	SDL_Quit();

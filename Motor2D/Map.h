@@ -48,7 +48,7 @@ struct MapLayer
 
 	~MapLayer()
 	{
-		//if (data != nullptr) delete data;
+		//TODO: DEL(data);
 	}
 
 	inline unsigned int Get(int x, int y) const

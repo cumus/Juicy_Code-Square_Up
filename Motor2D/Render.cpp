@@ -21,28 +21,13 @@ bool Render::Awake(pugi::xml_node& config)
 {
 	LOG("Create SDL rendering context");
 	bool ret = true;
-	// load flags
-	Uint32 flags = SDL_RENDERER_ACCELERATED;
 
+	// load flags
+	flags = SDL_RENDERER_ACCELERATED;
 	if(config.child("vsync").attribute("value").as_bool(true) == true)
 	{
 		flags |= SDL_RENDERER_PRESENTVSYNC;
 		LOG("Using vsync");
-	}
-
-	renderer = SDL_CreateRenderer(App->win->window, -1, flags);
-
-	if(renderer == NULL)
-	{
-		LOG("Could not create the renderer! SDL_Error: %s\n", SDL_GetError());
-		ret = false;
-	}
-	else
-	{
-		//camera.w = App->win->screen_surface->w;
-		//camera.h = App->win->screen_surface->h;
-		//camera.x = 0;
-		//camera.y = 0;
 	}
 
 	return ret;
@@ -52,9 +37,21 @@ bool Render::Awake(pugi::xml_node& config)
 bool Render::Start()
 {
 	LOG("render start");
-	// back background
-	SDL_RenderGetViewport(renderer, &viewport);
-	return true;
+	bool ret = true;
+
+	renderer = SDL_CreateRenderer(App->win->window, -1, flags);
+	if (renderer)
+	{
+		SDL_SetRenderDrawBlendMode(App->render->renderer, SDL_BLENDMODE_BLEND);
+		SDL_RenderGetViewport(renderer, &viewport);
+	}
+	else
+	{
+		LOG("Could not create the renderer! SDL_Error: %s\n", SDL_GetError());
+		ret = false;
+	}
+
+	return ret;
 }
 
 // Called each loop iteration
@@ -138,20 +135,20 @@ bool Render::Blit(SDL_Texture* texture, int x, int y, const SDL_Rect* section, f
 	rect.x = (int)(camera.x * speed) + x * scale;
 	rect.y = (int)(camera.y * speed) + y * scale;
 
-	if(section != NULL)
+	if(section)
 	{
 		rect.w = section->w;
 		rect.h = section->h;
 	}
 	else
 	{
-		SDL_QueryTexture(texture, NULL, NULL, &rect.w, &rect.h);
+		SDL_QueryTexture(texture, 0, 0, &rect.w, &rect.h);
 	}
 
 	rect.w *= scale;
 	rect.h *= scale;
 
-	SDL_Point* p = NULL;
+	SDL_Point* p = nullptr;
 	SDL_Point pivot;
 
 	if(pivot_x != INT_MAX && pivot_y != INT_MAX)

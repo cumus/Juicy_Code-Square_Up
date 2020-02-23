@@ -168,7 +168,7 @@ bool Map::CleanUp()
 
 	data.objects.clear();
 
-	// Clean up the pugui tree
+	// Clean up pugui document tree
 	map_file.reset();
 
 	return true;
@@ -266,12 +266,7 @@ bool Map::LoadMap()
 	bool ret = true;
 	pugi::xml_node map = map_file.child("map");
 
-	if(map == NULL)
-	{
-		LOG("Error parsing map xml file: Cannot find 'map' tag.");
-		ret = false;
-	}
-	else
+	if(map)
 	{
 		data.width = map.attribute("width").as_int();
 		data.height = map.attribute("height").as_int();
@@ -283,7 +278,7 @@ bool Map::LoadMap()
 		data.background_color.b = 0;
 		data.background_color.a = 0;
 		std::string bg_color = map.attribute("backgroundcolor").as_string();
-		if(bg_color.length() > 0)
+		if (bg_color.length() > 0)
 		{
 			std::string red = "0", green = "0", blue = "0";
 			/* TODO: parse background color string
@@ -294,21 +289,26 @@ bool Map::LoadMap()
 			int v = 0;
 
 			sscanf_s(red.c_str(), "%x", &v);
-			if(v >= 0 && v <= 255) data.background_color.r = v;
+			if (v >= 0 && v <= 255) data.background_color.r = v;
 
 			sscanf_s(green.c_str(), "%x", &v);
-			if(v >= 0 && v <= 255) data.background_color.g = v;
+			if (v >= 0 && v <= 255) data.background_color.g = v;
 
 			sscanf_s(blue.c_str(), "%x", &v);
-			if(v >= 0 && v <= 255) data.background_color.b = v;
+			if (v >= 0 && v <= 255) data.background_color.b = v;
 		}
 
 		std::string orientation = map.attribute("orientation").as_string();
 
-		if(orientation == "orthogonal") data.type = MAPTYPE_ORTHOGONAL;
-		else if(orientation == "isometric") data.type = MAPTYPE_ISOMETRIC;
-		else if(orientation == "staggered") data.type = MAPTYPE_STAGGERED;
+		if (orientation == "orthogonal") data.type = MAPTYPE_ORTHOGONAL;
+		else if (orientation == "isometric") data.type = MAPTYPE_ISOMETRIC;
+		else if (orientation == "staggered") data.type = MAPTYPE_STAGGERED;
 		else data.type = MAPTYPE_UNKNOWN;
+	}
+	else
+	{
+		LOG("Error parsing map xml file: Cannot find 'map' tag.");
+		ret = false;
 	}
 
 	return ret;
@@ -323,9 +323,9 @@ bool Map::LoadTilesetDetails(pugi::xml_node& tileset_node, TileSet* set)
 	set->tile_height = tileset_node.attribute("tileheight").as_int();
 	set->margin = tileset_node.attribute("margin").as_int();
 	set->spacing = tileset_node.attribute("spacing").as_int();
-	pugi::xml_node offset = tileset_node.child("tileoffset");
 
-	if(offset != NULL)
+	pugi::xml_node offset = tileset_node.child("tileoffset");
+	if(offset)
 	{
 		set->offset_x = offset.attribute("x").as_int();
 		set->offset_y = offset.attribute("y").as_int();
@@ -344,32 +344,32 @@ bool Map::LoadTilesetImage(pugi::xml_node& tileset_node, TileSet* set)
 	bool ret = true;
 	pugi::xml_node image = tileset_node.child("image");
 
-	if(image == NULL)
-	{
-		LOG("Error parsing tileset xml file: Cannot find 'image' tag.");
-		ret = false;
-	}
-	else
+	if(image)
 	{
 		set->texture = App->tex->Load(PATH(folder.c_str(), image.attribute("source").as_string()));
 		int w, h;
-		SDL_QueryTexture(set->texture, NULL, NULL, &w, &h);
+		SDL_QueryTexture(set->texture, 0, 0, &w, &h);
 		set->tex_width = image.attribute("width").as_int();
 
-		if(set->tex_width <= 0)
+		if (set->tex_width <= 0)
 		{
 			set->tex_width = w;
 		}
 
 		set->tex_height = image.attribute("height").as_int();
 
-		if(set->tex_height <= 0)
+		if (set->tex_height <= 0)
 		{
 			set->tex_height = h;
 		}
 
 		set->num_tiles_width = set->tex_width / set->tile_width;
 		set->num_tiles_height = set->tex_height / set->tile_height;
+	}
+	else
+	{
+		LOG("Error parsing tileset xml file: Cannot find 'image' tag.");
+		ret = false;
 	}
 
 	return ret;
@@ -413,7 +413,7 @@ bool Map::LoadProperties(pugi::xml_node& node, Properties& properties)
 
 	pugi::xml_node data = node.child("properties");
 
-	if(data != NULL)
+	if(data)
 	{
 		pugi::xml_node prop;
 
@@ -439,23 +439,22 @@ bool Map::LoadObjects(pugi::xml_node& node, MapObject* object)
 	object->id = node.attribute("id").as_uint();
 	pugi::xml_node col_object = node.child("object");
 
-	if (node == NULL)
-	{
-		LOG("Error parsing map xml file: Cannot find 'layer/data' tag.");
-		ret = false;
-		DEL(object);
-	}
-	else
+	if (node)
 	{
 		object = new MapObject;
-		
+
 		for (int i = 0; col_object; col_object = col_object.next_sibling("object"))
 		{
 			object->col[i] = new Collider({ col_object.attribute("x").as_int(0),col_object.attribute("y").as_int(0),col_object.attribute("width").as_int(0),col_object.attribute("height").as_int(0) }, COLLIDER);
 			App->collisions->AddCollider(object->col[i]->rect, object->col[i]->type);
 			i++;
 		}
-
+	}
+	else
+	{
+		LOG("Error parsing map xml file: Cannot find 'layer/data' tag.");
+		DEL(object);
+		ret = false;
 	}
 
 	return ret;

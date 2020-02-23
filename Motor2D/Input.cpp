@@ -33,6 +33,9 @@ bool Input::Awake(pugi::xml_node& config)
 		ret = false;
 	}
 
+	for (int i = 0; i < WE_COUNT; i++)
+		windowEvents[i] = false;
+
 	return ret;
 }
 
@@ -48,7 +51,7 @@ bool Input::PreUpdate()
 {
 	static SDL_Event event;
 	
-	const Uint8* keys = SDL_GetKeyboardState(NULL);
+	const Uint8* keys = SDL_GetKeyboardState(0);
 
 	for(int i = 0; i < MAX_KEYS; ++i)
 	{
