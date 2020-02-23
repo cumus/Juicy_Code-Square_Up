@@ -64,4 +64,4 @@ public:
 	}
 };
 
-#endif
+#endif // __ANIMATION_H__

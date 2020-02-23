@@ -1,23 +1,22 @@
 // ----------------------------------------------------
-// j1Module.h
+// Module.h
 // Interface for all engine modules
 // ----------------------------------------------------
 
-#ifndef __j1MODULE_H__
-#define __j1MODULE_H__
+#ifndef __MODULE_H__
+#define __MODULE_H__
 
-#include "p2SString.h"
 #include "PugiXml\src\pugixml.hpp"
 
 struct Collider;
 
-class j1App;
+class App;
 
-class j1Module
+class Module
 {
 public:
 
-	j1Module() : active(false)
+	Module(const char*	name) : active(false), name(name)
 	{}
 
 	void Init()
@@ -75,9 +74,9 @@ public:
 
 public:
 
-	p2SString	name;
+	const char*	name;
 	bool		active;
 
 };
 
-#endif // __j1MODULE_H__
+#endif // __MODULE_H__

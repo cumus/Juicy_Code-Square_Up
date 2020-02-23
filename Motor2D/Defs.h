@@ -1,5 +1,5 @@
-#ifndef __P2DEFS_H__
-#define __P2DEFS_H__
+#ifndef __DEFS_H__
+#define __DEFS_H__
 
 #include <stdio.h>
 
@@ -11,7 +11,7 @@
 #define NULL  0
 
 // Deletes a buffer
-#define RELEASE( x ) \
+#define DEL( x ) \
     {                        \
     if( x != NULL )        \
 	    {                      \
@@ -21,7 +21,7 @@
     }
 
 // Deletes an array of buffers
-#define RELEASE_ARRAY( x ) \
+#define DEL_ARRAY( x ) \
     {                              \
     if( x != NULL )              \
 	    {                            \
@@ -59,4 +59,4 @@ inline const char* const PATH(const char* folder, const char* file)
 	return path;
 }
 
-#endif
+#endif // __DEFS_H__

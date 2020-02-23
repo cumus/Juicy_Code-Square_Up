@@ -1,29 +1,27 @@
-#include "p2Defs.h"
-#include "p2Log.h"
-#include "j1App.h"
-#include "j1Input.h"
-#include "j1Window.h"
 #include "SDL/include/SDL.h"
+#include "Defs.h"
+#include "Log.h"
+#include "Application.h"
+#include "Window.h"
+#include "Input.h"
 
 #define MAX_KEYS 300
 
-j1Input::j1Input() : j1Module()
+Input::Input() : Module("input")
 {
-	name.create("input");
-
 	keyboard = new j1KeyState[MAX_KEYS];
 	memset(keyboard, KEY_IDLE, sizeof(j1KeyState) * MAX_KEYS);
 	memset(mouse_buttons, KEY_IDLE, sizeof(j1KeyState) * NUM_MOUSE_BUTTONS);
 }
 
 // Destructor
-j1Input::~j1Input()
+Input::~Input()
 {
 	delete[] keyboard;
 }
 
 // Called before render is available
-bool j1Input::Awake(pugi::xml_node& config)
+bool Input::Awake(pugi::xml_node& config)
 {
 	LOG("Init SDL input event system");
 	bool ret = true;
@@ -39,14 +37,14 @@ bool j1Input::Awake(pugi::xml_node& config)
 }
 
 // Called before the first frame
-bool j1Input::Start()
+bool Input::Start()
 {
 	SDL_StopTextInput();
 	return true;
 }
 
 // Called each loop iteration
-bool j1Input::PreUpdate()
+bool Input::PreUpdate()
 {
 	static SDL_Event event;
 	
@@ -132,7 +130,7 @@ bool j1Input::PreUpdate()
 }
 
 // Called before quitting
-bool j1Input::CleanUp()
+bool Input::CleanUp()
 {
 	LOG("Quitting SDL event subsystem");
 	SDL_QuitSubSystem(SDL_INIT_EVENTS);
@@ -140,18 +138,18 @@ bool j1Input::CleanUp()
 }
 
 // ---------
-bool j1Input::GetWindowEvent(j1EventWindow ev)
+bool Input::GetWindowEvent(j1EventWindow ev)
 {
 	return windowEvents[ev];
 }
 
-void j1Input::GetMousePosition(int& x, int& y)
+void Input::GetMousePosition(int& x, int& y)
 {
 	x = mouse_x;
 	y = mouse_y;
 }
 
-void j1Input::GetMouseMotion(int& x, int& y)
+void Input::GetMouseMotion(int& x, int& y)
 {
 	x = mouse_motion_x;
 	y = mouse_motion_y;

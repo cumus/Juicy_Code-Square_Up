@@ -1,16 +1,16 @@
-#ifndef __J1FADETOBLACK_H
-#define __J1FADETOBLACK_H
+#ifndef __FADETOBLACK_H
+#define __FADETOBLACK_H
 
 
-#include "j1Module.h"
+#include "Module.h"
 #include "SDL/include/SDL_rect.h"
 
-class j1FadeToBlack : public j1Module
+class FadeToBlack : public Module
 {
 public:
 
-	j1FadeToBlack();
-	~j1FadeToBlack();
+	FadeToBlack();
+	~FadeToBlack();
 
 	bool Start();
 	bool Update(float dt);
@@ -18,6 +18,7 @@ public:
 	bool FadeTo(float time = 1.0f);
 	bool FadeFrom(float time = 1.0f);
 	bool Fading() const;
+
 private:
 
 	enum fade_step
@@ -30,9 +31,8 @@ private:
 	Uint32 start_time = 0;
 	Uint32 total_time = 0;
 	SDL_Rect screen;
-	j1Module* to_enable = nullptr;
-	j1Module* to_disable = nullptr;
+	Module* to_enable = nullptr;
+	Module* to_disable = nullptr;
 };
 
-
-#endif
+#endif // __FADETOBLACK_H

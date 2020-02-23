@@ -1,18 +1,18 @@
-#ifndef __j1SCENE_H__
-#define __j1SCENE_H__
+#ifndef __SCENE_H__
+#define __SCENE_H__
 
-#include "j1Module.h"
+#include "Module.h"
 
 struct SDL_Texture;
 
-class j1Scene : public j1Module
+class Scene : public Module
 {
 public:
 
-	j1Scene();
+	Scene();
 
 	// Destructor
-	virtual ~j1Scene();
+	virtual ~Scene();
 
 	// Called before render is available
 	bool Awake(pugi::xml_node& config);

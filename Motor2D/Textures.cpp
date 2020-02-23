@@ -1,26 +1,24 @@
-#include "p2Defs.h"
-#include "p2Log.h"
-#include "j1App.h"
-#include "j1Render.h"
-#include "j1Textures.h"
-
 #include "SDL_image/include/SDL_image.h"
 #pragma comment( lib, "SDL_image/libx86/SDL2_image.lib" )
 
-j1Textures::j1Textures() : j1Module()
-{
-	name.create("textures");
-}
+#include "Defs.h"
+#include "Log.h"
+#include "Application.h"
+#include "Render.h"
+#include "Textures.h"
 
-// Destructor
-j1Textures::~j1Textures()
+Textures::Textures() : Module("textures")
+{}
+
+Textures::~Textures()
 {}
 
 // Called before render is available
-bool j1Textures::Awake(pugi::xml_node& config)
+bool Textures::Awake(pugi::xml_node& config)
 {
 	LOG("Init Image library");
 	bool ret = true;
+
 	// load support for the PNG image format
 	int flags = IMG_INIT_PNG;
 	int init = IMG_Init(flags);
@@ -35,7 +33,7 @@ bool j1Textures::Awake(pugi::xml_node& config)
 }
 
 // Called before the first frame
-bool j1Textures::Start()
+bool Textures::Start()
 {
 	LOG("start textures");
 	bool ret = true;
@@ -43,23 +41,22 @@ bool j1Textures::Start()
 }
 
 // Called before quitting
-bool j1Textures::CleanUp()
+bool Textures::CleanUp()
 {
 	LOG("Freeing textures and Image library");
-	p2List_item<SDL_Texture*>* item;
 
-	for(item = textures.start; item != NULL; item = item->next)
-	{
-		SDL_DestroyTexture(item->data);
-	}
+	for (std::list<SDL_Texture*>::iterator it = textures.begin(); it != textures.end(); ++it)
+		SDL_DestroyTexture(*it);
 
 	textures.clear();
+
 	IMG_Quit();
+
 	return true;
 }
 
 // Load new texture from file path
-SDL_Texture* const j1Textures::Load(const char* path)
+SDL_Texture* const Textures::Load(const char* path)
 {
 	SDL_Texture* texture = NULL;
 	SDL_Surface* surface = IMG_Load(path);
@@ -78,25 +75,26 @@ SDL_Texture* const j1Textures::Load(const char* path)
 }
 
 // Unload texture
-bool j1Textures::UnLoad(SDL_Texture* texture)
+bool Textures::UnLoad(SDL_Texture* texture)
 {
-	p2List_item<SDL_Texture*>* item;
+	bool ret = false;
 
-	for(item = textures.start; item != NULL; item = item->next)
+	for (std::list<SDL_Texture*>::iterator it = textures.begin(); it != textures.end(); ++it)
 	{
-		if(texture == item->data)
+		if (*it == texture)
 		{
-			SDL_DestroyTexture(item->data);
-			textures.del(item);
-			return true;
+			SDL_DestroyTexture(*it);
+			textures.remove(*it);
+			ret = true;
+			break;
 		}
 	}
 
-	return false;
+	return ret;
 }
 
 // Translate a surface into a texture
-SDL_Texture* const j1Textures::LoadSurface(SDL_Surface* surface)
+SDL_Texture* const Textures::LoadSurface(SDL_Surface* surface)
 {
 	SDL_Texture* texture = SDL_CreateTextureFromSurface(App->render->renderer, surface);
 
@@ -106,14 +104,14 @@ SDL_Texture* const j1Textures::LoadSurface(SDL_Surface* surface)
 	}
 	else
 	{
-		textures.add(texture);
+		textures.push_back(texture);
 	}
 
 	return texture;
 }
 
 // Retrieve size of a texture
-void j1Textures::GetSize(const SDL_Texture* texture, uint& width, uint& height) const
+void Textures::GetSize(const SDL_Texture* texture, uint& width, uint& height) const
 {
 	SDL_QueryTexture((SDL_Texture*)texture, NULL, NULL, (int*) &width, (int*) &height);
 }

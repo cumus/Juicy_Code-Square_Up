@@ -1,26 +1,24 @@
-#include "p2Defs.h"
-#include "p2Log.h"
-#include "j1App.h"
-#include "j1Input.h"
-#include "j1Textures.h"
-#include "j1Audio.h"
-#include "j1Render.h"
-#include "j1Window.h"
-#include "j1Map.h"
-#include "j1Scene.h"
-#include "J1FadetoBlack.h"
+#include "Defs.h"
+#include "Log.h"
+#include "Application.h"
+#include "Input.h"
+#include "Textures.h"
+#include "Audio.h"
+#include "Render.h"
+#include "Window.h"
+#include "Map.h"
+#include "FadetoBlack.h"
+#include "Scene.h"
 
-j1Scene::j1Scene() : j1Module()
-{
-	name.create("scene");
-}
+Scene::Scene() : Module("scene")
+{}
 
 // Destructor
-j1Scene::~j1Scene()
+Scene::~Scene()
 {}
 
 // Called before render is available
-bool j1Scene::Awake(pugi::xml_node& config)
+bool Scene::Awake(pugi::xml_node& config)
 {
 	LOG("Loading Scene");
 	bool ret = true;
@@ -31,7 +29,7 @@ bool j1Scene::Awake(pugi::xml_node& config)
 }
 
 // Called before the first frame
-bool j1Scene::Start()
+bool Scene::Start()
 {
 	App->map->Load("level1.tmx");
 	App->audio->PlayMusic("audio/music/lvl1bgm.ogg");
@@ -39,13 +37,13 @@ bool j1Scene::Start()
 }
 
 // Called each loop iteration
-bool j1Scene::PreUpdate()
+bool Scene::PreUpdate()
 {
 	return true;
 }
 
 // Called each loop iteration
-bool j1Scene::Update(float dt)
+bool Scene::Update(float dt)
 {
 	/*if (App->input->GetKey(SDL_SCANCODE_L) == KEY_DOWN)
 		App->LoadGame("save_game.xml");
@@ -58,18 +56,28 @@ bool j1Scene::Update(float dt)
 	int x, y;
 	App->input->GetMousePosition(x, y);
 	iPoint map_coordinates = App->map->WorldToMap(x - App->render->camera.x, y - App->render->camera.y);
-	p2SString title("Map:%dx%d Tiles:%dx%d Tilesets:%d Tile:%d,%d",
-					App->map->data.width, App->map->data.height,
-					App->map->data.tile_width, App->map->data.tile_height,
-					App->map->data.tilesets.count(),
-					map_coordinates.x, map_coordinates.y);
+	
+	std::string title = "Map:";
+	title += App->map->data.width;
+	title += "x";
+	title += App->map->data.height;
+	title += " Tiles : ";
+	title += App->map->data.tile_width;
+	title += "x";
+	title += App->map->data.tile_height;
+	title += " Tilesets : ";
+	title += App->map->data.tilesets.size();
+	title += " Tile : ";
+	title += map_coordinates.x;
+	title += ", ";
+	title += map_coordinates.y;
 
-	App->win->SetTitle(title.GetString());
+	App->win->SetTitle(title.c_str());
 	return true;
 }
 
 // Called each loop iteration
-bool j1Scene::PostUpdate()
+bool Scene::PostUpdate()
 {
 	bool ret = true;
 
@@ -80,7 +88,7 @@ bool j1Scene::PostUpdate()
 }
 
 // Called before quitting
-bool j1Scene::CleanUp()
+bool Scene::CleanUp()
 {
 	LOG("Freeing scene");
 	

@@ -1,22 +1,19 @@
-#include "j1App.h"
-#include "j1Window.h"
 #include <math.h>
-#include "p2Log.h"
-#include "j1FadeToBlack.h"
-#include "j1Render.h"
 #include "SDL/include/SDL_render.h"
 #include "SDL/include/SDL_timer.h"
+#include "Log.h"
+#include "Render.h"
+#include "Window.h"
+#include "Application.h"
+#include "FadeToBlack.h"
 
-j1FadeToBlack::j1FadeToBlack()
-{
-	name.create("FadeToBlack");
+FadeToBlack::FadeToBlack() : Module("FadeToBlack")
+{}
 
-}
-j1FadeToBlack::~j1FadeToBlack()
-{
-}
+FadeToBlack::~FadeToBlack()
+{}
 
-bool j1FadeToBlack::Start()
+bool FadeToBlack::Start()
 {
 	LOG("Starting Fade.");
 	SDL_SetRenderDrawBlendMode(App->render->renderer, SDL_BLENDMODE_BLEND);
@@ -25,7 +22,7 @@ bool j1FadeToBlack::Start()
 	return true;
 }
 
-bool j1FadeToBlack::Update(float dt)
+bool FadeToBlack::Update(float dt)
 {
 	if (current_step == fade_step::none)
 		return true;
@@ -60,12 +57,12 @@ bool j1FadeToBlack::Update(float dt)
 	return true;
 }
 
-bool j1FadeToBlack::CleanUp()
+bool FadeToBlack::CleanUp()
 {
 	return true;
 }
 
-bool j1FadeToBlack::FadeTo(float time)
+bool FadeToBlack::FadeTo(float time)
 {
 	bool ret = false;
 
@@ -80,7 +77,7 @@ bool j1FadeToBlack::FadeTo(float time)
 
 	return ret;
 }
-bool j1FadeToBlack::FadeFrom(float time)
+bool FadeToBlack::FadeFrom(float time)
 {
 	bool ret = false;
 
@@ -96,7 +93,7 @@ bool j1FadeToBlack::FadeFrom(float time)
 	return ret;
 }
 
-bool j1FadeToBlack::Fading() const
+bool FadeToBlack::Fading() const
 {
 	return current_step != fade_step::none;
 }

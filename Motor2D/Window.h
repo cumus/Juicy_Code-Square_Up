@@ -1,19 +1,19 @@
-#ifndef __j1WINDOW_H__
-#define __j1WINDOW_H__
+#ifndef __WINDOW_H__
+#define __WINDOW_H__
 
-#include "j1Module.h"
+#include "Module.h"
 
 struct SDL_Window;
 struct SDL_Surface;
 
-class j1Window : public j1Module
+class Window : public Module
 {
 public:
 
-	j1Window();
+	Window();
 
 	// Destructor
-	virtual ~j1Window();
+	virtual ~Window();
 
 	// Called before render is available
 	bool Awake(pugi::xml_node&);
@@ -32,17 +32,18 @@ public:
 
 public:
 	//The window we'll be rendering to
-	SDL_Window* window;
+	SDL_Window* window = nullptr;
 
 	//The surface contained by the window
-	SDL_Surface* screen_surface;
+	SDL_Surface* screen_surface = nullptr;
 
 	uint		width;
 	uint		height;
+
 private:
-	p2SString	title;
-	
+
+	std::string	title;
 	uint		scale;
 };
 
-#endif // __j1WINDOW_H__
+#endif // __WINDOW_H__

@@ -1,7 +1,7 @@
-#ifndef __j1INPUT_H__
-#define __j1INPUT_H__
+#ifndef __INPUT_H__
+#define __INPUT_H__
 
-#include "j1Module.h"
+#include "Module.h"
 
 //#define NUM_KEYS 352
 #define NUM_MOUSE_BUTTONS 5
@@ -25,15 +25,15 @@ enum j1KeyState
 	KEY_UP
 };
 
-class j1Input : public j1Module
+class Input : public Module
 {
 
 public:
 
-	j1Input();
+	Input();
 
 	// Destructor
-	virtual ~j1Input();
+	virtual ~Input();
 
 	// Called before render is available
 	bool Awake(pugi::xml_node&);
@@ -78,4 +78,4 @@ private:
 	int			mouse_y;
 };
 
-#endif // __j1INPUT_H__
+#endif // __INPUT_H__

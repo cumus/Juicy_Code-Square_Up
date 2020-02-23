@@ -1,20 +1,20 @@
-#ifndef __j1TEXTURES_H__
-#define __j1TEXTURES_H__
+#ifndef __TEXTURES_H__
+#define __TEXTURES_H__
 
-#include "j1Module.h"
-#include "p2List.h"
+#include "Module.h"
+#include <list>
 
 struct SDL_Texture;
 struct SDL_Surface;
 
-class j1Textures : public j1Module
+class Textures : public Module
 {
 public:
 
-	j1Textures();
+	Textures();
 
 	// Destructor
-	virtual ~j1Textures();
+	virtual ~Textures();
 
 	// Called before render is available
 	bool Awake(pugi::xml_node&);
@@ -27,14 +27,14 @@ public:
 
 	// Load Texture
 	SDL_Texture* const	Load(const char* path);
-	bool				UnLoad(SDL_Texture* texture);
 	SDL_Texture* const	LoadSurface(SDL_Surface* surface);
+	bool				UnLoad(SDL_Texture* texture);
+
 	void				GetSize(const SDL_Texture* texture, uint& width, uint& height) const;
 
 public:
 
-	p2List<SDL_Texture*>	textures;
+	std::list<SDL_Texture*>	textures;
 };
 
-
-#endif // __j1TEXTURES_H__
+#endif // __TEXTURES_H__

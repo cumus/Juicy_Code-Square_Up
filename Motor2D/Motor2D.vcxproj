@@ -78,40 +78,36 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="j1Collisions.cpp" />
-    <ClCompile Include="J1FadetoBlack.cpp" />
-    <ClCompile Include="j1Main.cpp" />
-    <ClCompile Include="j1App.cpp" />
-    <ClCompile Include="j1Audio.cpp" />
-    <ClCompile Include="j1Input.cpp" />
-    <ClCompile Include="j1Map.cpp" />
-    <ClCompile Include="j1Scene.cpp" />
-    <ClCompile Include="p2Log.cpp" />
-    <ClCompile Include="j1Render.cpp" />
-    <ClCompile Include="j1Textures.cpp" />
-    <ClCompile Include="j1Window.cpp" />
+    <ClCompile Include="Collisions.cpp" />
+    <ClCompile Include="FadetoBlack.cpp" />
+    <ClCompile Include="Main.cpp" />
+    <ClCompile Include="Application.cpp" />
+    <ClCompile Include="Audio.cpp" />
+    <ClCompile Include="Input.cpp" />
+    <ClCompile Include="Map.cpp" />
+    <ClCompile Include="Scene.cpp" />
+    <ClCompile Include="Log.cpp" />
+    <ClCompile Include="Render.cpp" />
+    <ClCompile Include="Textures.cpp" />
+    <ClCompile Include="Window.cpp" />
     <ClCompile Include="PugiXml\src\pugixml.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Animation.h" />
-    <ClInclude Include="j1Collisions.h" />
-    <ClInclude Include="J1FadetoBlack.h" />
-    <ClInclude Include="j1Map.h" />
-    <ClInclude Include="j1Scene.h" />
-    <ClInclude Include="p2DynArray.h" />
-    <ClInclude Include="j1Audio.h" />
-    <ClInclude Include="j1Input.h" />
-    <ClInclude Include="p2Log.h" />
-    <ClInclude Include="j1App.h" />
-    <ClInclude Include="p2Defs.h" />
-    <ClInclude Include="p2List.h" />
-    <ClInclude Include="j1Module.h" />
-    <ClInclude Include="p2Point.h" />
-    <ClInclude Include="j1Render.h" />
-    <ClInclude Include="j1Textures.h" />
-    <ClInclude Include="j1Window.h" />
-    <ClInclude Include="p2Queue.h" />
-    <ClInclude Include="p2SString.h" />
+    <ClInclude Include="Collisions.h" />
+    <ClInclude Include="FadetoBlack.h" />
+    <ClInclude Include="Map.h" />
+    <ClInclude Include="Scene.h" />
+    <ClInclude Include="Audio.h" />
+    <ClInclude Include="Input.h" />
+    <ClInclude Include="Log.h" />
+    <ClInclude Include="Application.h" />
+    <ClInclude Include="Defs.h" />
+    <ClInclude Include="Module.h" />
+    <ClInclude Include="Point.h" />
+    <ClInclude Include="Render.h" />
+    <ClInclude Include="Textures.h" />
+    <ClInclude Include="Window.h" />
     <ClInclude Include="PugiXml\src\pugiconfig.hpp" />
     <ClInclude Include="PugiXml\src\pugixml.hpp" />
   </ItemGroup>

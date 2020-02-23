@@ -1,15 +1,15 @@
-#include "j1App.h"
-#include "j1Input.h"
-#include "j1Render.h"
-#include "j1Collisions.h"
-#include "p2Log.h"
+#include "Log.h"
+#include "Input.h"
+#include "Render.h"
+#include "Application.h"
+#include "Collisions.h"
 
-j1Collisions::j1Collisions()
+Collisions::Collisions() : Module("collisions")
 {
 	for (uint i = 0; i < MAX_COLLIDERS; ++i)
 		colliders[i] = nullptr;
 
-	matrix[COLLIDER][COLLIDER] = false;
+	/*matrix[COLLIDER][COLLIDER] = false;
 	matrix[COLLIDER][NEXTLVL] = true;
 	matrix[COLLIDER][COLLIDER_PLAYER] = false;
 	matrix[COLLIDER][COLLIDER_DAMAGE] = false;
@@ -27,14 +27,14 @@ j1Collisions::j1Collisions()
 	matrix[COLLIDER_DAMAGE][COLLIDER] = false;
 	matrix[COLLIDER_DAMAGE][NEXTLVL] = false;
 	matrix[COLLIDER_DAMAGE][COLLIDER_PLAYER] = true;
-	matrix[COLLIDER_DAMAGE][COLLIDER_DAMAGE] = false;
+	matrix[COLLIDER_DAMAGE][COLLIDER_DAMAGE] = false;*/
 }
 
 
-j1Collisions::~j1Collisions()
+Collisions::~Collisions()
 {}
 
-bool j1Collisions::PreUpdate()
+bool Collisions::PreUpdate()
 {
 	for (uint i = 0; i < MAX_COLLIDERS; ++i)
 	{
@@ -81,7 +81,7 @@ bool j1Collisions::PreUpdate()
 }
 
 
-bool j1Collisions::Update(float dt)
+bool Collisions::Update(float dt)
 {
 
 	// To be implemented debug capabilities for painting colliders and godmode
@@ -107,7 +107,7 @@ bool j1Collisions::Update(float dt)
 
 }
 
-void j1Collisions::DebugDraw()
+void Collisions::DebugDraw()
 {
 	if (App->input->GetKey(SDL_SCANCODE_F9) == KEY_DOWN)
 		debug = !debug;
@@ -142,7 +142,7 @@ void j1Collisions::DebugDraw()
 	}
 }
 
-bool j1Collisions::CleanUp()
+bool Collisions::CleanUp()
 {
 	LOG("Freeing all colliders");
 	
@@ -158,7 +158,7 @@ bool j1Collisions::CleanUp()
 
 }
 
-Collider* j1Collisions::AddCollider(SDL_Rect rect, COLLIDER_TYPE type, j1Module* callback)
+Collider* Collisions::AddCollider(SDL_Rect rect, COLLIDER_TYPE type, Module* callback)
 {
 	Collider* ret = nullptr;
 

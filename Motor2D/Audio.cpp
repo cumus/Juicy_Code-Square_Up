@@ -1,24 +1,23 @@
-#include "p2Defs.h"
-#include "p2Log.h"
-#include "j1App.h"
-#include "j1Audio.h"
-
 #include "SDL/include/SDL.h"
 #include "SDL_mixer\include\SDL_mixer.h"
 #pragma comment( lib, "SDL_mixer/libx86/SDL2_mixer.lib" )
+#include "Defs.h"
+#include "Log.h"
+#include "Application.h"
+#include "Audio.h"
 
-j1Audio::j1Audio() : j1Module()
+
+Audio::Audio() : Module("audio")
 {
 	music = NULL;
-	name.create("audio");
 }
 
 // Destructor
-j1Audio::~j1Audio()
+Audio::~Audio()
 {}
 
 // Called before render is available
-bool j1Audio::Awake(pugi::xml_node& config)
+bool Audio::Awake(pugi::xml_node& config)
 {
 	LOG("Loading Audio Mixer");
 	bool ret = true;
@@ -54,7 +53,7 @@ bool j1Audio::Awake(pugi::xml_node& config)
 }
 
 // Called before quitting
-bool j1Audio::CleanUp()
+bool Audio::CleanUp()
 {
 	if(!active)
 		return true;
@@ -62,13 +61,10 @@ bool j1Audio::CleanUp()
 	LOG("Freeing sound FX, closing Mixer and Audio subsystem");
 
 	if(music != NULL)
-	{
 		Mix_FreeMusic(music);
-	}
 
-	p2List_item<Mix_Chunk*>* item;
-	for(item = fx.start; item != NULL; item = item->next)
-		Mix_FreeChunk(item->data);
+	for(std::vector<Mix_Chunk*>::iterator it = fx.begin(); it != fx.end(); ++it)
+		Mix_FreeChunk(*it);
 
 	fx.clear();
 
@@ -80,7 +76,7 @@ bool j1Audio::CleanUp()
 }
 
 // Play a music file
-bool j1Audio::PlayMusic(const char* path, float fade_time)
+bool Audio::PlayMusic(const char* path, float fade_time)
 {
 	bool ret = true;
 
@@ -90,13 +86,9 @@ bool j1Audio::PlayMusic(const char* path, float fade_time)
 	if(music != NULL)
 	{
 		if(fade_time > 0.0f)
-		{
 			Mix_FadeOutMusic(int(fade_time * 1000.0f));
-		}
 		else
-		{
 			Mix_HaltMusic();
-		}
 
 		// this call blocks until fade out is done
 		Mix_FreeMusic(music);
@@ -134,7 +126,7 @@ bool j1Audio::PlayMusic(const char* path, float fade_time)
 }
 
 // Load WAV
-unsigned int j1Audio::LoadFx(const char* path)
+unsigned int Audio::LoadFx(const char* path)
 {
 	unsigned int ret = 0;
 
@@ -149,25 +141,22 @@ unsigned int j1Audio::LoadFx(const char* path)
 	}
 	else
 	{
-		fx.add(chunk);
-		ret = fx.count();
+		fx.push_back(chunk);
+		ret = fx.size();
 	}
 
 	return ret;
 }
 
 // Play WAV
-bool j1Audio::PlayFx(unsigned int id, int repeat)
+bool Audio::PlayFx(unsigned int id, int repeat)
 {
-	bool ret = false;
+	bool ret = true;
 
-	if(!active)
-		return false;
-
-	if(id > 0 && id <= fx.count())
-	{
+	if (active && id > 0 && id <= fx.size())
 		Mix_PlayChannel(-1, fx[id - 1], repeat);
-	}
+	else
+		ret = false;
 
 	return ret;
 }

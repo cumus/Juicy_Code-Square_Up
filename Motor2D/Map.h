@@ -1,13 +1,13 @@
-#ifndef __j1MAP_H__
-#define __j1MAP_H__
+#ifndef __MAP_H__
+#define __MAP_H__
 
+#include <string>
+#include <list>
+#include <queue>
 #include "PugiXml/src/pugixml.hpp"
-#include "p2List.h"
-#include "p2Queue.h"
-#include "p2Point.h"
-#include "j1Module.h"
-#include "j1Collisions.h"
-
+#include "Point.h"
+#include "Collisions.h"
+#include "Module.h"
 
 #define MAX_COLLIDERS 100
 
@@ -15,33 +15,27 @@ struct Properties
 {
 	struct Property
 	{
-		p2SString name;
+		std::string name;
 		int value;
 	};
 
 	~Properties()
 	{
-		p2List_item<Property*>* item;
-		item = list.start;
-
-		while(item != NULL)
-		{
-			RELEASE(item->data);
-			item = item->next;
-		}
+		for (std::list<Property*>::iterator it = list.begin(); it != list.end(); ++it)
+			delete *it;
 
 		list.clear();
 	}
 
 	int Get(const char* name, int default_value = 0) const;
 
-	p2List<Property*>	list;
+	std::list<Property*>	list;
 };
 
 // ----------------------------------------------------
 struct MapLayer
 {
-	p2SString	name;
+	std::string	name;
 	int			width;
 	int			height;
 	uint*		data;
@@ -52,7 +46,7 @@ struct MapLayer
 
 	~MapLayer()
 	{
-		RELEASE(data);
+		DEL(data);
 	}
 
 	inline uint Get(int x, int y) const
@@ -63,7 +57,7 @@ struct MapLayer
 
 struct MapObject
 {
-	p2SString name;
+	std::string name;
 	Collider* col[MAX_COLLIDERS] = { nullptr };
 	uint id = 0u;
 };
@@ -73,7 +67,7 @@ struct TileSet
 {
 	SDL_Rect GetTileRect(int id) const;
 
-	p2SString			name;
+	std::string			name;
 	int					firstgid;
 	int					margin;
 	int					spacing;
@@ -104,20 +98,20 @@ struct MapData
 	int					tile_height;
 	SDL_Color			background_color;
 	MapTypes			type;
-	p2List<TileSet*>	tilesets;
-	p2List<MapLayer*>	layers;
-	p2List<MapObject*>	objects;
+	std::list<TileSet*>	tilesets;
+	std::list<MapLayer*>	layers;
+	std::list<MapObject*>	objects;
 };
 
 // ----------------------------------------------------
-class j1Map : public j1Module
+class Map : public Module
 {
 public:
 
-	j1Map();
+	Map();
 
 	// Destructor
-	virtual ~j1Map();
+	virtual ~Map();
 
 	// Called before render is available
 	bool Awake(pugi::xml_node& conf);
@@ -154,12 +148,12 @@ public:
 private:
 
 	pugi::xml_document	map_file;
-	p2SString			folder;
+	std::string			folder;
 	bool				map_loaded;
 
 	/// BFS
-	p2Queue<iPoint>		frontier;
-	p2List<iPoint>		visited;
+	std::queue<iPoint>		frontier;
+	std::queue<iPoint>		visited;
 };
 
-#endif // __j1MAP_H__
+#endif // __MAP_H__
