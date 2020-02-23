@@ -102,6 +102,12 @@
     <ClInclude Include="mmgr\nommgr.h">
       <Filter>Source\3rd Party\mmgr</Filter>
     </ClInclude>
+    <ClInclude Include="Optick\include\optick.config.h">
+      <Filter>Source\3rd Party\Optick</Filter>
+    </ClInclude>
+    <ClInclude Include="Optick\include\optick.h">
+      <Filter>Source\3rd Party\Optick</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Source">
@@ -130,6 +136,9 @@
     </Filter>
     <Filter Include="Source\3rd Party\mmgr">
       <UniqueIdentifier>{bde4e9d6-afcb-4cb0-8b3d-042e1d8c6f2d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\3rd Party\Optick">
+      <UniqueIdentifier>{0951b2ed-c0d8-4291-93ac-a38ff8a0bde2}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

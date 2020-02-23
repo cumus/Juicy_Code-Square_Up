@@ -1,120 +1,71 @@
-#include <stdlib.h>
+#include "Application.h"
+#include "Defs.h"
+#include "Log.h"
 
 #ifdef DEBUG
 //#pragma warning( disable : C4005 ) // Warning redefinition
-//#include "mmgr\mmgr.h"
+#include "mmgr\mmgr.h"
 #endif
-
-#include "Defs.h"
-#include "Log.h"
-#include "Application.h"
 
 #include "SDL/include/SDL.h"
 #pragma comment( lib, "SDL/libx86/SDL2.lib" )
 #pragma comment( lib, "SDL/libx86/SDL2main.lib" )
 
+#include "Optick/include/optick.h"
+#ifdef DEBUG
+#pragma comment( lib, "Optick/libx86/OptickCore_debug.lib" )
+#else
+#pragma comment( lib, "Optick/libx86/OptickCore_release.lib" )
+#endif
 
-enum MainState
-{
-	CREATE = 1,
-	AWAKE,
-	START,
-	LOOP,
-	CLEAN,
-	FAIL,
-	EXIT
-};
-
-Application* App = NULL;
+Application* App = nullptr;
 
 int main(int argc, char* args[])
 {
+	int main_return = EXIT_FAILURE;
+
 	LOG("Engine starting ... %d");
 
-	MainState state = MainState::CREATE;
-	int result = EXIT_FAILURE;
+	App = new Application(argc, args);
 
-	while(state != EXIT)
+	LOG("Initializing Application Systems");
+
+	if (App->Init())
 	{
-		switch(state)
+		LOG("Entering Application's Main Loop");
+
+		bool update_return = true;
+
+		while (update_return)
 		{
+			OPTICK_FRAME("Main Thread");
+			update_return = App->Update();
+		}
 
-			// Allocate the engine --------------------------------------------
-			case CREATE:
-			LOG("CREATION PHASE ===============================");
+		LOG("Shuting Engine Systems");
 
-			App = new Application(argc, args);
+		if (App->CleanUp())
+		{
+			main_return = EXIT_SUCCESS;
 
-			if(App != NULL)
-				state = AWAKE;
-			else
-				state = FAIL;
-
-			break;
-
-			// Awake all modules -----------------------------------------------
-			case AWAKE:
-			LOG("AWAKE PHASE ===============================");
-			if(App->Awake())
-				state = START;
-			else
-			{
-				LOG("ERROR: Awake failed");
-				state = FAIL;
-			}
-
-			break;
-
-			// Call all modules before first frame  ----------------------------
-			case START:
-			LOG("START PHASE ===============================");
-			if(App->Start())
-			{
-				state = LOOP;
-				LOG("UPDATE PHASE ===============================");
-			}
-			else
-			{
-				state = FAIL;
-				LOG("ERROR: Start failed");
-			}
-			break;
-
-			// Loop all modules until we are asked to leave ---------------------
-			case LOOP:
-			if(!App->Update())
-				state = CLEAN;
-			break;
-
-			// Cleanup allocated memory -----------------------------------------
-			case CLEAN:
-			LOG("CLEANUP PHASE ===============================");
-			if(App->CleanUp())
-			{
-				DEL(App);
-				result = EXIT_SUCCESS;
-				state = EXIT;
-			}
-			else
-				state = FAIL;
-
-			break;
-
-			// Exit with errors and shame ---------------------------------------
-			case FAIL:
-			LOG("Exiting with errors :(");
-			result = EXIT_FAILURE;
-			state = EXIT;
-			break;
+#ifdef DEBUG
+			LOG("EXIT SUCCESS: %d memory leaks!\n", (m_getMemoryStatistics().totalAllocUnitCount));
+#else
+			LOG("EXIT SUCCESS");
+#endif
+		}
+		else
+		{
+			LOG("Application CleanUp exits with ERROR");
 		}
 	}
+	else
+	{
+		LOG("Application Init exits with ERROR");
+	}
 
-#ifdef _DEBUG
-	LOG("With %d memory leaks!\n", (m_getMemoryStatistics().totalAllocUnitCount));
-#endif
 
 	LOG("... Bye! :)\n");
 
-	// Dump memory leaks
-	return result;
+	return main_return;
 }

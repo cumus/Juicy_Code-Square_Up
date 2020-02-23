@@ -41,8 +41,8 @@ void Application::AddModule(Module* module)
 	modules.push_back(module);
 }
 
-// Called before render is available
-bool Application::Awake()
+// Called before the first frame
+bool Application::Init()
 {
 	bool ret = true;
 
@@ -59,7 +59,7 @@ bool Application::Awake()
 
 			title = app_config.child("title").child_value();
 			organization = app_config.child("organization").child_value();
-			
+
 			for (std::list<Module*>::iterator it = modules.begin(); it != modules.end() && ret; ++it)
 				ret = (*it)->Awake(config.child((*it)->name));
 		}
@@ -73,22 +73,19 @@ bool Application::Awake()
 			for (std::list<Module*>::iterator it = modules.begin(); it != modules.end() && ret; ++it)
 				ret = (*it)->Awake(config.append_child((*it)->name));
 		}
+
+		// Setup module inter-dependecies
+		for (std::list<Module*>::iterator it = modules.begin(); it != modules.end() && ret; ++it)
+			ret = (*it)->Start();
+
+		// Run test content
+		map->Load("level1.tmx");
+		audio->PlayMusic("audio/music/lvl1bgm.ogg");
 	}
 	else
 	{
 		LOG("Could not load map xml file config.xml. pugi error: %s", result.description());
 	}
-
-	return ret;
-}
-
-// Called before the first frame
-bool Application::Start()
-{
-	bool ret = true;
-
-	for (std::list<Module*>::iterator it = modules.begin(); it != modules.end() && ret; ++it)
-		ret = (*it)->Start();
 
 	return ret;
 }
@@ -155,7 +152,7 @@ const char* Application::GetArgv(int index) const
 	if(index < argc)
 		return args[index];
 	else
-		return NULL;
+		return nullptr;
 }
 
 // ---------------------------------------

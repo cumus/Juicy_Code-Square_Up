@@ -24,8 +24,7 @@ public:
 	Application(int argc, char* args[]);
 	virtual ~Application();
 
-	bool Awake();
-	bool Start();
+	bool Init();
 	bool Update();
 	bool CleanUp();
 

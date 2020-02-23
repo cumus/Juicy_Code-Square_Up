@@ -42,7 +42,7 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <OutDir>..\Build</OutDir>
+    <OutDir>..\Build\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <OutDir>..\Build</OutDir>
@@ -102,6 +102,8 @@
     <ClInclude Include="Map.h" />
     <ClInclude Include="mmgr\mmgr.h" />
     <ClInclude Include="mmgr\nommgr.h" />
+    <ClInclude Include="Optick\include\optick.config.h" />
+    <ClInclude Include="Optick\include\optick.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="Audio.h" />
     <ClInclude Include="Input.h" />
