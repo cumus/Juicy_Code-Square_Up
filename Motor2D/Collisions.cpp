@@ -81,7 +81,7 @@ bool Collisions::PreUpdate()
 }
 
 
-bool Collisions::Update(float dt)
+bool Collisions::Update()
 {
 
 	// To be implemented debug capabilities for painting colliders and godmode

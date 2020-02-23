@@ -5,6 +5,10 @@
 #include "Window.h"
 #include "Input.h"
 
+//#include "SDL/include/SDL_surface.h"
+#include "SDL_image/include/SDL_image.h"
+#pragma comment( lib, "SDL_image/libx86/SDL2_image.lib" )
+
 #define VSYNC true
 
 Render::Render() : Module("renderer")
@@ -19,15 +23,27 @@ Render::~Render()
 // Called before render is available
 bool Render::Awake(pugi::xml_node& config)
 {
-	LOG("Create SDL rendering context");
 	bool ret = true;
 
-	// load flags
-	flags = SDL_RENDERER_ACCELERATED;
-	if(config.child("vsync").attribute("value").as_bool(true) == true)
+	LOG("Init Image library");
+
+	int img_flags = IMG_INIT_PNG;
+	int init = IMG_Init(img_flags);
+
+	if ((init & img_flags) != img_flags)
 	{
-		flags |= SDL_RENDERER_PRESENTVSYNC;
-		LOG("Using vsync");
+		LOG("Could not initialize Image lib. IMG_Init: %s", IMG_GetError());
+		ret = false;
+	}
+	else
+	{
+		// load flags
+		flags = SDL_RENDERER_ACCELERATED;
+		if (config.child("vsync").attribute("value").as_bool(true))
+		{
+			flags |= SDL_RENDERER_PRESENTVSYNC;
+			LOG("Using vsync");
+		}
 	}
 
 	return ret;
@@ -36,9 +52,9 @@ bool Render::Awake(pugi::xml_node& config)
 // Called before the first frame
 bool Render::Start()
 {
-	LOG("render start");
 	bool ret = true;
 
+	LOG("Create SDL rendering context");
 	renderer = SDL_CreateRenderer(App->win->window, -1, flags);
 	if (renderer)
 	{
@@ -61,7 +77,7 @@ bool Render::PreUpdate()
 	return true;
 }
 
-bool Render::Update(float dt)
+bool Render::Update()
 {
 	//camera.x = -App->player->position.x+95;
 	//camera.y = -App->player->position.y+40;
@@ -87,6 +103,7 @@ bool Render::CleanUp()
 {
 	LOG("Destroying SDL render");
 	SDL_DestroyRenderer(renderer);
+	IMG_Quit();
 	return true;
 }
 

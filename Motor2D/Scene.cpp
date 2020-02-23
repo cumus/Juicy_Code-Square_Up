@@ -41,7 +41,7 @@ bool Scene::PreUpdate()
 }
 
 // Called each loop iteration
-bool Scene::Update(float dt)
+bool Scene::Update()
 {
 	/*if (App->input->GetKey(SDL_SCANCODE_L) == KEY_DOWN)
 		App->LoadGame("save_game.xml");
@@ -51,26 +51,20 @@ bool Scene::Update(float dt)
 
 	App->map->Draw();
 
+	// Debug Pointer Info on Window Title
 	int x, y;
 	App->input->GetMousePosition(x, y);
 	iPoint map_coordinates = App->map->WorldToMap(x - App->render->camera.x, y - App->render->camera.y);
-	
-	std::string title = "Map:";
-	title += App->map->data.width;
-	title += "x";
-	title += App->map->data.height;
-	title += " Tiles : ";
-	title += App->map->data.tile_width;
-	title += "x";
-	title += App->map->data.tile_height;
-	title += " Tilesets : ";
-	title += (0 + App->map->data.tilesets.size());
-	title += " Tile : ";
-	title += map_coordinates.x;
-	title += ", ";
-	title += map_coordinates.y;
+	MapData* data = &App->map->data;
+	static char tmp_str[120];
+	sprintf_s(tmp_str, 120, "Map: %dx%d, Tiles: %dx%d, Tilesets: %d, Tile: %dx%d",
+		data->width, data->height,
+		data->tile_width, data->tile_height,
+		data->tilesets.size(),
+		map_coordinates.x, map_coordinates.y);
 
-	App->win->SetTitle(title.c_str());
+	App->win->SetTitle(tmp_str);
+
 	return true;
 }
 

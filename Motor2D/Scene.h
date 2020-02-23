@@ -10,29 +10,14 @@ class Scene : public Module
 public:
 
 	Scene();
+	~Scene();
 
-	// Destructor
-	virtual ~Scene();
-
-	// Called before render is available
-	bool Awake(pugi::xml_node& config);
-
-	// Called before the first frame
-	bool Start();
-
-	// Called before all Updates
-	bool PreUpdate();
-
-	// Called each loop iteration
-	bool Update(float dt);
-
-	// Called before all Updates
-	bool PostUpdate();
-
-	// Called before quitting
-	bool CleanUp();
-
-	void LoadLevel1();
+	bool Awake(pugi::xml_node& config) override;
+	bool Start() override;
+	bool PreUpdate() override;
+	bool Update() override;
+	bool PostUpdate() override;
+	bool CleanUp() override;
 
 private:
 	int levelNum;

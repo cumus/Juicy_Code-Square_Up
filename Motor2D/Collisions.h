@@ -49,7 +49,7 @@ public:
 	~Collisions();
 
 	bool PreUpdate() override;
-	bool Update(float dt) override;
+	bool Update() override;
 	bool CleanUp() override;
 
 	Collider* AddCollider(SDL_Rect rect, COLLIDER_TYPE type, Module* callback = nullptr);

@@ -12,25 +12,25 @@ public:
 	Render();
 
 	// Destructor
-	virtual ~Render();
+	~Render();
 
 	// Called before render is available
-	bool Awake(pugi::xml_node&);
+	bool Awake(pugi::xml_node&) override;
 
 	// Called before the first frame
-	bool Start();
+	bool Start() override;
 
 	// Called each loop iteration
-	bool PreUpdate();
-	bool Update(float dt);
-	bool PostUpdate();
+	bool PreUpdate() override;
+	bool Update() override;
+	bool PostUpdate() override;
 
 	// Called before quitting
-	bool CleanUp();
+	bool CleanUp() override;
 
 	// Load / Save
-	bool Load(pugi::xml_node&);
-	bool Save(pugi::xml_node&) const;
+	bool Load(pugi::xml_node&) override;
+	bool Save(pugi::xml_node&) const override;
 
 	// Blit
 	void SetViewPort(const SDL_Rect& rect);
