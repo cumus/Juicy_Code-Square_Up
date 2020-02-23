@@ -2,35 +2,25 @@
 #define __TEXTURES_H__
 
 #include <list>
-#include "Module.h"
 
 struct SDL_Texture;
 struct SDL_Surface;
 
-class Textures : public Module
+class Textures
 {
 public:
 
 	Textures();
+	~Textures();
 
-	// Destructor
-	virtual ~Textures();
-
-	// Called before render is available
-	bool Awake(pugi::xml_node&);
-
-	// Called before the first frame
-	bool Start();
-
-	// Called before quitting
-	bool CleanUp();
+	void CleanUp();
 
 	// Load Texture
 	SDL_Texture* const	Load(const char* path);
 	SDL_Texture* const	LoadSurface(SDL_Surface* surface);
 	bool				UnLoad(SDL_Texture* texture);
 
-	void				GetSize(const SDL_Texture* texture, unsigned int& width, unsigned int& height) const;
+	void GetSize(const SDL_Texture* texture, unsigned int& width, unsigned int& height) const;
 
 public:
 

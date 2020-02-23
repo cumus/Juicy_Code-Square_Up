@@ -5,57 +5,23 @@
 #include "Defs.h"
 #include "Log.h"
 
-#include "SDL/include/SDL_surface.h"
 #include "SDL_image/include/SDL_image.h"
-#pragma comment( lib, "SDL_image/libx86/SDL2_image.lib" )
 
-
-Textures::Textures() : Module("textures")
+Textures::Textures()
 {}
 
 Textures::~Textures()
 {}
 
-// Called before render is available
-bool Textures::Awake(pugi::xml_node& config)
-{
-	LOG("Init Image library");
-	bool ret = true;
-
-	// load support for the PNG image format
-	int flags = IMG_INIT_PNG;
-	int init = IMG_Init(flags);
-
-	if((init & flags) != flags)
-	{
-		LOG("Could not initialize Image lib. IMG_Init: %s", IMG_GetError());
-		ret = false;
-	}
-
-	return ret;
-}
-
-// Called before the first frame
-bool Textures::Start()
-{
-	LOG("start textures");
-	bool ret = true;
-	return ret;
-}
-
 // Called before quitting
-bool Textures::CleanUp()
+void Textures::CleanUp()
 {
-	LOG("Freeing textures and Image library");
+	LOG("Freeing textures");
 
 	for (std::list<SDL_Texture*>::iterator it = textures.begin(); it != textures.end(); ++it)
 		SDL_DestroyTexture(*it);
 
 	textures.clear();
-
-	IMG_Quit();
-
-	return true;
 }
 
 // Load new texture from file path

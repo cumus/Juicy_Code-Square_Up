@@ -10,15 +10,20 @@
 #include "Map.h"
 #include "FadeToBlack.h"
 #include "Collisions.h"
+#include "TimeManager.h"
+#include "Optick/include/optick.h"
 
 Application::Application(int argc, char* args[]) : argc(argc), args(args)
 {
-	frames = 0;
 	want_to_save = want_to_load = false;
 
+	// Independent Managers
+	time = new TimeManager();
+	tex = new Textures();
+
+	// Modules
 	AddModule(input = new Input());
 	AddModule(win = new Window());
-	AddModule(tex = new Textures());
 	AddModule(audio = new Audio());
 	AddModule(map = new Map());
 	AddModule(scene = new Scene());
@@ -33,6 +38,9 @@ Application::~Application()
 		DEL(*it);
 
 	modules.clear();
+
+	DEL(time);
+	DEL(tex);
 }
 
 void Application::AddModule(Module* module)
@@ -95,6 +103,8 @@ int Application::Update()
 {
 	int ret = 1;
 
+	OPTICK_CATEGORY("Update Application", Optick::Category::GameLogic);
+
 	PrepareUpdate();
 
 	if (input->GetWindowEvent(WE_QUIT))
@@ -107,12 +117,15 @@ int Application::Update()
 		static std::list<Module*>::iterator it;
 		static bool no_error = true;
 
+		OPTICK_CATEGORY("PreUpdate Application", Optick::Category::GameLogic);
 		for (it = modules.begin(); it != modules.end() && no_error; ++it)
 			no_error = (*it)->PreUpdate();
 
+		OPTICK_CATEGORY("Update Application", Optick::Category::GameLogic);
 		for (it = modules.begin(); it != modules.end() && no_error; ++it)
-			no_error = (*it)->Update(dt);
+			no_error = (*it)->Update();
 
+		OPTICK_CATEGORY("PostUpdate Application", Optick::Category::GameLogic);
 		for (it = modules.begin(); it != modules.end() && no_error; ++it)
 			no_error = (*it)->PostUpdate();
 
@@ -126,7 +139,9 @@ int Application::Update()
 }
 
 void Application::PrepareUpdate()
-{}
+{
+	time->UpdateDeltaTime();
+}
 
 void Application::FinishUpdate()
 {
@@ -135,6 +150,11 @@ void Application::FinishUpdate()
 
 	if(want_to_load == true)
 		LoadGameNow();
+
+	// Delay capped FPS
+	unsigned int extra_ms = time->ManageFrameTimers();
+	if (extra_ms > 0)
+		time->Delay(extra_ms);
 }
 
 // Called before quitting
@@ -144,6 +164,8 @@ bool Application::CleanUp()
 
 	for (std::list<Module*>::reverse_iterator it = modules.rbegin(); it != modules.rend() && ret; ++it)
 		ret = (*it)->CleanUp();
+
+	tex->CleanUp();
 
 	return ret;
 }

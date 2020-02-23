@@ -10,12 +10,15 @@
 class Window;
 class Input;
 class Render;
-class Textures;
 class Audio;
 class Scene;
 class Map;
 class FadeToBlack;
 class Collisions;
+
+// Independent Managers
+class TimeManager;
+class Textures;
 
 class Application
 {
@@ -28,10 +31,6 @@ public:
 	int Update();
 	bool CleanUp();
 
-	// Add a new module to handle
-	void AddModule(Module* module);
-
-	// Exposing some properties for reading
 	int GetArgc() const;
 	const char* GetArgv(int index) const;
 	const char* GetTitle() const;
@@ -43,10 +42,11 @@ public:
 
 private:
 
+	void AddModule(Module* module);
+
 	void PrepareUpdate();
 	void FinishUpdate();
 
-	// Load / Save
 	bool LoadGameNow();
 	bool SavegameNow() const;
 
@@ -56,17 +56,20 @@ public:
 	Window*			win;
 	Input*			input;
 	Render*			render;
-	Textures*		tex;
 	Audio*			audio;
 	Scene*			scene;
 	Map*			map;
 	FadeToBlack*	fade;
 	Collisions*		collisions;
 
+	// Independent Managers
+	TimeManager*	time;
+	Textures*		tex;
+
 private:
+
 	std::list<Module*>	modules;
-	unsigned int		frames;
-	float				dt;
+
 	int					argc;
 	char**				args;
 
@@ -75,6 +78,7 @@ private:
 
 	mutable bool		want_to_save;
 	bool				want_to_load;
+
 	std::string			load_game;
 	mutable std::string	save_game;
 };
