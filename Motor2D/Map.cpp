@@ -56,6 +56,14 @@ void Map::Draw()
 	
 }
 
+Properties::~Properties()
+{
+	for (std::list<Property*>::iterator it = list.begin(); it != list.end(); ++it)
+		DEL(*it);
+
+	list.clear();
+}
+
 int Properties::Get(const char* value, int default_value) const
 {
 	for (std::list<Property*>::const_iterator it = list.begin(); it != list.end(); ++it)
@@ -237,10 +245,10 @@ bool Map::Load(const char* file_name)
 		LOG("width: %d height: %d", data.width, data.height);
 		LOG("tile_width: %d tile_height: %d", data.tile_width, data.tile_height);
 
-		/*for (std::list<TileSet*>::iterator it = data.tilesets.begin(); it != data.tilesets.end(); ++it)
+		for (std::list<TileSet*>::iterator it = data.tilesets.begin(); it != data.tilesets.end(); ++it)
 		{
 			LOG("Tileset ----");
-			LOG("name: %s firstgid: %", (*it)->name.c_str(), (*it)->firstgid);
+			LOG("name: %s firstgid: %d", (*it)->name.c_str(), (*it)->firstgid);
 			LOG("tile width: %d tile height: %d", (*it)->tile_width, (*it)->tile_height);
 			LOG("spacing: %d margin: %d", (*it)->spacing, (*it)->margin);
 		}
@@ -250,7 +258,7 @@ bool Map::Load(const char* file_name)
 			LOG("Layer ----");
 			LOG("name: %s", (*it)->name.c_str());
 			LOG("tile width: %d tile height: %d", (*it)->width, (*it)->height);
-		}*/
+		}
 	}
 	else
 	{
@@ -393,13 +401,13 @@ bool Map::LoadLayer(pugi::xml_node& node, MapLayer* layer)
 	}
 	else
 	{
-		layer->data = new uint[layer->width*layer->height];
-		memset(layer->data, 0, layer->width*layer->height);
+		layer->data.clear();
+		layer->data.resize(layer->width * layer->height);
 
 		int i = 0;
 		for(pugi::xml_node tile = layer_data.child("tile"); tile; tile = tile.next_sibling("tile"))
 		{
-			layer->data[i++] = tile.attribute("gid").as_int(0);
+			layer->data[++i] = tile.attribute("gid").as_int(0);
 		}
 	}
 
@@ -458,4 +466,14 @@ bool Map::LoadObjects(pugi::xml_node& node, MapObject* object)
 	}
 
 	return ret;
+}
+
+MapLayer::~MapLayer()
+{
+	data.clear();
+}
+
+inline unsigned int MapLayer::Get(int x, int y) const
+{
+	return data[(y*width) + x];
 }

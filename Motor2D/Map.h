@@ -1,13 +1,15 @@
 #ifndef __MAP_H__
 #define __MAP_H__
 
+#include "Module.h"
+#include "Collisions.h"
+#include "Point.h"
+#include "PugiXml/src/pugixml.hpp"
+
 #include <string>
 #include <list>
 #include <queue>
-#include "PugiXml/src/pugixml.hpp"
-#include "Point.h"
-#include "Collisions.h"
-#include "Module.h"
+#include <vector>
 
 #define MAX_MAP_COLLIDERS 100
 
@@ -15,21 +17,15 @@ struct SDL_Texture;
 
 struct Properties
 {
+	~Properties();
+
+	int Get(const char* name, int default_value = 0) const;
+
 	struct Property
 	{
 		std::string name;
 		int value;
 	};
-
-	~Properties()
-	{
-		for (std::list<Property*>::iterator it = list.begin(); it != list.end(); ++it)
-			delete *it;
-
-		list.clear();
-	}
-
-	int Get(const char* name, int default_value = 0) const;
 
 	std::list<Property*>	list;
 };
@@ -37,24 +33,16 @@ struct Properties
 // ----------------------------------------------------
 struct MapLayer
 {
+	~MapLayer();
+
+	inline unsigned int Get(int x, int y) const;
+
 	std::string		name;
 	int				width;
 	int				height;
-	unsigned int*	data;
 	Properties		properties;
 
-	MapLayer() : data(nullptr)
-	{}
-
-	~MapLayer()
-	{
-		//TODO: DEL(data);
-	}
-
-	inline unsigned int Get(int x, int y) const
-	{
-		return data[(y*width) + x];
-	}
+	std::vector<unsigned int>	data;
 };
 
 struct MapObject
@@ -114,24 +102,22 @@ public:
 	Map();
 
 	// Destructor
-	virtual ~Map();
+	~Map();
 
 	// Called before render is available
-	bool Awake(pugi::xml_node& conf);
+	bool Awake(pugi::xml_node& conf) override;
 
 	// Called each loop iteration
 	void Draw();
 
 	// Called before quitting
-	bool CleanUp();
+	bool CleanUp() override;
 
 	// Load new map
 	bool Load(const char* path);
 
 	iPoint MapToWorld(int x, int y) const;
 	iPoint WorldToMap(int x, int y) const;
-
-	
 
 private:
 
@@ -155,8 +141,8 @@ private:
 	bool				map_loaded;
 
 	/// BFS
-	std::queue<iPoint>		frontier;
-	std::queue<iPoint>		visited;
+	std::queue<iPoint>	frontier;
+	std::queue<iPoint>	visited;
 };
 
 #endif // __MAP_H__
