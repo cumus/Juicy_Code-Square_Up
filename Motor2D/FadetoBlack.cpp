@@ -16,7 +16,10 @@ FadeToBlack::~FadeToBlack()
 bool FadeToBlack::Start()
 {
 	LOG("Starting Fade.");
-	screen = { 0, 0, (int)App->win->width, (int)App->win->height };
+
+	unsigned int w, h;
+	App->win->GetWindowSize(w, h);
+	screen = { 0, 0, (int)w, (int)h };
 
 	return true;
 }

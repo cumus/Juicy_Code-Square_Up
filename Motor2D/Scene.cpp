@@ -57,7 +57,8 @@ bool Scene::Update()
 	iPoint map_coordinates = App->map->WorldToMap(x - App->render->camera.x, y - App->render->camera.y);
 	MapData* data = &App->map->data;
 	static char tmp_str[120];
-	sprintf_s(tmp_str, 120, "Map: %dx%d, Tiles: %dx%d, Tilesets: %d, Tile: %dx%d",
+	sprintf_s(tmp_str, 120, "Mouse: %dx%d, Map: %dx%d, Tiles: %dx%d, Tilesets: %d, Tile: %dx%d",
+		x, y,
 		data->width, data->height,
 		data->tile_width, data->tile_height,
 		data->tilesets.size(),
