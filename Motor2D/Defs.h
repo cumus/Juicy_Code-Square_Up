@@ -6,20 +6,20 @@
 // Deletes a buffer
 #define DEL( x ) \
     {                        \
-    if( x != NULL )        \
+    if( x != nullptr )        \
 	    {                      \
       delete x;            \
-	  x = NULL;              \
+	  x = nullptr;              \
 	    }                      \
     }
 
 // Deletes an array of buffers
 #define DEL_ARRAY( x ) \
     {                              \
-    if( x != NULL )              \
+    if( x != nullptr )              \
 	    {                            \
       delete[] x;                \
-	  x = NULL;                    \
+	  x = nullptr;                    \
 	    }                            \
                               \
     }
@@ -29,8 +29,8 @@
 #define MAX( a, b ) ( ((a) > (b)) ? (a) : (b) )
 #define TO_BOOL( a )  ( (a != 0) ? true : false )
 
-typedef unsigned int uint;
-typedef unsigned char uchar;
+//typedef unsigned int uint;
+//typedef unsigned char uchar;
 
 template <class VALUE_TYPE> void SWAP(VALUE_TYPE& a, VALUE_TYPE& b)
 {

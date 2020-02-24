@@ -3,7 +3,6 @@
 #include "Log.h"
 
 #ifdef DEBUG
-//#pragma warning( disable : C4005 ) // Warning redefinition
 #include "mmgr\mmgr.h"
 #endif
 

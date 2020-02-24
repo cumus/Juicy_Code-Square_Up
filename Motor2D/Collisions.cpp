@@ -6,7 +6,7 @@
 
 Collisions::Collisions() : Module("collisions")
 {
-	for (uint i = 0; i < MAX_COLLIDERS; ++i)
+	for (unsigned int i = 0; i < MAX_COLLIDERS; ++i)
 		colliders[i] = nullptr;
 
 	/*matrix[COLLIDER][COLLIDER] = false;
@@ -36,7 +36,7 @@ Collisions::~Collisions()
 
 bool Collisions::PreUpdate()
 {
-	for (uint i = 0; i < MAX_COLLIDERS; ++i)
+	for (unsigned int i = 0; i < MAX_COLLIDERS; ++i)
 	{
 		if (colliders[i] != nullptr && colliders[i]->to_delete == true)
 		{
@@ -49,7 +49,7 @@ bool Collisions::PreUpdate()
 	Collider* c1;
 	Collider* c2;
 
-	for (uint i = 0; i < MAX_COLLIDERS; ++i)
+	for (unsigned int i = 0; i < MAX_COLLIDERS; ++i)
 	{
 		
 		if (colliders[i] == nullptr)
@@ -58,7 +58,7 @@ bool Collisions::PreUpdate()
 		c1 = colliders[i];
 
 		
-		for (uint k = i + 1; k < MAX_COLLIDERS; ++k)
+		for (unsigned int k = i + 1; k < MAX_COLLIDERS; ++k)
 		{
 			
 			if (colliders[k] == nullptr)
@@ -66,14 +66,14 @@ bool Collisions::PreUpdate()
 
 			c2 = colliders[k];
 
-			if (c1->CheckCollision(c2->rect) == true)
+			/*if (c1->CheckCollision(c2->rect) == true)
 			{
 				if (matrix[c1->type][c2->type] && c1->callback)
 					c1->callback->OnCollision(c1, c2);
 
 				if (matrix[c2->type][c1->type] && c2->callback)
 					c2->callback->OnCollision(c2, c1);
-			}
+			}*/
 		}
 	}
 
@@ -116,7 +116,7 @@ void Collisions::DebugDraw()
 		return;
 
 	Uint8 alpha = 80;
-	for (uint i = 0; i < MAX_COLLIDERS; ++i)
+	for (unsigned int i = 0; i < MAX_COLLIDERS; ++i)
 	{
 		if (colliders[i] == nullptr)
 			continue;
@@ -146,7 +146,7 @@ bool Collisions::CleanUp()
 {
 	LOG("Freeing all colliders");
 	
-	for (uint i = 0; i < MAX_COLLIDERS; ++i)
+	for (unsigned int i = 0; i < MAX_COLLIDERS; ++i)
 	{
 		if (colliders[i] != nullptr)
 		{
@@ -162,7 +162,7 @@ Collider* Collisions::AddCollider(SDL_Rect rect, COLLIDER_TYPE type, Module* cal
 {
 	Collider* ret = nullptr;
 
-	for (uint i = 0; i < MAX_COLLIDERS; ++i)
+	for (unsigned int i = 0; i < MAX_COLLIDERS; ++i)
 	{
 		if (colliders[i] == nullptr)
 		{
