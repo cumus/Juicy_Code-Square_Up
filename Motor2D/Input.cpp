@@ -1,26 +1,20 @@
 #include "Input.h"
-#include "SDL/include/SDL.h"
-#include "Defs.h"
-#include "Log.h"
+#include "Event.h"
 #include "Application.h"
 #include "Window.h"
-
-#define MAX_KEYS 300
+#include "Defs.h"
+#include "Log.h"
+#include "SDL/include/SDL.h"
 
 Input::Input() : Module("input")
 {
-	keyboard = new j1KeyState[MAX_KEYS];
-	memset(keyboard, KEY_IDLE, sizeof(j1KeyState) * MAX_KEYS);
-	memset(mouse_buttons, KEY_IDLE, sizeof(j1KeyState) * NUM_MOUSE_BUTTONS);
+	memset(keyboard, KEY_IDLE, sizeof(KeyState) * MAX_KEYS);
+	memset(mouse_buttons, KEY_IDLE, sizeof(KeyState) * NUM_MOUSE_BUTTONS);
 }
 
-// Destructor
 Input::~Input()
-{
-	delete[] keyboard;
-}
+{}
 
-// Called before render is available
 bool Input::Awake(pugi::xml_node& config)
 {
 	LOG("Init SDL input event system");
@@ -33,13 +27,9 @@ bool Input::Awake(pugi::xml_node& config)
 		ret = false;
 	}
 
-	for (int i = 0; i < WE_COUNT; i++)
-		windowEvents[i] = false;
-
 	return ret;
 }
 
-// Called before the first frame
 bool Input::Start()
 {
 	SDL_StopTextInput();
@@ -49,8 +39,10 @@ bool Input::Start()
 // Called each loop iteration
 bool Input::PreUpdate()
 {
-	static SDL_Event event;
-	
+	// Update SDL event queue
+	SDL_PumpEvents();
+
+	// Keyboard
 	const Uint8* keys = SDL_GetKeyboardState(0);
 
 	for(int i = 0; i < MAX_KEYS; ++i)
@@ -71,6 +63,7 @@ bool Input::PreUpdate()
 		}
 	}
 
+	// Mouse
 	for(int i = 0; i < NUM_MOUSE_BUTTONS; ++i)
 	{
 		if(mouse_buttons[i] == KEY_DOWN)
@@ -80,59 +73,88 @@ bool Input::PreUpdate()
 			mouse_buttons[i] = KEY_IDLE;
 	}
 
-	while(SDL_PollEvent(&event) != 0)
+	// Events SDL
+	static SDL_Event e;
+	while(SDL_PollEvent(&e) != 0)
 	{
-		switch(event.type)
+		switch(e.type)
 		{
 			case SDL_QUIT:
-				windowEvents[WE_QUIT] = true;
+				Event::Push(REQUEST_QUIT, App);
 			break;
 
 			case SDL_WINDOWEVENT:
-				switch(event.window.event)
+				switch(e.window.event)
 				{
 					//case SDL_WINDOWEVENT_LEAVE:
-					case SDL_WINDOWEVENT_HIDDEN:
-					case SDL_WINDOWEVENT_MINIMIZED:
-					case SDL_WINDOWEVENT_FOCUS_LOST:
-					windowEvents[WE_HIDE] = true;
-					break;
+					case SDL_WINDOWEVENT_HIDDEN: // Window has been hidden
+					case SDL_WINDOWEVENT_MINIMIZED: // Window has been minimized
+
+						Event::Push(WINDOW_HIDE, App);
+						break;
 
 					//case SDL_WINDOWEVENT_ENTER:
-					case SDL_WINDOWEVENT_SHOWN:
-					case SDL_WINDOWEVENT_FOCUS_GAINED:
-					case SDL_WINDOWEVENT_MAXIMIZED:
-					case SDL_WINDOWEVENT_RESTORED:
-					windowEvents[WE_SHOW] = true;
+					case SDL_WINDOWEVENT_SHOWN: // Window has been shown
+					case SDL_WINDOWEVENT_EXPOSED: // Window has been exposed and should be redrawn
+					case SDL_WINDOWEVENT_MAXIMIZED: // Window has been maximized
+
+						Event::Push(WINDOW_SHOW, App);
+						break;
+
+					case SDL_WINDOWEVENT_MOVED: // Window has been moved to data1, data2
+
+						Event::Push(WINDOW_MOVED, App->win, Cvar(e.window.data1), Cvar(e.window.data2));
+						break;
+
+					case SDL_WINDOWEVENT_RESIZED: // Window has been resized to data1xdata2
+					//case SDL_WINDOWEVENT_SIZE_CHANGED: // The window size has changed, either as a result of an API call or through the system or user changing the window size
+					//case SDL_WINDOWEVENT_RESTORED: // Window has been restored to normal size and position
+						Event::Push(WINDOW_SIZE_CHANGED, App->win, Cvar(e.window.data1), Cvar(e.window.data2));
+						break;
+
+					case SDL_WINDOWEVENT_ENTER: // Window has gained mouse focus
+					case SDL_WINDOWEVENT_FOCUS_GAINED: // Window has gained keyboard focus
+						Event::Push(WINDOW_FOCUS, App->win);
+						break;
+
+					case SDL_WINDOWEVENT_LEAVE: // Window has lost mouse focus
+					case SDL_WINDOWEVENT_FOCUS_LOST: // Window has lost keyboard focus
+						Event::Push(WINDOW_FOCUS_LEAVE, App->win);
+						break;
+
+					case SDL_WINDOWEVENT_CLOSE:
+						Event::Push(WINDOW_QUIT, App);
+						break;
 					break;
 				}
 			break;
 
 			case SDL_MOUSEBUTTONDOWN:
-				mouse_buttons[event.button.button - 1] = KEY_DOWN;
+				mouse_buttons[e.button.button - 1] = KEY_DOWN;
 				//LOG("Mouse button %d down", event.button.button-1);
 			break;
 
 			case SDL_MOUSEBUTTONUP:
-				mouse_buttons[event.button.button - 1] = KEY_UP;
+				mouse_buttons[e.button.button - 1] = KEY_UP;
 				//LOG("Mouse button %d up", event.button.button-1);
 			break;
 
 			case SDL_MOUSEMOTION:
-				int scale = App->win->GetScale();
-				mouse_motion_x = event.motion.xrel / scale;
-				mouse_motion_y = event.motion.yrel / scale;
-				mouse_x = event.motion.x / scale;
-				mouse_y = event.motion.y / scale;
+				mouse_motion_x = e.motion.xrel;
+				mouse_motion_y = e.motion.yrel;
+				mouse_x = e.motion.x;
+				mouse_y = e.motion.y;
 				//LOG("Mouse motion x %d y %d", mouse_motion_x, mouse_motion_y);
 			break;
 		}
 	}
 
+	// Own Events
+	Event::PumpAll();
+
 	return true;
 }
 
-// Called before quitting
 bool Input::CleanUp()
 {
 	LOG("Quitting SDL event subsystem");
@@ -140,19 +162,23 @@ bool Input::CleanUp()
 	return true;
 }
 
-// ---------
-bool Input::GetWindowEvent(j1EventWindow ev)
+/*KeyState Input::GetKey(int id) const
 {
-	return windowEvents[ev];
+	return keyboard[id];
 }
 
-void Input::GetMousePosition(int& x, int& y)
+KeyState Input::GetMouseButtonDown(int id) const
+{
+	return mouse_buttons[id - 1];
+}*/
+
+void Input::GetMousePosition(int& x, int& y) const
 {
 	x = mouse_x;
 	y = mouse_y;
 }
 
-void Input::GetMouseMotion(int& x, int& y)
+void Input::GetMouseMotion(int& x, int& y) const
 {
 	x = mouse_motion_x;
 	y = mouse_motion_y;

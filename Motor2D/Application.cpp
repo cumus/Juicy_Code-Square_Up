@@ -15,7 +15,7 @@
 
 Application::Application(int argc, char* args[]) : argc(argc), args(args)
 {
-	want_to_save = want_to_load = false;
+	want_to_save = want_to_load = want_to_quit = false;
 
 	// Independent Managers
 	time = new TimeManager();
@@ -101,41 +101,32 @@ bool Application::Init()
 // Called each loop iteration
 int Application::Update()
 {
-	int ret = 1;
-
-	OPTICK_CATEGORY("Update Application", Optick::Category::GameLogic);
+	if (want_to_quit)
+		return 0; // closing app
 
 	PrepareUpdate();
 
-	if (input->GetWindowEvent(WE_QUIT))
-	{
-		LOG("WINDOW EVENT TRIGGERED SHUTDOWN");
-		ret = 0; // closing app
-	}
-	else
-	{
-		static std::list<Module*>::iterator it;
-		static bool no_error = true;
+	static std::list<Module*>::iterator it;
+	static bool no_error = true;
 
-		OPTICK_CATEGORY("PreUpdate Application", Optick::Category::GameLogic);
-		for (it = modules.begin(); it != modules.end() && no_error; ++it)
-			no_error = (*it)->PreUpdate();
+	OPTICK_CATEGORY("PreUpdate Application", Optick::Category::GameLogic);
+	for (it = modules.begin(); it != modules.end() && no_error; ++it)
+		no_error = (*it)->PreUpdate();
 
-		OPTICK_CATEGORY("Update Application", Optick::Category::GameLogic);
-		for (it = modules.begin(); it != modules.end() && no_error; ++it)
-			no_error = (*it)->Update();
+	OPTICK_CATEGORY("Update Application", Optick::Category::GameLogic);
+	for (it = modules.begin(); it != modules.end() && no_error; ++it)
+		no_error = (*it)->Update();
 
-		OPTICK_CATEGORY("PostUpdate Application", Optick::Category::GameLogic);
-		for (it = modules.begin(); it != modules.end() && no_error; ++it)
-			no_error = (*it)->PostUpdate();
+	OPTICK_CATEGORY("PostUpdate Application", Optick::Category::GameLogic);
+	for (it = modules.begin(); it != modules.end() && no_error; ++it)
+		no_error = (*it)->PostUpdate();
 
-		if (no_error)
-			FinishUpdate();
-		else
-			ret = -1; // error
-	}
+	if (!no_error)
+		return -1; // error
 
-	return ret;
+	FinishUpdate();
+
+	return 1; // continue
 }
 
 void Application::PrepareUpdate()
@@ -145,10 +136,10 @@ void Application::PrepareUpdate()
 
 void Application::FinishUpdate()
 {
-	if(want_to_save == true)
+	if(want_to_save)
 		SavegameNow();
 
-	if(want_to_load == true)
+	if(want_to_load)
 		LoadGameNow();
 
 	// Delay capped FPS
@@ -168,6 +159,31 @@ bool Application::CleanUp()
 	tex->CleanUp();
 
 	return ret;
+}
+
+void Application::RecieveEvent(const Event & e)
+{
+	switch (e.type)
+	{
+	case REQUEST_LOAD:
+		LOG("App load event");
+		want_to_load = true;
+		break;
+	case REQUEST_SAVE:
+		LOG("App save event");
+		want_to_save = true;
+		break;
+	case REQUEST_QUIT:
+		LOG("App quit event requested");
+		want_to_quit = true;
+		break;
+	case WINDOW_QUIT:
+		LOG("App window quit event requested");
+		want_to_quit = true;
+		break;
+	default:
+		break;
+	}
 }
 
 // ---------------------------------------

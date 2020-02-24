@@ -31,7 +31,6 @@ bool Window::Awake(pugi::xml_node& config)
 
 		width = config.child("resolution").attribute("width").as_int(640);
 		height = config.child("resolution").attribute("height").as_int(480);
-		scale = config.child("resolution").attribute("scale").as_int(1);
 
 		if (fullscreen) flags |= SDL_WINDOW_FULLSCREEN;
 		if (borderless) flags |= SDL_WINDOW_BORDERLESS;
@@ -84,13 +83,8 @@ void Window::SetTitle(const char* new_title)
 	SDL_SetWindowTitle(window, new_title);
 }
 
-void Window::GetWindowSize(uint& w, uint& h) const
+void Window::GetWindowSize(unsigned int& w, unsigned int& h) const
 {
 	w = width;
 	h = height;
-}
-
-uint Window::GetScale() const
-{
-	return scale;
 }
