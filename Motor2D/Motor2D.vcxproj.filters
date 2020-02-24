@@ -46,6 +46,12 @@
     <ClCompile Include="Scene.cpp">
       <Filter>Source\Modules</Filter>
     </ClCompile>
+    <ClCompile Include="Event.cpp">
+      <Filter>Source\Independent Managers\Events</Filter>
+    </ClCompile>
+    <ClCompile Include="Cvar.cpp">
+      <Filter>Source\Independent Managers\Events</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="PugiXml\src\pugiconfig.hpp">
@@ -114,6 +120,15 @@
     <ClInclude Include="Scene.h">
       <Filter>Source\Modules</Filter>
     </ClInclude>
+    <ClInclude Include="Event.h">
+      <Filter>Source\Independent Managers\Events</Filter>
+    </ClInclude>
+    <ClInclude Include="EventListener.h">
+      <Filter>Source\Independent Managers\Events</Filter>
+    </ClInclude>
+    <ClInclude Include="Cvar.h">
+      <Filter>Source\Independent Managers\Events</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Source">
@@ -148,6 +163,9 @@
     </Filter>
     <Filter Include="Source\Independent Managers">
       <UniqueIdentifier>{705579a4-c897-4b70-8b5a-30a98cb90158}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Independent Managers\Events">
+      <UniqueIdentifier>{437881c8-60cd-4e3d-98b2-21bb1ba5336e}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

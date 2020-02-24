@@ -81,6 +81,8 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Collisions.cpp" />
+    <ClCompile Include="Cvar.cpp" />
+    <ClCompile Include="Event.cpp" />
     <ClCompile Include="FadetoBlack.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Application.cpp" />
@@ -99,6 +101,9 @@
   <ItemGroup>
     <ClInclude Include="Animation.h" />
     <ClInclude Include="Collisions.h" />
+    <ClInclude Include="Cvar.h" />
+    <ClInclude Include="Event.h" />
+    <ClInclude Include="EventListener.h" />
     <ClInclude Include="FadetoBlack.h" />
     <ClInclude Include="Map.h" />
     <ClInclude Include="mmgr\mmgr.h" />
