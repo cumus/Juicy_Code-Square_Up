@@ -17,11 +17,10 @@ bool FadeToBlack::Start()
 {
 	LOG("Starting Fade.");
 
-	unsigned int w, h;
-	App->win->GetWindowSize(w, h);
-	screen = { 0, 0, (int)w, (int)h };
+	screen = { 0, 0, 0, 0 };
+	App->win->GetWindowSize(screen.w, screen.h);
 
-	return true;
+	return (screen.w != 0 && screen.h != 0);
 }
 
 bool FadeToBlack::Update(float dt)

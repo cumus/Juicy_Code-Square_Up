@@ -8,7 +8,7 @@
 
 class EventListener;
 
-typedef enum EventType : unsigned short int
+enum EventType
 {
 	// APP
 	PLAY,
@@ -33,9 +33,9 @@ typedef enum EventType : unsigned short int
 	// Renderer
 	SET_VSYNC,
 
-	//Editor
-	UPDATE_SCENE_WINDOWS,
-	EDITOR_SCENE_RAYCAST,
+	// Gameobjects
+	TRANSFORM_MODIFIED,
+	PARENT_TRANSFORM_MODIFIED,
 
 	MAX_EVENT_TYPES
 };

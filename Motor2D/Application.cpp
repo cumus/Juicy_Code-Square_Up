@@ -86,9 +86,7 @@ bool Application::Init()
 		for (std::list<Module*>::iterator it = modules.begin(); it != modules.end() && ret; ++it)
 			ret = (*it)->Start();
 
-		// Run test content
-		map->Load("level1.tmx");
-		audio->PlayMusic("audio/music/lvl1bgm.ogg");
+		ret = scene->LoadTestScene();
 	}
 	else
 	{
