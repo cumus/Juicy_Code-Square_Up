@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="isometric" renderorder="right-down" width="83" height="63" tilewidth="32" tileheight="32" nextobjectid="226">
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="83" height="63" tilewidth="32" tileheight="32" nextobjectid="226">
  <tileset firstgid="1" name="warped_caves_spritesheet32x32" tilewidth="32" tileheight="32" spacing="1" margin="1" tilecount="180" columns="18">
   <image source="warped_caves_spritesheet32x32.png" width="595" height="331"/>
   <terraintypes>
