@@ -33,6 +33,8 @@ Cvar::Cvar(float float_v) : type(FLOAT) { value.float_v = float_v; }
 
 Cvar::Cvar(const char * char_p_v) : type(CHAR_P) { value.char_p_v = char_p_v; }
 
+Cvar::Cvar(vec vec_v) : type(VEC) { value.vec_v = vec_v; }
+
 bool Cvar::SetValue(bool bool_v, bool force_type)
 {
 	bool ret = false;
@@ -137,6 +139,19 @@ bool Cvar::SetValue(const char * char_p_v, bool force_type)
 	return ret;
 }
 
+bool Cvar::SetValue(vec vec_v, bool force_type)
+{
+	bool ret = false;
+
+	if (force_type)
+		type = VEC;
+
+	if (ret = (type == VEC))
+		value.vec_v = vec_v;
+
+	return ret;
+}
+
 Cvar::VAR_TYPE Cvar::GetType() const { return type; }
 
 bool Cvar::AsBool() const { return value.bool_v; }
@@ -154,3 +169,5 @@ double Cvar::AsDouble() const { return value.double_v; }
 float Cvar::AsFloat() const { return value.float_v; }
 
 const char * Cvar::AsCharP() const { return value.char_p_v; }
+
+vec Cvar::AsVec() const { return value.vec_v; }

@@ -1,6 +1,8 @@
 #ifndef __CVAR__
 #define __CVAR__
 
+#include "Vector3.h"
+
 class Cvar // Global Value Container
 {
 public:
@@ -14,6 +16,7 @@ public:
 	Cvar(double double_v);
 	Cvar(float float_v);
 	Cvar(const char* char_p_v);
+	Cvar(vec vec_v);
 
 public:
 	enum VAR_TYPE : unsigned int
@@ -26,7 +29,8 @@ public:
 		UINT64,
 		DOUBLE,
 		FLOAT,
-		CHAR_P
+		CHAR_P,
+		VEC
 	};
 
 protected:
@@ -42,6 +46,7 @@ protected:
 		double double_v;
 		float float_v;
 		const char* char_p_v;
+		vec vec_v;
 		VAR_data() { }
 		~VAR_data() { }
 	} value;
@@ -55,6 +60,7 @@ public:
 	bool SetValue(double double_v, bool force_type = false);
 	bool SetValue(float float_v, bool force_type = false);
 	bool SetValue(const char* char_p_v, bool force_type = false);
+	bool SetValue(vec vec_v, bool force_type = false);
 
 	VAR_TYPE				GetType() const;
 	bool					AsBool() const;
@@ -65,6 +71,7 @@ public:
 	double					AsDouble() const;
 	float					AsFloat() const;
 	const char*				AsCharP() const;
+	vec						AsVec() const;
 };
 
 #endif // !__CVAR__
