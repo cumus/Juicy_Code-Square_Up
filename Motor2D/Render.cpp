@@ -57,6 +57,11 @@ bool Render::Start()
 	{
 		SDL_SetRenderDrawBlendMode(App->render->renderer, SDL_BLENDMODE_BLEND);
 		SDL_RenderGetViewport(renderer, &viewport);
+
+		// setup camera
+		camera.x = camera.y = 0;
+		camera.w = viewport.w;
+		camera.h = viewport.h;
 	}
 	else
 	{
@@ -76,12 +81,9 @@ bool Render::PreUpdate()
 
 bool Render::Update()
 {
-	//camera.x = -App->player->position.x+95;
-	//camera.y = -App->player->position.y+40;
-
 	int moveSpeed = 5;
-	if (App->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT) camera.x += moveSpeed;
-	if (App->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT) camera.x -= moveSpeed;
+	if (App->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT) camera.x -= moveSpeed;
+	if (App->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT) camera.x += moveSpeed;
 	if (App->input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT) camera.y += moveSpeed;
 	if (App->input->GetKey(SDL_SCANCODE_S) == KEY_REPEAT) camera.y -= moveSpeed;
 
@@ -143,7 +145,7 @@ void Render::ResetViewPort()
 bool Render::Blit(SDL_Texture* texture, int x, int y, const SDL_Rect* section, float speed, SDL_RendererFlip flip, double angle, int pivot_x, int pivot_y) const
 {
 	bool ret = true;
-	unsigned int scale = 2;
+	unsigned int scale = 1;
 
 	SDL_Rect rect;
 	rect.x = (int)(camera.x * speed) + x * scale;

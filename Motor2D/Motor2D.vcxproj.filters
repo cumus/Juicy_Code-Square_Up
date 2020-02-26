@@ -16,9 +16,6 @@
     <ClCompile Include="Render.cpp">
       <Filter>Source\Modules</Filter>
     </ClCompile>
-    <ClCompile Include="Map.cpp">
-      <Filter>Source\Modules</Filter>
-    </ClCompile>
     <ClCompile Include="Input.cpp">
       <Filter>Source\Modules</Filter>
     </ClCompile>
@@ -52,6 +49,18 @@
     <ClCompile Include="Cvar.cpp">
       <Filter>Source\Independent Managers\Events</Filter>
     </ClCompile>
+    <ClCompile Include="Gameobject.cpp">
+      <Filter>Source\Gameobjects</Filter>
+    </ClCompile>
+    <ClCompile Include="Transform.cpp">
+      <Filter>Source\Gameobjects\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="Map.cpp">
+      <Filter>Source\Modules\Map</Filter>
+    </ClCompile>
+    <ClCompile Include="MapContainer.cpp">
+      <Filter>Source\Modules\Map</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="PugiXml\src\pugiconfig.hpp">
@@ -61,7 +70,7 @@
       <Filter>Source\3rd Party\PuguiXML</Filter>
     </ClInclude>
     <ClInclude Include="Animation.h">
-      <Filter>Source\Components</Filter>
+      <Filter>Source\Gameobjects\Components</Filter>
     </ClInclude>
     <ClInclude Include="Defs.h">
       <Filter>Source\Tools</Filter>
@@ -79,9 +88,6 @@
       <Filter>Source\Modules</Filter>
     </ClInclude>
     <ClInclude Include="Render.h">
-      <Filter>Source\Modules</Filter>
-    </ClInclude>
-    <ClInclude Include="Map.h">
       <Filter>Source\Modules</Filter>
     </ClInclude>
     <ClInclude Include="Input.h">
@@ -129,6 +135,24 @@
     <ClInclude Include="Cvar.h">
       <Filter>Source\Independent Managers\Events</Filter>
     </ClInclude>
+    <ClInclude Include="Gameobject.h">
+      <Filter>Source\Gameobjects</Filter>
+    </ClInclude>
+    <ClInclude Include="Transform.h">
+      <Filter>Source\Gameobjects\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Component.h">
+      <Filter>Source\Gameobjects\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Vector3.h">
+      <Filter>Source\Tools</Filter>
+    </ClInclude>
+    <ClInclude Include="Map.h">
+      <Filter>Source\Modules\Map</Filter>
+    </ClInclude>
+    <ClInclude Include="MapContainer.h">
+      <Filter>Source\Modules\Map</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Source">
@@ -142,9 +166,6 @@
     </Filter>
     <Filter Include="Source\Data Files">
       <UniqueIdentifier>{a11ad158-a8e9-4fd8-ac0d-299b81fed1e7}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\Components">
-      <UniqueIdentifier>{8e55dc4e-2e56-4a09-a9a8-879521849401}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source\3rd Party">
       <UniqueIdentifier>{ccbdbbe8-2dad-4bdb-b407-16b23f046e21}</UniqueIdentifier>
@@ -166,6 +187,15 @@
     </Filter>
     <Filter Include="Source\Independent Managers\Events">
       <UniqueIdentifier>{437881c8-60cd-4e3d-98b2-21bb1ba5336e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Gameobjects">
+      <UniqueIdentifier>{79219d60-c63a-46ef-8cda-9ae6221ae060}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Gameobjects\Components">
+      <UniqueIdentifier>{8e55dc4e-2e56-4a09-a9a8-879521849401}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Modules\Map">
+      <UniqueIdentifier>{09bfed4b-6c59-4dbf-b077-8a850cc733c0}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

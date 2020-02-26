@@ -17,7 +17,7 @@ public:
 	bool CleanUp() override;
 
 	void SetTitle(const char* new_title);
-	void GetWindowSize(unsigned int& width, unsigned int& height) const;
+	void GetWindowSize(int& width, int& height) const;
 
 public:
 
