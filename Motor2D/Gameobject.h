@@ -3,6 +3,7 @@
 
 #include "Component.h"
 #include "Transform.h"
+#include <string>
 
 class Gameobject : public EventListener
 {

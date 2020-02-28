@@ -2,7 +2,7 @@
 #define __TEXTURE_MANAGER_H__
 
 #include <vector>
-
+#include <string>
 struct SDL_Texture;
 
 struct Sprite
