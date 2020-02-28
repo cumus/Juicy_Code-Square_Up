@@ -7,80 +7,117 @@
 #include <string>
 #include <vector>
 
-struct SDL_Texture;
+struct TileData
+{
+	int x, y;
+	unsigned int tile_id;
+	int tex_id;
+	SDL_Rect section;
+};
 
 struct TileSet
 {
-	SDL_Rect& GetTileRect(int id) const;
+	TileSet();
+	TileSet(const TileSet& copy);
+	~TileSet();
 
-	int				firstgid;
-	std::string		name;
-	int				tile_width;
-	int				tile_height;
-	int				spacing;
-	int				margin;
-	int				tilecount;
-	int				columns;
+	SDL_Rect GetTileRect(int id) const;
 
-	int				offset_x;
-	int				offset_y;
+	std::string	name;
+	int	firstgid = 0;
+	int	tile_width = 0;
+	int	tile_height = 0;
+	int	spacing = 0;
+	int	margin = 0;
+	int	tilecount = 0;
+	int	columns = 0;
 
-	int				tex_width;
-	int				tex_height;
-	int				num_tiles_width;
-	int				num_tiles_height;
-	SDL_Texture*	texture;
+	int	offset_x = 0;
+	int	offset_y = 0;
+
+	//int	tex_width = 0;
+	//int	tex_height = 0;
+	int	num_tiles_width = 0;
+	int	num_tiles_height = 0;
+	int texture_id = -1;
 };
 
 class MapLayer
 {
 public:
 
+	MapLayer();
+	MapLayer(const MapLayer& copy);
 	~MapLayer();
 
-	inline unsigned int GetID(int x, int y) const;
-	int GetProperty(const char* name, int default_value = 0) const;
+	bool ParseProperties(pugi::xml_node layer_properties);
+	bool ParseData(pugi::xml_node layer_data);
+
+	unsigned int GetID(int x, int y) const;
+	float GetProperty(const char* name, float default_value = 0) const;
 
 public:
 
-	std::string	name = "undefined_layer";
-	int			width = 0;
-	int			height = 0;
+	std::string	name;
+	int	width, height;
+	bool drawable;
 
+private:
+
+	std::vector<std::pair<std::string, float>> properties;
 	std::vector<unsigned int> data;
-	std::vector<std::pair<const char*, int>> properties;
+};
+
+struct MapObject
+{
+	MapObject();
+	MapObject(const MapObject& copy);
+	~MapObject();
+
+	unsigned int id = 0;
+	float x = 0;
+	float y = 0;
+	float width = 0;
+	float height = 0;
 };
 
 struct MapObjectGroup
 {
+	MapObjectGroup();
+	MapObjectGroup(const MapObjectGroup& copy);
+	~MapObjectGroup();
+
 	std::string name;
 	//SDL_Color color;
-
-	struct MapObject
-	{
-		int id;
-		float x;
-		float y;
-		float width;
-		float height;
-	};
 	std::vector<MapObject> objects;
+};
+
+enum MapOrientation
+{
+	MAPTYPE_UNKNOWN = 0,
+	MAPTYPE_ORTHOGONAL,
+	MAPTYPE_ISOMETRIC,
+	MAPTYPE_STAGGERED
 };
 
 class MapContainer
 {
 public:
 
-	void Draw() const;
-	void CleanUp();
 	bool Load(const char* directory, const char* file);
 	bool IsValid() const;
-	void LogMapDetails() const;
+
+	void Draw() const;
+	void CleanUp();
 
 	bool GetTilesetFromTileId(int id, TileSet& set) const;
-	
-	std::pair<float,float> MapContainer::MapToWorld(float x, float y) const;
-	std::pair<float,float> MapContainer::WorldToMap(float x, float y) const;
+	bool GetRectAndTexId(int tile_id, SDL_Rect& section, int& text_id) const;
+
+	std::pair<int, int> MapContainer::I_MapToWorld(int x, int y) const;
+	std::pair<int, int> MapContainer::I_WorldToMap(int x, int y) const;
+
+	std::pair<float, float> MapContainer::F_MapToWorld(float x, float y) const;
+	std::pair<float, float> MapContainer::F_WorldToMap(float x, float y) const;
 
 private:
 
@@ -106,13 +143,7 @@ public:
 	// enum as string render order
 	// int next_object_id
 
-	enum MapOrientation
-	{
-		MAPTYPE_UNKNOWN = 0,
-		MAPTYPE_ORTHOGONAL,
-		MAPTYPE_ISOMETRIC,
-		MAPTYPE_STAGGERED
-	} type = MAPTYPE_UNKNOWN;
+	MapOrientation type = MAPTYPE_UNKNOWN;
 
 	std::vector<TileSet>		tilesets;
 	std::vector<MapLayer>		layers;

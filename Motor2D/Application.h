@@ -19,7 +19,7 @@ class Render;
 
 // Independent Managers
 class TimeManager;
-class Textures;
+class TextureManager;
 
 class Application : public EventListener
 {
@@ -67,7 +67,7 @@ public:
 
 	// Independent Managers
 	TimeManager*	time;
-	Textures*		tex;
+	TextureManager*		tex;
 
 private:
 

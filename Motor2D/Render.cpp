@@ -1,9 +1,10 @@
 #include "Render.h"
-#include "Defs.h"
-#include "Log.h"
 #include "Application.h"
 #include "Window.h"
 #include "Input.h"
+#include "TextureManager.h"
+#include "Defs.h"
+#include "Log.h"
 
 #include "SDL_image/include/SDL_image.h"
 #pragma comment( lib, "SDL_image/libx86/SDL2_image.lib" )
@@ -59,9 +60,9 @@ bool Render::Start()
 		SDL_RenderGetViewport(renderer, &viewport);
 
 		// setup camera
-		camera.x = camera.y = 0;
-		camera.w = viewport.w;
-		camera.h = viewport.h;
+		cam_x = cam_y = 0;
+		cam_w = float(viewport.w);
+		cam_h = float(viewport.h);
 	}
 	else
 	{
@@ -81,12 +82,6 @@ bool Render::PreUpdate()
 
 bool Render::Update()
 {
-	int moveSpeed = 5;
-	if (App->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT) camera.x -= moveSpeed;
-	if (App->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT) camera.x += moveSpeed;
-	if (App->input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT) camera.y += moveSpeed;
-	if (App->input->GetKey(SDL_SCANCODE_S) == KEY_REPEAT) camera.y -= moveSpeed;
-
 	return true;
 }
 
@@ -109,8 +104,8 @@ bool Render::CleanUp()
 // Load Game State
 bool Render::Load(pugi::xml_node& data)
 {
-	camera.x = data.child("camera").attribute("x").as_int();
-	camera.y = data.child("camera").attribute("y").as_int();
+	cam_x = data.child("camera").attribute("x").as_float();
+	cam_y = data.child("camera").attribute("y").as_float();
 
 	return true;
 }
@@ -120,8 +115,8 @@ bool Render::Save(pugi::xml_node& data) const
 {
 	pugi::xml_node cam = data.append_child("camera");
 
-	cam.append_attribute("x") = camera.x;
-	cam.append_attribute("y") = camera.y;
+	cam.append_attribute("x") = cam_x;
+	cam.append_attribute("y") = cam_y;
 
 	return true;
 }
@@ -142,41 +137,55 @@ void Render::ResetViewPort()
 }
 
 // Blit to screen
-bool Render::Blit(SDL_Texture* texture, int x, int y, const SDL_Rect* section, float speed, SDL_RendererFlip flip, double angle, int pivot_x, int pivot_y) const
+bool Render::Blit(int texture_id, int x, int y, const SDL_Rect* section, SDL_RendererFlip flip, double angle, int pivot_x, int pivot_y) const
 {
 	bool ret = true;
-	unsigned int scale = 1;
 
-	SDL_Rect rect;
-	rect.x = (int)(camera.x * speed) + x * scale;
-	rect.y = (int)(camera.y * speed) + y * scale;
+	SDL_Texture* texture = App->tex->GetTexture(texture_id);
 
-	if(section)
+	if (texture != nullptr)
 	{
-		rect.w = section->w;
-		rect.h = section->h;
+		unsigned int scale = 1;
+
+		SDL_Rect rect;
+		rect.x = x * scale;
+		rect.y = y * scale;
+
+		if (section)
+		{
+			rect.w = section->w;
+			rect.h = section->h;
+		}
+		else
+		{
+			Sprite sprite;
+			App->tex->GetSprite(texture_id, sprite);
+			rect.w = sprite.width;
+			rect.h = sprite.height;
+		}
+
+		rect.w *= scale;
+		rect.h *= scale;
+
+		SDL_Point* p = nullptr;
+		SDL_Point pivot;
+
+		if (pivot_x != INT_MAX && pivot_y != INT_MAX)
+		{
+			pivot.x = pivot_x;
+			pivot.y = pivot_y;
+			p = &pivot;
+		}
+
+		if (SDL_RenderCopyEx(renderer, texture, section, &rect, angle, p, flip) != 0)
+		{
+			LOG("Cannot blit to screen. SDL_RenderCopy error: %s", SDL_GetError());
+			ret = false;
+		}
 	}
 	else
 	{
-		SDL_QueryTexture(texture, 0, 0, &rect.w, &rect.h);
-	}
-
-	rect.w *= scale;
-	rect.h *= scale;
-
-	SDL_Point* p = nullptr;
-	SDL_Point pivot;
-
-	if(pivot_x != INT_MAX && pivot_y != INT_MAX)
-	{
-		pivot.x = pivot_x;
-		pivot.y = pivot_y;
-		p = &pivot;
-	}
-
-	if(SDL_RenderCopyEx(renderer, texture, section, &rect, angle, p, flip) != 0)
-	{
-		LOG("Cannot blit to screen. SDL_RenderCopy error: %s", SDL_GetError());
+		LOG("Cannot blit to screen. Invalid id %d");
 		ret = false;
 	}
 
@@ -192,13 +201,13 @@ bool Render::DrawQuad(const SDL_Rect& rect, Uint8 r, Uint8 g, Uint8 b, Uint8 a, 
 	SDL_SetRenderDrawColor(renderer, r, g, b, a);
 
 	SDL_Rect rec(rect);
-	if(use_camera)
+	/*if(use_camera)
 	{
 		rec.x = (int)(camera.x + rect.x);// *scale);
 		rec.y = (int)(camera.y + rect.y);// * scale);
 		//rec.w *= scale;
 		//rec.h *= scale;
-	}
+	}*/
 
 	int result = (filled) ? SDL_RenderFillRect(renderer, &rec) : SDL_RenderDrawRect(renderer, &rec);
 
@@ -224,10 +233,10 @@ bool Render::DrawLine(int x1, int y1, int x2, int y2, Uint8 r, Uint8 g, Uint8 b,
 	if (use_camera)
 		result = SDL_RenderDrawLine(
 			renderer,
-			camera.x + x1, // * scale,
-			camera.y + y1, // * scale,
-			camera.x + x2, // * scale,
-			camera.y + y2); // * scale);
+			int(cam_x) + x1, // * scale,
+			int(cam_y) + y1, // * scale,
+			int(cam_x) + x2, // * scale,
+			int(cam_y) + y2); // * scale);
 	else
 		result = SDL_RenderDrawLine(
 			renderer,

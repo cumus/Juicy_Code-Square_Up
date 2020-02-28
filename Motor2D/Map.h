@@ -3,6 +3,7 @@
 
 #include "Module.h"
 #include "MapContainer.h"
+
 #include <queue>
 
 class Map : public Module
@@ -18,11 +19,15 @@ public:
 	bool LoadFromFile(const char* file_name);
 
 	void Draw() const;
+	void SwapMapType();
 
 	const MapContainer* GetMap() const;
 
-	std::pair<int,int> MapToWorld(int x, int y) const;
-	std::pair<int,int> WorldToMap(int x, int y) const;
+	std::pair<int, int> I_MapToWorld(int x, int y) const;
+	std::pair<int, int> I_WorldToMap(int x, int y) const;
+
+	std::pair<float, float> F_MapToWorld(float x, float y) const;
+	std::pair<float, float> F_WorldToMap(float x, float y) const;
 
 private:
 

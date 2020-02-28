@@ -33,8 +33,6 @@ bool Map::CleanUp()
 bool Map::LoadFromFile(const char* file_name)
 {
 	map.Load(maps_folder.c_str(), file_name);
-	map.LogMapDetails();
-
 	return map.IsValid();
 }
 
@@ -48,15 +46,28 @@ const MapContainer* Map::GetMap() const
 	return &map;
 }
 
-std::pair<int, int> Map::MapToWorld(int x, int y) const
+void Map::SwapMapType()
 {
-	std::pair<float, float> coord = map.MapToWorld(x, y);
-	return { coord.first, coord.second };
+	map.type = (map.type == MAPTYPE_ISOMETRIC) ? MAPTYPE_ORTHOGONAL : MAPTYPE_ISOMETRIC;
 }
 
-std::pair<int, int> Map::WorldToMap(int x, int y) const
+std::pair<int, int> Map::I_MapToWorld(int x, int y) const
 {
-	std::pair<float, float> coord = map.WorldToMap(x, y);
-	return { coord.first, coord.second };
+	return map.I_MapToWorld(x, y);
+}
+
+std::pair<int, int> Map::I_WorldToMap(int x, int y) const
+{
+	return map.I_WorldToMap(x, y);
+}
+
+std::pair<float, float> Map::F_MapToWorld(float x, float y) const
+{
+	return std::pair<float, float>();
+}
+
+std::pair<float, float> Map::F_WorldToMap(float x, float y) const
+{
+	return std::pair<float, float>();
 }
 

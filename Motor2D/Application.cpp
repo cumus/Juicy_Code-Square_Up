@@ -4,7 +4,7 @@
 #include "Window.h"
 #include "Input.h"
 #include "Render.h"
-#include "Textures.h"
+#include "TextureManager.h"
 #include "Audio.h"
 #include "Scene.h"
 #include "Map.h"
@@ -19,7 +19,7 @@ Application::Application(int argc, char* args[]) : argc(argc), args(args)
 
 	// Independent Managers
 	time = new TimeManager();
-	tex = new Textures();
+	tex = new TextureManager();
 
 	// Modules
 	AddModule(input = new Input());
@@ -27,8 +27,8 @@ Application::Application(int argc, char* args[]) : argc(argc), args(args)
 	AddModule(audio = new Audio());
 	AddModule(map = new Map());
 	AddModule(scene = new Scene());
-	AddModule(collisions = new Collisions());
-	AddModule(fade = new FadeToBlack());
+	//AddModule(collisions = new Collisions());
+	//AddModule(fade = new FadeToBlack());
 	AddModule(render = new Render()); // render last to swap buffer
 }
 
@@ -244,7 +244,7 @@ bool Application::LoadGameNow()
 
 	if(result)
 	{
-		LOG("Loading new Game State from %s...", load_game);
+		LOG("Loading Game State from %s...", load_game);
 
 		root = data.child("game_state");
 

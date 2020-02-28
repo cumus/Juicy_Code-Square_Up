@@ -25,9 +25,6 @@
     <ClCompile Include="Audio.cpp">
       <Filter>Source\Modules</Filter>
     </ClCompile>
-    <ClCompile Include="mmgr\mmgr.cpp">
-      <Filter>Source\3rd Party\mmgr</Filter>
-    </ClCompile>
     <ClCompile Include="Main.cpp">
       <Filter>Source\Main</Filter>
     </ClCompile>
@@ -35,9 +32,6 @@
       <Filter>Source\Main</Filter>
     </ClCompile>
     <ClCompile Include="TimeManager.cpp">
-      <Filter>Source\Independent Managers</Filter>
-    </ClCompile>
-    <ClCompile Include="Textures.cpp">
       <Filter>Source\Independent Managers</Filter>
     </ClCompile>
     <ClCompile Include="Scene.cpp">
@@ -60,6 +54,12 @@
     </ClCompile>
     <ClCompile Include="MapContainer.cpp">
       <Filter>Source\Modules\Map</Filter>
+    </ClCompile>
+    <ClCompile Include="TextureManager.cpp">
+      <Filter>Source\Independent Managers</Filter>
+    </ClCompile>
+    <ClCompile Include="mmgr\mmgr.cpp">
+      <Filter>Source\3rd Party\mmgr</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -99,12 +99,6 @@
     <ClInclude Include="Audio.h">
       <Filter>Source\Modules</Filter>
     </ClInclude>
-    <ClInclude Include="mmgr\mmgr.h">
-      <Filter>Source\3rd Party\mmgr</Filter>
-    </ClInclude>
-    <ClInclude Include="mmgr\nommgr.h">
-      <Filter>Source\3rd Party\mmgr</Filter>
-    </ClInclude>
     <ClInclude Include="Optick\include\optick.config.h">
       <Filter>Source\3rd Party\Optick</Filter>
     </ClInclude>
@@ -118,9 +112,6 @@
       <Filter>Source\Main</Filter>
     </ClInclude>
     <ClInclude Include="TimeManager.h">
-      <Filter>Source\Independent Managers</Filter>
-    </ClInclude>
-    <ClInclude Include="Textures.h">
       <Filter>Source\Independent Managers</Filter>
     </ClInclude>
     <ClInclude Include="Scene.h">
@@ -152,6 +143,15 @@
     </ClInclude>
     <ClInclude Include="MapContainer.h">
       <Filter>Source\Modules\Map</Filter>
+    </ClInclude>
+    <ClInclude Include="TextureManager.h">
+      <Filter>Source\Independent Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="mmgr\mmgr.h">
+      <Filter>Source\3rd Party\mmgr</Filter>
+    </ClInclude>
+    <ClInclude Include="mmgr\nommgr.h">
+      <Filter>Source\3rd Party\mmgr</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

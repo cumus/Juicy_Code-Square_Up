@@ -17,6 +17,8 @@ Gameobject::~Gameobject()
 	for (std::vector<Gameobject*>::iterator child = childs.begin(); child != childs.end(); ++child)
 		DEL(*child);
 
+	transform = nullptr;
+
 	for (std::vector<Component*>::iterator component = components.begin(); component != components.end(); ++component)
 		DEL(*component);
 }

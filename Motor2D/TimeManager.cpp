@@ -56,7 +56,7 @@ void TimeManager::SetMaxFPS(float max_fps)
 	if (capped_fps == 0.f)
 		capped_ms = 0u;
 	else
-		capped_ms = 1000.f / capped_fps;
+		capped_ms = unsigned int(1000.f / capped_fps);
 }
 
 float TimeManager::GetMaxFPS() const { return capped_fps; }

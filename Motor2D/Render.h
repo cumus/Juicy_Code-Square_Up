@@ -2,40 +2,34 @@
 #define __RENDER_H__
 
 #include "SDL/include/SDL.h"
-#include "Point.h"
 #include "Module.h"
+
+struct Sprite;
 
 class Render : public Module
 {
 public:
 
 	Render();
-
-	// Destructor
 	~Render();
 
-	// Called before render is available
 	bool Awake(pugi::xml_node&) override;
-
-	// Called before the first frame
 	bool Start() override;
-
-	// Called each loop iteration
 	bool PreUpdate() override;
 	bool Update() override;
 	bool PostUpdate() override;
-
-	// Called before quitting
 	bool CleanUp() override;
 
 	// Load / Save
 	bool Load(pugi::xml_node&) override;
 	bool Save(pugi::xml_node&) const override;
 
-	// Blit
+	// Viewport
 	void SetViewPort(const SDL_Rect& rect);
 	void ResetViewPort();
-	bool Blit(SDL_Texture* texture, int x, int y, const SDL_Rect* section = nullptr, float speed = 1.0f, SDL_RendererFlip flip=SDL_RendererFlip::SDL_FLIP_NONE, double angle = 0, int pivot_x = INT_MAX, int pivot_y = INT_MAX) const;
+
+	// Blit
+	bool Blit(int texture_id, int x, int y, const SDL_Rect* section = nullptr, SDL_RendererFlip flip=SDL_RendererFlip::SDL_FLIP_NONE, double angle = 0, int pivot_x = INT_MAX, int pivot_y = INT_MAX) const;
 	bool DrawQuad(const SDL_Rect& rect, Uint8 r, Uint8 g, Uint8 b, Uint8 a = 255, bool filled = true, bool use_camera = true) const;
 	bool DrawLine(int x1, int y1, int x2, int y2, Uint8 r, Uint8 g, Uint8 b, Uint8 a = 255, bool use_camera = true) const;
 	bool DrawCircle(int x1, int y1, int redius, Uint8 r, Uint8 g, Uint8 b, Uint8 a = 255, bool use_camera = true) const;
@@ -48,7 +42,7 @@ public:
 	Uint32			flags = 0;
 	SDL_Renderer*	renderer = nullptr;
 
-	SDL_Rect		camera;
+	float cam_x, cam_y, cam_w, cam_h;
 	SDL_Rect		viewport;
 	SDL_Color		background;
 };
