@@ -1,18 +1,10 @@
-// ----------------------------------------------------
-// Module.h
-// Interface for all engine modules
-// ----------------------------------------------------
-
 #ifndef __MODULE_H__
 #define __MODULE_H__
 
+#include "EventListener.h"
 #include "PugiXml\src\pugixml.hpp"
 
-struct Collider;
-
-class App;
-
-class Module
+class Module : public EventListener
 {
 public:
 
@@ -69,8 +61,6 @@ public:
 	{
 		return true;
 	}
-
-	virtual void OnCollision(Collider*, Collider*) {}
 
 public:
 

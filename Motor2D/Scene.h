@@ -2,6 +2,7 @@
 #define __SCENE_H__
 
 #include "Module.h"
+#include "Gameobject.h"
 
 struct SDL_Texture;
 
@@ -19,12 +20,16 @@ public:
 	bool PostUpdate() override;
 	bool CleanUp() override;
 
-private:
-	int levelNum;
-	int count;
+	bool LoadTestScene();
 
-	float cameraSpeedx = 0;
-	float cameraSpeedy = 0;
+	Gameobject* AddGameobject(const char* name, Gameobject* parent = nullptr);
+
+private:
+
+	Gameobject root;
+
+	Gameobject* go1;
+	Gameobject* go2;
 };
 
-#endif // __j1SCENE_H__
+#endif // __SCENE_H__

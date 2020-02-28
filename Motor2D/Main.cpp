@@ -1,9 +1,7 @@
 #include "Application.h"
-#include "Defs.h"
 #include "Log.h"
 
 #ifdef DEBUG
-//#pragma warning( disable : C4005 ) // Warning redefinition
 #include "mmgr\mmgr.h"
 #endif
 
@@ -48,7 +46,7 @@ int main(int argc, char* args[])
 
 			if (App->CleanUp())
 			{
-				DEL(App);
+				delete App;
 				main_return = EXIT_SUCCESS;
 
 #ifdef DEBUG

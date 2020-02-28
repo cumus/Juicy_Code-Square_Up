@@ -81,26 +81,37 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Collisions.cpp" />
+    <ClCompile Include="Cvar.cpp" />
+    <ClCompile Include="Event.cpp" />
     <ClCompile Include="FadetoBlack.cpp" />
+    <ClCompile Include="Gameobject.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Application.cpp" />
     <ClCompile Include="Audio.cpp" />
     <ClCompile Include="Input.cpp" />
     <ClCompile Include="Map.cpp" />
+    <ClCompile Include="MapContainer.cpp" />
     <ClCompile Include="mmgr\mmgr.cpp" />
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="Log.cpp" />
     <ClCompile Include="Render.cpp" />
-    <ClCompile Include="Textures.cpp" />
+    <ClCompile Include="TextureManager.cpp" />
     <ClCompile Include="TimeManager.cpp" />
+    <ClCompile Include="Transform.cpp" />
     <ClCompile Include="Window.cpp" />
     <ClCompile Include="PugiXml\src\pugixml.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Animation.h" />
     <ClInclude Include="Collisions.h" />
+    <ClInclude Include="Component.h" />
+    <ClInclude Include="Cvar.h" />
+    <ClInclude Include="Event.h" />
+    <ClInclude Include="EventListener.h" />
     <ClInclude Include="FadetoBlack.h" />
+    <ClInclude Include="Gameobject.h" />
     <ClInclude Include="Map.h" />
+    <ClInclude Include="MapContainer.h" />
     <ClInclude Include="mmgr\mmgr.h" />
     <ClInclude Include="mmgr\nommgr.h" />
     <ClInclude Include="Optick\include\optick.config.h" />
@@ -114,8 +125,10 @@
     <ClInclude Include="Module.h" />
     <ClInclude Include="Point.h" />
     <ClInclude Include="Render.h" />
-    <ClInclude Include="Textures.h" />
+    <ClInclude Include="TextureManager.h" />
     <ClInclude Include="TimeManager.h" />
+    <ClInclude Include="Transform.h" />
+    <ClInclude Include="Vector3.h" />
     <ClInclude Include="Window.h" />
     <ClInclude Include="PugiXml\src\pugiconfig.hpp" />
     <ClInclude Include="PugiXml\src\pugixml.hpp" />

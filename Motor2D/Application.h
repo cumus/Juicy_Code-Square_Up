@@ -1,26 +1,27 @@
 #ifndef __APP_H__
 #define __APP_H__
 
+#include "EventListener.h"
+#include "Module.h"
+#include "PugiXml\src\pugixml.hpp"
 #include <list>
 #include <string>
-#include "PugiXml\src\pugixml.hpp"
-#include "Module.h"
 
 // Modules
-class Window;
 class Input;
-class Render;
+class Window;
 class Audio;
-class Scene;
 class Map;
-class FadeToBlack;
+class Scene;
 class Collisions;
+class FadeToBlack;
+class Render;
 
 // Independent Managers
 class TimeManager;
-class Textures;
+class TextureManager;
 
-class Application
+class Application : public EventListener
 {
 public:
 
@@ -30,6 +31,8 @@ public:
 	bool Init();
 	int Update();
 	bool CleanUp();
+
+	void RecieveEvent(const Event& e) override;
 
 	int GetArgc() const;
 	const char* GetArgv(int index) const;
@@ -53,18 +56,18 @@ private:
 public:
 
 	// Modules
-	Window*			win;
 	Input*			input;
-	Render*			render;
+	Window*			win;
 	Audio*			audio;
-	Scene*			scene;
 	Map*			map;
-	FadeToBlack*	fade;
+	Scene*			scene;
 	Collisions*		collisions;
+	FadeToBlack*	fade;
+	Render*			render;
 
 	// Independent Managers
 	TimeManager*	time;
-	Textures*		tex;
+	TextureManager*		tex;
 
 private:
 
@@ -78,6 +81,7 @@ private:
 
 	mutable bool		want_to_save;
 	bool				want_to_load;
+	bool				want_to_quit;
 
 	std::string			load_game;
 	mutable std::string	save_game;
