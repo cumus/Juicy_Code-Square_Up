@@ -24,6 +24,10 @@ public:
 
 	Gameobject* AddGameobject(const char* name, Gameobject* parent = nullptr);
 
+public:
+
+	int id_mouse_tex;
+
 private:
 
 	Gameobject root;

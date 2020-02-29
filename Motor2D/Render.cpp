@@ -136,8 +136,7 @@ void Render::ResetViewPort()
 	SDL_RenderSetViewport(renderer, &viewport);
 }
 
-// Blit to screen
-bool Render::Blit(int texture_id, int x, int y, const SDL_Rect* section, SDL_RendererFlip flip, double angle, int pivot_x, int pivot_y) const
+bool Render::Blit(int texture_id, int x, int y, float scale_x, float scale_y, const SDL_Rect* section) const
 {
 	bool ret = true;
 
@@ -145,11 +144,56 @@ bool Render::Blit(int texture_id, int x, int y, const SDL_Rect* section, SDL_Ren
 
 	if (texture != nullptr)
 	{
-		unsigned int scale = 1;
 
 		SDL_Rect rect;
-		rect.x = x * scale;
-		rect.y = y * scale;
+		rect.x = x;
+		rect.y = y;
+
+		if (section)
+		{
+			rect.w = section->w;
+			rect.h = section->h;
+		}
+		else
+		{
+			static Sprite sprite;
+			App->tex->GetSprite(texture_id, sprite);
+			rect.w = sprite.width;
+			rect.h = sprite.height;
+		}
+
+		rect.w = int(float(rect.w) * scale_x);
+		rect.h = int(float(rect.h) * scale_y);
+
+
+		if (SDL_RenderCopyEx(renderer, texture, section, &rect, 0,nullptr, SDL_RendererFlip::SDL_FLIP_NONE) != 0)
+		{
+			LOG("Cannot blit to screen. SDL_RenderCopy error: %s", SDL_GetError());
+			ret = false;
+		}
+	}
+	else
+	{
+		LOG("Cannot blit to screen. Invalid id %d");
+		ret = false;
+	}
+
+	return ret;
+}
+
+// Blit to screen
+bool Render::Blit(int texture_id, int x, int y, const SDL_Rect* section, int flip, double angle, int pivot_x, int pivot_y) const
+{
+	bool ret = true;
+
+	SDL_Texture* texture = App->tex->GetTexture(texture_id);
+
+	if (texture != nullptr)
+	{
+
+		SDL_Rect rect;
+		rect.x = x;
+		rect.y = y;
 
 		if (section)
 		{
@@ -164,9 +208,6 @@ bool Render::Blit(int texture_id, int x, int y, const SDL_Rect* section, SDL_Ren
 			rect.h = sprite.height;
 		}
 
-		rect.w *= scale;
-		rect.h *= scale;
-
 		SDL_Point* p = nullptr;
 		SDL_Point pivot;
 
@@ -177,7 +218,7 @@ bool Render::Blit(int texture_id, int x, int y, const SDL_Rect* section, SDL_Ren
 			p = &pivot;
 		}
 
-		if (SDL_RenderCopyEx(renderer, texture, section, &rect, angle, p, flip) != 0)
+		if (SDL_RenderCopyEx(renderer, texture, section, &rect, angle, p, SDL_RendererFlip(flip)) != 0)
 		{
 			LOG("Cannot blit to screen. SDL_RenderCopy error: %s", SDL_GetError());
 			ret = false;

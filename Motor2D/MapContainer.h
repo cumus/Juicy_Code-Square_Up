@@ -7,39 +7,42 @@
 #include <string>
 #include <vector>
 
-struct TileData
+class TileSet
 {
-	int x, y;
-	unsigned int tile_id;
-	int tex_id;
-	SDL_Rect section;
-};
+public:
 
-struct TileSet
-{
 	TileSet();
 	TileSet(const TileSet& copy);
 	~TileSet();
 
+	//bool ParseTerrainTypes(pugi::xml_node tileset_terraintypes);
+	//bool ParseData(pugi::xml_node tileset_tiles);
+
 	SDL_Rect GetTileRect(int id) const;
+
+public:
 
 	std::string	name;
 	int	firstgid = 0;
 	int	tile_width = 0;
 	int	tile_height = 0;
+
+	// Sections
 	int	spacing = 0;
 	int	margin = 0;
 	int	tilecount = 0;
-	int	columns = 0;
+	//int	columns = 0;
 
 	int	offset_x = 0;
 	int	offset_y = 0;
 
-	//int	tex_width = 0;
-	//int	tex_height = 0;
+	// Texture
+	int texture_id = -1;
 	int	num_tiles_width = 0;
 	int	num_tiles_height = 0;
-	int texture_id = -1;
+
+	//std::vector<std::pair<std::string, int>> terrain_types;
+	//std::vector<std::pair<int, SDL_Rect>> data;
 };
 
 class MapLayer

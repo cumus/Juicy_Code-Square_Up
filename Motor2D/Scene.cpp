@@ -7,6 +7,7 @@
 #include "Map.h"
 #include "MapContainer.h"
 #include "TimeManager.h"
+#include "TextureManager.h"
 #include "Defs.h"
 #include "Log.h"
 
@@ -115,12 +116,15 @@ bool Scene::LoadTestScene()
 	go1 = AddGameobject("sample name", &root);
 	go2 = AddGameobject("son", go1);
 
-	App->audio->PlayMusic("audio/music/lvl1bgm.ogg");
+	//App->audio->PlayMusic("audio/music/lvl1bgm.ogg");
 
 	// Remove fps cap
 	App->time->SetMaxFPS(0);
 
-	return App->map->LoadFromFile("level1.tmx");
+	// Load mouse debug texture for identifying tiles
+	id_mouse_tex = App->tex->Load("textures/meta.png");
+
+	return id_mouse_tex != -1;
 }
 
 Gameobject * Scene::AddGameobject(const char * name, Gameobject * parent)

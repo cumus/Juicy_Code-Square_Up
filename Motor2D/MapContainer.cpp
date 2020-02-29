@@ -2,6 +2,7 @@
 #include "Application.h"
 #include "Render.h"
 #include "Input.h"
+#include "Scene.h"
 #include "TextureManager.h"
 #include "Map.h"
 #include "Defs.h"
@@ -59,123 +60,116 @@ void MapContainer::Draw() const
 
 	// TODO: Frustum Culling
 	std::pair<float, float> cam = { App->render->cam_x, App->render->cam_y };
-	std::pair<int, int> min = I_WorldToMap(int(cam.first), int(cam.second));
-	std::pair<int, int> max = I_WorldToMap(int(cam.first + App->render->cam_w), int(cam.second + App->render->cam_h));
 
-	/*if (size.first + pos.first > width - size.first)
-			size.first = width - size.first;
-		else
-			size.first += pos.first;
-
-		if (size.second + pos.second > height - size.second)
-			size.second = height - size.second;
-		else
-			size.second += pos.second;*
-
-		if (min.first < 1) min.first = 1;
-		if (min.second < 1) min.second = 1;
-
-		/*float zoom = 2;
-		std::pair<int, int> midTile = WorldToMap((cam.x + cam.w) / 2, (cam.y + cam.h) / 2);
-		max.first = midTile.first + int((float(cam.w) / float(tile_width)) / zoom);
-		min.first = midTile.first - int((float(cam.w) / float(tile_width)) / zoom);
-		max.second = midTile.second + int((float(cam.h) / float(tile_height)) / zoom);
-		min.second = midTile.second - int((float(cam.h) / float(tile_height)) / zoom);*/
-
-#ifdef DEBUG
 	int i, j;
 	App->input->GetMousePosition(i, j);
 	i += int(cam.first);
 	j += int(cam.second);
-
 	std::pair<int, int> mouse = I_WorldToMap(i, j);
 
-	// Draw Debug Quads at tile render locations
-	for (int y = min.second; y <= max.second; ++y)
+
+	if (type == MAPTYPE_ORTHOGONAL)
 	{
-		for (int x = min.first; x <= max.first; ++x)
-		{
-			std::pair<int, int> pos = I_MapToWorld(x, y);
-			pos.first -= int(cam.first);
-			pos.second -= int(cam.second);
-
-			if (x == mouse.first && y == mouse.second) // green mouse
-				App->render->DrawQuad({ pos.first, pos.second, tile_width, tile_height}, 0, 100, 0);
-			else if (y == min.second || y == max.second || x == min.first || x == max.first) // blue border
-				App->render->DrawQuad({ pos.first + 3, pos.second + 3, tile_width - 6, tile_height - 6 }, 0, 100,  250);
-			else // white default
-				App->render->DrawQuad({ pos.first + 1, pos.second + 1, tile_width - 2, tile_height - 2 }, 250, 250, 250, 60);
-		}
-	}
-
-	std::queue<TileData> tiledata_mouse;
-
-#endif // DEBUG
-
-	for (std::vector<MapLayer>::const_iterator it = layers.begin(); it != layers.end(); ++it)
-	{
-		if (it->drawable)
-		{
-			for (int y = min.second; y <= max.second; ++y)
-			{
-				for (int x = min.first; x <= max.first; ++x)
-				{
-					unsigned int tile_id = it->GetID(x, y);
-					int tex_id;
-					SDL_Rect section;
-					if (GetRectAndTexId(tile_id, section, tex_id))
-					{
-						std::pair<int, int> render_pos = I_MapToWorld(x, y);
-						App->render->Blit(tex_id, render_pos.first - int(cam.first), render_pos.second - int(cam.second), &section);
-						// , SDL_RendererFlip::SDL_FLIP_NONE, type == MAPTYPE_ISOMETRIC ? 90 : 0);
+		std::pair<int, int> min = I_WorldToMap(int(cam.first), int(cam.second));
+		std::pair<int, int> max = I_WorldToMap(int(cam.first + App->render->cam_w), int(cam.second + App->render->cam_h));
 
 #ifdef DEBUG
-						if (x == mouse.first && y == mouse.second)
-						{
-							TileData tile_data;
-							tile_data.x = x;
-							tile_data.y = y;
-							tile_data.tile_id = tile_id;
-							tile_data.tex_id = tex_id;
-							tile_data.section = section;
-							tiledata_mouse.push(tile_data);
-						}
+
+		// Draw Debug Quads at tile render locations
+		for (int y = min.second; y <= max.second; ++y)
+		{
+			for (int x = min.first; x <= max.first; ++x)
+			{
+				std::pair<int, int> pos = I_MapToWorld(x, y);
+				pos.first -= int(cam.first);
+				pos.second -= int(cam.second);
+
+				if (y == min.second || y == max.second || x == min.first || x == max.first) // blue border
+					App->render->DrawQuad({ pos.first + 3, pos.second + 3, tile_width - 6, tile_height - 6 }, 0, 100, 250);
+				else // white default
+					App->render->DrawQuad({ pos.first + 1, pos.second + 1, tile_width - 2, tile_height - 2 }, 250, 250, 250, 60);
+			}
+		}
+
 #endif // DEBUG
+		for (std::vector<MapLayer>::const_iterator it = layers.begin(); it != layers.end(); ++it)
+		{
+			if (it->drawable)
+			{
+				for (int y = min.second; y <= max.second; ++y)
+				{
+					for (int x = min.first; x <= max.first; ++x)
+					{
+						unsigned int tile_id = it->GetID(x, y);
+						int tex_id;
+						SDL_Rect section;
+						if (GetRectAndTexId(tile_id, section, tex_id))
+						{
+							std::pair<int, int> render_pos = I_MapToWorld(x, y);
+
+							if (x == mouse.first && y == mouse.second)
+								LOG("MOUSE AT: %d x %d, tile id %d, tex id %d, { %d, %d, %d, %d }",
+									x, y, tile_id, tex_id, section.x, section.y, section.w, section.h);
+
+							App->render->Blit(tex_id, render_pos.first - int(cam.first), render_pos.second - int(cam.second), &section);
+						}
 					}
 				}
 			}
 		}
-	}
 
-#ifdef DEBUG
-	if (tiledata_mouse.empty())
-	{
-		LOG("TILES AT MOUSE: EMPTY ");
+		// Draw mouse green	quad
+		std::pair<int, int> mouse_tile_pos = I_MapToWorld(mouse.first, mouse.second);
+		App->render->DrawQuad({ mouse_tile_pos.first - int(cam.first), mouse_tile_pos.second - int(cam.second), tile_width, tile_height }, 0, 100, 0, 180);
+
 	}
-	else
+	else if (type == MAPTYPE_ISOMETRIC)
 	{
-		LOG("TILES AT MOUSE: %d", tiledata_mouse.size());
-		for (int i = 1; !tiledata_mouse.empty(); ++i)
+		std::pair<int, int> up_right = I_WorldToMap(int(cam.first + App->render->cam_w), int(cam.second));
+		std::pair<int, int> down_left = I_WorldToMap(int(cam.first), int(cam.second + App->render->cam_h));
+
+		std::pair<int, int> up_left = I_WorldToMap(int(cam.first), int(cam.second));
+		std::pair<int, int> down_right = I_WorldToMap(int(cam.first + App->render->cam_w), int(cam.second + App->render->cam_h));
+
+		for (std::vector<MapLayer>::const_iterator it = layers.begin(); it != layers.end(); ++it)
 		{
-			TileData t_data = tiledata_mouse.front();
+			if (it->drawable)
+			{
+				for (int y = up_right.second - 1; y <= down_left.second; ++y)
+				{
+					for (int x = up_left.first - 1; x <= down_right.first + 1; ++x)
+					{
+						unsigned int tile_id = it->GetID(x, y);
+						int tex_id;
+						SDL_Rect section;
+						if (GetRectAndTexId(tile_id, section, tex_id))
+						{
+							std::pair<int, int> render_pos = I_MapToWorld(x, y);
 
-			Sprite sprite;
-			App->tex->GetSprite(t_data.tex_id, sprite);
+							if (x == mouse.first && y == mouse.second)
+								LOG("MOUSE AT: %d x %d, tile id %d, tex id %d, { %d, %d, %d, %d }",
+									x, y, tile_id, tex_id, section.x, section.y, section.w, section.h);
 
-			LOG("%d: Tile id %d, Tex id %d - Rect { %d, %d, %d, %d } /{ %d, %d} , Source %s",
-				i,
-				t_data.tile_id,
-				sprite.id,
-				t_data.section.x, t_data.section.y, t_data.section.w, t_data.section.h,
-				sprite.width, sprite.height,
-				sprite.source);
-
-			tiledata_mouse.pop();
+							App->render->Blit(tex_id, render_pos.first - int(cam.first), render_pos.second - int(cam.second), &section);
+						}
+						else
+						{
+							std::pair<int, int> render_pos = I_MapToWorld(x, y);
+							App->render->DrawQuad({ render_pos.first - int(cam.first), render_pos.second - int(cam.second),
+								tilesets.front().tile_width, tilesets.front().tile_height }, 250, 250, 250, 10);
+						}
+					}
+				}
+			}
 		}
+
+		// draw green tile
+		std::pair<int, int> mouse_tile_pos = I_MapToWorld(mouse.first, mouse.second);
+		SDL_Rect rect = { 0, 0, 64, 64 };
+		App->render->Blit(App->scene->id_mouse_tex, mouse_tile_pos.first - int(cam.first), mouse_tile_pos.second - int(cam.second), 1.f, 1.f, &rect);
+		App->render->DrawQuad({ mouse_tile_pos.first - int(cam.first), mouse_tile_pos.second - int(cam.second), tilesets.front().tile_width, tilesets.front().tile_height }, 0, 100, 0, 180);
+
 	}
-
-#endif // DEBUG
-
 }
 
 void MapContainer::CleanUp()
@@ -207,17 +201,24 @@ bool MapContainer::GetTilesetFromTileId(int id, TileSet& set) const
 
 bool MapContainer::GetRectAndTexId(int tile_id, SDL_Rect & section, int& text_id) const
 {
-	TileSet tileset;
-	bool ret = GetTilesetFromTileId(tile_id, tileset);
+	bool ret = false;
 
-	if (ret)
+	if (tile_id >= tilesets.front().firstgid)
 	{
-		int relative_id = tile_id - tileset.firstgid;
-		section.w = tileset.tile_width;
-		section.h = tileset.tile_height;
-		section.x = tileset.margin + ((tileset.tile_width + tileset.spacing) * (relative_id % tileset.num_tiles_width));
-		section.y = tileset.margin + ((tileset.tile_height + tileset.spacing) * (relative_id / tileset.num_tiles_width));
-		text_id = tileset.texture_id;
+		for (std::vector<TileSet>::const_iterator it = tilesets.begin(); it != tilesets.end(); ++it)
+		{
+			if (tile_id <= it->firstgid + it->tilecount || it->tilecount < 0)
+			{
+				int relative_id = tile_id - it->firstgid;
+				section.w = it->tile_width;
+				section.h = it->tile_height;
+				section.x = it->margin + ((it->tile_width + it->spacing) * (relative_id % it->num_tiles_width));
+				section.y = it->margin + ((it->tile_height + it->spacing) * (relative_id / it->num_tiles_width));
+				text_id = it->texture_id;
+				ret = true;
+				break;
+			}
+		}
 	}
 
 	return ret;
@@ -288,31 +289,6 @@ void MapContainer::ParseHeader(pugi::xml_node & node)
 	tile_width = node.attribute("tilewidth").as_int();
 	tile_height = node.attribute("tileheight").as_int();
 
-	/*background_color.r = 0;
-	background_color.g = 0;
-	background_color.b = 0;
-	background_color.a = 0;
-	std::string bg_color = node.attribute("backgroundcolor").as_string();
-	if (bg_color.length() > 0)
-	{
-		std::string red = "0", green = "0", blue = "0";
-		// TODO: parse background color string
-		bg_color.SubString(1, 2, red);
-		bg_color.SubString(3, 4, green);
-		bg_color.SubString(5, 6, blue);
-
-		int v = 0;
-
-		sscanf_s(red.c_str(), "%x", &v);
-		if (v >= 0 && v <= 255) background_color.r = v;
-
-		sscanf_s(green.c_str(), "%x", &v);
-		if (v >= 0 && v <= 255) background_color.g = v;
-
-		sscanf_s(blue.c_str(), "%x", &v);
-		if (v >= 0 && v <= 255) background_color.b = v;
-	}*/
-
 	std::string orientation = node.attribute("orientation").as_string();
 
 	if (orientation == "orthogonal") type = MAPTYPE_ORTHOGONAL;
@@ -334,10 +310,11 @@ bool MapContainer::ParseTilesets(pugi::xml_node & node)
 		tileset.name = tileset_node.attribute("name").as_string();
 		tileset.tile_width = tileset_node.attribute("tilewidth").as_int();
 		tileset.tile_height = tileset_node.attribute("tileheight").as_int();
+
 		tileset.spacing = tileset_node.attribute("spacing").as_int();
 		tileset.margin = tileset_node.attribute("margin").as_int();
-		tileset.tilecount = tileset_node.attribute("tilecount").as_int();
-		tileset.columns = tileset_node.attribute("columns").as_int();
+		tileset.tilecount = tileset_node.attribute("tilecount").as_int(-1);
+		//tileset.columns = tileset_node.attribute("columns").as_int();
 
 		pugi::xml_node offset_node = tileset_node.child("tileoffset");
 		tileset.offset_x = offset_node ? offset_node.attribute("x").as_int() : 0;
@@ -354,6 +331,7 @@ bool MapContainer::ParseTilesets(pugi::xml_node & node)
 			Sprite sprite;
 			if (App->tex->GetSprite(tileset.texture_id, sprite))
 			{
+				// not needed as we query texture size on loading
 				//tileset.tex_width = image_node.attribute("width").as_int();
 				//tileset.tex_height = image_node.attribute("height").as_int();
 
@@ -374,6 +352,11 @@ bool MapContainer::ParseTilesets(pugi::xml_node & node)
 			LOG("Error parsing tileset xml file: Cannot find 'image' tag.");
 			ret = false;
 		}
+
+		if (ret)
+		{
+
+		}
 	}
 
 	return ret;
@@ -386,14 +369,14 @@ bool MapContainer::ParseLayers(pugi::xml_node & node)
 	// Load layer info
 	for (pugi::xml_node layer_node = node.child("layer"); layer_node && ret; layer_node = layer_node.next_sibling("layer"))
 	{
-		MapLayer layer;
+		static MapLayer layer;
 		layer.name = layer_node.attribute("name").as_string();
 		layer.width = layer_node.attribute("width").as_int();
 		layer.height = layer_node.attribute("height").as_int();
 
 		// Load Layer Properties
 		if (!layer.ParseProperties(layer_node.child("properties")))
-			LOG("Error parsing map xml file: Cannot find 'layer/properties' tag.");
+			LOG("WARNING parsing map xml file: Cannot find 'layer/properties' tag.");
 
 		// Load Layer Data
 		if (layer.ParseData(layer_node.child("data")))
@@ -450,14 +433,14 @@ TileSet::TileSet(const TileSet & copy) :
 	spacing(copy.spacing),
 	margin(copy.margin),
 	tilecount(copy.tilecount),
-	columns(copy.columns),
+	//columns(copy.columns),
 	offset_x(copy.offset_x),
 	offset_y(copy.offset_y),
-	//tex_width(copy.tex_width),
-	//tex_height(copy.tex_height),
 	num_tiles_width(copy.num_tiles_width),
 	num_tiles_height(copy.num_tiles_height),
 	texture_id(copy.texture_id)
+	//terrain_types(copy.terrain_types),
+	//data(copy.data)
 {}
 
 TileSet::~TileSet()
@@ -500,8 +483,7 @@ bool MapLayer::ParseProperties(pugi::xml_node layer_properties)
 
 	if (layer_properties)
 	{
-		//if (it->GetProperty("Nodraw") == 0)
-		for (pugi::xml_node property = layer_properties.child("property"); property; property = layer_properties.next_sibling("property"))
+		for (pugi::xml_node property = layer_properties.child("property"); property; property = property.next_sibling("property"))
 		{
 			std::pair<std::string, float> pair = { property.attribute("name").as_string(), property.attribute("value").as_float() };
 
@@ -524,13 +506,13 @@ bool MapLayer::ParseData(pugi::xml_node layer_data)
 	if (layer_data)
 	{
 		data.clear();
-		data.resize(width * height);
 
-		int i = 0;
 		for (pugi::xml_node tile = layer_data.child("tile"); tile; tile = tile.next_sibling("tile"))
-			data[++i] = tile.attribute("gid").as_uint();
+			data.push_back(tile.attribute("gid").as_uint());
+
+		data.shrink_to_fit();
 		
-		ret = (i - data.size() == 0);
+		ret = (data.size() == data.capacity());
 	}
 
 	return ret;
@@ -582,4 +564,3 @@ MapObjectGroup::~MapObjectGroup()
 {
 	objects.clear();
 }
-
