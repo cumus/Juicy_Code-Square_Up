@@ -138,6 +138,7 @@
     <Xml Include="..\Game\save_game.xml" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\Game\maps\iso.tmx" />
     <None Include="..\Game\maps\level1.tmx" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -7,9 +7,6 @@
     <ClCompile Include="Log.cpp">
       <Filter>Source\Tools</Filter>
     </ClCompile>
-    <ClCompile Include="FadetoBlack.cpp">
-      <Filter>Source</Filter>
-    </ClCompile>
     <ClCompile Include="Window.cpp">
       <Filter>Source\Modules</Filter>
     </ClCompile>
@@ -17,9 +14,6 @@
       <Filter>Source\Modules</Filter>
     </ClCompile>
     <ClCompile Include="Input.cpp">
-      <Filter>Source\Modules</Filter>
-    </ClCompile>
-    <ClCompile Include="Collisions.cpp">
       <Filter>Source\Modules</Filter>
     </ClCompile>
     <ClCompile Include="Audio.cpp">
@@ -61,6 +55,12 @@
     <ClCompile Include="mmgr\mmgr.cpp">
       <Filter>Source\3rd Party\mmgr</Filter>
     </ClCompile>
+    <ClCompile Include="Collisions.cpp">
+      <Filter>Source\Modules\Other</Filter>
+    </ClCompile>
+    <ClCompile Include="FadetoBlack.cpp">
+      <Filter>Source\Modules\Other</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="PugiXml\src\pugiconfig.hpp">
@@ -81,9 +81,6 @@
     <ClInclude Include="Point.h">
       <Filter>Source\Tools</Filter>
     </ClInclude>
-    <ClInclude Include="FadetoBlack.h">
-      <Filter>Source</Filter>
-    </ClInclude>
     <ClInclude Include="Window.h">
       <Filter>Source\Modules</Filter>
     </ClInclude>
@@ -91,9 +88,6 @@
       <Filter>Source\Modules</Filter>
     </ClInclude>
     <ClInclude Include="Input.h">
-      <Filter>Source\Modules</Filter>
-    </ClInclude>
-    <ClInclude Include="Collisions.h">
       <Filter>Source\Modules</Filter>
     </ClInclude>
     <ClInclude Include="Audio.h">
@@ -153,6 +147,12 @@
     <ClInclude Include="mmgr\nommgr.h">
       <Filter>Source\3rd Party\mmgr</Filter>
     </ClInclude>
+    <ClInclude Include="Collisions.h">
+      <Filter>Source\Modules\Other</Filter>
+    </ClInclude>
+    <ClInclude Include="FadetoBlack.h">
+      <Filter>Source\Modules\Other</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Source">
@@ -197,6 +197,9 @@
     <Filter Include="Source\Modules\Map">
       <UniqueIdentifier>{09bfed4b-6c59-4dbf-b077-8a850cc733c0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\Modules\Other">
+      <UniqueIdentifier>{323347ab-fdf8-4ead-8ba9-ab634e6c3ba5}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Xml Include="..\Game\config.xml">
@@ -208,6 +211,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="..\Game\maps\level1.tmx">
+      <Filter>Source\Data Files</Filter>
+    </None>
+    <None Include="..\Game\maps\iso.tmx">
       <Filter>Source\Data Files</Filter>
     </None>
   </ItemGroup>
