@@ -23,32 +23,45 @@ void TextureManager::CleanUp()
 int TextureManager::Load(const char* path)
 {
 	int ret = -1;
-	SDL_Surface* surface = IMG_Load(path);
 
-	if(surface)
+	for (std::vector<Sprite>::iterator it = sprites.begin(); it != sprites.end(); ++it)
 	{
-		SDL_Texture* texture = SDL_CreateTextureFromSurface(App->render->renderer, surface);
-
-		if (texture)
+		if (it->source == path)
 		{
-			Sprite sprite;
-			SDL_QueryTexture(texture, 0, 0, &sprite.width, &sprite.height);
-			sprite.source = path;
-			sprite.id = textures.size();
+			ret = it->id;
+			LOG("Texture already loaded: %s", it->source);
+		}
+	}
 
-			ret = sprite.id;
-			sprites.push_back(sprite);
-			textures.push_back(texture);
+	if (ret < 0)
+	{
+		SDL_Surface* surface = IMG_Load(path);
 
-			SDL_FreeSurface(surface);
+		if (surface)
+		{
+			SDL_Texture* texture = SDL_CreateTextureFromSurface(App->render->renderer, surface);
 
-			LOG("     Loaded surface with path: %s", path);
+			if (texture)
+			{
+				Sprite sprite;
+				SDL_QueryTexture(texture, 0, 0, &sprite.width, &sprite.height);
+				sprite.source = path;
+				sprite.id = textures.size();
+
+				ret = sprite.id;
+				sprites.push_back(sprite);
+				textures.push_back(texture);
+
+				SDL_FreeSurface(surface);
+
+				LOG("     Loaded surface with path: %s", path);
+			}
+			else
+				LOG("Unable to create texture from surface! SDL Error: %s\n", SDL_GetError());
 		}
 		else
-			LOG("Unable to create texture from surface! SDL Error: %s\n", SDL_GetError());
+			LOG("Could not load surface with path: %s. IMG_Load: %s", path, IMG_GetError());
 	}
-	else
-		LOG("Could not load surface with path: %s. IMG_Load: %s", path, IMG_GetError());
 
 	return ret;
 }
