@@ -1,6 +1,12 @@
 #include "Map.h"
+#include "Application.h"
+#include "Input.h"
 #include "Defs.h"
 #include "Log.h"
+
+#include "SDL/include/SDL_scancode.h"
+
+
 #include <math.h>
 
 Map::Map() : Module("map")
@@ -18,6 +24,22 @@ bool Map::Awake(pugi::xml_node& config)
 	return true;
 }
 
+bool Map::Update()
+{
+	bool ret = true;
+
+	if (App->input->GetKey(SDL_SCANCODE_1) == KEY_DOWN)
+	{
+		ret = LoadFromFile("iso.tmx");
+	}
+	else if (App->input->GetKey(SDL_SCANCODE_2) == KEY_DOWN)
+	{
+		ret = LoadFromFile("level1.tmx");
+	}
+
+	return ret;
+}
+
 bool Map::CleanUp()
 {
 	LOG("Unloading map");
@@ -32,7 +54,11 @@ bool Map::CleanUp()
 
 bool Map::LoadFromFile(const char* file_name)
 {
+	if (map.loaded)
+		map.CleanUp();
+
 	map.Load(maps_folder.c_str(), file_name);
+
 	return map.IsValid();
 }
 
