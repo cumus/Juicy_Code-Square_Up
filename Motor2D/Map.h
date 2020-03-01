@@ -13,6 +13,7 @@ public:
 
 	bool Awake(pugi::xml_node& conf) override;
 	bool Update() override;
+	bool PostUpdate() override;
 	bool CleanUp() override;
 
 	bool LoadFromFile(const char* file_name);

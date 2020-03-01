@@ -40,6 +40,12 @@ bool Map::Update()
 	return ret;
 }
 
+bool Map::PostUpdate()
+{
+	map.Draw();
+	return true;
+}
+
 bool Map::CleanUp()
 {
 	LOG("Unloading map");
@@ -86,11 +92,11 @@ std::pair<int, int> Map::I_WorldToMap(int x, int y) const
 
 std::pair<float, float> Map::F_MapToWorld(float x, float y) const
 {
-	return std::pair<float, float>();
+	return map.F_MapToWorld(x, y);
 }
 
 std::pair<float, float> Map::F_WorldToMap(float x, float y) const
 {
-	return std::pair<float, float>();
+	return map.F_WorldToMap(x, y);
 }
 

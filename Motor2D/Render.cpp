@@ -136,7 +136,7 @@ void Render::ResetViewPort()
 	SDL_RenderSetViewport(renderer, &viewport);
 }
 
-bool Render::Blit(int texture_id, int x, int y, float scale_x, float scale_y, const SDL_Rect* section) const
+bool Render::Blit(int texture_id, int x, int y, const SDL_Rect* section, bool use_cam) const
 {
 	bool ret = true;
 
@@ -144,10 +144,18 @@ bool Render::Blit(int texture_id, int x, int y, float scale_x, float scale_y, co
 
 	if (texture != nullptr)
 	{
-
 		SDL_Rect rect;
-		rect.x = x;
-		rect.y = y;
+
+		if (use_cam)
+		{
+			rect.x = x - int(cam_x);
+			rect.y = y - int(cam_y);
+		}
+		else
+		{
+			rect.x = x;
+			rect.y = y;
+		}
 
 		if (section)
 		{
@@ -161,10 +169,6 @@ bool Render::Blit(int texture_id, int x, int y, float scale_x, float scale_y, co
 			rect.w = tex_data.width;
 			rect.h = tex_data.height;
 		}
-
-		rect.w = int(float(rect.w) * scale_x);
-		rect.h = int(float(rect.h) * scale_y);
-
 
 		if (SDL_RenderCopyEx(renderer, texture, section, &rect, 0,nullptr, SDL_RendererFlip::SDL_FLIP_NONE) != 0)
 		{
@@ -181,8 +185,7 @@ bool Render::Blit(int texture_id, int x, int y, float scale_x, float scale_y, co
 	return ret;
 }
 
-// Blit to screen
-bool Render::Blit(int texture_id, int x, int y, const SDL_Rect* section, int flip, double angle, int pivot_x, int pivot_y) const
+bool Render::Blit_Scale(int texture_id, int x, int y, float scale_x, float scale_y, bool use_cam, const SDL_Rect* section) const
 {
 	bool ret = true;
 
@@ -190,10 +193,77 @@ bool Render::Blit(int texture_id, int x, int y, const SDL_Rect* section, int fli
 
 	if (texture != nullptr)
 	{
-
 		SDL_Rect rect;
-		rect.x = x;
-		rect.y = y;
+
+		if (use_cam)
+		{
+			rect.x = x - int(cam_x);
+			rect.y = y - int(cam_y);
+		}
+		else
+		{
+			rect.x = x;
+			rect.y = y;
+		}
+
+		if (section)
+		{
+			rect.w = section->w;
+			rect.h = section->h;
+		}
+		else
+		{
+			static TextureData tex_data;
+			App->tex->GetTextureData(texture_id, tex_data);
+			rect.w = tex_data.width;
+			rect.h = tex_data.height;
+		}
+
+		if (scale_x != 1.00f || scale_y != 1.00f)
+		{
+			rect.x -= int((float(rect.w) * scale_x) - float(rect.w) * 0.5f);
+			rect.y -= int((float(rect.h) * scale_y) - float(rect.h) * 0.5f);
+
+			rect.w = int(float(rect.w) * scale_x);
+			rect.h = int(float(rect.h) * scale_y);
+		}
+
+		if (SDL_RenderCopyEx(renderer, texture, section, &rect, 0, nullptr, SDL_RendererFlip::SDL_FLIP_NONE) != 0)
+		{
+			LOG("Cannot blit to screen. SDL_RenderCopy error: %s", SDL_GetError());
+			ret = false;
+		}
+	}
+	else
+	{
+		LOG("Cannot blit to screen. Invalid id %d");
+		ret = false;
+	}
+
+	return ret;
+}
+
+// Blit to screen
+bool Render::Blit_Rot(int texture_id, int x, int y, bool use_cam, const SDL_Rect* section, int flip, double angle, int pivot_x, int pivot_y) const
+{
+	bool ret = true;
+
+	SDL_Texture* texture = App->tex->GetTexture(texture_id);
+
+	if (texture != nullptr)
+	{
+		SDL_Rect rect;
+
+		if (use_cam)
+		{
+			rect.x = x - int(cam_x);
+			rect.y = y - int(cam_y);
+		}
+		else
+		{
+			rect.x = x;
+			rect.y = y;
+		}
 
 		if (section)
 		{
@@ -236,19 +306,16 @@ bool Render::Blit(int texture_id, int x, int y, const SDL_Rect* section, int fli
 bool Render::DrawQuad(const SDL_Rect& rect, Uint8 r, Uint8 g, Uint8 b, Uint8 a, bool filled, bool use_camera) const
 {
 	bool ret = true;
-	//unsigned int scale = App->win->GetScale();
 
 	SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
 	SDL_SetRenderDrawColor(renderer, r, g, b, a);
 
 	SDL_Rect rec(rect);
-	/*if(use_camera)
+	if(use_camera)
 	{
-		rec.x = (int)(camera.x + rect.x);// *scale);
-		rec.y = (int)(camera.y + rect.y);// * scale);
-		//rec.w *= scale;
-		//rec.h *= scale;
-	}*/
+		rec.x -= int(cam_x);
+		rec.y -= int(cam_y);
+	}
 
 	int result = (filled) ? SDL_RenderFillRect(renderer, &rec) : SDL_RenderDrawRect(renderer, &rec);
 

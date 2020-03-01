@@ -19,9 +19,6 @@ void Transform::PreUpdate()
 
 void Transform::Update()
 {
-	//LOG("POS: %d, %d, %d", pos.x, pos.y, pos.z);
-	//LOG("SCALE: %d, %d, %d", scale.x, scale.y, scale.z);
-
 	if (modified)
 	{
 		if (game_object != nullptr)

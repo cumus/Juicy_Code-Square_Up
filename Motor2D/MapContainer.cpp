@@ -83,9 +83,9 @@ void MapContainer::Draw() const
 
 				// Draw debug spite at render_pos
 				if (y == min.second || y == max.second || x == min.first || x == max.first) // blue border
-					App->render->DrawQuad({ pos.first - int(cam.first) + 3, pos.second - int(cam.second) + 3, tile_width - 6, tile_height - 6 }, 0, 100, 250);
+					App->render->DrawQuad({ pos.first + 3, pos.second + 3, tile_width - 6, tile_height - 6 }, 0, 100, 250);
 				else // white default
-					App->render->DrawQuad({ pos.first - int(cam.first) + 1, pos.second - int(cam.second) + 1, tile_width - 2, tile_height - 2 }, 250, 250, 250, 60);
+					App->render->DrawQuad({ pos.first + 1, pos.second + 1, tile_width - 2, tile_height - 2 }, 250, 250, 250, 60);
 			}
 		}
 #endif // DEBUG
@@ -104,11 +104,7 @@ void MapContainer::Draw() const
 						if (GetRectAndTexId(tile_id, section, tex_id))
 						{
 							std::pair<int, int> render_pos = I_MapToWorld(x, y);
-							App->render->Blit(tex_id, render_pos.first - int(cam.first), render_pos.second - int(cam.second), &section);
-
-							/*if (x == mouse.first && y == mouse.second)
-								LOG("MOUSE AT: %d x %d, tile id %d, tex id %d, { %d, %d, %d, %d }",
-									x, y, tile_id, tex_id, section.x, section.y, section.w, section.h);*/
+							App->render->Blit(tex_id, render_pos.first, render_pos.second, &section);
 						}
 					}
 				}
@@ -117,10 +113,12 @@ void MapContainer::Draw() const
 
 		// Draw mouse tile debug
 		std::pair<int, int> mouse_tile_pos = I_MapToWorld(mouse.first, mouse.second);
+		
 		// Frist tileset size - green
-		App->render->DrawQuad({ mouse_tile_pos.first - int(cam.first), mouse_tile_pos.second - int(cam.second), tilesets.front().tile_width, tilesets.front().tile_height }, 0, 100, 0, 180);
+		App->render->DrawQuad({ mouse_tile_pos.first, mouse_tile_pos.second, tilesets.front().tile_width, tilesets.front().tile_height }, 0, 100, 0, 180);
+		
 		// Map tile size - blue
-		App->render->DrawQuad({ mouse_tile_pos.first - int(cam.first), mouse_tile_pos.second - int(cam.second), tile_width, tile_height }, 0, 0, 100, 80);
+		App->render->DrawQuad({ mouse_tile_pos.first, mouse_tile_pos.second, tile_width, tile_height }, 0, 0, 100, 80);
 
 	}
 	else if (type == MAPTYPE_ISOMETRIC)
@@ -146,7 +144,7 @@ void MapContainer::Draw() const
 						{
 							// Draw tileset spite at render_pos
 							std::pair<int, int> render_pos = I_MapToWorld(x, y);
-							App->render->Blit(tex_id, render_pos.first - int(cam.first), render_pos.second - int(cam.second), &section);
+							App->render->Blit(tex_id, render_pos.first, render_pos.second, &section);
 						}
 #ifdef DEBUG
 						else
@@ -154,7 +152,7 @@ void MapContainer::Draw() const
 							// Draw debug spite at empty position
 							SDL_Rect rect = { 64, 0, 64, 64 };
 							std::pair<int, int> render_pos = I_MapToWorld(x, y);
-							App->render->Blit(App->scene->id_mouse_tex, render_pos.first - int(cam.first), render_pos.second - int(cam.second), 1.f, 1.f, &rect);
+							App->render->Blit(App->scene->id_mouse_tex, render_pos.first, render_pos.second, &rect);
 						}
 #endif // DEBUG
 					}
@@ -165,13 +163,15 @@ void MapContainer::Draw() const
 		// draw mouse tile debug
 		std::pair<int, int> mouse_tile_pos = I_MapToWorld(mouse.first, mouse.second);
 		SDL_Rect rect = { 0, 0, 64, 64 };
-		// Tile base rect - green
-		App->render->Blit(App->scene->id_mouse_tex, mouse_tile_pos.first - int(cam.first), mouse_tile_pos.second - int(cam.second), 1.f, 1.f, &rect);
-		// Frist tileset size - green
-		App->render->DrawQuad({ mouse_tile_pos.first - int(cam.first), mouse_tile_pos.second - int(cam.second), tilesets.front().tile_width, tilesets.front().tile_height }, 0, 100, 0, 180);
-		// Map tile size - blue
-		App->render->DrawQuad({ mouse_tile_pos.first - int(cam.first), mouse_tile_pos.second - int(cam.second), tile_width, tile_height }, 0, 0, 100, 80);
 
+		// Tile base rect - green
+		App->render->Blit(App->scene->id_mouse_tex, mouse_tile_pos.first, mouse_tile_pos.second, &rect);
+
+		// Frist tileset size - green
+		App->render->DrawQuad({ mouse_tile_pos.first, mouse_tile_pos.second, tilesets.front().tile_width, tilesets.front().tile_height }, 0, 100, 0, 180);
+
+		// Map tile size - blue
+		App->render->DrawQuad({ mouse_tile_pos.first, mouse_tile_pos.second, tile_width, tile_height }, 0, 0, 100, 80);
 	}
 }
 

@@ -6,7 +6,8 @@
 enum ComponentType
 {
 	NONE,
-	TRANSFORM
+	TRANSFORM,
+	SPRITE
 };
 
 class Transform;

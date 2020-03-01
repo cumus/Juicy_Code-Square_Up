@@ -2,7 +2,6 @@
 #define __TRANSFORM_H__
 
 #include "Component.h"
-#include "Defs.h"
 
 class Transform : public Component
 {

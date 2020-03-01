@@ -10,6 +10,7 @@ class Gameobject : public EventListener
 public:
 
 	Gameobject(const char* name = "unknown", Gameobject* parent = nullptr);
+	Gameobject(const Gameobject& copy);
 	~Gameobject();
 
 	void PreUpdate();
@@ -19,9 +20,11 @@ public:
 	void RecieveEvent(const Event& e) override;
 
 	Transform* GetTransform();
-	Transform* GetTransform() const;
+	const Transform* GetTransform() const;
 
 	void SetName(const char* name);
+
+	void AddComponent(Component* comp);
 
 private:
 
@@ -30,7 +33,7 @@ private:
 private:
 
 	bool active = true;
-	std::string name = "unknown";
+	std::string name;
 
 	std::vector<Component*> components;
 	std::vector<Gameobject*> childs;

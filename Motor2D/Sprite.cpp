@@ -17,8 +17,6 @@ Sprite::~Sprite()
 
 void Sprite::PostUpdate()
 {
-	std::pair<float, float> cam = { App->render->cam_x, App->render->cam_y };
-
 	if (game_object)
 	{
 		Transform* t = game_object->GetTransform();
@@ -28,9 +26,9 @@ void Sprite::PostUpdate()
 			std::pair<float, float> map_pos = App->map->F_MapToWorld(pos.x, pos.y);
 
 			if (tex_id >= 0)
-				App->render->Blit(tex_id, int(map_pos.first - App->render->cam_x), int(map_pos.second - App->render->cam_y), 1, 1, &section);
+				App->render->Blit(tex_id, int(map_pos.first), int(map_pos.second), &section);
 			else
-				App->render->DrawQuad({ int(map_pos.first - App->render->cam_x), int(map_pos.second - App->render->cam_y), section.w, section.h }, r, g, b, a);
+				App->render->DrawQuad({ int(map_pos.first), int(map_pos.second), section.w, section.h }, r, g, b, a);
 		}
 	}
 }

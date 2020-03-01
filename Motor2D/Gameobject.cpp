@@ -12,6 +12,15 @@ Gameobject::Gameobject(const char* n, Gameobject* p)
 		transform->SetParent(*p->AddNewChild(this));
 }
 
+Gameobject::Gameobject(const Gameobject& copy) :
+	active(copy.active),
+	name(copy.name),
+	components(copy.components),
+	childs(copy.childs),
+	parent(copy.parent),
+	transform(copy.transform)
+{}
+
 Gameobject::~Gameobject()
 {
 	for (std::vector<Gameobject*>::iterator child = childs.begin(); child != childs.end(); ++child)
@@ -64,15 +73,11 @@ void Gameobject::RecieveEvent(const Event & e)
 	{
 		for (std::vector<Component*>::iterator component = components.begin(); component != components.end(); ++component)
 			if ((*component)->IsActive())
-				Event::Push(TRANSFORM_MODIFIED, *component,
-					Cvar(e.data1),
-					Cvar(e.data2));
+				Event::Push(TRANSFORM_MODIFIED, *component, e.data1, e.data2);
 
 		for (std::vector<Gameobject*>::iterator child = childs.begin(); child != childs.end(); ++child)
 			if ((*child)->active)
-				Event::Push(PARENT_TRANSFORM_MODIFIED, *child,
-					Cvar(e.data1),
-					Cvar(e.data2));
+				Event::Push(PARENT_TRANSFORM_MODIFIED, *child, e.data1, e.data2);
 		break;
 
 	}
@@ -101,8 +106,11 @@ Transform * Gameobject::GetTransform()
 	return nullptr;
 }
 
-Transform* Gameobject::GetTransform() const
+const Transform* Gameobject::GetTransform() const
 {
+	if (transform != nullptr)
+		return transform;
+
 	for (std::vector<Component*>::const_iterator it = components.begin(); it != components.end(); ++it)
 		if ((*it)->GetType() == TRANSFORM)
 			return (*it)->AsTransform();
@@ -113,6 +121,12 @@ Transform* Gameobject::GetTransform() const
 void Gameobject::SetName(const char * n)
 {
 	name = n;
+}
+
+void Gameobject::AddComponent(Component* comp)
+{
+	if (comp)
+		components.push_back(comp);
 }
 
 Transform* Gameobject::AddNewChild(Gameobject * child)
