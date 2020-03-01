@@ -6,6 +6,7 @@
 class Cvar // Global Value Container
 {
 public:
+
 	Cvar();
 	Cvar(const Cvar& copy);
 	Cvar(bool bool_v);
@@ -19,6 +20,7 @@ public:
 	Cvar(vec vec_v);
 
 public:
+
 	enum VAR_TYPE : unsigned int
 	{
 		UNDEFINED,
@@ -34,6 +36,7 @@ public:
 	};
 
 protected:
+
 	VAR_TYPE type;
 
 	union VAR_data
@@ -52,6 +55,7 @@ protected:
 	} value;
 
 public:
+
 	bool SetValue(bool bool_v, bool force_type = false);
 	bool SetValue(int int_v, bool force_type = false);
 	bool SetValue(unsigned int uint_v, bool force_type = false);

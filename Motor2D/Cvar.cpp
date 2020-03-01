@@ -14,6 +14,7 @@ Cvar::Cvar(const Cvar & copy) : type(copy.type)
 	case DOUBLE: value.double_v = copy.value.double_v; break;
 	case FLOAT: value.float_v = copy.value.float_v; break;
 	case CHAR_P: value.char_p_v = copy.value.char_p_v; break;
+	case VEC: value.vec_v = copy.value.vec_v; break;
 	}
 }
 
