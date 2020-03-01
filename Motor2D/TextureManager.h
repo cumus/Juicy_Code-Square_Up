@@ -5,10 +5,10 @@
 #include <string>
 struct SDL_Texture;
 
-struct Sprite
+struct TextureData
 {
-	Sprite();
-	Sprite(const Sprite& copy);
+	TextureData();
+	TextureData(const TextureData& copy);
 
 	int id;
 	int width;
@@ -26,12 +26,12 @@ public:
 	int Load(const char* path);
 	void CleanUp();
 
-	bool GetSprite(int id, Sprite& spite) const;
+	bool GetTextureData(int id, TextureData& data) const;
 	SDL_Texture* GetTexture(int id) const;
 
 private:
 
-	std::vector<Sprite>	sprites;
+	std::vector<TextureData> texture_data;
 	std::vector<SDL_Texture*> textures;
 };
 

@@ -156,10 +156,10 @@ bool Render::Blit(int texture_id, int x, int y, float scale_x, float scale_y, co
 		}
 		else
 		{
-			static Sprite sprite;
-			App->tex->GetSprite(texture_id, sprite);
-			rect.w = sprite.width;
-			rect.h = sprite.height;
+			static TextureData tex_data;
+			App->tex->GetTextureData(texture_id, tex_data);
+			rect.w = tex_data.width;
+			rect.h = tex_data.height;
 		}
 
 		rect.w = int(float(rect.w) * scale_x);
@@ -202,10 +202,10 @@ bool Render::Blit(int texture_id, int x, int y, const SDL_Rect* section, int fli
 		}
 		else
 		{
-			Sprite sprite;
-			App->tex->GetSprite(texture_id, sprite);
-			rect.w = sprite.width;
-			rect.h = sprite.height;
+			static TextureData tex_data;
+			App->tex->GetTextureData(texture_id, tex_data);
+			rect.w = tex_data.width;
+			rect.h = tex_data.height;
 		}
 
 		SDL_Point* p = nullptr;

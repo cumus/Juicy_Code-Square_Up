@@ -331,15 +331,15 @@ bool MapContainer::ParseTilesets(pugi::xml_node & node)
 			tex_path += image_node.attribute("source").as_string();
 			tileset.texture_id = App->tex->Load(tex_path.c_str());
 
-			Sprite sprite;
-			if (App->tex->GetSprite(tileset.texture_id, sprite))
+			TextureData tex_data;
+			if (App->tex->GetTextureData(tileset.texture_id, tex_data))
 			{
 				// not needed as we query texture size on loading
 				//tileset.tex_width = image_node.attribute("width").as_int();
 				//tileset.tex_height = image_node.attribute("height").as_int();
 
-				tileset.num_tiles_width = sprite.width / tileset.tile_width;
-				tileset.num_tiles_height = sprite.height / tileset.tile_height;
+				tileset.num_tiles_width = tex_data.width / tileset.tile_width;
+				tileset.num_tiles_height = tex_data.height / tileset.tile_height;
 
 				LOG("Loading tileset - %s - correctly!!", tileset.name.c_str());
 				tilesets.push_back(tileset);
