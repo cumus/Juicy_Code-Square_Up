@@ -69,9 +69,6 @@
     <ClInclude Include="PugiXml\src\pugixml.hpp">
       <Filter>Source\3rd Party\PuguiXML</Filter>
     </ClInclude>
-    <ClInclude Include="Animation.h">
-      <Filter>Source\Gameobjects\Components</Filter>
-    </ClInclude>
     <ClInclude Include="Defs.h">
       <Filter>Source\Tools</Filter>
     </ClInclude>
@@ -98,9 +95,6 @@
     </ClInclude>
     <ClInclude Include="Optick\include\optick.h">
       <Filter>Source\3rd Party\Optick</Filter>
-    </ClInclude>
-    <ClInclude Include="Module.h">
-      <Filter>Source\Main</Filter>
     </ClInclude>
     <ClInclude Include="Application.h">
       <Filter>Source\Main</Filter>
@@ -151,6 +145,12 @@
       <Filter>Source\Modules\Other</Filter>
     </ClInclude>
     <ClInclude Include="FadetoBlack.h">
+      <Filter>Source\Modules\Other</Filter>
+    </ClInclude>
+    <ClInclude Include="Module.h">
+      <Filter>Source\Main</Filter>
+    </ClInclude>
+    <ClInclude Include="Animation.h">
       <Filter>Source\Modules\Other</Filter>
     </ClInclude>
   </ItemGroup>

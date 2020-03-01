@@ -46,9 +46,6 @@ bool Map::CleanUp()
 
 	map.CleanUp();
 
-	while (!frontier.empty()) frontier.pop();
-	while (!visited.empty()) visited.pop();
-
 	return true;
 }
 

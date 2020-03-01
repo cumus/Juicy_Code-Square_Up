@@ -4,8 +4,6 @@
 #include "Module.h"
 #include "MapContainer.h"
 
-#include <queue>
-
 class Map : public Module
 {
 public:
@@ -33,11 +31,7 @@ public:
 private:
 
 	MapContainer map;
-	std::string	maps_folder = "undefined";
-
-	/// BFS
-	std::queue<std::pair<int, int>>	frontier;
-	std::queue<std::pair<int, int>>	visited;
+	std::string	maps_folder;
 };
 
 #endif // __MAP_H__
