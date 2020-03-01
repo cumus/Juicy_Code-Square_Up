@@ -74,6 +74,22 @@ void MapContainer::Draw() const
 		std::pair<int, int> min = I_WorldToMap(int(cam.first), int(cam.second));
 		std::pair<int, int> max = I_WorldToMap(int(cam.first + App->render->cam_w), int(cam.second + App->render->cam_h));
 
+#ifdef DEBUG
+		for (int y = min.second; y <= max.second; ++y)
+		{
+			for (int x = min.first; x <= max.first; ++x)
+			{
+				std::pair<int, int> pos = I_MapToWorld(x, y);
+
+				// Draw debug spite at render_pos
+				if (y == min.second || y == max.second || x == min.first || x == max.first) // blue border
+					App->render->DrawQuad({ pos.first - int(cam.first) + 3, pos.second - int(cam.second) + 3, tile_width - 6, tile_height - 6 }, 0, 100, 250);
+				else // white default
+					App->render->DrawQuad({ pos.first - int(cam.first) + 1, pos.second - int(cam.second) + 1, tile_width - 2, tile_height - 2 }, 250, 250, 250, 60);
+			}
+		}
+#endif // DEBUG
+
 		for (std::vector<MapLayer>::const_iterator it = layers.begin(); it != layers.end(); ++it)
 		{
 			if (it->drawable)
@@ -94,27 +110,16 @@ void MapContainer::Draw() const
 								LOG("MOUSE AT: %d x %d, tile id %d, tex id %d, { %d, %d, %d, %d }",
 									x, y, tile_id, tex_id, section.x, section.y, section.w, section.h);*/
 						}
-#ifdef DEBUG
-						else
-						{
-							std::pair<int, int> pos = I_MapToWorld(x, y);
-							pos.first -= int(cam.first);
-							pos.second -= int(cam.second);
-
-							if (y == min.second || y == max.second || x == min.first || x == max.first) // blue border
-								App->render->DrawQuad({ pos.first - int(cam.first) + 3, pos.second - int(cam.second) + 3, tile_width - 6, tile_height - 6 }, 0, 100, 250);
-							else // white default
-								App->render->DrawQuad({ pos.first - int(cam.first) + 1, pos.second - int(cam.second) + 1, tile_width - 2, tile_height - 2 }, 250, 250, 250, 60);
-						}
-#endif // DEBUG
 					}
 				}
 			}
 		}
 
-		// Draw mouse green	quad
+		// Draw mouse tile debug
 		std::pair<int, int> mouse_tile_pos = I_MapToWorld(mouse.first, mouse.second);
+		// Frist tileset size - green
 		App->render->DrawQuad({ mouse_tile_pos.first - int(cam.first), mouse_tile_pos.second - int(cam.second), tilesets.front().tile_width, tilesets.front().tile_height }, 0, 100, 0, 180);
+		// Map tile size - blue
 		App->render->DrawQuad({ mouse_tile_pos.first - int(cam.first), mouse_tile_pos.second - int(cam.second), tile_width, tile_height }, 0, 0, 100, 80);
 
 	}
@@ -139,19 +144,16 @@ void MapContainer::Draw() const
 						SDL_Rect section;
 						if (GetRectAndTexId(tile_id, section, tex_id))
 						{
+							// Draw tileset spite at render_pos
 							std::pair<int, int> render_pos = I_MapToWorld(x, y);
 							App->render->Blit(tex_id, render_pos.first - int(cam.first), render_pos.second - int(cam.second), &section);
-
-							/*if (x == mouse.first && y == mouse.second)
-								LOG("MOUSE AT: %d x %d, tile id %d, tex id %d, { %d, %d, %d, %d }",
-									x, y, tile_id, tex_id, section.x, section.y, section.w, section.h);*/
 						}
 #ifdef DEBUG
 						else
 						{
-							std::pair<int, int> render_pos = I_MapToWorld(x, y);
-
+							// Draw debug spite at empty position
 							SDL_Rect rect = { 64, 0, 64, 64 };
+							std::pair<int, int> render_pos = I_MapToWorld(x, y);
 							App->render->Blit(App->scene->id_mouse_tex, render_pos.first - int(cam.first), render_pos.second - int(cam.second), 1.f, 1.f, &rect);
 						}
 #endif // DEBUG
@@ -160,11 +162,14 @@ void MapContainer::Draw() const
 			}
 		}
 
-		// draw green tile
+		// draw mouse tile debug
 		std::pair<int, int> mouse_tile_pos = I_MapToWorld(mouse.first, mouse.second);
 		SDL_Rect rect = { 0, 0, 64, 64 };
+		// Tile base rect - green
 		App->render->Blit(App->scene->id_mouse_tex, mouse_tile_pos.first - int(cam.first), mouse_tile_pos.second - int(cam.second), 1.f, 1.f, &rect);
+		// Frist tileset size - green
 		App->render->DrawQuad({ mouse_tile_pos.first - int(cam.first), mouse_tile_pos.second - int(cam.second), tilesets.front().tile_width, tilesets.front().tile_height }, 0, 100, 0, 180);
+		// Map tile size - blue
 		App->render->DrawQuad({ mouse_tile_pos.first - int(cam.first), mouse_tile_pos.second - int(cam.second), tile_width, tile_height }, 0, 0, 100, 80);
 
 	}
