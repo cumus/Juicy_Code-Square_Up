@@ -6,7 +6,6 @@
 
 #include "SDL/include/SDL_scancode.h"
 
-
 #include <math.h>
 
 Map::Map() : Module("map")
@@ -100,3 +99,7 @@ std::pair<float, float> Map::F_WorldToMap(float x, float y) const
 	return map.F_WorldToMap(x, y);
 }
 
+std::pair<int, int> Map::WorldToTileBase(float x, float y) const
+{
+	return map.WorldToTileBase(x, y);
+}

@@ -79,7 +79,7 @@ bool Scene::PostUpdate()
 	// Debug Pointer Info on Window Title
 	int mouse_x, mouse_y;
 	App->input->GetMousePosition(mouse_x, mouse_y);
-	std::pair<int, int> map_coordinates = App->map->I_WorldToMap(int(App->render->cam_x) + mouse_x, int(App->render->cam_y) + mouse_y);
+	std::pair<int, int> map_coordinates = App->map->WorldToTileBase(App->render->cam_x + mouse_x, App->render->cam_y + mouse_y);
 
 	// Debug gameobject transforms
 	vec go1_pos = go1->GetTransform()->GetGlobalPosition();

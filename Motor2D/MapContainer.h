@@ -116,11 +116,13 @@ public:
 	bool GetTilesetFromTileId(int id, TileSet& set) const;
 	bool GetRectAndTexId(int tile_id, SDL_Rect& section, int& text_id) const;
 
-	std::pair<int, int> MapContainer::I_MapToWorld(int x, int y) const;
-	std::pair<int, int> MapContainer::I_WorldToMap(int x, int y) const;
+	std::pair<int, int> I_MapToWorld(int x, int y) const;
+	std::pair<int, int> I_WorldToMap(int x, int y) const;
 
-	std::pair<float, float> MapContainer::F_MapToWorld(float x, float y) const;
-	std::pair<float, float> MapContainer::F_WorldToMap(float x, float y) const;
+	std::pair<float, float> F_MapToWorld(float x, float y) const;
+	std::pair<float, float> F_WorldToMap(float x, float y) const;
+
+	std::pair<int, int> WorldToTileBase(float x, float y) const;
 
 private:
 
@@ -128,6 +130,19 @@ private:
 	bool ParseTilesets(pugi::xml_node & node);
 	bool ParseLayers(pugi::xml_node & node);
 	void ParseObjectGroups(pugi::xml_node & node);
+
+	// Get Triangle abc Area
+	static float TriangleArea(
+		const std::pair<float, float> a,
+		const std::pair<float, float> b,
+		const std::pair<float, float> c);
+
+	// Check Point p is inside Triangle abc
+	static bool PointInsideTriangle(
+		const std::pair<float, float> p,
+		const std::pair<float, float> a,
+		const std::pair<float, float> b,
+		const std::pair<float, float> c);
 
 public:
 

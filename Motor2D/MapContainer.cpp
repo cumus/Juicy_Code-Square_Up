@@ -8,6 +8,8 @@
 #include "Defs.h"
 #include "Log.h"
 
+#include <math.h>
+
 bool MapContainer::Load(const char* directory, const char* file)
 {
 	loaded = false;
@@ -61,12 +63,11 @@ void MapContainer::Draw() const
 	// TODO: Frustum Culling
 	std::pair<float, float> cam = { App->render->cam_x, App->render->cam_y };
 
-	int i, j;
-	App->input->GetMousePosition(i, j);
-	i += int(cam.first);
-	j += int(cam.second);
-	std::pair<int, int> mouse = I_WorldToMap(i, j);
+	int mouse_x, mouse_y;
+	App->input->GetMousePosition(mouse_x, mouse_y);
 
+	mouse_x += int(cam.first);
+	mouse_y += int(cam.second);
 
 	if (type == MAPTYPE_ORTHOGONAL)
 	{
@@ -112,6 +113,7 @@ void MapContainer::Draw() const
 		}
 
 		// Draw mouse tile debug
+		std::pair<int, int> mouse = I_WorldToMap(mouse_x, mouse_y);
 		std::pair<int, int> mouse_tile_pos = I_MapToWorld(mouse.first, mouse.second);
 		
 		// Frist tileset size - green
@@ -161,13 +163,19 @@ void MapContainer::Draw() const
 		}
 
 		// draw mouse tile debug
-		std::pair<int, int> mouse_tile_pos = I_MapToWorld(mouse.first, mouse.second);
+
+		std::pair<int, int> tile_base = WorldToTileBase(mouse_x, mouse_y);
+
+		//if (tile_base.first < 0.0f) tile_base.first--;
+		//if (tile_base.second < 0.0f) tile_base.second--;
+
+		std::pair<int, int> mouse_tile_pos = I_MapToWorld(tile_base.first, tile_base.second);
 		SDL_Rect rect = { 0, 0, 64, 64 };
 
 		// Tile base rect - green
 		App->render->Blit(App->scene->id_mouse_tex, mouse_tile_pos.first, mouse_tile_pos.second, &rect);
 
-		// Frist tileset size - green
+		// First tileset size - green
 		App->render->DrawQuad({ mouse_tile_pos.first, mouse_tile_pos.second, tilesets.front().tile_width, tilesets.front().tile_height }, 0, 100, 0, 180);
 
 		// Map tile size - blue
@@ -260,8 +268,8 @@ std::pair<float, float> MapContainer::F_MapToWorld(float x, float y) const
 	switch (type)
 	{
 	case MAPTYPE_ISOMETRIC: return {
-		(x - y) * float(tile_width * 0.5f),
-		(x + y) * float(tile_height * 0.5f) };
+		(x - y) * (float(tile_width) * 0.5f),
+		(x + y) * (float(tile_height) * 0.5f) };
 	case MAPTYPE_ORTHOGONAL: return {
 		x * float(tile_width),
 		y * float(tile_height) };
@@ -279,10 +287,30 @@ std::pair<float, float> MapContainer::F_WorldToMap(float x, float y) const
 		(x / size.first) + (y / size.second),
 		(y / size.second) - (x / size.first) };
 	case MAPTYPE_ORTHOGONAL: return {
-		(x / size.first < 0) ? (x / size.first) - 1 : x / size.first,
-		(y / size.second < 0) ? (y / size.second) - 1 : y / size.second };
+		x / size.first,
+		y / size.second };
 	default: return { x, y };
 	}
+}
+
+std::pair<int, int> MapContainer::WorldToTileBase(float x, float y) const
+{
+	std::pair<int, int> ret = I_WorldToMap(x, y);
+	std::pair<float, float> tile_position = F_MapToWorld(ret.first, ret.second);
+
+	if (PointInsideTriangle({ x , y },
+		{ tile_position.first, tile_position.second },
+		{ tile_position.first + tile_width, tile_position.second },
+		{ tile_position.first, tile_position.second + (float(tile_width) / (2.0f * sin(60.0f * DEGTORAD))) }))
+		ret.first--;
+
+	if (PointInsideTriangle({ x , y },
+		{ tile_position.first, tile_position.second },
+		{ tile_position.first + tile_width, tile_position.second },
+		{ tile_position.first + tile_width, tile_position.second + (float(tile_width) / (2.0f * sin(60.0f * DEGTORAD))) }))
+		ret.second--;
+
+	return ret;
 }
 
 void MapContainer::ParseHeader(pugi::xml_node & node)
@@ -422,6 +450,24 @@ void MapContainer::ParseObjectGroups(pugi::xml_node & node)
 
 		obj_groups.push_back(obj_group);
 	}
+}
+
+float MapContainer::TriangleArea(const std::pair<float, float> a, const std::pair<float, float> b, const std::pair<float, float> c)
+{
+	return abs((
+		a.first * (b.second - c.second)
+		+ b.first * (c.second - a.second)
+		+ c.first * (a.second - b.second)) / 2.0f);
+}
+
+bool MapContainer::PointInsideTriangle(const std::pair<float, float> p, const std::pair<float, float> a, const std::pair<float, float> b, const std::pair<float, float> c)
+{
+	float abc = TriangleArea(a, b, c);
+	float pbc = TriangleArea(p, c, b);
+	float apc = TriangleArea(a, p, c);
+	float abp = TriangleArea(a, b, p);
+
+	return (abc == pbc + apc + abp);
 }
 
 TileSet::TileSet() : 
