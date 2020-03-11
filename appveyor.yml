@@ -4,7 +4,9 @@ branches:
   only:
     - master
 
-configuration: Debug
+configuration: 
+  - Debug
+  - Release
 
 build:
   verbosity: minimal
