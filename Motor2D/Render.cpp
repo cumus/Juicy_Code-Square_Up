@@ -8,6 +8,8 @@
 #include "Defs.h"
 #include "Log.h"
 
+#include "Optick/include/optick.h"
+
 #include "SDL_image/include/SDL_image.h"
 #pragma comment( lib, "SDL_image/libx86/SDL2_image.lib" )
 
@@ -52,6 +54,8 @@ bool Render::Awake(pugi::xml_node& config)
 // Called before the first frame
 bool Render::Start()
 {
+	OPTICK_THREAD("RenderStart");
+
 	bool ret = true;
 
 	LOG("Create SDL rendering context");
@@ -84,6 +88,8 @@ bool Render::PreUpdate()
 
 bool Render::Update()
 {
+	OPTICK_EVENT("render_update");
+
 	// Zoom
 	int wheel_motion = App->input->GetMouseWheelMotion();
 	if (wheel_motion != 0)

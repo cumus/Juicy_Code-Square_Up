@@ -3,6 +3,7 @@
 #include "Log.h"
 #include "Application.h"
 
+#include "Optick/include/optick.h"
 #include "SDL/include/SDL.h"
 #include "SDL_mixer\include\SDL_mixer.h"
 #pragma comment( lib, "SDL_mixer/libx86/SDL2_mixer.lib" )
@@ -17,6 +18,10 @@ Audio::~Audio()
 // Called before render is available
 bool Audio::Awake(pugi::xml_node& config)
 {
+
+	OPTICK_EVENT("audio_awake");
+	OPTICK_THREAD("AudioAwake");
+
 	LOG("Loading Audio Mixer");
 	bool ret = true;
 	SDL_Init(0);
@@ -75,6 +80,10 @@ bool Audio::CleanUp()
 // Play a music file
 bool Audio::PlayMusic(const char* path, float fade_time)
 {
+
+	OPTICK_EVENT("play_music");
+	OPTICK_THREAD("PlayMusic");
+
 	bool ret = true;
 
 	if(!active)
@@ -125,6 +134,9 @@ bool Audio::PlayMusic(const char* path, float fade_time)
 // Load WAV
 unsigned int Audio::LoadFx(const char* path)
 {
+
+	OPTICK_EVENT("load_fx");
+	OPTICK_THREAD("LoadFx");
 	unsigned int ret = 0;
 
 	if(!active)
@@ -148,6 +160,9 @@ unsigned int Audio::LoadFx(const char* path)
 // Play WAV
 bool Audio::PlayFx(unsigned int id, int repeat)
 {
+
+	OPTICK_EVENT("play_fx");
+	OPTICK_THREAD("PlayFx");
 	bool ret = (active && id > 0 && id <= fx.size());
 
 	if (ret) Mix_PlayChannel(-1, fx[id - 1], repeat);

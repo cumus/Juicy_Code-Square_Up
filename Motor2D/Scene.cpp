@@ -13,6 +13,8 @@
 #include "Log.h"
 #include <math.h>
 
+#include "Optick/include/optick.h"
+
 Scene::Scene() : Module("scene")
 {}
 
@@ -38,6 +40,10 @@ bool Scene::PreUpdate()
 
 bool Scene::Update()
 {
+
+	OPTICK_EVENT("scene_update");
+	OPTICK_THREAD("SceneUpdate");
+
 	Transform* t1 = go1->GetTransform();
 	Transform* t2 = go2->GetTransform();
 
@@ -108,7 +114,7 @@ bool Scene::LoadTestScene()
 	//App->audio->PlayMusic("audio/music/lvl1bgm.ogg");
 
 	// Remove fps cap
-	App->time->SetMaxFPS(0);
+	App->time->SetMaxFPS(60);
 
 	// Load mouse debug texture for identifying tiles
 	id_mouse_tex = App->tex->Load("textures/meta.png");

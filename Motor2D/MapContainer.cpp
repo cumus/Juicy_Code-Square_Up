@@ -8,10 +8,16 @@
 #include "Defs.h"
 #include "Log.h"
 
+#include "Optick/include/optick.h"
+
 #include <math.h>
 
 bool MapContainer::Load(const char* directory, const char* file)
 {
+
+	OPTICK_EVENT("map_container_load");
+	OPTICK_THREAD("MApContainerLoad");
+
 	loaded = false;
 	dir = directory;
 	file_name = file;

@@ -4,6 +4,7 @@
 #include "Defs.h"
 #include "Log.h"
 
+#include "Optick/include/optick.h"
 #include "SDL/include/SDL_scancode.h"
 
 #include <math.h>
@@ -25,6 +26,10 @@ bool Map::Awake(pugi::xml_node& config)
 
 bool Map::Update()
 {
+
+	OPTICK_EVENT("map_update");
+	OPTICK_THREAD("MapUpdate");
+
 	bool ret = true;
 
 	// Load sample maps

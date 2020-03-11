@@ -4,7 +4,9 @@
 #include "Window.h"
 #include "Defs.h"
 #include "Log.h"
+
 #include "SDL/include/SDL.h"
+#include "Optick/include/optick.h"
 
 Input::Input() : Module("input")
 {
@@ -39,6 +41,10 @@ bool Input::Start()
 // Called each loop iteration
 bool Input::PreUpdate()
 {
+
+	OPTICK_EVENT("input_preupdate");
+	OPTICK_THREAD("InputPrepdate");
+
 	// Update SDL event queue
 	SDL_PumpEvents();
 

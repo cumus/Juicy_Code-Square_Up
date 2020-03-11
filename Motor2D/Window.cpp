@@ -4,6 +4,8 @@
 #include "Log.h"
 #include "Application.h"
 
+#include "Optick/include/optick.h"
+
 Window::Window() : Module("window")
 {
 	window = nullptr;
@@ -17,6 +19,10 @@ Window::~Window()
 // Called before render is available
 bool Window::Awake(pugi::xml_node& config)
 {
+
+	OPTICK_EVENT("window_awake");
+	OPTICK_THREAD("WindowAwake");
+
 	LOG("Init SDL window & surface");
 	bool ret = true;
 

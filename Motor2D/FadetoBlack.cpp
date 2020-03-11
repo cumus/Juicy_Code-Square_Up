@@ -5,6 +5,7 @@
 #include "Log.h"
 #include "Defs.h"
 
+#include "Optick/include/optick.h"
 #include "SDL/include/SDL_render.h"
 #include "SDL/include/SDL_timer.h"
 
@@ -28,6 +29,10 @@ bool FadeToBlack::Start()
 
 bool FadeToBlack::Update(float dt)
 {
+
+	OPTICK_EVENT("fade_to_black_update");
+	OPTICK_THREAD("FadeToBlackUpdate");
+
 	if (current_step == fade_step::none)
 		return true;
 
