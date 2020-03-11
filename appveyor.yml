@@ -1,7 +1,5 @@
 version: 0.0.{build}
 
-platform: Any CPU
-
 matrix:
   allow_failures:
   - platform: x86
