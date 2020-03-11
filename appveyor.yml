@@ -1,5 +1,14 @@
 version: 0.0.{build}
 
+platform:
+  - x86
+  - x64
+
+matrix:
+  allow_failures:
+  - platform: x86
+  - version: latest
+
 branches:
   only:
     - master
@@ -18,4 +27,3 @@ notifications:
 
 build:
   verbosity: minimal
-  
