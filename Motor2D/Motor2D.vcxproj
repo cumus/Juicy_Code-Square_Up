@@ -82,6 +82,8 @@
   <ItemGroup>
     <ClCompile Include="Collisions.cpp" />
     <ClCompile Include="Cvar.cpp" />
+    <ClCompile Include="Editor.cpp" />
+    <ClCompile Include="EditorWindows.cpp" />
     <ClCompile Include="Event.cpp" />
     <ClCompile Include="FadetoBlack.cpp" />
     <ClCompile Include="Gameobject.cpp" />
@@ -107,6 +109,8 @@
     <ClInclude Include="Collisions.h" />
     <ClInclude Include="Component.h" />
     <ClInclude Include="Cvar.h" />
+    <ClInclude Include="Editor.h" />
+    <ClInclude Include="EditorWindows.h" />
     <ClInclude Include="Event.h" />
     <ClInclude Include="EventListener.h" />
     <ClInclude Include="FadetoBlack.h" />
