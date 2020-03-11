@@ -4,8 +4,6 @@ branches:
   only:
     - master
 
-platform: x86
-
 configuration: Debug
 
 build:
