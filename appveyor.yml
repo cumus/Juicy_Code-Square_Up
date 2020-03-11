@@ -9,6 +9,5 @@ platform: x86
 configuration: Debug
 
 build:
-  project: Game Engine 2D.sln
   verbosity: minimal
   
