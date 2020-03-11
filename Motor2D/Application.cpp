@@ -1,16 +1,15 @@
 #include "Application.h"
-#include "Defs.h"
-#include "Log.h"
-#include "Window.h"
 #include "Input.h"
+#include "Window.h"
+#include "Audio.h"
+#include "Map.h"
+#include "Scene.h"
+#include "Editor.h"
 #include "Render.h"
 #include "TextureManager.h"
-#include "Audio.h"
-#include "Scene.h"
-#include "Map.h"
-#include "FadeToBlack.h"
-#include "Collisions.h"
 #include "TimeManager.h"
+#include "Defs.h"
+#include "Log.h"
 #include "Optick/include/optick.h"
 
 Application::Application(int argc, char* args[]) : argc(argc), args(args)
@@ -27,8 +26,7 @@ Application::Application(int argc, char* args[]) : argc(argc), args(args)
 	AddModule(audio = new Audio());
 	AddModule(map = new Map());
 	AddModule(scene = new Scene());
-	//AddModule(collisions = new Collisions());
-	//AddModule(fade = new FadeToBlack());
+	AddModule(editor = new Editor());
 	AddModule(render = new Render()); // render last to swap buffer
 }
 

@@ -13,8 +13,7 @@ class Window;
 class Audio;
 class Map;
 class Scene;
-class Collisions;
-class FadeToBlack;
+class Editor;
 class Render;
 
 // Independent Managers
@@ -56,18 +55,17 @@ private:
 public:
 
 	// Modules
-	Input*			input;
-	Window*			win;
-	Audio*			audio;
-	Map*			map;
-	Scene*			scene;
-	Collisions*		collisions;
-	FadeToBlack*	fade;
-	Render*			render;
+	Input*		input;
+	Window*		win;
+	Audio*		audio;
+	Map*		map;
+	Scene*		scene;
+	Render*		render;
+	Editor*		editor;
 
 	// Independent Managers
 	TimeManager*	time;
-	TextureManager*		tex;
+	TextureManager*	tex;
 
 private:
 

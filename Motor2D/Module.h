@@ -8,7 +8,10 @@ class Module : public EventListener
 {
 public:
 
-	Module(const char*	name) : active(false), name(name)
+	Module(const char* name) : active(false), name(name)
+	{}
+
+	virtual ~Module()
 	{}
 
 	void Init()
