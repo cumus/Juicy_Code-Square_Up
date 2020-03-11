@@ -4,6 +4,13 @@ branches:
   only:
     - master
 
+platform: x86
+
+configuration: 
+  - Debug
+  - Release
+
 build:
+  project: Game Engine 2D.sln
   verbosity: minimal
   
