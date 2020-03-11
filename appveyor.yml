@@ -10,6 +10,7 @@ configuration:
   
 platform:
   - x86
+  - x64
 
 build:
   verbosity: minimal
