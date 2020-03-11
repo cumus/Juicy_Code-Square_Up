@@ -6,9 +6,7 @@ branches:
 
 platform: x86
 
-configuration: 
-  - Debug
-  - Release
+configuration: Debug
 
 build:
   project: Game Engine 2D.sln
