@@ -50,6 +50,8 @@ public:
 
 	static void Push(EventType t, EventListener* lis, Cvar data = Cvar(), Cvar data2 = Cvar());
 	static void PumpAll();
+	static void Pump();
+	static unsigned int RemainingEvents();
 
 	static void ResumeEvents();
 	static void PauseEvents();

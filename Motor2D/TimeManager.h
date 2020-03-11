@@ -13,8 +13,9 @@ public:
 	void Pause();
 	void Stop();
 
-	float ReadF() const;
 	unsigned int Read() const;
+	int ReadI() const;
+	float ReadF() const;
 
 private:
 
@@ -31,7 +32,7 @@ public:
 	~TimeManager();
 
 	float UpdateDeltaTime(); // returns updated dt
-	unsigned int ManageFrameTimers(); // returns extra ms for frame
+	int ManageFrameTimers(); // returns extra ms for frame
 
 	void	Delay(unsigned int ms) const;
 	

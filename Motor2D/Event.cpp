@@ -47,6 +47,24 @@ void Event::PumpAll()
 	}
 }
 
+void Event::Pump()
+{
+	if (!Event::events_queue.empty())
+	{
+		const Event e = Event::events_queue.front();
+
+		if (e.IsValid())
+			e.CallListener();
+
+		Event::events_queue.pop();
+	}
+}
+
+unsigned int Event::RemainingEvents()
+{
+	return Event::events_queue.size();
+}
+
 void Event::ResumeEvents()
 {
 	paused = false;

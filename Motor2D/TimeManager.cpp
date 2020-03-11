@@ -21,7 +21,7 @@ float TimeManager::UpdateDeltaTime()
 	return dt;
 }
 
-unsigned int TimeManager::ManageFrameTimers()
+int TimeManager::ManageFrameTimers()
 {
 	// Recap on framecount and fps
 	++frames_counter;
@@ -36,10 +36,10 @@ unsigned int TimeManager::ManageFrameTimers()
 
 	last_ms_count = ms_timer.Read();
 
-	unsigned int ret = 1u;
+	int ret = -1;
 
 	if (capped_ms > 0 && capped_ms > last_ms_count)
-		ret = capped_ms - last_ms_count;
+		ret = int(capped_ms - last_ms_count);
 
 	return ret;
 }
@@ -138,7 +138,12 @@ unsigned int Timer::Read() const
 	return paused ? paused_at - started_at : SDL_GetTicks() - started_at;
 }
 
+int Timer::ReadI() const
+{
+	return int(Read());
+}
+
 float Timer::ReadF() const
 {
-	return (float)Read();
+	return float(Read());
 }

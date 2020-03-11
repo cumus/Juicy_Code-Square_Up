@@ -140,10 +140,25 @@ void Application::FinishUpdate()
 	if(want_to_load)
 		LoadGameNow();
 
-	// Delay capped FPS
-	unsigned int extra_ms = time->ManageFrameTimers();
-	if (extra_ms > 0)
-		time->Delay(extra_ms);
+	int extra_ms = time->ManageFrameTimers();
+
+	// uncapped fps
+	if (extra_ms < 0)
+	{
+		while (Event::RemainingEvents() > 0)
+			Event::Pump();
+	}
+	else
+	{
+		// Pump events in extra_ms timespan
+		Timer timer;
+		while (extra_ms > timer.ReadI() && Event::RemainingEvents() > 0)
+			Event::Pump();
+
+		// Delay capped FPS
+		if (extra_ms - timer.ReadI() > 0)
+			time->Delay(extra_ms - timer.Read());
+	}
 }
 
 // Called before quitting
