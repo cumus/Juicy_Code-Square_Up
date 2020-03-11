@@ -1,6 +1,8 @@
 version: 0.0.{build}
 
-platform: Any CPU
+platform:
+  - x86
+  - x64
 
 matrix:
   allow_failures:
@@ -27,4 +29,7 @@ notifications:
     template: "{{#passed}}:white_check_mark:{{/passed}}{{#failed}}:x:{{/failed}} [Build {{&projectName}} {{buildVersion}} {{status}}]({{buildUrl}}) (commit {{commitUrl}} by @{{&commitAuthorUsername}})"
 
 build:
+  parallel: true
+  project: Game Engine 2D.sln
+
   verbosity: minimal
