@@ -1,5 +1,7 @@
 version: 0.0.{build}
 
+platform: Any CPU
+
 matrix:
   allow_failures:
   - platform: x86
@@ -20,8 +22,9 @@ notifications:
      - '{{commitAuthorEmail}}'
      - ...
     on_build_failure: true 
-    on_build_success: false 
-    on_build_status_changed: false 
+
+  - provider: GitHubPullRequest
+    template: "{{#passed}}:white_check_mark:{{/passed}}{{#failed}}:x:{{/failed}} [Build {{&projectName}} {{buildVersion}} {{status}}]({{buildUrl}}) (commit {{commitUrl}} by @{{&commitAuthorUsername}})"
 
 build:
   verbosity: minimal
