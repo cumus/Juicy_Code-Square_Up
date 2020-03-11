@@ -57,12 +57,6 @@ bool Scene::Update()
 	if (App->input->GetKey(SDL_SCANCODE_UP) == KEY_REPEAT)		t1->MoveY(-moveSpeed);
 	if (App->input->GetKey(SDL_SCANCODE_DOWN) == KEY_REPEAT)	t1->MoveY(moveSpeed);
 
-	// Move camera
-	if (App->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT) App->render->cam_x -= moveSpeed * 50.f;
-	if (App->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT) App->render->cam_x += moveSpeed * 50.f;
-	if (App->input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT) App->render->cam_y -= moveSpeed * 50.f;
-	if (App->input->GetKey(SDL_SCANCODE_S) == KEY_REPEAT) App->render->cam_y += moveSpeed * 50.f;
-
 	// Swap map orientation
 	if (App->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN) App->map->SwapMapType();
 
@@ -79,7 +73,8 @@ bool Scene::PostUpdate()
 	// Debug Pointer Info on Window Title
 	int mouse_x, mouse_y;
 	App->input->GetMousePosition(mouse_x, mouse_y);
-	std::pair<int, int> map_coordinates = App->map->WorldToTileBase(App->render->cam_x + mouse_x, App->render->cam_y + mouse_y);
+	SDL_Rect cam_rect = App->render->GetCameraRect();
+	std::pair<int, int> map_coordinates = App->map->WorldToTileBase(cam_rect.x + mouse_x, cam_rect.y + mouse_y);
 
 	// Debug gameobject transforms
 	vec go1_pos = go1->GetTransform()->GetGlobalPosition();
@@ -87,8 +82,9 @@ bool Scene::PostUpdate()
 
 	// Log onto window title
 	static char tmp_str[220];
-	sprintf_s(tmp_str, 220, "FPS: %d, Mouse: %dx%d, Tile: %dx%d, g1 { %d, %d, %d }, g2 { %d, %d, %d }",
+	sprintf_s(tmp_str, 220, "FPS: %d, Zoom: %f, Mouse: %dx%d, Tile: %dx%d, g1 { %d, %d, %d }, g2 { %d, %d, %d }",
 		App->time->GetLastFPS(),
+		App->render->GetZoom(),
 		mouse_x, mouse_y,
 		map_coordinates.first, map_coordinates.second,
 		(int)go1_pos.x, (int)go1_pos.y, (int)go1_pos.z,

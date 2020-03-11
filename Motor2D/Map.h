@@ -20,6 +20,7 @@ public:
 
 	void Draw() const;
 	void SwapMapType();
+	void SetMapScale(float scale);
 
 	const MapContainer* GetMap() const;
 

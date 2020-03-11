@@ -24,13 +24,18 @@ public:
 	bool Load(pugi::xml_node&) override;
 	bool Save(pugi::xml_node&) const override;
 
+	// Getters
+	SDL_Renderer* GetSDLRenderer() const;
+	SDL_Rect GetCameraRect() const;
+	float GetZoom() const;
+
 	// Viewport
 	void SetViewPort(const SDL_Rect& rect);
 	void ResetViewPort();
 
 	// Blit
 	bool Blit(int texture_id, int x, int y, const SDL_Rect* section = nullptr, bool use_cam = true) const;
-	bool Blit_Scale(int texture_id, int x, int y, float scale_x, float scale_y, bool use_cam = true, const SDL_Rect* section = nullptr) const;
+	bool Blit_Scale(int texture_id, int x, int y, float scale_x, float scale_y, const SDL_Rect* section = nullptr, bool use_cam = true) const;
 	bool Blit_Rot(int texture_id, int x, int y, bool use_cam = true, const SDL_Rect* section = nullptr, int flip = 0, double angle = 0, int pivot_x = INT_MAX, int pivot_y = INT_MAX) const;
 	
 	bool DrawQuad(const SDL_Rect& rect, Uint8 r, Uint8 g, Uint8 b, Uint8 a = 255, bool filled = true, bool use_camera = true) const;
@@ -40,12 +45,14 @@ public:
 	// Set background color
 	void SetBackgroundColor(SDL_Color color);
 
-public:
+private:
 
 	Uint32			flags = 0;
 	SDL_Renderer*	renderer = nullptr;
 
 	float cam_x, cam_y, cam_w, cam_h;
+	float zoom = 1.0f;
+
 	SDL_Rect		viewport;
 	SDL_Color		background;
 };

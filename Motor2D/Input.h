@@ -39,15 +39,18 @@ public:
 
 	void GetMousePosition(int &x, int &y) const;
 	void GetMouseMotion(int& x, int& y) const;
+	int GetMouseWheelMotion() const;
 
 private:
 
 	KeyState	keyboard[MAX_KEYS];
 	KeyState	mouse_buttons[NUM_MOUSE_BUTTONS];
+
 	int			mouse_motion_x;
 	int			mouse_motion_y;
 	int			mouse_x;
 	int			mouse_y;
+	int			mouse_wheel_motion;
 };
 
 #endif // __INPUT_H__

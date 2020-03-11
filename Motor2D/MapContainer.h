@@ -158,6 +158,8 @@ public:
 	int					tile_height = -1;
 	//SDL_Color			background_color;
 
+	float scale = 1.0f;
+
 	// enum as string render order
 	// int next_object_id
 

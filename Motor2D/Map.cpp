@@ -27,6 +27,7 @@ bool Map::Update()
 {
 	bool ret = true;
 
+	// Load sample maps
 	if (App->input->GetKey(SDL_SCANCODE_1) == KEY_DOWN)
 	{
 		ret = LoadFromFile("iso.tmx");
@@ -77,6 +78,11 @@ const MapContainer* Map::GetMap() const
 void Map::SwapMapType()
 {
 	map.type = (map.type == MAPTYPE_ISOMETRIC) ? MAPTYPE_ORTHOGONAL : MAPTYPE_ISOMETRIC;
+}
+
+void Map::SetMapScale(float scale)
+{
+	map.scale = scale;
 }
 
 std::pair<int, int> Map::I_MapToWorld(int x, int y) const

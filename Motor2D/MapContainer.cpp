@@ -60,30 +60,27 @@ void MapContainer::Draw() const
 {
 	if (!loaded) return;
 
-	// TODO: Frustum Culling
-	std::pair<float, float> cam = { App->render->cam_x, App->render->cam_y };
-
 	int mouse_x, mouse_y;
 	App->input->GetMousePosition(mouse_x, mouse_y);
 
-	mouse_x += int(cam.first);
-	mouse_y += int(cam.second);
+	SDL_Rect cam = App->render->GetCameraRect();
+	mouse_x += cam.x;
+	mouse_y += cam.y;
+
+	std::pair<int, int> up_left = I_WorldToMap(cam.x, cam.y);
+	std::pair<int, int> down_right = I_WorldToMap(cam.x + cam.w, cam.y + cam.h);
 
 	if (type == MAPTYPE_ORTHOGONAL)
 	{
-		// Get min & max coordinates
-		std::pair<int, int> min = I_WorldToMap(int(cam.first), int(cam.second));
-		std::pair<int, int> max = I_WorldToMap(int(cam.first + App->render->cam_w), int(cam.second + App->render->cam_h));
-
 #ifdef DEBUG
-		for (int y = min.second; y <= max.second; ++y)
+		for (int y = up_left.second; y <= down_right.second; ++y)
 		{
-			for (int x = min.first; x <= max.first; ++x)
+			for (int x = up_left.first; x <= down_right.first; ++x)
 			{
 				std::pair<int, int> pos = I_MapToWorld(x, y);
 
 				// Draw debug spite at render_pos
-				if (y == min.second || y == max.second || x == min.first || x == max.first) // blue border
+				if (y == up_left.second || y == down_right.second || x == up_left.first || x == down_right.first) // blue border
 					App->render->DrawQuad({ pos.first + 3, pos.second + 3, tile_width - 6, tile_height - 6 }, 0, 100, 250);
 				else // white default
 					App->render->DrawQuad({ pos.first + 1, pos.second + 1, tile_width - 2, tile_height - 2 }, 250, 250, 250, 60);
@@ -95,9 +92,9 @@ void MapContainer::Draw() const
 		{
 			if (it->drawable)
 			{
-				for (int y = min.second; y <= max.second; ++y)
+				for (int y = up_left.second; y <= down_right.second; ++y)
 				{
-					for (int x = min.first; x <= max.first; ++x)
+					for (int x = up_left.first; x <= down_right.first; ++x)
 					{
 						unsigned int tile_id = it->GetID(x, y);
 						int tex_id;
@@ -121,15 +118,12 @@ void MapContainer::Draw() const
 		
 		// Map tile size - blue
 		App->render->DrawQuad({ mouse_tile_pos.first, mouse_tile_pos.second, tile_width, tile_height }, 0, 0, 100, 80);
-
 	}
 	else if (type == MAPTYPE_ISOMETRIC)
 	{
 		// Get corner coordinates
-		std::pair<int, int> up_right = I_WorldToMap(int(cam.first + App->render->cam_w), int(cam.second));
-		std::pair<int, int> down_left = I_WorldToMap(int(cam.first), int(cam.second + App->render->cam_h));
-		std::pair<int, int> up_left = I_WorldToMap(int(cam.first), int(cam.second));
-		std::pair<int, int> down_right = I_WorldToMap(int(cam.first + App->render->cam_w), int(cam.second + App->render->cam_h));
+		std::pair<int, int> up_right = I_WorldToMap(cam.x + cam.w, cam.y);
+		std::pair<int, int> down_left = I_WorldToMap(cam.x, cam.y + cam.h);
 
 		for (std::vector<MapLayer>::const_iterator it = layers.begin(); it != layers.end(); ++it)
 		{
@@ -226,49 +220,55 @@ bool MapContainer::GetRectAndTexId(int tile_id, SDL_Rect & section, int& text_id
 
 std::pair<int, int> MapContainer::I_MapToWorld(int x, int y) const
 {
+	std::pair<int, int> size = { int(float(tile_width) * scale), int(float(tile_height) * scale) };
+
 	switch (type)
 	{
 	case MAPTYPE_ISOMETRIC: return {
-		(x - y) * tile_width / 2,
-		(x + y) * tile_height / 2 };
+		(x - y) * size.first / 2,
+		(x + y) * size.second / 2 };
 	case MAPTYPE_ORTHOGONAL: return {
-		x * tile_width,
-		y * tile_height };
+		x * size.first,
+		y * size.second };
 	default: return { x, y };
 	}
 }
 
 std::pair<int, int> MapContainer::I_WorldToMap(int x, int y) const
 {
+	std::pair<int, int> size = { int(float(tile_width) * scale), int(float(tile_height) * scale) };
+
 	switch (type)
 	{
 	case MAPTYPE_ISOMETRIC: return {
-		(x / tile_width) + (y / tile_height),
-		(y / tile_height) - (x / tile_width) };
+		(x / size.first) + (y / size.second),
+		(y / size.second) - (x / size.first) };
 	case MAPTYPE_ORTHOGONAL: return {
-		(float(x) / tile_width < 0) ? (x / tile_width) - 1 : x / tile_width,
-		(float(y) / tile_height < 0) ? (y / tile_height) - 1 : y / tile_height };
+		(float(x) / size.first < 0) ? (x / size.first) - 1 : x / size.first,
+		(float(y) / size.second < 0) ? (y / size.second) - 1 : y / size.second };
 	default: return { x, y };
 	}
 }
 
 std::pair<float, float> MapContainer::F_MapToWorld(float x, float y) const
 {
+	std::pair<float, float> size = { float(tile_width) * scale, float(tile_height) * scale };
+
 	switch (type)
 	{
 	case MAPTYPE_ISOMETRIC: return {
-		(x - y) * float(tile_width) * 0.5f,
-		(x + y) * float(tile_height) * 0.5f };
+		(x - y) * size.first * 0.5f,
+		(x + y) * size.second * 0.5f };
 	case MAPTYPE_ORTHOGONAL: return {
-		x * float(tile_width),
-		y * float(tile_height) };
+		x * size.first,
+		y * size.second };
 	default: return { x, y };
 	}
 }
 
 std::pair<float, float> MapContainer::F_WorldToMap(float x, float y) const
 {
-	std::pair<float, float> size = { float(tile_width), float(tile_height) };
+	std::pair<float, float> size = { float(tile_width) * scale, float(tile_height) * scale };
 
 	switch (type)
 	{
@@ -286,18 +286,18 @@ std::pair<int, int> MapContainer::WorldToTileBase(float x, float y) const
 {
 	std::pair<float, float> ret = F_WorldToMap(x, y);
 	std::pair<float, float> tile_position = F_MapToWorld(ret.first, ret.second);
-	float base_offset = float(tile_width) / (2.0f * sin(60.0f * DEGTORAD));
+	float base_offset = float(tile_width) * scale / (2.0f * sin(60.0f * DEGTORAD));
 
-	if (PointInsideTriangle({ x , y - 1.0f },
+	if (PointInsideTriangle({ x , y - scale },
 		{ tile_position.first, tile_position.second },
-		{ tile_position.first + float(tile_width), tile_position.second },
+		{ tile_position.first + float(tile_width) * scale, tile_position.second },
 		{ tile_position.first, tile_position.second + base_offset }))
 		ret.first--;
 
-	if (PointInsideTriangle({ x , y - 1.0f },
+	if (PointInsideTriangle({ x , y - scale },
 		{ tile_position.first, tile_position.second },
-		{ tile_position.first + float(tile_width), tile_position.second },
-		{ tile_position.first + float(tile_width), tile_position.second + base_offset }))
+		{ tile_position.first + float(tile_width) * scale, tile_position.second },
+		{ tile_position.first + float(tile_width) * scale, tile_position.second + base_offset }))
 		ret.second--;
 
 	// Fix decimal clipping

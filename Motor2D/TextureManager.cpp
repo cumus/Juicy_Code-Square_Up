@@ -39,7 +39,7 @@ int TextureManager::Load(const char* path)
 
 		if (surface)
 		{
-			SDL_Texture* texture = SDL_CreateTextureFromSurface(App->render->renderer, surface);
+			SDL_Texture* texture = SDL_CreateTextureFromSurface(App->render->GetSDLRenderer(), surface);
 
 			if (texture)
 			{

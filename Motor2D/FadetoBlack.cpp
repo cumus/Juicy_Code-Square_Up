@@ -55,8 +55,8 @@ bool FadeToBlack::Update(float dt)
 	} break;
 	}
 
-	SDL_SetRenderDrawColor(App->render->renderer, 0, 0, 0, (Uint8)(normalized * 255.0f));
-	SDL_RenderFillRect(App->render->renderer, &screen);
+	SDL_SetRenderDrawColor(App->render->GetSDLRenderer(), 0, 0, 0, (Uint8)(normalized * 255.0f));
+	SDL_RenderFillRect(App->render->GetSDLRenderer(), &screen);
 
 	return true;
 }

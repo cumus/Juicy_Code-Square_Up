@@ -64,6 +64,8 @@ bool Input::PreUpdate()
 	}
 
 	// Mouse
+	mouse_motion_x = mouse_motion_y = mouse_wheel_motion = 0;
+
 	for(int i = 0; i < NUM_MOUSE_BUTTONS; ++i)
 	{
 		if(mouse_buttons[i] == KEY_DOWN)
@@ -72,7 +74,6 @@ bool Input::PreUpdate()
 		if(mouse_buttons[i] == KEY_UP)
 			mouse_buttons[i] = KEY_IDLE;
 	}
-
 	// Events SDL
 	static SDL_Event e;
 	while(SDL_PollEvent(&e) != 0)
@@ -127,24 +128,26 @@ bool Input::PreUpdate()
 						break;
 					break;
 				}
-			break;
+				break;
 
 			case SDL_MOUSEBUTTONDOWN:
 				mouse_buttons[e.button.button - 1] = KEY_DOWN;
-				//LOG("Mouse button %d down", event.button.button-1);
-			break;
+				break;
 
 			case SDL_MOUSEBUTTONUP:
 				mouse_buttons[e.button.button - 1] = KEY_UP;
-				//LOG("Mouse button %d up", event.button.button-1);
-			break;
+				break;
 
 			case SDL_MOUSEMOTION:
 				mouse_motion_x = e.motion.xrel;
 				mouse_motion_y = e.motion.yrel;
 				mouse_x = e.motion.x;
 				mouse_y = e.motion.y;
-				//LOG("Mouse motion x %d y %d", mouse_motion_x, mouse_motion_y);
+				break;
+
+			case SDL_MOUSEWHEEL:
+				mouse_wheel_motion = e.wheel.y;
+				break;
 			break;
 		}
 	}
@@ -182,4 +185,9 @@ void Input::GetMouseMotion(int& x, int& y) const
 {
 	x = mouse_motion_x;
 	y = mouse_motion_y;
+}
+
+int Input::GetMouseWheelMotion() const
+{
+	return mouse_wheel_motion;
 }

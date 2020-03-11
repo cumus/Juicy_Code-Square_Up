@@ -2,7 +2,9 @@
 #include "Application.h"
 #include "Window.h"
 #include "Input.h"
+#include "Map.h"
 #include "TextureManager.h"
+#include "TimeManager.h"
 #include "Defs.h"
 #include "Log.h"
 
@@ -82,6 +84,48 @@ bool Render::PreUpdate()
 
 bool Render::Update()
 {
+	// Zoom
+	int wheel_motion = App->input->GetMouseWheelMotion();
+	if (wheel_motion != 0)
+	{
+		float target_zoom = zoom + float(wheel_motion) * 0.05f;
+
+		if (target_zoom > 4.0f)
+		{
+			zoom = 4.0f;
+			App->map->SetMapScale(zoom);
+		}
+		else if (target_zoom < 0.5f)
+		{
+			zoom = 0.5f;
+			App->map->SetMapScale(zoom);
+		}
+		else if (wheel_motion != 0)
+		{
+			// Get Tile at mouse - before zoom
+			int x, y;
+			App->input->GetMousePosition(x, y);
+			std::pair<int, int> mouse_tile = App->map->WorldToTileBase(int(cam_x) + x, int(cam_y) + y);
+			std::pair<float, float> tile_pos = App->map->F_MapToWorld(mouse_tile.first, mouse_tile.second);
+
+			// Get Tile at mouse - after zoom
+			App->map->SetMapScale(zoom = target_zoom);
+			std::pair<float, float> tile_pos_next = App->map->F_MapToWorld(mouse_tile.first, mouse_tile.second);
+
+			// Displace camera - keep mouse at same tile
+			cam_x += (tile_pos_next.first - tile_pos.first);
+			cam_y += (tile_pos_next.second - tile_pos.second);
+		}
+	}
+
+	// Move camera
+	float moveSpeed = 200.000f * App->time->GetDeltaTime() / zoom;
+	if (App->input->GetKey(SDL_SCANCODE_LSHIFT) == KEY_REPEAT) moveSpeed *= 5.000f;
+	if (App->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT) cam_x -= moveSpeed;
+	if (App->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT) cam_x += moveSpeed;
+	if (App->input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT) cam_y -= moveSpeed;
+	if (App->input->GetKey(SDL_SCANCODE_S) == KEY_REPEAT) cam_y += moveSpeed;
+
 	return true;
 }
 
@@ -121,6 +165,21 @@ bool Render::Save(pugi::xml_node& data) const
 	return true;
 }
 
+SDL_Renderer* Render::GetSDLRenderer() const
+{
+	return renderer;
+}
+
+SDL_Rect Render::GetCameraRect() const
+{
+	return { int(cam_x), int(cam_y), int(cam_w), int(cam_h) };
+}
+
+float Render::GetZoom() const
+{
+	return zoom;
+}
+
 void Render::SetBackgroundColor(SDL_Color color)
 {
 	background = color;
@@ -145,18 +204,6 @@ bool Render::Blit(int texture_id, int x, int y, const SDL_Rect* section, bool us
 	if (texture != nullptr)
 	{
 		SDL_Rect rect;
-
-		if (use_cam)
-		{
-			rect.x = x - int(cam_x);
-			rect.y = y - int(cam_y);
-		}
-		else
-		{
-			rect.x = x;
-			rect.y = y;
-		}
-
 		if (section)
 		{
 			rect.w = section->w;
@@ -168,6 +215,18 @@ bool Render::Blit(int texture_id, int x, int y, const SDL_Rect* section, bool us
 			App->tex->GetTextureData(texture_id, tex_data);
 			rect.w = tex_data.width;
 			rect.h = tex_data.height;
+		}
+		if (use_cam)
+		{
+			rect.x = x - int(cam_x);
+			rect.y = y - int(cam_y);
+			rect.w = int(float(rect.w) * zoom);
+			rect.h = int(float(rect.h) * zoom);
+		}
+		else
+		{
+			rect.x = x;
+			rect.y = y;
 		}
 
 		if (SDL_RenderCopyEx(renderer, texture, section, &rect, 0,nullptr, SDL_RendererFlip::SDL_FLIP_NONE) != 0)
@@ -185,7 +244,7 @@ bool Render::Blit(int texture_id, int x, int y, const SDL_Rect* section, bool us
 	return ret;
 }
 
-bool Render::Blit_Scale(int texture_id, int x, int y, float scale_x, float scale_y, bool use_cam, const SDL_Rect* section) const
+bool Render::Blit_Scale(int texture_id, int x, int y, float scale_x, float scale_y, const SDL_Rect* section, bool use_cam) const
 {
 	bool ret = true;
 
@@ -194,17 +253,6 @@ bool Render::Blit_Scale(int texture_id, int x, int y, float scale_x, float scale
 	if (texture != nullptr)
 	{
 		SDL_Rect rect;
-
-		if (use_cam)
-		{
-			rect.x = x - int(cam_x);
-			rect.y = y - int(cam_y);
-		}
-		else
-		{
-			rect.x = x;
-			rect.y = y;
-		}
 
 		if (section)
 		{
@@ -219,11 +267,17 @@ bool Render::Blit_Scale(int texture_id, int x, int y, float scale_x, float scale
 			rect.h = tex_data.height;
 		}
 
-		if (scale_x != 1.00f || scale_y != 1.00f)
+		if (use_cam)
 		{
-			rect.x -= int((float(rect.w) * scale_x) - float(rect.w) * 0.5f);
-			rect.y -= int((float(rect.h) * scale_y) - float(rect.h) * 0.5f);
-
+			rect.x = x - int(cam_x);
+			rect.y = y - int(cam_y);
+			rect.w = int(float(rect.w) * zoom * scale_x);
+			rect.h = int(float(rect.h) * zoom * scale_y);
+		}
+		else
+		{
+			rect.x = x;
+			rect.y = y;
 			rect.w = int(float(rect.w) * scale_x);
 			rect.h = int(float(rect.h) * scale_y);
 		}
