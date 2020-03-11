@@ -1,0 +1,7 @@
+Error:
+  Message: The request is invalid.
+  ModelState:
+    svg: >-
+      The value
+      'true)](https://https://ci.appveyor.com/project/PolGannau/juicy-code-games-project-2)'
+      is not valid for Nullable`1.
