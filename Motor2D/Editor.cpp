@@ -28,6 +28,10 @@ bool Editor::Awake(pugi::xml_node&)
 
 bool Editor::Update()
 {
+	mouse_over_windows = 0u;
+	KeyState mouse_left_button = App->input->GetMouseButtonDown(0);
+	bool sizing = (App->input->GetKey(SDL_SCANCODE_LCTRL) == KEY_REPEAT);
+
 	if (!hide_windows)
 	{
 		int x, y;
@@ -36,19 +40,14 @@ bool Editor::Update()
 		float mouse_x = float(x) / float(cam.w);
 		float mouse_y = float(y) / float(cam.h);
 
-		KeyState mouse_left_button = App->input->GetMouseButtonDown(0);
-		bool sizing = (App->input->GetKey(SDL_SCANCODE_LCTRL) == KEY_REPEAT);
-
-		mouse_over_windows = 0u;
-
 		for (std::vector<EditorWindow*>::const_iterator it = windows.begin(); it != windows.end(); ++it)
 			if ((*it)->Update(mouse_x, mouse_y, mouse_left_button, sizing))
 				mouse_over_windows++;
-
-		// Select Gameobject
-		if (mouse_left_button == KEY_DOWN && !sizing && mouse_over_windows == 0u)
-			selection = App->scene->RaycastSelect();
 	}
+
+	// Select Gameobject
+	if (mouse_left_button == KEY_DOWN && !sizing && mouse_over_windows == 0u)
+		selection = App->scene->RaycastSelect();
 
 	return true;
 }
