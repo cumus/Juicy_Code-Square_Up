@@ -19,10 +19,13 @@ public:
 
 	void RecieveEvent(const Event& e) override;
 
+	std::string GetName() const;
+	void SetName(const char* name);
+
 	Transform* GetTransform();
 	const Transform* GetTransform() const;
 
-	void SetName(const char* name);
+	std::vector<Gameobject*>& GetChilds();
 
 	void AddComponent(Component* comp);
 

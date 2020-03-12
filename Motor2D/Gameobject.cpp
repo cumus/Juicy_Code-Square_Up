@@ -94,6 +94,11 @@ void Gameobject::RecieveEvent(const Event & e)
 	}
 }
 
+std::string Gameobject::GetName() const
+{
+	return name;
+}
+
 Transform * Gameobject::GetTransform()
 {
 	if (transform != nullptr)
@@ -116,6 +121,11 @@ const Transform* Gameobject::GetTransform() const
 			return (*it)->AsTransform();
 
 	return nullptr;
+}
+
+std::vector<Gameobject*>& Gameobject::GetChilds()
+{
+	return childs;
 }
 
 void Gameobject::SetName(const char * n)
