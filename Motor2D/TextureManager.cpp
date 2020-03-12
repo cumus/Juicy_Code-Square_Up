@@ -21,6 +21,29 @@ void TextureManager::CleanUp()
 	textures.clear();
 }
 
+int TextureManager::LoadSurface(SDL_Surface* surface)
+{
+	int ret = -1;
+
+	SDL_Texture* tex = SDL_CreateTextureFromSurface(App->render->GetSDLRenderer(), surface);
+
+	if (tex != nullptr)
+	{
+		TextureData data;
+		SDL_QueryTexture(tex, 0, 0, &data.width, &data.height);
+		data.source = "From SDL_Surface";
+		data.id = textures.size();
+
+		ret = data.id;
+		texture_data.push_back(data);
+		textures.push_back(tex);
+	}
+	else
+		LOG("Unable to create texture from surface! SDL Error: %s\n", SDL_GetError());
+
+	return ret;
+}
+
 // Load texture from file path
 int TextureManager::Load(const char* path)
 {

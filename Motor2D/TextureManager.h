@@ -26,6 +26,8 @@ public:
 	int Load(const char* path);
 	void CleanUp();
 
+	int LoadSurface(SDL_Surface* surface);
+
 	bool GetTextureData(int id, TextureData& data) const;
 	SDL_Texture* GetTexture(int id) const;
 
