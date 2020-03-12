@@ -20,7 +20,10 @@ public:
 	~Editor();
 
 	bool Awake(pugi::xml_node&) override;
+	bool Update() override;
 	bool PostUpdate() override;
+
+	bool MouseOnWindow() const;
 
 public:
 
@@ -38,7 +41,8 @@ private:
 private:
 
 	std::vector<EditorWindow*> windows;
-	bool draw = true;
+	bool hide_windows = false;
+	unsigned int mouse_over_windows = 0u;
 };
 
 #endif // __EDITOR_H__

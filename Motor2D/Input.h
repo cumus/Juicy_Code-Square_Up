@@ -34,7 +34,7 @@ public:
 
 	inline KeyState GetMouseButtonDown(int id) const
 	{
-		return mouse_buttons[id - 1];
+		return mouse_buttons[id];
 	}
 
 	void GetMousePosition(int &x, int &y) const;

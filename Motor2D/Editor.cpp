@@ -27,20 +27,49 @@ bool Editor::Awake(pugi::xml_node&)
 	return true;
 }
 
-bool Editor::PostUpdate()
+bool Editor::Update()
 {
-	if (App->input->GetKey(SDL_SCANCODE_F1) == KEY_DOWN)
-		draw = !draw;
-
-	if (draw)
+	if (!hide_windows)
 	{
+		int x, y;
+		App->input->GetMousePosition(x, y);
 		SDL_Rect cam = App->render->GetCameraRect();
+		float mouse_x = float(x) / float(cam.w);
+		float mouse_y = float(y) / float(cam.h);
+
+		KeyState mouse_left_button = App->input->GetMouseButtonDown(0);
+		bool sizing = (App->input->GetKey(SDL_SCANCODE_LCTRL) == KEY_REPEAT);
+
+		mouse_over_windows = 0u;
 
 		for (std::vector<EditorWindow*>::const_iterator it = windows.begin(); it != windows.end(); ++it)
-			(*it)->Draw(float(cam.w), float(cam.h));
+			if ((*it)->Update(mouse_x, mouse_y, mouse_left_button, sizing))
+				mouse_over_windows++;
 	}
 
 	return true;
+}
+
+bool Editor::PostUpdate()
+{
+	if (App->input->GetKey(SDL_SCANCODE_F1) == KEY_DOWN)
+		hide_windows = !hide_windows;
+
+	if (!hide_windows)
+	{
+		SDL_Rect cam = App->render->GetCameraRect();
+		bool draw_border = (App->input->GetKey(SDL_SCANCODE_LCTRL) == KEY_REPEAT);
+
+		for (std::vector<EditorWindow*>::const_iterator it = windows.begin(); it != windows.end(); ++it)
+			(*it)->Draw(float(cam.w), float(cam.h), draw_border);
+	}
+
+	return true;
+}
+
+bool Editor::MouseOnWindow() const
+{
+	return mouse_over_windows > 0u;
 }
 
 void Editor::AddWindow(EditorWindow* window)
