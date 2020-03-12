@@ -87,6 +87,7 @@
     <ClCompile Include="Event.cpp" />
     <ClCompile Include="FadetoBlack.cpp" />
     <ClCompile Include="Gameobject.cpp" />
+    <ClCompile Include="JuicyMath.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Application.cpp" />
     <ClCompile Include="Audio.cpp" />
@@ -116,6 +117,7 @@
     <ClInclude Include="EventListener.h" />
     <ClInclude Include="FadetoBlack.h" />
     <ClInclude Include="Gameobject.h" />
+    <ClInclude Include="JuicyMath.h" />
     <ClInclude Include="Map.h" />
     <ClInclude Include="MapContainer.h" />
     <ClInclude Include="mmgr\mmgr.h" />
