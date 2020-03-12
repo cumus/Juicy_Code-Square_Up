@@ -287,7 +287,7 @@ extern DECLSPEC int TTF_GetFontKerningSizeGlyphs(TTF_Font *font, Uint16 previous
 #ifdef __cplusplus
 }
 #endif
-#include "..\..\SDL2\include\close_code.h"
+#include "..\..\SDL\include\close_code.h"
 
 #endif /* SDL_TTF_H_ */
 

@@ -41,6 +41,7 @@ Application::~Application()
 
 	DEL(time);
 	DEL(tex);
+	DEL(fonts);
 }
 
 void Application::AddModule(Module* module)
@@ -54,7 +55,7 @@ bool Application::Init()
 {
 	bool ret = true;
 
-	//ret = fonts->Init();
+	ret = fonts->Init();
 
 	pugi::xml_document config_file;
 	pugi::xml_parse_result result = config_file.load_file("config.xml");
@@ -171,6 +172,7 @@ bool Application::CleanUp()
 	for (std::list<Module*>::reverse_iterator it = modules.rbegin(); it != modules.rend() && ret; ++it)
 		ret = (*it)->CleanUp();
 
+	fonts->CleanUp();
 	tex->CleanUp();
 
 	return ret;
