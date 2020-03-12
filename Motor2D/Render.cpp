@@ -54,7 +54,6 @@ bool Render::Awake(pugi::xml_node& config)
 // Called before the first frame
 bool Render::Start()
 {
-	OPTICK_THREAD("RenderStart");
 
 	bool ret = true;
 
@@ -88,7 +87,7 @@ bool Render::PreUpdate()
 
 bool Render::Update()
 {
-	OPTICK_EVENT("render_update");
+	OPTICK_EVENT();
 
 	// Zoom
 	int wheel_motion = App->input->GetMouseWheelMotion();

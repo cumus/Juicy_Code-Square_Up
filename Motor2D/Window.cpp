@@ -19,9 +19,7 @@ Window::~Window()
 // Called before render is available
 bool Window::Awake(pugi::xml_node& config)
 {
-
-	OPTICK_EVENT("window_awake");
-	OPTICK_THREAD("WindowAwake");
+	OPTICK_EVENT();
 
 	LOG("Init SDL window & surface");
 	bool ret = true;

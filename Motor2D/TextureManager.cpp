@@ -5,6 +5,8 @@
 #include "Defs.h"
 #include "Log.h"
 
+#include "Optick/include/optick.h"
+
 #include "SDL_image/include/SDL_image.h"
 
 void TextureManager::CleanUp()
@@ -22,6 +24,8 @@ void TextureManager::CleanUp()
 // Load texture from file path
 int TextureManager::Load(const char* path)
 {
+	OPTICK_EVENT();
+
 	int ret = -1;
 
 	for (std::vector<TextureData>::iterator it = texture_data.begin(); it != texture_data.end(); ++it)

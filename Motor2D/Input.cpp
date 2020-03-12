@@ -41,9 +41,7 @@ bool Input::Start()
 // Called each loop iteration
 bool Input::PreUpdate()
 {
-
-	OPTICK_EVENT("input_preupdate");
-	OPTICK_THREAD("InputPrepdate");
+	OPTICK_EVENT();
 
 	// Update SDL event queue
 	SDL_PumpEvents();

@@ -5,6 +5,8 @@
 #include "Gameobject.h"
 #include "Transform.h"
 
+#include "Optick/include/optick.h"
+
 Sprite::Sprite(Gameobject* go) : Component(SPRITE, go)
 {
 	r = g = b = a = 250;
@@ -17,6 +19,8 @@ Sprite::~Sprite()
 
 void Sprite::PostUpdate()
 {
+	OPTICK_EVENT();
+
 	if (game_object)
 	{
 		Transform* t = game_object->GetTransform();

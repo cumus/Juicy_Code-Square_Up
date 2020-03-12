@@ -3,6 +3,8 @@
 #include "Gameobject.h"
 #include "Log.h"
 
+#include "Optick/include/optick.h"
+
 Transform::Transform(Gameobject* go) : Component(TRANSFORM, go)
 {
 	pos.Set(0.f);
@@ -20,6 +22,8 @@ void Transform::PreUpdate()
 
 void Transform::Update()
 {
+	OPTICK_EVENT();
+
 	if (modified)
 	{
 		if (game_object != nullptr)

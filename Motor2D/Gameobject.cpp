@@ -2,6 +2,8 @@
 #include "Defs.h"
 #include "Transform.h"
 
+#include "Optick/include/optick.h"
+
 Gameobject::Gameobject(const char* n, Gameobject* p)
 {
 	name = n;
@@ -45,6 +47,8 @@ void Gameobject::PreUpdate()
 
 void Gameobject::Update()
 {
+	OPTICK_EVENT();
+
 	for (std::vector<Component*>::iterator component = components.begin(); component != components.end(); ++component)
 		if ((*component)->IsActive())
 			(*component)->Update();

@@ -26,9 +26,7 @@ bool Map::Awake(pugi::xml_node& config)
 
 bool Map::Update()
 {
-
 	OPTICK_EVENT("map_update");
-	OPTICK_THREAD("MapUpdate");
 
 	bool ret = true;
 

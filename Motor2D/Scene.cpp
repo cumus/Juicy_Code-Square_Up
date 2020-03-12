@@ -43,9 +43,7 @@ bool Scene::PreUpdate()
 
 bool Scene::Update()
 {
-
-	OPTICK_EVENT("scene_update");
-	OPTICK_THREAD("SceneUpdate");
+	OPTICK_EVENT();
 
 	Transform* t1 = go1->GetTransform();
 	Transform* t2 = go2->GetTransform();
@@ -121,7 +119,7 @@ bool Scene::LoadTestScene()
 	//App->audio->PlayMusic("audio/music/lvl1bgm.ogg");
 
 	// Remove fps cap
-	App->time->SetMaxFPS(60);
+	App->time->SetMaxFPS(30);
 
 	// Load mouse debug texture for identifying tiles
 	id_mouse_tex = App->tex->Load("textures/meta.png");

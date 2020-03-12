@@ -30,8 +30,8 @@ bool FadeToBlack::Start()
 bool FadeToBlack::Update(float dt)
 {
 
-	OPTICK_EVENT("fade_to_black_update");
-	OPTICK_THREAD("FadeToBlackUpdate");
+	//OPTICK_EVENT("fade_to_black_update");
+	//OPTICK_THREAD("FadeToBlackUpdate");
 
 	if (current_step == fade_step::none)
 		return true;

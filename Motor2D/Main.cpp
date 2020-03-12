@@ -36,7 +36,7 @@ int main(int argc, char* args[])
 
 		while (update_return == 1)
 		{
-			OPTICK_FRAME("Main Thread");
+			OPTICK_FRAME("MainThread");
 			update_return = App->Update();
 		}
 

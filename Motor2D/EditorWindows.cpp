@@ -4,6 +4,8 @@
 #include "Render.h"
 #include "JuicyMath.h"
 
+#include "Optick/include/optick.h"
+
 EditorWindow::EditorWindow(float x, float y, float w, float h) : x(x), y(y), w(w), h(h)
 {
 	r = g = b = 250;

@@ -14,9 +14,7 @@
 
 bool MapContainer::Load(const char* directory, const char* file)
 {
-
-	OPTICK_EVENT("map_container_load");
-	OPTICK_THREAD("MApContainerLoad");
+	OPTICK_EVENT();
 
 	loaded = false;
 	dir = directory;

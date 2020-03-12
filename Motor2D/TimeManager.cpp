@@ -2,6 +2,7 @@
 
 #include "Log.h"
 #include "SDL\include\SDL.h"
+#include "Optick/include/optick.h"
 
 TimeManager::TimeManager()
 {
@@ -15,6 +16,8 @@ TimeManager::~TimeManager()
 
 float TimeManager::UpdateDeltaTime()
 {
+	OPTICK_EVENT();
+
 	dt = ms_timer.ReadF() / 1000.f;
 	ms_timer.Start();
 
