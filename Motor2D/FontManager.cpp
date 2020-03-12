@@ -3,9 +3,9 @@
 #include "TextureManager.h"
 #include "Log.h"
 
-#include "SDL/include/SDL.h"
-#include "SDL_ttf/include/SDL_ttf.h"
-#pragma comment( lib, "SDL_ttf/libx86/SDL2_ttf.lib" )
+/*#include "SDL/include/SDL.h"
+#include "SDL2_ttf-2.0.15/include/SDL_ttf.h"
+#pragma comment( lib, "SDL2_ttf-2.0.15/lib/x86/SDL2_ttf.lib" )*/
 
 FontManager::FontManager()
 {
@@ -17,24 +17,25 @@ FontManager::~FontManager()
 
 bool FontManager::Init()
 {
-	bool ret = (TTF_Init() == 0);
+	/*bool ret = (TTF_Init() == 0);
 
 	if (!ret) LOG("SDL_ttf could not initialize! SDL_ttf Error: %s\n", TTF_GetError());
 
-	return ret;
+	return ret;*/
+	return true;
 }
 
 bool FontManager::CleanUp()
 {
-	for (std::vector<TTF_Font*>::iterator item = fonts.begin(); item != fonts.cend(); item++)
+	/*for (std::vector<TTF_Font*>::iterator item = fonts.begin(); item != fonts.cend(); item++)
 		TTF_CloseFont(*item);
 
 	fonts.clear();
-	TTF_Quit();
+	TTF_Quit();*/
 
 	return true;
 }
-
+/*
 _TTF_Font* const FontManager::Load(const char* path, int size)
 {
 	// TODO: Add SDL_RWops support
@@ -78,4 +79,4 @@ bool FontManager::CalcSize(const char* text, int& width, int& height, _TTF_Font*
 		LOG("Unable to calc size of text surface! SDL_ttf Error: %s\n", TTF_GetError());
 
 	return ret;
-}
+}*/

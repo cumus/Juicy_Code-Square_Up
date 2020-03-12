@@ -19,6 +19,7 @@ class Render;
 // Independent Managers
 class TimeManager;
 class TextureManager;
+class FontManager;
 
 class Application : public EventListener
 {
@@ -66,6 +67,7 @@ public:
 	// Independent Managers
 	TimeManager*	time;
 	TextureManager*	tex;
+	FontManager*	fonts;
 
 private:
 

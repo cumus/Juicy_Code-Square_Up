@@ -135,6 +135,7 @@
     <ClInclude Include="Module.h" />
     <ClInclude Include="Point.h" />
     <ClInclude Include="Render.h" />
+    <ClInclude Include="SDL2_ttf-2.0.15\include\SDL_ttf.h" />
     <ClInclude Include="Sprite.h" />
     <ClInclude Include="TextureManager.h" />
     <ClInclude Include="TimeManager.h" />

@@ -189,6 +189,9 @@
     <ClInclude Include="FontManager.h">
       <Filter>Source\Independent Managers</Filter>
     </ClInclude>
+    <ClInclude Include="SDL2_ttf-2.0.15\include\SDL_ttf.h">
+      <Filter>Source\3rd Party\SDL_ttf</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Source">
@@ -238,6 +241,9 @@
     </Filter>
     <Filter Include="Source\Modules\Editor">
       <UniqueIdentifier>{d82a7a8a-4c42-42b6-9915-e43fb9545b2c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\3rd Party\SDL_ttf">
+      <UniqueIdentifier>{e53cba69-e257-43a2-a3dd-432fe4d40dd7}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

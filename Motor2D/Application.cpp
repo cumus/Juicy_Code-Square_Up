@@ -8,6 +8,7 @@
 #include "Render.h"
 #include "TextureManager.h"
 #include "TimeManager.h"
+#include "FontManager.h"
 #include "Defs.h"
 #include "Log.h"
 #include "Optick/include/optick.h"
@@ -19,6 +20,7 @@ Application::Application(int argc, char* args[]) : argc(argc), args(args)
 	// Independent Managers
 	time = new TimeManager();
 	tex = new TextureManager();
+	fonts = new FontManager();
 
 	// Modules
 	AddModule(input = new Input());
@@ -52,10 +54,12 @@ bool Application::Init()
 {
 	bool ret = true;
 
+	//ret = fonts->Init();
+
 	pugi::xml_document config_file;
 	pugi::xml_parse_result result = config_file.load_file("config.xml");
 
-	if (result)
+	if (ret && result)
 	{
 		pugi::xml_node config = config_file.child("config");
 
