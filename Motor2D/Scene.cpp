@@ -5,15 +5,18 @@
 #include "Window.h"
 #include "Render.h"
 #include "Map.h"
+#include "Editor.h"
 #include "MapContainer.h"
 #include "TimeManager.h"
 #include "TextureManager.h"
 #include "Sprite.h"
 #include "Defs.h"
 #include "Log.h"
-#include <math.h>
 
 #include "Optick/include/optick.h"
+
+#include <math.h>
+#include <queue>
 
 Scene::Scene() : Module("scene")
 {}
@@ -86,15 +89,19 @@ bool Scene::PostUpdate()
 	vec go1_pos = go1->GetTransform()->GetGlobalPosition();
 	vec go2_pos = go2->GetTransform()->GetGlobalPosition();
 
+	// Editor Selection
+	Gameobject* sel = App->editor->selection;
+
 	// Log onto window title
 	static char tmp_str[220];
-	sprintf_s(tmp_str, 220, "FPS: %d, Zoom: %f, Mouse: %dx%d, Tile: %dx%d, g1 { %d, %d, %d }, g2 { %d, %d, %d }",
+	sprintf_s(tmp_str, 220, "FPS: %d, Zoom: %0.2f, Mouse: %dx%d, Tile: %dx%d, g1 { %d, %d, %d }, g2 { %d, %d, %d }, Selection: %s",
 		App->time->GetLastFPS(),
 		App->render->GetZoom(),
 		mouse_x, mouse_y,
 		map_coordinates.first, map_coordinates.second,
 		(int)go1_pos.x, (int)go1_pos.y, (int)go1_pos.z,
-		(int)go2_pos.x, (int)go2_pos.y, (int)go2_pos.z);
+		(int)go2_pos.x, (int)go2_pos.y, (int)go2_pos.z,
+		sel != nullptr ? sel->GetName().c_str() : "none selected");
 
 	App->win->SetTitle(tmp_str);
 
@@ -137,4 +144,41 @@ bool Scene::LoadTestScene()
 Gameobject * Scene::AddGameobject(const char * name, Gameobject * parent)
 {
 	return new Gameobject(name, parent != nullptr ? parent : &root);
+}
+
+Gameobject* Scene::RaycastSelect()
+{
+	Gameobject* ret = nullptr;
+	std::queue<Gameobject*> queue;
+	std::vector<Gameobject*> root_childs = root.GetChilds();
+	
+	for (std::vector<Gameobject*>::iterator it = root_childs.begin(); it != root_childs.end(); ++it)
+		queue.push(*it);
+
+	if (!queue.empty())
+	{
+		int mouse_x, mouse_y;
+		App->input->GetMousePosition(mouse_x, mouse_y);
+		SDL_Rect cam_rect = App->render->GetCameraRect();
+		std::pair<float, float> map_coordinates = App->map->WorldToTileBase(cam_rect.x + mouse_x, cam_rect.y + mouse_y);
+
+		while (!queue.empty())
+		{
+			// TODO: Quadtree
+
+			Gameobject* go = queue.front();
+
+			std::vector<Gameobject*> go_childs = go->GetChilds();
+			for (std::vector<Gameobject*>::iterator it = go_childs.begin(); it != go_childs.end(); ++it)
+				queue.push(*it);
+
+			Transform* t = go->GetTransform();
+			if (t->Intersects(map_coordinates))
+				ret = go;
+
+			queue.pop();
+		}
+	}
+
+	return ret;
 }

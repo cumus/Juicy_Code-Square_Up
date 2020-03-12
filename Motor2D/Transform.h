@@ -18,20 +18,11 @@ public:
 
 	void SetParent(Transform& parent);
 
-	// Position
+	// Local Position
 	vec		GetLocalPos() const { return pos; }
 	float	GetLocalX() const { return pos.x; }
 	float	GetLocalY() const { return pos.y; }
 	float	GetLocalZ() const { return pos.z; }
-
-	// Scale
-	vec		GetLocalScale() const { return scale; }
-	float	GetLocalScaleX() const { return scale.x; }
-	float	GetLocalScaleY() const { return scale.y; }
-	float	GetLocalScaleZ() const { return scale.z; }
-
-	vec GetGlobalPosition() const { return global_parent_pos + pos; }
-	vec GetGlobalScale() const { return global_parent_scale * scale; }
 
 	void SetX(float val);
 	void SetY(float val);
@@ -39,6 +30,19 @@ public:
 	void MoveX(float val);
 	void MoveY(float val);
 	void MoveZ(float val);
+
+	// Local Scale
+	vec		GetLocalScale() const { return scale; }
+	float	GetLocalScaleX() const { return scale.x; }
+	float	GetLocalScaleY() const { return scale.y; }
+	float	GetLocalScaleZ() const { return scale.z; }
+
+	// Global values
+	vec GetGlobalPosition() const { return global_parent_pos + pos; }
+	vec GetGlobalScale() const { return global_parent_scale * scale; }
+
+	// Collision
+	bool Intersects(std::pair<float, float> p) const;
 
 private:
 

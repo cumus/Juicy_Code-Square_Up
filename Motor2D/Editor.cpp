@@ -1,16 +1,15 @@
 #include "Editor.h"
-#include "EditorWindows.h"
 #include "Application.h"
 #include "Input.h"
 #include "Render.h"
+#include "Scene.h"
+#include "EditorWindows.h"
 
 Editor::Editor() : Module("editor")
-{
-}
+{}
 
 Editor::~Editor()
-{
-}
+{}
 
 bool Editor::Awake(pugi::xml_node&)
 {
@@ -45,6 +44,10 @@ bool Editor::Update()
 		for (std::vector<EditorWindow*>::const_iterator it = windows.begin(); it != windows.end(); ++it)
 			if ((*it)->Update(mouse_x, mouse_y, mouse_left_button, sizing))
 				mouse_over_windows++;
+
+		// Select Gameobject
+		if (mouse_left_button == KEY_DOWN && !sizing && mouse_over_windows == 0u)
+			selection = App->scene->RaycastSelect();
 	}
 
 	return true;

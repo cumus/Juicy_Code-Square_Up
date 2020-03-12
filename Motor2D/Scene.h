@@ -24,6 +24,8 @@ public:
 
 	Gameobject* AddGameobject(const char* name, Gameobject* parent = nullptr);
 
+	Gameobject* RaycastSelect();
+
 public:
 
 	int id_mouse_tex;

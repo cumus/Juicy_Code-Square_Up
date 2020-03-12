@@ -11,6 +11,7 @@ class HeriarchyWindow;
 class PropertiesWindow;
 class ConsoleWindow;
 class ConfigWindow;
+class Gameobject;
 
 class Editor : public Module
 {
@@ -34,15 +35,18 @@ public:
 	ConsoleWindow* console = nullptr;
 	ConfigWindow* config = nullptr;
 
+	Gameobject* selection = nullptr;
+
 private:
 
 	void AddWindow(EditorWindow* window);
 
 private:
 
-	std::vector<EditorWindow*> windows;
 	bool hide_windows = false;
 	unsigned int mouse_over_windows = 0u;
+
+	std::vector<EditorWindow*> windows;
 };
 
 #endif // __EDITOR_H__

@@ -1,4 +1,5 @@
 #include "Transform.h"
+#include "JuicyMath.h"
 #include "Gameobject.h"
 #include "Log.h"
 
@@ -102,4 +103,16 @@ void Transform::MoveZ(float val)
 		pos.z += val;
 		modified = true;
 	}
+}
+
+bool Transform::Intersects(std::pair<float, float> p) const
+{
+	vec g_pos = GetGlobalPosition();
+	vec g_scale = GetGlobalScale();
+
+	return JMath::PointInsideRect(p.first, p.second, {
+		g_pos.x - (0.5f * g_scale.x),
+		g_pos.y - (0.5f * g_scale.y),
+		g_scale.x,
+		g_scale.y });
 }
