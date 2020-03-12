@@ -76,6 +76,9 @@
     <ClCompile Include="JuicyMath.cpp">
       <Filter>Source\Tools</Filter>
     </ClCompile>
+    <ClCompile Include="FontManager.cpp">
+      <Filter>Source\Independent Managers</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="PugiXml\src\pugiconfig.hpp">
@@ -182,6 +185,9 @@
     </ClInclude>
     <ClInclude Include="JuicyMath.h">
       <Filter>Source\Tools</Filter>
+    </ClInclude>
+    <ClInclude Include="FontManager.h">
+      <Filter>Source\Independent Managers</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

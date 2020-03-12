@@ -86,6 +86,7 @@
     <ClCompile Include="EditorWindows.cpp" />
     <ClCompile Include="Event.cpp" />
     <ClCompile Include="FadetoBlack.cpp" />
+    <ClCompile Include="FontManager.cpp" />
     <ClCompile Include="Gameobject.cpp" />
     <ClCompile Include="JuicyMath.cpp" />
     <ClCompile Include="Main.cpp" />
@@ -116,6 +117,7 @@
     <ClInclude Include="Event.h" />
     <ClInclude Include="EventListener.h" />
     <ClInclude Include="FadetoBlack.h" />
+    <ClInclude Include="FontManager.h" />
     <ClInclude Include="Gameobject.h" />
     <ClInclude Include="JuicyMath.h" />
     <ClInclude Include="Map.h" />
