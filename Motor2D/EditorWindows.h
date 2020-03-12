@@ -1,14 +1,12 @@
 #ifndef __EDITOR_WINDOWS_H__
 #define __EDITOR_WINDOWS_H__
 
-#include "UI_Elements.h"
+#include "EventListener.h"
 #include "SDL/include/SDL_rect.h"
-
-enum KeyState;
 
 enum Window_Sides
 {
-	NONE,
+	SIDE_NONE,
 	SIDE_N,
 	SIDE_W,
 	SIDE_E,
@@ -18,6 +16,9 @@ enum Window_Sides
 	CORNER_SW,
 	CORNER_SE
 };
+
+enum KeyState;
+class UI_Element;
 
 class EditorWindow : public EventListener
 {
@@ -42,15 +43,13 @@ public:
 
 	virtual void DrawContent(SDL_Rect area) const {}
 
-	static bool InsideRect(std::pair<float, float> p, RectF rect);
-
 public:
 
 	float x, y, w, h;
 	unsigned int r, g, b, a;
 
 	bool mouse_inside = false;
-	Window_Sides hovering = NONE;
+	Window_Sides hovering = SIDE_NONE;
 	bool dragging = false;
 
 	std::vector<UI_Element*> elements;

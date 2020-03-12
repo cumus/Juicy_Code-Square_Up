@@ -4,7 +4,7 @@
 #include "SDL/include/SDL.h"
 #include "Module.h"
 
-struct Sprite;
+class Sprite;
 
 class Render : public Module
 {

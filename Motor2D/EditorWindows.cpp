@@ -2,6 +2,7 @@
 #include "Application.h"
 #include "Input.h"
 #include "Render.h"
+#include "JuicyMath.h"
 
 EditorWindow::EditorWindow(float x, float y, float w, float h) : x(x), y(y), w(w), h(h)
 {
@@ -22,26 +23,26 @@ bool EditorWindow::Update(float mouse_x, float mouse_y, KeyState mouse_left_butt
 				mouse_y >= y - margin && mouse_y <= y + h + margin)
 			{
 				// Clicking inside window
-				if (InsideRect({ mouse_x, mouse_y }, GetBorderN_Normalized(margin)))
+				if (JMath::PointInsideRect(mouse_x, mouse_y, GetBorderN_Normalized(margin)))
 				{
-					if (InsideRect({ mouse_x, mouse_y }, GetBorderW_Normalized(margin))) hovering = CORNER_NW;
-					else if (InsideRect({ mouse_x, mouse_y }, GetBorderE_Normalized(margin))) hovering = CORNER_NE;
+					if (JMath::PointInsideRect(mouse_x, mouse_y, GetBorderW_Normalized(margin))) hovering = CORNER_NW;
+					else if (JMath::PointInsideRect(mouse_x, mouse_y, GetBorderE_Normalized(margin))) hovering = CORNER_NE;
 					else hovering = SIDE_N;
 				}
-				else if (InsideRect({ mouse_x, mouse_y }, GetBorderS_Normalized(margin)))
+				else if (JMath::PointInsideRect(mouse_x, mouse_y, GetBorderS_Normalized(margin)))
 				{
-					if (InsideRect({ mouse_x, mouse_y }, GetBorderW_Normalized(margin))) hovering = CORNER_SW;
-					else if (InsideRect({ mouse_x, mouse_y }, GetBorderE_Normalized(margin))) hovering = CORNER_SE;
+					if (JMath::PointInsideRect(mouse_x, mouse_y, GetBorderW_Normalized(margin))) hovering = CORNER_SW;
+					else if (JMath::PointInsideRect(mouse_x, mouse_y, GetBorderE_Normalized(margin))) hovering = CORNER_SE;
 					else hovering = SIDE_S;
 				}
-				else if (InsideRect({ mouse_x, mouse_y }, GetBorderW_Normalized(margin))) hovering = SIDE_W;
-				else if (InsideRect({ mouse_x, mouse_y }, GetBorderE_Normalized(margin))) hovering = SIDE_E;
+				else if (JMath::PointInsideRect(mouse_x, mouse_y, GetBorderW_Normalized(margin))) hovering = SIDE_W;
+				else if (JMath::PointInsideRect(mouse_x, mouse_y, GetBorderE_Normalized(margin))) hovering = SIDE_E;
 
-				if (hovering != NONE && mouse_left_button == KEY_DOWN)
+				if (hovering != SIDE_NONE && mouse_left_button == KEY_DOWN)
 					dragging = true;
 			}
 			else
-				hovering = NONE;
+				hovering = SIDE_NONE;
 		}
 		else
 		{
@@ -218,15 +219,6 @@ RectF EditorWindow::GetBorderS_Normalized(float margin) const
 		y + h - margin,
 		w + margin * 2.0f,
 		margin * 2.0f };
-}
-
-bool EditorWindow::InsideRect(std::pair<float, float> p, RectF rect)
-{
-	return
-		  (p.first >= rect.x
-		&& p.first <= rect.x + rect.w
-		&& p.second >= rect.y
-		&& p.second <= rect.y + rect.h);
 }
 
 void BarMenu::DrawContent(SDL_Rect area) const

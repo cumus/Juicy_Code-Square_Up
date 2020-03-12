@@ -5,7 +5,7 @@
 
 enum ComponentType
 {
-	NONE,
+	COMP_NONE,
 	TRANSFORM,
 	SPRITE
 };
@@ -35,7 +35,7 @@ public:
 private:
 
 	bool active = true;
-	ComponentType type = NONE;
+	ComponentType type = COMP_NONE;
 
 protected:
 

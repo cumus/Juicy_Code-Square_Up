@@ -3,18 +3,13 @@
 
 #include "EventListener.h"
 
-struct RectF
-{
-	float x, y, w, h;
-};
-
 class UI_Element : public EventListener
 {
 public:
-	UI_Element(RectF rect) : rect(rect) {}
+	UI_Element() {}//RectF rect) : rect(rect) {}
 	~UI_Element() {}
 
-	RectF rect;
+	//RectF rect;
 };
 
 #endif // __UI_ELEMENTS_H__

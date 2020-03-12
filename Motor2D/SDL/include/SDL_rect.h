@@ -67,6 +67,12 @@ typedef struct SDL_Rect
     int w, h;
 } SDL_Rect;
 
+// Juicy Code Stuff
+struct RectF
+{
+    float x, y, w, h;
+};
+
 /**
  *  \brief Returns true if point resides inside a rectangle.
  */
