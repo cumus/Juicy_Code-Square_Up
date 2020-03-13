@@ -23,6 +23,7 @@ public:
 	bool Awake(pugi::xml_node&) override;
 	bool Update() override;
 	bool PostUpdate() override;
+	bool CleanUp() override;
 
 	bool MouseOnWindow() const;
 

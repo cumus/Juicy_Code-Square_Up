@@ -4,6 +4,7 @@
 #include "Render.h"
 #include "Scene.h"
 #include "EditorWindows.h"
+#include "Defs.h"
 
 Editor::Editor() : Module("editor")
 {}
@@ -65,6 +66,16 @@ bool Editor::PostUpdate()
 		for (std::vector<EditorWindow*>::const_iterator it = windows.begin(); it != windows.end(); ++it)
 			(*it)->Draw(float(cam.w), float(cam.h), draw_border);
 	}
+
+	return true;
+}
+
+bool Editor::CleanUp()
+{
+	for (std::vector<EditorWindow*>::reverse_iterator it = windows.rbegin(); it != windows.rend(); ++it)
+		DEL(*it);
+
+	windows.clear();
 
 	return true;
 }

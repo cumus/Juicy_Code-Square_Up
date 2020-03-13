@@ -56,11 +56,9 @@ int main(int argc, char* args[])
 			{
 				delete App;
 				main_return = EXIT_SUCCESS;
-
-#ifdef DEBUG
-				LOG("EXIT SUCCESS: %d memory leaks!\n", (m_getMemoryStatistics().totalAllocUnitCount));
-#else
 				LOG("EXIT SUCCESS");
+#ifdef DEBUG
+				LOG("Memory Leaks: %d!\n", (m_getMemoryStatistics().totalAllocUnitCount));
 #endif
 			}
 			else
@@ -77,7 +75,6 @@ int main(int argc, char* args[])
 	{
 		LOG("Application Init exits with ERROR");
 	}
-
 
 	LOG("... Bye! :)\n");
 
