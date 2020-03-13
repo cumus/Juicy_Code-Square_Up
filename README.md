@@ -44,13 +44,24 @@ Here are some links to our GitHib, Wiki, etc.
 
 ## Controls
 For now we have little interaction with the map, but here it is.
+
+### Camera:
 * W: move the camera up
 * A: move the camera left
 * S: move the camera down
 * D: move the camera right
-
 * Shift: Move the camera faster
 * Mouse Weel: Zoom in/out
+
+### Map:
+* 1: Open sample map 1
+* 2: Open sample map 2
+* SPACE: Toggle map orientation
+
+### Editor
+* Left-Click: Select Gameobject
+* F1: Toggle editor windows visible
+* Hold LeftCtrl: Allow editor window size editing
 
 ##
 ![University Logo](https://www.citm.upc.edu/templates/new/img/logoCITM.png?1401879059) 
