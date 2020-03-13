@@ -1,10 +1,5 @@
 version: 0.0.{build}
 
-matrix:
-  allow_failures:
-  - platform: x86
-  - version: latest
-
 branches:
   only:
     - master
@@ -12,7 +7,6 @@ branches:
 configuration: 
   - Debug
   - Release
-  
   
 notifications:
   - provider: Email
@@ -25,6 +19,6 @@ notifications:
 
 build:
   parallel: true
-  project: Game Engine 2D.sln
+  project: Square Up.sln
 
   verbosity: minimal
