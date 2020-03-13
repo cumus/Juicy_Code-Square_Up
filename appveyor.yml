@@ -24,4 +24,9 @@ build:
   parallel: true
   project: Square Up.sln
 
-  verbosity: minimal
+  verbosity: normal
+
+test:
+  assemblies:
+    only:
+      - SDL2_ttf.lib
