@@ -3,14 +3,14 @@
 #include "TextureManager.h"
 #include "Log.h"
 
-/*/#include "SDL/include/SDL.h"
+//#include "SDL/include/SDL.h"
 
 #include "SDL2_ttf-2.0.15/include/SDL_ttf.h"
 #ifdef PLATFORMx86
 #pragma comment( lib, "SDL2_ttf-2.0.15/lib/x86/SDL2_ttf.lib" )
 #elif PLATFORMx64
 #pragma comment( lib, "SDL2_ttf-2.0.15/lib/x64/SDL2_ttf.lib" )
-#endif*/
+#endif
 
 FontManager::FontManager()
 {
@@ -22,12 +22,12 @@ FontManager::~FontManager()
 
 bool FontManager::Init()
 {
-	/*bool ret = (TTF_Init() == 0);
+	bool ret = (TTF_Init() == 0);
 
 	if (!ret) LOG("SDL_ttf could not initialize! SDL_ttf Error: %s\n", TTF_GetError());
 
-	return ret;*/
-	return true;
+	return ret;
+	//return true;
 }
 
 bool FontManager::CleanUp()

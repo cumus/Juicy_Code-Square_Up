@@ -10,8 +10,12 @@
 
 #include "Optick/include/optick.h"
 
-#include "SDL_image/include/SDL_image.h"
-#pragma comment( lib, "SDL_image/libx86/SDL2_image.lib" )
+#include "SDL2_image-2.0.5/include/SDL_image.h"
+#ifdef PLATFORMx86
+#pragma comment( lib, "SDL2_image-2.0.5/lib/x86/SDL2_image.lib" )
+#elif PLATFORMx64
+#pragma comment( lib, "SDL2_image-2.0.5/lib/x64/SDL2_image.lib" )
+#endif
 
 Render::Render() : Module("renderer")
 {

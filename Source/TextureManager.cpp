@@ -7,7 +7,7 @@
 
 #include "Optick/include/optick.h"
 
-#include "SDL_image/include/SDL_image.h"
+#include "SDL2_image-2.0.5/include/SDL_image.h"
 
 void TextureManager::CleanUp()
 {

@@ -5,8 +5,14 @@
 
 #include "Optick/include/optick.h"
 #include "SDL/include/SDL.h"
-#include "SDL_mixer\include\SDL_mixer.h"
-#pragma comment( lib, "SDL_mixer/libx86/SDL2_mixer.lib" )
+
+#include "SDL2_mixer-2.0.4/include/SDL_mixer.h"
+#ifdef PLATFORMx86
+#pragma comment( lib, "SDL2_mixer-2.0.4/lib/x86/SDL2_mixer.lib" )
+#elif PLATFORMx64
+#pragma comment( lib, "SDL2_mixer-2.0.4/lib/x64/SDL2_mixer.lib" )
+#endif
+
 
 Audio::Audio() : Module("audio")
 {}

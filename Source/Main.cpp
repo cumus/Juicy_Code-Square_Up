@@ -6,22 +6,12 @@
 #endif
 
 #include "SDL/include/SDL.h"
+#ifdef PLATFORMx86
 #pragma comment( lib, "SDL/libx86/SDL2.lib" )
 #pragma comment( lib, "SDL/libx86/SDL2main.lib" )
-
-#include "Optick/include/optick.h"
-#ifdef DEBUG
-#ifdef PLATFORMx86
-#pragma comment( lib, "Optick/libx86/OptickCore_debug.lib" )
 #elif PLATFORMx64
-#pragma comment( lib, "Optick/libx64/OptickCore_debug.lib" )
-#endif
-#else
-#ifdef PLATFORMx86
-#pragma comment( lib, "Optick/libx86/OptickCore_release.lib" )
-#elif PLATFORMx64
-#pragma comment( lib, "Optick/libx64/OptickCore_release.lib" )
-#endif
+#pragma comment( lib, "SDL/libx64/SDL2.lib" )
+#pragma comment( lib, "SDL/libx64/SDL2main.lib" )
 #endif
 
 Application* App = nullptr;
@@ -43,10 +33,7 @@ int main(int argc, char* args[])
 		int update_return = 1;
 
 		while (update_return == 1)
-		{
-			OPTICK_FRAME("MainThread");
 			update_return = App->Update();
-		}
 
 		if (update_return == 0)
 		{
@@ -57,9 +44,9 @@ int main(int argc, char* args[])
 				delete App;
 				main_return = EXIT_SUCCESS;
 				LOG("EXIT SUCCESS");
-#ifdef DEBUG
+/*#ifdef DEBUG
 				LOG("Memory Leaks: %d!\n", (m_getMemoryStatistics().totalAllocUnitCount));
-#endif
+#endif*/
 			}
 			else
 			{

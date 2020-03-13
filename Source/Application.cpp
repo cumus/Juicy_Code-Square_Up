@@ -8,7 +8,22 @@
 #include "Render.h"
 #include "Defs.h"
 #include "Log.h"
+
 #include "Optick/include/optick.h"
+
+#ifdef DEBUG
+#ifdef PLATFORMx86
+#pragma comment( lib, "Optick/libx86/OptickCore_debug.lib" )
+#elif PLATFORMx64
+#pragma comment( lib, "Optick/libx64/OptickCore_debug.lib" )
+#endif
+#else
+#ifdef PLATFORMx86
+#pragma comment( lib, "Optick/libx86/OptickCore_release.lib" )
+#elif PLATFORMx64
+#pragma comment( lib, "Optick/libx64/OptickCore_release.lib" )
+#endif
+#endif
 
 Application::Application(int argc, char* args[]) : argc(argc), args(args)
 {
@@ -21,7 +36,7 @@ Application::Application(int argc, char* args[]) : argc(argc), args(args)
 	AddModule(map = new Map());
 	AddModule(scene = new Scene());
 	AddModule(editor = new Editor());
-	AddModule(render = new Render()); // render last to swap buffer
+	AddModule(render = new Render());
 }
 
 Application::~Application()
@@ -85,6 +100,8 @@ bool Application::Init()
 // Called each loop iteration
 int Application::Update()
 {
+	OPTICK_FRAME("MainThread");
+
 	if (want_to_quit)
 		return 0; // closing app
 
