@@ -8,6 +8,8 @@ configuration:
   - Debug
   - Release
   
+platform: Any CPU
+  
 notifications:
   - provider: Email
     to:
