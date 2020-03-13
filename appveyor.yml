@@ -8,7 +8,9 @@ configuration:
   - Debug
   - Release
   
-platform: "Any CPU"
+platform: 
+  - Win32
+  - x64
   
 notifications:
   - provider: Email
