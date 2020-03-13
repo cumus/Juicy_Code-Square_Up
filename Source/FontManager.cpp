@@ -3,14 +3,14 @@
 #include "TextureManager.h"
 #include "Log.h"
 
-//#include "SDL/include/SDL.h"
+/*/#include "SDL/include/SDL.h"
 
 #include "SDL2_ttf-2.0.15/include/SDL_ttf.h"
 #ifdef PLATFORMx86
 #pragma comment( lib, "SDL2_ttf-2.0.15/lib/x86/SDL2_ttf.lib" )
 #elif PLATFORMx64
 #pragma comment( lib, "SDL2_ttf-2.0.15/lib/x64/SDL2_ttf.lib" )
-#endif
+#endif*/
 
 FontManager::FontManager()
 {

@@ -259,18 +259,15 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <Xml Include="..\Game\config.xml">
-      <Filter>Source\Data Files</Filter>
-    </Xml>
-    <Xml Include="..\Game\save_game.xml">
+    <Xml Include="..\Build\config.xml">
       <Filter>Source\Data Files</Filter>
     </Xml>
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\Game\maps\level1.tmx">
+    <None Include="..\Build\maps\iso.tmx">
       <Filter>Source\Data Files</Filter>
     </None>
-    <None Include="..\Game\maps\iso.tmx">
+    <None Include="..\Build\maps\level1.tmx">
       <Filter>Source\Data Files</Filter>
     </None>
   </ItemGroup>
