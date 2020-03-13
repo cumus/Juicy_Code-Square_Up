@@ -12,6 +12,13 @@ platform:
   - x86
   - x64
   
+matrix:
+  allow_failures:
+    - platform: x86
+      configuration: Debug
+    - platform: x86
+      configuration: Release
+  
 notifications:
   - provider: Email
     to:
