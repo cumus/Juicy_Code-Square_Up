@@ -8,7 +8,7 @@ configuration:
   - Debug
   - Release
   
-platform: Any CPU
+platform: "Any CPU"
   
 notifications:
   - provider: Email
