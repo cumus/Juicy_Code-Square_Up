@@ -50,11 +50,11 @@ bool Scene::Update()
 	// Load sample maps
 	if (App->input->GetKey(SDL_SCANCODE_1) == KEY_DOWN)
 	{
-		ret = App->map->LoadFromFile("iso.tmx");
+		ret = App->map->LoadFromFile("maps/iso.tmx");
 	}
 	else if (App->input->GetKey(SDL_SCANCODE_2) == KEY_DOWN)
 	{
-		ret = App->map->LoadFromFile("level1.tmx");
+		ret = App->map->LoadFromFile("maps/level1.tmx");
 	}
 
 	if (go1 != nullptr && go2 != nullptr)
@@ -140,27 +140,37 @@ bool Scene::CleanUp()
 bool Scene::LoadTestScene()
 {
 	// Play sample track
-	App->audio->PlayMusic("audio/Music/alexander-nakarada-buzzkiller.ogg");
+	bool ret = App->audio->PlayMusic("audio/Music/alexander-nakarada-buzzkiller.ogg");
 
 	// Remove fps cap
 	App->time.SetMaxFPS(0);
 
 	// Load mouse debug texture for identifying tiles
-	id_mouse_tex = App->tex.Load("textures/meta.png");
+	if (ret)
+	{
+		id_mouse_tex = App->tex.Load("textures/meta.png");
+		ret = (id_mouse_tex != -1);
+	}
 
-	// Run test content
-	go1 = AddGameobject("g1 - son of root", &root);
-	go2 = AddGameobject("g2 - son of g1", go1);
+	// Load font
+	if (ret) ret = (App->fonts.Load("fonts/OpenSans-Regular.ttf") != nullptr);
 
-	Sprite* s1 = new Sprite(go1);
-	s1->tex_id = id_mouse_tex;
-	s1->section = { 0, 0, 64, 64 };
+	if (ret)
+	{
+		// Run test content
+		go1 = AddGameobject("g1 - son of root", &root);
+		go2 = AddGameobject("g2 - son of g1", go1);
 
-	Sprite* s2 = new Sprite(go2);
-	s2->tex_id = id_mouse_tex;
-	s2->section = { 64, 0, 64, 64 };
+		Sprite* s1 = new Sprite(go1);
+		s1->tex_id = id_mouse_tex;
+		s1->section = { 0, 0, 64, 64 };
 
-	return id_mouse_tex != -1;
+		Sprite* s2 = new Sprite(go2);
+		s2->tex_id = id_mouse_tex;
+		s2->section = { 64, 0, 64, 64 };
+	}
+
+	return ret;
 }
 
 Gameobject * Scene::AddGameobject(const char * name, Gameobject * parent)
