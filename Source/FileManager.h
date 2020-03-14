@@ -16,23 +16,24 @@ public:
 	FileManager();
 	~FileManager();
 
+	bool Init();
 	bool CleanUp();
 
-	bool LoadConfig(pugi::xml_node& config);
+	bool AddDirectory(const char* path, const char* mount_point = nullptr);
+
+	bool LoadConfig(pugi::xml_node& node);
+	bool LoadXML(const char* file, pugi::xml_document& doc);
 
 	const char* GetBasePath();
 
-	/*unsigned int Load(const char* file, char** buffer) const;
+	unsigned int Load(const char* file, char** buffer) const;
 	SDL_RWops* Load(const char* file) const;
-
-	unsigned int Save(const char* file, const char* buffer, unsigned int size) const;*/
 
 private:
 
-	pugi::xml_document config_file;
-
-	const char* base_path = nullptr;
-	const char* pref_dir = nullptr;
+	pugi::xml_document	config;
+	std::string base_path;
+	std::string pref_dir;
 };
 
 #endif // __FILE_MANAGER_H__
