@@ -31,56 +31,88 @@ bool FontManager::Init()
 
 bool FontManager::CleanUp()
 {
-	for (std::vector<TTF_Font*>::iterator item = fonts.begin(); item != fonts.cend(); item++)
+	for (std::vector<TTF_Font*>::iterator item = fonts.begin(); item != fonts.end(); item++)
 		TTF_CloseFont(*item);
 
 	fonts.clear();
+	fonts_data.clear();
 
 	TTF_Quit();
 
 	return true;
 }
 
-_TTF_Font* const FontManager::Load(const char* path, int size)
+int FontManager::Load(const char* path, int size)
 {
-	TTF_Font* font = nullptr;
+	int ret = -1;
 
 	if (path != nullptr)
 	{
-		font = TTF_OpenFontRW(App->files.Load(path), 1, size);
+		for (std::vector<FontData>::const_iterator it = fonts_data.cbegin(); it != fonts_data.cend(); ++it)
+		{
+			if (it->source == path && it->size == size)
+			{
+				ret = it->id;
+				LOG("Font already loaded: %s, size: %d", path, size);
+			}
+		}
 
-		if (font != nullptr)
-			fonts.push_back(font);
-		else
-			LOG("Could not load TTF font with path: %s. TTF_OpenFont: %s", path, TTF_GetError());
+		if (ret < 0)
+		{
+			TTF_Font* font = TTF_OpenFontRW(App->files.Load(path), 1, size);
+
+			if (font != nullptr)
+			{
+				FontData data;
+				ret = data.id = fonts.size();
+				data.source = path;
+				data.size = size;
+
+				fonts_data.push_back(data);
+				fonts.push_back(font);
+
+				LOG("Loaded TTF font size %d with path: %s", size, path);
+			}
+			else
+				LOG("Could not load TTF font with path: %s. TTF_OpenFont: %s", path, TTF_GetError());
+		}
 	}
 
-	return font;
+	return ret;
 }
 
-SDL_Texture* FontManager::RenderText(const char* text, unsigned int wrap_length, int font_id, int r, int g, int b, int a)
+_TTF_Font* FontManager::GetFont(int id) const
 {
-	SDL_Texture* ret = nullptr;
+	_TTF_Font* ret = nullptr;
 
 	if (!fonts.empty())
 	{
-		if (font_id < 0 || font_id > fonts.size())
-			font_id = 0;
+		if (id < 0 || id >= fonts.size())
+			id = 0;
 
-		_TTF_Font* font = fonts[font_id];
+		ret = fonts[id];
+	}
 
-		if (font != nullptr)
+	return ret;
+}
+
+SDL_Texture* FontManager::RenderText(const char* text, unsigned int wrap_length, int font_id, int r, int g, int b, int a) const
+{
+	SDL_Texture* ret = nullptr;
+
+	_TTF_Font* font = GetFont(font_id);
+
+	if (font != nullptr)
+	{
+		SDL_Surface* surface = TTF_RenderText_Blended_Wrapped(font, text, { unsigned char(r), unsigned char(g), unsigned char(b), unsigned char(a) }, wrap_length);
+
+		if (surface != nullptr)
 		{
-			SDL_Surface* surface = TTF_RenderText_Blended_Wrapped(font, text, { unsigned char(r), unsigned char(g), unsigned char(b), unsigned char(a) }, wrap_length);
-
-			if (surface != nullptr)
-			{
-				ret = App->tex.GetTexture(App->tex.LoadSurface(surface));
-				SDL_FreeSurface(surface);
-			}
-			else
-				LOG("Unable to render text surface! SDL_ttf Error: %s\n", TTF_GetError());
+			ret = App->tex.GetTexture(App->tex.LoadSurface(surface));
+			SDL_FreeSurface(surface);
 		}
+		else
+			LOG("Unable to render text surface! SDL_ttf Error: %s\n", TTF_GetError());
 	}
 	else
 		LOG("Unable to render text! No fonts loaded.");
@@ -88,14 +120,27 @@ SDL_Texture* FontManager::RenderText(const char* text, unsigned int wrap_length,
 	return ret;
 }
 
-bool FontManager::CalcSize(const char* text, int& width, int& height, _TTF_Font* font) const
+bool FontManager::CalcSize(const char* text, int& width, int& height, int font_id) const
 {
 	bool ret = false;
 
-	if (font != nullptr && TTF_SizeText(font, text, & width, & height) == 0)
-		ret = true;
+	_TTF_Font* font = GetFont(font_id);
+
+	if (font != nullptr)
+	{
+		if (TTF_SizeText(font, text, &width, &height) == 0)
+			ret = true;
+		else
+			LOG("Unable to calc size of text surface! SDL_ttf Error: %s\n", TTF_GetError());
+	}
 	else
-		LOG("Unable to calc size of text surface! SDL_ttf Error: %s\n", TTF_GetError());
+		LOG("Unable to calc size of text! No fonts loaded.");
 
 	return ret;
 }
+
+FontData::FontData() : id(-1), size(-1), source("none")
+{}
+
+FontData::FontData(const FontData& copy) : id(copy.id), size(copy.size), source(copy.source)
+{}
