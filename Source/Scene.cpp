@@ -143,7 +143,7 @@ bool Scene::LoadTestScene()
 	bool ret = App->audio->PlayMusic("audio/Music/alexander-nakarada-buzzkiller.ogg");
 
 	// Remove fps cap
-	App->time.SetMaxFPS(0);
+	App->time.SetMaxFPS(60);
 
 	// Load mouse debug texture for identifying tiles
 	if (ret)
