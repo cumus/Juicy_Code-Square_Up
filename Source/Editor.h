@@ -45,6 +45,7 @@ private:
 private:
 
 	bool hide_windows = false;
+	int editing_window = -1;
 	unsigned int mouse_over_windows = 0u;
 
 	std::vector<EditorWindow*> windows;

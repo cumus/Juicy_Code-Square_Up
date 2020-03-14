@@ -3,6 +3,7 @@
 
 #include "EventListener.h"
 #include "SDL/include/SDL_rect.h"
+#include "SDL/include/SDL_pixels.h"
 
 enum Window_Sides
 {
@@ -24,33 +25,30 @@ class EditorWindow : public EventListener
 {
 public:
 
-	EditorWindow(float x, float y, float w, float h);
-	virtual ~EditorWindow() {}
+	EditorWindow(const RectF rect);
+	virtual ~EditorWindow();
 
-	bool Update(float mouse_x, float mouse_y, KeyState mouse_left_button, bool sizing = false);
-	void Draw(float width, float height, bool draw_border = false) const;
-	void DrawBorders(float width, float height, float margin = 0.002f) const;
+	bool CheckIfEditing(float mouse_x, float mouse_y, KeyState mouse_left_button);
+	bool Update(float mouse_x, float mouse_y, KeyState mouse_left_button);
+	void Draw(bool draw_border = false) const;
+	void DrawBorders() const;
 
-	SDL_Rect GetBorderN(float width, float height, float margin) const;
-	SDL_Rect GetBorderW(float width, float height, float margin) const;
-	SDL_Rect GetBorderE(float width, float height, float margin) const;
-	SDL_Rect GetBorderS(float width, float height, float margin) const;
+	RectF GetBorderN_Norm() const;
+	RectF GetBorderW_Norm() const;
+	RectF GetBorderE_Norm() const;
+	RectF GetBorderS_Norm() const;
 
-	RectF GetBorderN_Normalized(float margin) const;
-	RectF GetBorderW_Normalized(float margin) const;
-	RectF GetBorderE_Normalized(float margin) const;
-	RectF GetBorderS_Normalized(float margin) const;
-
-	virtual void DrawContent(SDL_Rect area) const {}
+	virtual void DrawContent() const {}
 
 public:
 
-	float x, y, w, h;
-	unsigned int r, g, b, a;
+	RectF rect;
+	SDL_Color color;
 
 	bool mouse_inside = false;
 	Window_Sides hovering = SIDE_NONE;
 	bool dragging = false;
+	float margin = 0.002f;
 
 	std::vector<UI_Element*> elements;
 };
@@ -59,60 +57,60 @@ class BarMenu : public EditorWindow
 {
 public:
 
-	BarMenu(float x, float y, float w, float h) : EditorWindow(x, y, w, h) {}
+	BarMenu(const RectF rect) : EditorWindow(rect) {}
 	~BarMenu() {}
 
-	void DrawContent(SDL_Rect area) const override;
+	void DrawContent() const override;
 };
 
 class PlayPauseWindow : public EditorWindow
 {
 public:
 
-	PlayPauseWindow(float x, float y, float w, float h) : EditorWindow(x, y, w, h) {}
+	PlayPauseWindow(const RectF rect) : EditorWindow(rect) {}
 	~PlayPauseWindow() {}
 
-	void DrawContent(SDL_Rect area) const override;
+	void DrawContent() const override;
 };
 
 class HeriarchyWindow : public EditorWindow
 {
 public:
 
-	HeriarchyWindow(float x, float y, float w, float h) : EditorWindow(x, y, w, h) {}
+	HeriarchyWindow(const RectF rect) : EditorWindow(rect) {}
 	~HeriarchyWindow() {}
 
-	void DrawContent(SDL_Rect area) const override;
+	void DrawContent() const override;
 };
 
 class PropertiesWindow : public EditorWindow
 {
 public:
 
-	PropertiesWindow(float x, float y, float w, float h) : EditorWindow(x, y, w, h) {}
+	PropertiesWindow(const RectF rect) : EditorWindow(rect) {}
 	~PropertiesWindow() {}
 
-	void DrawContent(SDL_Rect area) const override;
+	void DrawContent() const override;
 };
 
 class ConsoleWindow : public EditorWindow
 {
 public:
 
-	ConsoleWindow(float x, float y, float w, float h) : EditorWindow(x, y, w, h) {}
+	ConsoleWindow(const RectF rect) : EditorWindow(rect) {}
 	~ConsoleWindow() {}
 
-	void DrawContent(SDL_Rect area) const override;
+	void DrawContent() const override;
 };
 
 class ConfigWindow : public EditorWindow
 {
 public:
 
-	ConfigWindow(float x, float y, float w, float h) : EditorWindow(x, y, w, h) {}
+	ConfigWindow(const RectF rect) : EditorWindow(rect) {}
 	~ConfigWindow() {}
 
-	void DrawContent(SDL_Rect area) const override;
+	void DrawContent() const override;
 };
 
 #endif // __EDITOR_WINDOWS_H__

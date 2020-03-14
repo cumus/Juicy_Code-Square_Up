@@ -6,112 +6,114 @@
 
 #include "Optick/include/optick.h"
 
-EditorWindow::EditorWindow(float x, float y, float w, float h) : x(x), y(y), w(w), h(h)
+EditorWindow::EditorWindow(const RectF rect) : rect(rect)
 {
-	r = g = b = 250;
-	a = 220;
+	color = { 250, 250, 250, 220 };
 }
 
-bool EditorWindow::Update(float mouse_x, float mouse_y, KeyState mouse_left_button, bool sizing)
+EditorWindow::~EditorWindow()
+{}
+
+bool EditorWindow::CheckIfEditing(float mouse_x, float mouse_y, KeyState mouse_left_button)
 {
-	float margin = 0.002f;
-
-	if (sizing)
+	if (!dragging)
 	{
-		if (!dragging)
+		// Check borders
+		if (mouse_x >= rect.x - margin && mouse_x <= rect.x + rect.w + margin &&
+			mouse_y >= rect.y - margin && mouse_y <= rect.y + rect.h + margin)
 		{
-			// Check borders
-			if (mouse_x >= x - margin && mouse_x <= x + w + margin &&
-				mouse_y >= y - margin && mouse_y <= y + h + margin)
+			// Clicking inside window
+			if (JMath::PointInsideRect(mouse_x, mouse_y, GetBorderN_Norm()))
 			{
-				// Clicking inside window
-				if (JMath::PointInsideRect(mouse_x, mouse_y, GetBorderN_Normalized(margin)))
-				{
-					if (JMath::PointInsideRect(mouse_x, mouse_y, GetBorderW_Normalized(margin))) hovering = CORNER_NW;
-					else if (JMath::PointInsideRect(mouse_x, mouse_y, GetBorderE_Normalized(margin))) hovering = CORNER_NE;
-					else hovering = SIDE_N;
-				}
-				else if (JMath::PointInsideRect(mouse_x, mouse_y, GetBorderS_Normalized(margin)))
-				{
-					if (JMath::PointInsideRect(mouse_x, mouse_y, GetBorderW_Normalized(margin))) hovering = CORNER_SW;
-					else if (JMath::PointInsideRect(mouse_x, mouse_y, GetBorderE_Normalized(margin))) hovering = CORNER_SE;
-					else hovering = SIDE_S;
-				}
-				else if (JMath::PointInsideRect(mouse_x, mouse_y, GetBorderW_Normalized(margin))) hovering = SIDE_W;
-				else if (JMath::PointInsideRect(mouse_x, mouse_y, GetBorderE_Normalized(margin))) hovering = SIDE_E;
-
-				if (hovering != SIDE_NONE && mouse_left_button == KEY_DOWN)
-					dragging = true;
+				if (JMath::PointInsideRect(mouse_x, mouse_y, GetBorderW_Norm())) hovering = CORNER_NW;
+				else if (JMath::PointInsideRect(mouse_x, mouse_y, GetBorderE_Norm())) hovering = CORNER_NE;
+				else hovering = SIDE_N;
 			}
-			else
-				hovering = SIDE_NONE;
+			else if (JMath::PointInsideRect(mouse_x, mouse_y, GetBorderS_Norm()))
+			{
+				if (JMath::PointInsideRect(mouse_x, mouse_y, GetBorderW_Norm())) hovering = CORNER_SW;
+				else if (JMath::PointInsideRect(mouse_x, mouse_y, GetBorderE_Norm())) hovering = CORNER_SE;
+				else hovering = SIDE_S;
+			}
+			else if (JMath::PointInsideRect(mouse_x, mouse_y, GetBorderW_Norm())) hovering = SIDE_W;
+			else if (JMath::PointInsideRect(mouse_x, mouse_y, GetBorderE_Norm())) hovering = SIDE_E;
+
+			if (hovering != SIDE_NONE && mouse_left_button == KEY_DOWN)
+				dragging = true;
 		}
 		else
+			hovering = SIDE_NONE;
+	}
+	else
+	{
+		// Editing window sizes
+		switch (hovering)
 		{
-			// Editing window sizes
-			switch (hovering)
-			{
-			case SIDE_N:
-			{
-				h -= mouse_y - y;
-				y = mouse_y;
-				break;
-			}
-			case SIDE_W:
-			{
-				w -= mouse_x - x;
-				x = mouse_x;
-				break;
-			}
-			case SIDE_E:
-			{
-				w = mouse_x - x;
-				break;
-			}
-			case SIDE_S:
-			{
-				h = mouse_y - y;
-				break;
-			}
-			case CORNER_NW:
-			{
-				h -= mouse_y - y;
-				y = mouse_y;
-				w -= mouse_x - x;
-				x = mouse_x;
-				break;
-			}
-			case CORNER_NE:
-			{
-				h -= mouse_y - y;
-				y = mouse_y;
-				w = mouse_x - x;
-				break;
-			}
-			case CORNER_SW:
-			{
-				h = mouse_y - y;
-				w -= mouse_x - x;
-				x = mouse_x;
-				break;
-			}
-			case CORNER_SE:
-			{
-				h = mouse_y - y;
-				w = mouse_x - x;
-				break;
-			}
-			default:
-				break;
-			}
-
-			if (mouse_left_button != KEY_REPEAT)
-				dragging = false;
+		case SIDE_N:
+		{
+			rect.h -= mouse_y - rect.y;
+			rect.y = mouse_y;
+			break;
 		}
+		case SIDE_W:
+		{
+			rect.w -= mouse_x - rect.x;
+			rect.x = mouse_x;
+			break;
+		}
+		case SIDE_E:
+		{
+			rect.w = mouse_x - rect.x;
+			break;
+		}
+		case SIDE_S:
+		{
+			rect.h = mouse_y - rect.y;
+			break;
+		}
+		case CORNER_NW:
+		{
+			rect.h -= mouse_y - rect.y;
+			rect.y = mouse_y;
+			rect.w -= mouse_x - rect.x;
+			rect.x = mouse_x;
+			break;
+		}
+		case CORNER_NE:
+		{
+			rect.h -= mouse_y - rect.y;
+			rect.y = mouse_y;
+			rect.w = mouse_x - rect.x;
+			break;
+		}
+		case CORNER_SW:
+		{
+			rect.h = mouse_y - rect.y;
+			rect.w -= mouse_x - rect.x;
+			rect.x = mouse_x;
+			break;
+		}
+		case CORNER_SE:
+		{
+			rect.h = mouse_y - rect.y;
+			rect.w = mouse_x - rect.x;
+			break;
+		}
+		default:
+			break;
+		}
+
+		if (mouse_left_button != KEY_REPEAT)
+			dragging = false;
 	}
 
-	if (mouse_x >= x && mouse_x <= x + w
-		&& mouse_y >= y && mouse_y <= y + h)
+	return dragging;
+}
+
+bool EditorWindow::Update(float mouse_x, float mouse_y, KeyState mouse_left_button)
+{
+	if (mouse_x >= rect.x && mouse_x <= rect.x + rect.w
+		&& mouse_y >= rect.y && mouse_y <= rect.y + rect.h)
 	{
 		// Mouse inside window
 		mouse_inside = true;
@@ -130,119 +132,84 @@ bool EditorWindow::Update(float mouse_x, float mouse_y, KeyState mouse_left_butt
 		mouse_inside = false;
 	}
 
-	a = (mouse_inside ? 250 : 220);
+	color.a = (mouse_inside ? 255 : 220);
 
 	return mouse_inside;
 }
 
-void EditorWindow::Draw(float width, float height, bool draw_border) const
+void EditorWindow::Draw(bool draw_border) const
 {
-	// Calculate area
-	SDL_Rect area = { int(x * width), int(y * height), int(w * width), int(h * height) };
-
 	// Draw background
-	App->render->DrawQuad(area, r, g, b, a, true, false);
+	App->render->DrawQuadNormCoords(rect, color);
 
 	// Draw contents
-	DrawContent(area);
+	DrawContent();
 
 	// Draw Border
 	if (draw_border)
-		DrawBorders(width, height);
+		DrawBorders();
 }
 
-void EditorWindow::DrawBorders(float width, float height, float margin) const
+void EditorWindow::DrawBorders() const
 {
-	App->render->DrawQuad(GetBorderN(width, height, margin), 150, (hovering == SIDE_N || hovering == CORNER_NW || hovering == CORNER_NE ? 150 : 0), 0, 200, true, false);
-	App->render->DrawQuad(GetBorderW(width, height, margin), 150, (hovering == SIDE_W || hovering == CORNER_NW || hovering == CORNER_SW ? 150 : 0), 0, 200, true, false);
-	App->render->DrawQuad(GetBorderE(width, height, margin), 150, (hovering == SIDE_E || hovering == CORNER_SE || hovering == CORNER_NE ? 150 : 0), 0, 200, true, false);
-	App->render->DrawQuad(GetBorderS(width, height, margin), 150, (hovering == SIDE_S || hovering == CORNER_SE || hovering == CORNER_SW ? 150 : 0), 0, 200, true, false);
+	App->render->DrawQuadNormCoords(GetBorderN_Norm(), { 150, (hovering == SIDE_N || hovering == CORNER_NW || hovering == CORNER_NE ? 150u : 0), 0, 200 });
+	App->render->DrawQuadNormCoords(GetBorderW_Norm(), { 150, (hovering == SIDE_W || hovering == CORNER_NW || hovering == CORNER_SW ? 150u : 0), 0, 200 });
+	App->render->DrawQuadNormCoords(GetBorderE_Norm(), { 150, (hovering == SIDE_E || hovering == CORNER_SE || hovering == CORNER_NE ? 150u : 0), 0, 200 });
+	App->render->DrawQuadNormCoords(GetBorderS_Norm(), { 150, (hovering == SIDE_S || hovering == CORNER_SE || hovering == CORNER_SW ? 150u : 0), 0, 200 });
 }
 
-SDL_Rect EditorWindow::GetBorderN(float width, float height, float margin) const
+RectF EditorWindow::GetBorderN_Norm() const
 {
-	return { int((x - margin) * width),
-		int((y - margin) * height),
-		int((w + margin * 2.0f) * width),
-		int(margin * 2.0f * height) };
-}
-
-SDL_Rect EditorWindow::GetBorderW(float width, float height, float margin) const
-{
-	return { int((x - margin) * width),
-		int((y - margin) * height),
-		int((margin * 2.0f) * width),
-		int((h + margin * 2.0f) * height) };
-}
-
-SDL_Rect EditorWindow::GetBorderE(float width, float height, float margin) const
-{
-	return { int((x + w - margin) * width),
-		int((y - margin) * height),
-		int((margin * 2.0f) * width),
-		int((h + margin * 2.0f) * height) };
-}
-
-SDL_Rect EditorWindow::GetBorderS(float width, float height, float margin) const
-{
-	return { int((x - margin) * width),
-		int((y + h - margin) * height),
-		int((w + margin * 2.0f) * width),
-		int(margin * 2.0f * height) };
-}
-
-RectF EditorWindow::GetBorderN_Normalized(float margin) const
-{
-	return { x - margin,
-		y - margin,
-		w + margin * 2.0f,
+	return { rect.x - margin,
+		rect.y - margin,
+		rect.w + margin * 2.0f,
 		margin * 2.0f };
 }
 
-RectF EditorWindow::GetBorderW_Normalized(float margin) const
+RectF EditorWindow::GetBorderW_Norm() const
 {
-	return { x - margin,
-		y - margin,
+	return { rect.x - margin,
+		rect.y - margin,
 		margin * 2.0f,
-		h + margin * 2.0f };
+		rect.h + margin * 2.0f };
 }
 
-RectF EditorWindow::GetBorderE_Normalized(float margin) const
+RectF EditorWindow::GetBorderE_Norm() const
 {
-	return { x + w - margin,
-		y - margin,
+	return { rect.x + rect.w - margin,
+		rect.y - margin,
 		margin * 2.0f,
-		h + margin * 2.0f };
+		rect.h + margin * 2.0f };
 }
 
-RectF EditorWindow::GetBorderS_Normalized(float margin) const
+RectF EditorWindow::GetBorderS_Norm() const
 {
-	return { x - margin,
-		y + h - margin,
-		w + margin * 2.0f,
+	return { rect.x - margin,
+		rect.y + rect.h - margin,
+		rect.w + margin * 2.0f,
 		margin * 2.0f };
 }
 
-void BarMenu::DrawContent(SDL_Rect area) const
+void BarMenu::DrawContent() const
 {
 }
 
-void PlayPauseWindow::DrawContent(SDL_Rect area) const
+void PlayPauseWindow::DrawContent() const
 {
 }
 
-void HeriarchyWindow::DrawContent(SDL_Rect area) const
+void HeriarchyWindow::DrawContent() const
 {
 }
 
-void PropertiesWindow::DrawContent(SDL_Rect area) const
+void PropertiesWindow::DrawContent() const
 {
 }
 
-void ConsoleWindow::DrawContent(SDL_Rect area) const
+void ConsoleWindow::DrawContent() const
 {
 }
 
-void ConfigWindow::DrawContent(SDL_Rect area) const
+void ConfigWindow::DrawContent() const
 {
 }
