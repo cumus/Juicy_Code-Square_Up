@@ -25,7 +25,7 @@ public:
 	TextureManager() {}
 	~TextureManager() {}
 
-	int Load(const char* path, bool relative_path = true);
+	int Load(const char* path);
 	void CleanUp();
 
 	int LoadSurface(SDL_Surface* surface);

@@ -45,17 +45,11 @@ int TextureManager::LoadSurface(SDL_Surface* surface)
 }
 
 // Load texture from file path
-int TextureManager::Load(const char* path, bool relative_path)
+int TextureManager::Load(const char* path)
 {
 	OPTICK_EVENT();
 
 	int ret = -1;
-
-	std::string tex_path;
-	if (relative_path)
-		tex_path = App->files.GetBasePath();
-
-	tex_path += path;
 
 	for (std::vector<TextureData>::iterator it = texture_data.begin(); it != texture_data.end(); ++it)
 	{
@@ -68,7 +62,7 @@ int TextureManager::Load(const char* path, bool relative_path)
 
 	if (ret < 0)
 	{
-		SDL_Surface* surface = IMG_Load(tex_path.c_str());
+		SDL_Surface* surface = IMG_Load_RW(App->files.Load(path), 1);
 
 		if (surface)
 		{

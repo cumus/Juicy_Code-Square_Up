@@ -34,7 +34,6 @@ public:
 private:
 
 	MapContainer map;
-	std::string	maps_folder;
 };
 
 #endif // __MAP_H__

@@ -56,10 +56,10 @@ void Application::AddModule(Module* module)
 // Called before the first frame
 bool Application::Init()
 {
-	bool ret = true;
-
+	bool ret = files.Init();
 	pugi::xml_node config;
-	if (files.LoadConfig(config))
+
+	if (ret && files.LoadConfig(config))
 	{
 		if (!config.empty())
 		{
@@ -68,12 +68,12 @@ bool Application::Init()
 			title = app_config.child("title").child_value();
 			organization = app_config.child("organization").child_value();
 
-			// Initialize Independent Managers
-			ret = fonts.Init();
-
 			// Awake Modules
 			for (std::list<Module*>::iterator it = modules.begin(); it != modules.end() && ret; ++it)
 				ret = (*it)->Awake(config.child((*it)->name));
+
+			// Initialize Independent Managers
+			ret = fonts.Init();
 		}
 		else
 		{
@@ -172,9 +172,12 @@ bool Application::CleanUp()
 	for (std::list<Module*>::reverse_iterator it = modules.rbegin(); it != modules.rend() && ret; ++it)
 		ret = (*it)->CleanUp();
 
-	tex.CleanUp();
-	fonts.CleanUp();
-	files.CleanUp();
+	if (ret)
+	{
+		tex.CleanUp();
+
+		ret = (fonts.CleanUp() && files.CleanUp());
+	}
 
 	return ret;
 }

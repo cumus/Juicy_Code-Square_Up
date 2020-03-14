@@ -12,24 +12,22 @@
 
 #include <math.h>
 
-bool MapContainer::Load(const char* directory, const char* file)
+bool MapContainer::Load(const char* file)
 {
 	OPTICK_EVENT();
 
 	loaded = false;
-	dir = directory;
-	file_name = file;
-	pugi::xml_parse_result result = doc.load_file((dir + file_name).c_str());
+	path = file;
 
-	if (result)
+	if (App->files.LoadXML(file, doc))
 	{
 		pugi::xml_node map_node = doc.child("map");
 		if (map_node)
 		{
 			ParseHeader(map_node);
 
-			LOG("Map XML file: %s%s w/ width: %d, height: %d, tile_width: %d, tile_height: %d",
-				dir.c_str(), file_name.c_str(), width, height, tile_width, tile_height);
+			LOG("Map XML file: %s w/ width: %d, height: %d, tile_width: %d, tile_height: %d",
+				path.c_str(), width, height, tile_width, tile_height);
 
 			if (ParseTilesets(map_node))
 			{
@@ -48,7 +46,7 @@ bool MapContainer::Load(const char* directory, const char* file)
 			LOG("Error parsing map xml file: Cannot find 'map' tag.");
 	}
 	else
-		LOG("ERROR: Could not load map xml file %s. pugi error: %s", file, result.description());
+		LOG("ERROR: Could not load map xml file %s.", file);
 
 	doc.reset();
 
@@ -354,9 +352,9 @@ bool MapContainer::ParseTilesets(pugi::xml_node & node)
 		pugi::xml_node image_node = tileset_node.child("image");
 		if (image_node)
 		{
-			std::string tex_path = dir;
+			std::string tex_path = "maps/";
 			tex_path += image_node.attribute("source").as_string();
-			tileset.texture_id = App->tex.Load(tex_path.c_str(), false);
+			tileset.texture_id = App->tex.Load(tex_path.c_str());
 
 			TextureData tex_data;
 			if (App->tex.GetTextureData(tileset.texture_id, tex_data))
@@ -381,11 +379,6 @@ bool MapContainer::ParseTilesets(pugi::xml_node & node)
 		{
 			LOG("Error parsing tileset xml file: Cannot find 'image' tag.");
 			ret = false;
-		}
-
-		if (ret)
-		{
-
 		}
 	}
 

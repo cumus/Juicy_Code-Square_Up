@@ -18,8 +18,6 @@ Map::~Map()
 bool Map::Awake(pugi::xml_node& config)
 {
 	LOG("Loading Map Parser");
-
-	maps_folder = config.child("folder").child_value();
 	
 	return true;
 }
@@ -44,9 +42,7 @@ bool Map::LoadFromFile(const char* file_name)
 	if (map.loaded)
 		map.CleanUp();
 
-	std::string map_path = App->files.GetBasePath();
-	map_path += maps_folder;
-	map.Load(map_path.c_str(), file_name);
+	map.Load(file_name);
 
 	return map.IsValid();
 }

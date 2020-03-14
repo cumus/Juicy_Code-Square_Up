@@ -102,9 +102,7 @@ bool Audio::PlayMusic(const char* path, float fade_time)
 		Mix_FreeMusic(music);
 	}
 
-	std::string audio_path = App->files.GetBasePath();
-	audio_path += path;
-	music = Mix_LoadMUS(audio_path.c_str());
+	music = Mix_LoadMUS_RW(App->files.Load(path), 1);
 
 	if(music)
 	{
@@ -112,7 +110,7 @@ bool Audio::PlayMusic(const char* path, float fade_time)
 		{
 			if (Mix_FadeInMusic(music, -1, (int)(fade_time * 1000.0f)) < 0)
 			{
-				LOG("Cannot fade in music %s. Mix_GetError(): %s", audio_path.c_str(), Mix_GetError());
+				LOG("Cannot fade in music %s. Mix_GetError(): %s", path, Mix_GetError());
 				ret = false;
 			}
 		}
@@ -120,18 +118,18 @@ bool Audio::PlayMusic(const char* path, float fade_time)
 		{
 			if (Mix_PlayMusic(music, -1) < 0)
 			{
-				LOG("Cannot play in music %s. Mix_GetError(): %s", audio_path.c_str(), Mix_GetError());
+				LOG("Cannot play in music %s. Mix_GetError(): %s", path, Mix_GetError());
 				ret = false;
 			}
 		}
 	}
 	else
 	{
-		LOG("Cannot load music %s. Mix_GetError(): %s\n", audio_path.c_str(), Mix_GetError());
+		LOG("Cannot load music %s. Mix_GetError(): %s\n", path, Mix_GetError());
 		ret = false;
 	}
 
-	LOG("Successfully playing %s", audio_path.c_str());
+	LOG("Successfully playing %s", path);
 	return ret;
 }
 

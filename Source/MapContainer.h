@@ -107,7 +107,7 @@ class MapContainer
 {
 public:
 
-	bool Load(const char* directory, const char* file);
+	bool Load(const char* file);
 	bool IsValid() const;
 
 	void Draw() const;
@@ -149,8 +149,7 @@ public:
 	bool				loaded = false;
 
 	pugi::xml_document	doc;
-	std::string			dir = "undefined";
-	std::string			file_name = "undefined";
+	std::string			path = "undefined";
 
 	int					width = -1;
 	int					height = -1;
