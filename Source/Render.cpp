@@ -139,9 +139,6 @@ bool Render::Update()
 
 bool Render::PostUpdate()
 {
-	SDL_Rect rect = { (cam_w / 2) - 50, (cam_h / 2) - 25, 100, 50 };
-	App->render->Blit_Text("Square UP!", rect, -1, 250, 250, 250, 250);
-
 	SDL_SetRenderDrawColor(renderer, background.r, background.g, background.g, background.a);
 	SDL_RenderPresent(renderer);
 	return true;
@@ -368,11 +365,30 @@ bool Render::Blit_Rot(int texture_id, int x, int y, bool use_cam, const SDL_Rect
 	return ret;
 }
 
-bool Render::Blit_Text(const char* text, SDL_Rect rect, int font_id, int r, int g, int b, int a, unsigned int wrap_length)
+bool Render::Blit_Text(const char* text, int x, int y, int font_id, int r, int g, int b, int a, unsigned int wrap_length) const
 {
 	bool ret = true;
 
-	if (SDL_RenderCopyEx(renderer, App->fonts.RenderText("Square UP!", wrap_length, font_id, r, g, b, a), 0, &rect, 0, nullptr, SDL_RendererFlip::SDL_FLIP_NONE) != 0)
+	int width, height;
+	if (App->fonts.CalcSize(text, width, height, font_id))
+	{
+		SDL_Rect rect = { x, y, width, height };
+
+		if (SDL_RenderCopyEx(renderer, App->fonts.RenderText("Square UP!", wrap_length, font_id, r, g, b, a), 0, &rect, 0, nullptr, SDL_RendererFlip::SDL_FLIP_NONE) != 0)
+		{
+			LOG("Cannot blit to screen. SDL_RenderCopy error: %s", SDL_GetError());
+			ret = false;
+		}
+	}
+
+	return ret;
+}
+
+bool Render::Blit_TextSized(const char* text, SDL_Rect size, int font_id, int r, int g, int b, int a, unsigned int wrap_length) const
+{
+	bool ret = true;
+
+	if (SDL_RenderCopyEx(renderer, App->fonts.RenderText("Square UP!", wrap_length, font_id, r, g, b, a), 0, &size, 0, nullptr, SDL_RendererFlip::SDL_FLIP_NONE) != 0)
 	{
 		LOG("Cannot blit to screen. SDL_RenderCopy error: %s", SDL_GetError());
 		ret = false;
