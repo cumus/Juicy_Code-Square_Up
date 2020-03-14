@@ -127,6 +127,12 @@ bool Scene::PostUpdate()
 
 	App->win->SetTitle(tmp_str);
 
+	// Render Some Text
+	App->render->Blit_Text("Sample Text At 200x200", 200, 200);
+
+	SDL_Rect rect = { (cam_rect.w / 2) - 50, (cam_rect.h / 2) - 25, 96, 48 };
+	App->render->Blit_TextSized("Square UP!", rect, 1, 250, 250, 250, 250);
+
 	return true;
 }
 
@@ -153,7 +159,10 @@ bool Scene::LoadTestScene()
 	}
 
 	// Load font
-	if (ret) ret = (App->fonts.Load("fonts/OpenSans-Regular.ttf") != nullptr);
+	if (ret)
+		ret = (App->fonts.Load("fonts/OpenSans-Regular.ttf") >= 0);
+	if (ret)
+		ret = (App->fonts.Load("fonts/OpenSans-Regular.ttf", 56) >= 0);
 
 	if (ret)
 	{

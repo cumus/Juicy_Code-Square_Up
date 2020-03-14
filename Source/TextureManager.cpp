@@ -51,7 +51,7 @@ int TextureManager::Load(const char* path)
 
 	int ret = -1;
 
-	for (std::vector<TextureData>::iterator it = texture_data.begin(); it != texture_data.end(); ++it)
+	for (std::vector<TextureData>::const_iterator it = texture_data.cbegin(); it != texture_data.cend(); ++it)
 	{
 		if (it->source == path)
 		{
@@ -81,7 +81,7 @@ int TextureManager::Load(const char* path)
 
 				SDL_FreeSurface(surface);
 
-				LOG("     Loaded surface with path: %s", path);
+				LOG("Loaded surface with path: %s", path);
 			}
 			else
 				LOG("Unable to create texture from surface! SDL Error: %s\n", SDL_GetError());
