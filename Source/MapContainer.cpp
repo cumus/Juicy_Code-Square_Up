@@ -116,10 +116,10 @@ void MapContainer::Draw() const
 		std::pair<int, int> mouse_tile_pos = I_MapToWorld(mouse.first, mouse.second);
 		
 		// Frist tileset size - green
-		App->render->DrawQuad({ mouse_tile_pos.first, mouse_tile_pos.second, tilesets.front().tile_width, tilesets.front().tile_height }, 0, 100, 0, 180);
+		App->render->DrawQuad({ mouse_tile_pos.first, mouse_tile_pos.second, tilesets.front().tile_width, tilesets.front().tile_height }, { 0, 100, 0, 180 });
 		
 		// Map tile size - blue
-		App->render->DrawQuad({ mouse_tile_pos.first, mouse_tile_pos.second, tile_width, tile_height }, 0, 0, 100, 80);
+		App->render->DrawQuad({ mouse_tile_pos.first, mouse_tile_pos.second, tile_width, tile_height }, { 0, 0, 100, 80 });
 	}
 	else if (type == MAPTYPE_ISOMETRIC)
 	{

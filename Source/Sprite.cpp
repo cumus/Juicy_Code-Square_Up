@@ -9,7 +9,7 @@
 
 Sprite::Sprite(Gameobject* go) : Component(SPRITE, go)
 {
-	r = g = b = a = 250;
+	color = { 255, 255, 255, 255 };
 
 	if (go) go->AddComponent(this);
 }
@@ -32,7 +32,7 @@ void Sprite::PostUpdate()
 			if (tex_id >= 0)
 				App->render->Blit(tex_id, int(map_pos.first), int(map_pos.second), &section);
 			else
-				App->render->DrawQuad({ int(map_pos.first), int(map_pos.second), section.w, section.h }, r, g, b, a);
+				App->render->DrawQuad({ int(map_pos.first), int(map_pos.second), section.w, section.h }, color);
 		}
 	}
 }

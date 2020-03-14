@@ -3,6 +3,7 @@
 
 #include "Component.h"
 #include "SDL/include/SDL_rect.h"
+#include "SDL/include/SDL_pixels.h"
 
 class Sprite : public Component
 {
@@ -17,7 +18,7 @@ public:
 
 	int tex_id = -1;
 	SDL_Rect section;
-	int r, g, b, a;
+	SDL_Color color;
 };
 
 #endif // __SPRITE_H__

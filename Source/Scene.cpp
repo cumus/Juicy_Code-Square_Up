@@ -13,6 +13,7 @@
 #include "Defs.h"
 #include "Log.h"
 
+#include "SDL/include/SDL_scancode.h"
 #include "Optick/include/optick.h"
 
 #include <math.h>
@@ -130,8 +131,8 @@ bool Scene::PostUpdate()
 	// Render Some Text
 	App->render->Blit_Text("Sample Text At 200x200", 200, 200);
 
-	SDL_Rect rect = { (cam_rect.w / 2) - 50, (cam_rect.h / 2) - 25, 96, 48 };
-	App->render->Blit_TextSized("Square UP!", rect, 1, 250, 250, 250, 250);
+	SDL_Rect rect = { (cam_rect.w / 2) - 90, (cam_rect.h / 2) - 30, 180, 60 };
+	App->render->Blit_TextSized("Square UP!", rect, 1);
 
 	return true;
 }

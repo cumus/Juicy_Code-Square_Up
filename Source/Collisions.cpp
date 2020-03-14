@@ -4,6 +4,8 @@
 #include "Input.h"
 #include "Log.h"
 
+#include "SDL/include/SDL_scancode.h"
+
 Collisions::Collisions() : Module("collisions")
 {
 	for (unsigned int i = 0; i < MAX_COLLIDERS; ++i)
@@ -124,19 +126,19 @@ void Collisions::DebugDraw()
 		switch (colliders[i]->type)
 		{
 		case COLLIDER_NONE:
-			App->render->DrawQuad(colliders[i]->rect, 255, 255, 255, alpha);
+			App->render->DrawQuad(colliders[i]->rect, { 255, 255, 255, alpha });
 			break;
 		case COLLIDER:
-			App->render->DrawQuad(colliders[i]->rect, 0, 0, 255, alpha);
+			App->render->DrawQuad(colliders[i]->rect, { 0, 0, 255, alpha });
 			break;
 		case NEXTLVL:
-			App->render->DrawQuad(colliders[i]->rect, 100, 100, 100, alpha);
+			App->render->DrawQuad(colliders[i]->rect, { 100, 100, 100, alpha });
 			break;
 		case COLLIDER_PLAYER:
-			App->render->DrawQuad(colliders[i]->rect, 0, 255, 0, alpha);
+			App->render->DrawQuad(colliders[i]->rect, { 0, 255, 0, alpha });
 			break;
 		case COLLIDER_DAMAGE:
-			App->render->DrawQuad(colliders[i]->rect, 255, 0, 0, alpha);
+			App->render->DrawQuad(colliders[i]->rect, { 255, 0, 0, alpha });
 			break;
 		}
 	}

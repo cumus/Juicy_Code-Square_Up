@@ -97,7 +97,7 @@ bool TextureManager::GetTextureData(int id, TextureData& data) const
 {
 	bool ret;
 
-	if (ret = (id >= 0 && id < textures.size()))
+	if (ret = (id >= 0 && id < int(textures.size())))
 		data = texture_data[id];
 
 	return ret;
@@ -107,7 +107,7 @@ SDL_Texture * TextureManager::GetTexture(int id) const
 {
 	SDL_Texture* ret = nullptr;
 
-	if (id >= 0 && id < textures.size())
+	if (id >= 0 && id < int(textures.size()))
 		ret = textures[id];
 
 	return ret;

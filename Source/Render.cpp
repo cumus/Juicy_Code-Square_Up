@@ -68,9 +68,9 @@ bool Render::Start()
 		SDL_RenderGetViewport(renderer, &viewport);
 
 		// setup camera
-		cam_x = cam_y = 0;
-		cam_w = float(viewport.w);
-		cam_h = float(viewport.h);
+		cam.x = cam.y = 0;
+		cam.w = float(viewport.w);
+		cam.h = float(viewport.h);
 	}
 	else
 	{
@@ -110,29 +110,31 @@ bool Render::Update()
 		}
 		else if (wheel_motion != 0)
 		{
-			// Get Tile at mouse - before zoom
+			// Get Tile at mouse
 			int x, y;
 			App->input->GetMousePosition(x, y);
-			std::pair<int, int> mouse_tile = App->map->WorldToTileBase(int(cam_x) + x, int(cam_y) + y);
-			std::pair<float, float> tile_pos = App->map->F_MapToWorld(mouse_tile.first, mouse_tile.second);
+			std::pair<int, int> mouse_tile = App->map->WorldToTileBase(int(cam.x) + x, int(cam.y) + y);
+			x = int(mouse_tile.first);
+			y = int(mouse_tile.second);
 
-			// Get Tile at mouse - after zoom
+			// Get Tile at mouse pos - before and after zoom
+			std::pair<float, float> tile_pos = App->map->F_MapToWorld(x, y);
 			App->map->SetMapScale(zoom = target_zoom);
-			std::pair<float, float> tile_pos_next = App->map->F_MapToWorld(mouse_tile.first, mouse_tile.second);
+			std::pair<float, float> tile_pos_next = App->map->F_MapToWorld(x, y);
 
 			// Displace camera - keep mouse at same tile
-			cam_x += (tile_pos_next.first - tile_pos.first);
-			cam_y += (tile_pos_next.second - tile_pos.second);
+			cam.x += (tile_pos_next.first - tile_pos.first);
+			cam.y += (tile_pos_next.second - tile_pos.second);
 		}
 	}
 
 	// Move camera
 	float moveSpeed = 200.000f * App->time.GetDeltaTime() / zoom;
 	if (App->input->GetKey(SDL_SCANCODE_LSHIFT) == KEY_REPEAT) moveSpeed *= 5.000f;
-	if (App->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT) cam_x -= moveSpeed;
-	if (App->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT) cam_x += moveSpeed;
-	if (App->input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT) cam_y -= moveSpeed;
-	if (App->input->GetKey(SDL_SCANCODE_S) == KEY_REPEAT) cam_y += moveSpeed;
+	if (App->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT) cam.x -= moveSpeed;
+	if (App->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT) cam.x += moveSpeed;
+	if (App->input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT) cam.y -= moveSpeed;
+	if (App->input->GetKey(SDL_SCANCODE_S) == KEY_REPEAT) cam.y += moveSpeed;
 
 	return true;
 }
@@ -156,8 +158,8 @@ bool Render::CleanUp()
 // Load Game State
 bool Render::Load(pugi::xml_node& data)
 {
-	cam_x = data.child("camera").attribute("x").as_float();
-	cam_y = data.child("camera").attribute("y").as_float();
+	cam.x = data.child("camera").attribute("x").as_float();
+	cam.y = data.child("camera").attribute("y").as_float();
 
 	return true;
 }
@@ -165,10 +167,10 @@ bool Render::Load(pugi::xml_node& data)
 // Save Game State
 bool Render::Save(pugi::xml_node& data) const
 {
-	pugi::xml_node cam = data.append_child("camera");
+	pugi::xml_node camera = data.append_child("camera");
 
-	cam.append_attribute("x") = cam_x;
-	cam.append_attribute("y") = cam_y;
+	camera.append_attribute("x") = cam.x;
+	camera.append_attribute("y") = cam.y;
 
 	return true;
 }
@@ -180,7 +182,12 @@ SDL_Renderer* Render::GetSDLRenderer() const
 
 SDL_Rect Render::GetCameraRect() const
 {
-	return { int(cam_x), int(cam_y), int(cam_w), int(cam_h) };
+	return { int(cam.x), int(cam.y), int(cam.w), int(cam.h) };
+}
+
+RectF Render::GetCameraRectF() const
+{
+	return cam;
 }
 
 float Render::GetZoom() const
@@ -226,8 +233,8 @@ bool Render::Blit(int texture_id, int x, int y, const SDL_Rect* section, bool us
 		}
 		if (use_cam)
 		{
-			rect.x = x - int(cam_x);
-			rect.y = y - int(cam_y);
+			rect.x = x - int(cam.x);
+			rect.y = y - int(cam.y);
 			rect.w = int(float(rect.w) * zoom);
 			rect.h = int(float(rect.h) * zoom);
 		}
@@ -277,8 +284,8 @@ bool Render::Blit_Scale(int texture_id, int x, int y, float scale_x, float scale
 
 		if (use_cam)
 		{
-			rect.x = x - int(cam_x);
-			rect.y = y - int(cam_y);
+			rect.x = x - int(cam.x);
+			rect.y = y - int(cam.y);
 			rect.w = int(float(rect.w) * zoom * scale_x);
 			rect.h = int(float(rect.h) * zoom * scale_y);
 		}
@@ -318,8 +325,8 @@ bool Render::Blit_Rot(int texture_id, int x, int y, bool use_cam, const SDL_Rect
 
 		if (use_cam)
 		{
-			rect.x = x - int(cam_x);
-			rect.y = y - int(cam_y);
+			rect.x = x - int(cam.x);
+			rect.y = y - int(cam.y);
 		}
 		else
 		{
@@ -365,7 +372,7 @@ bool Render::Blit_Rot(int texture_id, int x, int y, bool use_cam, const SDL_Rect
 	return ret;
 }
 
-bool Render::Blit_Text(const char* text, int x, int y, int font_id, int r, int g, int b, int a, unsigned int wrap_length) const
+bool Render::Blit_Text(const char* text, int x, int y, int font_id, SDL_Color color, unsigned int wrap_length) const
 {
 	bool ret = true;
 
@@ -374,7 +381,7 @@ bool Render::Blit_Text(const char* text, int x, int y, int font_id, int r, int g
 	{
 		SDL_Rect rect = { x, y, width, height };
 
-		if (SDL_RenderCopyEx(renderer, App->fonts.RenderText("Square UP!", wrap_length, font_id, r, g, b, a), 0, &rect, 0, nullptr, SDL_RendererFlip::SDL_FLIP_NONE) != 0)
+		if (SDL_RenderCopyEx(renderer, App->fonts.RenderText("Square UP!", wrap_length, font_id, color.r, color.g, color.b, color.a), 0, &rect, 0, nullptr, SDL_RendererFlip::SDL_FLIP_NONE) != 0)
 		{
 			LOG("Cannot blit to screen. SDL_RenderCopy error: %s", SDL_GetError());
 			ret = false;
@@ -384,11 +391,11 @@ bool Render::Blit_Text(const char* text, int x, int y, int font_id, int r, int g
 	return ret;
 }
 
-bool Render::Blit_TextSized(const char* text, SDL_Rect size, int font_id, int r, int g, int b, int a, unsigned int wrap_length) const
+bool Render::Blit_TextSized(const char* text, SDL_Rect size, int font_id, SDL_Color color, unsigned int wrap_length) const
 {
 	bool ret = true;
 
-	if (SDL_RenderCopyEx(renderer, App->fonts.RenderText("Square UP!", wrap_length, font_id, r, g, b, a), 0, &size, 0, nullptr, SDL_RendererFlip::SDL_FLIP_NONE) != 0)
+	if (SDL_RenderCopyEx(renderer, App->fonts.RenderText("Square UP!", wrap_length, font_id, color.r, color.g, color.b, color.a), 0, &size, 0, nullptr, SDL_RendererFlip::SDL_FLIP_NONE) != 0)
 	{
 		LOG("Cannot blit to screen. SDL_RenderCopy error: %s", SDL_GetError());
 		ret = false;
@@ -397,21 +404,21 @@ bool Render::Blit_TextSized(const char* text, SDL_Rect size, int font_id, int r,
 	return ret;
 }
 
-bool Render::DrawQuad(const SDL_Rect& rect, Uint8 r, Uint8 g, Uint8 b, Uint8 a, bool filled, bool use_camera) const
+bool Render::DrawQuad(const SDL_Rect rect, SDL_Color color, bool filled, bool use_camera) const
 {
 	bool ret = true;
 
 	SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
-	SDL_SetRenderDrawColor(renderer, r, g, b, a);
+	SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, color.a);
 
-	SDL_Rect rec(rect);
+	SDL_Rect dim(rect);
 	if(use_camera)
 	{
-		rec.x -= int(cam_x);
-		rec.y -= int(cam_y);
+		dim.x -= int(cam.x);
+		dim.y -= int(cam.y);
 	}
 
-	int result = (filled) ? SDL_RenderFillRect(renderer, &rec) : SDL_RenderDrawRect(renderer, &rec);
+	int result = (filled) ? SDL_RenderFillRect(renderer, &dim) : SDL_RenderDrawRect(renderer, &dim);
 
 	if(result != 0)
 	{
@@ -422,30 +429,40 @@ bool Render::DrawQuad(const SDL_Rect& rect, Uint8 r, Uint8 g, Uint8 b, Uint8 a, 
 	return ret;
 }
 
-bool Render::DrawLine(int x1, int y1, int x2, int y2, Uint8 r, Uint8 g, Uint8 b, Uint8 a, bool use_camera) const
+bool Render::DrawQuadNormCoords(RectF rect, SDL_Color color, bool filled) const
+{
+	bool ret = true;
+
+	SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
+	SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, color.a);
+
+	SDL_Rect dim = { int(rect.x * cam.w), int(rect.y * cam.h), int(rect.w * cam.w), int(rect.h * cam.h) };
+
+	int result = (filled) ? SDL_RenderFillRect(renderer, &dim) : SDL_RenderDrawRect(renderer, &dim);
+
+	if (result != 0)
+	{
+		LOG("Cannot draw quad to screen. SDL_RenderFillRect error: %s", SDL_GetError());
+		ret = false;
+	}
+
+	return ret;
+}
+
+bool Render::DrawLine(const SDL_Point a, const SDL_Point b, SDL_Color color, bool use_camera) const
 {
 	bool ret = true;
 	//unsigned int scale = App->win->GetScale();
 
 	SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
-	SDL_SetRenderDrawColor(renderer, r, g, b, a);
+	SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, color.a);
 
 	int result = -1;
 
 	if (use_camera)
-		result = SDL_RenderDrawLine(
-			renderer,
-			int(cam_x) + x1, // * scale,
-			int(cam_y) + y1, // * scale,
-			int(cam_x) + x2, // * scale,
-			int(cam_y) + y2); // * scale);
+		result = SDL_RenderDrawLine(renderer, a.x - int(cam.x), a.y - int(cam.y), b.x - int(cam.x), b.y - int(cam.y));
 	else
-		result = SDL_RenderDrawLine(
-			renderer,
-			x1, // * scale,
-			y1, // * scale,
-			x2, // * scale,
-			y2); // * scale);
+		result = SDL_RenderDrawLine(renderer, a.x, a.y, b.x, b.y);
 
 	if(result != 0)
 	{
@@ -456,28 +473,28 @@ bool Render::DrawLine(int x1, int y1, int x2, int y2, Uint8 r, Uint8 g, Uint8 b,
 	return ret;
 }
 
-bool Render::DrawCircle(int x, int y, int radius, Uint8 r, Uint8 g, Uint8 b, Uint8 a, bool use_camera) const
+bool Render::DrawCircle(int x, int y, float radius, SDL_Color color, bool use_camera) const
 {
 	bool ret = true;
-	//unsigned int scale = App->win->GetScale();
 
-	SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
-	SDL_SetRenderDrawColor(renderer, r, g, b, a);
-
-	int result = -1;
-	SDL_Point points[360];
-
-	float factor = (float)M_PI / 180.0f;
-
-	for(unsigned int i = 0; i < 360; ++i)
+	if (use_camera)
 	{
-		points[i].x = (int)(x + radius * cos(i * factor));
-		points[i].y = (int)(y + radius * sin(i * factor));
+		x -= int(cam.x);
+		y -= int(cam.y);
 	}
 
-	result = SDL_RenderDrawPoints(renderer, points, 360);
+	SDL_Point points[360];
+	float factor = (float)M_PI / 180.0f;
+	for(unsigned int i = 0; i < 360; ++i)
+	{
+		points[i].x = x + int(radius * cos(i * factor));
+		points[i].y = y + int(radius * sin(i * factor));
+	}
 
-	if(result != 0)
+	SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
+	SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, color.a);
+
+	if(SDL_RenderDrawPoints(renderer, points, 360) != 0)
 	{
 		LOG("Cannot draw quad to screen. SDL_RenderFillRect error: %s", SDL_GetError());
 		ret = false;

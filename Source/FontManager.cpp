@@ -87,7 +87,7 @@ _TTF_Font* FontManager::GetFont(int id) const
 
 	if (!fonts.empty())
 	{
-		if (id < 0 || id >= fonts.size())
+		if (id < 0 || id >= int(fonts.size()))
 			id = 0;
 
 		ret = fonts[id];
