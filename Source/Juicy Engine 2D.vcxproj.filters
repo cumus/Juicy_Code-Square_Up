@@ -257,6 +257,12 @@
     <Filter Include="Source\3rd Party\SDL_Mixer">
       <UniqueIdentifier>{d1d9a028-468e-44a3-94fd-e9ab3569bc9a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\Data Files\x86 memleaks">
+      <UniqueIdentifier>{79a4ef72-32b7-4040-ac2e-8870998bbd22}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Data Files\x64 memleaks">
+      <UniqueIdentifier>{9cfb9079-2877-48a6-85c8-bca3f4c7c09e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Xml Include="..\Build\config.xml">
@@ -270,5 +276,10 @@
     <None Include="..\Build\maps\level1.tmx">
       <Filter>Source\Data Files</Filter>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="..\Platform_Data\x86\DebugData\memleaks.log">
+      <Filter>Source\Data Files\x86 memleaks</Filter>
+    </Text>
   </ItemGroup>
 </Project>
