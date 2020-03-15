@@ -5,7 +5,7 @@
 #include "Gameobject.h"
 #include "Transform.h"
 
-#include "Optick/include/optick.h"
+#include "optick-1.3.0.0/include/optick.h"
 
 Sprite::Sprite(Gameobject* go) : Component(SPRITE, go)
 {

@@ -2,7 +2,7 @@
 #include "Defs.h"
 #include "Transform.h"
 
-#include "Optick/include/optick.h"
+#include "optick-1.3.0.0/include/optick.h"
 
 Gameobject::Gameobject(const char* n, Gameobject* p)
 {

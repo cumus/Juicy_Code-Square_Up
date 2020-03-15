@@ -3,7 +3,7 @@
 #include "Log.h"
 #include "Application.h"
 
-#include "Optick/include/optick.h"
+#include "optick-1.3.0.0/include/optick.h"
 #include "SDL/include/SDL.h"
 
 #include "SDL2_mixer-2.0.4/include/SDL_mixer.h"

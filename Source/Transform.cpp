@@ -3,7 +3,7 @@
 #include "Gameobject.h"
 #include "Log.h"
 
-#include "Optick/include/optick.h"
+#include "optick-1.3.0.0/include/optick.h"
 
 Transform::Transform(Gameobject* go) : Component(TRANSFORM, go)
 {

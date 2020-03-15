@@ -5,7 +5,7 @@
 #include "Log.h"
 #include "Defs.h"
 
-#include "Optick/include/optick.h"
+#include "optick-1.3.0.0/include/optick.h"
 #include "SDL/include/SDL_render.h"
 #include "SDL/include/SDL_timer.h"
 

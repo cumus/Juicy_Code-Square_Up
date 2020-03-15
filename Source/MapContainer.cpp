@@ -8,7 +8,7 @@
 #include "Defs.h"
 #include "Log.h"
 
-#include "Optick/include/optick.h"
+#include "optick-1.3.0.0/include/optick.h"
 
 #include <math.h>
 

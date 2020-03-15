@@ -9,19 +9,19 @@
 #include "Defs.h"
 #include "Log.h"
 
-#include "Optick/include/optick.h"
+#include "optick-1.3.0.0/include/optick.h"
 
 #ifdef DEBUG
 #ifdef PLATFORMx86
-#pragma comment( lib, "Optick/libx86/OptickCore_debug.lib" )
+#pragma comment( lib, "optick-1.3.0.0/x86/DebugData/OptickCore.lib" )
 #elif PLATFORMx64
-#pragma comment( lib, "Optick/libx64/OptickCore_debug.lib" )
+#pragma comment( lib, "optick-1.3.0.0/x64/DebugData/OptickCore.lib" )
 #endif
 #else
 #ifdef PLATFORMx86
-#pragma comment( lib, "Optick/libx86/OptickCore_release.lib" )
+#pragma comment( lib, "optick-1.3.0.0/x86/ReleaseData/OptickCore.lib" )
 #elif PLATFORMx64
-#pragma comment( lib, "Optick/libx64/OptickCore_release.lib" )
+#pragma comment( lib, "optick-1.3.0.0/x64/ReleaseData/OptickCore.lib" )
 #endif
 #endif
 

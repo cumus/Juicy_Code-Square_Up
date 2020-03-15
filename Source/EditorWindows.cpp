@@ -4,7 +4,7 @@
 #include "Render.h"
 #include "JuicyMath.h"
 
-#include "Optick/include/optick.h"
+#include "optick-1.3.0.0/include/optick.h"
 
 float EditorWindow::margin = 0.002f;
 float EditorWindow::min_size = 0.02f;

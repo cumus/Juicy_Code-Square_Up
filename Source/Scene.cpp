@@ -14,7 +14,7 @@
 #include "Log.h"
 
 #include "SDL/include/SDL_scancode.h"
-#include "Optick/include/optick.h"
+#include "optick-1.3.0.0/include/optick.h"
 
 #include <math.h>
 #include <queue>

@@ -4,7 +4,7 @@
 #include "Log.h"
 #include "Application.h"
 
-#include "Optick/include/optick.h"
+#include "optick-1.3.0.0/include/optick.h"
 
 Window::Window() : Module("window")
 {
