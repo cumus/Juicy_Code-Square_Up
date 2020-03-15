@@ -3,9 +3,21 @@
 #include "Log.h"
 #include "SDL/include/SDL.h"
 
-#include "PhysFS/include/physfs.h"
+#include "physfs-3.0.2/include/physfs.h"
 
-#pragma comment( lib, "PhysFS/libx86/physfs.lib" )
+#ifdef DEBUG
+#ifdef PLATFORMx86
+#pragma comment( lib, "physfs-3.0.2/x86/DebugData/physfs.lib" )
+#elif PLATFORMx64
+#pragma comment( lib, "physfs-3.0.2/x64/DebugData/physfs.lib" )
+#endif
+#else
+#ifdef PLATFORMx86
+#pragma comment( lib, "physfs-3.0.2/x86/ReleaseData/physfs.lib" )
+#elif PLATFORMx64
+#pragma comment( lib, "physfs-3.0.2/x64/ReleaseData/physfs.lib" )
+#endif
+#endif
 
 FileManager::FileManager()
 {}
@@ -70,6 +82,8 @@ bool FileManager::LoadXML(const char* file, pugi::xml_document& doc)
 
 		if (!(ret = result))
 			LOG("Could not load config.xml - pugi error: %s", result.description());
+
+		DEL_ARRAY(buffer);
 	}
 
 	return ret;
@@ -124,7 +138,7 @@ SDL_RWops* FileManager::Load(const char* file) const
 	if (size > 0)
 	{
 		SDL_RWops* r = SDL_RWFromConstMem(buffer, size);
-		if (r != NULL)
+		if (r != nullptr)
 			r->close = close_sdl_rwops;
 
 		return r;
