@@ -19,7 +19,8 @@
 
 Render::Render() : Module("renderer")
 {
-	background.r = background.g = background.b = background.a = 0;
+	background.r = background.g = background.b = 0;
+	background.a = 255;
 }
 
 // Destructor
