@@ -6,9 +6,18 @@
 
 #include "Optick/include/optick.h"
 
-EditorWindow::EditorWindow(const RectF rect) : rect(rect)
+float EditorWindow::margin = 0.002f;
+float EditorWindow::min_size = 0.02f;
+
+EditorWindow::EditorWindow(const RectF window_area, SDL_Color color) : rect(window_area), color(color)
 {
-	color = { 250, 250, 250, 220 };
+	// Cap min pos
+	if (rect.x < 0.0f) rect.x = 0.0f;
+	if (rect.y < 0.0f) rect.y = 0.0f;
+
+	// Cap min size
+	if (rect.w < min_size) rect.w = min_size;
+	if (rect.h < min_size) rect.h = min_size;
 }
 
 EditorWindow::~EditorWindow()
@@ -18,9 +27,8 @@ bool EditorWindow::CheckIfEditing(float mouse_x, float mouse_y, KeyState mouse_l
 {
 	if (!dragging)
 	{
-		// Check borders
-		if (mouse_x >= rect.x - margin && mouse_x <= rect.x + rect.w + margin &&
-			mouse_y >= rect.y - margin && mouse_y <= rect.y + rect.h + margin)
+		// Check mouse inside rect with margin
+		if (JMath::PointInsideRect(mouse_x, mouse_y, { rect.x - margin,  rect.y - margin,  rect.x + rect.w + margin, rect.y + rect.h + margin }))
 		{
 			// Clicking inside window
 			if (JMath::PointInsideRect(mouse_x, mouse_y, GetBorderN_Norm()))
@@ -49,58 +57,15 @@ bool EditorWindow::CheckIfEditing(float mouse_x, float mouse_y, KeyState mouse_l
 		// Editing window sizes
 		switch (hovering)
 		{
-		case SIDE_N:
-		{
-			rect.h -= mouse_y - rect.y;
-			rect.y = mouse_y;
-			break;
-		}
-		case SIDE_W:
-		{
-			rect.w -= mouse_x - rect.x;
-			rect.x = mouse_x;
-			break;
-		}
-		case SIDE_E:
-		{
-			rect.w = mouse_x - rect.x;
-			break;
-		}
-		case SIDE_S:
-		{
-			rect.h = mouse_y - rect.y;
-			break;
-		}
-		case CORNER_NW:
-		{
-			rect.h -= mouse_y - rect.y;
-			rect.y = mouse_y;
-			rect.w -= mouse_x - rect.x;
-			rect.x = mouse_x;
-			break;
-		}
-		case CORNER_NE:
-		{
-			rect.h -= mouse_y - rect.y;
-			rect.y = mouse_y;
-			rect.w = mouse_x - rect.x;
-			break;
-		}
-		case CORNER_SW:
-		{
-			rect.h = mouse_y - rect.y;
-			rect.w -= mouse_x - rect.x;
-			rect.x = mouse_x;
-			break;
-		}
-		case CORNER_SE:
-		{
-			rect.h = mouse_y - rect.y;
-			rect.w = mouse_x - rect.x;
-			break;
-		}
-		default:
-			break;
+		case SIDE_N: MouseDrag_N(mouse_x, mouse_y); break;
+		case SIDE_W: MouseDrag_W(mouse_x, mouse_y); break;
+		case SIDE_E: MouseDrag_E(mouse_x, mouse_y); break;
+		case SIDE_S: MouseDrag_S(mouse_x, mouse_y); break;
+		case CORNER_NW: MouseDrag_N(mouse_x, mouse_y); MouseDrag_W(mouse_x, mouse_y); break;
+		case CORNER_NE:MouseDrag_N(mouse_x, mouse_y); MouseDrag_E(mouse_x, mouse_y); break;
+		case CORNER_SW:MouseDrag_S(mouse_x, mouse_y); MouseDrag_W(mouse_x, mouse_y); break;
+		case CORNER_SE:MouseDrag_S(mouse_x, mouse_y); MouseDrag_E(mouse_x, mouse_y); break;
+		default: break;
 		}
 
 		if (mouse_left_button != KEY_REPEAT)
@@ -188,6 +153,46 @@ RectF EditorWindow::GetBorderS_Norm() const
 		rect.y + rect.h - margin,
 		rect.w + margin * 2.0f,
 		margin * 2.0f };
+}
+
+void EditorWindow::MouseDrag_N(float mouse_x, float mouse_y)
+{
+	if (rect.h + rect.y - mouse_y >= min_size)
+	{
+		rect.h += rect.y - mouse_y;
+		rect.y = mouse_y;
+	}
+	else
+	{
+		rect.y += rect.h - min_size;
+		rect.h = min_size;
+	}
+}
+
+void EditorWindow::MouseDrag_W(float mouse_x, float mouse_y)
+{
+	if (rect.w + rect.x - mouse_x >= min_size)
+	{
+		rect.w += rect.x - mouse_x;
+		rect.x = mouse_x;
+	}
+	else
+	{
+		rect.x += rect.w - (min_size);
+		rect.w = min_size;
+	}
+}
+
+void EditorWindow::MouseDrag_E(float mouse_x, float mouse_y)
+{
+	if ((rect.w = mouse_x - rect.x) < min_size)
+		rect.w = min_size;
+}
+
+void EditorWindow::MouseDrag_S(float mouse_x, float mouse_y)
+{
+	if ((rect.h = mouse_y - rect.y) < min_size)
+		rect.h = min_size;
 }
 
 void BarMenu::DrawContent() const

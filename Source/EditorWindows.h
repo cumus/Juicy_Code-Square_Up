@@ -25,7 +25,7 @@ class EditorWindow : public EventListener
 {
 public:
 
-	EditorWindow(const RectF rect);
+	EditorWindow(const RectF rect, SDL_Color color = { 250, 250, 250, 220 });
 	virtual ~EditorWindow();
 
 	bool CheckIfEditing(float mouse_x, float mouse_y, KeyState mouse_left_button);
@@ -40,6 +40,13 @@ public:
 
 	virtual void DrawContent() const {}
 
+private:
+
+	inline void MouseDrag_N(float mouse_x, float mouse_y);
+	inline void MouseDrag_W(float mouse_x, float mouse_y);
+	inline void MouseDrag_E(float mouse_x, float mouse_y);
+	inline void MouseDrag_S(float mouse_x, float mouse_y);
+
 public:
 
 	RectF rect;
@@ -48,7 +55,9 @@ public:
 	bool mouse_inside = false;
 	Window_Sides hovering = SIDE_NONE;
 	bool dragging = false;
-	float margin = 0.002f;
+
+	static float margin;
+	static float min_size;
 
 	std::vector<UI_Element*> elements;
 };
