@@ -83,9 +83,9 @@ void MapContainer::Draw() const
 
 				// Draw debug spite at render_pos
 				if (y == up_left.second || y == down_right.second || x == up_left.first || x == down_right.first) // blue border
-					App->render->DrawQuad({ pos.first + 3, pos.second + 3, tile_width - 6, tile_height - 6 }, 0, 100, 250);
+					App->render->DrawQuad({ pos.first + 3, pos.second + 3, tile_width - 6, tile_height - 6 }, { 0, 100, 250, 200 });
 				else // white default
-					App->render->DrawQuad({ pos.first + 1, pos.second + 1, tile_width - 2, tile_height - 2 }, 250, 250, 250, 60);
+					App->render->DrawQuad({ pos.first + 1, pos.second + 1, tile_width - 2, tile_height - 2 }, { 250, 250, 250, 60 });
 			}
 		}
 #endif // DEBUG
@@ -288,7 +288,7 @@ std::pair<int, int> MapContainer::WorldToTileBase(float x, float y) const
 {
 	std::pair<float, float> ret = F_WorldToMap(x, y);
 	std::pair<float, float> tile_position = F_MapToWorld(ret.first, ret.second);
-	float base_offset = float(tile_width) * scale / (2.0f * sin(60.0f * DEGTORAD));
+	float base_offset = (float(tile_width) * scale) / (2.0f * sin(60.0f * DEGTORAD));
 
 	if (PointInsideTriangle({ x , y - scale },
 		{ tile_position.first, tile_position.second },
@@ -512,8 +512,6 @@ MapLayer::MapLayer(const MapLayer & copy) :
 MapLayer::~MapLayer()
 {
 	data.clear();
-	//data.shrink_to_fit();
-
 	properties.clear();
 }
 
@@ -563,8 +561,8 @@ unsigned int MapLayer::GetID(int x, int y) const
 {
 	unsigned int ret = 0;
 
-	if (x >= 0 && x <= width &&
-		y >= 0 && y <= height)
+	if (x >= 0 && x < width &&
+		y >= 0 && y < height)
 		ret = data[(y*width) + x];
 
 	return ret;

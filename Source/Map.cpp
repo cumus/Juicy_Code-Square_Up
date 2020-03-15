@@ -91,3 +91,8 @@ std::pair<int, int> Map::WorldToTileBase(int x, int y) const
 {
 	return map.WorldToTileBase(float(x), float(y));
 }
+
+std::pair<int, int> Map::WorldToTileBase(float x, float y) const
+{
+	return map.WorldToTileBase(x, y);
+}

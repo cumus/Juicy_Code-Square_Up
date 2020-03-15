@@ -113,14 +113,13 @@ bool Render::Update()
 			// Get Tile at mouse
 			int x, y;
 			App->input->GetMousePosition(x, y);
-			std::pair<int, int> mouse_tile = App->map->WorldToTileBase(int(cam.x) + x, int(cam.y) + y);
-			x = int(mouse_tile.first);
-			y = int(mouse_tile.second);
+			std::pair<int, int> mouse_tile = App->map->WorldToTileBase(cam.x + float(x), cam.y + float(y));
+			std::pair<float, float> mouse_tile_f = { float(mouse_tile.first), float(mouse_tile.second) };
 
 			// Get Tile at mouse pos - before and after zoom
-			std::pair<float, float> tile_pos = App->map->F_MapToWorld(x, y);
+			std::pair<float, float> tile_pos = App->map->F_MapToWorld(mouse_tile_f.first, mouse_tile_f.second);
 			App->map->SetMapScale(zoom = target_zoom);
-			std::pair<float, float> tile_pos_next = App->map->F_MapToWorld(x, y);
+			std::pair<float, float> tile_pos_next = App->map->F_MapToWorld(mouse_tile_f.first, mouse_tile_f.second);
 
 			// Displace camera - keep mouse at same tile
 			cam.x += (tile_pos_next.first - tile_pos.first);
@@ -395,6 +394,7 @@ bool Render::Blit_TextSized(const char* text, SDL_Rect size, int font_id, SDL_Co
 {
 	bool ret = true;
 
+	// TODO: Release rendered text texture on changing text or removing component
 	if (SDL_RenderCopyEx(renderer, App->fonts.RenderText("Square UP!", wrap_length, font_id, color.r, color.g, color.b, color.a), 0, &size, 0, nullptr, SDL_RendererFlip::SDL_FLIP_NONE) != 0)
 	{
 		LOG("Cannot blit to screen. SDL_RenderCopy error: %s", SDL_GetError());

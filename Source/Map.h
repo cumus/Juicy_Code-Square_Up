@@ -30,6 +30,7 @@ public:
 	std::pair<float, float> F_WorldToMap(float x, float y) const;
 
 	std::pair<int, int> WorldToTileBase(int x, int y) const;
+	std::pair<int, int> WorldToTileBase(float x, float y) const;
 
 private:
 
