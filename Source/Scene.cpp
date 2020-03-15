@@ -129,10 +129,10 @@ bool Scene::PostUpdate()
 	App->win->SetTitle(tmp_str);
 
 	// Render Some Text
-	App->render->Blit_Text("Sample Text At 200x200", 200, 200);
+	/*App->render->Blit_Text("Sample Text At 200x200", 200, 200);
 
 	SDL_Rect rect = { (cam_rect.w / 2) - 90, (cam_rect.h / 2) - 30, 180, 60 };
-	App->render->Blit_TextSized("Square UP!", rect, 1);
+	App->render->Blit_TextSized("Square UP!", rect, 1);*/
 
 	return true;
 }
