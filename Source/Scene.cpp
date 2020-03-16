@@ -90,14 +90,6 @@ bool Scene::Update()
 	// Update gameobject hierarchy
 	root.Update();
 
-	// UI Image Test
-
-	image_text_id = App->tex.Load("textures/background.png");
-	UI_Image* image = new UI_Image(this);
-	image->texture_id = image_text_id;
-	image->Init({ 500, 250}, { 0,0,100,100});
-	image->Draw();
-
 	return ret;
 }
 

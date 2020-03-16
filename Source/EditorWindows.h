@@ -49,6 +49,7 @@ private:
 
 public:
 
+
 	RectF rect;
 	SDL_Color color;
 
@@ -60,6 +61,9 @@ public:
 	static float min_size;
 
 	std::vector<UI_Element*> elements;
+
+	int image_text_id;
+
 };
 
 class BarMenu : public EditorWindow
@@ -120,6 +124,7 @@ public:
 	~ConfigWindow() {}
 
 	void DrawContent() const override;
+
 };
 
 #endif // __EDITOR_WINDOWS_H__

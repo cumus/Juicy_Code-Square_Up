@@ -3,6 +3,7 @@
 #include "Input.h"
 #include "Render.h"
 #include "JuicyMath.h"
+#include "UI_Image.h"
 
 #include "optick-1.3.0.0/include/optick.h"
 
@@ -18,6 +19,8 @@ EditorWindow::EditorWindow(const RectF window_area, SDL_Color color) : rect(wind
 	// Cap min size
 	if (rect.w < min_size) rect.w = min_size;
 	if (rect.h < min_size) rect.h = min_size;
+
+	
 }
 
 EditorWindow::~EditorWindow()
@@ -105,6 +108,7 @@ bool EditorWindow::Update(float mouse_x, float mouse_y, KeyState mouse_left_butt
 void EditorWindow::Draw(bool draw_border) const
 {
 	// Draw background
+	
 	App->render->DrawQuadNormCoords(rect, color);
 
 	// Draw contents
@@ -197,24 +201,38 @@ void EditorWindow::MouseDrag_S(float mouse_x, float mouse_y)
 
 void BarMenu::DrawContent() const
 {
+
 }
 
 void PlayPauseWindow::DrawContent() const
 {
+
 }
 
 void HeriarchyWindow::DrawContent() const
 {
+
 }
 
 void PropertiesWindow::DrawContent() const
 {
+	
 }
 
 void ConsoleWindow::DrawContent() const
 {
+	
 }
 
 void ConfigWindow::DrawContent() const
 {
+    // UI Image
+
+	RectF camera = App->render->GetCameraRectF();
+
+	UI_Image* image = new UI_Image();
+	image->texture_id = App->tex.Load("textures/background.png");
+	image->Init({ int(rect.x * camera.w), int(rect.y * camera.h) }, { 0,0,int(rect.w * camera.w),int(rect.h * camera.w) });
+	image->Draw();
+
 }
