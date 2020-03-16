@@ -10,6 +10,7 @@
 #include "TimeManager.h"
 #include "TextureManager.h"
 #include "Sprite.h"
+#include "UI_Image.h"
 #include "Defs.h"
 #include "Log.h"
 
@@ -89,6 +90,14 @@ bool Scene::Update()
 	// Update gameobject hierarchy
 	root.Update();
 
+	// UI Image Test
+
+	image_text_id = App->tex.Load("textures/background.png");
+	UI_Image* image = new UI_Image(this);
+	image->texture_id = image_text_id;
+	image->Init({ 500, 250}, { 0,0,100,100});
+	image->Draw();
+
 	return ret;
 }
 
@@ -151,6 +160,8 @@ bool Scene::LoadTestScene()
 
 	// Remove fps cap
 	App->time.SetMaxFPS(60);
+
+	
 
 	// Load mouse debug texture for identifying tiles
 	if (ret)

@@ -29,6 +29,7 @@ public:
 public:
 
 	int id_mouse_tex;
+	int image_text_id;
 
 private:
 

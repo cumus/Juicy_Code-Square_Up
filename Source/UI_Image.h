@@ -6,6 +6,8 @@
 #include "SDL2_image-2.0.5/include/SDL_image.h"
 #include "Module.h"
 
+class Module;
+
 class UI_Image : public UI_Element
 {
 public:
@@ -13,7 +15,7 @@ public:
 	UI_Image(Module* callback);
 	~UI_Image() {}
 
-	void Init(iPoint position, SDL_Rect section, const char* path);
+	void Init(iPoint position, SDL_Rect section);
 	bool Update(float dt);
 	bool CleanUp();
 	bool Draw();

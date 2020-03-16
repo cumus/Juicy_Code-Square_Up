@@ -3,6 +3,9 @@
 #include "Render.h"
 #include "TextureManager.h"
 
+UI_Image::UI_Image() {
+
+}
 
 UI_Image::UI_Image(Module* _callback) 
 {
@@ -10,9 +13,8 @@ UI_Image::UI_Image(Module* _callback)
 	to_delete = false;
 }
 
-void UI_Image::Init(iPoint pos, SDL_Rect _section, const char* path)
+void UI_Image::Init(iPoint pos, SDL_Rect _section)
 {
-	texture_id = App->tex.Load(path);
 	screenPos = pos;
 	section = _section;
 	rect.x = screenPos.x;
