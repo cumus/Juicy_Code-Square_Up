@@ -85,6 +85,9 @@
     <ClCompile Include="PathfindingManager.cpp">
       <Filter>Source\Independent Managers</Filter>
     </ClCompile>
+    <ClCompile Include="UI_Image.cpp">
+      <Filter>Source\Modules\Editor</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="PugiXml\src\pugiconfig.hpp">
@@ -206,6 +209,9 @@
     </ClInclude>
     <ClInclude Include="PathfindingManager.h">
       <Filter>Source\Independent Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="UI_Image.h">
+      <Filter>Source\Modules\Editor</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
