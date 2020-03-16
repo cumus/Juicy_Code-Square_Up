@@ -157,6 +157,7 @@
     <ClCompile Include="Map.cpp" />
     <ClCompile Include="MapContainer.cpp" />
     <ClCompile Include="mmgr\mmgr.cpp" />
+    <ClCompile Include="PathfindingManager.cpp" />
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="Log.cpp" />
     <ClCompile Include="Render.cpp" />
@@ -188,6 +189,7 @@
     <ClInclude Include="mmgr\nommgr.h" />
     <ClInclude Include="Optick\include\optick.config.h" />
     <ClInclude Include="Optick\include\optick.h" />
+    <ClInclude Include="PathfindingManager.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="Audio.h" />
     <ClInclude Include="Input.h" />

@@ -82,6 +82,9 @@
     <ClCompile Include="FileManager.cpp">
       <Filter>Source\Independent Managers</Filter>
     </ClCompile>
+    <ClCompile Include="PathfindingManager.cpp">
+      <Filter>Source\Independent Managers</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="PugiXml\src\pugiconfig.hpp">
@@ -200,6 +203,9 @@
     </ClInclude>
     <ClInclude Include="SDL_mixer\include\SDL_mixer.h">
       <Filter>Source\3rd Party\SDL_Mixer</Filter>
+    </ClInclude>
+    <ClInclude Include="PathfindingManager.h">
+      <Filter>Source\Independent Managers</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
