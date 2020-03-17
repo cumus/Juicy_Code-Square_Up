@@ -48,7 +48,7 @@ void Render::SaveConfig() const
 }
 
 // Called before the first frame
-bool Render::Start()
+bool Render::Init()
 {
 	bool ret = false;
 
@@ -65,7 +65,7 @@ bool Render::Start()
 		SDL_RenderGetViewport(renderer, &viewport);
 
 		// Add alpha blending
-		if (SDL_SetRenderDrawBlendMode(App->render->renderer, SDL_BLENDMODE_BLEND) == 0)
+		if (SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND) == 0)
 		{
 			// Setup camera from viewport
 			cam.x = cam.y = 0;
@@ -332,6 +332,31 @@ bool Render::Blit_Rot(int texture_id, int x, int y, bool use_cam, const SDL_Rect
 			ret = true;
 		else
 			LOG("Cannot blit to screen. SDL_RenderCopy error: %s", SDL_GetError());
+	}
+	else
+		LOG("Cannot blit to screen. Invalid id %d");
+
+	return ret;
+}
+
+bool Render::BlitNorm(int texture_id, RectF rect, const SDL_Rect* section, bool draw_anyway) const
+{
+	bool ret = false;
+
+	SDL_Texture* texture = App->tex.GetTexture(texture_id);
+
+	if (texture != nullptr)
+	{
+		SDL_Rect target_rect = { int(cam.w * rect.x), int(cam.h * rect.y), int(cam.w * rect.w), int(cam.h * rect.h) };
+
+		if (SDL_RenderCopyEx(renderer, texture, section, &target_rect, 0, nullptr, SDL_RendererFlip::SDL_FLIP_NONE) == 0)
+			ret = true;
+		else
+			LOG("Cannot blit to screen. SDL_RenderCopy error: %s", SDL_GetError());
+	}
+	else if (draw_anyway)
+	{
+		ret = DrawQuadNormCoords(rect);
 	}
 	else
 		LOG("Cannot blit to screen. Invalid id %d");

@@ -21,6 +21,7 @@ public:
 	~Editor();
 
 	bool Init() override;
+	bool Start() override;
 	bool Update() override;
 	bool PostUpdate() override;
 	bool CleanUp() override;
@@ -37,10 +38,6 @@ public:
 	ConfigWindow* config = nullptr;
 
 	Gameobject* selection = nullptr;
-
-private:
-
-	void AddWindow(EditorWindow* window);
 
 private:
 

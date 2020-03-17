@@ -1,59 +1,34 @@
 #include "UI_Elements.h"
+#include "EditorWindows.h"
 #include "Application.h"
-#include "Input.h"
 #include "Render.h"
 
-void UI_Element::SetLocalPos(iPoint pos) { localPos = pos; }
+UI_Element::UI_Element(EditorWindow* window, UI_Type type, RectF rect)
+	: window(window), type(type), rect(rect)
+{}
 
-bool UI_Element::OnHover()
+UI_Element::~UI_Element()
+{}
+
+bool UI_Element::Draw()
 {
-	iPoint mouse;
-	SDL_Rect camera;
-	camera = App->render->GetCameraRect();
+	return App->render->DrawQuadNormCoords(GetTargetNormRect(), { 0, 0, 0, 255 });
+}
 
-	bool ret = false;
-	App->input->GetMousePosition(mouse.x, mouse.y);
-	mouse.x -= camera.x;
-	mouse.y -= camera.y;
+RectF UI_Element::GetTargetNormRect() const
+{
+	RectF ret;
 
-	if ((mouse.x > rect.x) && (mouse.x < rect.x + rect.w) && (mouse.y > rect.y) && (mouse.y < rect.y + rect.h)) ret = true;
+	if (window != nullptr)
+	{
+		RectF parent = window->rect;
+		
+		ret = {
+		parent.x + (rect.x * parent.w),
+		parent.y + (rect.y * parent.h),
+		parent.w - ((1.0f - rect.w) * parent.w),
+		parent.h - ((1.0f - rect.h) * parent.h) };
+	}
 
 	return ret;
-}
-
-iPoint UI_Element::GetScreenPos() const
-{
-	iPoint pos;
-	pos.x = rect.x;
-	pos.y = rect.y;
-	return pos;
-}
-
-iPoint UI_Element::GetLocalPos() const
-{
-	iPoint pos;
-	if (parent != nullptr)
-	{
-		pos.x = rect.x - parent->GetScreenPos().x;
-		pos.y = rect.y - parent->GetScreenPos().y;
-	}
-	else
-	{
-		pos.x = rect.x;
-		pos.y = rect.y;
-	}
-	return pos;
-}
-
-SDL_Rect UI_Element::GetScreenRect() const { return rect; }
-
-SDL_Rect UI_Element::GetLocalRect() const
-{
-	SDL_Rect local_rect = rect;
-	if (parent != nullptr)
-	{
-		local_rect.x = rect.x - parent->GetScreenPos().x;
-		local_rect.y = rect.y - parent->GetScreenPos().y;
-	}
-	return local_rect;
 }

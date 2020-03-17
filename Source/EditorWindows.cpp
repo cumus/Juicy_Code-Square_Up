@@ -19,12 +19,18 @@ EditorWindow::EditorWindow(const RectF window_area, SDL_Color color) : rect(wind
 	// Cap min size
 	if (rect.w < min_size) rect.w = min_size;
 	if (rect.h < min_size) rect.h = min_size;
-
-	
 }
 
 EditorWindow::~EditorWindow()
 {}
+
+void EditorWindow::CleanUp()
+{
+	for (std::vector<UI_Element*>::iterator it = elements.begin(); it != elements.end(); ++it)
+		DEL(*it);
+
+	elements.clear();
+}
 
 bool EditorWindow::CheckIfEditing(float mouse_x, float mouse_y, KeyState mouse_left_button)
 {
@@ -78,7 +84,7 @@ bool EditorWindow::CheckIfEditing(float mouse_x, float mouse_y, KeyState mouse_l
 	return dragging;
 }
 
-bool EditorWindow::Update(float mouse_x, float mouse_y, KeyState mouse_left_button)
+bool EditorWindow::CheckMouse(float mouse_x, float mouse_y, KeyState mouse_left_button)
 {
 	if (mouse_x >= rect.x && mouse_x <= rect.x + rect.w
 		&& mouse_y >= rect.y && mouse_y <= rect.y + rect.h)
@@ -108,11 +114,11 @@ bool EditorWindow::Update(float mouse_x, float mouse_y, KeyState mouse_left_butt
 void EditorWindow::Draw(bool draw_border) const
 {
 	// Draw background
-	
 	App->render->DrawQuadNormCoords(rect, color);
 
 	// Draw contents
-	DrawContent();
+	for (std::vector<UI_Element*>::const_iterator it = elements.begin(); it != elements.end(); ++it)
+		(*it)->Draw();
 
 	// Draw Border
 	if (draw_border)
@@ -199,40 +205,12 @@ void EditorWindow::MouseDrag_S(float mouse_x, float mouse_y)
 		rect.h = min_size;
 }
 
-void BarMenu::DrawContent() const
+bool ConfigWindow::Init()
 {
+	int tex_id = App->tex.Load("textures/background.png");
 
-}
+	if (tex_id >= 0)
+		elements.push_back(new UI_Image(this, { 0.1f, 0.1f, 0.8f, 0.5f }, tex_id));
 
-void PlayPauseWindow::DrawContent() const
-{
-
-}
-
-void HeriarchyWindow::DrawContent() const
-{
-
-}
-
-void PropertiesWindow::DrawContent() const
-{
-	
-}
-
-void ConsoleWindow::DrawContent() const
-{
-	
-}
-
-void ConfigWindow::DrawContent() const
-{
-    // UI Image
-
-	RectF camera = App->render->GetCameraRectF();
-
-	UI_Image* image = new UI_Image();
-	image->texture_id = App->tex.Load("textures/background.png");
-	image->Init({ int(rect.x * camera.w), int(rect.y * camera.h) }, { 0,0,int(rect.w * camera.w),int(rect.h * camera.w) });
-	image->Draw();
-
+	return !elements.empty();
 }

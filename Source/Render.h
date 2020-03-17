@@ -18,7 +18,7 @@ public:
 	void LoadConfig(bool empty_config) override;
 	void SaveConfig() const override;
 
-	bool Start() override;
+	bool Init() override;
 	bool PreUpdate() override;
 	bool Update() override;
 	bool PostUpdate() override;
@@ -38,6 +38,8 @@ public:
 	bool Blit(int texture_id, int x, int y, const SDL_Rect* section = nullptr, bool use_cam = true) const;
 	bool Blit_Scale(int texture_id, int x, int y, float scale_x, float scale_y, const SDL_Rect* section = nullptr, bool use_cam = true) const;
 	bool Blit_Rot(int texture_id, int x, int y, bool use_cam = true, const SDL_Rect* section = nullptr, int flip = 0, double angle = 0, int pivot_x = INT_MAX, int pivot_y = INT_MAX) const;
+
+	bool BlitNorm(int texture_id, RectF rect, const SDL_Rect* section = nullptr, bool draw_anyway = true) const;
 
 	bool Blit_Text(const char* text, int x, int y, int font_id = -1, SDL_Color color = { 0, 0, 0, 255 }, unsigned int wrap_length = 1000u) const;
 	bool Blit_TextSized(const char* text, SDL_Rect size, int font_id = -1, SDL_Color color = { 0, 0, 0, 255 }, unsigned int wrap_length = 1000u) const;

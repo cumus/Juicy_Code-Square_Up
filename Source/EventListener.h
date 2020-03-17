@@ -6,6 +6,10 @@
 class EventListener
 {
 public:
+
+	EventListener() {};
+	virtual ~EventListener() {};
+
 	virtual void RecieveEvent(const Event& e) {}
 };
 

@@ -17,16 +17,27 @@ Editor::~Editor()
 bool Editor::Init()
 {
 	//TODO: Load/Save window positions from config
-	AddWindow(bar_menu = new BarMenu({ 0.0f, 0.0f, 1.0f, 0.02f }));
-	AddWindow(play_pause = new PlayPauseWindow({ 0.3f, 0.05f, 0.4f, 0.05f }));
 
-	AddWindow(hierarchy = new HeriarchyWindow({ 0.0f, 0.05f, 0.2f, 0.5f }));
-	AddWindow(properties = new PropertiesWindow({ 0.8f, 0.05f, 0.2f, 0.5f }));
+	windows.push_back(bar_menu = new BarMenu({ 0.0f, 0.0f, 1.0f, 0.02f }));
+	windows.push_back(play_pause = new PlayPauseWindow({ 0.3f, 0.05f, 0.4f, 0.05f }));
 
-	AddWindow(console = new ConsoleWindow({ 0.0f, 0.7f, 0.4f, 0.3f }));
-	AddWindow(config = new ConfigWindow({ 0.7f, 0.6f, 0.3f, 0.4f }));
+	windows.push_back(hierarchy = new HeriarchyWindow({ 0.0f, 0.05f, 0.2f, 0.5f }));
+	windows.push_back(properties = new PropertiesWindow({ 0.8f, 0.05f, 0.2f, 0.5f }));
 
-	return true;
+	windows.push_back(console = new ConsoleWindow({ 0.0f, 0.7f, 0.4f, 0.3f }));
+	windows.push_back(config = new ConfigWindow({ 0.7f, 0.6f, 0.3f, 0.4f }));
+
+	return !windows.empty();
+}
+
+bool Editor::Start()
+{
+	bool ret = true;
+
+	for (std::vector<EditorWindow*>::iterator it = windows.begin(); it != windows.end() && ret; ++it)
+		ret = (*it)->Init();
+
+	return ret;
 }
 
 bool Editor::Update()
@@ -75,7 +86,7 @@ bool Editor::Update()
 		}
 
 		for (std::vector<EditorWindow*>::const_iterator it = windows.begin(); it != windows.end(); ++it)
-			if ((*it)->Update(mouse_x, mouse_y, mouse_left_button))
+			if ((*it)->CheckMouse(mouse_x, mouse_y, mouse_left_button))
 				mouse_over_windows++;
 	}
 
@@ -105,7 +116,10 @@ bool Editor::PostUpdate()
 bool Editor::CleanUp()
 {
 	for (std::vector<EditorWindow*>::reverse_iterator it = windows.rbegin(); it != windows.rend(); ++it)
+	{
+		(*it)->CleanUp();
 		DEL(*it);
+	}
 
 	windows.clear();
 
@@ -115,9 +129,4 @@ bool Editor::CleanUp()
 bool Editor::MouseOnWindow() const
 {
 	return mouse_over_windows > 0u;
-}
-
-void Editor::AddWindow(EditorWindow* window)
-{
-	windows.push_back(window);
 }
