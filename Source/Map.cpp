@@ -268,6 +268,13 @@ bool Map::GetRectAndTexId(int tile_id, SDL_Rect& section, int& text_id) const
 	return ret;
 }
 
+MapLayer& Map::GetMapWalkabilityLayer() const
+{
+	//TODO: Modify to send walkability layer
+	MapLayer ret = layers.front();
+	return ret;
+}
+
 std::pair<int, int> Map::I_MapToWorld(int x, int y)
 {
 	switch (type)
