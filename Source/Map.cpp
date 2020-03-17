@@ -190,6 +190,24 @@ void Map::Draw() const
 					}
 				}
 			}
+			else if (draw_walkability){
+				for (int y = up_right.second - 1; y <= down_left.second; ++y)
+				{
+					for (int x = up_left.first - 1; x <= down_right.first + 1; ++x)
+					{
+						unsigned int tile_id = it->GetID(x, y);
+
+						// Draw debug spite at empty position
+						SDL_Rect rect = { 0, 0, 64, 64 };
+
+						if (tile_id != 0) rect.x = 64;
+						std::pair<int, int> render_pos = I_MapToWorld(x, y);
+						App->render->Blit(App->scene->id_mouse_tex, render_pos.first, render_pos.second, &rect);
+												
+					}
+				}
+			}
+
 		}
 
 		// draw mouse tile debug
@@ -270,9 +288,23 @@ bool Map::GetRectAndTexId(int tile_id, SDL_Rect& section, int& text_id) const
 	return ret;
 }
 
-const MapLayer& Map::GetMapWalkabilityLayer() const
+const MapLayer& Map::GetMapWalkabilityLayer()
 {
 	//TODO: Modify to send walkability layer
+	bool ret = false;
+	std::vector<MapLayer>::iterator item;
+	item = layers.begin();
+
+	for (item; item != layers.end(); ++item)
+	{
+		if (item->GetProperty("Navigation") == 1.0f) {
+			item->drawable = false;
+			return *item;
+		}
+
+		
+
+	}
 	return layers.front();
 }
 

@@ -48,6 +48,8 @@ bool Scene::Update()
 		ret = map.Load("maps/level1.tmx");
 	}
 
+	if (App->input->GetKey(SDL_SCANCODE_F2) == KEY_DOWN) map.draw_walkability = !map.draw_walkability;
+
 	if (go1 != nullptr && go2 != nullptr)
 	{
 		Transform* t1 = go1->GetTransform();

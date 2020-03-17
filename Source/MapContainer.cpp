@@ -108,9 +108,9 @@ bool MapLayer::ParseData(pugi::xml_node layer_data)
 	return ret;
 }
 
-unsigned int MapLayer::GetID(int x, int y) const
+int MapLayer::GetID(int x, int y) const
 {
-	unsigned int ret = 0;
+	int ret = -1;
 
 	if (x >= 0 && x < width &&
 		y >= 0 && y < height)

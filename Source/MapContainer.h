@@ -56,7 +56,7 @@ public:
 	bool ParseProperties(pugi::xml_node layer_properties);
 	bool ParseData(pugi::xml_node layer_data);
 
-	unsigned int GetID(int x, int y) const;
+	int GetID(int x, int y) const;
 	float GetProperty(const char* name, float default_value = 0) const;
 
 public:
