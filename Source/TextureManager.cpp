@@ -16,17 +16,19 @@
 
 void TextureManager::LoadConfig(bool empty_config)
 {
+	pugi::xml_node config = FileManager::ConfigNode();
+
 	if (empty_config)
 	{
-		pugi::xml_node img_flags = FileManager::ConfigNode().append_child("textures").append_child("flags");
-		img_flags.append_attribute("jpg").as_bool(using_jpg);
-		img_flags.append_attribute("png").as_bool(using_png);
-		img_flags.append_attribute("tif").as_bool(using_tif);
-		img_flags.append_attribute("webp").as_bool(using_webp);
+		pugi::xml_node img_flags = config.append_child("textures").append_child("flags");
+		img_flags.append_attribute("jpg").set_value(using_jpg);
+		img_flags.append_attribute("png").set_value(using_png);
+		img_flags.append_attribute("tif").set_value(using_tif);
+		img_flags.append_attribute("webp").set_value(using_webp);
 	}
 	else
 	{
-		pugi::xml_node img_flags = FileManager::ConfigNode().child("textures").child("flags");
+		pugi::xml_node img_flags = config.child("textures").child("flags");
 		using_jpg = img_flags.attribute("jpg").as_bool(using_jpg);
 		using_png = img_flags.attribute("png").as_bool(using_png);
 		using_tif = img_flags.attribute("tif").as_bool(using_tif);
@@ -36,7 +38,8 @@ void TextureManager::LoadConfig(bool empty_config)
 
 void TextureManager::SaveConfig() const
 {
-	pugi::xml_node img_flags = FileManager::ConfigNode().child("textures").child("flags");
+	pugi::xml_node config = FileManager::ConfigNode();
+	pugi::xml_node img_flags = config.child("textures").child("flags");
 	img_flags.attribute("jpg").set_value(using_jpg);
 	img_flags.attribute("png").set_value(using_png);
 	img_flags.attribute("tif").set_value(using_tif);

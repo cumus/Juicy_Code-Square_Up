@@ -23,19 +23,21 @@ Audio::~Audio()
 
 void Audio::LoadConfig(bool empty_config)
 {
+	pugi::xml_node config = FileManager::ConfigNode();
+
 	if (empty_config)
 	{
-		pugi::xml_node codecs = FileManager::ConfigNode().append_child(name).append_child("codecs");
-		codecs.append_attribute("FLAC").as_bool(using_FLAC);
-		codecs.append_attribute("MOD").as_bool(using_MOD);
-		codecs.append_attribute("MP3").as_bool(using_MP3);
-		codecs.append_attribute("OGG").as_bool(using_OGG);
-		codecs.append_attribute("MID").as_bool(using_MID);
-		codecs.append_attribute("OPUS").as_bool(using_OPUS);
+		pugi::xml_node codecs = config.append_child(name).append_child("codecs");
+		codecs.append_attribute("FLAC").set_value(using_FLAC);
+		codecs.append_attribute("MOD").set_value(using_MOD);
+		codecs.append_attribute("MP3").set_value(using_MP3);
+		codecs.append_attribute("OGG").set_value(using_OGG);
+		codecs.append_attribute("MID").set_value(using_MID);
+		codecs.append_attribute("OPUS").set_value(using_OPUS);
 	}
 	else
 	{
-		pugi::xml_node codecs = FileManager::ConfigNode().child(name).child("codecs");
+		pugi::xml_node codecs = config.child(name).child("codecs");
 		using_FLAC = codecs.attribute("FLAC").as_bool(using_FLAC);
 		using_MOD = codecs.attribute("MOD").as_bool(using_MOD);
 		using_MP3 = codecs.attribute("MP3").as_bool(using_MP3);
@@ -47,7 +49,8 @@ void Audio::LoadConfig(bool empty_config)
 
 void Audio::SaveConfig() const
 {
-	pugi::xml_node codecs = FileManager::ConfigNode().child(name).child("codecs");
+	pugi::xml_node config = FileManager::ConfigNode();
+	pugi::xml_node codecs = config.child(name).child("codecs");
 	codecs.attribute("FLAC").set_value(using_FLAC);
 	codecs.attribute("MOD").set_value(using_MOD);
 	codecs.attribute("MP3").set_value(using_MP3);

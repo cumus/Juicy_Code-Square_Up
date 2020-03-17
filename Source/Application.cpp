@@ -57,9 +57,9 @@ bool Application::Init()
 
 		// Load Engine Configuration
 		bool config_loaded = files.LoadConfig();
-		LoadAllConfig(config_loaded);
+		LoadAllConfig(!config_loaded);
 
-		//if (!config_loaded) files.SaveConfig();
+		if (!config_loaded) files.SaveConfig();
 
 		// Pre-Initialize Independent Manager Systems
 		if (ret) ret = time.Init();
@@ -108,7 +108,10 @@ int Application::Update()
 	OPTICK_FRAME("MainThread");
 
 	if (want_to_quit)
+	{
+		SaveConfig();
 		return 0; // closing app
+	}
 
 	PrepareUpdate();
 
@@ -240,21 +243,22 @@ void Application::SetTitleAndOrg(const char* t, const char* org)
 
 void Application::LoadAllConfig(bool empty_config)
 {
-	LOG("Loading%sConfig", empty_config ? " empty " : " ");
 	pugi::xml_node config = files.ConfigNode();
 
-	// App Config
+	title = "Square Up";
+	organization = "UPC";
+
 	if (empty_config)
 	{
 		pugi::xml_node app_config = config.append_child("app");
-		app_config.append_child("title").set_value(title = "Square Up");
-		app_config.append_child("organization").set_value(organization = "UPC");
+		app_config.append_attribute("title").set_value(title);
+		app_config.append_attribute("organization").set_value(organization);
 	}
 	else
 	{
 		pugi::xml_node app_config = config.child("app");
-		title = app_config.child("title").child_value();
-		organization = app_config.child("organization").child_value();
+		title = app_config.attribute("title").as_string(title);
+		organization = app_config.attribute("organization").as_string(organization);
 	}
 
 	// Call Managers
@@ -268,9 +272,10 @@ void Application::LoadAllConfig(bool empty_config)
 void Application::SaveConfig() const
 {
 	// Save App config
-	pugi::xml_node app_config = files.ConfigNode().child("app");
-	app_config.child("title").set_value(title);
-	app_config.child("organization").set_value(organization);
+	pugi::xml_node config = files.ConfigNode();
+	pugi::xml_node app_config = config.append_child("app");
+	app_config.attribute("title").set_value(title);
+	app_config.attribute("organization").set_value(organization);
 
 	// Call Managers
 	tex.SaveConfig();

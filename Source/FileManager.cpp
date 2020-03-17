@@ -67,7 +67,7 @@ const char* FileManager::GetBasePath()
 	return base_path.c_str();
 }
 
-pugi::xml_node FileManager::ConfigNode()
+pugi::xml_node& FileManager::ConfigNode()
 {
 	return config.first_child();
 }
@@ -84,6 +84,8 @@ bool FileManager::SaveConfig() const
 
 bool FileManager::LoadConfig()
 {
+	config.reset();
+
 	bool ret = LoadXML("config.xml", config);
 
 	if(!ret)

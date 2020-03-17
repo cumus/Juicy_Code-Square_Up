@@ -18,24 +18,26 @@ Window::~Window()
 
 void Window::LoadConfig(bool empty_config)
 {
+	pugi::xml_node config = FileManager::ConfigNode();
+
 	if (empty_config)
 	{
-		pugi::xml_node window_node = FileManager::ConfigNode().append_child(name);
+		pugi::xml_node window_node = config.append_child(name);
 
 		// Resolution
 		pugi::xml_node res = window_node.append_child("resolution");
-		res.append_attribute("width").as_int(width);
-		res.append_attribute("height").as_int(height);
+		res.append_attribute("width").set_value(width);
+		res.append_attribute("height").set_value(height);
 
 		// Window flags
-		window_node.append_child("fullscreen").append_attribute("value").as_bool(fullscreen);
-		window_node.append_child("borderless").append_attribute("value").as_bool(borderless);
-		window_node.append_child("resizable").append_attribute("value").as_bool(resizable);
-		window_node.append_child("fullscreen_window").append_attribute("value").as_bool(fullscreen_window);
+		window_node.append_child("fullscreen").append_attribute("value").set_value(fullscreen);
+		window_node.append_child("borderless").append_attribute("value").set_value(borderless);
+		window_node.append_child("resizable").append_attribute("value").set_value(resizable);
+		window_node.append_child("fullscreen_window").append_attribute("value").set_value(fullscreen_window);
 	}
 	else
 	{
-		pugi::xml_node window_node = FileManager::ConfigNode().child(name);
+		pugi::xml_node window_node = config.child(name);
 
 		// Resolution
 		pugi::xml_node res = window_node.child("resolution");
@@ -52,7 +54,8 @@ void Window::LoadConfig(bool empty_config)
 
 void Window::SaveConfig() const
 {
-	pugi::xml_node window_node = FileManager::ConfigNode().child(name);
+	pugi::xml_node config = FileManager::ConfigNode();
+	pugi::xml_node window_node = config.child(name);
 
 	// Resolution
 	pugi::xml_node res = window_node.child("resolution");

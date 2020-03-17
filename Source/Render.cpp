@@ -23,16 +23,17 @@ Render::~Render()
 
 void Render::LoadConfig(bool empty_config)
 {
+	pugi::xml_node config = FileManager::ConfigNode();
 	if (empty_config)
 	{
-		pugi::xml_node render_flags = FileManager::ConfigNode().append_child(name).append_child("flags");
-		render_flags.append_attribute("accelerated").as_bool(accelerated);
-		render_flags.append_attribute("vsync").as_bool(vsync);
-		render_flags.append_attribute("target_texture").as_bool(target_texture);
+		pugi::xml_node render_flags = config.append_child(name).append_child("flags");
+		render_flags.append_attribute("accelerated").set_value(accelerated);
+		render_flags.append_attribute("vsync").set_value(vsync);
+		render_flags.append_attribute("target_texture").set_value(target_texture);
 	}
 	else
 	{
-		pugi::xml_node render_flags = FileManager::ConfigNode().child(name).child("flags");
+		pugi::xml_node render_flags = config.child(name).child("flags");
 		accelerated = render_flags.attribute("accelerated").as_bool(accelerated);
 		vsync = render_flags.attribute("vsync").as_bool(vsync);
 		target_texture = render_flags.attribute("height").as_bool(target_texture);
@@ -41,7 +42,8 @@ void Render::LoadConfig(bool empty_config)
 
 void Render::SaveConfig() const
 {
-	pugi::xml_node render_flags = FileManager::ConfigNode().child(name).child("flags");
+	pugi::xml_node config = FileManager::ConfigNode();
+	pugi::xml_node render_flags = config.child(name).child("flags");
 	render_flags.attribute("accelerated").set_value(accelerated);
 	render_flags.attribute("vsync").set_value(vsync);
 	render_flags.attribute("target_texture").set_value(target_texture);

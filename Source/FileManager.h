@@ -22,7 +22,7 @@ public:
 	bool AddDirectory(const char* path, const char* mount_point = nullptr);
 	const char* GetBasePath();
 
-	static pugi::xml_node ConfigNode();
+	static pugi::xml_node& ConfigNode();
 
 	bool SaveConfig() const;
 	bool LoadConfig();
