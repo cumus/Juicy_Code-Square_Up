@@ -25,6 +25,11 @@ UI_Image* UI_Element::ToUiImage()
 	return nullptr;
 }
 
+UI_Text* UI_Element::ToUiText()
+{
+	return nullptr;
+}
+
 RectF UI_Element::GetTargetNormRect() const
 {
 	RectF ret;
@@ -38,6 +43,25 @@ RectF UI_Element::GetTargetNormRect() const
 		parent.y + (rect.y * parent.h),
 		parent.w - ((1.0f - rect.w) * parent.w),
 		parent.h - ((1.0f - rect.h) * parent.h) };
+	}
+
+	return ret;
+}
+
+SDL_Rect UI_Element::GetTargetRect() const
+{
+	SDL_Rect ret;
+
+	if (window != nullptr)
+	{
+		RectF parent = window->rect;
+		RectF cam = App->render->GetCameraRectF();
+
+		ret = {
+		int((parent.x + (rect.x * parent.w)) * cam.w),
+		int((parent.y + (rect.y * parent.h)) * cam.h),
+		int((parent.w - ((1.0f - rect.w) * parent.w)) * cam.w),
+		int((parent.h - ((1.0f - rect.h) * parent.h)) * cam.h) };
 	}
 
 	return ret;

@@ -91,6 +91,9 @@
     <ClCompile Include="UI_Button.cpp">
       <Filter>Source\Modules\Editor</Filter>
     </ClCompile>
+    <ClCompile Include="UI_Text.cpp">
+      <Filter>Source\Modules\Editor</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="PugiXml\src\pugiconfig.hpp">
@@ -217,6 +220,9 @@
       <Filter>Source\Modules\Editor</Filter>
     </ClInclude>
     <ClInclude Include="UI_Button.h">
+      <Filter>Source\Modules\Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="UI_Text.h">
       <Filter>Source\Modules\Editor</Filter>
     </ClInclude>
   </ItemGroup>

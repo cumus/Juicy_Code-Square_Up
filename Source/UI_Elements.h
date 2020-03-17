@@ -17,6 +17,7 @@ enum UI_Type
 class EditorWindow;
 class UI_Button;
 class UI_Image;
+class UI_Text;
 
 class UI_Element : public EventListener
 {
@@ -28,8 +29,10 @@ public:
 
 	virtual UI_Button* ToUiButton();
 	virtual UI_Image* ToUiImage();
+	virtual UI_Text* ToUiText();
 
 	RectF GetTargetNormRect() const;
+	SDL_Rect GetTargetRect() const;
 
 protected:
 

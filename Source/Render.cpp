@@ -390,7 +390,7 @@ bool Render::Blit_TextSized(const char* text, SDL_Rect size, int font_id, SDL_Co
 	bool ret = true;
 
 	// TODO: Release rendered text texture on changing text or removing component
-	if (SDL_RenderCopyEx(renderer, App->fonts.RenderText("Square UP!", wrap_length, font_id, color.r, color.g, color.b, color.a), 0, &size, 0, nullptr, SDL_RendererFlip::SDL_FLIP_NONE) != 0)
+	if (SDL_RenderCopyEx(renderer, App->fonts.RenderText(text, wrap_length, font_id, color.r, color.g, color.b, color.a), 0, &size, 0, nullptr, SDL_RendererFlip::SDL_FLIP_NONE) != 0)
 	{
 		LOG("Cannot blit to screen. SDL_RenderCopy error: %s", SDL_GetError());
 		ret = false;
