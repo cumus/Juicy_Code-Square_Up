@@ -12,7 +12,6 @@
 #include "UI_Image.h"
 #include "Defs.h"
 #include "Log.h"
-#include "PathfindingManager.h"
 
 #include "SDL/include/SDL_scancode.h"
 #include "optick-1.3.0.0/include/optick.h"
@@ -43,12 +42,10 @@ bool Scene::Update()
 	if (App->input->GetKey(SDL_SCANCODE_1) == KEY_DOWN)
 	{
 		ret = map.Load("maps/iso.tmx");
-		App->pathfinding.SetMap(map.GetMapWalkabilityLayer());
 	}
 	else if (App->input->GetKey(SDL_SCANCODE_2) == KEY_DOWN)
 	{
 		ret = map.Load("maps/level1.tmx");
-		App->pathfinding.SetMap(map.GetMapWalkabilityLayer());
 	}
 
 	if (go1 != nullptr && go2 != nullptr)

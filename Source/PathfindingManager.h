@@ -59,7 +59,7 @@ public:
 	bool CleanUp();
 
 	// Sets up the walkability map
-	void SetMap(MapLayer layer);
+	void SetWalkabilityLayer(const MapLayer& layer);
 
 	// Main function to request a path from A to B
 	std::vector<iPoint> CreatePath( iPoint& origin,  iPoint& destination);

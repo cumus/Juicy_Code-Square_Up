@@ -39,7 +39,7 @@ bool PathfindingManager::CleanUp()
 }
 
 // Sets up the walkability map
-void PathfindingManager::SetMap(MapLayer layer)
+void PathfindingManager::SetWalkabilityLayer(const MapLayer& layer)
 {
 	map = layer;
 }

@@ -3,6 +3,7 @@
 #include "Render.h"
 #include "Input.h"
 #include "Scene.h"
+#include "PathfindingManager.h"
 #include "JuicyMath.h"
 #include "Defs.h"
 #include "Log.h"
@@ -57,6 +58,7 @@ bool Map::Load(const char* file, float target_scale)
 			{
 				if (ParseLayers(map_node))
 				{
+					App->pathfinding.SetMap(GetMapWalkabilityLayer());
 					ParseObjectGroups(map_node);
 					SetMapScale(target_scale);
 					loaded = true;
@@ -268,11 +270,10 @@ bool Map::GetRectAndTexId(int tile_id, SDL_Rect& section, int& text_id) const
 	return ret;
 }
 
-MapLayer& Map::GetMapWalkabilityLayer() const
+const MapLayer& Map::GetMapWalkabilityLayer() const
 {
 	//TODO: Modify to send walkability layer
-	MapLayer ret = layers.front();
-	return ret;
+	return layers.front();
 }
 
 std::pair<int, int> Map::I_MapToWorld(int x, int y)

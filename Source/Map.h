@@ -33,7 +33,7 @@ public:
 	// Map Data Getters
 	bool GetTilesetFromTileId(int id, TileSet& set) const;
 	bool GetRectAndTexId(int tile_id, SDL_Rect& section, int& text_id) const;
-	MapLayer& GetMapWalkabilityLayer() const;
+	const MapLayer& GetMapWalkabilityLayer() const;
 
 	// Coordinate conversions
 	static std::pair<int, int> I_MapToWorld(int x, int y);
