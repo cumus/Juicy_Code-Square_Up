@@ -10,7 +10,7 @@ UI_Element::UI_Element(EditorWindow* window, UI_Type type, RectF rect)
 UI_Element::~UI_Element()
 {}
 
-bool UI_Element::Draw()
+bool UI_Element::Draw() const
 {
 	return App->render->DrawQuadNormCoords(GetTargetNormRect(), { 0, 0, 0, 255 });
 }

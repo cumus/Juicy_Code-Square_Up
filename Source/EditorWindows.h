@@ -115,6 +115,8 @@ public:
 	ConfigWindow(const RectF rect) : EditorWindow(rect) {}
 	~ConfigWindow() {}
 	
+	void RecieveEvent(const Event& e) override;
+
 	bool Init() override;
 };
 

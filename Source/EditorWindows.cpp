@@ -4,6 +4,7 @@
 #include "Render.h"
 #include "JuicyMath.h"
 #include "UI_Image.h"
+#include "UI_Button.h"
 
 #include "optick-1.3.0.0/include/optick.h"
 
@@ -205,12 +206,18 @@ void EditorWindow::MouseDrag_S(float mouse_x, float mouse_y)
 		rect.h = min_size;
 }
 
+void ConfigWindow::RecieveEvent(const Event& e)
+{
+}
+
 bool ConfigWindow::Init()
 {
 	int tex_id = App->tex.Load("textures/background.png");
 
 	if (tex_id >= 0)
 		elements.push_back(new UI_Image(this, { 0.1f, 0.1f, 0.8f, 0.5f }, tex_id));
+
+	elements.push_back(new UI_Button(this, { 0.3f, 0.3f, 0.5f, 0.3f }));
 
 	return !elements.empty();
 }

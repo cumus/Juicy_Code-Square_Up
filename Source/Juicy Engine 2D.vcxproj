@@ -165,6 +165,7 @@
     <ClCompile Include="TextureManager.cpp" />
     <ClCompile Include="TimeManager.cpp" />
     <ClCompile Include="Transform.cpp" />
+    <ClCompile Include="UI_Button.cpp" />
     <ClCompile Include="UI_Elements.cpp" />
     <ClCompile Include="UI_Image.cpp" />
     <ClCompile Include="Window.cpp" />
@@ -206,6 +207,7 @@
     <ClInclude Include="TextureManager.h" />
     <ClInclude Include="TimeManager.h" />
     <ClInclude Include="Transform.h" />
+    <ClInclude Include="UI_Button.h" />
     <ClInclude Include="UI_Elements.h" />
     <ClInclude Include="UI_Image.h" />
     <ClInclude Include="Vector3.h" />

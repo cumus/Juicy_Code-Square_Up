@@ -22,7 +22,7 @@ public:
 	UI_Element(EditorWindow* window, UI_Type type, RectF rect = { 0.0f, 0.0f, 0.0f, 0.0f });
 	virtual ~UI_Element();
 
-	virtual bool Draw();
+	virtual bool Draw() const;
 
 	RectF GetTargetNormRect() const;
 

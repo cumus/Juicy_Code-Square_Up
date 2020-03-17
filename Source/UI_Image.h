@@ -9,7 +9,7 @@ public:
 	UI_Image(EditorWindow* window, RectF rect = { 0.0f, 0.0f, 1.0f, 1.0f }, int texture_id = -1, SDL_Rect section = { 0, 0, 0, 0 });
 	~UI_Image();
 
-	bool Draw() override;
+	bool Draw() const override;
 
 public:
 

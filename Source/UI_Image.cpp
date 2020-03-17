@@ -10,7 +10,7 @@ UI_Image::UI_Image(EditorWindow* window, RectF rect, int texture_id, SDL_Rect se
 UI_Image::~UI_Image()
 {}
 
-bool UI_Image::Draw()
+bool UI_Image::Draw() const
 {
 	return App->render->BlitNorm(texture_id, GetTargetNormRect(), apply_section ? &section : nullptr);
 }
