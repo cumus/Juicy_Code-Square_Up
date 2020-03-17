@@ -58,7 +58,7 @@ bool Map::Load(const char* file, float target_scale)
 			{
 				if (ParseLayers(map_node))
 				{
-					App->pathfinding.SetMap(GetMapWalkabilityLayer());
+					App->pathfinding.SetWalkabilityLayer(GetMapWalkabilityLayer());
 					ParseObjectGroups(map_node);
 					SetMapScale(target_scale);
 					loaded = true;
