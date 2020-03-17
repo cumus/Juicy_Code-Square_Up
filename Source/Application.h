@@ -8,6 +8,7 @@
 #include "TextureManager.h"
 #include "TimeManager.h"
 #include "FontManager.h"
+#include "PathfindingManager.h"
 
 #include "PugiXml\src\pugixml.hpp"
 #include <list>
@@ -27,6 +28,7 @@ class FileManager;
 class TimeManager;
 class TextureManager;
 class FontManager;
+class PathfindingManager;
 
 class Application : public EventListener
 {
@@ -72,6 +74,7 @@ public:
 	TimeManager		time;
 	TextureManager	tex;
 	FontManager		fonts;
+	PathfindingManager pathfinding;
 
 private:
 
