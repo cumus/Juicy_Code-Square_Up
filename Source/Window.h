@@ -2,6 +2,7 @@
 #define __WINDOW_H__
 
 #include "Module.h"
+#include <string>
 
 struct SDL_Window;
 struct SDL_Surface;
@@ -13,23 +14,31 @@ public:
 	Window();
 	~Window();
 
-	bool Awake(pugi::xml_node&) override;
+	void LoadConfig(bool empty_config) override;
+	void SaveConfig() const override;
+
+	bool Init() override;
 	bool CleanUp() override;
 
 	void SetTitle(const char* new_title);
+	SDL_Window* GetWindow() const;
 	void GetWindowSize(int& width, int& height) const;
 
-public:
+private:
 
 	SDL_Window* window = nullptr;
 	SDL_Surface* screen_surface = nullptr; //The surface contained by the window
 
 private:
 
-	std::string		title;
+	std::string	title;
 
-	unsigned int	width;
-	unsigned int	height;
+	int width = 1080;
+	int height = 720;
+	bool fullscreen = false;
+	bool borderless = false;
+	bool resizable = true;
+	bool fullscreen_window = false;
 };
 
 #endif // __WINDOW_H__

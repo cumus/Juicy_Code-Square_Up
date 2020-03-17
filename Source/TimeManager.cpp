@@ -14,6 +14,18 @@ TimeManager::TimeManager()
 TimeManager::~TimeManager()
 {}
 
+bool TimeManager::Init()
+{
+	bool ret = (SDL_InitSubSystem(SDL_INIT_TIMER) == 0);
+
+	if (ret)
+		LOG("SDL_TIMER initialized.");
+	else
+		LOG("SDL_TIMER could not initialize! SDL_Error: %s\n", SDL_GetError());
+
+	return ret;
+}
+
 float TimeManager::UpdateDeltaTime()
 {
 	OPTICK_EVENT();

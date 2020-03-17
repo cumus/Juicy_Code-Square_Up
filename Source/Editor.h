@@ -20,7 +20,7 @@ public:
 	Editor();
 	~Editor();
 
-	bool Awake(pugi::xml_node&) override;
+	bool Init() override;
 	bool Update() override;
 	bool PostUpdate() override;
 	bool CleanUp() override;

@@ -22,7 +22,7 @@ public:
 	Input();
 	~Input();
 
-	bool Awake(pugi::xml_node&) override;
+	bool Init() override;
 	bool Start() override;
 	bool PreUpdate() override;
 	bool CleanUp() override;
@@ -43,14 +43,14 @@ public:
 
 private:
 
-	KeyState	keyboard[MAX_KEYS];
-	KeyState	mouse_buttons[NUM_MOUSE_BUTTONS];
+	KeyState keyboard[MAX_KEYS];
+	KeyState mouse_buttons[NUM_MOUSE_BUTTONS];
 
-	int			mouse_motion_x;
-	int			mouse_motion_y;
-	int			mouse_x;
-	int			mouse_y;
-	int			mouse_wheel_motion;
+	int mouse_motion_x = 0;
+	int mouse_motion_y = 0;
+	int mouse_x = 0;
+	int mouse_y = 0;
+	int mouse_wheel_motion = 0;
 };
 
 #endif // __INPUT_H__

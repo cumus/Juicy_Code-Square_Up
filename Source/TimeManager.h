@@ -31,6 +31,8 @@ public:
 	TimeManager();
 	~TimeManager();
 
+	bool Init();
+
 	float UpdateDeltaTime(); // returns updated dt
 	int ManageFrameTimers(); // returns extra ms for frame
 

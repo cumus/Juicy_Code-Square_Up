@@ -13,18 +13,19 @@
 #endif
 
 FontManager::FontManager()
-{
-}
+{}
 
 FontManager::~FontManager()
-{
-}
+{}
 
 bool FontManager::Init()
 {
 	bool ret = (TTF_Init() == 0);
 
-	if (!ret) LOG("SDL_ttf could not initialize! SDL_ttf Error: %s\n", TTF_GetError());
+	if (ret)
+		LOG("SDL_ttf initialized!");
+	else
+		LOG("SDL_ttf could not initialize! SDL_ttf Error: %s\n", TTF_GetError());
 
 	return ret;
 }
@@ -59,7 +60,7 @@ int FontManager::Load(const char* path, int size)
 
 		if (ret < 0)
 		{
-			TTF_Font* font = TTF_OpenFontRW(App->files.Load(path), 1, size);
+			TTF_Font* font = TTF_OpenFontRW(App->files.LoadRWops(path), 1, size);
 
 			if (font != nullptr)
 			{

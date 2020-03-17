@@ -9,6 +9,7 @@
 #include "Defs.h"
 #include "Log.h"
 
+#include "SDL/include/SDL.h"
 #include "optick-1.3.0.0/include/optick.h"
 
 #ifdef DEBUG
@@ -30,13 +31,12 @@ Application::Application(int argc, char* args[]) : argc(argc), args(args)
 	want_to_save = want_to_load = want_to_quit = false;
 
 	// Modules
-	AddModule(input = new Input());
-	AddModule(win = new Window());
-	AddModule(audio = new Audio());
-	AddModule(map = new Map());
-	AddModule(scene = new Scene());
-	AddModule(editor = new Editor());
-	AddModule(render = new Render());
+	modules.push_back(input = new Input());
+	modules.push_back(win = new Window());
+	modules.push_back(audio = new Audio());
+	modules.push_back(scene = new Scene());
+	modules.push_back(editor = new Editor());
+	modules.push_back(render = new Render());
 }
 
 Application::~Application()
@@ -47,52 +47,57 @@ Application::~Application()
 	modules.clear();
 }
 
-void Application::AddModule(Module* module)
-{
-	module->Init();
-	modules.push_back(module);
-}
-
 // Called before the first frame
 bool Application::Init()
 {
-	bool ret = files.Init();
-	pugi::xml_node config;
-
-	if (ret && files.LoadConfig(config))
+	bool ret = false;
+	if (files.Init(args[0]))
 	{
-		if (!config.empty())
+		ret = true;
+
+		// Load Engine Configuration
+		bool config_loaded = files.LoadConfig();
+		LoadAllConfig(config_loaded);
+
+		//if (!config_loaded) files.SaveConfig();
+
+		// Pre-Initialize Independent Manager Systems
+		if (ret) ret = time.Init();
+		if (ret) ret = tex.Init();
+
+		// Initialize Modules
+		for (std::list<Module*>::iterator it = modules.begin(); it != modules.end() && ret; ++it)
 		{
-			// App Config
-			pugi::xml_node app_config = config.child("app");
-			title = app_config.child("title").child_value();
-			organization = app_config.child("organization").child_value();
-
-			// Awake Modules
-			for (std::list<Module*>::iterator it = modules.begin(); it != modules.end() && ret; ++it)
-				ret = (*it)->Awake(config.child((*it)->name));
-
-			// Initialize Independent Managers
-			ret = fonts.Init();
+			(*it)->SetActive(ret = (*it)->Init());
+			if (ret)
+				LOG("Initialized module: %s.", (*it)->GetName());
+			else
+				LOG("Error initializing module: %s.", (*it)->GetName());
 		}
-		else
-		{
-			LOG("Empty config file.");
 
-			title = "unknown";
-			organization = "unknown";
-
-			for (std::list<Module*>::iterator it = modules.begin(); it != modules.end() && ret; ++it)
-				ret = (*it)->Awake(config.append_child((*it)->name));
-		}
+		// Post-Initialize Independent Manager Systems
+		if (ret) ret = fonts.Init();
 
 		// Start Modules
 		for (std::list<Module*>::iterator it = modules.begin(); it != modules.end() && ret; ++it)
-			ret = (*it)->Start();
-	}
+		{
+			if (ret = (*it)->Start())
+				LOG("Started module: %s.", (*it)->GetName());
+			else
+				LOG("Error starting module: %s.", (*it)->GetName());
+		}
 
-	if (ret)
-		ret = scene->LoadTestScene();
+		// Load sample scene
+		if (ret)
+		{
+			if (ret = scene->LoadTestScene())
+				LOG("Loaded Scene");
+			else
+				LOG("Error loading Scene");
+		}
+	}
+	else
+		LOG("Error initializing file system.");
 
 	return ret;
 }
@@ -137,11 +142,11 @@ void Application::PrepareUpdate()
 
 void Application::FinishUpdate()
 {
-	if(want_to_save)
+	/*(want_to_save)
 		SavegameNow();
 
 	if(want_to_load)
-		LoadGameNow();
+		LoadGameNow();*/
 
 	int extra_ms = time.ManageFrameTimers();
 
@@ -207,25 +212,21 @@ void Application::RecieveEvent(const Event & e)
 	}
 }
 
-// ---------------------------------------
 int Application::GetArgc() const
 {
 	return argc;
 }
 
-// ---------------------------------------
 const char* Application::GetArgv(int index) const
 {
-	return index < argc ? args[index] : nullptr;
+	return (index > 0 && index < argc) ? args[index] : nullptr;
 }
 
-// ---------------------------------------
 const char* Application::GetTitle() const
 {
 	return title;
 }
 
-// ---------------------------------------
 const char* Application::GetOrganization() const
 {
 	return organization;
@@ -237,91 +238,47 @@ void Application::SetTitleAndOrg(const char* t, const char* org)
 	organization = org;
 }
 
-// Load / Save
-void Application::LoadGame(const char* file)
+void Application::LoadAllConfig(bool empty_config)
 {
-	// we should be checking if that file actually exist
-	// from the "GetSaveGames" list
-	want_to_load = true;
-	//load_game.create("%s%s", fs->GetSaveDirectory(), file);
-}
+	LOG("Loading%sConfig", empty_config ? " empty " : " ");
+	pugi::xml_node config = files.ConfigNode();
 
-// ---------------------------------------
-void Application::SaveGame(const char* file) const
-{
-	// we should be checking if that file actually exist
-	// from the "GetSaveGames" list ... should we overwrite ?
-
-	want_to_save = true;
-	//save_game.create(file);
-}
-
-// ---------------------------------------
-void Application::GetSaveGames(std::list<std::string>& list_to_fill) const
-{
-	// need to add functionality to file_system module for this to work
-}
-
-bool Application::LoadGameNow()
-{
-	bool ret = true;
-
-	pugi::xml_document data;
-	pugi::xml_node root;
-
-	pugi::xml_parse_result result = data.load_file(load_game.c_str());
-
-	if(result)
+	// App Config
+	if (empty_config)
 	{
-		LOG("Loading Game State from %s...", load_game);
-
-		root = data.child("game_state");
-
-		std::list<Module*>::iterator it;
-		for (it = modules.begin(); it != modules.end() && ret; ++it)
-			ret = (*it)->Load(root.child((*it)->name));
-
-		want_to_load = false;
-		data.reset();
-
-		if(ret) LOG("...finished loading");
-		else LOG("...loading process interrupted with error on module %s", (*it)->name);
+		pugi::xml_node app_config = config.append_child("app");
+		app_config.append_child("title").set_value(title = "Square Up");
+		app_config.append_child("organization").set_value(organization = "UPC");
 	}
 	else
 	{
-		LOG("Could not parse game state xml file %s. pugi error: %s", load_game, result.description());
-		ret = false;
+		pugi::xml_node app_config = config.child("app");
+		title = app_config.child("title").child_value();
+		organization = app_config.child("organization").child_value();
 	}
 
-	return ret;
+	// Call Managers
+	tex.LoadConfig(empty_config);
+
+	// Call Modules
+	for (std::list<Module*>::iterator it = modules.begin(); it != modules.end(); ++it)
+		(*it)->LoadConfig(empty_config);
 }
 
-bool Application::SavegameNow() const
+void Application::SaveConfig() const
 {
-	bool ret = true;
+	// Save App config
+	pugi::xml_node app_config = files.ConfigNode().child("app");
+	app_config.child("title").set_value(title);
+	app_config.child("organization").set_value(organization);
 
-	LOG("Saving Game State to %s...", save_game);
+	// Call Managers
+	tex.SaveConfig();
 
-	// xml object were we will store all data
-	pugi::xml_document data;
-	pugi::xml_node root;
-	
-	root = data.append_child("game_state");
+	// Call Modules
+	for (std::list<Module*>::const_iterator it = modules.begin(); it != modules.end(); ++it)
+		(*it)->SaveConfig();
 
-	std::list<Module*>::const_iterator it;
-	for (it = modules.begin(); it != modules.end() && ret; ++it)
-		ret = (*it)->Save(root.append_child((*it)->name));
-
-	if (ret)
-	{
-		data.save_file(save_game.c_str());
-		data.reset();
-		want_to_save = false;
-
-		LOG("... finished saving", save_game);
-	}
-	else
-		LOG("Save process halted from an error in module %s", (*it)->name);
-
-	return ret;
+	// Save changes
+	files.SaveConfig();
 }

@@ -48,19 +48,13 @@ public:
 
 	void SetTitleAndOrg(const char* title, const char* org);
 
-	void LoadGame(const char* file);
-	void SaveGame(const char* file) const;
-	void GetSaveGames(std::list<std::string>& list_to_fill) const;
-
 private:
-
-	void AddModule(Module* module);
 
 	void PrepareUpdate();
 	void FinishUpdate();
 
-	bool LoadGameNow();
-	bool SavegameNow() const;
+	void LoadAllConfig(bool empty_config);
+	void SaveConfig() const;
 
 public:
 
@@ -74,27 +68,28 @@ public:
 	Render*		render;
 
 	// Independent Managers
-	FileManager files;
-	TimeManager time;
+	FileManager		files;
+	TimeManager		time;
 	TextureManager	tex;
-	FontManager	fonts;
+	FontManager		fonts;
 
 private:
 
-	std::list<Module*>	modules;
+	// Module container
+	std::list<Module*> modules;
 
-	int					argc;
-	char**				args;
+	// Execution arguments
+	int		argc = -1;
+	char**	args = nullptr;
 
-	const char*			title = nullptr;
-	const char*			organization = nullptr;
+	// Config values
+	const char*	title = nullptr;
+	const char*	organization = nullptr;
 
-	mutable bool		want_to_save;
-	bool				want_to_load;
-	bool				want_to_quit;
-
-	std::string			load_game;
-	mutable std::string	save_game;
+	// Event controls
+	bool want_to_save = false;
+	bool want_to_load = false;
+	bool want_to_quit = false;
 };
 
 extern Application* App;

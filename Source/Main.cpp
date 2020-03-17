@@ -31,7 +31,7 @@ int main(int argc, char* args[])
 {
 	int main_return = EXIT_FAILURE;
 
-	LOG("Engine starting ... %d");
+	LOG("Engine starting.");
 
 	App = new Application(argc, args);
 
@@ -55,26 +55,15 @@ int main(int argc, char* args[])
 				delete App;
 				main_return = EXIT_SUCCESS;
 				LOG("EXIT SUCCESS");
-/*#ifdef DEBUG
-				LOG("Memory Leaks: %d!\n", (m_getMemoryStatistics().totalAllocUnitCount));
-#endif*/
 			}
 			else
-			{
 				LOG("Application CleanUp exits with ERROR");
-			}
 		}
 		else
-		{
 			LOG("Application Main Loop ERROR");
-		}
 	}
 	else
-	{
 		LOG("Application Init exits with ERROR");
-	}
-
-	LOG("... Bye! :)\n");
 
 	return main_return;
 }

@@ -15,16 +15,14 @@ public:
 	Render();
 	~Render();
 
-	bool Awake(pugi::xml_node&) override;
+	void LoadConfig(bool empty_config) override;
+	void SaveConfig() const override;
+
 	bool Start() override;
 	bool PreUpdate() override;
 	bool Update() override;
 	bool PostUpdate() override;
 	bool CleanUp() override;
-
-	// Load / Save
-	bool Load(pugi::xml_node&) override;
-	bool Save(pugi::xml_node&) const override;
 
 	// Getters
 	SDL_Renderer* GetSDLRenderer() const;
@@ -54,14 +52,18 @@ public:
 
 private:
 
-	Uint32			flags = 0;
 	SDL_Renderer*	renderer = nullptr;
+	SDL_Rect		viewport;
+	SDL_Color		background;
 
+	// Camera
 	RectF cam;
 	float zoom = 1.0f;
 
-	SDL_Rect		viewport;
-	SDL_Color		background;
+	// Config
+	bool accelerated = true;
+	bool vsync = false;
+	bool target_texture = false;
 };
 
 #endif // __RENDER_H__

@@ -8,38 +8,55 @@
 #include "optick-1.3.0.0/include/optick.h"
 
 #include "SDL2_image-2.0.5/include/SDL_image.h"
+#ifdef PLATFORMx86
+#pragma comment( lib, "SDL2_image-2.0.5/lib/x86/SDL2_image.lib" )
+#elif PLATFORMx64
+#pragma comment( lib, "SDL2_image-2.0.5/lib/x64/SDL2_image.lib" )
+#endif
 
-void TextureManager::CleanUp()
+void TextureManager::LoadConfig(bool empty_config)
 {
-	LOG("Freeing textures");
-
-	texture_data.clear();
-
-	for (std::vector<SDL_Texture*>::iterator it = textures.begin(); it != textures.end(); ++it)
-		SDL_DestroyTexture(*it);
-
-	textures.clear();
-}
-
-int TextureManager::LoadSurface(SDL_Surface* surface)
-{
-	int ret = -1;
-
-	SDL_Texture* tex = SDL_CreateTextureFromSurface(App->render->GetSDLRenderer(), surface);
-
-	if (tex != nullptr)
+	if (empty_config)
 	{
-		TextureData data;
-		SDL_QueryTexture(tex, 0, 0, &data.width, &data.height);
-		data.source = "From SDL_Surface";
-		data.id = textures.size();
-
-		ret = data.id;
-		texture_data.push_back(data);
-		textures.push_back(tex);
+		pugi::xml_node img_flags = FileManager::ConfigNode().append_child("textures").append_child("flags");
+		img_flags.append_attribute("jpg").as_bool(using_jpg);
+		img_flags.append_attribute("png").as_bool(using_png);
+		img_flags.append_attribute("tif").as_bool(using_tif);
+		img_flags.append_attribute("webp").as_bool(using_webp);
 	}
 	else
-		LOG("Unable to create texture from surface! SDL Error: %s\n", SDL_GetError());
+	{
+		pugi::xml_node img_flags = FileManager::ConfigNode().child("textures").child("flags");
+		using_jpg = img_flags.attribute("jpg").as_bool(using_jpg);
+		using_png = img_flags.attribute("png").as_bool(using_png);
+		using_tif = img_flags.attribute("tif").as_bool(using_tif);
+		using_webp = img_flags.attribute("webp").as_bool(using_webp);
+	}
+}
+
+void TextureManager::SaveConfig() const
+{
+	pugi::xml_node img_flags = FileManager::ConfigNode().child("textures").child("flags");
+	img_flags.attribute("jpg").set_value(using_jpg);
+	img_flags.attribute("png").set_value(using_png);
+	img_flags.attribute("tif").set_value(using_tif);
+	img_flags.attribute("webp").set_value(using_webp);
+}
+
+bool TextureManager::Init()
+{
+	bool ret;
+	int flags = 0;
+	if (using_jpg) flags |= IMG_INIT_JPG;
+	if (using_png) flags |= IMG_INIT_PNG;
+	if (using_tif) flags |= IMG_INIT_TIF;
+	if (using_webp) flags |= IMG_INIT_WEBP;
+
+	int init = IMG_Init(flags);
+	if (ret = ((init & flags) == flags))
+		LOG("SDL_IMG initialized.");
+	else
+		LOG("Could not initialize Image lib. IMG_Init: %s", IMG_GetError());
 
 	return ret;
 }
@@ -62,7 +79,7 @@ int TextureManager::Load(const char* path)
 
 	if (ret < 0)
 	{
-		SDL_Surface* surface = IMG_Load_RW(App->files.Load(path), 1);
+		SDL_Surface* surface = IMG_Load_RW(App->files.LoadRWops(path), 1);
 
 		if (surface)
 		{
@@ -89,6 +106,43 @@ int TextureManager::Load(const char* path)
 		else
 			LOG("Could not load surface with path: %s. IMG_Load: %s", path, IMG_GetError());
 	}
+
+	return ret;
+}
+
+void TextureManager::CleanUp()
+{
+	LOG("Freeing textures");
+
+	texture_data.clear();
+
+	for (std::vector<SDL_Texture*>::iterator it = textures.begin(); it != textures.end(); ++it)
+		SDL_DestroyTexture(*it);
+
+	textures.clear();
+
+	IMG_Quit();
+}
+
+int TextureManager::LoadSurface(SDL_Surface* surface)
+{
+	int ret = -1;
+
+	SDL_Texture* tex = SDL_CreateTextureFromSurface(App->render->GetSDLRenderer(), surface);
+
+	if (tex != nullptr)
+	{
+		TextureData data;
+		SDL_QueryTexture(tex, 0, 0, &data.width, &data.height);
+		data.source = "From SDL_Surface";
+		data.id = textures.size();
+
+		ret = data.id;
+		texture_data.push_back(data);
+		textures.push_back(tex);
+	}
+	else
+		LOG("Unable to create texture from surface! SDL Error: %s\n", SDL_GetError());
 
 	return ret;
 }

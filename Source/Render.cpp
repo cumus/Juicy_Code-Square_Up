@@ -9,13 +9,7 @@
 #include "Log.h"
 
 #include "optick-1.3.0.0/include/optick.h"
-
 #include "SDL2_image-2.0.5/include/SDL_image.h"
-#ifdef PLATFORMx86
-#pragma comment( lib, "SDL2_image-2.0.5/lib/x86/SDL2_image.lib" )
-#elif PLATFORMx64
-#pragma comment( lib, "SDL2_image-2.0.5/lib/x64/SDL2_image.lib" )
-#endif
 
 Render::Render() : Module("renderer")
 {
@@ -27,57 +21,64 @@ Render::Render() : Module("renderer")
 Render::~Render()
 {}
 
-// Called before render is available
-bool Render::Awake(pugi::xml_node& config)
+void Render::LoadConfig(bool empty_config)
 {
-	bool ret = true;
-
-	LOG("Init Image library");
-
-	int img_flags = IMG_INIT_PNG;
-	int init = IMG_Init(img_flags);
-
-	if ((init & img_flags) != img_flags)
+	if (empty_config)
 	{
-		LOG("Could not initialize Image lib. IMG_Init: %s", IMG_GetError());
-		ret = false;
+		pugi::xml_node render_flags = FileManager::ConfigNode().append_child(name).append_child("flags");
+		render_flags.append_attribute("accelerated").as_bool(accelerated);
+		render_flags.append_attribute("vsync").as_bool(vsync);
+		render_flags.append_attribute("target_texture").as_bool(target_texture);
 	}
 	else
 	{
-		// load flags
-		flags = SDL_RENDERER_ACCELERATED;
-		if (config.child("vsync").attribute("value").as_bool(true))
-		{
-			flags |= SDL_RENDERER_PRESENTVSYNC;
-			LOG("Using vsync");
-		}
+		pugi::xml_node render_flags = FileManager::ConfigNode().child(name).child("flags");
+		accelerated = render_flags.attribute("accelerated").as_bool(accelerated);
+		vsync = render_flags.attribute("vsync").as_bool(vsync);
+		target_texture = render_flags.attribute("height").as_bool(target_texture);
 	}
+}
 
-	return ret;
+void Render::SaveConfig() const
+{
+	pugi::xml_node render_flags = FileManager::ConfigNode().child(name).child("flags");
+	render_flags.attribute("accelerated").set_value(accelerated);
+	render_flags.attribute("vsync").set_value(vsync);
+	render_flags.attribute("target_texture").set_value(target_texture);
 }
 
 // Called before the first frame
 bool Render::Start()
 {
-	bool ret = true;
+	bool ret = false;
 
-	LOG("Create SDL rendering context");
-	renderer = SDL_CreateRenderer(App->win->window, -1, flags);
+	// Set loaded flags
+	unsigned int flags = 0;
+	if (accelerated) flags |= SDL_RENDERER_ACCELERATED;
+	if (vsync) flags |= SDL_RENDERER_PRESENTVSYNC;
+	if (target_texture) flags |= SDL_RENDERER_TARGETTEXTURE;
+
+	// Create SDL rendering context
+	renderer = SDL_CreateRenderer(App->win->GetWindow(), -1, flags);
 	if (renderer)
 	{
-		SDL_SetRenderDrawBlendMode(App->render->renderer, SDL_BLENDMODE_BLEND);
 		SDL_RenderGetViewport(renderer, &viewport);
 
-		// setup camera
-		cam.x = cam.y = 0;
-		cam.w = float(viewport.w);
-		cam.h = float(viewport.h);
+		// Add alpha blending
+		if (SDL_SetRenderDrawBlendMode(App->render->renderer, SDL_BLENDMODE_BLEND) == 0)
+		{
+			// Setup camera from viewport
+			cam.x = cam.y = 0;
+			cam.w = float(viewport.w);
+			cam.h = float(viewport.h);
+
+			ret = true;
+		}
+		else
+			LOG("Could not Set Render Draw Blend Mode to SDL_BLENDMODE_BLEND! SDL_Error: %s\n", SDL_GetError());
 	}
 	else
-	{
 		LOG("Could not create the renderer! SDL_Error: %s\n", SDL_GetError());
-		ret = false;
-	}
 
 	return ret;
 }
@@ -85,8 +86,7 @@ bool Render::Start()
 // Called each loop iteration
 bool Render::PreUpdate()
 {
-	SDL_RenderClear(renderer);
-	return true;
+	return (SDL_RenderClear(renderer) == 0);
 }
 
 bool Render::Update()
@@ -102,25 +102,25 @@ bool Render::Update()
 		if (target_zoom > 4.0f)
 		{
 			zoom = 4.0f;
-			App->map->SetMapScale(zoom);
+			Map::SetMapScale(zoom);
 		}
 		else if (target_zoom < 0.5f)
 		{
 			zoom = 0.5f;
-			App->map->SetMapScale(zoom);
+			Map::SetMapScale(zoom);
 		}
 		else if (wheel_motion != 0)
 		{
 			// Get Tile at mouse
 			int x, y;
 			App->input->GetMousePosition(x, y);
-			std::pair<int, int> mouse_tile = App->map->WorldToTileBase(cam.x + float(x), cam.y + float(y));
+			std::pair<int, int> mouse_tile = Map::WorldToTileBase(cam.x + float(x), cam.y + float(y));
 			std::pair<float, float> mouse_tile_f = { float(mouse_tile.first), float(mouse_tile.second) };
 
 			// Get Tile at mouse pos - before and after zoom
-			std::pair<float, float> tile_pos = App->map->F_MapToWorld(mouse_tile_f.first, mouse_tile_f.second);
-			App->map->SetMapScale(zoom = target_zoom);
-			std::pair<float, float> tile_pos_next = App->map->F_MapToWorld(mouse_tile_f.first, mouse_tile_f.second);
+			std::pair<float, float> tile_pos = Map::F_MapToWorld(mouse_tile_f.first, mouse_tile_f.second);
+			Map::SetMapScale(zoom = target_zoom);
+			std::pair<float, float> tile_pos_next = Map::F_MapToWorld(mouse_tile_f.first, mouse_tile_f.second);
 
 			// Displace camera - keep mouse at same tile
 			cam.x += (tile_pos_next.first - tile_pos.first);
@@ -151,27 +151,6 @@ bool Render::CleanUp()
 {
 	LOG("Destroying SDL render");
 	SDL_DestroyRenderer(renderer);
-	IMG_Quit();
-	return true;
-}
-
-// Load Game State
-bool Render::Load(pugi::xml_node& data)
-{
-	cam.x = data.child("camera").attribute("x").as_float();
-	cam.y = data.child("camera").attribute("y").as_float();
-
-	return true;
-}
-
-// Save Game State
-bool Render::Save(pugi::xml_node& data) const
-{
-	pugi::xml_node camera = data.append_child("camera");
-
-	camera.append_attribute("x") = cam.x;
-	camera.append_attribute("y") = cam.y;
-
 	return true;
 }
 
@@ -212,7 +191,7 @@ void Render::ResetViewPort()
 
 bool Render::Blit(int texture_id, int x, int y, const SDL_Rect* section, bool use_cam) const
 {
-	bool ret = true;
+	bool ret = false;
 
 	SDL_Texture* texture = App->tex.GetTexture(texture_id);
 
@@ -244,24 +223,20 @@ bool Render::Blit(int texture_id, int x, int y, const SDL_Rect* section, bool us
 			rect.y = y;
 		}
 
-		if (SDL_RenderCopyEx(renderer, texture, section, &rect, 0,nullptr, SDL_RendererFlip::SDL_FLIP_NONE) != 0)
-		{
+		if (SDL_RenderCopyEx(renderer, texture, section, &rect, 0,nullptr, SDL_RendererFlip::SDL_FLIP_NONE) == 0)
+			ret = true;
+		else
 			LOG("Cannot blit to screen. SDL_RenderCopy error: %s", SDL_GetError());
-			ret = false;
-		}
 	}
 	else
-	{
 		LOG("Cannot blit to screen. Invalid id %d");
-		ret = false;
-	}
 
 	return ret;
 }
 
 bool Render::Blit_Scale(int texture_id, int x, int y, float scale_x, float scale_y, const SDL_Rect* section, bool use_cam) const
 {
-	bool ret = true;
+	bool ret = false;
 
 	SDL_Texture* texture = App->tex.GetTexture(texture_id);
 
@@ -297,17 +272,13 @@ bool Render::Blit_Scale(int texture_id, int x, int y, float scale_x, float scale
 			rect.h = int(float(rect.h) * scale_y);
 		}
 
-		if (SDL_RenderCopyEx(renderer, texture, section, &rect, 0, nullptr, SDL_RendererFlip::SDL_FLIP_NONE) != 0)
-		{
+		if (SDL_RenderCopyEx(renderer, texture, section, &rect, 0, nullptr, SDL_RendererFlip::SDL_FLIP_NONE) == 0)
+			ret = true;
+		else
 			LOG("Cannot blit to screen. SDL_RenderCopy error: %s", SDL_GetError());
-			ret = false;
-		}
 	}
 	else
-	{
 		LOG("Cannot blit to screen. Invalid id %d");
-		ret = false;
-	}
 
 	return ret;
 }
@@ -315,7 +286,7 @@ bool Render::Blit_Scale(int texture_id, int x, int y, float scale_x, float scale
 // Blit to screen
 bool Render::Blit_Rot(int texture_id, int x, int y, bool use_cam, const SDL_Rect* section, int flip, double angle, int pivot_x, int pivot_y) const
 {
-	bool ret = true;
+	bool ret = false;
 
 	SDL_Texture* texture = App->tex.GetTexture(texture_id);
 
@@ -357,17 +328,13 @@ bool Render::Blit_Rot(int texture_id, int x, int y, bool use_cam, const SDL_Rect
 			p = &pivot;
 		}
 
-		if (SDL_RenderCopyEx(renderer, texture, section, &rect, angle, p, SDL_RendererFlip(flip)) != 0)
-		{
+		if (SDL_RenderCopyEx(renderer, texture, section, &rect, angle, p, SDL_RendererFlip(flip)) == 0)
+			ret = true;
+		else
 			LOG("Cannot blit to screen. SDL_RenderCopy error: %s", SDL_GetError());
-			ret = false;
-		}
 	}
 	else
-	{
 		LOG("Cannot blit to screen. Invalid id %d");
-		ret = false;
-	}
 
 	return ret;
 }

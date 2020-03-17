@@ -27,7 +27,7 @@ void Sprite::PostUpdate()
 		if (t)
 		{
 			vec pos = t->GetGlobalPosition();
-			std::pair<float, float> map_pos = App->map->F_MapToWorld(pos.x, pos.y);
+			std::pair<float, float> map_pos = Map::F_MapToWorld(pos.x, pos.y);
 
 			if (tex_id >= 0)
 				App->render->Blit(tex_id, int(map_pos.first), int(map_pos.second), &section);

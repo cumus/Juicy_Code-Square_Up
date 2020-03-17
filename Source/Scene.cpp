@@ -6,7 +6,6 @@
 #include "Render.h"
 #include "Map.h"
 #include "Editor.h"
-#include "MapContainer.h"
 #include "TimeManager.h"
 #include "TextureManager.h"
 #include "Sprite.h"
@@ -26,16 +25,6 @@ Scene::Scene() : Module("scene")
 Scene::~Scene()
 {}
 
-bool Scene::Awake(pugi::xml_node& config)
-{
-	return true;
-}
-
-bool Scene::Start()
-{
-	return true;
-}
-
 bool Scene::PreUpdate()
 {
 	root.PreUpdate();
@@ -52,11 +41,11 @@ bool Scene::Update()
 	// Load sample maps
 	if (App->input->GetKey(SDL_SCANCODE_1) == KEY_DOWN)
 	{
-		ret = App->map->LoadFromFile("maps/iso.tmx");
+		ret = map.Load("maps/iso.tmx");
 	}
 	else if (App->input->GetKey(SDL_SCANCODE_2) == KEY_DOWN)
 	{
-		ret = App->map->LoadFromFile("maps/level1.tmx");
+		ret = map.Load("maps/level1.tmx");
 	}
 
 	if (go1 != nullptr && go2 != nullptr)
@@ -85,7 +74,7 @@ bool Scene::Update()
 	}
 
 	// Swap map orientation
-	if (App->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN) App->map->SwapMapType();
+	if (App->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN) Map::SwapMapType();
 
 	// Update gameobject hierarchy
 	root.Update();
@@ -95,13 +84,15 @@ bool Scene::Update()
 
 bool Scene::PostUpdate()
 {
+	map.Draw();
+
 	root.PostUpdate();
 
 	// Debug Pointer Info on Window Title
 	int mouse_x, mouse_y;
 	App->input->GetMousePosition(mouse_x, mouse_y);
 	SDL_Rect cam_rect = App->render->GetCameraRect();
-	std::pair<int, int> map_coordinates = App->map->WorldToTileBase(cam_rect.x + mouse_x, cam_rect.y + mouse_y);
+	std::pair<int, int> map_coordinates = Map::WorldToTileBase(cam_rect.x + mouse_x, cam_rect.y + mouse_y);
 
 	// Debug gameobject transforms
 	vec go1_pos;
@@ -153,8 +144,6 @@ bool Scene::LoadTestScene()
 	// Remove fps cap
 	App->time.SetMaxFPS(60);
 
-	
-
 	// Load mouse debug texture for identifying tiles
 	if (ret)
 	{
@@ -205,7 +194,7 @@ Gameobject* Scene::RaycastSelect()
 		int mouse_x, mouse_y;
 		App->input->GetMousePosition(mouse_x, mouse_y);
 		SDL_Rect cam_rect = App->render->GetCameraRect();
-		std::pair<float, float> map_coordinates = App->map->WorldToTileBase(cam_rect.x + mouse_x, cam_rect.y + mouse_y);
+		std::pair<float, float> map_coordinates = Map::WorldToTileBase(cam_rect.x + mouse_x, cam_rect.y + mouse_y);
 
 		while (!queue.empty())
 		{

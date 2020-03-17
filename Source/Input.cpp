@@ -17,17 +17,22 @@ Input::Input() : Module("input")
 Input::~Input()
 {}
 
-bool Input::Awake(pugi::xml_node& config)
+bool Input::Init()
 {
-	LOG("Init SDL input event system");
-	bool ret = true;
-	SDL_Init(0);
+	OPTICK_EVENT();
 
-	if(SDL_InitSubSystem(SDL_INIT_EVENTS) < 0)
-	{
+	bool ret = (SDL_InitSubSystem(SDL_INIT_EVENTS) == 0);
+
+	/*/ Unused SDL Input Systems
+	SDL_INIT_JOYSTICK (implies SDL_INIT_EVENTS)
+	SDL_INIT_HAPTIC
+	SDL_INIT_GAMECONTROLLER (implies SDL_INIT_JOYSTICK)
+	SDL_INIT_SENSOR*/
+
+	if(ret)
+		LOG("SDL_EVENTS initialized.");
+	else
 		LOG("SDL_EVENTS could not initialize! SDL_Error: %s\n", SDL_GetError());
-		ret = false;
-	}
 
 	return ret;
 }

@@ -2,6 +2,7 @@
 #define __SCENE_H__
 
 #include "Module.h"
+#include "Map.h"
 #include "Gameobject.h"
 
 struct SDL_Texture;
@@ -13,8 +14,6 @@ public:
 	Scene();
 	~Scene();
 
-	bool Awake(pugi::xml_node& config) override;
-	bool Start() override;
 	bool PreUpdate() override;
 	bool Update() override;
 	bool PostUpdate() override;
@@ -33,6 +32,7 @@ public:
 
 private:
 
+	Map map;
 	Gameobject root;
 
 	Gameobject* go1;

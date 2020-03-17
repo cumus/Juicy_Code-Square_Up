@@ -21,40 +21,76 @@ Audio::Audio() : Module("audio")
 Audio::~Audio()
 {}
 
+void Audio::LoadConfig(bool empty_config)
+{
+	if (empty_config)
+	{
+		pugi::xml_node codecs = FileManager::ConfigNode().append_child(name).append_child("codecs");
+		codecs.append_attribute("FLAC").as_bool(using_FLAC);
+		codecs.append_attribute("MOD").as_bool(using_MOD);
+		codecs.append_attribute("MP3").as_bool(using_MP3);
+		codecs.append_attribute("OGG").as_bool(using_OGG);
+		codecs.append_attribute("MID").as_bool(using_MID);
+		codecs.append_attribute("OPUS").as_bool(using_OPUS);
+	}
+	else
+	{
+		pugi::xml_node codecs = FileManager::ConfigNode().child(name).child("codecs");
+		using_FLAC = codecs.attribute("FLAC").as_bool(using_FLAC);
+		using_MOD = codecs.attribute("MOD").as_bool(using_MOD);
+		using_MP3 = codecs.attribute("MP3").as_bool(using_MP3);
+		using_OGG = codecs.attribute("OGG").as_bool(using_OGG);
+		using_MID = codecs.attribute("MID").as_bool(using_MID);
+		using_OPUS = codecs.attribute("OPUS").as_bool(using_OPUS);
+	}
+}
+
+void Audio::SaveConfig() const
+{
+	pugi::xml_node codecs = FileManager::ConfigNode().child(name).child("codecs");
+	codecs.attribute("FLAC").set_value(using_FLAC);
+	codecs.attribute("MOD").set_value(using_MOD);
+	codecs.attribute("MP3").set_value(using_MP3);
+	codecs.attribute("OGG").set_value(using_OGG);
+	codecs.attribute("MID").set_value(using_MID);
+	codecs.attribute("OPUS").set_value(using_OPUS);
+}
+
 // Called before render is available
-bool Audio::Awake(pugi::xml_node& config)
+bool Audio::Init()
 {
 	OPTICK_EVENT();
 
-	LOG("Loading Audio Mixer");
-	bool ret = true;
-	SDL_Init(0);
+	bool ret = (SDL_InitSubSystem(SDL_INIT_AUDIO) == 0);
 
-	if(SDL_InitSubSystem(SDL_INIT_AUDIO) < 0)
+	if (ret)
 	{
-		LOG("SDL_INIT_AUDIO could not initialize! SDL_Error: %s\n", SDL_GetError());
-		active = false;
-		ret = true;
-	}
+		LOG("SDL_AUDIO initialized.");
 
-	// load support for the JPG and PNG image formats
-	int flags = MIX_INIT_OGG;
-	int init = Mix_Init(flags);
+		// Initialize SDL_mixer
+		int flags = 0;
+		if (using_FLAC) flags |= MIX_INIT_FLAC;
+		if (using_MOD) flags |= MIX_INIT_MOD;
+		if (using_MP3) flags |= MIX_INIT_MP3;
+		if (using_OGG) flags |= MIX_INIT_OGG;
+		if (using_MID) flags |= MIX_INIT_MID;
+		if (using_OPUS) flags |= MIX_INIT_OPUS;
 
-	if((init & flags) != flags)
-	{
-		LOG("Could not initialize Mixer lib. Mix_Init: %s", Mix_GetError());
-		active = false;
-		ret = true;
-	}
+		int res_flags = Mix_Init(flags);
 
-	//Initialize SDL_mixer
-	if(Mix_OpenAudio(MIX_DEFAULT_FREQUENCY, MIX_DEFAULT_FORMAT, 2, 2048) < 0)
-	{
-		LOG("SDL_mixer could not initialize! SDL_mixer Error: %s\n", Mix_GetError());
-		active = false;
-		ret = true;
+		if ((res_flags & flags) == flags)
+		{
+			// Initialize SDL_mixer with default frequecy & format
+			if (Mix_OpenAudio(MIX_DEFAULT_FREQUENCY, MIX_DEFAULT_FORMAT, 2, 2048) == 0)
+				LOG("SDL_Mixer opened correctly.");
+			else
+				LOG("SDL_mixer could not initialize! SDL_mixer Error: %s\n", Mix_GetError());
+		}
+		else
+			LOG("Could not initialize Mixer lib. Mix_Init: %s", Mix_GetError());
 	}
+	else
+		LOG("SDL_AUDIO could not initialize! SDL_Error: %s\n", SDL_GetError());
 
 	return ret;
 }
@@ -102,7 +138,7 @@ bool Audio::PlayMusic(const char* path, float fade_time)
 		Mix_FreeMusic(music);
 	}
 
-	music = Mix_LoadMUS_RW(App->files.Load(path), 1);
+	music = Mix_LoadMUS_RW(App->files.LoadRWops(path), 1);
 
 	if(music)
 	{

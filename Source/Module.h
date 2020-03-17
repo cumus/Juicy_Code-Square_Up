@@ -2,70 +2,32 @@
 #define __MODULE_H__
 
 #include "EventListener.h"
-#include "PugiXml\src\pugixml.hpp"
 
 class Module : public EventListener
 {
 public:
 
-	Module(const char* name) : active(false), name(name)
-	{}
+	Module(const char* name) : active(false), name(name) {}
+	virtual ~Module() {}
 
-	virtual ~Module()
-	{}
+	virtual void LoadConfig(bool empty_config) {}
+	virtual void SaveConfig() const {}
 
-	void Init()
-	{
-		active = true;
-	}
+	virtual bool Init() { return true; }
+	virtual bool Start() { return true; }
 
-	// Called before render is available
-	virtual bool Awake(pugi::xml_node&)
-	{
-		return true;
-	}
+	virtual bool PreUpdate() { return true; }
+	virtual bool Update() { return true; }
+	virtual bool PostUpdate() { return true; }
 
-	// Called before the first frame
-	virtual bool Start()
-	{
-		return true;
-	}
+	virtual bool CleanUp() { return true; }
 
-	// Called each loop iteration
-	virtual bool PreUpdate()
-	{
-		return true;
-	}
+	const char* GetName() const { return name; }
 
-	// Called each loop iteration
-	virtual bool Update()
-	{
-		return true;
-	}
+	void SetActive(bool is_active) { active = is_active; }
+	bool IsActive() const { return active; }
 
-	// Called each loop iteration
-	virtual bool PostUpdate()
-	{
-		return true;
-	}
-
-	// Called before quitting
-	virtual bool CleanUp()
-	{
-		return true;
-	}
-
-	virtual bool Load(pugi::xml_node&)
-	{
-		return true;
-	}
-
-	virtual bool Save(pugi::xml_node&) const
-	{
-		return true;
-	}
-
-public:
+protected:
 
 	const char*	name;
 	bool		active;

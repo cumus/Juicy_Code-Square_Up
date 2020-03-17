@@ -14,14 +14,12 @@ class Audio : public Module
 public:
 
 	Audio();
+	~Audio();
 
-	// Destructor
-	virtual ~Audio();
+	void LoadConfig(bool empty_config) override;
+	void SaveConfig() const override;
 
-	// Called before render is available
-	bool Awake(pugi::xml_node&);
-
-	// Called before quitting
+	bool Init();
 	bool CleanUp();
 
 	// Play a music file
@@ -37,6 +35,14 @@ private:
 
 	_Mix_Music*				music = nullptr;
 	std::vector<Mix_Chunk*>	fx;
+
+	// Mixer Codecs
+	bool using_FLAC = false;
+	bool using_MOD = false;
+	bool using_MP3 = false;
+	bool using_OGG = true;
+	bool using_MID = false;
+	bool using_OPUS = false;
 };
 
 #endif // __AUDIO_H__

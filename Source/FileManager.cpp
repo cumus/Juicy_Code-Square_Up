@@ -1,8 +1,8 @@
 #include "FileManager.h"
 #include "Defs.h"
 #include "Log.h"
-#include "SDL/include/SDL.h"
 
+#include "SDL/include/SDL.h"
 #include "physfs-3.0.2/include/physfs.h"
 
 #ifdef DEBUG
@@ -19,13 +19,15 @@
 #endif
 #endif
 
+pugi::xml_document FileManager::config;
+
 FileManager::FileManager()
 {}
 
 FileManager::~FileManager()
 {}
 
-bool FileManager::Init()
+bool FileManager::Init(const char* argv0)
 {
 	char* path = SDL_GetBasePath();
 
@@ -46,6 +48,7 @@ bool FileManager::Init()
 
 bool FileManager::CleanUp()
 {
+	config.reset();
 	return (PHYSFS_deinit() != 0);
 }
 
@@ -59,12 +62,34 @@ bool FileManager::AddDirectory(const char* path, const char* mount_point)
 	return ret;
 }
 
-bool FileManager::LoadConfig(pugi::xml_node& node)
+const char* FileManager::GetBasePath()
+{
+	return base_path.c_str();
+}
+
+pugi::xml_node FileManager::ConfigNode()
+{
+	return config.first_child();
+}
+
+bool FileManager::SaveConfig() const
+{
+	bool ret = config.save_file((base_path + "config.xml").c_str(), "\t", 1u, pugi::encoding_utf8);
+
+	if (!ret)
+		LOG("Error saving new config.xml file.");
+
+	return ret;
+}
+
+bool FileManager::LoadConfig()
 {
 	bool ret = LoadXML("config.xml", config);
 
-	if (ret)
-		node = config.first_child();
+	if(!ret)
+		config.append_child("config");
+	else
+		LOG("Engine Configuration config.xml found and ready to load.");
 
 	return ret;
 }
@@ -81,21 +106,12 @@ bool FileManager::LoadXML(const char* file, pugi::xml_document& doc)
 		pugi::xml_parse_result result = doc.load_buffer(buffer, size);
 
 		if (!(ret = result))
-			LOG("Could not load config.xml - pugi error: %s", result.description());
+			LOG("Could not load %s - pugi error: %s", file, result.description());
 
 		DEL_ARRAY(buffer);
 	}
 
 	return ret;
-
-	/*const char* org = "Juicy Code Games";
-	const char* app = "Square Up";
-	pref_dir = SDL_GetPrefPath(org, app);*/
-}
-
-const char* FileManager::GetBasePath()
-{
-	return base_path.c_str();
 }
 
 unsigned int FileManager::Load(const char* file, char** buffer) const
@@ -130,7 +146,7 @@ unsigned int FileManager::Load(const char* file, char** buffer) const
 	return ret;
 }
 
-SDL_RWops* FileManager::Load(const char* file) const
+SDL_RWops* FileManager::LoadRWops(const char* file) const
 {
 	char* buffer;
 	int size = Load(file, &buffer);

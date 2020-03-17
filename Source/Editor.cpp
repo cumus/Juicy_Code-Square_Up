@@ -14,9 +14,9 @@ Editor::Editor() : Module("editor")
 Editor::~Editor()
 {}
 
-bool Editor::Awake(pugi::xml_node&)
+bool Editor::Init()
 {
-	// Load window positions from config
+	//TODO: Load/Save window positions from config
 	AddWindow(bar_menu = new BarMenu({ 0.0f, 0.0f, 1.0f, 0.02f }));
 	AddWindow(play_pause = new PlayPauseWindow({ 0.3f, 0.05f, 0.4f, 0.05f }));
 

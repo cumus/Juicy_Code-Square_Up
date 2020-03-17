@@ -25,6 +25,10 @@ public:
 	TextureManager() {}
 	~TextureManager() {}
 
+	void LoadConfig(bool empty_config);
+	void SaveConfig() const;
+
+	bool Init();
 	int Load(const char* path);
 	void CleanUp();
 
@@ -34,6 +38,11 @@ public:
 	SDL_Texture* GetTexture(int id) const;
 
 private:
+
+	bool using_jpg = false;
+	bool using_png = true;
+	bool using_tif = false;
+	bool using_webp = false;
 
 	std::vector<TextureData> texture_data;
 	std::vector<SDL_Texture*> textures;
