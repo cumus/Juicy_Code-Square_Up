@@ -15,6 +15,8 @@ enum UI_Type
 };
 
 class EditorWindow;
+class UI_Button;
+class UI_Image;
 
 class UI_Element : public EventListener
 {
@@ -23,6 +25,9 @@ public:
 	virtual ~UI_Element();
 
 	virtual bool Draw() const;
+
+	virtual UI_Button* ToUiButton();
+	virtual UI_Image* ToUiImage();
 
 	RectF GetTargetNormRect() const;
 
@@ -33,6 +38,7 @@ protected:
 public:
 
 	RectF rect;
+	bool mouse_inside = false;
 
 private:
 

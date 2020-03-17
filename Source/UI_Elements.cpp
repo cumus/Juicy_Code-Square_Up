@@ -15,6 +15,16 @@ bool UI_Element::Draw() const
 	return App->render->DrawQuadNormCoords(GetTargetNormRect(), { 0, 0, 0, 255 });
 }
 
+UI_Button* UI_Element::ToUiButton()
+{
+	return nullptr;
+}
+
+UI_Image* UI_Element::ToUiImage()
+{
+	return nullptr;
+}
+
 RectF UI_Element::GetTargetNormRect() const
 {
 	RectF ret;

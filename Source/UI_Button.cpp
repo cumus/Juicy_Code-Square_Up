@@ -11,5 +11,10 @@ UI_Button::~UI_Button()
 
 bool UI_Button::Draw() const
 {
-	return App->render->DrawQuadNormCoords(GetTargetNormRect(), { 0, 0, 0, 255 });
+	return App->render->DrawQuadNormCoords(GetTargetNormRect(), color);
+}
+
+UI_Button* UI_Button::ToUiButton()
+{
+	return this;
 }

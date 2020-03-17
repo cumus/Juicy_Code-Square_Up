@@ -90,17 +90,41 @@ bool EditorWindow::CheckMouse(float mouse_x, float mouse_y, KeyState mouse_left_
 	if (mouse_x >= rect.x && mouse_x <= rect.x + rect.w
 		&& mouse_y >= rect.y && mouse_y <= rect.y + rect.h)
 	{
-		// Mouse inside window
-		mouse_inside = true;
-
-		/*if (mouse_left_button == KEY_DOWN || mouse_left_button == KEY_REPEAT)
+		if (!mouse_inside)
 		{
-			// Mouse Click content
-			for (std::vector<UI_Element*>::iterator it = elements.begin(); it != elements.end(); ++it)
+			mouse_inside = true;
+			Event::Push(HOVER_IN, this);
+		}
+		// Mouse Click content
+
+		int id = 0;
+
+		for (std::vector<UI_Element*>::iterator it = elements.begin(); it != elements.end(); ++it)
+		{			
+			if (JMath::PointInsideRect(mouse_x, mouse_y, (*it)->GetTargetNormRect()))
 			{
-				if (InsideRect({ mouse_x - x, mouse_y - y }, (*it)->rect))
+				if (!(*it)->mouse_inside)
+				{
+					Event::Push(HOVER_IN, this, id);
+					(*it)->mouse_inside = true;
+				}
+				if (mouse_left_button == KEY_DOWN)
+					Event::Push(MOUSE_DOWN, this, id);
+
+				else if (mouse_left_button == KEY_REPEAT)
+					Event::Push(MOUSE_REPEAT, this, id);
+
+				else if (mouse_left_button == KEY_UP)
+					Event::Push(MOUSE_UP, this, id);
 			}
-		}*/
+			else if((*it)->mouse_inside)
+			{
+				Event::Push(HOVER_OUT, this, id);
+				(*it)->mouse_inside = false;
+			}
+
+			++id;
+		}
 	}
 	else
 	{
@@ -208,6 +232,47 @@ void EditorWindow::MouseDrag_S(float mouse_x, float mouse_y)
 
 void ConfigWindow::RecieveEvent(const Event& e)
 {
+	switch (e.data1.AsInt())
+	{
+	case 1:
+	{
+		switch (e.type)
+		{
+		case HOVER_IN:
+		{
+			elements[e.data1.AsInt()]->ToUiButton()->color = { 255, 0, 0, 255 };
+
+			break;
+		}
+		case HOVER_OUT:
+		{
+			elements[e.data1.AsInt()]->ToUiButton()->color = { 0, 0, 0, 255 };
+
+			break;
+		}
+		case MOUSE_DOWN:
+		{
+			elements[e.data1.AsInt()]->ToUiButton()->color = { 0, 255, 0, 255 };
+
+			break;
+		}
+		case MOUSE_REPEAT:
+		{
+			elements[e.data1.AsInt()]->ToUiButton()->color = { 0, 255, 255, 255 };
+
+			break;
+		}
+		case MOUSE_UP:
+		{
+			elements[e.data1.AsInt()]->ToUiButton()->color = { 255, 255, 0, 255 };
+			Event::Push(REQUEST_QUIT, App);
+			break;
+		}
+		}
+
+		break;
+	}
+	}
 }
 
 bool ConfigWindow::Init()
@@ -217,7 +282,7 @@ bool ConfigWindow::Init()
 	if (tex_id >= 0)
 		elements.push_back(new UI_Image(this, { 0.1f, 0.1f, 0.8f, 0.5f }, tex_id));
 
-	elements.push_back(new UI_Button(this, { 0.3f, 0.3f, 0.5f, 0.3f }));
+	elements.push_back(new UI_Button(this, { 0.25f, 0.6f, 0.5f, 0.25f }));
 
 	return !elements.empty();
 }
