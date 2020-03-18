@@ -96,38 +96,44 @@ bool Input::PreUpdate()
 			case SDL_WINDOWEVENT:
 				switch(e.window.event)
 				{
-					//case SDL_WINDOWEVENT_LEAVE:
-					case SDL_WINDOWEVENT_HIDDEN: // Window has been hidden
-					case SDL_WINDOWEVENT_MINIMIZED: // Window has been minimized
-
-						Event::Push(WINDOW_HIDE, App);
-						break;
-
-					//case SDL_WINDOWEVENT_ENTER:
 					case SDL_WINDOWEVENT_SHOWN: // Window has been shown
-					case SDL_WINDOWEVENT_EXPOSED: // Window has been exposed and should be redrawn
-					case SDL_WINDOWEVENT_MAXIMIZED: // Window has been maximized
-
 						Event::Push(WINDOW_SHOW, App);
+						break;
+					case SDL_WINDOWEVENT_HIDDEN: // Window has been hidden
+						Event::Push(WINDOW_HIDDEN, App);
+						break;
+					case SDL_WINDOWEVENT_EXPOSED: // Window has been exposed and should be redrawn
+						Event::Push(WINDOW_EXPOSED, App);
 						break;
 
 					case SDL_WINDOWEVENT_MOVED: // Window has been moved to data1, data2
-
 						Event::Push(WINDOW_MOVED, App->win, Cvar(e.window.data1), Cvar(e.window.data2));
 						break;
 
 					case SDL_WINDOWEVENT_RESIZED: // Window has been resized to data1xdata2
 					//case SDL_WINDOWEVENT_SIZE_CHANGED: // The window size has changed, either as a result of an API call or through the system or user changing the window size
-					//case SDL_WINDOWEVENT_RESTORED: // Window has been restored to normal size and position
 						Event::Push(WINDOW_SIZE_CHANGED, App->win, Cvar(e.window.data1), Cvar(e.window.data2));
 						break;
 
-					case SDL_WINDOWEVENT_ENTER: // Window has gained mouse focus
-					case SDL_WINDOWEVENT_FOCUS_GAINED: // Window has gained keyboard focus
-						Event::Push(WINDOW_FOCUS, App->win);
+					case SDL_WINDOWEVENT_MINIMIZED: // Window has been minimized
+						Event::Push(WINDOW_MINIMIZED, App->win);
+						break;
+					case SDL_WINDOWEVENT_MAXIMIZED: // Window has been maximized
+						Event::Push(WINDOW_MAXIMIZED, App->win);
+						break;
+					case SDL_WINDOWEVENT_RESTORED: // Window has been restored to normal size and position
+						Event::Push(WINDOW_RESTORED, App->win);
 						break;
 
+					case SDL_WINDOWEVENT_ENTER: // Window has gained mouse focus
+						Event::Push(WINDOW_ENTER, App->win);
+						break;
 					case SDL_WINDOWEVENT_LEAVE: // Window has lost mouse focus
+						Event::Push(WINDOW_LEAVE, App->win);
+						break;
+					case SDL_WINDOWEVENT_FOCUS_GAINED: // Window has gained keyboard focus
+						Event::Push(WINDOW_FOCUS_GAINED, App->win);
+						break;
 					case SDL_WINDOWEVENT_FOCUS_LOST: // Window has lost keyboard focus
 						Event::Push(WINDOW_FOCUS_LEAVE, App->win);
 						break;

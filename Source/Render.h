@@ -24,6 +24,8 @@ public:
 	bool PostUpdate() override;
 	bool CleanUp() override;
 
+	void RecieveEvent(const Event& e) override;
+
 	// Getters
 	SDL_Renderer* GetSDLRenderer() const;
 	SDL_Rect GetCameraRect() const;

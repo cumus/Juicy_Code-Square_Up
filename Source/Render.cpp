@@ -156,6 +156,21 @@ bool Render::CleanUp()
 	return true;
 }
 
+void Render::RecieveEvent(const Event& e)
+{
+	switch (e.type)
+	{
+	case WINDOW_SIZE_CHANGED:
+	{
+		cam.w = float(e.data1.AsInt());
+		cam.h = float(e.data2.AsInt());
+		break;
+	}
+	default:
+		break;
+	}
+}
+
 SDL_Renderer* Render::GetSDLRenderer() const
 {
 	return renderer;

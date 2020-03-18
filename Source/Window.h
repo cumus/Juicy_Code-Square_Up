@@ -2,6 +2,9 @@
 #define __WINDOW_H__
 
 #include "Module.h"
+
+#include "SDL/include/SDL_rect.h"
+
 #include <string>
 
 struct SDL_Window;
@@ -18,7 +21,10 @@ public:
 	void SaveConfig() const override;
 
 	bool Init() override;
+	bool Update() override;
 	bool CleanUp() override;
+
+	void RecieveEvent(const Event& e) override;
 
 	void SetTitle(const char* new_title);
 	SDL_Window* GetWindow() const;
@@ -32,13 +38,32 @@ private:
 private:
 
 	std::string	title;
+	SDL_Rect rect = { -1, -1, 1080, 720 };
 
-	int width = 1080;
-	int height = 720;
-	bool fullscreen = false;
-	bool borderless = false;
-	bool resizable = true;
-	bool fullscreen_window = false;
+	int display_index = -1;
+
+	bool showing = true;
+	bool has_mouse_focus = false;
+	bool has_keyboard_focus = false;
+
+	// Flags
+	bool fullscreen			= false;
+	bool fullscreen_desktop = false;
+
+	bool borderless			= false;
+	bool resizable			= true;
+
+	bool minimized			= false;
+	bool maximized			= false;
+
+	bool input_grabbed		= false;
+	bool input_focus		= false;
+	bool mouse_focus		= false;
+
+	bool high_dpi			= true;
+	bool mouse_capture		= false;
+	bool always_on_top		= false;
+	bool skip_taskbar		= false;
 };
 
 #endif // __WINDOW_H__

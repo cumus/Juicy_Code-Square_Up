@@ -273,7 +273,7 @@ void Application::SaveConfig() const
 {
 	// Save App config
 	pugi::xml_node config = files.ConfigNode();
-	pugi::xml_node app_config = config.append_child("app");
+	pugi::xml_node app_config = config.child("app");
 	app_config.attribute("title").set_value(title);
 	app_config.attribute("organization").set_value(organization);
 
