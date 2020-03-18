@@ -100,6 +100,9 @@
     <ClCompile Include="UI_ButtonImage.cpp">
       <Filter>Source\Modules\Editor</Filter>
     </ClCompile>
+    <ClCompile Include="Behaviour.cpp">
+      <Filter>Source\Gameobjects\Components</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="PugiXml\src\pugiconfig.hpp">
@@ -236,6 +239,9 @@
     </ClInclude>
     <ClInclude Include="UI_ButtonImage.h">
       <Filter>Source\Modules\Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="Behaviour.h">
+      <Filter>Source\Gameobjects\Components</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

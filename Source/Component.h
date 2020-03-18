@@ -7,7 +7,11 @@ enum ComponentType
 {
 	COMP_NONE,
 	TRANSFORM,
-	SPRITE
+	SPRITE,
+	BEHAVIOUR,
+	B_MOVABLE,
+	B_BUILDING,
+	B_UNIT
 };
 
 class Transform;

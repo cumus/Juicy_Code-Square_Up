@@ -9,9 +9,10 @@
 #include "TimeManager.h"
 #include "TextureManager.h"
 #include "Sprite.h"
-#include "UI_Image.h"
+#include "Behaviour.h"
 #include "Defs.h"
 #include "Log.h"
+
 
 #include "SDL/include/SDL_scancode.h"
 #include "optick-1.3.0.0/include/optick.h"
@@ -168,10 +169,14 @@ bool Scene::LoadTestScene()
 		Sprite* s1 = new Sprite(go1);
 		s1->tex_id = id_mouse_tex;
 		s1->section = { 0, 0, 64, 64 };
-
+		
 		Sprite* s2 = new Sprite(go2);
 		s2->tex_id = id_mouse_tex;
 		s2->section = { 64, 0, 64, 64 };
+
+		B_Unit* b1 = new B_Unit(go1);
+		
+		B_Unit* b2 = new B_Unit(go2);
 	}
 
 	return ret;
