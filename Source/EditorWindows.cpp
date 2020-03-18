@@ -6,6 +6,7 @@
 #include "UI_Image.h"
 #include "UI_Button.h"
 #include "UI_Text.h"
+#include "UI_TextButton.h"
 
 #include "optick-1.3.0.0/include/optick.h"
 
@@ -246,31 +247,37 @@ void ConfigWindow::RecieveEvent(const Event& e)
 		{
 		case HOVER_IN:
 		{
-			elements[e.data1.AsInt()]->ToUiButton()->color = { 255, 0, 0, 255 };
+			// elements[e.data1.AsInt()]->ToUiButton()->color = { 255, 0, 0, 255 };
+			elements[e.data1.AsInt()]->ToUiTextButton()->color = { 255, 0, 0, 255 };
 
 			break;
 		}
 		case HOVER_OUT:
 		{
-			elements[e.data1.AsInt()]->ToUiButton()->color = { 0, 0, 0, 255 };
+			// elements[e.data1.AsInt()]->ToUiButton()->color = { 0, 0, 0, 255 };
+			elements[e.data1.AsInt()]->ToUiTextButton()->color = { 0, 0, 0, 255 };
 
 			break;
 		}
 		case MOUSE_DOWN:
 		{
-			elements[e.data1.AsInt()]->ToUiButton()->color = { 0, 255, 0, 255 };
+			// elements[e.data1.AsInt()]->ToUiButton()->color = { 0, 255, 0, 255 };
+			elements[e.data1.AsInt()]->ToUiTextButton()->color = { 0, 255, 0, 255 };
 
 			break;
 		}
 		case MOUSE_REPEAT:
 		{
-			elements[e.data1.AsInt()]->ToUiButton()->color = { 0, 255, 255, 255 };
+			// elements[e.data1.AsInt()]->ToUiButton()->color = { 0, 255, 255, 255 };
+			elements[e.data1.AsInt()]->ToUiTextButton()->color = { 0, 255, 255, 255 };
 
 			break;
 		}
 		case MOUSE_UP:
 		{
-			elements[e.data1.AsInt()]->ToUiButton()->color = { 255, 255, 0, 255 };
+			// elements[e.data1.AsInt()]->ToUiButton()->color = { 255, 255, 0, 255 };
+			elements[e.data1.AsInt()]->ToUiTextButton()->color = { 255, 255, 0, 255 };
+
 			Event::Push(REQUEST_QUIT, App);
 			break;
 		}
@@ -286,11 +293,15 @@ bool ConfigWindow::Init()
 	int tex_id = App->tex.Load("textures/background.png");
 
 	if (tex_id >= 0)
-		elements.push_back(new UI_Image(this, { 0.1f, 0.1f, 0.8f, 0.5f }, tex_id));
+		elements.push_back(new UI_Image(this, { 0.5f, 0.4f, 0.4f, 0.5f }, tex_id));
+	
+	// elements.push_back(new UI_Button(this, { 0.25f, 0.6f, 0.5f, 0.25f }));
 
-	elements.push_back(new UI_Button(this, { 0.25f, 0.6f, 0.5f, 0.25f }));
+	// elements.push_back(new UI_Button(this, { 0.0f, 0.0f, 0.5f, 0.25f }));
 
-	elements.push_back(new UI_Text(this, { 0.25f, 0.58f,  0.45f, 0.25f }, 1, "Hello"));
+	// elements.push_back(new UI_Text(this, { 0.25f, 0.58f,  0.45f, 0.25f }, 1, "Hello"));
+
+	elements.push_back(new UI_TextButton(this, { 0.0f, 0.0f, 0.5f, 0.25f }, 1, "Press Here"));
 
 	return !elements.empty();
 }

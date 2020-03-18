@@ -18,6 +18,7 @@ class EditorWindow;
 class UI_Button;
 class UI_Image;
 class UI_Text;
+class UI_TextButton;
 
 class UI_Element : public EventListener
 {
@@ -30,6 +31,7 @@ public:
 	virtual UI_Button* ToUiButton();
 	virtual UI_Image* ToUiImage();
 	virtual UI_Text* ToUiText();
+	virtual UI_TextButton* ToUiTextButton();
 
 	RectF GetTargetNormRect() const;
 	SDL_Rect GetTargetRect() const;

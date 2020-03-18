@@ -30,6 +30,11 @@ UI_Text* UI_Element::ToUiText()
 	return nullptr;
 }
 
+UI_TextButton* UI_Element::ToUiTextButton()
+{
+	return nullptr;
+}
+
 RectF UI_Element::GetTargetNormRect() const
 {
 	RectF ret;
