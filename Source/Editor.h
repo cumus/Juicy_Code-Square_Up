@@ -42,6 +42,7 @@ public:
 private:
 
 	bool hide_windows = false;
+	bool sizing = false;
 	int editing_window = -1;
 	unsigned int mouse_over_windows = 0u;
 

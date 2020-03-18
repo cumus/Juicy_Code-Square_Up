@@ -34,74 +34,78 @@ void EditorWindow::CleanUp()
 	elements.clear();
 }
 
-bool EditorWindow::CheckIfEditing(float mouse_x, float mouse_y, KeyState mouse_left_button)
+const WindowState EditorWindow::Update(float mouse_x, float mouse_y, KeyState mouse_left_button, bool sizing)
 {
-	if (!dragging)
+	if (sizing)
 	{
-		// Check mouse inside rect with margin
-		if (JMath::PointInsideRect(mouse_x, mouse_y, { rect.x - margin,  rect.y - margin,  rect.x + rect.w + margin, rect.y + rect.h + margin }))
+		// Check if user is editing window size
+		if (!state.dragging)
 		{
-			// Clicking inside window
-			if (JMath::PointInsideRect(mouse_x, mouse_y, GetBorderN_Norm()))
+			// Check mouse inside rect with margin
+			if (JMath::PointInsideRect(mouse_x, mouse_y, { rect.x - margin,  rect.y - margin,  rect.x + rect.w + margin, rect.y + rect.h + margin }))
 			{
-				if (JMath::PointInsideRect(mouse_x, mouse_y, GetBorderW_Norm())) hovering = CORNER_NW;
-				else if (JMath::PointInsideRect(mouse_x, mouse_y, GetBorderE_Norm())) hovering = CORNER_NE;
-				else hovering = SIDE_N;
-			}
-			else if (JMath::PointInsideRect(mouse_x, mouse_y, GetBorderS_Norm()))
-			{
-				if (JMath::PointInsideRect(mouse_x, mouse_y, GetBorderW_Norm())) hovering = CORNER_SW;
-				else if (JMath::PointInsideRect(mouse_x, mouse_y, GetBorderE_Norm())) hovering = CORNER_SE;
-				else hovering = SIDE_S;
-			}
-			else if (JMath::PointInsideRect(mouse_x, mouse_y, GetBorderW_Norm())) hovering = SIDE_W;
-			else if (JMath::PointInsideRect(mouse_x, mouse_y, GetBorderE_Norm())) hovering = SIDE_E;
+				state.mouse_inside = true;
 
-			if (hovering != SIDE_NONE && mouse_left_button == KEY_DOWN)
-				dragging = true;
+				// Check mouse hovering side
+				if (JMath::PointInsideRect(mouse_x, mouse_y, GetBorderN_Norm()))
+				{
+					if (JMath::PointInsideRect(mouse_x, mouse_y, GetBorderW_Norm())) state.hovering = CORNER_NW;
+					else if (JMath::PointInsideRect(mouse_x, mouse_y, GetBorderE_Norm())) state.hovering = CORNER_NE;
+					else state.hovering = SIDE_N;
+				}
+				else if (JMath::PointInsideRect(mouse_x, mouse_y, GetBorderS_Norm()))
+				{
+					if (JMath::PointInsideRect(mouse_x, mouse_y, GetBorderW_Norm())) state.hovering = CORNER_SW;
+					else if (JMath::PointInsideRect(mouse_x, mouse_y, GetBorderE_Norm())) state.hovering = CORNER_SE;
+					else state.hovering = SIDE_S;
+				}
+				else if (JMath::PointInsideRect(mouse_x, mouse_y, GetBorderW_Norm())) state.hovering = SIDE_W;
+				else if (JMath::PointInsideRect(mouse_x, mouse_y, GetBorderE_Norm())) state.hovering = SIDE_E;
+				else state.hovering = INSIDE;
+
+				if (state.hovering > OUTSIDE && mouse_left_button == KEY_DOWN)
+						state.dragging = true;
+			}
+			else
+			{
+				state.mouse_inside = false;
+				state.hovering = OUTSIDE;
+			}
+		}
+		else if (mouse_left_button != KEY_REPEAT)
+		{
+			state.dragging = false;
+			state.hovering = OUTSIDE;
 		}
 		else
-			hovering = SIDE_NONE;
-	}
-	else
-	{
-		// Editing window sizes
-		switch (hovering)
 		{
-		case SIDE_N: MouseDrag_N(mouse_x, mouse_y); break;
-		case SIDE_W: MouseDrag_W(mouse_x, mouse_y); break;
-		case SIDE_E: MouseDrag_E(mouse_x, mouse_y); break;
-		case SIDE_S: MouseDrag_S(mouse_x, mouse_y); break;
-		case CORNER_NW: MouseDrag_N(mouse_x, mouse_y); MouseDrag_W(mouse_x, mouse_y); break;
-		case CORNER_NE:MouseDrag_N(mouse_x, mouse_y); MouseDrag_E(mouse_x, mouse_y); break;
-		case CORNER_SW:MouseDrag_S(mouse_x, mouse_y); MouseDrag_W(mouse_x, mouse_y); break;
-		case CORNER_SE:MouseDrag_S(mouse_x, mouse_y); MouseDrag_E(mouse_x, mouse_y); break;
-		default: break;
+			// Editing window sizes
+			switch (state.hovering)
+			{
+			case SIDE_N: MouseDrag_N(mouse_x, mouse_y); break;
+			case SIDE_W: MouseDrag_W(mouse_x, mouse_y); break;
+			case SIDE_E: MouseDrag_E(mouse_x, mouse_y); break;
+			case SIDE_S: MouseDrag_S(mouse_x, mouse_y); break;
+			case CORNER_NW: MouseDrag_N(mouse_x, mouse_y); MouseDrag_W(mouse_x, mouse_y); break;
+			case CORNER_NE: MouseDrag_N(mouse_x, mouse_y); MouseDrag_E(mouse_x, mouse_y); break;
+			case CORNER_SW: MouseDrag_S(mouse_x, mouse_y); MouseDrag_W(mouse_x, mouse_y); break;
+			case CORNER_SE: MouseDrag_S(mouse_x, mouse_y); MouseDrag_E(mouse_x, mouse_y); break;
+			}
 		}
-
-		if (mouse_left_button != KEY_REPEAT)
-			dragging = false;
 	}
-
-	return dragging;
-}
-
-bool EditorWindow::CheckMouse(float mouse_x, float mouse_y, KeyState mouse_left_button)
-{
-	if (mouse_x >= rect.x && mouse_x <= rect.x + rect.w
-		&& mouse_y >= rect.y && mouse_y <= rect.y + rect.h)
+	else if (JMath::PointInsideRect(mouse_x, mouse_y, rect))
 	{
-		if (!mouse_inside)
+		// Mouse is inside window
+		if (!state.mouse_inside)
 		{
-			mouse_inside = true;
+			state.mouse_inside = true;
 			Event::Push(HOVER_IN, this);
 		}
-		// Mouse Click content
 
+		// Iterate window's UI_Elements. Call all given events
 		int id = 0;
-
 		for (std::vector<UI_Element*>::iterator it = elements.begin(); it != elements.end(); ++it)
-		{			
+		{
 			if (JMath::PointInsideRect(mouse_x, mouse_y, (*it)->GetTargetNormRect()))
 			{
 				if (!(*it)->mouse_inside)
@@ -118,7 +122,7 @@ bool EditorWindow::CheckMouse(float mouse_x, float mouse_y, KeyState mouse_left_
 				else if (mouse_left_button == KEY_UP)
 					Event::Push(MOUSE_UP, this, id);
 			}
-			else if((*it)->mouse_inside)
+			else if ((*it)->mouse_inside)
 			{
 				Event::Push(HOVER_OUT, this, id);
 				(*it)->mouse_inside = false;
@@ -127,14 +131,15 @@ bool EditorWindow::CheckMouse(float mouse_x, float mouse_y, KeyState mouse_left_
 			++id;
 		}
 	}
-	else
+	else if (state.mouse_inside)
 	{
-		mouse_inside = false;
+		state.mouse_inside = false;
+		Event::Push(HOVER_OUT, this);
 	}
 
-	color.a = (mouse_inside ? 255 : 220);
+	_Update();
 
-	return mouse_inside;
+	return state;
 }
 
 void EditorWindow::Draw(bool draw_border) const
@@ -153,10 +158,10 @@ void EditorWindow::Draw(bool draw_border) const
 
 void EditorWindow::DrawBorders() const
 {
-	App->render->DrawQuadNormCoords(GetBorderN_Norm(), { 150, (hovering == SIDE_N || hovering == CORNER_NW || hovering == CORNER_NE ? 150u : 0), 0, 200 });
-	App->render->DrawQuadNormCoords(GetBorderW_Norm(), { 150, (hovering == SIDE_W || hovering == CORNER_NW || hovering == CORNER_SW ? 150u : 0), 0, 200 });
-	App->render->DrawQuadNormCoords(GetBorderE_Norm(), { 150, (hovering == SIDE_E || hovering == CORNER_SE || hovering == CORNER_NE ? 150u : 0), 0, 200 });
-	App->render->DrawQuadNormCoords(GetBorderS_Norm(), { 150, (hovering == SIDE_S || hovering == CORNER_SE || hovering == CORNER_SW ? 150u : 0), 0, 200 });
+	App->render->DrawQuadNormCoords(GetBorderN_Norm(), { 150, (state.hovering == SIDE_N || state.hovering == CORNER_NW || state.hovering == CORNER_NE ? 150u : 0), 0, 200 });
+	App->render->DrawQuadNormCoords(GetBorderW_Norm(), { 150, (state.hovering == SIDE_W || state.hovering == CORNER_NW || state.hovering == CORNER_SW ? 150u : 0), 0, 200 });
+	App->render->DrawQuadNormCoords(GetBorderE_Norm(), { 150, (state.hovering == SIDE_E || state.hovering == CORNER_SE || state.hovering == CORNER_NE ? 150u : 0), 0, 200 });
+	App->render->DrawQuadNormCoords(GetBorderS_Norm(), { 150, (state.hovering == SIDE_S || state.hovering == CORNER_SE || state.hovering == CORNER_SW ? 150u : 0), 0, 200 });
 }
 
 RectF EditorWindow::GetBorderN_Norm() const
@@ -288,4 +293,9 @@ bool ConfigWindow::Init()
 	elements.push_back(new UI_Text(this, { 0.25f, 0.58f,  0.45f, 0.25f }, 1, "Hello"));
 
 	return !elements.empty();
+}
+
+void ConfigWindow::_Update()
+{
+	color.a = (state.mouse_inside ? 255 : 220);
 }

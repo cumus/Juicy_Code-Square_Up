@@ -42,56 +42,50 @@ bool Editor::Start()
 
 bool Editor::Update()
 {
-	mouse_over_windows = 0u;
 	KeyState mouse_left_button = App->input->GetMouseButtonDown(0);
-	bool sizing = (App->input->GetKey(SDL_SCANCODE_LCTRL) == KEY_REPEAT);
+	mouse_over_windows = 0u;
+	sizing = App->input->GetKey(SDL_SCANCODE_LCTRL) == KEY_REPEAT;
 
 	if (!hide_windows)
 	{
+		// Get mouse position
 		int x, y;
 		App->input->GetMousePosition(x, y);
 		RectF cam = App->render->GetCameraRectF();
 		float mouse_x = float(x) / cam.w;
 		float mouse_y = float(y) / cam.h;
 
-		if (editing_window < 0)
+		if (sizing)
 		{
-			int count = 0;
-			for (std::vector<EditorWindow*>::const_iterator it = windows.begin(); it != windows.end(); ++it)
+			if (editing_window < 0)
 			{
-				if ((*it)->CheckIfEditing(mouse_x, mouse_y, mouse_left_button))
+				int count = 0;
+				for (std::vector<EditorWindow*>::const_iterator it = windows.begin(); it != windows.end(); ++it)
 				{
-					editing_window = count;
-					break;
-				}
+					if (((*it)->Update(mouse_x, mouse_y, mouse_left_button, sizing).dragging))
+					{
+						editing_window = count;
+						break;
+					}
 
-				++count;
+					++count;
+				}
 			}
+			else if (!windows[editing_window]->Update(mouse_x, mouse_y, mouse_left_button, sizing).dragging)
+				editing_window = -1;
 		}
-		else 
+		else
 		{
-			int count = 0;
+			editing_window = -1;
+
 			for (std::vector<EditorWindow*>::const_iterator it = windows.begin(); it != windows.end(); ++it)
-			{
-				if (count == editing_window)
-				{
-					if (!(*it)->CheckIfEditing(mouse_x, mouse_y, mouse_left_button))
-						editing_window = -1;
-				}
-				else
-					(*it)->CheckIfEditing(mouse_x, mouse_y, KEY_IDLE);
-
-				++count;
-			}
+				if ((*it)->Update(mouse_x, mouse_y, mouse_left_button, sizing).mouse_inside)
+					mouse_over_windows++;
 		}
-
-		for (std::vector<EditorWindow*>::const_iterator it = windows.begin(); it != windows.end(); ++it)
-			if ((*it)->CheckMouse(mouse_x, mouse_y, mouse_left_button))
-				mouse_over_windows++;
 	}
 
 	// Select Gameobject
-	if (mouse_left_button == KEY_DOWN && !sizing && mouse_over_windows == 0u)
+	if (mouse_left_button == KEY_DOWN && mouse_over_windows == 0u && !sizing)
 		selection = App->scene->RaycastSelect();
 
 	return true;

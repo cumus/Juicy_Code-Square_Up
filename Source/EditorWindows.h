@@ -5,9 +5,10 @@
 #include "SDL/include/SDL_rect.h"
 #include "SDL/include/SDL_pixels.h"
 
-enum Window_Sides
+enum WindowPos
 {
-	SIDE_NONE,
+	INSIDE,
+	OUTSIDE,
 	SIDE_N,
 	SIDE_W,
 	SIDE_E,
@@ -16,6 +17,13 @@ enum Window_Sides
 	CORNER_NE,
 	CORNER_SW,
 	CORNER_SE
+};
+
+struct WindowState
+{
+	bool mouse_inside = false;
+	WindowPos hovering = OUTSIDE;
+	bool dragging = false;
 };
 
 enum KeyState;
@@ -29,11 +37,9 @@ public:
 	virtual ~EditorWindow();
 
 	virtual bool Init() { return true; }
-	virtual void Update() const {}
 	virtual void CleanUp();
 
-	bool CheckIfEditing(float mouse_x, float mouse_y, KeyState mouse_left_button);
-	bool CheckMouse(float mouse_x, float mouse_y, KeyState mouse_left_button);
+	const WindowState Update(float mouse_x, float mouse_y, KeyState mouse_left_button, bool sizing);
 
 	void Draw(bool draw_border = false) const;
 	void DrawBorders() const;
@@ -45,6 +51,8 @@ public:
 
 private:
 
+	virtual void _Update() {}
+
 	inline void MouseDrag_N(float mouse_x, float mouse_y);
 	inline void MouseDrag_W(float mouse_x, float mouse_y);
 	inline void MouseDrag_E(float mouse_x, float mouse_y);
@@ -55,17 +63,13 @@ public:
 	RectF rect;
 	SDL_Color color;
 
-	bool mouse_inside = false;
-	Window_Sides hovering = SIDE_NONE;
-	bool dragging = false;
-
 	static float margin;
 	static float min_size;
 
+protected:
+
+	WindowState state;
 	std::vector<UI_Element*> elements;
-
-	int image_text_id;
-
 };
 
 class BarMenu : public EditorWindow
@@ -118,6 +122,10 @@ public:
 	void RecieveEvent(const Event& e) override;
 
 	bool Init() override;
+
+private:
+
+	void _Update() override;
 };
 
 #endif // __EDITOR_WINDOWS_H__
