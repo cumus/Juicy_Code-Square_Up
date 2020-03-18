@@ -35,9 +35,6 @@ private:
 	Map map;
 	Gameobject root;
 
-	Gameobject* go1;
-	Gameobject* go2;
-
 	float time = 0;
 	bool x_t, y_t;
 };

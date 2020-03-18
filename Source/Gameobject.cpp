@@ -1,4 +1,6 @@
 #include "Gameobject.h"
+#include "Application.h"
+#include "Editor.h"
 #include "Defs.h"
 #include "Transform.h"
 
@@ -6,12 +8,12 @@
 
 double Gameobject::go_count = 0;
 
-Gameobject::Gameobject(const char* n, Gameobject* p) : id(++go_count), name(n)
+Gameobject::Gameobject(const char* n, Gameobject* p) : id(++go_count), name(n), parent(p)
 {
 	components.push_back(transform = new Transform(this));
 
-	if (p != nullptr)
-		transform->SetParent(*p->AddNewChild(this));
+	if (parent != nullptr)
+		transform->SetParent(*parent->AddNewChild(this));
 }
 
 Gameobject::Gameobject(const Gameobject& copy) :
@@ -74,6 +76,9 @@ void Gameobject::Update()
 		{
 			if (go_id == (*it)->id)
 			{
+				if (App->editor->selection == *it)
+					App->editor->selection = nullptr;
+
 				DEL(*it);
 				childs.erase(it);
 				break;
@@ -190,7 +195,7 @@ bool Gameobject::RemoveChild(Gameobject* child)
 
 	for (std::vector<Gameobject*>::const_iterator it = childs.begin(); it != childs.end(); ++it)
 	{
-		if (id == (*it)->id)
+		if (child == *it)
 		{
 			go_to_remove.push(child->id);
 			ret = true;

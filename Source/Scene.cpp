@@ -13,11 +13,9 @@
 #include "Defs.h"
 #include "Log.h"
 
-
 #include "SDL/include/SDL_scancode.h"
 #include "optick-1.3.0.0/include/optick.h"
 
-#include <math.h>
 #include <queue>
 
 Scene::Scene() : Module("scene")
@@ -49,32 +47,8 @@ bool Scene::Update()
 		ret = map.Load("maps/level1.tmx");
 	}
 
-	if (App->input->GetKey(SDL_SCANCODE_F2) == KEY_DOWN) map.draw_walkability = !map.draw_walkability;
-
-	if (go1 != nullptr && go2 != nullptr)
-	{
-		Transform* t1 = go1->GetTransform();
-		Transform* t2 = go2->GetTransform();
-
-		if (t1 != nullptr && t2 != nullptr)
-		{
-			// Rotate go2 around go1
-			time += App->time.GetDeltaTime() * 5.00f;
-			t2->SetX(sin(time) * 2.0f);
-			t2->SetY(cos(time) * 2.0f);
-
-			// Shift acceleration
-			float moveSpeed = 4.000f * App->time.GetDeltaTime();
-			if (App->input->GetKey(SDL_SCANCODE_LSHIFT) == KEY_REPEAT)
-				moveSpeed *= 5.000f;
-
-			// Move go1
-			if (App->input->GetKey(SDL_SCANCODE_LEFT) == KEY_REPEAT)	t1->MoveX(-moveSpeed);
-			if (App->input->GetKey(SDL_SCANCODE_RIGHT) == KEY_REPEAT)	t1->MoveX(moveSpeed);
-			if (App->input->GetKey(SDL_SCANCODE_UP) == KEY_REPEAT)		t1->MoveY(-moveSpeed);
-			if (App->input->GetKey(SDL_SCANCODE_DOWN) == KEY_REPEAT)	t1->MoveY(moveSpeed);
-		}
-	}
+	if (App->input->GetKey(SDL_SCANCODE_F2) == KEY_DOWN)
+		map.draw_walkability = !map.draw_walkability;
 
 	// Swap map orientation
 	if (App->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN) Map::SwapMapType();
@@ -97,28 +71,16 @@ bool Scene::PostUpdate()
 	SDL_Rect cam_rect = App->render->GetCameraRect();
 	std::pair<int, int> map_coordinates = Map::WorldToTileBase(cam_rect.x + mouse_x, cam_rect.y + mouse_y);
 
-	// Debug gameobject transforms
-	vec go1_pos;
-	vec go2_pos;
-
-	if (go1 != nullptr && go2 != nullptr)
-	{
-		go1_pos = go1->GetTransform()->GetGlobalPosition();
-		go2_pos = go2->GetTransform()->GetGlobalPosition();
-	}
-
 	// Editor Selection
 	Gameobject* sel = App->editor->selection;
 
 	// Log onto window title
 	static char tmp_str[220];
-	sprintf_s(tmp_str, 220, "FPS: %d, Zoom: %0.2f, Mouse: %dx%d, Tile: %dx%d, g1 { %d, %d, %d }, g2 { %d, %d, %d }, Selection: %s",
+	sprintf_s(tmp_str, 220, "FPS: %d, Zoom: %0.2f, Mouse: %dx%d, Tile: %dx%d, Selection: %s",
 		App->time.GetLastFPS(),
 		App->render->GetZoom(),
 		mouse_x, mouse_y,
 		map_coordinates.first, map_coordinates.second,
-		(int)go1_pos.x, (int)go1_pos.y, (int)go1_pos.z,
-		(int)go2_pos.x, (int)go2_pos.y, (int)go2_pos.z,
 		sel != nullptr ? sel->GetName() : "none selected");
 
 	App->win->SetTitle(tmp_str);
@@ -163,8 +125,8 @@ bool Scene::LoadTestScene()
 	if (ret)
 	{
 		// Run test content
-		go1 = AddGameobject("g1 - son of root", &root);
-		go2 = AddGameobject("g2 - son of g1", go1);
+		Gameobject* go1 = AddGameobject("g1 - son of root", &root);
+		Gameobject* go2 = AddGameobject("g2 - son of g1", go1);
 
 		Sprite* s1 = new Sprite(go1);
 		s1->tex_id = id_mouse_tex;
