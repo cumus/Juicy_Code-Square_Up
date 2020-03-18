@@ -19,7 +19,7 @@ public:
 
 	void RecieveEvent(const Event& e) override;
 
-	std::string GetName() const;
+	const char* GetName() const;
 	void SetName(const char* name);
 
 	Transform* GetTransform();
@@ -29,17 +29,32 @@ public:
 
 	void AddComponent(Component* comp);
 
+	bool RemoveChild(Gameobject* child);
+	bool RemoveComponent(Component* comp);
+
+	bool Destroy();
+
+	double GetID() const;
+
+	bool operator==(Gameobject* go);
+
 private:
 
 	Transform* AddNewChild(Gameobject* child);
 
 private:
 
+	static double go_count;
+
+	double id = -1;
 	bool active = true;
 	std::string name;
 
 	std::vector<Component*> components;
 	std::vector<Gameobject*> childs;
+
+	std::queue<double> comp_to_remove;
+	std::queue<double> go_to_remove;
 
 	Gameobject* parent = nullptr;
 	Transform* transform = nullptr;

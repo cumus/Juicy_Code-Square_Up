@@ -119,7 +119,7 @@ bool Scene::PostUpdate()
 		map_coordinates.first, map_coordinates.second,
 		(int)go1_pos.x, (int)go1_pos.y, (int)go1_pos.z,
 		(int)go2_pos.x, (int)go2_pos.y, (int)go2_pos.z,
-		sel != nullptr ? sel->GetName().c_str() : "none selected");
+		sel != nullptr ? sel->GetName() : "none selected");
 
 	App->win->SetTitle(tmp_str);
 

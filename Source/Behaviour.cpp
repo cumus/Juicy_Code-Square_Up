@@ -19,6 +19,14 @@ void B_Unit::RecieveEvent(const Event& e)
 		
 		life -= damage;
 		LOG("Life after taking damage is: %d", life);
+
+		if (life <= 0)
+		{
+			if (game_object->Destroy())
+				LOG("Destroying GO: %s", game_object->GetName());
+			else
+				LOG("Error destroying GO: %s", game_object->GetName());
+		}
     break;
 	}
 	default:

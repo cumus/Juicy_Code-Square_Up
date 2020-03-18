@@ -4,10 +4,10 @@
 
 #include "optick-1.3.0.0/include/optick.h"
 
-Gameobject::Gameobject(const char* n, Gameobject* p)
-{
-	name = n;
+double Gameobject::go_count = 0;
 
+Gameobject::Gameobject(const char* n, Gameobject* p) : id(++go_count), name(n)
+{
 	components.push_back(transform = new Transform(this));
 
 	if (p != nullptr)
@@ -48,6 +48,41 @@ void Gameobject::PreUpdate()
 void Gameobject::Update()
 {
 	OPTICK_EVENT();
+
+	while (!comp_to_remove.empty())
+	{
+		double comp_id = comp_to_remove.front();
+
+		for (std::vector<Component*>::iterator it = components.begin(); it != components.end(); ++it)
+		{
+			if (comp_id == (*it)->GetID())
+			{
+				DEL(*it);
+				components.erase(it);
+				break;
+			}
+		}
+
+		comp_to_remove.pop();
+	}
+
+	while (!go_to_remove.empty())
+	{
+		double go_id = go_to_remove.front();
+
+		for (std::vector<Gameobject*>::iterator it = childs.begin(); it != childs.end(); ++it)
+		{
+			if (go_id == (*it)->id)
+			{
+				DEL(*it);
+				childs.erase(it);
+				break;
+			}
+		}
+
+		go_to_remove.pop();
+	}
+
 
 	for (std::vector<Component*>::iterator component = components.begin(); component != components.end(); ++component)
 		if ((*component)->IsActive())
@@ -104,9 +139,9 @@ void Gameobject::RecieveEvent(const Event & e)
 	}
 }
 
-std::string Gameobject::GetName() const
+const char* Gameobject::GetName() const
 {
-	return name;
+	return name.c_str();
 }
 
 Transform * Gameobject::GetTransform()
@@ -147,6 +182,55 @@ void Gameobject::AddComponent(Component* comp)
 {
 	if (comp)
 		components.push_back(comp);
+}
+
+bool Gameobject::RemoveChild(Gameobject* child)
+{
+	bool ret = false;
+
+	for (std::vector<Gameobject*>::const_iterator it = childs.begin(); it != childs.end(); ++it)
+	{
+		if (id == (*it)->id)
+		{
+			go_to_remove.push(child->id);
+			ret = true;
+			break;
+		}
+	}
+
+	return ret;
+}
+
+bool Gameobject::RemoveComponent(Component* comp)
+{
+	bool ret = false;
+
+	for (std::vector<Component*>::const_iterator it = components.begin(); it != components.end(); ++it)
+	{
+		if (comp == (*it))
+		{
+			comp_to_remove.push(comp->GetID());
+			ret = true;
+			break;
+		}
+	}
+
+	return ret;
+}
+
+bool Gameobject::Destroy()
+{
+	return parent != nullptr && parent->RemoveChild(this);
+}
+
+double Gameobject::GetID() const
+{
+	return id;
+}
+
+bool Gameobject::operator==(Gameobject* go)
+{
+	return go != nullptr && id == go->id;
 }
 
 Transform* Gameobject::AddNewChild(Gameobject * child)

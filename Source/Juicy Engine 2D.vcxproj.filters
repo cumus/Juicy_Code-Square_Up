@@ -70,9 +70,6 @@
     <ClCompile Include="EditorWindows.cpp">
       <Filter>Source\Modules\Editor</Filter>
     </ClCompile>
-    <ClCompile Include="UI_Elements.cpp">
-      <Filter>Source\Modules\Editor</Filter>
-    </ClCompile>
     <ClCompile Include="JuicyMath.cpp">
       <Filter>Source\Tools</Filter>
     </ClCompile>
@@ -85,23 +82,29 @@
     <ClCompile Include="PathfindingManager.cpp">
       <Filter>Source\Independent Managers</Filter>
     </ClCompile>
-    <ClCompile Include="UI_Image.cpp">
-      <Filter>Source\Modules\Editor</Filter>
-    </ClCompile>
-    <ClCompile Include="UI_Button.cpp">
-      <Filter>Source\Modules\Editor</Filter>
-    </ClCompile>
-    <ClCompile Include="UI_Text.cpp">
-      <Filter>Source\Modules\Editor</Filter>
-    </ClCompile>
-    <ClCompile Include="UI_TextButton.cpp">
-      <Filter>Source\Modules\Editor</Filter>
-    </ClCompile>
-    <ClCompile Include="UI_ButtonImage.cpp">
-      <Filter>Source\Modules\Editor</Filter>
-    </ClCompile>
     <ClCompile Include="Behaviour.cpp">
       <Filter>Source\Gameobjects\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="Component.cpp">
+      <Filter>Source\Gameobjects\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="UI_Button.cpp">
+      <Filter>Source\Modules\Editor\UI Elements</Filter>
+    </ClCompile>
+    <ClCompile Include="UI_ButtonImage.cpp">
+      <Filter>Source\Modules\Editor\UI Elements</Filter>
+    </ClCompile>
+    <ClCompile Include="UI_Elements.cpp">
+      <Filter>Source\Modules\Editor\UI Elements</Filter>
+    </ClCompile>
+    <ClCompile Include="UI_Image.cpp">
+      <Filter>Source\Modules\Editor\UI Elements</Filter>
+    </ClCompile>
+    <ClCompile Include="UI_Text.cpp">
+      <Filter>Source\Modules\Editor\UI Elements</Filter>
+    </ClCompile>
+    <ClCompile Include="UI_TextButton.cpp">
+      <Filter>Source\Modules\Editor\UI Elements</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -204,9 +207,6 @@
     <ClInclude Include="EditorWindows.h">
       <Filter>Source\Modules\Editor</Filter>
     </ClInclude>
-    <ClInclude Include="UI_Elements.h">
-      <Filter>Source\Modules\Editor</Filter>
-    </ClInclude>
     <ClInclude Include="JuicyMath.h">
       <Filter>Source\Tools</Filter>
     </ClInclude>
@@ -225,23 +225,26 @@
     <ClInclude Include="PathfindingManager.h">
       <Filter>Source\Independent Managers</Filter>
     </ClInclude>
-    <ClInclude Include="UI_Image.h">
-      <Filter>Source\Modules\Editor</Filter>
-    </ClInclude>
-    <ClInclude Include="UI_Button.h">
-      <Filter>Source\Modules\Editor</Filter>
-    </ClInclude>
-    <ClInclude Include="UI_Text.h">
-      <Filter>Source\Modules\Editor</Filter>
-    </ClInclude>
-    <ClInclude Include="UI_TextButton.h">
-      <Filter>Source\Modules\Editor</Filter>
-    </ClInclude>
-    <ClInclude Include="UI_ButtonImage.h">
-      <Filter>Source\Modules\Editor</Filter>
-    </ClInclude>
     <ClInclude Include="Behaviour.h">
       <Filter>Source\Gameobjects\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="UI_Button.h">
+      <Filter>Source\Modules\Editor\UI Elements</Filter>
+    </ClInclude>
+    <ClInclude Include="UI_ButtonImage.h">
+      <Filter>Source\Modules\Editor\UI Elements</Filter>
+    </ClInclude>
+    <ClInclude Include="UI_Elements.h">
+      <Filter>Source\Modules\Editor\UI Elements</Filter>
+    </ClInclude>
+    <ClInclude Include="UI_Image.h">
+      <Filter>Source\Modules\Editor\UI Elements</Filter>
+    </ClInclude>
+    <ClInclude Include="UI_Text.h">
+      <Filter>Source\Modules\Editor\UI Elements</Filter>
+    </ClInclude>
+    <ClInclude Include="UI_TextButton.h">
+      <Filter>Source\Modules\Editor\UI Elements</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -304,6 +307,9 @@
     </Filter>
     <Filter Include="Source\Data Files\x64 memleaks">
       <UniqueIdentifier>{9cfb9079-2877-48a6-85c8-bca3f4c7c09e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Modules\Editor\UI Elements">
+      <UniqueIdentifier>{10a769a3-fb2b-48e1-add3-68356f42aab6}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

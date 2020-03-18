@@ -21,7 +21,7 @@ class Component : public EventListener
 {
 public:
 
-	Component(ComponentType type, Gameobject* go) : type(type), game_object(go) {}
+	Component(ComponentType type, Gameobject* go);
 	virtual ~Component() {}
 
 	virtual void PreUpdate() {}
@@ -36,8 +36,15 @@ public:
 	ComponentType GetType() const { return type; }
 	Transform* AsTransform() const { return (Transform*)this; }
 
+	double GetID() const { return id; }
+
+	bool operator==(Component* comp);
+
 private:
 
+	static double component_count;
+
+	double id = -1;
 	bool active = true;
 	ComponentType type = COMP_NONE;
 

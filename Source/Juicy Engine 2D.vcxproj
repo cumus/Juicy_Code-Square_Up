@@ -142,6 +142,7 @@
   <ItemGroup>
     <ClCompile Include="Behaviour.cpp" />
     <ClCompile Include="Collisions.cpp" />
+    <ClCompile Include="Component.cpp" />
     <ClCompile Include="Cvar.cpp" />
     <ClCompile Include="Editor.cpp" />
     <ClCompile Include="EditorWindows.cpp" />
