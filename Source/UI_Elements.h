@@ -7,10 +7,12 @@
 enum UI_Type
 {
 	BUTTON,
+	BUTTON_IMAGE,
 	IMAGE,
 	TEXT,
 	TEXT_BUTTON,
 	SLIDER,
+
 	MAX_UI_ELEMENTS
 };
 
@@ -19,6 +21,7 @@ class UI_Button;
 class UI_Image;
 class UI_Text;
 class UI_TextButton;
+class UI_ButtonImage;
 
 class UI_Element : public EventListener
 {
@@ -32,6 +35,7 @@ public:
 	virtual UI_Image* ToUiImage();
 	virtual UI_Text* ToUiText();
 	virtual UI_TextButton* ToUiTextButton();
+	virtual UI_ButtonImage* ToUiButtonImage();
 
 	RectF GetTargetNormRect() const;
 	SDL_Rect GetTargetRect() const;

@@ -126,6 +126,14 @@ public:
 private:
 
 	void _Update() override;
+
+private:
+
+	int tex_in;
+	int tex_out;
+	int tex_down;
+	int tex_repeat;
+	int tex_up;
 };
 
 #endif // __EDITOR_WINDOWS_H__
