@@ -182,7 +182,7 @@ Gameobject * Scene::AddGameobject(const char * name, Gameobject * parent)
 	return new Gameobject(name, parent != nullptr ? parent : &root);
 }
 
-Gameobject* Scene::RaycastSelect()
+Gameobject* Scene::MouseClickSelect(int mouse_x, int mouse_y)
 {
 	Gameobject* ret = nullptr;
 	std::queue<Gameobject*> queue;
@@ -193,8 +193,6 @@ Gameobject* Scene::RaycastSelect()
 
 	if (!queue.empty())
 	{
-		int mouse_x, mouse_y;
-		App->input->GetMousePosition(mouse_x, mouse_y);
 		SDL_Rect cam_rect = App->render->GetCameraRect();
 		std::pair<float, float> map_coordinates = Map::WorldToTileBase(cam_rect.x + mouse_x, cam_rect.y + mouse_y);
 
@@ -222,6 +220,9 @@ Gameobject* Scene::RaycastSelect()
 			queue.pop();
 		}
 	}
+
+	if (ret != nullptr)
+		Event::Push(ON_SELECT, ret);
 
 	return ret;
 }

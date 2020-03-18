@@ -23,7 +23,7 @@ public:
 
 	Gameobject* AddGameobject(const char* name, Gameobject* parent = nullptr);
 
-	Gameobject* RaycastSelect();
+	Gameobject* MouseClickSelect(int mouse_x, int mouse_y);
 
 public:
 

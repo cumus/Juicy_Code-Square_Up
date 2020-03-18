@@ -42,15 +42,14 @@ bool Editor::Start()
 
 bool Editor::Update()
 {
-	KeyState mouse_left_button = App->input->GetMouseButtonDown(0);
 	mouse_over_windows = 0u;
+	int x, y;
+	App->input->GetMousePosition(x, y);
+	KeyState mouse_left_button = App->input->GetMouseButtonDown(0);
 	sizing = App->input->GetKey(SDL_SCANCODE_LCTRL) == KEY_REPEAT;
 
 	if (!hide_windows)
 	{
-		// Get mouse position
-		int x, y;
-		App->input->GetMousePosition(x, y);
 		RectF cam = App->render->GetCameraRectF();
 		float mouse_x = float(x) / cam.w;
 		float mouse_y = float(y) / cam.h;
@@ -86,7 +85,7 @@ bool Editor::Update()
 
 	// Select Gameobject
 	if (mouse_left_button == KEY_DOWN && mouse_over_windows == 0u && !sizing)
-		selection = App->scene->RaycastSelect();
+		selection = App->scene->MouseClickSelect(x, y);
 
 	return true;
 }

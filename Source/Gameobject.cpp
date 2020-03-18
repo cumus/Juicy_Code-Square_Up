@@ -73,6 +73,12 @@ void Gameobject::RecieveEvent(const Event & e)
 {
 	switch (e.type)
 	{
+	case ON_SELECT:
+	{
+		for (std::vector<Component*>::iterator component = components.begin(); component != components.end(); ++component)
+			if ((*component)->IsActive())
+				Event::Push(ON_SELECT, *component);
+	}
 	case TRANSFORM_MODIFIED:
 	{
 		for (std::vector<Component*>::iterator component = components.begin(); component != components.end(); ++component)

@@ -40,6 +40,7 @@ enum EventType
 	SET_VSYNC,
 
 	// Gameobjects
+	ON_SELECT,
 	TRANSFORM_MODIFIED,
 	PARENT_TRANSFORM_MODIFIED,
 

@@ -51,8 +51,6 @@ void Transform::SetParent(Transform& parent)
 {
 	global_parent_pos = parent.GetGlobalPosition();
 	global_parent_scale = parent.GetGlobalScale();
-	
-	parent.GetGlobalScale();
 }
 
 void Transform::SetX(float val)
