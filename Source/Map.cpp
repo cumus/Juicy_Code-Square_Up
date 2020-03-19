@@ -40,7 +40,6 @@ bool Map::Load(const char* file, float target_scale)
 	if (loaded)
 		CleanUp();
 
-	loaded = false;
 	path = file;
 
 	pugi::xml_document doc;
@@ -85,6 +84,7 @@ void Map::CleanUp()
 	tilesets.clear();
 	layers.clear();
 	obj_groups.clear();
+	loaded = false;
 }
 
 bool Map::IsValid() const
@@ -190,7 +190,8 @@ void Map::Draw() const
 					}
 				}
 			}
-			else if (draw_walkability){
+			else if (draw_walkability)
+			{
 				for (int y = up_right.second - 1; y <= down_left.second; ++y)
 				{
 					for (int x = up_left.first - 1; x <= down_right.first + 1; ++x)
@@ -290,22 +291,11 @@ bool Map::GetRectAndTexId(int tile_id, SDL_Rect& section, int& text_id) const
 
 const MapLayer& Map::GetMapWalkabilityLayer()
 {
-	//TODO: Modify to send walkability layer
-	bool ret = false;
-	std::vector<MapLayer>::iterator item;
-	item = layers.begin();
-
-	for (item; item != layers.end(); ++item)
-	{
-		if (item->GetProperty("Navigation") == 1.0f) {
-			item->drawable = false;
+	for (std::vector<MapLayer>::const_iterator item = layers.cbegin(); item != layers.cend(); ++item)
+		if (!item->drawable)
 			return *item;
-		}
 
-		
-
-	}
-	return layers.front();
+	return *layers.cbegin();
 }
 
 std::pair<int, int> Map::I_MapToWorld(int x, int y)

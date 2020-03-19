@@ -63,7 +63,7 @@ public:
 
 	std::string	name;
 	int	width, height;
-	bool drawable;
+	bool drawable = true;
 
 private:
 

@@ -56,6 +56,7 @@ MapLayer::MapLayer(const MapLayer & copy) :
 	name(copy.name),
 	width(copy.width),
 	height(copy.height),
+	drawable(copy.drawable),
 	data(copy.data),
 	properties(copy.properties)
 {}
@@ -77,7 +78,7 @@ bool MapLayer::ParseProperties(pugi::xml_node layer_properties)
 		{
 			std::pair<std::string, float> pair = { property.attribute("name").as_string(), property.attribute("value").as_float() };
 
-			if (pair.first == "Nodraw" && pair.second != 0)
+			if (pair.first == "Navigation" && pair.second == 1.0f)
 				drawable = false;
 
 			properties.push_back(pair);
