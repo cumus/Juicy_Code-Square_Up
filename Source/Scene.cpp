@@ -55,7 +55,27 @@ bool Scene::Update()
 	if (App->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN) Map::SwapMapType();
 
 	// Update gameobject hierarchy
+	
 	root.Update();
+
+	if (App->input->GetKey(SDL_SCANCODE_3) == KEY_DOWN)
+	{
+		int x, y;
+		App->input->GetMousePosition(x, y);
+		
+		RectF cam = App->render->GetCameraRectF();
+
+		std::pair<int, int> position = Map::WorldToTileBase(float(x) + cam.x, float(y) + cam.y);
+
+		Gameobject* audio_go = AddGameobject("AudioSource - son of root", &root);
+		audio_go->GetTransform()->SetLocalPos({ float(position.first), float(position.second), 0.0f });
+
+		new AudioSource(audio_go, App->audio->LoadFx("audio/Effects/Buildings/Select/select.wav"));
+
+		Sprite* s3 = new Sprite(audio_go);
+		s3->tex_id = id_mouse_tex;
+		s3->section = { 128, 0, 64, 64 };
+	}
 
 	return ret;
 }
@@ -142,14 +162,7 @@ bool Scene::LoadTestScene()
 		B_Unit* b2 = new B_Unit(go2);
 
 
-		audio_go = AddGameobject("AudioSource - son of root", &root);
-		audio_go->GetTransform()->SetLocalPos({5.0f, 5.0f, 0.0f});
 
-		AudioSource* audio_component = new AudioSource(audio_go, App->audio->LoadFx("audio/Effects/Buildings/Select/select.wav"));
-
-		Sprite* s3 = new Sprite(audio_go);
-		s3->tex_id = id_mouse_tex;
-		s3->section = { 128, 0, 64, 64 };
 	}
 
 	return ret;

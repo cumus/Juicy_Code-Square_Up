@@ -30,8 +30,6 @@ public:
 	int id_mouse_tex;
 	int image_text_id;
 
-	Gameobject* audio_go = nullptr;
-
 private:
 
 	Map map;
