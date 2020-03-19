@@ -11,7 +11,9 @@ enum ComponentType
 	BEHAVIOUR,
 	B_MOVABLE,
 	B_BUILDING,
-	B_UNIT
+	B_UNIT,
+	AUDIO_SOURCE,
+	AS_OBJECT
 };
 
 class Transform;

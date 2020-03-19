@@ -3,6 +3,7 @@
 
 #include <vector>
 #include "Module.h"
+#include "Point.h"
 
 #define DEFAULT_MUSIC_FADE_TIME 2.0f
 
@@ -27,6 +28,9 @@ public:
 
 	// Load a WAV in memory
 	unsigned int LoadFx(const char* path);
+
+	// unload a wav from memory
+	bool UnloadFx(unsigned int id);
 
 	// Play a previously loaded WAV
 	bool PlayFx(unsigned int fx, int repeat = 0);

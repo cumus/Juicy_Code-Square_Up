@@ -10,6 +10,7 @@
 #include "TextureManager.h"
 #include "Sprite.h"
 #include "Behaviour.h"
+#include "AudioSource.h"
 #include "Defs.h"
 #include "Log.h"
 
@@ -53,6 +54,17 @@ bool Scene::Update()
 	// Swap map orientation
 	if (App->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN) Map::SwapMapType();
 
+	if (App->input->GetKey(SDL_SCANCODE_3) == KEY_DOWN)
+	{
+		//int mouse_x, mouse_y;
+		//App->input->GetMousePosition(mouse_x, mouse_y);
+		Gameobject* AudioSource = AddAudioSource("AudioSource - son of root", &root);
+		AS_Object* as = new AS_Object(AudioSource);
+		
+		Sprite* s3 = new Sprite(AudioSource);
+		s3->tex_id = id_mouse_tex;
+		s3->section = { 128, 0, 64, 64 };
+	}
 	// Update gameobject hierarchy
 	root.Update();
 
@@ -192,4 +204,9 @@ Gameobject* Scene::MouseClickSelect(int mouse_x, int mouse_y)
 		Event::Push(ON_SELECT, ret);
 
 	return ret;
+}
+
+Gameobject* Scene::AddAudioSource(const char* name, Gameobject* parent)
+{
+	return new Gameobject(name, parent != nullptr ? parent : &root);
 }

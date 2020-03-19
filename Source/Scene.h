@@ -22,6 +22,7 @@ public:
 	bool LoadTestScene();
 
 	Gameobject* AddGameobject(const char* name, Gameobject* parent = nullptr);
+	Gameobject* AddAudioSource(const char* name, Gameobject* parent = nullptr);
 
 	Gameobject* MouseClickSelect(int mouse_x, int mouse_y);
 

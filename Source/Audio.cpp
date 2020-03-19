@@ -95,6 +95,8 @@ bool Audio::Init()
 	else
 		LOG("SDL_AUDIO could not initialize! SDL_Error: %s\n", SDL_GetError());
 
+	//Mix_AllocateChannels(360);
+	
 	return ret;
 }
 
@@ -194,6 +196,25 @@ unsigned int Audio::LoadFx(const char* path)
 	else
 	{
 		LOG("Cannot load wav %s. Mix_GetError(): %s", audio_path.c_str(), Mix_GetError());
+	}
+
+	return ret;
+}
+
+bool Audio::UnloadFx(unsigned int id) 
+{
+	if (!active)
+		return true;
+
+	bool ret = false;
+
+	Mix_Chunk* chunk = NULL;
+
+	if (chunk != nullptr)
+	{
+		Mix_FreeChunk(chunk);
+		chunk = nullptr;
+		ret = true;
 	}
 
 	return ret;

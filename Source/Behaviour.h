@@ -3,7 +3,7 @@
 
 #include "Component.h"
 
-class Gameogject;
+class Gameobject;
 
 class Behaviour : public Component 
 {
