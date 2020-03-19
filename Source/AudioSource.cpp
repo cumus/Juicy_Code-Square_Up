@@ -20,7 +20,7 @@ AudioSource::~AudioSource()
 
 bool AudioSource::Play() const
 {
-	return false;
+	return fx_id >= 0 && App->audio->PlayFx(fx_id);
 }
 
 void AudioSource::RecieveEvent(const Event& e)
@@ -29,9 +29,7 @@ void AudioSource::RecieveEvent(const Event& e)
 	{
 	case ON_SELECT:
 	{
-		if (fx_id >= 0)
-			App->audio->PlayFx(fx_id);
-
+		Play();
 		LOG("BEEP!");
 		break;
 	}
