@@ -41,6 +41,8 @@ public:
 	void GetMouseMotion(int& x, int& y) const;
 	int GetMouseWheelMotion() const;
 
+	char* GetEditableText() const;
+
 private:
 
 	KeyState keyboard[MAX_KEYS];
@@ -51,6 +53,8 @@ private:
 	int mouse_x = 0;
 	int mouse_y = 0;
 	int mouse_wheel_motion = 0;
+
+	char* get_text;
 };
 
 #endif // __INPUT_H__

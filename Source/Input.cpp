@@ -164,6 +164,10 @@ bool Input::PreUpdate()
 				mouse_wheel_motion = e.wheel.y;
 				break;
 			break;
+
+			/*case SDL_TEXTINPUT:
+				get_text += (e.text.text);
+			break;*/
 		}
 	}
 
@@ -205,4 +209,9 @@ void Input::GetMouseMotion(int& x, int& y) const
 int Input::GetMouseWheelMotion() const
 {
 	return mouse_wheel_motion;
+}
+
+char* Input::GetEditableText() const
+{
+	return get_text;
 }

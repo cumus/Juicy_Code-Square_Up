@@ -109,6 +109,9 @@
     <ClCompile Include="AudioSource.cpp">
       <Filter>Source\Gameobjects\Components</Filter>
     </ClCompile>
+    <ClCompile Include="Console.cpp">
+      <Filter>Source\Modules\Editor</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="PugiXml\src\pugiconfig.hpp">
@@ -251,6 +254,9 @@
     </ClInclude>
     <ClInclude Include="AudioSource.h">
       <Filter>Source\Gameobjects\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Console.h">
+      <Filter>Source\Modules\Editor</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

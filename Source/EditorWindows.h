@@ -129,6 +129,7 @@ private:
 
 private:
 
+	int tex_id;
 	int tex_in;
 	int tex_out;
 	int tex_down;

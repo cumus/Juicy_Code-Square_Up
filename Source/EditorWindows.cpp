@@ -296,8 +296,7 @@ void ConfigWindow::RecieveEvent(const Event& e)
 
 bool ConfigWindow::Init()
 {
-	int tex_id = App->tex.Load("textures/background.png");
-
+	tex_id = App->tex.Load("textures/background.png");
 	tex_in = App->tex.Load("textures/joseph.png");
 	tex_out = App->tex.Load("textures/goku.png");
 	tex_down = App->tex.Load("textures/fullmetal.png");
@@ -306,8 +305,8 @@ bool ConfigWindow::Init()
 
 	if (tex_id >= 0)
 		// elements.push_back(new UI_Image(this, { 0.5f, 0.4f, 0.4f, 0.5f }, tex_id));
-	
-	elements.push_back(new UI_ButtonImage(this, { 0.25f, 0.6f, 0.5f, 0.25f }, tex_id));
+
+		elements.push_back(new UI_ButtonImage(this, { 0.25f, 0.6f, 0.5f, 0.25f }, tex_out));
 
 	// elements.push_back(new UI_Button(this, { 0.0f, 0.0f, 0.5f, 0.25f }));
 
