@@ -24,6 +24,7 @@ public:
 	float	GetLocalY() const { return pos.y; }
 	float	GetLocalZ() const { return pos.z; }
 
+	void SetLocalPos(const vec& p);
 	void SetX(float val);
 	void SetY(float val);
 	void SetZ(float val);

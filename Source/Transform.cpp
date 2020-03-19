@@ -53,6 +53,15 @@ void Transform::SetParent(Transform& parent)
 	global_parent_scale = parent.GetGlobalScale();
 }
 
+void Transform::SetLocalPos(const vec& p)
+{
+	if (pos != p)
+	{
+		pos = p;
+		modified = true;
+	}
+}
+
 void Transform::SetX(float val)
 {
 	if (pos.x != val)

@@ -193,13 +193,17 @@ bool Gameobject::RemoveChild(Gameobject* child)
 {
 	bool ret = false;
 
-	for (std::vector<Gameobject*>::const_iterator it = childs.begin(); it != childs.end(); ++it)
+	if (child != nullptr)
 	{
-		if (child == *it)
+		for (std::vector<Gameobject*>::const_iterator it = childs.begin(); it != childs.end(); ++it)
 		{
-			go_to_remove.push(child->id);
-			ret = true;
-			break;
+			if (child == *it)
+			{
+				Event::Push(ON_DESTROY, child);
+				go_to_remove.push(child->id);
+				ret = true;
+				break;
+			}
 		}
 	}
 
@@ -210,13 +214,17 @@ bool Gameobject::RemoveComponent(Component* comp)
 {
 	bool ret = false;
 
-	for (std::vector<Component*>::const_iterator it = components.begin(); it != components.end(); ++it)
+	if (comp != nullptr)
 	{
-		if (comp == (*it))
+		for (std::vector<Component*>::const_iterator it = components.begin(); it != components.end(); ++it)
 		{
-			comp_to_remove.push(comp->GetID());
-			ret = true;
-			break;
+			if (comp == (*it))
+			{
+				Event::Push(ON_DESTROY, comp);
+				comp_to_remove.push(comp->GetID());
+				ret = true;
+				break;
+			}
 		}
 	}
 

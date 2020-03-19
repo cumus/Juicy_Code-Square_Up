@@ -54,17 +54,6 @@ bool Scene::Update()
 	// Swap map orientation
 	if (App->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN) Map::SwapMapType();
 
-	if (App->input->GetKey(SDL_SCANCODE_3) == KEY_DOWN)
-	{
-		//int mouse_x, mouse_y;
-		//App->input->GetMousePosition(mouse_x, mouse_y);
-		Gameobject* AudioSource = AddAudioSource("AudioSource - son of root", &root);
-		AS_Object* as = new AS_Object(AudioSource);
-		
-		Sprite* s3 = new Sprite(AudioSource);
-		s3->tex_id = id_mouse_tex;
-		s3->section = { 128, 0, 64, 64 };
-	}
 	// Update gameobject hierarchy
 	root.Update();
 
@@ -148,9 +137,19 @@ bool Scene::LoadTestScene()
 		s2->tex_id = id_mouse_tex;
 		s2->section = { 64, 0, 64, 64 };
 
-		B_Unit* b1 = new B_Unit(go1);
+		//B_Unit* b1 = new B_Unit(go1);
 		
 		B_Unit* b2 = new B_Unit(go2);
+
+
+		audio_go = AddGameobject("AudioSource - son of root", &root);
+		audio_go->GetTransform()->SetLocalPos({5.0f, 5.0f, 0.0f});
+
+		AudioSource* audio_component = new AudioSource(audio_go, App->audio->LoadFx("audio/Effects/Buildings/Select/select.wav"));
+
+		Sprite* s3 = new Sprite(audio_go);
+		s3->tex_id = id_mouse_tex;
+		s3->section = { 128, 0, 64, 64 };
 	}
 
 	return ret;
@@ -204,9 +203,4 @@ Gameobject* Scene::MouseClickSelect(int mouse_x, int mouse_y)
 		Event::Push(ON_SELECT, ret);
 
 	return ret;
-}
-
-Gameobject* Scene::AddAudioSource(const char* name, Gameobject* parent)
-{
-	return new Gameobject(name, parent != nullptr ? parent : &root);
 }

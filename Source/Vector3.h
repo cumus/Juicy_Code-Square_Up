@@ -6,7 +6,7 @@ class Vector3
 {
 public:
 
-	Vector3() : x(0), y(0), z(0) {}
+	Vector3(TYPE _x = 0, TYPE _y = 0, TYPE _z = 0) : x(_x), y(_y), z(_z) {}
 
 	TYPE x, y, z;
 

@@ -22,7 +22,6 @@ public:
 	bool LoadTestScene();
 
 	Gameobject* AddGameobject(const char* name, Gameobject* parent = nullptr);
-	Gameobject* AddAudioSource(const char* name, Gameobject* parent = nullptr);
 
 	Gameobject* MouseClickSelect(int mouse_x, int mouse_y);
 
@@ -30,6 +29,8 @@ public:
 
 	int id_mouse_tex;
 	int image_text_id;
+
+	Gameobject* audio_go = nullptr;
 
 private:
 

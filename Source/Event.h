@@ -41,6 +41,7 @@ enum EventType
 
 	// Gameobjects
 	ON_SELECT,
+	ON_DESTROY,
 	TRANSFORM_MODIFIED,
 	PARENT_TRANSFORM_MODIFIED,
 

@@ -11,23 +11,16 @@ class AudioSource : public Component
 {
 public:
 
-	AudioSource(Gameobject* go, ComponentType type = AUDIO_SOURCE);
+	AudioSource(Gameobject* go, int id = -1);
 	~AudioSource();
 
+	bool Play() const;
+
+	void RecieveEvent(const Event& e) override;
+
 public: 
-	unsigned int test_sound = 0u;
-};
 
-class AS_Object : public AudioSource
-{
-public:
-	AS_Object(Gameobject*go, ComponentType type=AS_OBJECT):AudioSource(go, type){}
-	virtual ~AS_Object() {}
-
-	void RecieveEvent(const Event& e)override;
-
-public:
-	vec pos;
+	int fx_id;
 };
 
 
