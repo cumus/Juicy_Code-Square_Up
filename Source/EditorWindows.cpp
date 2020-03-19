@@ -101,7 +101,7 @@ const WindowState EditorWindow::Update(float mouse_x, float mouse_y, KeyState mo
 		if (!state.mouse_inside)
 		{
 			state.mouse_inside = true;
-			Event::Push(HOVER_IN, this);
+			Event::Push(HOVER_IN, this, -1);
 		}
 
 		// Iterate window's UI_Elements. Call all given events
@@ -136,7 +136,7 @@ const WindowState EditorWindow::Update(float mouse_x, float mouse_y, KeyState mo
 	else if (state.mouse_inside)
 	{
 		state.mouse_inside = false;
-		Event::Push(HOVER_OUT, this);
+		Event::Push(HOVER_OUT, this, -1);
 	}
 
 	_Update();
