@@ -144,7 +144,6 @@
     <ClCompile Include="Behaviour.cpp" />
     <ClCompile Include="Collisions.cpp" />
     <ClCompile Include="Component.cpp" />
-    <ClCompile Include="Console.cpp" />
     <ClCompile Include="Cvar.cpp" />
     <ClCompile Include="Editor.cpp" />
     <ClCompile Include="EditorWindows.cpp" />
@@ -184,7 +183,6 @@
     <ClInclude Include="Behaviour.h" />
     <ClInclude Include="Collisions.h" />
     <ClInclude Include="Component.h" />
-    <ClInclude Include="Console.h" />
     <ClInclude Include="Cvar.h" />
     <ClInclude Include="Editor.h" />
     <ClInclude Include="EditorWindows.h" />

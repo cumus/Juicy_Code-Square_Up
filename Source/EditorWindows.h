@@ -78,6 +78,18 @@ public:
 
 	BarMenu(const RectF rect) : EditorWindow(rect) {}
 	~BarMenu() {}
+
+	void RecieveEvent(const Event& e) override;
+
+	bool Init() override;
+
+private:
+
+	void _Update() override;
+
+private:
+
+
 };
 
 class PlayPauseWindow : public EditorWindow
@@ -110,6 +122,8 @@ public:
 
 	ConsoleWindow(const RectF rect) : EditorWindow(rect) {}
 	~ConsoleWindow() {}
+
+	
 };
 
 class ConfigWindow : public EditorWindow

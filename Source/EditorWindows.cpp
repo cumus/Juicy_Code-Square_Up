@@ -321,3 +321,138 @@ void ConfigWindow::_Update()
 {
 	color.a = (state.mouse_inside ? 255 : 220);
 }
+
+void BarMenu::RecieveEvent(const Event& e)
+{
+	switch (e.data1.AsInt())
+	{
+	case 0:
+	{
+		switch (e.type)
+		{
+		case HOVER_IN:
+		{
+			elements[e.data1.AsInt()]->ToUiTextButton()->color = { 0, 0, 255, 100 };
+
+			break;
+		}
+		case HOVER_OUT:
+		{
+			elements[e.data1.AsInt()]->ToUiTextButton()->color = { 255, 255, 255, 255 };
+
+			break;
+		}
+		case MOUSE_DOWN:
+		{
+			elements[e.data1.AsInt()]->ToUiTextButton()->color = { 0, 0, 255, 150 };
+
+			break;
+		}
+		case MOUSE_REPEAT:
+		{
+			elements[e.data1.AsInt()]->ToUiTextButton()->color = { 0, 0, 255, 150 };
+
+			break;
+		}
+		case MOUSE_UP:
+		{
+			elements[e.data1.AsInt()]->ToUiTextButton()->color = { 255, 255, 255, 255 };
+			//Event::Push(REQUEST_QUIT, App);
+			break;
+		}
+		}
+
+		break;
+	}
+	case 1:
+	{
+		switch (e.type)
+		{
+		case HOVER_IN:
+		{
+			elements[e.data1.AsInt()]->ToUiTextButton()->color = { 0, 0, 255, 100 };
+
+			break;
+		}
+		case HOVER_OUT:
+		{
+			elements[e.data1.AsInt()]->ToUiTextButton()->color = { 255, 255, 255, 255 };
+
+			break;
+		}
+		case MOUSE_DOWN:
+		{
+			elements[e.data1.AsInt()]->ToUiTextButton()->color = { 0, 0, 255, 150 };
+
+			break;
+		}
+		case MOUSE_REPEAT:
+		{
+			elements[e.data1.AsInt()]->ToUiTextButton()->color = { 0, 0, 255, 150 };
+
+			break;
+		}
+		case MOUSE_UP:
+		{
+			elements[e.data1.AsInt()]->ToUiTextButton()->color = { 255, 255, 255, 255 };
+			//Event::Push(REQUEST_QUIT, App);
+			break;
+		}
+		}
+
+		break;
+	}
+	case 2:
+	{
+		switch (e.type)
+		{
+		case HOVER_IN:
+		{
+			elements[e.data1.AsInt()]->ToUiTextButton()->color = { 0, 0, 255, 100 };
+
+			break;
+		}
+		case HOVER_OUT:
+		{
+			elements[e.data1.AsInt()]->ToUiTextButton()->color = { 255, 255, 255, 255 };
+
+			break;
+		}
+		case MOUSE_DOWN:
+		{
+			elements[e.data1.AsInt()]->ToUiTextButton()->color = { 0, 0, 255, 150 };
+
+			break;
+		}
+		case MOUSE_REPEAT:
+		{
+			elements[e.data1.AsInt()]->ToUiTextButton()->color = { 0, 0, 255, 150 };
+
+			break;
+		}
+		case MOUSE_UP:
+		{
+			elements[e.data1.AsInt()]->ToUiTextButton()->color = { 255, 255, 255, 255 };
+			//Event::Push(REQUEST_QUIT, App);
+			break;
+		}
+		}
+
+		break;
+	}
+	}
+}
+
+bool BarMenu::Init()
+{
+	elements.push_back(new UI_TextButton(this, { 0.00F, 0.0F, 0.05F, 1.0F }, 1, "Archive"));
+	elements.push_back(new UI_TextButton(this, { 0.055F, 0.0F, 0.10F, 1.0F }, 1, "GameObject"));
+	elements.push_back(new UI_TextButton(this, { 0.16F, 0.0F, 0.05F, 1.0F }, 1, "About"));
+
+	return !elements.empty();
+}
+
+void BarMenu::_Update()
+{
+	color.a = (state.mouse_inside ? 255 : 220);
+}

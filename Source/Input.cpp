@@ -164,10 +164,6 @@ bool Input::PreUpdate()
 				mouse_wheel_motion = e.wheel.y;
 				break;
 			break;
-
-			/*case SDL_TEXTINPUT:
-				get_text += (e.text.text);
-			break;*/
 		}
 	}
 
