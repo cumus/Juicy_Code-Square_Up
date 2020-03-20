@@ -9,6 +9,8 @@
 #include "UI_TextButton.h"
 #include "UI_ButtonImage.h"
 
+#include <Windows.h>
+
 #include "optick-1.3.0.0/include/optick.h"
 
 float EditorWindow::margin = 0.002f;
@@ -357,7 +359,8 @@ void BarMenu::RecieveEvent(const Event& e)
 		case MOUSE_UP:
 		{
 			elements[e.data1.AsInt()]->ToUiTextButton()->color = { 255, 255, 255, 255 };
-			//Event::Push(REQUEST_QUIT, App);
+			Event::Push(REQUEST_QUIT, App);
+			
 			break;
 		}
 		}
@@ -395,7 +398,8 @@ void BarMenu::RecieveEvent(const Event& e)
 		case MOUSE_UP:
 		{
 			elements[e.data1.AsInt()]->ToUiTextButton()->color = { 255, 255, 255, 255 };
-			//Event::Push(REQUEST_QUIT, App);
+			Event::Push(REQUEST_SAVE, App);
+
 			break;
 		}
 		}
@@ -433,7 +437,196 @@ void BarMenu::RecieveEvent(const Event& e)
 		case MOUSE_UP:
 		{
 			elements[e.data1.AsInt()]->ToUiTextButton()->color = { 255, 255, 255, 255 };
-			//Event::Push(REQUEST_QUIT, App);
+			Event::Push(REQUEST_LOAD, App);
+			break;
+		}
+		}
+
+		break;
+	}
+	case 3:
+	{
+		switch (e.type)
+		{
+		case HOVER_IN:
+		{
+			elements[e.data1.AsInt()]->ToUiTextButton()->color = { 0, 0, 255, 100 };
+
+			break;
+		}
+		case HOVER_OUT:
+		{
+			elements[e.data1.AsInt()]->ToUiTextButton()->color = { 255, 255, 255, 255 };
+
+			break;
+		}
+		case MOUSE_DOWN:
+		{
+			elements[e.data1.AsInt()]->ToUiTextButton()->color = { 0, 0, 255, 150 };
+
+			break;
+		}
+		case MOUSE_REPEAT:
+		{
+			elements[e.data1.AsInt()]->ToUiTextButton()->color = { 0, 0, 255, 150 };
+
+			break;
+		}
+		case MOUSE_UP:
+		{
+			elements[e.data1.AsInt()]->ToUiTextButton()->color = { 255, 255, 255, 255 };
+			break;
+		}
+		}
+
+		break;
+	}
+	case 4:
+	{
+		switch (e.type)
+		{
+		case HOVER_IN:
+		{
+			elements[e.data1.AsInt()]->ToUiTextButton()->color = { 0, 0, 255, 100 };
+
+			break;
+		}
+		case HOVER_OUT:
+		{
+			elements[e.data1.AsInt()]->ToUiTextButton()->color = { 255, 255, 255, 255 };
+
+			break;
+		}
+		case MOUSE_DOWN:
+		{
+			elements[e.data1.AsInt()]->ToUiTextButton()->color = { 0, 0, 255, 150 };
+
+			break;
+		}
+		case MOUSE_REPEAT:
+		{
+			elements[e.data1.AsInt()]->ToUiTextButton()->color = { 0, 0, 255, 150 };
+
+			break;
+		}
+		case MOUSE_UP:
+		{
+			elements[e.data1.AsInt()]->ToUiTextButton()->color = { 255, 255, 255, 255 };
+			ShellExecute(0, 0, "https://polgannau.github.io/Juicy-Code-Games_Project-2/", 0, 0, SW_SHOW);
+			break;
+		}
+		}
+
+		break;
+	}
+	case 5:
+	{
+		switch (e.type)
+		{
+		case HOVER_IN:
+		{
+			elements[e.data1.AsInt()]->ToUiTextButton()->color = { 0, 0, 255, 100 };
+
+			break;
+		}
+		case HOVER_OUT:
+		{
+			elements[e.data1.AsInt()]->ToUiTextButton()->color = { 255, 255, 255, 255 };
+
+			break;
+		}
+		case MOUSE_DOWN:
+		{
+			elements[e.data1.AsInt()]->ToUiTextButton()->color = { 0, 0, 255, 150 };
+
+			break;
+		}
+		case MOUSE_REPEAT:
+		{
+			elements[e.data1.AsInt()]->ToUiTextButton()->color = { 0, 0, 255, 150 };
+
+			break;
+		}
+		case MOUSE_UP:
+		{
+			elements[e.data1.AsInt()]->ToUiTextButton()->color = { 255, 255, 255, 255 };
+			ShellExecute(0, 0, "https://github.com/PolGannau/Juicy-Code-Games_Project-2/wiki", 0, 0, SW_SHOW);
+			break;
+		}
+		}
+
+		break;
+	}
+	case 6:
+	{
+		switch (e.type)
+		{
+		case HOVER_IN:
+		{
+			elements[e.data1.AsInt()]->ToUiTextButton()->color = { 0, 0, 255, 100 };
+
+			break;
+		}
+		case HOVER_OUT:
+		{
+			elements[e.data1.AsInt()]->ToUiTextButton()->color = { 255, 255, 255, 255 };
+
+			break;
+		}
+		case MOUSE_DOWN:
+		{
+			elements[e.data1.AsInt()]->ToUiTextButton()->color = { 0, 0, 255, 150 };
+
+			break;
+		}
+		case MOUSE_REPEAT:
+		{
+			elements[e.data1.AsInt()]->ToUiTextButton()->color = { 0, 0, 255, 150 };
+
+			break;
+		}
+		case MOUSE_UP:
+		{
+			elements[e.data1.AsInt()]->ToUiTextButton()->color = { 255, 255, 255, 255 };
+			ShellExecute(0, 0, "https://github.com/PolGannau/Juicy-Code-Games_Project-2/releases", 0, 0, SW_SHOW);
+			break;
+		}
+		}
+
+		break;
+	}
+	case 7:
+	{
+		switch (e.type)
+		{
+		case HOVER_IN:
+		{
+			elements[e.data1.AsInt()]->ToUiTextButton()->color = { 0, 0, 255, 100 };
+
+			break;
+		}
+		case HOVER_OUT:
+		{
+			elements[e.data1.AsInt()]->ToUiTextButton()->color = { 255, 255, 255, 255 };
+
+			break;
+		}
+		case MOUSE_DOWN:
+		{
+			elements[e.data1.AsInt()]->ToUiTextButton()->color = { 0, 0, 255, 150 };
+
+			break;
+		}
+		case MOUSE_REPEAT:
+		{
+			elements[e.data1.AsInt()]->ToUiTextButton()->color = { 0, 0, 255, 150 };
+
+			break;
+		}
+		case MOUSE_UP:
+		{
+			elements[e.data1.AsInt()]->ToUiTextButton()->color = { 255, 255, 255, 255 };
+			ShellExecute(0, 0, "https://github.com/PolGannau/Juicy-Code-Games_Project-2", 0, 0, SW_SHOW);
 			break;
 		}
 		}
@@ -445,9 +638,14 @@ void BarMenu::RecieveEvent(const Event& e)
 
 bool BarMenu::Init()
 {
-	elements.push_back(new UI_TextButton(this, { 0.00F, 0.0F, 0.05F, 1.0F }, 1, "Archive"));
-	elements.push_back(new UI_TextButton(this, { 0.055F, 0.0F, 0.10F, 1.0F }, 1, "GameObject"));
-	elements.push_back(new UI_TextButton(this, { 0.16F, 0.0F, 0.05F, 1.0F }, 1, "About"));
+	elements.push_back(new UI_TextButton(this, { 0.000F, 0.0F, 0.03F, 1.0F }, 1, "Exit")); //0
+	elements.push_back(new UI_TextButton(this, { 0.040F, 0.0F, 0.03F, 1.0F }, 1, "Save")); //1
+	elements.push_back(new UI_TextButton(this, { 0.080F, 0.0F, 0.03F, 1.0F }, 1, "Load")); //2
+	elements.push_back(new UI_TextButton(this, { 0.120F, 0.0F, 0.10F, 1.0F }, 1, "GameObject")); //3
+	elements.push_back(new UI_TextButton(this, { 0.230F, 0.0F, 0.03F, 1.0F }, 1, "Web")); //4
+	elements.push_back(new UI_TextButton(this, { 0.270F, 0.0F, 0.03F, 1.0F }, 1, "Wiki")); //5
+	elements.push_back(new UI_TextButton(this, { 0.310F, 0.0F, 0.07F, 1.0F }, 1, "Release")); //6
+	elements.push_back(new UI_TextButton(this, { 0.390F, 0.0F, 0.09F, 1.0F }, 1, "Repository")); //7
 
 	return !elements.empty();
 }
