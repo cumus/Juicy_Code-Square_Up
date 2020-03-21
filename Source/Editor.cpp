@@ -4,6 +4,12 @@
 #include "Render.h"
 #include "Scene.h"
 #include "EditorWindow.h"
+#include "BarMenu.h"
+#include "PlayPauseWindow.h"
+#include "HierarchyWindow.h"
+#include "PropertiesWindow.h"
+#include "ConsoleWindow.h"
+#include "ConfigWindow.h"
 #include "Defs.h"
 
 #include "SDL/include/SDL_scancode.h"
@@ -21,7 +27,7 @@ bool Editor::Init()
 	windows.push_back(bar_menu = new BarMenu({ 0.0f, 0.0f, 1.0f, 0.02f }));
 	windows.push_back(play_pause = new PlayPauseWindow({ 0.3f, 0.05f, 0.4f, 0.05f }));
 
-	windows.push_back(hierarchy = new HeriarchyWindow({ 0.0f, 0.05f, 0.2f, 0.5f }));
+	windows.push_back(hierarchy = new HierarchyWindow({ 0.0f, 0.05f, 0.2f, 0.5f }));
 	windows.push_back(properties = new PropertiesWindow({ 0.8f, 0.05f, 0.2f, 0.5f }));
 
 	windows.push_back(console = new ConsoleWindow({ 0.0f, 0.7f, 0.4f, 0.3f }));

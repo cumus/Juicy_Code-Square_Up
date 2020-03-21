@@ -7,7 +7,7 @@
 class EditorWindow;
 class BarMenu;
 class PlayPauseWindow;
-class HeriarchyWindow;
+class HierarchyWindow;
 class PropertiesWindow;
 class ConsoleWindow;
 class ConfigWindow;
@@ -32,7 +32,7 @@ public:
 
 	BarMenu* bar_menu = nullptr;
 	PlayPauseWindow* play_pause = nullptr;
-	HeriarchyWindow* hierarchy = nullptr;
+	HierarchyWindow* hierarchy = nullptr;
 	PropertiesWindow* properties = nullptr;
 	ConsoleWindow* console = nullptr;
 	ConfigWindow* config = nullptr;
