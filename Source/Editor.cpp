@@ -3,7 +3,7 @@
 #include "Input.h"
 #include "Render.h"
 #include "Scene.h"
-#include "EditorWindows.h"
+#include "EditorWindow.h"
 #include "Defs.h"
 
 #include "SDL/include/SDL_scancode.h"

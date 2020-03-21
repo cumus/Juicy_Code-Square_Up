@@ -1,5 +1,5 @@
-#ifndef __EDITOR_WINDOWS_H__
-#define __EDITOR_WINDOWS_H__
+#ifndef __EDITOR_WINDOW_H__
+#define __EDITOR_WINDOW_H__
 
 #include "EventListener.h"
 #include "SDL/include/SDL_rect.h"
@@ -72,83 +72,4 @@ protected:
 	std::vector<UI_Element*> elements;
 };
 
-class BarMenu : public EditorWindow
-{
-public:
-
-	BarMenu(const RectF rect) : EditorWindow(rect) {}
-	~BarMenu() {}
-
-	void RecieveEvent(const Event& e) override;
-
-	bool Init() override;
-
-private:
-
-	void _Update() override;
-
-private:
-
-
-};
-
-class PlayPauseWindow : public EditorWindow
-{
-public:
-
-	PlayPauseWindow(const RectF rect) : EditorWindow(rect) {}
-	~PlayPauseWindow() {}
-};
-
-class HeriarchyWindow : public EditorWindow
-{
-public:
-
-	HeriarchyWindow(const RectF rect) : EditorWindow(rect) {}
-	~HeriarchyWindow() {}
-};
-
-class PropertiesWindow : public EditorWindow
-{
-public:
-
-	PropertiesWindow(const RectF rect) : EditorWindow(rect) {}
-	~PropertiesWindow() {}
-};
-
-class ConsoleWindow : public EditorWindow
-{
-public:
-
-	ConsoleWindow(const RectF rect) : EditorWindow(rect) {}
-	~ConsoleWindow() {}
-
-	
-};
-
-class ConfigWindow : public EditorWindow
-{
-public:
-
-	ConfigWindow(const RectF rect) : EditorWindow(rect) {}
-	~ConfigWindow() {}
-	
-	void RecieveEvent(const Event& e) override;
-
-	bool Init() override;
-
-private:
-
-	void _Update() override;
-
-private:
-
-	int tex_id;
-	int tex_in;
-	int tex_out;
-	int tex_down;
-	int tex_repeat;
-	int tex_up;
-};
-
-#endif // __EDITOR_WINDOWS_H__
+#endif // __EDITOR_WINDOW_H__

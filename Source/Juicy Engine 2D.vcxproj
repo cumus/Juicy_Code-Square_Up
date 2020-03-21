@@ -141,17 +141,21 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="AudioSource.cpp" />
+    <ClCompile Include="BarMenu.cpp" />
     <ClCompile Include="Behaviour.cpp" />
     <ClCompile Include="Collisions.cpp" />
     <ClCompile Include="Component.cpp" />
+    <ClCompile Include="ConfigWindow.cpp" />
+    <ClCompile Include="ConsoleWindow.cpp" />
     <ClCompile Include="Cvar.cpp" />
     <ClCompile Include="Editor.cpp" />
-    <ClCompile Include="EditorWindows.cpp" />
+    <ClCompile Include="EditorWindow.cpp" />
     <ClCompile Include="Event.cpp" />
     <ClCompile Include="FadetoBlack.cpp" />
     <ClCompile Include="FileManager.cpp" />
     <ClCompile Include="FontManager.cpp" />
     <ClCompile Include="Gameobject.cpp" />
+    <ClCompile Include="HierarchyWindow.cpp" />
     <ClCompile Include="JuicyMath.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Application.cpp" />
@@ -161,6 +165,8 @@
     <ClCompile Include="MapContainer.cpp" />
     <ClCompile Include="mmgr\mmgr.cpp" />
     <ClCompile Include="PathfindingManager.cpp" />
+    <ClCompile Include="PlayPauseWindow.cpp" />
+    <ClCompile Include="PropertiesWindow.cpp" />
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="Log.cpp" />
     <ClCompile Include="Render.cpp" />
@@ -180,18 +186,22 @@
   <ItemGroup>
     <ClInclude Include="Animation.h" />
     <ClInclude Include="AudioSource.h" />
+    <ClInclude Include="BarMenu.h" />
     <ClInclude Include="Behaviour.h" />
     <ClInclude Include="Collisions.h" />
     <ClInclude Include="Component.h" />
+    <ClInclude Include="ConfigWindow.h" />
+    <ClInclude Include="ConsoleWindow.h" />
     <ClInclude Include="Cvar.h" />
     <ClInclude Include="Editor.h" />
-    <ClInclude Include="EditorWindows.h" />
+    <ClInclude Include="EditorWindow.h" />
     <ClInclude Include="Event.h" />
     <ClInclude Include="EventListener.h" />
     <ClInclude Include="FadetoBlack.h" />
     <ClInclude Include="FileManager.h" />
     <ClInclude Include="FontManager.h" />
     <ClInclude Include="Gameobject.h" />
+    <ClInclude Include="HierarchyWindow.h" />
     <ClInclude Include="JuicyMath.h" />
     <ClInclude Include="Map.h" />
     <ClInclude Include="MapContainer.h" />
@@ -200,6 +210,8 @@
     <ClInclude Include="Optick\include\optick.config.h" />
     <ClInclude Include="Optick\include\optick.h" />
     <ClInclude Include="PathfindingManager.h" />
+    <ClInclude Include="PlayPauseWindow.h" />
+    <ClInclude Include="PropertiesWindow.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="Audio.h" />
     <ClInclude Include="Input.h" />
