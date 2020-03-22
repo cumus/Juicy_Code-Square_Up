@@ -113,6 +113,24 @@ void Gameobject::RecieveEvent(const Event & e)
 {
 	switch (e.type)
 	{
+	case ON_PLAY:
+	{
+		for (std::vector<Component*>::iterator component = components.begin(); component != components.end(); ++component)
+			if ((*component)->IsActive())
+				Event::Push(ON_PLAY, *component);
+	}
+	case ON_PAUSE:
+	{
+		for (std::vector<Component*>::iterator component = components.begin(); component != components.end(); ++component)
+			if ((*component)->IsActive())
+				Event::Push(ON_PAUSE, *component);
+	}
+	case ON_STOP:
+	{
+		for (std::vector<Component*>::iterator component = components.begin(); component != components.end(); ++component)
+			if ((*component)->IsActive())
+				Event::Push(ON_STOP, *component);
+	}
 	case ON_SELECT:
 	{
 		for (std::vector<Component*>::iterator component = components.begin(); component != components.end(); ++component)

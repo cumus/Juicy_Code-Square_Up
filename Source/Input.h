@@ -4,6 +4,7 @@
 #include "Module.h"
 
 #define NUM_MOUSE_BUTTONS 5
+#define MAX_KEYS 300
 
 struct SDL_Rect;
 

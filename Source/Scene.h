@@ -19,10 +19,11 @@ public:
 	bool PostUpdate() override;
 	bool CleanUp() override;
 
+	void RecieveEvent(const Event& e) override;
+
 	bool LoadTestScene();
 
 	Gameobject* AddGameobject(const char* name, Gameobject* parent = nullptr);
-
 	Gameobject* MouseClickSelect(int mouse_x, int mouse_y);
 
 public:

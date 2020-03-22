@@ -122,6 +122,24 @@ bool Scene::CleanUp()
 	return true;
 }
 
+void Scene::RecieveEvent(const Event& e)
+{
+	switch (e.type)
+	{
+	case SCENE_PLAY:
+		Event::Push(ON_PLAY, &root, e.data1);
+		break;
+	case SCENE_PAUSE:
+		Event::Push(ON_PAUSE, &root, e.data1);
+		break;
+	case SCENE_STOP:
+		Event::Push(ON_STOP, &root, e.data1);
+		break;
+	default:
+		break;
+	}
+}
+
 bool Scene::LoadTestScene()
 {
 	// Play sample track
@@ -160,9 +178,6 @@ bool Scene::LoadTestScene()
 		//B_Unit* b1 = new B_Unit(go1);
 		
 		B_Unit* b2 = new B_Unit(go2);
-
-
-
 	}
 
 	return ret;

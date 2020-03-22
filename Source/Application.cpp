@@ -90,6 +90,8 @@ bool Application::Init()
 		// Load sample scene
 		if (ret)
 		{
+			state = STOPED;
+
 			if (ret = scene->LoadTestScene())
 				LOG("Loaded Scene");
 			else
@@ -151,6 +153,14 @@ void Application::FinishUpdate()
 	if(want_to_load)
 		LoadGameNow();*/
 
+	if (state == TICKING)
+	{
+		time.PauseGameTimer();
+		Event::Push(SCENE_PAUSE, scene);
+		Event::PumpAll();
+		state = PAUSED;
+	}
+
 	int extra_ms = time.ManageFrameTimers();
 
 	// uncapped fps
@@ -210,9 +220,38 @@ void Application::RecieveEvent(const Event & e)
 		LOG("App window quit event requested");
 		want_to_quit = true;
 		break;
+	case SCENE_PLAY:
+		time.StartGameTimer();
+		Event::Push(SCENE_PLAY, scene, int(state));
+		Event::PumpAll();
+		state = PLAYING;
+		break;
+	case SCENE_PAUSE:
+		time.PauseGameTimer();
+		Event::Push(SCENE_PAUSE, scene, int(state));
+		Event::PumpAll();
+		state = PAUSED;
+		break;
+	case SCENE_TICK:
+		time.StartGameTimer();
+		Event::Push(SCENE_PLAY, scene, int(state));
+		Event::PumpAll();
+		state = TICKING;
+		break;
+	case SCENE_STOP:
+		time.StopGameTimer();
+		Event::Push(SCENE_STOP, scene, int(state));
+		Event::PumpAll();
+		state = STOPED;
+		break;
 	default:
 		break;
 	}
+}
+
+GameState Application::GetState() const
+{
+	return state;
 }
 
 int Application::GetArgc() const

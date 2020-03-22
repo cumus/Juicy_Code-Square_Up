@@ -30,6 +30,14 @@ class TextureManager;
 class FontManager;
 class PathfindingManager;
 
+enum GameState : int
+{
+	STOPED,
+	PLAYING,
+	PAUSED,
+	TICKING
+};
+
 class Application : public EventListener
 {
 public:
@@ -43,6 +51,7 @@ public:
 
 	void RecieveEvent(const Event& e) override;
 
+	GameState GetState() const;
 	int GetArgc() const;
 	const char* GetArgv(int index) const;
 	const char* GetTitle() const;
@@ -76,6 +85,7 @@ public:
 	FontManager		fonts;
 	PathfindingManager pathfinding;
 
+
 private:
 
 	// Module container
@@ -84,6 +94,9 @@ private:
 	// Execution arguments
 	int		argc = -1;
 	char**	args = nullptr;
+
+	// Game State
+	GameState state;
 
 	// Config values
 	const char*	title = nullptr;
