@@ -25,17 +25,16 @@ public:
 	Transform* GetTransform();
 	const Transform* GetTransform() const;
 
+	void RecursiveFillHierarchy(float deepness, std::vector<std::pair<float, Gameobject*>>& container);
 	std::vector<Gameobject*>& GetChilds();
 
 	void AddComponent(Component* comp);
 
 	bool RemoveChild(Gameobject* child);
 	bool RemoveComponent(Component* comp);
-
 	bool Destroy();
 
 	double GetID() const;
-
 	bool operator==(Gameobject* go);
 
 private:

@@ -7,7 +7,7 @@
 class UI_TextButton : public UI_Element
 {
 public:
-	UI_TextButton(EditorWindow* window, RectF rect = { 0.0f, 0.0f, 1.0f, 1.0f }, int font_id = -1, const char* text = nullptr);
+	UI_TextButton(EditorWindow* window, RectF rect = { 0.0f, 0.0f, 1.0f, 1.0f }, const char* text = nullptr, int font_id = -1);
 	~UI_TextButton();
 
 	bool Draw() const override;

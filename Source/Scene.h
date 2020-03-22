@@ -23,6 +23,8 @@ public:
 
 	bool LoadTestScene();
 
+	Gameobject* GetRoot();
+	const Gameobject* GetRoot() const;
 	Gameobject* AddGameobject(const char* name, Gameobject* parent = nullptr);
 	Gameobject* MouseClickSelect(int mouse_x, int mouse_y);
 

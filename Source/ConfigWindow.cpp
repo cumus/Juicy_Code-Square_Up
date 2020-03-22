@@ -28,7 +28,7 @@ bool ConfigWindow::Init()
 
 	// elements.push_back(new UI_Text(this, { 0.25f, 0.58f,  0.45f, 0.25f }, 1, "Hello"));
 
-	elements.push_back(new UI_TextButton(this, { 0.0f, 0.0f, 0.5f, 0.25f }, 1, "Press Here"));
+	elements.push_back(new UI_TextButton(this, { 0.0f, 0.0f, 0.5f, 0.25f }, "Press Here"));
 
 	return !elements.empty();
 }

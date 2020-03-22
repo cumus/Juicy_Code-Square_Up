@@ -20,7 +20,9 @@
 #include <queue>
 
 Scene::Scene() : Module("scene")
-{}
+{
+	root.SetName("root");
+}
 
 Scene::~Scene()
 {}
@@ -181,6 +183,16 @@ bool Scene::LoadTestScene()
 	}
 
 	return ret;
+}
+
+Gameobject* Scene::GetRoot()
+{
+	return &root;
+}
+
+const Gameobject* Scene::GetRoot() const
+{
+	return &root;
 }
 
 Gameobject * Scene::AddGameobject(const char * name, Gameobject * parent)

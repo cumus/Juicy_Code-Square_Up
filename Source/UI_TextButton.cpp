@@ -3,7 +3,7 @@
 #include "Render.h"
 #include "FontManager.h"
 
-UI_TextButton::UI_TextButton(EditorWindow* window, RectF rect, int font_id, const char* text)
+UI_TextButton::UI_TextButton(EditorWindow* window, RectF rect, const char* text, int font_id)
 	: UI_Element(window, TEXT, rect), font_id(font_id), text(text)
 {}
 

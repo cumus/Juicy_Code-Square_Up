@@ -191,6 +191,14 @@ const Transform* Gameobject::GetTransform() const
 	return nullptr;
 }
 
+void Gameobject::RecursiveFillHierarchy(float deepness, std::vector<std::pair<float, Gameobject*>>& container)
+{
+	container.push_back({ deepness, this });
+
+	for (std::vector<Gameobject*>::iterator child = childs.begin(); child != childs.end(); ++child)
+		(*child)->RecursiveFillHierarchy(++deepness, container);
+}
+
 std::vector<Gameobject*>& Gameobject::GetChilds()
 {
 	return childs;
