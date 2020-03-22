@@ -39,11 +39,10 @@ void Event::PumpAll()
 	while (!Event::events_queue.empty())
 	{
 		const Event e = Event::events_queue.front();
+		Event::events_queue.pop();
 
 		if (e.IsValid())
 			e.CallListener();
-
-		Event::events_queue.pop();
 	}
 }
 
@@ -52,11 +51,10 @@ void Event::Pump()
 	if (!Event::events_queue.empty())
 	{
 		const Event e = Event::events_queue.front();
+		Event::events_queue.pop();
 
 		if (e.IsValid())
 			e.CallListener();
-
-		Event::events_queue.pop();
 	}
 }
 

@@ -4,18 +4,11 @@
 #include "Cvar.h"
 #include <queue>
 
-#define MAX_KEYS 300
-
 class EventListener;
 
 enum EventType
 {
 	// APP
-	PLAY,
-	PAUSE,
-	TICK,
-	STOP,
-
 	REQUEST_DEFAULT_CONF,
 	REQUEST_LOAD,
 	REQUEST_SAVE,
@@ -36,10 +29,16 @@ enum EventType
 	WINDOW_FOCUS_LEAVE,
 	WINDOW_QUIT,
 
-	// Renderer
-	SET_VSYNC,
+	// Scene
+	SCENE_PLAY,
+	SCENE_PAUSE,
+	SCENE_TICK,
+	SCENE_STOP,
 
 	// Gameobjects
+	ON_PLAY,
+	ON_PAUSE,
+	ON_STOP,
 	ON_SELECT,
 	ON_DESTROY,
 	TRANSFORM_MODIFIED,
@@ -51,6 +50,9 @@ enum EventType
 	MOUSE_DOWN,
 	MOUSE_REPEAT,
 	MOUSE_UP,
+
+	// Renderer
+	SET_VSYNC,
 
 	MAX_EVENT_TYPES
 };

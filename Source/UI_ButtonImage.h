@@ -6,7 +6,7 @@
 class UI_ButtonImage : public UI_Element
 {
 public:
-	UI_ButtonImage(EditorWindow* window, RectF rect = { 0.0f, 0.0f, 1.0f, 1.0f }, int texture_id = -1, SDL_Rect section = { 0, 0, 0, 0 });
+	UI_ButtonImage(EditorWindow* window, RectF rect = { 0.0f, 0.0f, 1.0f, 1.0f }, int texture_id = -1, SDL_Rect section = { -1, -1, -1, -1 });
 	~UI_ButtonImage();
 
 	bool Draw() const override;
