@@ -29,7 +29,7 @@ bool HierarchyWindow::Init()
 void HierarchyWindow::RecieveEvent(const Event& e)
 {
 	int id = e.data1.AsInt();
-	if (id >= 0 && e.type == MOUSE_UP)
+	if (id >= 0 && id < gos.size() && e.type == MOUSE_UP)
 	{
 		Gameobject* go = gos[id].second;
 		App->editor->selection = go;
