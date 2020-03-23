@@ -127,6 +127,9 @@
     <ClCompile Include="ConsoleWindow.cpp">
       <Filter>Source\Modules\Editor\Windows</Filter>
     </ClCompile>
+    <ClCompile Include="UI_SubMenu.cpp">
+      <Filter>Source\Modules\Editor\UI Elements</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="PugiXml\src\pugiconfig.hpp">
@@ -287,6 +290,9 @@
     </ClInclude>
     <ClInclude Include="ConsoleWindow.h">
       <Filter>Source\Modules\Editor\Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="UI_SubMenu.h">
+      <Filter>Source\Modules\Editor\UI Elements</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

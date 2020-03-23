@@ -178,6 +178,7 @@
     <ClCompile Include="UI_ButtonImage.cpp" />
     <ClCompile Include="UI_Elements.cpp" />
     <ClCompile Include="UI_Image.cpp" />
+    <ClCompile Include="UI_SubMenu.cpp" />
     <ClCompile Include="UI_Text.cpp" />
     <ClCompile Include="UI_TextButton.cpp" />
     <ClCompile Include="Window.cpp" />
@@ -231,6 +232,7 @@
     <ClInclude Include="UI_ButtonImage.h" />
     <ClInclude Include="UI_Elements.h" />
     <ClInclude Include="UI_Image.h" />
+    <ClInclude Include="UI_SubMenu.h" />
     <ClInclude Include="UI_Text.h" />
     <ClInclude Include="UI_TextButton.h" />
     <ClInclude Include="Vector3.h" />

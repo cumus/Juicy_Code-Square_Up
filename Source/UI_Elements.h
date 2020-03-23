@@ -12,6 +12,7 @@ enum UI_Type
 	TEXT,
 	TEXT_BUTTON,
 	SLIDER,
+	SUB_MENU,
 
 	MAX_UI_ELEMENTS
 };
@@ -22,6 +23,7 @@ class UI_Image;
 class UI_Text;
 class UI_TextButton;
 class UI_ButtonImage;
+class UI_SubMenu;
 
 class UI_Element : public EventListener
 {
@@ -36,6 +38,7 @@ public:
 	virtual UI_Text* ToUiText();
 	virtual UI_TextButton* ToUiTextButton();
 	virtual UI_ButtonImage* ToUiButtonImage();
+	virtual UI_SubMenu* ToUiSubMenu();
 
 	RectF GetTargetNormRect() const;
 	SDL_Rect GetTargetRect() const;

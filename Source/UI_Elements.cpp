@@ -40,6 +40,11 @@ UI_ButtonImage* UI_Element::ToUiButtonImage()
 	return nullptr;
 }
 
+UI_SubMenu* UI_Element::ToUiSubMenu()
+{
+	return nullptr;
+}
+
 
 
 RectF UI_Element::GetTargetNormRect() const
