@@ -13,11 +13,14 @@
 #include "AudioSource.h"
 #include "Defs.h"
 #include "Log.h"
+#include "PathfindingManager.h"
+#include "Point.h"
 
 #include "SDL/include/SDL_scancode.h"
 #include "optick-1.3.0.0/include/optick.h"
 
 #include <queue>
+#include <vector>
 
 Scene::Scene() : Module("scene")
 {
@@ -77,6 +80,33 @@ bool Scene::Update()
 		Sprite* s3 = new Sprite(audio_go);
 		s3->tex_id = id_mouse_tex;
 		s3->section = { 128, 0, 64, 64 };
+	}
+
+	int x, y;
+
+	if (App->input->GetKey(SDL_SCANCODE_Z) == KEY_DOWN)
+	{		
+		App->input->GetMousePosition(x, y);
+		std::pair<int, int> mouseOnMap = Map::I_WorldToMap(x, y);
+		startPath = new iPoint(mouseOnMap.first, mouseOnMap.second);
+		pathStart = true;
+		LOG("Start point");
+	}
+
+	if (App->input->GetKey(SDL_SCANCODE_X) == KEY_DOWN)
+	{
+		App->input->GetMousePosition(x, y);
+		std::pair<int, int> mouseOnMap = Map::I_WorldToMap(x, y);
+		destinationPath = new iPoint(mouseOnMap.first, mouseOnMap.second);
+		pathFinish = true;
+		LOG("Destination point");
+	}
+
+	if (pathStart && pathFinish)
+	{
+		path = App->pathfinding.CreatePath(*startPath, *destinationPath);
+		pathStart = false;
+		pathFinish = false;
 	}
 
 	return ret;

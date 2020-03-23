@@ -4,6 +4,9 @@
 #include "Module.h"
 #include "Map.h"
 #include "Gameobject.h"
+#include "Point.h"
+
+#include <vector>
 
 struct SDL_Texture;
 
@@ -32,6 +35,9 @@ public:
 
 	int id_mouse_tex;
 	int image_text_id;
+	iPoint* startPath;
+	iPoint* destinationPath;
+	std::vector<iPoint> path; //= new std::vector<iPoint>();
 
 private:
 
@@ -40,6 +46,8 @@ private:
 
 	float time = 0;
 	bool x_t, y_t;
+	bool pathStart = false;
+	bool pathFinish = false;		
 };
 
 #endif // __SCENE_H__

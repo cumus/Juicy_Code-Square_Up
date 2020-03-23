@@ -5,7 +5,7 @@
 #include "PathfindingManager.h"
 
 #include <vector>
-#include <algorithm>
+
 
 PathfindingManager::PathfindingManager() : width(0), height(0)
 {
@@ -67,7 +67,7 @@ bool PathfindingManager::IsWalkable(iPoint& pos)
 bool PathfindingManager::GetTileAt(iPoint& pos) 
 {
 	bool ret = true;
-	if (map.GetID(pos.x,pos.y) > 22) ret = false;	
+	if (map.GetID(pos.x,pos.y) == 22 || map.GetID(pos.x, pos.y) == 23) ret = false;
 	return ret;
 }
 
@@ -254,6 +254,7 @@ std::vector<iPoint> PathfindingManager::CreatePath(iPoint& origin, iPoint& desti
 	else
 	{
 		finalPath.push_back(destination);
+		LOG("Path created.");
 		return finalPath;
 	}
 }
