@@ -24,7 +24,7 @@
 
 Scene::Scene() : Module("scene")
 {
-	root.SetName("root");
+	root.SetName("______root______");
 }
 
 Scene::~Scene()

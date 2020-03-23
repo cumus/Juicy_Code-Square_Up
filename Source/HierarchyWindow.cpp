@@ -4,6 +4,8 @@
 #include "Editor.h"
 #include "UI_TextButton.h"
 
+#include <stack>
+
 HierarchyWindow::HierarchyWindow(const RectF rect) : EditorWindow(rect)
 {
 }
@@ -38,17 +40,37 @@ void HierarchyWindow::RecieveEvent(const Event& e)
 void HierarchyWindow::_Update()
 {
 	gos.clear();
-	root->RecursiveFillHierarchy(0, gos);
+	std::stack<std::pair<float, Gameobject*>> stack;
 
-	int i = 0;
-	for (std::vector<std::pair<float, Gameobject*>>::iterator it = gos.begin(); it != gos.end(); ++it)
+	// Add root childs to stack
+	std::vector<Gameobject*> childs = root->GetChilds();
+	for (std::vector<Gameobject*>::reverse_iterator it = childs.rbegin(); it != childs.rend(); ++it)
+		stack.push({ 0.0f, *it });
+
+	// Add 
+	while (!stack.empty())
 	{
-		if (i < 20)
-		{
-			elements[i]->rect = { it->first * 0.05f, 0.05f * float(i), 0.5f, 0.05f };
-			elements[i]->ToUiTextButton()->text = it->second->GetName();
-		}
+		std::pair<float, Gameobject*> go = stack.top();
+		stack.pop();
 
-		++i;
+		gos.push_back(go);
+
+		std::vector<Gameobject*> childs = go.second->GetChilds();
+		for (std::vector<Gameobject*>::reverse_iterator it = childs.rbegin(); it != childs.rend(); ++it)
+			stack.push({ go.first + 1.0f, *it });
+	}
+
+	for (int i = 0; i < 20; ++i)
+	{
+		if (i < gos.size())
+		{
+			elements[i]->rect = { gos[i].first * 0.05f, 0.05f * float(i), 0.5f, 0.05f };
+			elements[i]->ToUiTextButton()->text = gos[i].second->GetName();
+		}
+		else
+		{
+			elements[i]->rect = { 0.0f, 0.05f, 0.5f, 0.05f };
+			elements[i]->ToUiTextButton()->text = " ";
+		}
 	}
 }
