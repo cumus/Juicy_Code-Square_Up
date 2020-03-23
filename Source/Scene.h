@@ -35,8 +35,8 @@ public:
 
 	int id_mouse_tex;
 	int image_text_id;
-	iPoint* startPath;
-	iPoint* destinationPath;
+	iPoint startPath;
+	iPoint destinationPath;
 	std::vector<iPoint> path; //= new std::vector<iPoint>();
 
 private:
@@ -45,9 +45,7 @@ private:
 	Gameobject root;
 
 	float time = 0;
-	bool x_t, y_t;
-	bool pathStart = false;
-	bool pathFinish = false;		
+	bool x_t, y_t;	
 };
 
 #endif // __SCENE_H__

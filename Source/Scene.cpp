@@ -63,14 +63,13 @@ bool Scene::Update()
 	
 	root.Update();
 
+	int x, y;
+	App->input->GetMousePosition(x, y);
+	SDL_Rect cam = App->render->GetCameraRect();
+
 	if (App->input->GetKey(SDL_SCANCODE_3) == KEY_DOWN)
 	{
-		int x, y;
-		App->input->GetMousePosition(x, y);
-		
-		RectF cam = App->render->GetCameraRectF();
-
-		std::pair<int, int> position = Map::WorldToTileBase(float(x) + cam.x, float(y) + cam.y);
+		std::pair<int, int> position = Map::WorldToTileBase(float(x + cam.x), float(y + cam.y));
 
 		Gameobject* audio_go = AddGameobject("AudioSource - son of root", &root);
 		audio_go->GetTransform()->SetLocalPos({ float(position.first), float(position.second), 0.0f });
@@ -82,31 +81,18 @@ bool Scene::Update()
 		s3->section = { 128, 0, 64, 64 };
 	}
 
-	int x, y;
-
 	if (App->input->GetKey(SDL_SCANCODE_Z) == KEY_DOWN)
 	{		
-		App->input->GetMousePosition(x, y);
-		std::pair<int, int> mouseOnMap = Map::I_WorldToMap(x, y);
-		startPath = new iPoint(mouseOnMap.first, mouseOnMap.second);
-		pathStart = true;
-		LOG("Start point");
+		std::pair<int, int> mouseOnMap = Map::WorldToTileBase(x + cam.x, y + cam.y);
+		startPath = iPoint(mouseOnMap.first, mouseOnMap.second);
+		path = App->pathfinding.CreatePath(startPath, destinationPath);
 	}
 
 	if (App->input->GetKey(SDL_SCANCODE_X) == KEY_DOWN)
 	{
-		App->input->GetMousePosition(x, y);
-		std::pair<int, int> mouseOnMap = Map::I_WorldToMap(x, y);
-		destinationPath = new iPoint(mouseOnMap.first, mouseOnMap.second);
-		pathFinish = true;
-		LOG("Destination point");
-	}
-
-	if (pathStart && pathFinish)
-	{
-		path = App->pathfinding.CreatePath(*startPath, *destinationPath);
-		pathStart = false;
-		pathFinish = false;
+		std::pair<int, int> mouseOnMap = Map::WorldToTileBase(x + cam.x, y + cam.y);
+		destinationPath = iPoint(mouseOnMap.first, mouseOnMap.second);
+		path = App->pathfinding.CreatePath(startPath, destinationPath);
 	}
 
 	return ret;
@@ -116,12 +102,30 @@ bool Scene::PostUpdate()
 {
 	map.Draw();
 
+	SDL_Rect cam_rect = App->render->GetCameraRect();
+	SDL_Rect rect = { 0, 0, 64, 64 };
+
+	std::pair<int, int> render_pos = Map::I_MapToWorld(startPath.x, startPath.y);
+	App->render->Blit(id_mouse_tex, render_pos.first, render_pos.second, &rect);
+
+	render_pos = Map::I_MapToWorld(destinationPath.x, destinationPath.y);
+	App->render->Blit(id_mouse_tex, render_pos.first, render_pos.second, &rect);
+
+	if (!path.empty())
+	{
+		for (std::vector<iPoint>::const_iterator it = path.cbegin(); it != path.cend(); ++it)
+		{
+			std::pair<int, int> render_pos = Map::I_MapToWorld(it->x, it->y);
+			App->render->Blit(id_mouse_tex, render_pos.first, render_pos.second, &rect);
+		}
+	}
+
+
 	root.PostUpdate();
 
 	// Debug Pointer Info on Window Title
 	int mouse_x, mouse_y;
 	App->input->GetMousePosition(mouse_x, mouse_y);
-	SDL_Rect cam_rect = App->render->GetCameraRect();
 	std::pair<int, int> map_coordinates = Map::WorldToTileBase(cam_rect.x + mouse_x, cam_rect.y + mouse_y);
 
 	// Editor Selection
