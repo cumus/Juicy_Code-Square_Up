@@ -7,7 +7,7 @@
 #include <vector>
 
 
-PathfindingManager::PathfindingManager() : width(0), height(0)
+PathfindingManager::PathfindingManager()
 {
 	//name.create("pathfinding");
 }
@@ -48,7 +48,7 @@ void PathfindingManager::SetWalkabilityLayer(const MapLayer& layer)
 bool PathfindingManager::CheckBoundaries(iPoint& pos) 
 {
 	bool ret = false;
-	if ((pos.x >= 0 && pos.x <= width) && (pos.y >= 0 && pos.y <= height)) ret = true;
+	if ((pos.x >= 0 && pos.x <= map.width) && (pos.y >= 0 && pos.y <= map.height)) ret = true;
 	return ret;
 }
 

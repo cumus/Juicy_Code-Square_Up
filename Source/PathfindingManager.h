@@ -33,6 +33,7 @@ struct PathNode
 
 	// Fills a list (PathList) of all valid adjacent pathnodes
 	void FindWalkableAdjacents(std::vector<PathNode>& list_to_fill);
+
 	// Calculate the F for a specific destination tile
 	void CalculateF(iPoint& destination);
 
@@ -85,13 +86,11 @@ public:
 	//Utility: Remove node in vector
 	void RemoveItemInVector(std::vector<PathNode>& vec, PathNode node);
 
-private:	
+private:
 
-	// size of the map
-	int width = 0;
-	int height = 0;
 	// all map walkability values [0..255]
 	MapLayer map;
+
 	// we store the created path here
 	std::vector<iPoint> finalPath;
 };
