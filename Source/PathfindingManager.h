@@ -32,7 +32,7 @@ struct PathNode
 	PathNode(const PathNode& node);
 
 	// Fills a list (PathList) of all valid adjacent pathnodes
-	void FindWalkableAdjacents(std::vector<PathNode>& list_to_fill);
+	std::vector<PathNode> FindWalkableAdjacents();
 
 	// Calculate the F for a specific destination tile
 	void CalculateF(iPoint& destination);
@@ -66,7 +66,7 @@ public:
 	std::vector<iPoint> CreatePath( iPoint& origin,  iPoint& destination);
 
 	// To request all tiles involved in the last generated path
-	std::vector<iPoint>* GetLastPath() ;
+	//std::vector<iPoint>* GetLastPath();
 
 	// Utility: return true if pos is inside the map boundaries
 	bool CheckBoundaries( iPoint& pos);
@@ -77,8 +77,8 @@ public:
 	// Utility: return the walkability value of a tile
 	bool GetTileAt( iPoint& pos);
 
-	//Utility: eturns node with lowest score
-	PathNode* GetNodeLowestScore(std::vector<PathNode>& node, iPoint& destination);
+	//Utility: Returns node with lowest score
+	PathNode GetNodeLowestScore(std::vector<PathNode> node);
 
 	//Utility: Find node in vector and returns boolean
 	bool FindItemInVector(std::vector<PathNode>& vec,PathNode node);
@@ -86,13 +86,13 @@ public:
 	//Utility: Remove node in vector
 	void RemoveItemInVector(std::vector<PathNode>& vec, PathNode node);
 
+	// Utility: Get node in vector 
+	PathNode* GetItemInVector(std::vector<PathNode>& vec, PathNode node);
+
 private:
 
 	// all map walkability values [0..255]
 	MapLayer map;
-
-	// we store the created path here
-	std::vector<iPoint> finalPath;
 };
 
 #endif 

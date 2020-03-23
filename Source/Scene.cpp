@@ -81,18 +81,19 @@ bool Scene::Update()
 		s3->section = { 128, 0, 64, 64 };
 	}
 
-	if (App->input->GetKey(SDL_SCANCODE_Z) == KEY_DOWN)
+	/*if (App->input->GetKey(SDL_SCANCODE_Z) == KEY_DOWN)
 	{		
 		std::pair<int, int> mouseOnMap = Map::WorldToTileBase(x + cam.x, y + cam.y);
 		startPath = iPoint(mouseOnMap.first, mouseOnMap.second);
 		path = App->pathfinding.CreatePath(startPath, destinationPath);
-	}
+	}*/
 
 	if (App->input->GetKey(SDL_SCANCODE_X) == KEY_DOWN)
 	{
 		std::pair<int, int> mouseOnMap = Map::WorldToTileBase(x + cam.x, y + cam.y);
 		destinationPath = iPoint(mouseOnMap.first, mouseOnMap.second);
 		path = App->pathfinding.CreatePath(startPath, destinationPath);
+		LOG("Path length: %d", path.size());
 	}
 
 	return ret;
@@ -110,7 +111,7 @@ bool Scene::PostUpdate()
 
 	render_pos = Map::I_MapToWorld(destinationPath.x, destinationPath.y);
 	App->render->Blit(id_mouse_tex, render_pos.first, render_pos.second, &rect);
-
+	
 	if (!path.empty())
 	{
 		for (std::vector<iPoint>::const_iterator it = path.cbegin(); it != path.cend(); ++it)
