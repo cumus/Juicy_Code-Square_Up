@@ -28,21 +28,21 @@ struct PathNode
 {
 	// Constructors
 	PathNode();
-	PathNode(iPoint pos, PathNode* parent = nullptr);
+	PathNode(iPoint pos, iPoint parentPos);
 	PathNode(const PathNode& node);
 
 	// Fills a list (PathList) of all valid adjacent pathnodes
-	std::vector<PathNode> FindWalkableAdjacents();
-
+	std::vector<PathNode> FindWalkableAdjacents();	
 	// Calculate the F for a specific destination tile
-	void CalculateF(iPoint& destination);
+	void CalculateF(iPoint destination);
 
 	// -----------
 	int g = 0;
 	int h = 0;
-	int score = 0;
+	int score=0;
 	iPoint pos = iPoint({ 0, 0 });
-	PathNode* parent; // needed to reconstruct the path in the end
+	iPoint parentPos = iPoint({ -1, -1 });
+	//PathNode* parent; // needed to reconstruct the path in the end
 };
 
 class PathfindingManager
@@ -87,12 +87,14 @@ public:
 	void RemoveItemInVector(std::vector<PathNode>& vec, PathNode node);
 
 	// Utility: Get node in vector 
-	PathNode* GetItemInVector(std::vector<PathNode>& vec, PathNode node);
+	PathNode GetItemInVector(std::vector<PathNode>& vec, iPoint nodePos);
+	
 
 private:
 
 	// all map walkability values [0..255]
 	MapLayer map;
+	iPoint nullPoint = iPoint({ -1,-1 });
 };
 
 #endif 

@@ -80,16 +80,13 @@ bool PathfindingManager::GetTileAt(iPoint& pos)
 // Constructors
 // ----------------------------------------------------------------------------------
 
-PathNode::PathNode() : g(0), h(0), score(0), pos(0, 0), parent(nullptr) 
+PathNode::PathNode() : g(0), h(0), score(0), pos(0, 0), parentPos(iPoint({-1,-1}))
 {}
 
-PathNode::PathNode(iPoint pos, PathNode* parentNode) : pos(pos),parent(parentNode)
-{
-	if (parentNode != nullptr) g = parent->g + 1;
-	else g = 0;
-}
+PathNode::PathNode(iPoint nodePos, iPoint parent) : pos(nodePos), parentPos(parent)
+{}
 
-PathNode::PathNode(const PathNode& node) : g(node.g), h(node.h), pos(node.pos),parent(node.parent)
+PathNode::PathNode(const PathNode& node) : g(node.g), h(node.h), score(node.score), pos(node.pos),parentPos(node.parentPos)
 {}
 
 // ---------------------------------------------------------------------------------
@@ -143,12 +140,12 @@ void PathfindingManager::RemoveItemInVector(std::vector<PathNode>& vec, PathNode
 }
 
 //Utility: Returns item of a vector
-PathNode* PathfindingManager::GetItemInVector(std::vector<PathNode>& vec, PathNode node)
+PathNode PathfindingManager::GetItemInVector(std::vector<PathNode>& vec, iPoint nodePos)
 {
-	PathNode* item = new PathNode();
+	PathNode item;
 	for (std::vector<PathNode>::iterator it = vec.begin(); it != vec.end(); it++)
 	{
-		if (it->pos == node.pos) return item = &*it;
+		if (it->pos == nodePos) return item = *it;
 	}
 	return item;
 }
@@ -165,22 +162,22 @@ std::vector<PathNode> PathNode::FindWalkableAdjacents()
 	// north
 	cell.create(pos.x, pos.y + 1);
 	if (App->pathfinding.IsWalkable(cell))
-		list.push_back(PathNode(cell, this));
+		list.push_back(PathNode(cell, this->pos));
 
 	// south
 	cell.create(pos.x, pos.y - 1);
 	if (App->pathfinding.IsWalkable(cell))
-		list.push_back(PathNode(cell, this));
+		list.push_back(PathNode(cell, this->pos));
 
 	// east
 	cell.create(pos.x + 1, pos.y);
 	if (App->pathfinding.IsWalkable(cell))
-		list.push_back(PathNode(cell, this));
+		list.push_back(PathNode(cell, this->pos));
 
 	// west
 	cell.create(pos.x - 1, pos.y);
 	if (App->pathfinding.IsWalkable(cell))
-		list.push_back(PathNode(cell, this));
+		list.push_back(PathNode(cell, this->pos));
 
 	return list;
 }
@@ -189,10 +186,8 @@ std::vector<PathNode> PathNode::FindWalkableAdjacents()
 // PathNode -------------------------------------------------------------------------
 // Calculate the F for a specific destination tile
 // ----------------------------------------------------------------------------------
-void PathNode::CalculateF(iPoint& destination)
+void PathNode::CalculateF(iPoint destination)
 {
-	if (parent != nullptr) g = parent->g + 1;
-	else g = 0;	
 	h = pos.DistanceTo(destination);
 	score = g + h;
 }
@@ -211,10 +206,13 @@ std::vector<iPoint> PathfindingManager::CreatePath(iPoint& origin, iPoint& desti
 	if (IsWalkable(origin) && IsWalkable(destination))//Give error
 	{
 		std::vector<PathNode> openList,closedList;
-		PathNode originNode(origin, nullptr);
+		PathNode originNode(origin, nullPoint);
+		originNode.g = 0;
+		originNode.CalculateF(destination);
 		
 		openList.push_back(originNode);
 		LOG("Start node added to open list");
+
 		PathNode checkNode;
 		while (openList.empty() == false)
 		{
@@ -230,24 +228,22 @@ std::vector<iPoint> PathfindingManager::CreatePath(iPoint& origin, iPoint& desti
 				}
 			}
 		
-			closedList.push_back(checkNode); //Save node to evaluated node
+			closedList.push_back(checkNode); //Save node to evaluated list
 			//openList.pop_back();
-			//openList.erase(openList.begin());
-			RemoveItemInVector(openList, checkNode);//Remove node from open list
+			openList.erase(openList.begin());
+			//RemoveItemInVector(openList, checkNode);//Remove node from open list
 			LOG("2");
 
 			if (checkNode.pos == destination)
 			{
 				LOG("Destination reached");
 				PathNode iteratorNode = closedList.back();
-				PathNode auxNode;
 
 				while (iteratorNode.pos != origin)
 				{
-					LOG("Jump pos.x: %d;pos.y: %d", iteratorNode.pos.x, iteratorNode.pos.y);
+					//LOG("Jump pos.x: %d;pos.y: %d", iteratorNode.pos.x, iteratorNode.pos.y);
 					finalPath.push_back(iteratorNode.pos);
-					auxNode = *iteratorNode.parent;
-					iteratorNode = auxNode;
+					iteratorNode = GetItemInVector(closedList,iteratorNode.parentPos);
 				}
 				LOG("Last position added");
 
@@ -260,26 +256,28 @@ std::vector<iPoint> PathfindingManager::CreatePath(iPoint& origin, iPoint& desti
 			adjacentCells = checkNode.FindWalkableAdjacents();
 			int length = adjacentCells.size();
 			LOG("3");
+			LOG("Length: %d",length);
+
 			for (int a = 0; a < length; a++)
 			{
-				if (FindItemInVector(closedList, adjacentCells[a]) == false)
+				LOG("3.1");
+				if (FindItemInVector(closedList, adjacentCells[a]) == false)//Assertion error sometimes
 				{
 					LOG("4");
 					if (FindItemInVector(openList, adjacentCells[a]) == false)
 					{
 						LOG("5");
-						adjacentCells[a].parent = &checkNode;
+						adjacentCells[a].g = checkNode.g + 1;
 						adjacentCells[a].CalculateF(destination);
-						openList.push_back(adjacentCells[a]); LOG("6");						
+						openList.push_back(adjacentCells[a]); 
+						LOG("6");						
 					}
 					else
 					{
-						PathNode* temp = GetItemInVector(openList,adjacentCells[a]);
-						if (temp->g < checkNode.g) checkNode.parent = temp;
+						if (adjacentCells[a].g < checkNode.g) checkNode.parentPos = adjacentCells[a].pos;
 					}					
 				}
 			}
-			openList;
 			adjacentCells.clear();					
 		}
 	}
