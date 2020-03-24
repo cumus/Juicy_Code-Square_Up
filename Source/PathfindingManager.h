@@ -7,11 +7,7 @@
 
 #include <vector>
 
-#define DEFAULT_PATH_LENGTH 50
-#define INVALID_WALK_CODE 255
-#define NORMAL_MOVEMENT_COST 1
-#define DIAGONAL_MOVEMENT_COST 2
-#define MAX_PATH_ITERATIONS 150
+
 
 /*enum CellType
 {
@@ -81,7 +77,7 @@ public:
 	PathNode GetNodeLowestScore(std::vector<PathNode> node);
 
 	//Utility: Find node in vector and returns boolean
-	bool FindItemInVector(std::vector<PathNode>& vec,PathNode node);
+	bool FindItemInVector(std::vector<PathNode> vec,PathNode node);
 
 	//Utility: Remove node in vector
 	void RemoveItemInVector(std::vector<PathNode>& vec, PathNode node);

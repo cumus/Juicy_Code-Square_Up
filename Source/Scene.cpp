@@ -109,8 +109,8 @@ bool Scene::PostUpdate()
 	std::pair<int, int> render_pos = Map::I_MapToWorld(startPath.x, startPath.y);
 	App->render->Blit(id_mouse_tex, render_pos.first, render_pos.second, &rect);
 
-	render_pos = Map::I_MapToWorld(destinationPath.x, destinationPath.y);
-	App->render->Blit(id_mouse_tex, render_pos.first, render_pos.second, &rect);
+	//render_pos = Map::I_MapToWorld(destinationPath.x, destinationPath.y);
+	//App->render->Blit(id_mouse_tex, render_pos.first, render_pos.second, &rect);
 	
 	if (!path.empty())
 	{

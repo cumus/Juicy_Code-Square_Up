@@ -64,8 +64,10 @@ bool PathfindingManager::IsWalkable(iPoint& pos)
 // Utility: return the walkability value of a tile
 bool PathfindingManager::GetTileAt(iPoint& pos) 
 {
-	bool ret = true;
-	if (map.GetID(pos.x,pos.y) == 22 || map.GetID(pos.x, pos.y) == 23) ret = false;
+	bool ret = false;
+	//LOG("Tile ID--%d", map.GetID(pos.x, pos.y));
+	//if (map.GetID(pos.x,pos.y) == 22 || map.GetID(pos.x, pos.y) == 23) ret = false;
+	if (map.GetID(pos.x, pos.y) == 0) ret = true;
 	return ret;
 }
 
@@ -117,9 +119,9 @@ PathNode PathfindingManager::GetNodeLowestScore(std::vector<PathNode> list)
 }
 
 //Utility: Returns boolean if found item
-bool PathfindingManager::FindItemInVector(std::vector<PathNode>& vec, PathNode node)
+bool PathfindingManager::FindItemInVector(std::vector<PathNode> vec, PathNode node)
 {
-	for (std::vector<PathNode>::iterator it = vec.begin(); it != vec.end(); it++)
+	for (std::vector<PathNode>::const_iterator it = vec.cbegin(); it != vec.cend(); ++it)
 	{
 		if (it->pos == node.pos) return true;
 	}
@@ -162,22 +164,30 @@ std::vector<PathNode> PathNode::FindWalkableAdjacents()
 	// north
 	cell.create(pos.x, pos.y + 1);
 	if (App->pathfinding.IsWalkable(cell))
+	{
 		list.push_back(PathNode(cell, this->pos));
+	}
 
 	// south
 	cell.create(pos.x, pos.y - 1);
 	if (App->pathfinding.IsWalkable(cell))
+	{
 		list.push_back(PathNode(cell, this->pos));
+	}
 
 	// east
 	cell.create(pos.x + 1, pos.y);
 	if (App->pathfinding.IsWalkable(cell))
+	{
 		list.push_back(PathNode(cell, this->pos));
+	}
 
 	// west
 	cell.create(pos.x - 1, pos.y);
 	if (App->pathfinding.IsWalkable(cell))
+	{
 		list.push_back(PathNode(cell, this->pos));
+	}
 
 	return list;
 }
@@ -203,7 +213,7 @@ std::vector<iPoint> PathfindingManager::CreatePath(iPoint& origin, iPoint& desti
 	//BROFILER_CATEGORY("CreatePath", Profiler::Color::Azure)
 
 
-	if (IsWalkable(origin) && IsWalkable(destination))//Give error
+	if (IsWalkable(destination))
 	{
 		std::vector<PathNode> openList,closedList;
 		PathNode originNode(origin, nullPoint);
@@ -283,7 +293,7 @@ std::vector<iPoint> PathfindingManager::CreatePath(iPoint& origin, iPoint& desti
 	}
 	else
 	{
-		finalPath.push_back(destination);
+		finalPath.push_back(origin);
 		LOG("Path created.");
 		return finalPath;
 	}
