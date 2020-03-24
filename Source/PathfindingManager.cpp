@@ -166,6 +166,40 @@ PathNode PathfindingManager::GetLowestScoreNode(std::vector<PathNode>& vec)
 	return item;
 }
 
+void PathfindingManager::VectorQuicksort(std::vector<PathNode>& vec,int L, int R)
+{
+	int j = R;
+	int i = L;
+	int mid = i + (R - i) / 2;
+	PathNode piv = vec[mid];
+	PathNode temp;
+
+
+	while (i<R || j>0) 
+	{
+		while (vec[i].score < piv.score)
+			i++;
+		while (vec[j].score > piv.score)
+			j--;
+
+		if (i <= j) 
+		{
+			temp = vec[i];
+			vec[i] = vec[j];
+			vec[j] = temp;
+			i++;
+			j--;
+		}
+		else 
+		{
+			if (i < R)
+				VectorQuicksort(vec, i, R);
+			if (j > L)
+				VectorQuicksort(vec, L, j);
+			return;
+		}
+	}
+}
 
 
 // PathNode -------------------------------------------------------------------------
@@ -243,7 +277,8 @@ std::vector<iPoint> PathfindingManager::CreatePath(iPoint& origin, iPoint& desti
 		while (openList.empty() == false)
 		{
 			loops++;
-			checkNode = openList.front();//GetLowestScoreNode(openList);//openList[0];
+			VectorQuicksort(openList, 0, openList.size() - 1);
+			checkNode = openList.front();
 			//LOG("Start loop");
 			
 			/*for (int i = 1; i < openList.size(); i++)
@@ -256,9 +291,7 @@ std::vector<iPoint> PathfindingManager::CreatePath(iPoint& origin, iPoint& desti
 			}*/
 		
 			closedList.push_back(checkNode); //Save node to evaluated list
-			//openList.pop_back();
 			openList.erase(openList.begin());
-			//RemoveItemInVector(openList, checkNode);//Remove node from open list
 			//LOG("2");
 
 			if (checkNode.pos == destination)
