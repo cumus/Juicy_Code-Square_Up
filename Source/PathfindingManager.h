@@ -84,6 +84,9 @@ public:
 
 	// Utility: Get node in vector 
 	PathNode GetItemInVector(std::vector<PathNode>& vec, iPoint nodePos);
+
+	// Utility: Get lowest score node in vector 
+	PathNode GetLowestScoreNode(std::vector<PathNode>& vec);
 	
 
 private:

@@ -5,6 +5,7 @@
 #include "PathfindingManager.h"
 
 #include <vector>
+#include <algorithm>
 
 
 PathfindingManager::PathfindingManager()
@@ -152,6 +153,20 @@ PathNode PathfindingManager::GetItemInVector(std::vector<PathNode>& vec, iPoint 
 	return item;
 }
 
+//Utility: Get lowest score node in vector 
+PathNode PathfindingManager::GetLowestScoreNode(std::vector<PathNode>& vec)
+{
+	PathNode item;
+	int minScore = 0;
+	for (std::vector<PathNode>::iterator it = vec.begin(); it != vec.end(); it++)
+	{
+		if (minScore == 0) { item = *it; }
+		if (it->score < item.score) item = *it;
+	}
+	return item;
+}
+
+
 
 // PathNode -------------------------------------------------------------------------
 // Fills a list (PathList) of all valid adjacent pathnodes
@@ -208,13 +223,14 @@ void PathNode::CalculateF(iPoint destination)
 std::vector<iPoint> PathfindingManager::CreatePath(iPoint& origin, iPoint& destination)
 {
 	std::vector<iPoint> finalPath;
-	LOG("Origin! X=%d   y=%d",origin.x,origin.y);
-	LOG("Destination! X=%d   y=%d", destination.x, destination.y);
+	//LOG("Origin! X=%d   y=%d",origin.x,origin.y);
+	//LOG("Destination! X=%d   y=%d", destination.x, destination.y);
 	//BROFILER_CATEGORY("CreatePath", Profiler::Color::Azure)
 
 
 	if (IsWalkable(destination))
 	{
+		int loops = 0;
 		std::vector<PathNode> openList,closedList;
 		PathNode originNode(origin, nullPoint);
 		originNode.g = 0;
@@ -226,23 +242,24 @@ std::vector<iPoint> PathfindingManager::CreatePath(iPoint& origin, iPoint& desti
 		PathNode checkNode;
 		while (openList.empty() == false)
 		{
-			checkNode = openList[0];
-			LOG("Start loop");
+			loops++;
+			checkNode = openList.front();//GetLowestScoreNode(openList);//openList[0];
+			//LOG("Start loop");
 			
-			for (int i = 1; i < openList.size(); i++)
+			/*for (int i = 1; i < openList.size(); i++)
 			{
 				if (openList[i].score < checkNode.score || openList[i].score == checkNode.score && openList[i].h < checkNode.h)
 				{
 					checkNode = openList[i];
 					LOG("1");
 				}
-			}
+			}*/
 		
 			closedList.push_back(checkNode); //Save node to evaluated list
 			//openList.pop_back();
 			openList.erase(openList.begin());
 			//RemoveItemInVector(openList, checkNode);//Remove node from open list
-			LOG("2");
+			//LOG("2");
 
 			if (checkNode.pos == destination)
 			{
@@ -255,32 +272,33 @@ std::vector<iPoint> PathfindingManager::CreatePath(iPoint& origin, iPoint& desti
 					finalPath.push_back(iteratorNode.pos);
 					iteratorNode = GetItemInVector(closedList,iteratorNode.parentPos);
 				}
-				LOG("Last position added");
+				//LOG("Last position added");
 
 				std::reverse(finalPath.begin(), finalPath.end());
 				LOG("Path reversed");
+				LOG("Loops done: %d", loops);
 				return finalPath;
 			}
 
 			std::vector<PathNode> adjacentCells;
 			adjacentCells = checkNode.FindWalkableAdjacents();
 			int length = adjacentCells.size();
-			LOG("3");
-			LOG("Length: %d",length);
+			//LOG("3");
+			//LOG("Length: %d",length);
 
 			for (int a = 0; a < length; a++)
 			{
-				LOG("3.1");
+				//LOG("3.1");
 				if (FindItemInVector(closedList, adjacentCells[a]) == false)//Assertion error sometimes
 				{
-					LOG("4");
+					//LOG("4");
 					if (FindItemInVector(openList, adjacentCells[a]) == false)
 					{
 						LOG("5");
 						adjacentCells[a].g = checkNode.g + 1;
 						adjacentCells[a].CalculateF(destination);
 						openList.push_back(adjacentCells[a]); 
-						LOG("6");						
+						//LOG("6");						
 					}
 					else
 					{
@@ -294,7 +312,7 @@ std::vector<iPoint> PathfindingManager::CreatePath(iPoint& origin, iPoint& desti
 	else
 	{
 		finalPath.push_back(origin);
-		LOG("Path created.");
+		LOG("Unavailable destination!");
 		return finalPath;
 	}
 }
