@@ -6,16 +6,9 @@
 #include "MapContainer.h"
 
 #include <vector>
+#include <map>
 
-
-
-/*enum CellType
-{
-	NONE = 0,
-	WATER,
-	GROUND,
-	BUILDING
-};*/
+#define DEBUG_ID_TEXTURE 33
 
 // ---------------------------------------------------------------------
 // Pathnode: Helper struct to represent a node in the path creation
@@ -27,7 +20,7 @@ struct PathNode
 	PathNode(iPoint pos, iPoint parentPos);
 	PathNode(const PathNode& node);
 
-	// Fills a list (PathList) of all valid adjacent pathnodes
+	// Fills a vector of all valid adjacent pathnodes
 	std::vector<PathNode> FindWalkableAdjacents();	
 	// Calculate the F for a specific destination tile
 	void CalculateF(iPoint destination);
@@ -59,10 +52,7 @@ public:
 	void SetWalkabilityLayer(const MapLayer& layer);
 
 	// Main function to request a path from A to B
-	std::vector<iPoint> CreatePath( iPoint& origin,  iPoint& destination);
-
-	// To request all tiles involved in the last generated path
-	//std::vector<iPoint>* GetLastPath();
+	std::vector<iPoint> CreatePath( iPoint& origin,  iPoint& destination,int ID=0);
 
 	// Utility: return true if pos is inside the map boundaries
 	bool CheckBoundaries( iPoint& pos);
@@ -73,9 +63,6 @@ public:
 	// Utility: return the walkability value of a tile
 	bool GetTileAt( iPoint& pos);
 
-	//Utility: Returns node with lowest score
-	PathNode GetNodeLowestScore(std::vector<PathNode> node);
-
 	//Utility: Find node in vector and returns boolean
 	bool FindItemInVector(std::vector<PathNode> vec,PathNode node);
 
@@ -85,9 +72,6 @@ public:
 	// Utility: Get node in vector 
 	PathNode GetItemInVector(std::vector<PathNode>& vec, iPoint nodePos);
 
-	//Utility: Get lowest score node in vector 
-	PathNode GetLowestScoreNode(std::vector<PathNode>& vec);
-
 	//Utility: Quicksort for vector
 	void VectorQuicksort(std::vector<PathNode>& vec,int L,int R);
 
@@ -96,13 +80,26 @@ public:
 
 	//Utility: Used by merge sort
 	void Merge(std::vector<PathNode>& vec,int l, int m, int r);
+
+	//Utility: Delete all generated paths
+	void ClearAllPaths();
 	
+	//Utility: Prints all paths
+	void DebugShowPaths();
+
+	//Utility: Updates already stored path or add it
+	void UpdateStoredPaths(int ID, std::vector<iPoint> path);
+
+	//Utility: Delete one stored path
+	void DeletePath(int ID);
+
+	//Utility: Return one path found by ID
+	std::vector<iPoint> GetPath(int ID);
 
 private:
-
-	// all map walkability values [0..255]
 	MapLayer map;
 	iPoint nullPoint = iPoint({ -1,-1 });
+	std::map<int, std::vector<iPoint>> storedPaths; //Stores all generated paths by units
 };
 
 #endif 
