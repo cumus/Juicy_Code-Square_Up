@@ -38,40 +38,7 @@ bool PathfindingManager::CleanUp()
 	return true;
 }
 
-// Sets up the walkability map
-void PathfindingManager::SetWalkabilityLayer(const MapLayer& layer)
-{
-	map = layer;
-}
 
-// Utility: return true if pos is inside the map boundaries
-bool PathfindingManager::CheckBoundaries(iPoint& pos) 
-{
-	bool ret = false;
-	if ((pos.x >= 0 && pos.x <= map.width) && (pos.y >= 0 && pos.y <= map.height)) ret = true;
-	return ret;
-}
-
-// Utility: returns true if the tile is walkable
-bool PathfindingManager::IsWalkable(iPoint& pos) 
-{
-	bool ret = false;
-	if (CheckBoundaries(pos))
-	{
-		ret = GetTileAt(pos);
-	}
-	return ret;
-}
-
-// Utility: return the walkability value of a tile
-bool PathfindingManager::GetTileAt(iPoint& pos) 
-{
-	bool ret = false;
-	//LOG("Tile ID--%d", map.GetID(pos.x, pos.y));
-	//if (map.GetID(pos.x,pos.y) == 22 || map.GetID(pos.x, pos.y) == 23) ret = false;
-	if (map.GetID(pos.x, pos.y) == 0) ret = true;
-	return ret;
-}
 
 // PathNode -------------------------------------------------------------------------
 // Constructors
@@ -84,6 +51,8 @@ PathNode::PathNode(iPoint nodePos, iPoint parent) : pos(nodePos), parentPos(pare
 
 PathNode::PathNode(const PathNode& node) : g(node.g), h(node.h), score(node.score), pos(node.pos),parentPos(node.parentPos)
 {}
+
+#pragma region Paths management
 
 //Utility: Delete all generated paths
 void PathfindingManager::ClearAllPaths()
@@ -142,6 +111,63 @@ std::vector<iPoint> PathfindingManager::GetPath(int ID)
 	else return vec;
 }
 
+//Utility: Prints unit path
+void PathfindingManager::DebugShowUnitPath(int ID)
+{
+	std::vector<iPoint> path;
+	SDL_Rect rect = { 0, 0, 64, 64 };
+	std::map<int, std::vector<iPoint>>::iterator it;
+	it = storedPaths.find(ID);
+
+	if (it != storedPaths.end())
+	{
+		path = it->second;
+		for (std::vector<iPoint>::const_iterator it = path.cbegin(); it != path.cend(); ++it)
+		{
+			std::pair<int, int> render_pos = Map::I_MapToWorld(it->x, it->y);
+			App->render->Blit(DEBUG_ID_TEXTURE, render_pos.first, render_pos.second, &rect);
+		}
+	}
+}
+
+#pragma endregion
+
+#pragma region Path creation utils
+// Sets up the walkability map
+void PathfindingManager::SetWalkabilityLayer(const MapLayer& layer)
+{
+	map = layer;
+}
+
+// Utility: return true if pos is inside the map boundaries
+bool PathfindingManager::CheckBoundaries(iPoint& pos)
+{
+	bool ret = false;
+	if ((pos.x >= 0 && pos.x <= map.width) && (pos.y >= 0 && pos.y <= map.height)) ret = true;
+	return ret;
+}
+
+// Utility: returns true if the tile is walkable
+bool PathfindingManager::IsWalkable(iPoint& pos)
+{
+	bool ret = false;
+	if (CheckBoundaries(pos))
+	{
+		ret = GetTileAt(pos);
+	}
+	return ret;
+}
+
+// Utility: return the walkability value of a tile
+bool PathfindingManager::GetTileAt(iPoint& pos)
+{
+	bool ret = false;
+	//LOG("Tile ID--%d", map.GetID(pos.x, pos.y));
+	//if (map.GetID(pos.x,pos.y) == 22 || map.GetID(pos.x, pos.y) == 23) ret = false;
+	if (map.GetID(pos.x, pos.y) == 0) ret = true;
+	return ret;
+}
+
 //Utility: Returns boolean if found item
 bool PathfindingManager::FindItemInVector(std::vector<PathNode> vec, PathNode node)
 {
@@ -176,6 +202,54 @@ PathNode PathfindingManager::GetItemInVector(std::vector<PathNode>& vec, iPoint 
 	return item;
 }
 
+// Fills a vector of all valid adjacent pathnodes
+std::vector<PathNode> PathNode::FindWalkableAdjacents()
+{
+	std::vector<PathNode> list;
+	iPoint cell;
+
+	// north
+	cell.create(pos.x, pos.y + 1);
+	if (App->pathfinding.IsWalkable(cell))
+	{
+		list.push_back(PathNode(cell, this->pos));
+	}
+
+	// south
+	cell.create(pos.x, pos.y - 1);
+	if (App->pathfinding.IsWalkable(cell))
+	{
+		list.push_back(PathNode(cell, this->pos));
+	}
+
+	// east
+	cell.create(pos.x + 1, pos.y);
+	if (App->pathfinding.IsWalkable(cell))
+	{
+		list.push_back(PathNode(cell, this->pos));
+	}
+
+	// west
+	cell.create(pos.x - 1, pos.y);
+	if (App->pathfinding.IsWalkable(cell))
+	{
+		list.push_back(PathNode(cell, this->pos));
+	}
+
+	return list;
+}
+
+// Calculate the F for a specific destination tile
+void PathNode::CalculateF(iPoint destination)
+{
+	h = pos.DistanceTo(destination);
+	score = g + h;
+}
+
+
+#pragma endregion
+
+#pragma region Ordenation algorithms
 //Recursive sort
 void PathfindingManager::VectorQuicksort(std::vector<PathNode>& vec,int L, int R)
 {
@@ -276,49 +350,8 @@ void PathfindingManager::Merge(std::vector<PathNode>& vec, int l, int m, int r)
 	}
 }
 
-// Fills a vector of all valid adjacent pathnodes
-std::vector<PathNode> PathNode::FindWalkableAdjacents()
-{
-	std::vector<PathNode> list;
-	iPoint cell;
+#pragma endregion
 
-	// north
-	cell.create(pos.x, pos.y + 1);
-	if (App->pathfinding.IsWalkable(cell))
-	{
-		list.push_back(PathNode(cell, this->pos));
-	}
-
-	// south
-	cell.create(pos.x, pos.y - 1);
-	if (App->pathfinding.IsWalkable(cell))
-	{
-		list.push_back(PathNode(cell, this->pos));
-	}
-
-	// east
-	cell.create(pos.x + 1, pos.y);
-	if (App->pathfinding.IsWalkable(cell))
-	{
-		list.push_back(PathNode(cell, this->pos));
-	}
-
-	// west
-	cell.create(pos.x - 1, pos.y);
-	if (App->pathfinding.IsWalkable(cell))
-	{
-		list.push_back(PathNode(cell, this->pos));
-	}
-
-	return list;
-}
-
-// Calculate the F for a specific destination tile
-void PathNode::CalculateF(iPoint destination)
-{
-	h = pos.DistanceTo(destination);
-	score = g + h;
-}
 
 // Main function to request a path from A to B
 std::vector<iPoint> PathfindingManager::CreatePath(iPoint& origin, iPoint& destination, int ID)

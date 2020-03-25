@@ -87,6 +87,9 @@ public:
 	//Utility: Prints all paths
 	void DebugShowPaths();
 
+	//Utility: Prints unit path
+	void DebugShowUnitPath(int ID);
+
 	//Utility: Updates already stored path or add it
 	void UpdateStoredPaths(int ID, std::vector<iPoint> path);
 
