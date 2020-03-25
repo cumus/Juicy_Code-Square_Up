@@ -90,6 +90,12 @@ public:
 
 	//Utility: Quicksort for vector
 	void VectorQuicksort(std::vector<PathNode>& vec,int L,int R);
+
+	//Utility: Merge sort for vector
+	void VectorMergesort(std::vector<PathNode>& vec, int R);
+
+	//Utility: Used by merge sort
+	void Merge(std::vector<PathNode>& vec,int l, int m, int r);
 	
 
 private:

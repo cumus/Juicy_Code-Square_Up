@@ -167,6 +167,7 @@ PathNode PathfindingManager::GetLowestScoreNode(std::vector<PathNode>& vec)
 	return item;
 }
 
+//Recursive sort
 void PathfindingManager::VectorQuicksort(std::vector<PathNode>& vec,int L, int R)
 {
 	int j = R;
@@ -199,6 +200,69 @@ void PathfindingManager::VectorQuicksort(std::vector<PathNode>& vec,int L, int R
 				VectorQuicksort(vec, L, j);
 			return;
 		}
+	}
+}
+
+//Iterative sort
+void PathfindingManager::VectorMergesort(std::vector<PathNode>& vec, int length)
+{
+	int curr_size;
+	int left_start; 
+
+	for (curr_size = 1; curr_size <= length - 1; curr_size = 2 * curr_size)
+	{
+		for (left_start = 0; left_start < length - 1; left_start += 2 * curr_size)
+		{
+			int mid = min(left_start + curr_size - 1, length - 1);
+			int right_end = min(left_start + 2 * curr_size - 1, length - 1);
+			Merge(vec, left_start, mid, right_end);
+		}
+	}
+}
+
+void PathfindingManager::Merge(std::vector<PathNode>& vec, int l, int m, int r)
+{
+	int i, j, k;
+	int n1 = m - l + 1;
+	int n2 = r - m;
+
+	PathNode* L = new PathNode[n1];
+	PathNode* R = new PathNode[n2];
+
+
+	for (i = 0; i < n1; i++)
+		L[i] = vec[l + i];
+	for (j = 0; j < n2; j++)
+		R[j] = vec[m + 1 + j];
+
+	i = 0;
+	j = 0;
+	k = l;
+	while (i < n1 && j < n2)
+	{
+		if (L[i].score <= R[j].score)
+		{
+			vec[k] = L[i];
+			i++;
+		}
+		else
+		{
+			vec[k] = R[j];
+			j++;
+		}
+		k++;
+	}
+	while (i < n1)
+	{
+		vec[k] = L[i];
+		i++;
+		k++;
+	}
+	while (j < n2)
+	{
+		vec[k] = R[j];
+		j++;
+		k++;
 	}
 }
 
@@ -280,6 +344,7 @@ std::vector<iPoint> PathfindingManager::CreatePath(iPoint& origin, iPoint& desti
 		{
 			loops++;
 			VectorQuicksort(openList, 0, openList.size() - 1);
+			//VectorMergesort(openList,openList.size());
 			checkNode = openList.front();
 			//LOG("Start loop");
 			
