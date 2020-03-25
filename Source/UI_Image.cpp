@@ -4,7 +4,7 @@
 #include "TextureManager.h"
 
 UI_Image::UI_Image(EditorWindow* window, RectF rect, int texture_id, SDL_Rect section)
-	: UI_Element(window, IMAGE, rect), section(section)
+	: UI_Element(window, IMAGE, rect), texture_id(texture_id), section(section)
 {}
 
 UI_Image::~UI_Image()

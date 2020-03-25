@@ -29,7 +29,7 @@ bool HierarchyWindow::Init()
 void HierarchyWindow::RecieveEvent(const Event& e)
 {
 	int id = e.data1.AsInt();
-	if (id >= 0 && id < gos.size() && e.type == MOUSE_UP)
+	if (id >= 0 && id < int(gos.size()) && e.type == MOUSE_UP)
 	{
 		Gameobject* go = gos[id].second;
 		App->editor->selection = go;
@@ -47,30 +47,32 @@ void HierarchyWindow::_Update()
 	for (std::vector<Gameobject*>::reverse_iterator it = childs.rbegin(); it != childs.rend(); ++it)
 		stack.push({ 0.0f, *it });
 
-	// Add 
+	// Fill gos vector from stack
 	while (!stack.empty())
 	{
+		// Add stacked gameobject to vector
 		std::pair<float, Gameobject*> go = stack.top();
+		gos.push_back(go);
 		stack.pop();
 
-		gos.push_back(go);
-
+		// Add childs to stack in reverse order
 		std::vector<Gameobject*> childs = go.second->GetChilds();
 		for (std::vector<Gameobject*>::reverse_iterator it = childs.rbegin(); it != childs.rend(); ++it)
 			stack.push({ go.first + 1.0f, *it });
 	}
 
-	for (int i = 0; i < 20; ++i)
+	// Set UI_Elements from gos vector
+	for (unsigned int i = 0; i < 20; ++i)
 	{
 		if (i < gos.size())
 		{
 			elements[i]->rect = { gos[i].first * 0.05f, 0.05f * float(i), 0.5f, 0.05f };
-			elements[i]->ToUiTextButton()->text = gos[i].second->GetName();
+			elements[i]->ToUiTextButton()->text->SetText(gos[i].second->GetName());
 		}
 		else
 		{
 			elements[i]->rect = { 0.0f, 0.05f, 0.5f, 0.05f };
-			elements[i]->ToUiTextButton()->text = " ";
+			elements[i]->ToUiTextButton()->text->SetText(" ");
 		}
 	}
 }

@@ -7,6 +7,7 @@
 
 struct SDL_Renderer;
 class Sprite;
+class RenderedText;
 
 class Render : public Module
 {
@@ -43,8 +44,8 @@ public:
 
 	bool BlitNorm(int texture_id, RectF rect, const SDL_Rect* section = nullptr, bool draw_anyway = true) const;
 
-	bool Blit_Text(const char* text, int x, int y, int font_id = -1, SDL_Color color = { 0, 0, 0, 255 }, unsigned int wrap_length = 1000u) const;
-	bool Blit_TextSized(const char* text, SDL_Rect size, int font_id = -1, SDL_Color color = { 0, 0, 0, 255 }, unsigned int wrap_length = 1000u) const;
+	bool Blit_Text(RenderedText* rendered_text, int x, int y) const;
+	bool Blit_TextSized(RenderedText* rendered_text, SDL_Rect size) const;
 
 	bool DrawQuad(const SDL_Rect rect, SDL_Color color = { 0, 0, 0, 255 }, bool filled = true, bool use_camera = true) const;
 	bool DrawQuadNormCoords(const RectF rect, SDL_Color color = { 0, 0, 0, 255 }, bool filled = true) const;

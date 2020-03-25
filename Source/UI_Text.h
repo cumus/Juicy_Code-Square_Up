@@ -5,6 +5,8 @@
 
 #include <string>
 
+class RenderedText;
+
 class UI_Text : public UI_Element
 {
 public:
@@ -17,7 +19,7 @@ public:
 
 public:
 
-	std::string text;
-	int font_id;
+	bool scale_to_fit = false;
+	RenderedText* text = nullptr;
 };
 #endif // !_UI_TEXT_H_

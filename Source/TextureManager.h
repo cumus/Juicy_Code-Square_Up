@@ -2,6 +2,7 @@
 #define __TEXTURE_MANAGER_H__
 
 #include <vector>
+#include <map>
 #include <string>
 
 struct SDL_Texture;
@@ -11,31 +12,42 @@ struct TextureData
 {
 	TextureData();
 	TextureData(const TextureData& copy);
+	~TextureData();
+
+	void ClearTexture();
+	bool ReloadSurface(SDL_Surface* surface);
+
+	static int texture_count;
 
 	int id;
 	int width;
 	int height;
 	std::string source;
+	SDL_Texture* texture;
 };
 
 class TextureManager
 {
 public:
 
-	TextureManager() {}
-	~TextureManager() {}
+	TextureManager();
+	~TextureManager();
 
 	void LoadConfig(bool empty_config);
 	void SaveConfig() const;
 
 	bool Init();
-	int Load(const char* path);
 	void CleanUp();
 
+	int Load(const char* path);
 	int LoadSurface(SDL_Surface* surface);
+	TextureData* CreateEmpty();
+
+	bool Remove(int id);
 
 	bool GetTextureData(int id, TextureData& data) const;
 	SDL_Texture* GetTexture(int id) const;
+	TextureData* GetDataPtr(int id);
 
 private:
 
@@ -44,8 +56,7 @@ private:
 	bool using_tif = false;
 	bool using_webp = false;
 
-	std::vector<TextureData> texture_data;
-	std::vector<SDL_Texture*> textures;
+	std::map<int, TextureData> textures;
 };
 
 #endif // __TEXTURE_MANAGER_H__

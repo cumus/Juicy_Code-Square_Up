@@ -14,6 +14,65 @@
 #pragma comment( lib, "SDL2_image-2.0.5/lib/x64/SDL2_image.lib" )
 #endif
 
+int TextureData::texture_count = 0;
+
+TextureData::TextureData() :
+	id(++texture_count),
+	width(0),
+	height(0),
+	source("none"),
+	texture(nullptr)
+{}
+
+TextureData::TextureData(const TextureData& copy) :
+	id(copy.id),
+	width(copy.width),
+	height(copy.height),
+	source(copy.source),
+	texture(copy.texture)
+{}
+
+TextureData::~TextureData()
+{
+}
+
+void TextureData::ClearTexture()
+{
+	if (texture != nullptr)
+	{
+		width = height = 0;
+		SDL_DestroyTexture(texture);
+		texture = nullptr;
+	}
+}
+
+bool TextureData::ReloadSurface(SDL_Surface* surface)
+{
+	bool ret = false;
+
+	ClearTexture();
+
+	texture = SDL_CreateTextureFromSurface(App->render->GetSDLRenderer(), surface);
+	if (texture != nullptr)
+	{
+		if (!(ret = (SDL_QueryTexture(texture, 0, 0, &width, &height) == 0)))
+			LOG("Unable to create texture from surface! SDL Error: %s\n", SDL_GetError());
+	}
+	else
+		LOG("Unable to create texture from surface! SDL Error: %s\n", SDL_GetError());
+
+	return ret;
+}
+
+TextureManager::TextureManager()
+{}
+
+TextureManager::~TextureManager()
+{
+	if (!textures.empty())
+		CleanUp();
+}
+
 void TextureManager::LoadConfig(bool empty_config)
 {
 	pugi::xml_node config = FileManager::ConfigNode();
@@ -64,19 +123,30 @@ bool TextureManager::Init()
 	return ret;
 }
 
+void TextureManager::CleanUp()
+{
+	LOG("Freeing textures");
+
+	for (std::map<int, TextureData>::iterator it = textures.begin(); it != textures.end(); ++it)
+		it->second.ClearTexture();
+
+	textures.clear();
+
+	IMG_Quit();
+}
+
 // Load texture from file path
 int TextureManager::Load(const char* path)
 {
 	OPTICK_EVENT();
 
 	int ret = -1;
-
-	for (std::vector<TextureData>::const_iterator it = texture_data.cbegin(); it != texture_data.cend(); ++it)
+	for (std::map<int, TextureData>::const_iterator it = textures.cbegin(); it != textures.cend(); ++it)
 	{
-		if (it->source == path)
+		if (it->second.source == path)
 		{
-			ret = it->id;
-			LOG("Texture already loaded: %s", it->source);
+			ret = it->second.id;
+			LOG("Texture already loaded: %s", it->second.source);
 		}
 	}
 
@@ -93,38 +163,21 @@ int TextureManager::Load(const char* path)
 				TextureData data;
 				SDL_QueryTexture(texture, 0, 0, &data.width, &data.height);
 				data.source = path;
-				data.id = textures.size();
-
-				ret = data.id;
-				texture_data.push_back(data);
-				textures.push_back(texture);
-
-				SDL_FreeSurface(surface);
+				data.texture = texture;
+				textures.insert({ ret = data.id, data });
 
 				LOG("Loaded surface with path: %s", path);
 			}
 			else
 				LOG("Unable to create texture from surface! SDL Error: %s\n", SDL_GetError());
+
+			SDL_FreeSurface(surface);
 		}
 		else
 			LOG("Could not load surface with path: %s. IMG_Load: %s", path, IMG_GetError());
 	}
 
 	return ret;
-}
-
-void TextureManager::CleanUp()
-{
-	LOG("Freeing textures");
-
-	texture_data.clear();
-
-	for (std::vector<SDL_Texture*>::iterator it = textures.begin(); it != textures.end(); ++it)
-		SDL_DestroyTexture(*it);
-
-	textures.clear();
-
-	IMG_Quit();
 }
 
 int TextureManager::LoadSurface(SDL_Surface* surface)
@@ -138,11 +191,8 @@ int TextureManager::LoadSurface(SDL_Surface* surface)
 		TextureData data;
 		SDL_QueryTexture(tex, 0, 0, &data.width, &data.height);
 		data.source = "From SDL_Surface";
-		data.id = textures.size();
-
-		ret = data.id;
-		texture_data.push_back(data);
-		textures.push_back(tex);
+		data.texture = tex;
+		textures.insert({ ret = data.id, data });
 	}
 	else
 		LOG("Unable to create texture from surface! SDL Error: %s\n", SDL_GetError());
@@ -150,12 +200,32 @@ int TextureManager::LoadSurface(SDL_Surface* surface)
 	return ret;
 }
 
+TextureData* TextureManager::CreateEmpty()
+{
+	TextureData data;
+	return &textures.insert({ data.id, data }).first->second;
+}
+
+bool TextureManager::Remove(int id)
+{
+	bool ret = false;
+
+	std::map<int, TextureData>::iterator it = textures.find(id);
+
+	if (ret = (it != textures.end()))
+		textures.erase(it);
+
+	return ret;
+}
+
 bool TextureManager::GetTextureData(int id, TextureData& data) const
 {
-	bool ret;
+	bool ret = false;
 
-	if (ret = (id >= 0 && id < int(textures.size())))
-		data = texture_data[id];
+	std::map<int, TextureData>::const_iterator it = textures.find(id);
+
+	if (ret = (it != textures.end()))
+		data = it->second;
 
 	return ret;
 }
@@ -164,22 +234,22 @@ SDL_Texture * TextureManager::GetTexture(int id) const
 {
 	SDL_Texture* ret = nullptr;
 
-	if (id >= 0 && id < int(textures.size()))
-		ret = textures[id];
+	std::map<int, TextureData>::const_iterator it = textures.find(id);
+
+	if (it != textures.end())
+		ret = it->second.texture;
 
 	return ret;
 }
 
-TextureData::TextureData() :
-	id(0),
-	width(0),
-	height(0),
-	source("none")
-{}
+TextureData* TextureManager::GetDataPtr(int id)
+{
+	TextureData* ret = nullptr;
 
-TextureData::TextureData(const TextureData& copy) :
-	id(copy.id),
-	width(copy.width),
-	height(copy.height),
-	source(copy.source)
-{}
+	std::map<int, TextureData>::iterator it = textures.find(id);
+
+	if (it != textures.end())
+		ret = &it->second;
+
+	return ret;
+}

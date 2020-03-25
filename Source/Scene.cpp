@@ -192,12 +192,6 @@ bool Scene::LoadTestScene()
 		ret = (id_mouse_tex != -1);
 	}
 
-	// Load font
-	if (ret)
-		ret = (App->fonts.Load("fonts/OpenSans-Regular.ttf") >= 0);
-	if (ret)
-		ret = (App->fonts.Load("fonts/OpenSans-Regular.ttf", 56) >= 0);
-
 	if (ret)
 	{
 		// Run test content

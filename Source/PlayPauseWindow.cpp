@@ -68,5 +68,5 @@ void PlayPauseWindow::RecieveEvent(const Event& e)
 
 void PlayPauseWindow::_Update()
 {
-	elements[TIMER]->ToUiText()->text = std::to_string(App->time.GetGameTimer());
+	elements[TIMER]->ToUiText()->text->SetText(std::to_string(App->time.GetGameTimer()).c_str());
 }

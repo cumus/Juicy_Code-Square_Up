@@ -381,34 +381,36 @@ bool Render::BlitNorm(int texture_id, RectF rect, const SDL_Rect* section, bool 
 	return ret;
 }
 
-bool Render::Blit_Text(const char* text, int x, int y, int font_id, SDL_Color color, unsigned int wrap_length) const
+bool Render::Blit_Text(RenderedText* rendered_text, int x, int y) const
 {
-	bool ret = true;
+	bool ret = false;
 
-	int width, height;
-	if (App->fonts.CalcSize(text, width, height, font_id))
+	if (rendered_text != nullptr)
 	{
-		SDL_Rect rect = { x, y, width, height };
-
-		if (SDL_RenderCopyEx(renderer, App->fonts.RenderText("Square UP!", wrap_length, font_id, color.r, color.g, color.b, color.a), 0, &rect, 0, nullptr, SDL_RendererFlip::SDL_FLIP_NONE) != 0)
+		int width, height;
+		if (rendered_text->GetSize(width, height))
 		{
-			LOG("Cannot blit to screen. SDL_RenderCopy error: %s", SDL_GetError());
-			ret = false;
+			SDL_Rect rect = { x, y, width, height };
+			if (!(ret = (SDL_RenderCopyEx(renderer, rendered_text->GetTexture(), 0, &rect, 0, nullptr, SDL_RendererFlip::SDL_FLIP_NONE) == 0)))
+				LOG("Cannot blit to screen. SDL_RenderCopy error: %s", SDL_GetError());
 		}
 	}
 
 	return ret;
 }
 
-bool Render::Blit_TextSized(const char* text, SDL_Rect size, int font_id, SDL_Color color, unsigned int wrap_length) const
+bool Render::Blit_TextSized(RenderedText* rendered_text, SDL_Rect size) const
 {
-	bool ret = true;
+	bool ret = false;
 
-	// TODO: Release rendered text texture on changing text or removing component
-	if (SDL_RenderCopyEx(renderer, App->fonts.RenderText(text, wrap_length, font_id, color.r, color.g, color.b, color.a), 0, &size, 0, nullptr, SDL_RendererFlip::SDL_FLIP_NONE) != 0)
+	if (rendered_text != nullptr)
 	{
-		LOG("Cannot blit to screen. SDL_RenderCopy error: %s", SDL_GetError());
-		ret = false;
+		int width, height;
+		if (rendered_text->GetSize(width, height))
+		{
+			if (!(ret = (SDL_RenderCopyEx(renderer, rendered_text->GetTexture(), 0, &size, 0, nullptr, SDL_RendererFlip::SDL_FLIP_NONE) == 0)))
+				LOG("Cannot blit to screen. SDL_RenderCopy error: %s", SDL_GetError());
+		}
 	}
 
 	return ret;

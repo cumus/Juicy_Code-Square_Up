@@ -23,7 +23,14 @@ bool FontManager::Init()
 	bool ret = (TTF_Init() == 0);
 
 	if (ret)
+	{
 		LOG("SDL_ttf initialized!");
+
+		// Load default font
+		ret = (
+			Load("fonts/OpenSans-Regular.ttf") >= 0 &&
+			Load("fonts/OpenSans-Regular.ttf", 56) >= 0);
+	}
 	else
 		LOG("SDL_ttf could not initialize! SDL_ttf Error: %s\n", TTF_GetError());
 
@@ -97,51 +104,94 @@ _TTF_Font* FontManager::GetFont(int id) const
 	return ret;
 }
 
-SDL_Texture* FontManager::RenderText(const char* text, unsigned int wrap_length, int font_id, int r, int g, int b, int a) const
-{
-	SDL_Texture* ret = nullptr;
-
-	_TTF_Font* font = GetFont(font_id);
-
-	if (font != nullptr)
-	{
-		SDL_Surface* surface = TTF_RenderText_Blended_Wrapped(font, text, { unsigned char(r), unsigned char(g), unsigned char(b), unsigned char(a) }, wrap_length);
-
-		if (surface != nullptr)
-		{
-			ret = App->tex.GetTexture(App->tex.LoadSurface(surface));
-			SDL_FreeSurface(surface);
-		}
-		else
-			LOG("Unable to render text surface! SDL_ttf Error: %s\n", TTF_GetError());
-	}
-	else
-		LOG("Unable to render text! No fonts loaded.");
-
-	return ret;
-}
-
-bool FontManager::CalcSize(const char* text, int& width, int& height, int font_id) const
-{
-	bool ret = false;
-
-	_TTF_Font* font = GetFont(font_id);
-
-	if (font != nullptr)
-	{
-		if (TTF_SizeText(font, text, &width, &height) == 0)
-			ret = true;
-		else
-			LOG("Unable to calc size of text surface! SDL_ttf Error: %s\n", TTF_GetError());
-	}
-	else
-		LOG("Unable to calc size of text! No fonts loaded.");
-
-	return ret;
-}
-
 FontData::FontData() : id(-1), size(-1), source("none")
 {}
 
 FontData::FontData(const FontData& copy) : id(copy.id), size(copy.size), source(copy.source)
 {}
+
+RenderedText::RenderedText(const char* content, int font_id, SDL_Color color, unsigned int wrap_length) :
+	text(content), wrap_length(wrap_length), color(color), texture(nullptr)
+{
+	texture = App->tex.CreateEmpty();
+	needs_redraw = true;
+	BlitTexture();
+}
+
+RenderedText::~RenderedText()
+{
+	if (texture != nullptr)
+		App->tex.Remove(texture->id);
+}
+
+const char* RenderedText::GetText() const
+{
+	return text.c_str();
+}
+
+void RenderedText::SetText(const char* t)
+{
+	if (t != nullptr && text != t)
+	{
+		text = t;
+		needs_redraw = true;
+	}
+}
+
+SDL_Texture* RenderedText::GetTexture()
+{
+	SDL_Texture* ret = nullptr;
+
+	if (texture != nullptr)
+	{
+		if (needs_redraw)
+			BlitTexture();
+
+		ret = texture->texture;
+	}
+
+	return ret;
+}
+
+bool RenderedText::GetSize(int& w, int& h) const
+{
+	bool ret;
+
+	if (ret = (width > 0 && height > 0))
+	{
+		w = width;
+		h = height;
+	}
+
+	return ret;
+}
+
+bool RenderedText::BlitTexture()
+{
+	_TTF_Font* font = App->fonts.GetFont(font_id);
+	if (font != nullptr)
+	{
+		if (TTF_SizeText(font, text.c_str(), &width, &height) == 0)
+		{
+			SDL_Surface* surface = TTF_RenderText_Blended_Wrapped(font, text.c_str(), color, wrap_length);
+
+			if (surface != nullptr)
+			{
+				if (texture->ReloadSurface(surface))
+					needs_redraw = false;
+				else
+					LOG("Unable to reload texture from text surface!", TTF_GetError());
+
+				SDL_FreeSurface(surface);
+			}
+			else
+				LOG("Unable to render text surface! SDL_ttf Error: %s\n", TTF_GetError());
+		}
+		else
+			LOG("Unable to calc size of text surface! SDL_ttf Error: %s\n", TTF_GetError());
+	}
+	else
+		LOG("Unable to render text! No fonts loaded.");
+
+	return !needs_redraw;
+}

@@ -3,21 +3,30 @@
 #include "Render.h"
 #include "FontManager.h"
 
-UI_TextButton::UI_TextButton(EditorWindow* window, RectF rect, const char* text, int font_id)
-	: UI_Element(window, TEXT, rect), font_id(font_id), text(text)
-{}
+UI_TextButton::UI_TextButton(EditorWindow* window, RectF rect, const char* t, int font_id)
+	: UI_Element(window, TEXT, rect)
+{
+	text = new RenderedText(t, font_id);
+}
 
 UI_TextButton::~UI_TextButton()
-{}
+{
+	DEL(text);
+}
 
 bool UI_TextButton::Draw() const
 {
+	bool ret;
 
-	App->render->DrawQuadNormCoords(GetTargetNormRect(), color);
+	if (ret = App->render->DrawQuadNormCoords(GetTargetNormRect(), color))
+	{
+		SDL_Rect rect = GetTargetRect();
+		ret = (scale_to_fit ?
+			App->render->Blit_Text(text, rect.x, rect.y) :
+			App->render->Blit_TextSized(text, rect));
+	}
 
-	App->render->Blit_TextSized(text, GetTargetRect(), font_id);
-
-	return true;
+	return ret;
 }
 
 UI_TextButton* UI_TextButton::ToUiTextButton()

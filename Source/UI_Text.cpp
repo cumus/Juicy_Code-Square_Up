@@ -3,16 +3,21 @@
 #include "Render.h"
 #include "FontManager.h"
 
-UI_Text::UI_Text(EditorWindow* window, RectF rect, const char* text, int font_id)
-	: UI_Element(window, TEXT, rect), text(text), font_id(font_id)
-{}
+UI_Text::UI_Text(EditorWindow* window, RectF rect, const char* t, int font_id)
+	: UI_Element(window, TEXT, rect)
+{
+	text = new RenderedText(t, font_id);
+}
 
 UI_Text::~UI_Text()
-{}
+{
+	DEL(text);
+}
 
 bool UI_Text::Draw() const
 {
-	return App->render->Blit_TextSized(text.c_str(), GetTargetRect(), font_id);
+	SDL_Rect rect = GetTargetRect();
+	return scale_to_fit ? App->render->Blit_Text(text, rect.x, rect.y) : App->render->Blit_TextSized(text, rect);
 }
 
 UI_Text* UI_Text::ToUiText()

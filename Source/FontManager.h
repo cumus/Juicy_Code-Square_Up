@@ -1,11 +1,14 @@
 #ifndef __FONT_MANAGER_H__
 #define __FONT_MANAGER_H__
 
+#include "SDL/include/SDL_pixels.h"
+
 #include <string>
 #include <vector>
 
 struct SDL_Texture;
 struct _TTF_Font;
+struct TextureData;
 
 struct FontData
 {
@@ -14,6 +17,38 @@ struct FontData
 
 	int id, size;
 	std::string source;
+};
+
+class RenderedText
+{
+public:
+	RenderedText(const char* content = "sample text", int font_id = -1, SDL_Color color = { 0, 0, 0, 255 }, unsigned int wrap_length = 1000u);
+	~RenderedText();
+
+	const char* GetText() const;
+	void SetText(const char* t);
+
+	SDL_Texture* GetTexture();
+
+	bool GetSize(int& width, int& height) const;
+
+private:
+
+	bool BlitTexture();
+
+private:
+
+	bool needs_redraw = true;
+
+	std::string text;
+	int font_id = -1;
+
+	TextureData* texture = nullptr;
+
+	int width = -1;
+	int height = -1;
+	unsigned int wrap_length = 1000u;
+	SDL_Color color = { 0, 0, 0, 255 };
 };
 
 class FontManager
@@ -29,10 +64,6 @@ public:
 	int Load(const char* path, int size = 12);
 
 	_TTF_Font* GetFont(int id = -1) const;
-
-	SDL_Texture* RenderText(const char* text, unsigned int wrap_length, int font_id = -1, int r = 0, int g = 0, int b = 0, int a = 256)  const;
-
-	bool CalcSize(const char* text, int& width, int& height, int font_id = -1) const;
 	
 public:
 

@@ -18,7 +18,10 @@ Editor::Editor() : Module("editor")
 {}
 
 Editor::~Editor()
-{}
+{
+	if (!windows.empty())
+		CleanUp();
+}
 
 bool Editor::Init()
 {

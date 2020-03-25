@@ -3,6 +3,7 @@
 
 #include "UI_Elements.h"
 
+class RenderedText;
 
 class UI_TextButton : public UI_Element
 {
@@ -17,8 +18,8 @@ public:
 public:
 
 	SDL_Color color;
-	const char* text;
-	int font_id;
+	bool scale_to_fit = false;
+	RenderedText* text = nullptr;
 
 };
 #endif // !_UI_TEXT_H_

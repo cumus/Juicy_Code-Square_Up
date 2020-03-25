@@ -64,6 +64,7 @@ bool Application::Init()
 		// Pre-Initialize Independent Manager Systems
 		if (ret) ret = time.Init();
 		if (ret) ret = tex.Init();
+		if (ret) ret = fonts.Init();
 
 		// Initialize Modules
 		for (std::list<Module*>::iterator it = modules.begin(); it != modules.end() && ret; ++it)
@@ -74,9 +75,6 @@ bool Application::Init()
 			else
 				LOG("Error initializing module: %s.", (*it)->GetName());
 		}
-
-		// Post-Initialize Independent Manager Systems
-		if (ret) ret = fonts.Init();
 
 		// Start Modules
 		for (std::list<Module*>::iterator it = modules.begin(); it != modules.end() && ret; ++it)
