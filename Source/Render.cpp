@@ -101,14 +101,14 @@ bool Render::Update()
 	{
 		float target_zoom = zoom + float(wheel_motion) * 0.05f;
 
-		if (target_zoom > 4.0f)
+		if (target_zoom > 2.0f)
 		{
-			zoom = 4.0f;
+			zoom = 2.0f;
 			Map::SetMapScale(zoom);
 		}
-		else if (target_zoom < 0.5f)
+		else if (target_zoom < 0.3f)
 		{
-			zoom = 0.5f;
+			zoom = 0.3f;
 			Map::SetMapScale(zoom);
 		}
 		else if (wheel_motion != 0)
