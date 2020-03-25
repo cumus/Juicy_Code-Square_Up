@@ -17,6 +17,8 @@ private:
 
 	enum Content
 	{
+		Archive,
+		Team,
 		Exit,
 		Save,
 		Load,

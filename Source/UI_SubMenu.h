@@ -13,5 +13,15 @@ public:
 	bool Draw() const override;
 
 	UI_SubMenu* ToUiSubMenu() override;
+
+	void ContentGetter(const int id);
+
+private:
+
+	enum Content
+	{
+		Archive,
+		Team
+	};
 };
 #endif // !__UI_SUBMENU_H__

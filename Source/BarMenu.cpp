@@ -12,14 +12,16 @@ BarMenu::~BarMenu()
 
 bool BarMenu::Init()
 {
-	elements.push_back(new UI_TextButton(this, { 0.000f, 0.0f, 0.03f, 1.0f }, "Exit")); //0
-	elements.push_back(new UI_TextButton(this, { 0.040f, 0.0f, 0.03f, 1.0f }, "Save")); //1
-	elements.push_back(new UI_TextButton(this, { 0.080f, 0.0f, 0.03f, 1.0f }, "Load")); //2
-	elements.push_back(new UI_TextButton(this, { 0.120f, 0.0f, 0.10f, 1.0f }, "GameObject")); //3
-	elements.push_back(new UI_TextButton(this, { 0.230f, 0.0f, 0.03f, 1.0f }, "Web")); //4
-	elements.push_back(new UI_TextButton(this, { 0.270f, 0.0f, 0.03f, 1.0f }, "Wiki")); //5
-	elements.push_back(new UI_TextButton(this, { 0.310f, 0.0f, 0.07f, 1.0f }, "Release")); //6
-	elements.push_back(new UI_TextButton(this, { 0.390f, 0.0f, 0.09f, 1.0f }, "Repository")); //7
+	elements.push_back(new UI_TextButton(this, { 0.00f, 0.0f, 0.04f, 1.0f }, "Archive")); //0
+	elements.push_back(new UI_TextButton(this, { 0.05f, 0.0f, 0.03f, 1.0f }, "Team")); //1
+	elements.push_back(new UI_TextButton(this, { 0.09f, 0.0f, 0.03f, 1.0f }, "Exit")); //2
+	elements.push_back(new UI_TextButton(this, { 0.13f, 0.0f, 0.03f, 1.0f }, "Save")); //3
+	elements.push_back(new UI_TextButton(this, { 0.17f, 0.0f, 0.03f, 1.0f }, "Load")); //4
+	elements.push_back(new UI_TextButton(this, { 0.21f, 0.0f, 0.10f, 1.0f }, "GameObject")); //5
+	elements.push_back(new UI_TextButton(this, { 0.32f, 0.0f, 0.03f, 1.0f }, "Web")); //6
+	elements.push_back(new UI_TextButton(this, { 0.36f, 0.0f, 0.03f, 1.0f }, "Wiki")); //7
+	elements.push_back(new UI_TextButton(this, { 0.40f, 0.0f, 0.07f, 1.0f }, "Release")); //8
+	elements.push_back(new UI_TextButton(this, { 0.48f, 0.0f, 0.09f, 1.0f }, "Repository")); //9
 
 	return !elements.empty();
 }
@@ -58,6 +60,10 @@ void BarMenu::RecieveEvent(const Event& e)
 
 			switch (Content(id))
 			{
+			case BarMenu::Archive:
+				break;
+			case BarMenu::Team:
+				break;
 			case BarMenu::Exit:
 				Event::Push(REQUEST_QUIT, App);
 				break;
