@@ -3,6 +3,7 @@
 #include "Point.h"
 #include "Application.h"
 #include "PathfindingManager.h"
+#include "optick-1.3.0.0/include/optick.h"
 
 #include <vector>
 #include <algorithm>
@@ -256,6 +257,7 @@ void PathNode::CalculateF(iPoint destination)
 // ----------------------------------------------------------------------------------
 std::vector<iPoint> PathfindingManager::CreatePath(iPoint& origin, iPoint& destination)
 {
+	OPTICK_EVENT();
 	std::vector<iPoint> finalPath;
 	//LOG("Origin! X=%d   y=%d",origin.x,origin.y);
 	//LOG("Destination! X=%d   y=%d", destination.x, destination.y);
@@ -327,7 +329,7 @@ std::vector<iPoint> PathfindingManager::CreatePath(iPoint& origin, iPoint& desti
 					//LOG("4");
 					if (FindItemInVector(openList, adjacentCells[a]) == false)
 					{
-						LOG("5");
+						//LOG("5");
 						adjacentCells[a].g = checkNode.g + 1;
 						adjacentCells[a].CalculateF(destination);
 						openList.push_back(adjacentCells[a]); 
