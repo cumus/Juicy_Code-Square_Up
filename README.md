@@ -54,7 +54,7 @@ For now we have little interaction with the map, but here it is.
 * Mouse Weel: Zoom in/out
 
 ### Map:
-* 1: Open sample map 1
+* 1: Open Base map 1
 * 2: Open sample map 2
 * SPACE: Toggle map orientation
 
