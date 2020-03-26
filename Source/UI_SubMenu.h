@@ -11,17 +11,24 @@ public:
 	~UI_SubMenu();
 
 	bool Draw() const override;
+	 
+	void RecieveEvent(const Event& e) override;
 
 	UI_SubMenu* ToUiSubMenu() override;
 
-	void ContentGetter(const int id);
-
 private:
-
-	enum Content
+	enum Options
 	{
-		Archive,
-		Team
+		Save,
+		Load,
+		GameObject,
+		Exit,
+		Repo,
+		Wiki,
+		Web,
+		Release
 	};
+
+	std::vector<UI_Element*> elements;
 };
 #endif // !__UI_SUBMENU_H__

@@ -13,20 +13,12 @@ public:
 	bool Init() override;
 	void RecieveEvent(const Event& e) override;
 
-private:
+public:
 
 	enum Content
 	{
-		Archive,
+		Menu,
 		Team,
-		Exit,
-		Save,
-		Load,
-		GameObject,
-		Web,
-		Wiki,
-		Release,
-		Repository
 	};
 };
 
