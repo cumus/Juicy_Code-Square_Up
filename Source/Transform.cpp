@@ -1,4 +1,7 @@
 #include "Transform.h"
+#include "Application.h"
+#include "Map.h"
+#include "Render.h"
 #include "JuicyMath.h"
 #include "Gameobject.h"
 #include "Log.h"
@@ -12,6 +15,8 @@ Transform::Transform(Gameobject* go) : Component(TRANSFORM, go)
 
 	global_parent_pos.Set(0.f);
 	global_parent_scale.Set(1.f);
+
+	modified = true;
 }
 
 Transform::~Transform()
@@ -26,17 +31,52 @@ void Transform::Update()
 
 	if (modified)
 	{
+		vec p = GetGlobalPosition();
+		vec scale = GetGlobalScale();
+
 		if (game_object != nullptr)
-			Event::Push(TRANSFORM_MODIFIED, game_object,
-				Cvar(global_parent_pos + pos),
-				Cvar(global_parent_scale * scale));
+			Event::Push(TRANSFORM_MODIFIED, game_object, Cvar(p), Cvar(scale));
+
+		float w, h;
+		Map::GetTileSize_F(w, h);
+		w *= scale.x;
+		h *= scale.y;
+
+		std::pair<float, float> pos = Map::F_MapToWorld(p.x, p.y, p.z);
+
+		points[0] = { int(pos.first),				int(pos.second + (h * 0.5f)) };
+		points[1] = { int(pos.first + (w * 0.5f)),	int(pos.second + h) };
+		points[2] = { int(pos.first + w),			int(pos.second + (h * 0.5f)) };
+		points[3] = { int(pos.first + (w * 0.5f)),	int(pos.second) };
+		points[4] = { int(pos.first),				int(pos.second + (h * 0.5f) - (scale.z * h)) };
+		points[5] = { int(pos.first + (w * 0.5f)),	int(pos.second + h - (scale.z * h)) };
+		points[6] = { int(pos.first + w),			int(pos.second + (h * 0.5f) - (scale.z * h)) };
+		points[7] = { int(pos.first + (w * 0.5f)),	int(pos.second - (scale.z * h)) };
 
 		modified = false;
 	}
 }
 
 void Transform::PostUpdate()
-{}
+{
+	// Draw AABB
+	// Base bottom
+	App->render->DrawLine({ points[0].first, points[0].second }, { points[1].first, points[1].second });
+	App->render->DrawLine({ points[1].first, points[1].second }, { points[2].first, points[2].second });
+	App->render->DrawLine({ points[2].first, points[2].second }, { points[3].first, points[3].second });
+	App->render->DrawLine({ points[3].first, points[3].second }, { points[0].first, points[0].second });
+
+	// Base top
+	App->render->DrawLine({ points[4].first, points[4].second }, { points[5].first, points[5].second });
+	App->render->DrawLine({ points[5].first, points[5].second }, { points[6].first, points[6].second });
+	App->render->DrawLine({ points[6].first, points[6].second }, { points[7].first, points[7].second });
+	App->render->DrawLine({ points[7].first, points[7].second }, { points[4].first, points[4].second });
+
+	// Vertical
+	App->render->DrawLine({ points[0].first, points[0].second }, { points[4].first, points[4].second });
+	App->render->DrawLine({ points[1].first, points[1].second }, { points[5].first, points[5].second });
+	App->render->DrawLine({ points[2].first, points[2].second }, { points[6].first, points[6].second });
+}
 
 void Transform::RecieveEvent(const Event & e)
 {

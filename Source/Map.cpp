@@ -298,7 +298,19 @@ const MapLayer& Map::GetMapWalkabilityLayer()
 	return *layers.cbegin();
 }
 
-std::pair<int, int> Map::I_MapToWorld(int x, int y)
+void Map::GetTileSize_I(int& w, int& h)
+{
+	w = size_i.first;
+	h = size_i.second;
+}
+
+void Map::GetTileSize_F(float& w, float& h)
+{
+	w = size_f.first;
+	h = size_f.second;
+}
+
+std::pair<int, int> Map::I_MapToWorld(int x, int y, int z)
 {
 	switch (type)
 	{
@@ -307,7 +319,7 @@ std::pair<int, int> Map::I_MapToWorld(int x, int y)
 		(x + y) * size_i.second / 2 };
 	case MAPTYPE_ORTHOGONAL: return {
 		x * size_i.first,
-		y * size_i.second };
+		(y - z)* size_i.second };
 	default: return { x, y };
 	}
 }
@@ -326,7 +338,7 @@ std::pair<int, int> Map::I_WorldToMap(int x, int y)
 	}
 }
 
-std::pair<float, float> Map::F_MapToWorld(float x, float y)
+std::pair<float, float> Map::F_MapToWorld(float x, float y, float z)
 {
 	switch (type)
 	{
@@ -335,7 +347,7 @@ std::pair<float, float> Map::F_MapToWorld(float x, float y)
 		(x + y) * size_f.second * 0.5f };
 	case MAPTYPE_ORTHOGONAL: return {
 		x * size_f.first,
-		y * size_f.second };
+		(y - z) * size_f.second };
 	default: return { x, y };
 	}
 }

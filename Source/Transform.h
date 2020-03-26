@@ -53,6 +53,8 @@ private:
 	vec global_parent_pos;
 	vec global_parent_scale;
 
+	std::pair<int, int> points[8];
+
 	bool modified = false;
 };
 

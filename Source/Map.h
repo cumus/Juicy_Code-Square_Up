@@ -35,10 +35,13 @@ public:
 	bool GetRectAndTexId(int tile_id, SDL_Rect& section, int& text_id) const;
 	const MapLayer& GetMapWalkabilityLayer();
 
+	static void GetTileSize_I(int& width, int& height);
+	static void GetTileSize_F(float& width, float& height);
+
 	// Coordinate conversions
-	static std::pair<int, int> I_MapToWorld(int x, int y);
+	static std::pair<int, int> I_MapToWorld(int x, int y, int z = 0);
 	static std::pair<int, int> I_WorldToMap(int x, int y);
-	static std::pair<float, float> F_MapToWorld(float x, float y);
+	static std::pair<float, float> F_MapToWorld(float x, float y, float z = 0.0f);
 	static std::pair<float, float> F_WorldToMap(float x, float y);
 	static std::pair<int, int> WorldToTileBase(float x, float y);
 
