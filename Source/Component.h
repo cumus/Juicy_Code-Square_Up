@@ -18,6 +18,8 @@ enum ComponentType
 
 class Transform;
 class Gameobject;
+class B_Unit;
+class B_Movable;
 
 class Component : public EventListener
 {
@@ -37,6 +39,8 @@ public:
 
 	ComponentType GetType() const { return type; }
 	Transform* AsTransform() const { return (Transform*)this; }
+	B_Unit* AsBUnit() const { return (B_Unit*)this; }
+	B_Movable* AsBMovable() const { return (B_Movable*)this; }
 
 	double GetID() const { return id; }
 

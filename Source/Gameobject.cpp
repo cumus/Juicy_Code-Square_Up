@@ -137,6 +137,12 @@ void Gameobject::RecieveEvent(const Event & e)
 			if ((*component)->IsActive())
 				Event::Push(ON_SELECT, *component);
 	}
+	case ON_MOVEMENT:
+	{
+		for (std::vector<Component*>::iterator component = components.begin(); component != components.end(); ++component)
+			if ((*component)->IsActive())
+				Event::Push(ON_PAUSE, *component);
+	}
 	case TRANSFORM_MODIFIED:
 	{
 		for (std::vector<Component*>::iterator component = components.begin(); component != components.end(); ++component)
@@ -190,6 +196,56 @@ const Transform* Gameobject::GetTransform() const
 
 	return nullptr;
 }
+
+B_Movable* Gameobject::GetBMovable()
+{
+	if (bMovable != nullptr)
+		return bMovable;
+
+	for (std::vector<Component*>::iterator it = components.begin(); it != components.end(); ++it)
+		if ((*it)->GetType() == B_MOVABLE)
+			return bMovable = (*it)->AsBMovable();
+
+	return nullptr;
+}
+
+const B_Movable* Gameobject::GetBMovable() const
+{
+	if (bMovable != nullptr)
+		return bMovable;
+
+	for (std::vector<Component*>::const_iterator it = components.begin(); it != components.end(); ++it)
+		if ((*it)->GetType() == B_MOVABLE)
+			return (*it)->AsBMovable();
+
+	return nullptr;
+}
+
+B_Unit* Gameobject::GetBUnit()
+{
+	if (bunit != nullptr)
+		return bunit;
+
+	for (std::vector<Component*>::iterator it = components.begin(); it != components.end(); ++it)
+		if ((*it)->GetType() == B_UNIT)
+			return bunit = (*it)->AsBUnit();
+
+	return nullptr;
+}
+
+const B_Unit* Gameobject::GetBUnit() const
+{
+	if (bunit != nullptr)
+		return bunit;
+
+	for (std::vector<Component*>::const_iterator it = components.begin(); it != components.end(); ++it)
+		if ((*it)->GetType() == B_UNIT)
+			return (*it)->AsBUnit();
+
+	return nullptr;
+}
+
+
 
 void Gameobject::RecursiveFillHierarchy(float deepness, std::vector<std::pair<float, Gameobject*>>& container)
 {

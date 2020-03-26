@@ -81,6 +81,21 @@ bool Scene::Update()
 		s3->section = { 128, 0, 64, 64 };
 	}
 
+	if (App->input->GetKey(SDL_SCANCODE_4) == KEY_DOWN)
+	{
+		std::pair<int, int> position = Map::WorldToTileBase(float(x + cam.x), float(y + cam.y));
+
+		Gameobject* unit_go = AddGameobject("Game Unit - son of root", &root);
+		unit_go->GetTransform()->SetLocalPos({ float(position.first), float(position.second), 0.0f });
+
+		new B_Movable(unit_go);
+
+		Sprite* s3 = new Sprite(unit_go);
+		s3->tex_id = id_mouse_tex;
+		s3->section = { 64, 0, 64, 64 };
+
+	}
+
 	/*if (App->input->GetKey(SDL_SCANCODE_Z) == KEY_DOWN)
 	{		
 		std::pair<int, int> mouseOnMap = Map::WorldToTileBase(x + cam.x, y + cam.y);

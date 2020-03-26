@@ -5,6 +5,8 @@
 #include "Transform.h"
 #include <string>
 
+class B_Unit;
+
 class Gameobject : public EventListener
 {
 public:
@@ -24,6 +26,12 @@ public:
 
 	Transform* GetTransform();
 	const Transform* GetTransform() const;
+
+	B_Unit* GetBUnit();
+	const B_Unit* GetBUnit() const;
+
+	B_Movable* GetBMovable();
+	const B_Movable* GetBMovable() const;
 
 	void RecursiveFillHierarchy(float deepness, std::vector<std::pair<float, Gameobject*>>& container);
 	std::vector<Gameobject*>& GetChilds();
@@ -57,6 +65,8 @@ private:
 
 	Gameobject* parent = nullptr;
 	Transform* transform = nullptr;
+	B_Unit* bunit = nullptr;
+	B_Movable* bMovable = nullptr;
 };
 
 #endif // __GAMEOBJECT_H__

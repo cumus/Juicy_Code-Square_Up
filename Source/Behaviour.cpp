@@ -1,5 +1,8 @@
 #include "Behaviour.h"
+#include "Application.h"
+#include "TimeManager.h"
 #include "Gameobject.h"
+#include "PathfindingManager.h"
 #include "Log.h"
 
 
@@ -10,14 +13,14 @@ Behaviour::Behaviour(Gameobject* go, ComponentType type) : Component(type, go) {
 }
 
 
-void B_Unit::RecieveEvent(const Event& e)
+void B_Movable::RecieveEvent(const Event& e)
 {
 	
 	switch (e.type)
 	{
 	case ON_SELECT: {
-		
-		life -= damage;
+
+		life -= 5;
 		LOG("Life after taking damage is: %d", life);
 
 		if (life <= 0)
@@ -27,10 +30,28 @@ void B_Unit::RecieveEvent(const Event& e)
 			else
 				LOG("Error destroying GO: %s", game_object->GetName());
 		}
-    break;
+
+		break;
+	}
+	case ON_MOVEMENT: {
+
+		vec pos = game_object->GetTransform()->GetGlobalPosition();
+		iPoint origin = {int(pos.x), int(pos.y)};
+		iPoint destination = { e.data1.AsInt(), e.data2.AsInt() };
+		path = App->pathfinding.CreatePath(origin , destination);
+		LOG("Path length: %d", path.size());
+
+		break;
 	}
 	default:
 		break;
 	}
 	
 };
+
+void B_Movable::Update()
+{
+	game_object->GetTransform()->MoveX(speed * App->time.GetDeltaTime());
+	game_object->GetTransform()->MoveY(speed * App->time.GetDeltaTime());
+		
+}

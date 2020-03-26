@@ -2,6 +2,7 @@
 #define __BEHAVIOUR_H__
 
 #include "Component.h"
+#include "PathfindingManager.h"
 
 class Gameobject;
 
@@ -24,11 +25,14 @@ public:
 
 	B_Movable(Gameobject* go, ComponentType type = B_MOVABLE) : Behaviour(go, type) {}
 	virtual ~B_Movable() {}
+	void Update() override;
+	void RecieveEvent(const Event& e) override;
 
 public:
 	
-	float speed;
+	float speed = 2;
 	float angle;
+	std::vector<iPoint> path;
 
 };
 
@@ -53,7 +57,7 @@ public:
 	B_Unit(Gameobject* go, ComponentType type = B_UNIT) : B_Movable(go, type) {}
 	virtual ~B_Unit() {}
 
-	void RecieveEvent(const Event& e) override;
+	
 
 public:
 
