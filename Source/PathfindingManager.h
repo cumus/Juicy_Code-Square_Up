@@ -39,14 +39,12 @@ class PathfindingManager
 public:
 
 	PathfindingManager();
-
-	// Destructor
 	~PathfindingManager();
 
 	bool Init();
-
-	// Called before quitting
 	bool CleanUp();
+
+	int IteratePaths(int extra_ms);
 
 	// Sets up the walkability map
 	void SetWalkabilityLayer(const MapLayer& layer);

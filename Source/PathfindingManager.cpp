@@ -38,6 +38,15 @@ bool PathfindingManager::CleanUp()
 	return true;
 }
 
+int PathfindingManager::IteratePaths(int extra_ms)
+{
+	Timer timer;
+
+	// TODO: Iterate paths
+
+	return extra_ms - timer.ReadI();
+}
+
 
 
 // PathNode -------------------------------------------------------------------------

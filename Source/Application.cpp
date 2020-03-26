@@ -164,11 +164,16 @@ void Application::FinishUpdate()
 	// uncapped fps
 	if (extra_ms < 0)
 	{
+		pathfinding.IteratePaths(1);
+
 		while (Event::RemainingEvents() > 0)
 			Event::Pump();
 	}
 	else
 	{
+		// Update pathfindnig
+		extra_ms = pathfinding.IteratePaths(extra_ms);
+
 		// Pump events in extra_ms timespan
 		Timer timer;
 		while (extra_ms > timer.ReadI() && Event::RemainingEvents() > 0)
