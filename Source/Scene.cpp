@@ -73,7 +73,7 @@ bool Scene::Update()
 
 		Gameobject* audio_go = AddGameobject("AudioSource - son of root", &root);
 		audio_go->GetTransform()->SetLocalPos({ float(position.first), float(position.second), 0.0f });
-
+		audio_go->GetTransform()->GetGlobalPosition();
 		new AudioSource(audio_go, App->audio->LoadFx("audio/Effects/Buildings/Select/select.wav"));
 
 		Sprite* s3 = new Sprite(audio_go);

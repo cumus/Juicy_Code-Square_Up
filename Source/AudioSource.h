@@ -14,17 +14,15 @@ public:
 	AudioSource(Gameobject* go, int id = -1);
 	~AudioSource();
 
-	bool Play() const;
+	bool Play();
+	int channel;
 
 	void RecieveEvent(const Event& e) override;
 
 public: 
 
 	int fx_id;
+	iPoint source_pos;
 };
-
-
-
-
 
 #endif // !__AUDIO_SOURCE_H__

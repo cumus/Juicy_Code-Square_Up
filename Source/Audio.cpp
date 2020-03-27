@@ -1,7 +1,9 @@
 #include "Audio.h"
+#include "Render.h"
 #include "Defs.h"
 #include "Log.h"
 #include "Application.h"
+#include <math.h>
 
 #include "optick-1.3.0.0/include/optick.h"
 #include "SDL/include/SDL.h"
@@ -85,7 +87,10 @@ bool Audio::Init()
 		{
 			// Initialize SDL_mixer with default frequecy & format
 			if (Mix_OpenAudio(MIX_DEFAULT_FREQUENCY, MIX_DEFAULT_FORMAT, 2, 2048) == 0)
-				LOG("SDL_Mixer opened correctly.");
+			{
+				channels = Mix_AllocateChannels(360);
+				LOG("SDL_Mixer opened correctly. Allocated channels: %d", channels);
+			}
 			else
 				LOG("SDL_mixer could not initialize! SDL_mixer Error: %s\n", Mix_GetError());
 		}
@@ -94,8 +99,6 @@ bool Audio::Init()
 	}
 	else
 		LOG("SDL_AUDIO could not initialize! SDL_Error: %s\n", SDL_GetError());
-
-	//Mix_AllocateChannels(360);
 	
 	return ret;
 }
@@ -188,10 +191,10 @@ unsigned int Audio::LoadFx(const char* path)
 	audio_path += path;
 	Mix_Chunk* chunk = Mix_LoadWAV(audio_path.c_str());
 
-	if(chunk)
+	if (chunk)
 	{
 		fx.push_back(chunk);
-		ret = fx.size();
+		ret = fx.size() - 1;
 	}
 	else
 	{
@@ -201,7 +204,7 @@ unsigned int Audio::LoadFx(const char* path)
 	return ret;
 }
 
-bool Audio::UnloadFx(unsigned int id) 
+bool Audio::UnloadFx(unsigned int id)
 {
 	if (!active)
 		return true;
@@ -209,11 +212,11 @@ bool Audio::UnloadFx(unsigned int id)
 	bool ret = false;
 
 	Mix_Chunk* chunk = NULL;
-
+	
 	if (chunk != nullptr)
 	{
 		Mix_FreeChunk(chunk);
-		chunk = nullptr;
+		chunk = fx[id];
 		ret = true;
 	}
 
@@ -221,13 +224,89 @@ bool Audio::UnloadFx(unsigned int id)
 }
 
 // Play WAV
-bool Audio::PlayFx(unsigned int id, int repeat)
+bool Audio::PlayFx(int channel, unsigned int id, int repeat)
 {
 	OPTICK_EVENT();
 
 	bool ret = (active && id > 0 && id <= fx.size());
 
-	if (ret) Mix_PlayChannel(-1, fx[id - 1], repeat);
+	if (fx[id] != nullptr)
+	{
+		Mix_PlayChannel(-1, fx[id], repeat);
+		ret = true;
+	}
 
 	return ret;
+}
+
+int Audio::PlaySpatialFx(unsigned int id, std::pair<int, int> position, int repeat)
+{
+	int ret = -1;
+	 
+	if (!active)
+		return false;
+
+	Mix_Chunk* chunk = NULL;
+
+	SDL_Rect cam = App->render->GetCameraRect();
+	cam.x = cam.x + cam.w / 2;
+	cam.y = cam.y - cam.h / 2;
+
+	unsigned int angle = GetAngle({ cam.x, cam.y }, {position.first, position.second});
+	unsigned int distance = GetDistance({ cam.x, cam.y }, { position.first, position.second });
+
+	chunk = fx[id];
+
+	if (chunk != nullptr)
+	{
+		int i = 0;
+		while (Mix_Playing(i) == 1)	// If the channel is already playing, choose the next channel that we already allocated with Mix_AllocateChannels()
+		{
+			i++;
+
+			if (i > channels)
+				i = 0;
+		}
+
+		Mix_SetPosition(i, angle, 0);	// Set a channel in a position given a channel, an angle and a distance
+
+		Mix_PlayChannel(i, chunk, repeat);		// Play the channel that we already placed with Mix_SetPosition()
+
+		ret = i;
+	}
+
+	return ret;
+}
+
+
+unsigned int Audio::GetAngle(iPoint cam_pos, iPoint source_pos)
+{	
+	iPoint pos = cam_pos;
+	pos -= source_pos;
+	iPoint axis = { 0, 1 };								// vector to get the angle from
+
+	double prod_x = axis.y * pos.y;						// product of two vectors to get x
+	double det_y = - (axis.y * pos.x);					// determinant of the vectors to get y
+
+	float angle = (atan2(det_y, prod_x)) * RAD_TO_DEG;	// arctangent of x and y multiplied by 57.32f to get radiants
+	if (angle < 0) angle += 360;						// this needs to be positive so we add 360 if angle < 0
+
+	return angle;
+}
+
+unsigned int Audio::GetDistance(iPoint cam_pos, iPoint source_pos)
+{
+	unsigned int distance = sqrt(pow(cam_pos.x - source_pos.x, 2) + pow(cam_pos.y - source_pos.y, 2)); 
+
+	int volume = (distance * MAX_DISTANCE) / SCALE;
+	if (volume < 0)
+	{
+		volume = 0;
+	}
+	if (volume > MAX_DISTANCE)
+	{
+		volume = MAX_DISTANCE;
+	}
+
+	return volume;
 }
