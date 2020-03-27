@@ -24,6 +24,7 @@ class UI_Text;
 class UI_TextButton;
 class UI_ButtonImage;
 class UI_SubMenu;
+class UI_Slider;
 
 class UI_Element : public EventListener
 {
@@ -39,6 +40,7 @@ public:
 	virtual UI_TextButton* ToUiTextButton();
 	virtual UI_ButtonImage* ToUiButtonImage();
 	virtual UI_SubMenu* ToUiSubMenu();
+	virtual UI_Slider* ToUiSlider();
 
 	RectF GetTargetNormRect() const;
 	SDL_Rect GetTargetRect() const;

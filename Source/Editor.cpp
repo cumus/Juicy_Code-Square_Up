@@ -31,10 +31,10 @@ bool Editor::Init()
 	windows.push_back(play_pause = new PlayPauseWindow({ 0.4f, 0.05f, 0.2f, 0.05f }));
 
 	windows.push_back(hierarchy = new HierarchyWindow({ 0.0f, 0.05f, 0.2f, 0.5f }));
-	windows.push_back(properties = new PropertiesWindow({ 0.8f, 0.05f, 0.2f, 0.8f }));
+	windows.push_back(properties = new PropertiesWindow({ 0.8f, 0.05f, 0.2f, 0.4f }));
 
 	windows.push_back(console = new ConsoleWindow({ 0.0f, 0.7f, 0.4f, 0.3f }));
-	//windows.push_back(config = new ConfigWindow({ 0.7f, 0.6f, 0.3f, 0.4f }));
+	windows.push_back(config = new ConfigWindow({ 0.7f, 0.6f, 0.3f, 0.4f }));
 
 	return !windows.empty();
 }

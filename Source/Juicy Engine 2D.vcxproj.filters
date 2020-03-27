@@ -130,6 +130,9 @@
     <ClCompile Include="UI_SubMenu.cpp">
       <Filter>Source\Modules\Editor\UI Elements</Filter>
     </ClCompile>
+    <ClCompile Include="UI_Slider.cpp">
+      <Filter>Source\Modules\Editor\UI Elements</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="PugiXml\src\pugiconfig.hpp">
@@ -292,6 +295,9 @@
       <Filter>Source\Modules\Editor\Windows</Filter>
     </ClInclude>
     <ClInclude Include="UI_SubMenu.h">
+      <Filter>Source\Modules\Editor\UI Elements</Filter>
+    </ClInclude>
+    <ClInclude Include="UI_Slider.h">
       <Filter>Source\Modules\Editor\UI Elements</Filter>
     </ClInclude>
   </ItemGroup>

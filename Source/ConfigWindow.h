@@ -25,6 +25,13 @@ private:
 	int tex_down;
 	int tex_repeat;
 	int tex_up;
+
+	// Test Slider
+
+	int SliderBar_tex_id;
+	RectF SliderBar_Rect;
+	RectF SliderButton_Rect;
+
 };
 
 #endif // __CONFIG_WINDOW_H__

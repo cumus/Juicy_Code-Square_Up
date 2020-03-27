@@ -45,6 +45,11 @@ UI_SubMenu* UI_Element::ToUiSubMenu()
 	return nullptr;
 }
 
+UI_Slider* UI_Element::ToUiSlider()
+{
+	return nullptr;
+}
+
 
 
 RectF UI_Element::GetTargetNormRect() const
