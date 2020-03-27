@@ -38,8 +38,8 @@ void B_Movable::RecieveEvent(const Event& e)
 		vec pos = game_object->GetTransform()->GetGlobalPosition();
 		iPoint origin = {int(pos.x), int(pos.y)};
 		iPoint destination = { e.data1.AsInt(), e.data2.AsInt() };
-		path = App->pathfinding.CreatePath(origin , destination);
-		LOG("Path length: %d", path.size());
+		path = App->pathfinding.CreatePath(origin , destination/*,ID*/);
+		if(path != nullptr) LOG("Path length: %d", path->size());
 
 		break;
 	}

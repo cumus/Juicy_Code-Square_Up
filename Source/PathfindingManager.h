@@ -9,6 +9,18 @@
 #include <map>
 
 #define DEBUG_ID_TEXTURE 33
+//#define STARTING_PATH_LENGTH 5
+
+struct UncompletedPath
+{
+	UncompletedPath();
+	UncompletedPath(int ID,iPoint first, iPoint last);
+	UncompletedPath(const UncompletedPath& path);
+
+	int ID;
+	iPoint start;
+	iPoint end;
+};
 
 // ---------------------------------------------------------------------
 // Pathnode: Helper struct to represent a node in the path creation
@@ -50,7 +62,9 @@ public:
 	void SetWalkabilityLayer(const MapLayer& layer);
 
 	// Main function to request a path from A to B
-	std::vector<iPoint> CreatePath( iPoint& origin,  iPoint& destination,int ID=0);
+	std::vector<iPoint>* CreatePath( iPoint& origin, iPoint& destination,int ID=0);
+
+	int ContinuePath(iPoint origin, iPoint destination, int ID, int working_ms);
 
 	// Utility: return true if pos is inside the map boundaries
 	bool CheckBoundaries( iPoint& pos);
@@ -91,16 +105,24 @@ public:
 	//Utility: Updates already stored path or add it
 	void UpdateStoredPaths(int ID, std::vector<iPoint> path);
 
+	//Utility: Updates already pending path
+	void UpdatePendingPaths(int ID, UncompletedPath info);
+
 	//Utility: Delete one stored path
 	void DeletePath(int ID);
 
+	//Utility: Delete one stored path
+	void DeletePendingPath(int ID);
+
 	//Utility: Return one path found by ID
-	std::vector<iPoint> GetPath(int ID);
+	std::vector<iPoint>* GetPath(int ID);
 
 private:
 	MapLayer map;
 	iPoint nullPoint = iPoint({ -1,-1 });
 	std::map<int, std::vector<iPoint>> storedPaths; //Stores all generated paths by units
+	std::map<int, UncompletedPath> toDoPaths; //Stores pending path for each id
+	int calls = 0;
 };
 
 #endif 

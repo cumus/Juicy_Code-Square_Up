@@ -37,7 +37,7 @@ public:
 	int image_text_id;
 	iPoint startPath = iPoint({ 16,3 }); //Temporal
 	iPoint destinationPath;
-	std::vector<iPoint> path;
+	std::vector<iPoint>* path = nullptr;
 
 private:
 

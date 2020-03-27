@@ -32,7 +32,7 @@ public:
 	
 	float speed = 2;
 	float angle;
-	std::vector<iPoint> path;
+	std::vector<iPoint>* path = nullptr;
 
 };
 
