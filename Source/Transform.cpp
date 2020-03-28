@@ -31,11 +31,48 @@ void Transform::Update()
 
 	if (modified)
 	{
-		vec p = GetGlobalPosition();
-		vec scale = GetGlobalScale();
-
 		if (game_object != nullptr)
-			Event::Push(TRANSFORM_MODIFIED, game_object, Cvar(p), Cvar(scale));
+			Event::Push(TRANSFORM_MODIFIED, game_object, Cvar(GetGlobalPosition()), Cvar(GetGlobalScale()));
+
+		modified = false;
+	}
+}
+
+void Transform::PostUpdate()
+{
+	// Draw AABB
+	// Base bottom
+	App->render->DrawLine({ points[0].first, points[0].second }, { points[1].first, points[1].second });
+	App->render->DrawLine({ points[1].first, points[1].second }, { points[2].first, points[2].second });
+	//App->render->DrawLine({ points[2].first, points[2].second }, { points[3].first, points[3].second });
+	//App->render->DrawLine({ points[3].first, points[3].second }, { points[0].first, points[0].second });
+
+	// Base top
+	App->render->DrawLine({ points[4].first, points[4].second }, { points[5].first, points[5].second });
+	App->render->DrawLine({ points[5].first, points[5].second }, { points[6].first, points[6].second });
+	App->render->DrawLine({ points[6].first, points[6].second }, { points[7].first, points[7].second });
+	App->render->DrawLine({ points[7].first, points[7].second }, { points[4].first, points[4].second });
+
+	// Vertical
+	App->render->DrawLine({ points[0].first, points[0].second }, { points[4].first, points[4].second });
+	App->render->DrawLine({ points[1].first, points[1].second }, { points[5].first, points[5].second });
+	App->render->DrawLine({ points[2].first, points[2].second }, { points[6].first, points[6].second });
+}
+
+void Transform::RecieveEvent(const Event & e)
+{
+	switch (e.type)
+	{
+	case PARENT_TRANSFORM_MODIFIED:
+	{
+		global_parent_pos = e.data1.AsVec();
+		global_parent_scale = e.data2.AsVec();
+		break;
+	}
+	case TRANSFORM_MODIFIED:
+	{
+		vec p = e.data1.AsVec();
+		vec scale = e.data2.AsVec();
 
 		float w, h;
 		Map::GetTileSize_F(w, h);
@@ -53,37 +90,10 @@ void Transform::Update()
 		points[6] = { int(pos.first + w),			int(pos.second + (h * 0.5f) - (scale.z * h)) };
 		points[7] = { int(pos.first + (w * 0.5f)),	int(pos.second - (scale.z * h)) };
 
-		modified = false;
+		break;
 	}
-}
-
-void Transform::PostUpdate()
-{
-	// Draw AABB
-	// Base bottom
-	App->render->DrawLine({ points[0].first, points[0].second }, { points[1].first, points[1].second });
-	App->render->DrawLine({ points[1].first, points[1].second }, { points[2].first, points[2].second });
-	App->render->DrawLine({ points[2].first, points[2].second }, { points[3].first, points[3].second });
-	App->render->DrawLine({ points[3].first, points[3].second }, { points[0].first, points[0].second });
-
-	// Base top
-	App->render->DrawLine({ points[4].first, points[4].second }, { points[5].first, points[5].second });
-	App->render->DrawLine({ points[5].first, points[5].second }, { points[6].first, points[6].second });
-	App->render->DrawLine({ points[6].first, points[6].second }, { points[7].first, points[7].second });
-	App->render->DrawLine({ points[7].first, points[7].second }, { points[4].first, points[4].second });
-
-	// Vertical
-	App->render->DrawLine({ points[0].first, points[0].second }, { points[4].first, points[4].second });
-	App->render->DrawLine({ points[1].first, points[1].second }, { points[5].first, points[5].second });
-	App->render->DrawLine({ points[2].first, points[2].second }, { points[6].first, points[6].second });
-}
-
-void Transform::RecieveEvent(const Event & e)
-{
-	if (e.type == PARENT_TRANSFORM_MODIFIED)
-	{
-		global_parent_pos = e.data1.AsVec();
-		global_parent_scale = e.data2.AsVec();
+	default:
+		break;
 	}
 }
 

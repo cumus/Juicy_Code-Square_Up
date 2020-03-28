@@ -150,13 +150,13 @@ void PathfindingManager::DeletePendingPath(int ID)
 std::vector<iPoint>* PathfindingManager::GetPath(int ID)
 {
 	std::vector<iPoint>* vec = nullptr;
-	std::map<int, std::vector<iPoint>>::iterator it;
-	it = storedPaths.find(ID);
+	std::map<int, std::vector<iPoint>>::iterator it = storedPaths.find(ID);
 	if (it != storedPaths.end())
 	{
 		vec = &it->second;
 	}
-	else return vec;
+	
+	return vec;
 }
 
 //Utility: Prints unit path
@@ -516,7 +516,6 @@ int PathfindingManager::ContinuePath(iPoint origin, iPoint destination, int ID, 
 {
 	OPTICK_EVENT();
 	Timer timer;
-	timer.Start();
 	LOG("Start time: %d", working_ms - timer.ReadI());
 
 	std::vector<iPoint> finalPath;
@@ -608,6 +607,5 @@ int PathfindingManager::ContinuePath(iPoint origin, iPoint destination, int ID, 
 		UpdatePendingPaths(ID, path);
 	}
 
-	timer.Stop();
 	return working_ms - timer.ReadI();
 }
