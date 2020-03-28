@@ -1,13 +1,23 @@
 #ifndef __RENDER_H__
 #define __RENDER_H__
 
+#include "Module.h"
 #include "SDL/include/SDL_rect.h"
 #include "SDL/include/SDL_pixels.h"
-#include "Module.h"
+#include <map>
+#include <vector>
 
-struct SDL_Renderer;
 class Sprite;
 class RenderedText;
+struct SDL_Renderer;
+struct SDL_Texture;
+
+enum Layer : int
+{
+	MAP,
+	SCENE,
+	MAX_LAYERS
+};
 
 class Render : public Module
 {
@@ -38,28 +48,60 @@ public:
 	void ResetViewPort();
 
 	// Blit
-	bool Blit(int texture_id, int x, int y, const SDL_Rect* section = nullptr, bool use_cam = true) const;
-	bool Blit_Scale(int texture_id, int x, int y, float scale_x, float scale_y, const SDL_Rect* section = nullptr, bool use_cam = true) const;
-	bool Blit_Rot(int texture_id, int x, int y, bool use_cam = true, const SDL_Rect* section = nullptr, int flip = 0, double angle = 0, int pivot_x = INT_MAX, int pivot_y = INT_MAX) const;
+	bool Blit(int texture_id, int x, int y, const SDL_Rect* section = nullptr, Layer layer = SCENE, bool use_cam = true);
+	bool Blit_Scale(int texture_id, int x, int y, float scale_x, float scale_y, const SDL_Rect* section = nullptr, Layer layer = SCENE, bool use_cam = true);
 
-	bool BlitNorm(int texture_id, RectF rect, const SDL_Rect* section = nullptr, bool draw_anyway = true) const;
+	bool BlitNorm(int texture_id, const RectF rect, const SDL_Rect* section = nullptr, Layer layer = SCENE);
 
-	bool Blit_Text(RenderedText* rendered_text, int x, int y) const;
-	bool Blit_TextSized(RenderedText* rendered_text, SDL_Rect size) const;
+	bool Blit_Text(RenderedText* rendered_text, int x, int y, Layer layer = SCENE);
+	bool Blit_TextSized(RenderedText* rendered_text, const SDL_Rect size, Layer layer = SCENE);
 
-	bool DrawQuad(const SDL_Rect rect, SDL_Color color = { 0, 0, 0, 255 }, bool filled = true, bool use_camera = true) const;
-	bool DrawQuadNormCoords(const RectF rect, SDL_Color color = { 0, 0, 0, 255 }, bool filled = true) const;
-	bool DrawLine(const SDL_Point a, const SDL_Point b, SDL_Color color = { 0, 0, 0, 255 }, bool use_camera = true) const;
-	bool DrawCircle(int x1, int y1, float radius, SDL_Color color = { 0, 0, 0, 255 }, bool use_camera = true) const;
+	void DrawQuad(const SDL_Rect rect, const SDL_Color color = { 0, 0, 0, 255 }, bool filled = true, Layer layer = SCENE, bool use_camera = true);
+	void DrawQuadNormCoords(const RectF rect, const SDL_Color color = { 0, 0, 0, 255 }, bool filled = true, Layer layer = SCENE);
+	void DrawLine(const std::pair<int,int> a, const std::pair<int, int> b, const SDL_Color color = { 0, 0, 0, 255 }, Layer layer = SCENE, bool use_camera = true);
+	void DrawCircle(const SDL_Rect rect, const SDL_Color color = { 0, 0, 0, 255 }, Layer layer = SCENE, bool use_camera = true);
 
 	// Set background color
 	void SetBackgroundColor(SDL_Color color);
 
 private:
 
+	bool SetDrawColor(SDL_Color color);
+
+private:
+
 	SDL_Renderer*	renderer = nullptr;
 	SDL_Rect		viewport;
 	SDL_Color		background;
+	SDL_Color		draw_color;
+
+	// Layer mapping
+	struct RenderData
+	{
+		enum Type
+		{
+			TEXTURE_FULL,
+			TEXTURE_SECTION,
+			QUAD_FILLED,
+			QUAD_EMPTY,
+			LINE,
+			CIRCLE,
+			MAX_TYPES
+		} type;
+
+		RenderData(Type type);
+		RenderData(const RenderData& copy);
+
+		SDL_Texture* texture;
+		SDL_Rect rect;
+		union ExtraData
+		{
+			SDL_Rect section;
+			SDL_Color color;
+		} extra;
+	};
+
+	std::map<int, std::vector<RenderData>> layers[MAX_LAYERS] ;
 
 	// Camera
 	RectF cam;

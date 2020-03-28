@@ -13,7 +13,7 @@ public:
 	UI_Text(EditorWindow* window, RectF rect = { 0.0f, 0.0f, 1.0f, 1.0f }, const char* text = nullptr, int font_id = -1);
 	~UI_Text();
 
-	bool Draw() const override;
+	void Draw() const override;
 
 	UI_Text* ToUiText() override;
 

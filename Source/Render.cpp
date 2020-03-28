@@ -13,8 +13,7 @@
 
 Render::Render() : Module("renderer")
 {
-	background.r = background.g = background.b = 0;
-	background.a = 255;
+	SetBackgroundColor({ 0, 0, 0, 255 });
 }
 
 // Destructor
@@ -69,12 +68,18 @@ bool Render::Init()
 		// Add alpha blending
 		if (SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND) == 0)
 		{
-			// Setup camera from viewport
-			cam.x = cam.y = 0;
-			cam.w = float(viewport.w);
-			cam.h = float(viewport.h);
+			// Get render drawing color
+			if (SDL_GetRenderDrawColor(renderer, &draw_color.r, &draw_color.g, &draw_color.b, &draw_color.a) == 0)
+			{
+				// Setup camera from viewport
+				cam.x = cam.y = 0;
+				cam.w = float(viewport.w);
+				cam.h = float(viewport.h);
 
-			ret = true;
+				ret = true;
+			}
+			else
+				LOG("Could not Get Render Draw Color! SDL_SetRenderDrawBlendMode Error: %s\n", SDL_GetError());
 		}
 		else
 			LOG("Could not Set Render Draw Blend Mode to SDL_BLENDMODE_BLEND! SDL_Error: %s\n", SDL_GetError());
@@ -143,9 +148,83 @@ bool Render::Update()
 
 bool Render::PostUpdate()
 {
-	SDL_SetRenderDrawColor(renderer, background.r, background.g, background.g, background.a);
+	bool ret = true;
+
+	// Render by layers
+	for (int i = 0; i < MAX_LAYERS; ++i)
+	{
+		for (std::map<int, std::vector<RenderData>>::const_iterator it = layers[i].cbegin(); it != layers[i].cend() && ret; ++it)
+		{
+			// TODO: Check if map layers need sorting
+			for (std::vector<RenderData>::const_iterator data = it->second.cbegin(); data != it->second.cend() && ret; ++data)
+			{
+				switch (data->type)
+				{
+				case RenderData::TEXTURE_FULL:
+				{
+					if (data->texture != nullptr)
+						if (!(ret = SDL_RenderCopy(renderer, data->texture, nullptr, &data->rect) == 0))
+							LOG("Cannot blit to screen. SDL_RenderCopy error: %s", SDL_GetError());
+					break;
+				}
+				case RenderData::TEXTURE_SECTION:
+				{
+					if (data->texture != nullptr)
+						if (!(ret = SDL_RenderCopy(renderer, data->texture, &data->extra.section, &data->rect) == 0))
+							LOG("Cannot blit to screen. SDL_RenderCopy error: %s", SDL_GetError());
+					break;
+				}
+				case RenderData::QUAD_FILLED:
+				{
+					if (!(ret = (SetDrawColor(data->extra.color) && SDL_RenderFillRect(renderer, &data->rect) == 0)))
+						LOG("Cannot draw filled rect. SDL_RenderFillRect error: %s", SDL_GetError());
+					break;
+				}
+				case RenderData::QUAD_EMPTY:
+				{
+					if (!(ret = (SetDrawColor(data->extra.color) && SDL_RenderDrawRect(renderer, &data->rect) == 0)))
+						LOG("Cannot draw empty rect. SDL_RenderFillRect error: %s", SDL_GetError());
+					break;
+				}
+				case RenderData::LINE:
+				{
+					if (!(ret = (SDL_RenderDrawLine(renderer, data->rect.x, data->rect.y, data->rect.w, data->rect.h) == 0)))
+						LOG("Cannot draw line. SDL_RenderDrawLine error: %s", SDL_GetError());
+					break;
+				}
+				case RenderData::CIRCLE:
+				{
+					if (ret = SetDrawColor(data->extra.color))
+					{
+						SDL_Point points[360];
+						float factor = (float)M_PI / 180.0f;
+						for (unsigned int i = 0; i < 360; ++i)
+						{
+							points[i].x = data->rect.x + int(float(data->rect.w) * cos(float(i) * factor));
+							points[i].y = data->rect.y + int(float(data->rect.h) * sin(float(i) * factor));
+						}
+
+						if (!(ret = (SDL_RenderDrawPoints(renderer, points, 360) == 0)))
+							LOG("Cannot draw circle. SDL_RenderDrawPoints error: %s", SDL_GetError());
+					}
+
+					break;
+				}
+				default:
+					break;
+				}
+			}
+		}
+	}
+
+	for (int i = 0; i < MAX_LAYERS; ++i)
+		for (std::map<int, std::vector<RenderData>>::iterator it = layers[i].begin(); it != layers[i].end() && ret; ++it)
+			it->second.clear();
+
+	// Update Screen
 	SDL_RenderPresent(renderer);
-	return true;
+
+	return ret;
 }
 
 // Called before quitting
@@ -196,6 +275,22 @@ void Render::SetBackgroundColor(SDL_Color color)
 	background = color;
 }
 
+bool Render::SetDrawColor(SDL_Color color)
+{
+	bool ret = true;
+
+	if (color.r != draw_color.r ||
+		color.g != draw_color.g ||
+		color.b != draw_color.b ||
+		color.a != draw_color.a)
+	{
+		if (!(ret = (SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, color.a) == 0)))
+			LOG("Cannot set Render Draw Color. SDL_SetRenderDrawColor error: %s", SDL_GetError());
+	}
+
+	return ret;
+}
+
 void Render::SetViewPort(const SDL_Rect& rect)
 {
 	SDL_RenderSetViewport(renderer, &rect);
@@ -206,102 +301,98 @@ void Render::ResetViewPort()
 	SDL_RenderSetViewport(renderer, &viewport);
 }
 
-bool Render::Blit(int texture_id, int x, int y, const SDL_Rect* section, bool use_cam) const
+bool Render::Blit(int texture_id, int x, int y, const SDL_Rect* section, Layer layer, bool use_cam)
 {
-	bool ret = false;
+	bool ret;
+	RenderData data(RenderData::TEXTURE_FULL);
+	data.texture = App->tex.GetTexture(texture_id);
 
-	SDL_Texture* texture = App->tex.GetTexture(texture_id);
-
-	if (texture != nullptr)
+	if (ret = (data.texture != nullptr))
 	{
-		SDL_Rect rect;
-		if (section)
+		if (section != nullptr)
 		{
-			rect.w = section->w;
-			rect.h = section->h;
+			data.type = RenderData::TEXTURE_SECTION;
+			data.extra.section = *section;
+			data.rect.w = data.extra.section.w;
+			data.rect.h = data.extra.section.h;
 		}
 		else
 		{
 			static TextureData tex_data;
 			App->tex.GetTextureData(texture_id, tex_data);
-			rect.w = tex_data.width;
-			rect.h = tex_data.height;
-		}
-		if (use_cam)
-		{
-			rect.x = x - int(cam.x);
-			rect.y = y - int(cam.y);
-			rect.w = int(float(rect.w) * zoom);
-			rect.h = int(float(rect.h) * zoom);
-		}
-		else
-		{
-			rect.x = x;
-			rect.y = y;
+			data.rect.w = tex_data.width;
+			data.rect.h = tex_data.height;
 		}
 
-		if (SDL_RenderCopyEx(renderer, texture, section, &rect, 0,nullptr, SDL_RendererFlip::SDL_FLIP_NONE) == 0)
-			ret = true;
+		if (use_cam)
+		{
+			data.rect.x = x - int(cam.x);
+			data.rect.y = y - int(cam.y);
+			data.rect.w = int(float(data.rect.w) * zoom);
+			data.rect.h = int(float(data.rect.h) * zoom);
+		}
 		else
-			LOG("Cannot blit to screen. SDL_RenderCopy error: %s", SDL_GetError());
+		{
+			data.rect.x = x;
+			data.rect.y = y;
+		}
+
+		layers[layer][data.rect.y].push_back(data);
 	}
 	else
-		LOG("Cannot blit to screen. Invalid id %d");
+		LOG("Cannot blit to screen. Invalid id %d", texture_id);
 
 	return ret;
 }
 
-bool Render::Blit_Scale(int texture_id, int x, int y, float scale_x, float scale_y, const SDL_Rect* section, bool use_cam) const
+bool Render::Blit_Scale(int texture_id, int x, int y, float scale_x, float scale_y, const SDL_Rect* section, Layer layer, bool use_cam)
 {
-	bool ret = false;
+	bool ret;
+	RenderData data(RenderData::TEXTURE_FULL);
+	data.texture = App->tex.GetTexture(texture_id);
 
-	SDL_Texture* texture = App->tex.GetTexture(texture_id);
-
-	if (texture != nullptr)
+	if (ret = (data.texture != nullptr))
 	{
-		SDL_Rect rect;
-
-		if (section)
+		if (section != nullptr)
 		{
-			rect.w = section->w;
-			rect.h = section->h;
+			data.type = RenderData::TEXTURE_SECTION;
+			data.extra.section = *section;
+			data.rect.w = section->w;
+			data.rect.h = section->h;
 		}
 		else
 		{
 			static TextureData tex_data;
 			App->tex.GetTextureData(texture_id, tex_data);
-			rect.w = tex_data.width;
-			rect.h = tex_data.height;
+			data.rect.w = tex_data.width;
+			data.rect.h = tex_data.height;
 		}
 
 		if (use_cam)
 		{
-			rect.x = x - int(cam.x);
-			rect.y = y - int(cam.y);
-			rect.w = int(float(rect.w) * zoom * scale_x);
-			rect.h = int(float(rect.h) * zoom * scale_y);
+			data.rect.x = x - int(cam.x);
+			data.rect.y = y - int(cam.y);
+			data.rect.w = int(float(data.rect.w) * zoom * scale_x);
+			data.rect.h = int(float(data.rect.h) * zoom * scale_y);
 		}
 		else
 		{
-			rect.x = x;
-			rect.y = y;
-			rect.w = int(float(rect.w) * scale_x);
-			rect.h = int(float(rect.h) * scale_y);
+			data.rect.x = x;
+			data.rect.y = y;
+			data.rect.w = int(float(data.rect.w) * scale_x);
+			data.rect.h = int(float(data.rect.h) * scale_y);
 		}
 
-		if (SDL_RenderCopyEx(renderer, texture, section, &rect, 0, nullptr, SDL_RendererFlip::SDL_FLIP_NONE) == 0)
-			ret = true;
-		else
-			LOG("Cannot blit to screen. SDL_RenderCopy error: %s", SDL_GetError());
+		layers[layer][data.rect.y].push_back(data);
 	}
 	else
-		LOG("Cannot blit to screen. Invalid id %d");
+		LOG("Cannot blit to screen. Invalid id %d", texture_id);
 
 	return ret;
 }
 
-// Blit to screen
-bool Render::Blit_Rot(int texture_id, int x, int y, bool use_cam, const SDL_Rect* section, int flip, double angle, int pivot_x, int pivot_y) const
+/*
+bool Render::Blit_Rot(int texture_id, int x, int y, bool use_cam, const SDL_Rect* section, int flip, double angle, int pivot_x, int pivot_y)
 {
 	bool ret = false;
 
@@ -355,162 +446,148 @@ bool Render::Blit_Rot(int texture_id, int x, int y, bool use_cam, const SDL_Rect
 
 	return ret;
 }
+*/
 
-bool Render::BlitNorm(int texture_id, RectF rect, const SDL_Rect* section, bool draw_anyway) const
+bool Render::BlitNorm(int texture_id, RectF rect, const SDL_Rect* section, Layer layer)
+{
+	bool ret;
+	RenderData data(RenderData::TEXTURE_FULL);
+	data.texture = App->tex.GetTexture(texture_id);
+
+	if (ret = (data.texture != nullptr))
+	{
+		data.rect = { int(cam.w * rect.x), int(cam.h * rect.y), int(cam.w * rect.w), int(cam.h * rect.h) };
+
+		if (section != nullptr)
+		{
+			data.extra.section = *section;
+			data.type = RenderData::TEXTURE_SECTION;
+		}
+
+		layers[layer][data.rect.y].push_back(data);
+	}
+	else
+		LOG("Cannot blit to screen. Invalid id %d", texture_id);
+
+	return ret;
+}
+
+bool Render::Blit_Text(RenderedText* rendered_text, int x, int y, Layer layer)
 {
 	bool ret = false;
-
-	SDL_Texture* texture = App->tex.GetTexture(texture_id);
-
-	if (texture != nullptr)
+	if (rendered_text != nullptr)
 	{
-		SDL_Rect target_rect = { int(cam.w * rect.x), int(cam.h * rect.y), int(cam.w * rect.w), int(cam.h * rect.h) };
+		int width, height;
+		if (ret = (rendered_text->GetSize(width, height)))
+		{
+			RenderData data(RenderData::TEXTURE_FULL);
+			data.texture = rendered_text->GetTexture();
+			data.rect = { x, y, width, height };
 
-		if (SDL_RenderCopyEx(renderer, texture, section, &target_rect, 0, nullptr, SDL_RendererFlip::SDL_FLIP_NONE) == 0)
-			ret = true;
+			layers[layer][data.rect.y].push_back(data);
+		}
 		else
-			LOG("Cannot blit to screen. SDL_RenderCopy error: %s", SDL_GetError());
-	}
-	else if (draw_anyway)
-	{
-		ret = DrawQuadNormCoords(rect);
+			LOG("Cannot blit text. Invalid text size");
 	}
 	else
-		LOG("Cannot blit to screen. Invalid id %d");
+		LOG("Cannot blit text. Invalid RenderedText");
 
 	return ret;
 }
 
-bool Render::Blit_Text(RenderedText* rendered_text, int x, int y) const
+bool Render::Blit_TextSized(RenderedText* rendered_text, SDL_Rect size, Layer layer)
 {
-	bool ret = false;
+	bool ret;
 
-	if (rendered_text != nullptr)
+	if (ret = (rendered_text != nullptr))
 	{
-		int width, height;
-		if (rendered_text->GetSize(width, height))
-		{
-			SDL_Rect rect = { x, y, width, height };
-			if (!(ret = (SDL_RenderCopyEx(renderer, rendered_text->GetTexture(), 0, &rect, 0, nullptr, SDL_RendererFlip::SDL_FLIP_NONE) == 0)))
-				LOG("Cannot blit to screen. SDL_RenderCopy error: %s", SDL_GetError());
-		}
+		RenderData data(RenderData::TEXTURE_FULL);
+		data.texture = rendered_text->GetTexture();
+		data.rect = size;
+
+		layers[layer][data.rect.y].push_back(data);
 	}
-
-	return ret;
-}
-
-bool Render::Blit_TextSized(RenderedText* rendered_text, SDL_Rect size) const
-{
-	bool ret = false;
-
-	if (rendered_text != nullptr)
-	{
-		int width, height;
-		if (rendered_text->GetSize(width, height))
-		{
-			if (!(ret = (SDL_RenderCopyEx(renderer, rendered_text->GetTexture(), 0, &size, 0, nullptr, SDL_RendererFlip::SDL_FLIP_NONE) == 0)))
-				LOG("Cannot blit to screen. SDL_RenderCopy error: %s", SDL_GetError());
-		}
-	}
-
-	return ret;
-}
-
-bool Render::DrawQuad(const SDL_Rect rect, SDL_Color color, bool filled, bool use_camera) const
-{
-	bool ret = true;
-
-	SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
-	SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, color.a);
-
-	SDL_Rect dim(rect);
-	if(use_camera)
-	{
-		dim.x -= int(cam.x);
-		dim.y -= int(cam.y);
-	}
-
-	int result = (filled) ? SDL_RenderFillRect(renderer, &dim) : SDL_RenderDrawRect(renderer, &dim);
-
-	if(result != 0)
-	{
-		LOG("Cannot draw quad to screen. SDL_RenderFillRect error: %s", SDL_GetError());
-		ret = false;
-	}
-
-	return ret;
-}
-
-bool Render::DrawQuadNormCoords(RectF rect, SDL_Color color, bool filled) const
-{
-	bool ret = true;
-
-	SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
-	SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, color.a);
-
-	SDL_Rect dim = { int(rect.x * cam.w), int(rect.y * cam.h), int(rect.w * cam.w), int(rect.h * cam.h) };
-
-	int result = (filled) ? SDL_RenderFillRect(renderer, &dim) : SDL_RenderDrawRect(renderer, &dim);
-
-	if (result != 0)
-	{
-		LOG("Cannot draw quad to screen. SDL_RenderFillRect error: %s", SDL_GetError());
-		ret = false;
-	}
-
-	return ret;
-}
-
-bool Render::DrawLine(const SDL_Point a, const SDL_Point b, SDL_Color color, bool use_camera) const
-{
-	bool ret = true;
-	//unsigned int scale = App->win->GetScale();
-
-	SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
-	SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, color.a);
-
-	int result = -1;
-
-	if (use_camera)
-		result = SDL_RenderDrawLine(renderer, a.x - int(cam.x), a.y - int(cam.y), b.x - int(cam.x), b.y - int(cam.y));
 	else
-		result = SDL_RenderDrawLine(renderer, a.x, a.y, b.x, b.y);
-
-	if(result != 0)
-	{
-		LOG("Cannot draw quad to screen. SDL_RenderFillRect error: %s", SDL_GetError());
-		ret = false;
-	}
+		LOG("Cannot blit text. Invalid RenderedText");
 
 	return ret;
 }
 
-bool Render::DrawCircle(int x, int y, float radius, SDL_Color color, bool use_camera) const
+void Render::DrawQuad(const SDL_Rect rect, const SDL_Color color, bool filled, Layer layer, bool use_camera)
 {
-	bool ret = true;
+	RenderData data(filled ? RenderData::QUAD_FILLED : RenderData::QUAD_EMPTY);
+	data.texture = nullptr;
+	data.rect = rect;
+	data.extra.color = color;
 
 	if (use_camera)
 	{
-		x -= int(cam.x);
-		y -= int(cam.y);
+		data.rect.x -= int(cam.x);
+		data.rect.y -= int(cam.y);
 	}
 
-	SDL_Point points[360];
-	float factor = (float)M_PI / 180.0f;
-	for(unsigned int i = 0; i < 360; ++i)
+	layers[layer][data.rect.y].push_back(data);
+}
+
+void Render::DrawQuadNormCoords(RectF rect, const SDL_Color color, bool filled, Layer layer)
+{
+	RenderData data(filled ? RenderData::QUAD_FILLED : RenderData::QUAD_EMPTY);
+	data.texture = nullptr;
+	data.rect = { int(rect.x * cam.w), int(rect.y * cam.h), int(rect.w * cam.w), int(rect.h * cam.h) };
+	data.extra.color = color;
+
+	layers[layer][data.rect.y].push_back(data);
+}
+
+void Render::DrawLine(const std::pair<int, int> a, const std::pair<int, int> b, const SDL_Color color, Layer layer, bool use_camera)
+{
+	RenderData data(RenderData::LINE);
+	data.texture = nullptr;
+	data.rect = { a.first, a.second, b.first, b.second };
+	data.extra.color = color;
+
+	if (use_camera)
 	{
-		points[i].x = x + int(radius * cos(i * factor));
-		points[i].y = y + int(radius * sin(i * factor));
+		data.rect.x -= int(cam.x);
+		data.rect.y -= int(cam.y);
+		data.rect.w -= int(cam.x);
+		data.rect.h -= int(cam.y);
 	}
 
-	SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
-	SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, color.a);
+	layers[layer][data.rect.y].push_back(data);
+}
 
-	if(SDL_RenderDrawPoints(renderer, points, 360) != 0)
+void Render::DrawCircle(const SDL_Rect rect, const SDL_Color color, Layer layer, bool use_camera)
+{
+	RenderData data(RenderData::CIRCLE);
+	data.texture = nullptr;
+	data.rect = rect;
+	data.extra.color = color;
+
+	if (use_camera)
 	{
-		LOG("Cannot draw quad to screen. SDL_RenderFillRect error: %s", SDL_GetError());
-		ret = false;
+		data.rect.x -= int(cam.x);
+		data.rect.y -= int(cam.y);
 	}
 
-	return ret;
+	layers[layer][data.rect.y].push_back(data);
+}
+
+Render::RenderData::RenderData(Type t) :
+	type(t),
+	texture(nullptr),
+	rect({0, 0, 0, 0})
+{
+	extra.section = rect;
+}
+
+Render::RenderData::RenderData(const RenderData& copy) :
+	type(copy.type),
+	texture(copy.texture),
+	rect(copy.rect)
+{
+	if (type <= TEXTURE_SECTION)
+		extra.section = copy.extra.section;
+	else if (type > TEXTURE_SECTION)
+		extra.color = copy.extra.color;
 }

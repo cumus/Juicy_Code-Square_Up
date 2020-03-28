@@ -14,19 +14,15 @@ UI_TextButton::~UI_TextButton()
 	DEL(text);
 }
 
-bool UI_TextButton::Draw() const
+void UI_TextButton::Draw() const
 {
-	bool ret;
+	App->render->DrawQuadNormCoords(GetTargetNormRect(), color);
 
-	if (ret = App->render->DrawQuadNormCoords(GetTargetNormRect(), color))
-	{
-		SDL_Rect rect = GetTargetRect();
-		ret = (scale_to_fit ?
-			App->render->Blit_Text(text, rect.x, rect.y) :
-			App->render->Blit_TextSized(text, rect));
-	}
-
-	return ret;
+	SDL_Rect rect = GetTargetRect();
+	if (scale_to_fit)
+		App->render->Blit_Text(text, rect.x, rect.y);
+	else
+		App->render->Blit_TextSized(text, rect);
 }
 
 UI_TextButton* UI_TextButton::ToUiTextButton()

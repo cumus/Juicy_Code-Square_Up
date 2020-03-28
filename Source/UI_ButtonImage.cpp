@@ -12,9 +12,9 @@ UI_ButtonImage::UI_ButtonImage(EditorWindow* window, RectF rect, int texture_id,
 UI_ButtonImage::~UI_ButtonImage()
 {}
 
-bool UI_ButtonImage::Draw() const
+void UI_ButtonImage::Draw() const
 {
-	return App->render->BlitNorm(texture_id, GetTargetNormRect(), apply_section ? &section : nullptr);
+	App->render->BlitNorm(texture_id, GetTargetNormRect(), apply_section ? &section : nullptr);
 }
 
 UI_ButtonImage* UI_ButtonImage::ToUiButtonImage()

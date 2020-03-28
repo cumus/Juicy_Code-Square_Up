@@ -10,47 +10,10 @@ UI_Element::UI_Element(EditorWindow* window, UI_Type type, RectF rect)
 UI_Element::~UI_Element()
 {}
 
-bool UI_Element::Draw() const
+void UI_Element::Draw() const
 {
-	return App->render->DrawQuadNormCoords(GetTargetNormRect(), { 0, 0, 0, 255 });
+	App->render->DrawQuadNormCoords(GetTargetNormRect());
 }
-
-UI_Button* UI_Element::ToUiButton()
-{
-	return nullptr;
-}
-
-UI_Image* UI_Element::ToUiImage()
-{
-	return nullptr;
-}
-
-UI_Text* UI_Element::ToUiText()
-{
-	return nullptr;
-}
-
-UI_TextButton* UI_Element::ToUiTextButton()
-{
-	return nullptr;
-}
-
-UI_ButtonImage* UI_Element::ToUiButtonImage()
-{
-	return nullptr;
-}
-
-UI_SubMenu* UI_Element::ToUiSubMenu()
-{
-	return nullptr;
-}
-
-UI_Slider* UI_Element::ToUiSlider()
-{
-	return nullptr;
-}
-
-
 
 RectF UI_Element::GetTargetNormRect() const
 {

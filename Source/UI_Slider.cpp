@@ -9,21 +9,16 @@ UI_Slider::UI_Slider(EditorWindow* window, RectF rect, RectF button_rect, int te
 UI_Slider::~UI_Slider()
 {}
 
-bool UI_Slider::Draw() const
+void UI_Slider::Draw() const
 {
-	bool ret = true;
+	App->render->BlitNorm(bar_texture_id, GetTargetNormRect(), apply_section ? &section : nullptr);
 
-	if (ret = App->render->BlitNorm(bar_texture_id, GetTargetNormRect(), apply_section ? &section : nullptr))
-	{
-		float x = button_rect.x * GetTargetNormRect().x;
-		float y = button_rect.y * GetTargetNormRect().y;
-		float w = button_rect.w * GetTargetNormRect().w;
-		float h = button_rect.h * GetTargetNormRect().h;
-
-		App->render->DrawQuadNormCoords({ x, y, w, h }, button_color);
-	}
-
-	return ret;
+	RectF target = GetTargetNormRect();
+	App->render->DrawQuadNormCoords({
+		button_rect.x * target.x,
+		button_rect.y * target.y,
+		button_rect.w * target.w,
+		button_rect.h * target.h }, button_color);
 }
 
 UI_Slider* UI_Slider::ToUiSlider()

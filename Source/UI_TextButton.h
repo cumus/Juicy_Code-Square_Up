@@ -11,7 +11,7 @@ public:
 	UI_TextButton(EditorWindow* window, RectF rect = { 0.0f, 0.0f, 1.0f, 1.0f }, const char* text = nullptr, int font_id = -1);
 	~UI_TextButton();
 
-	bool Draw() const override;
+	void Draw() const override;
 	
 	UI_TextButton* ToUiTextButton() override;
 

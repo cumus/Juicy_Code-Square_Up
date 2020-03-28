@@ -14,10 +14,13 @@ UI_Text::~UI_Text()
 	DEL(text);
 }
 
-bool UI_Text::Draw() const
+void UI_Text::Draw() const
 {
 	SDL_Rect rect = GetTargetRect();
-	return scale_to_fit ? App->render->Blit_Text(text, rect.x, rect.y) : App->render->Blit_TextSized(text, rect);
+	if (scale_to_fit)
+		App->render->Blit_Text(text, rect.x, rect.y);
+	else
+		App->render->Blit_TextSized(text, rect);
 }
 
 UI_Text* UI_Text::ToUiText()

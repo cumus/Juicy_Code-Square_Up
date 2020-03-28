@@ -15,9 +15,8 @@ UI_SubMenu::~UI_SubMenu()
 {
 }
 
-bool UI_SubMenu::Draw() const
+void UI_SubMenu::Draw() const
 {
-	return true;
 }
 
 void UI_SubMenu::RecieveEvent(const Event& e)

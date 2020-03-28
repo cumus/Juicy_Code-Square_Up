@@ -9,7 +9,7 @@ public:
 	UI_Slider(EditorWindow* window, RectF rect = { 0.0f, 0.0f, 1.0f, 1.0f }, RectF button_rect = { 0.0f, 0.0f, 1.0f, 1.0f }, int texture_id = -1, SDL_Rect section = { 0, 0, 0, 0 });
 	~UI_Slider();
 
-	bool Draw() const override;
+	void Draw() const override;
 
 	UI_Slider* ToUiSlider() override;
 

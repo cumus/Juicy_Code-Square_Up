@@ -32,15 +32,15 @@ public:
 	UI_Element(EditorWindow* window, UI_Type type, RectF rect = { 0.0f, 0.0f, 0.0f, 0.0f });
 	virtual ~UI_Element();
 
-	virtual bool Draw() const;
+	virtual void Draw() const;
 
-	virtual UI_Button* ToUiButton();
-	virtual UI_Image* ToUiImage();
-	virtual UI_Text* ToUiText();
-	virtual UI_TextButton* ToUiTextButton();
-	virtual UI_ButtonImage* ToUiButtonImage();
-	virtual UI_SubMenu* ToUiSubMenu();
-	virtual UI_Slider* ToUiSlider();
+	virtual UI_Button* ToUiButton() { return nullptr; }
+	virtual UI_Image* ToUiImage() { return nullptr; }
+	virtual UI_Text* ToUiText() { return nullptr; }
+	virtual UI_TextButton* ToUiTextButton() { return nullptr; }
+	virtual UI_ButtonImage* ToUiButtonImage() { return nullptr; }
+	virtual UI_SubMenu* ToUiSubMenu() { return nullptr; }
+	virtual UI_Slider* ToUiSlider() { return nullptr; }
 
 	RectF GetTargetNormRect() const;
 	SDL_Rect GetTargetRect() const;

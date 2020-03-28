@@ -9,9 +9,9 @@ UI_Button::UI_Button(EditorWindow* window, RectF rect)
 UI_Button::~UI_Button()
 {}
 
-bool UI_Button::Draw() const
+void UI_Button::Draw() const
 {
-	return App->render->DrawQuadNormCoords(GetTargetNormRect(), color);
+	App->render->DrawQuadNormCoords(GetTargetNormRect(), color);
 }
 
 UI_Button* UI_Button::ToUiButton()

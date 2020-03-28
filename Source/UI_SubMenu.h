@@ -10,7 +10,7 @@ public:
 	UI_SubMenu(const RectF rect);
 	~UI_SubMenu();
 
-	bool Draw() const override;
+	void Draw() const override;
 	 
 	void RecieveEvent(const Event& e) override;
 

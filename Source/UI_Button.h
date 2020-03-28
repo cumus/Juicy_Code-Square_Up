@@ -9,7 +9,7 @@ public:
 	UI_Button(EditorWindow* window, RectF rect = { 0.0f, 0.0f, 1.0f, 1.0f });
 	~UI_Button();
 
-	bool Draw() const override;
+	void Draw() const override;
 
 	UI_Button* ToUiButton() override;
 
