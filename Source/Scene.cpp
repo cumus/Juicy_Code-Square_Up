@@ -56,6 +56,12 @@ bool Scene::Update()
 	if (App->input->GetKey(SDL_SCANCODE_F2) == KEY_DOWN)
 		map.draw_walkability = !map.draw_walkability;
 
+	if (App->input->GetKey(SDL_SCANCODE_F3) == KEY_DOWN)
+		App->audio->PauseMusic();
+
+	if (App->input->GetKey(SDL_SCANCODE_F4) == KEY_DOWN)
+		App->audio->PlayMusic("audio/Music/alexander-nakarada-buzzkiller.ogg");
+
 	// Swap map orientation
 	if (App->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN) Map::SwapMapType();
 
@@ -74,7 +80,7 @@ bool Scene::Update()
 		Gameobject* audio_go = AddGameobject("AudioSource - son of root", &root);
 		audio_go->GetTransform()->SetLocalPos({ float(position.first), float(position.second), 0.0f });
 		audio_go->GetTransform()->GetGlobalPosition();
-		new AudioSource(audio_go, App->audio->LoadFx("audio/Effects/Buildings/Select/select.wav"));
+		new AudioSource(audio_go, App->audio->LoadFx("audio/Effects/Buildings/Nails/HamerNail13Hits.wav"));
 
 		Sprite* s3 = new Sprite(audio_go);
 		s3->tex_id = id_mouse_tex;

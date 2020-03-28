@@ -178,6 +178,20 @@ bool Audio::PlayMusic(const char* path, float fade_time)
 	return ret;
 }
 
+bool Audio::PauseMusic()
+{
+	OPTICK_EVENT();
+
+	bool ret = true;
+	
+	if (!active)
+		return false;
+
+	Mix_HaltMusic();
+	
+	return ret;
+}
+
 // Load WAV
 unsigned int Audio::LoadFx(const char* path)
 {
@@ -272,10 +286,12 @@ int Audio::PlaySpatialFx(unsigned int id, std::pair<int, int> position, int repe
 		Mix_SetPosition(i, angle, distance);	// Set a channel in a position given a channel, an angle and a distance
 
 		Mix_PlayChannel(i, chunk, repeat);		// Play the channel that we already placed with Mix_SetPosition()
-
+		
+		LOG("channel: %i", i);
+		
 		ret = i;
 	}
-
+	
 	return ret;
 }
 
@@ -308,8 +324,8 @@ unsigned int Audio::GetDistance(iPoint cam_pos, iPoint source_pos)
 	{
 		volume = MAX_DISTANCE;
 	}*/
-	int distance = source_pos.DistanceTo(cam_pos);
-	distance = distance / 2;							//to scale a bit
+	int distance = cam_pos.DistanceTo(source_pos);
+	distance = distance / 3;							//to scale a bit
 	int volume = (distance * MAX_DISTANCE) / cam_pos.x;
 	if (volume < 0) 
 	{ 

@@ -38,7 +38,6 @@ void AudioSource::RecieveEvent(const Event& e)
 	{
 	case ON_SELECT:
 	{
-		Mix_HaltChannel(-1);
 		Play();
 		break;
 	}
