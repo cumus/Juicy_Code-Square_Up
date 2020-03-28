@@ -171,16 +171,10 @@ void Application::FinishUpdate()
 	}
 	else
 	{
-		// Update pathfindnig
-		//int t = 0;
 		Timer timer;
-		int t = pathfinding.IteratePaths(extra_ms);
 
-		if (t != extra_ms)
-		{
-			LOG("TTTTTTTTTTTTTTTTTTTTTTT:   %d - %d    \n", extra_ms, t);
-			extra_ms -= timer.Read();
-		}
+		// Update pathfindnig
+		pathfinding.IteratePaths(extra_ms);
 
 		// Pump events in extra_ms timespan
 		while (extra_ms > timer.ReadI() && Event::RemainingEvents() > 0)
