@@ -40,18 +40,14 @@ bool PathfindingManager::CleanUp()
 
 int PathfindingManager::IteratePaths(int extra_ms)
 {
-	int time = extra_ms;
-	if (extra_ms > 0)
+	while (!toDoPaths.empty() && extra_ms > 0)
 	{
-		while (!toDoPaths.empty() && time > 0)
-		{
-			std::map<int, UncompletedPath>::iterator it;
-			it = toDoPaths.begin();
-			UncompletedPath path = it->second;
-			time = ContinuePath(path.lastNode, path.end, path.ID, time);
-		}
+		std::map<int, UncompletedPath>::iterator it = toDoPaths.begin();
+		UncompletedPath path = it->second;
+		extra_ms = ContinuePath(path.lastNode, path.end, path.ID, extra_ms);
 	}
-	return time;
+
+	return extra_ms;
 }
 
 UncompletedPath::UncompletedPath() : ID(0)

@@ -93,7 +93,7 @@ bool Render::Init()
 // Called each loop iteration
 bool Render::PreUpdate()
 {
-	return (SDL_RenderClear(renderer) == 0);
+	return (SetDrawColor(background) && SDL_RenderClear(renderer) == 0);
 }
 
 bool Render::Update()
@@ -165,6 +165,7 @@ bool Render::PostUpdate()
 					if (data->texture != nullptr)
 						if (!(ret = SDL_RenderCopy(renderer, data->texture, nullptr, &data->rect) == 0))
 							LOG("Cannot blit to screen. SDL_RenderCopy error: %s", SDL_GetError());
+
 					break;
 				}
 				case RenderData::TEXTURE_SECTION:
@@ -172,24 +173,31 @@ bool Render::PostUpdate()
 					if (data->texture != nullptr)
 						if (!(ret = SDL_RenderCopy(renderer, data->texture, &data->extra.section, &data->rect) == 0))
 							LOG("Cannot blit to screen. SDL_RenderCopy error: %s", SDL_GetError());
+
 					break;
 				}
 				case RenderData::QUAD_FILLED:
 				{
-					if (!(ret = (SetDrawColor(data->extra.color) && SDL_RenderFillRect(renderer, &data->rect) == 0)))
+					SetDrawColor(data->extra.color);
+					if (!(ret = (SDL_RenderFillRect(renderer, &data->rect) == 0)))
 						LOG("Cannot draw filled rect. SDL_RenderFillRect error: %s", SDL_GetError());
+
 					break;
 				}
 				case RenderData::QUAD_EMPTY:
 				{
-					if (!(ret = (SetDrawColor(data->extra.color) && SDL_RenderDrawRect(renderer, &data->rect) == 0)))
+					SetDrawColor(data->extra.color);
+					if (!(ret = (SDL_RenderDrawRect(renderer, &data->rect) == 0)))
 						LOG("Cannot draw empty rect. SDL_RenderFillRect error: %s", SDL_GetError());
+
 					break;
 				}
 				case RenderData::LINE:
 				{
+					SetDrawColor(data->extra.color);
 					if (!(ret = (SDL_RenderDrawLine(renderer, data->rect.x, data->rect.y, data->rect.w, data->rect.h) == 0)))
 						LOG("Cannot draw line. SDL_RenderDrawLine error: %s", SDL_GetError());
+
 					break;
 				}
 				case RenderData::CIRCLE:

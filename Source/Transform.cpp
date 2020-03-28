@@ -42,21 +42,21 @@ void Transform::PostUpdate()
 {
 	// Draw AABB
 	// Base bottom
-	App->render->DrawLine({ points[0].first, points[0].second }, { points[1].first, points[1].second });
-	App->render->DrawLine({ points[1].first, points[1].second }, { points[2].first, points[2].second });
+	App->render->DrawLine({ points[0].first, points[0].second }, { points[1].first, points[1].second }, { 0, 0, 0, 255 }, DEBUG_SCENE);
+	App->render->DrawLine({ points[1].first, points[1].second }, { points[2].first, points[2].second }, { 0, 0, 0, 255 }, DEBUG_SCENE);
 	//App->render->DrawLine({ points[2].first, points[2].second }, { points[3].first, points[3].second });
 	//App->render->DrawLine({ points[3].first, points[3].second }, { points[0].first, points[0].second });
 
 	// Base top
-	App->render->DrawLine({ points[4].first, points[4].second }, { points[5].first, points[5].second });
-	App->render->DrawLine({ points[5].first, points[5].second }, { points[6].first, points[6].second });
-	App->render->DrawLine({ points[6].first, points[6].second }, { points[7].first, points[7].second });
-	App->render->DrawLine({ points[7].first, points[7].second }, { points[4].first, points[4].second });
+	App->render->DrawLine({ points[4].first, points[4].second }, { points[5].first, points[5].second }, { 0, 0, 0, 255 }, DEBUG_SCENE);
+	App->render->DrawLine({ points[5].first, points[5].second }, { points[6].first, points[6].second }, { 0, 0, 0, 255 }, DEBUG_SCENE);
+	App->render->DrawLine({ points[6].first, points[6].second }, { points[7].first, points[7].second }, { 0, 0, 0, 255 }, DEBUG_SCENE);
+	App->render->DrawLine({ points[7].first, points[7].second }, { points[4].first, points[4].second }, { 0, 0, 0, 255 }, DEBUG_SCENE);
 
 	// Vertical
-	App->render->DrawLine({ points[0].first, points[0].second }, { points[4].first, points[4].second });
-	App->render->DrawLine({ points[1].first, points[1].second }, { points[5].first, points[5].second });
-	App->render->DrawLine({ points[2].first, points[2].second }, { points[6].first, points[6].second });
+	App->render->DrawLine({ points[0].first, points[0].second }, { points[4].first, points[4].second }, { 0, 0, 0, 255 }, DEBUG_SCENE);
+	App->render->DrawLine({ points[1].first, points[1].second }, { points[5].first, points[5].second }, { 0, 0, 0, 255 }, DEBUG_SCENE);
+	App->render->DrawLine({ points[2].first, points[2].second }, { points[6].first, points[6].second }, { 0, 0, 0, 255 }, DEBUG_SCENE);
 }
 
 void Transform::RecieveEvent(const Event & e)
@@ -164,6 +164,11 @@ void Transform::MoveZ(float val)
 		pos.z += val;
 		modified = true;
 	}
+}
+
+bool Transform::GlobalPosIsDifferentFrom(vec global_pos) const
+{
+	return global_pos != GetGlobalPosition();
 }
 
 bool Transform::Intersects(std::pair<float, float> p) const

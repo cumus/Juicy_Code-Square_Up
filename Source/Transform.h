@@ -42,6 +42,8 @@ public:
 	vec GetGlobalPosition() const { return global_parent_pos + pos; }
 	vec GetGlobalScale() const { return global_parent_scale * scale; }
 
+	bool GlobalPosIsDifferentFrom(vec global_pos) const;
+
 	// Collision
 	bool Intersects(std::pair<float, float> p) const;
 
