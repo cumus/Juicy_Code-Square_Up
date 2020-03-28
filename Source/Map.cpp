@@ -179,7 +179,7 @@ void Map::Draw() const
 							App->render->Blit(tex_id, render_pos.first, render_pos.second, &section, MAP);
 						}
 #ifdef DEBUG
-						else
+						else if (it == layers.begin())
 						{
 							// Draw debug spite at empty position
 							SDL_Rect rect = { 64, 0, 64, 64 };
