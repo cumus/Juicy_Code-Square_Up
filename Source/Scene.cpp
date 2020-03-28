@@ -137,28 +137,24 @@ bool Scene::Update()
 
 bool Scene::PostUpdate()
 {
+	root.PostUpdate();
+
 	map.Draw();
 
 	SDL_Rect cam_rect = App->render->GetCameraRect();
 	SDL_Rect rect = { 0, 0, 64, 64 };
 
 	std::pair<int, int> render_pos = Map::I_MapToWorld(startPath.x, startPath.y);
-	App->render->Blit(id_mouse_tex, render_pos.first, render_pos.second, &rect);
-
-	//render_pos = Map::I_MapToWorld(destinationPath.x, destinationPath.y);
-	//App->render->Blit(id_mouse_tex, render_pos.first, render_pos.second, &rect);
+	App->render->Blit(id_mouse_tex, render_pos.first, render_pos.second, &rect, DEBUG_MAP);
 
 	if (path != nullptr && !path->empty())
 	{
 		for (std::vector<iPoint>::const_iterator it = path->cbegin(); it != path->cend(); ++it)
 		{
 			std::pair<int, int> render_pos = Map::I_MapToWorld(it->x, it->y);
-			App->render->Blit(id_mouse_tex, render_pos.first, render_pos.second, &rect);
+			App->render->Blit(id_mouse_tex, render_pos.first, render_pos.second, &rect, DEBUG_MAP);
 		}
 	}
-
-
-	root.PostUpdate();
 
 	// Debug Pointer Info on Window Title
 	int mouse_x, mouse_y;
@@ -178,12 +174,6 @@ bool Scene::PostUpdate()
 		sel != nullptr ? sel->GetName() : "none selected");
 
 	App->win->SetTitle(tmp_str);
-
-	// Render Some Text
-	/*App->render->Blit_Text("Sample Text At 200x200", 200, 200);
-
-	SDL_Rect rect = { (cam_rect.w / 2) - 90, (cam_rect.h / 2) - 30, 180, 60 };
-	App->render->Blit_TextSized("Square UP!", rect, 1);*/
 
 	return true;
 }

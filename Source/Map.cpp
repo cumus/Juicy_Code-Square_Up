@@ -117,9 +117,9 @@ void Map::Draw() const
 
 				// Draw debug spite at render_pos
 				if (y == up_left.second || y == down_right.second || x == up_left.first || x == down_right.first) // blue border
-					App->render->DrawQuad({ pos.first + 3, pos.second + 3, tile_width - 6, tile_height - 6 }, { 0, 100, 250, 200 }, true, MAP);
+					App->render->DrawQuad({ pos.first + 3, pos.second + 3, tile_width - 6, tile_height - 6 }, { 0, 100, 250, 200 }, true, BACKGROUND);
 				else // white default
-					App->render->DrawQuad({ pos.first + 1, pos.second + 1, tile_width - 2, tile_height - 2 }, { 250, 250, 250, 60 }, true, MAP);
+					App->render->DrawQuad({ pos.first + 1, pos.second + 1, tile_width - 2, tile_height - 2 }, { 250, 250, 250, 60 }, true, BACKGROUND);
 			}
 		}
 #endif // DEBUG
@@ -150,10 +150,10 @@ void Map::Draw() const
 		std::pair<int, int> mouse_tile_pos = I_MapToWorld(mouse.first, mouse.second);
 
 		// Frist tileset size - green
-		App->render->DrawQuad({ mouse_tile_pos.first, mouse_tile_pos.second, tilesets.front().tile_width, tilesets.front().tile_height }, { 0, 100, 0, 180 }, true, MAP);
+		App->render->DrawQuad({ mouse_tile_pos.first, mouse_tile_pos.second, tilesets.front().tile_width, tilesets.front().tile_height }, { 0, 100, 0, 180 }, true, DEBUG_MAP);
 
 		// Map tile size - blue
-		App->render->DrawQuad({ mouse_tile_pos.first, mouse_tile_pos.second, tile_width, tile_height }, { 0, 0, 100, 80 }, true, MAP);
+		App->render->DrawQuad({ mouse_tile_pos.first, mouse_tile_pos.second, tile_width, tile_height }, { 0, 0, 100, 80 }, true, DEBUG_MAP);
 	}
 	else if (type == MAPTYPE_ISOMETRIC)
 	{
@@ -184,7 +184,7 @@ void Map::Draw() const
 							// Draw debug spite at empty position
 							SDL_Rect rect = { 64, 0, 64, 64 };
 							std::pair<int, int> render_pos = I_MapToWorld(x, y);
-							App->render->Blit(App->scene->id_mouse_tex, render_pos.first, render_pos.second, &rect, MAP);
+							App->render->Blit(App->scene->id_mouse_tex, render_pos.first, render_pos.second, &rect, BACKGROUND);
 						}
 #endif // DEBUG
 					}
@@ -204,7 +204,7 @@ void Map::Draw() const
 						if (tile_id != 0) rect.x = 64;
 						std::pair<int, int> render_pos = I_MapToWorld(x, y);
 						//App->render->Blit(App->scene->id_mouse_tex, render_pos.first, render_pos.second, &rect);
-						App->render->Blit_Scale(App->scene->id_mouse_tex, render_pos.first, render_pos.second + (21.0f * scale), 2, 2, &rect, MAP, true);
+						App->render->Blit_Scale(App->scene->id_mouse_tex, render_pos.first, render_pos.second + (21.0f * scale), 2, 2, &rect, WALKABILITY, true);
 					}
 				}
 			}
@@ -217,7 +217,7 @@ void Map::Draw() const
 		SDL_Rect rect = { 0, 0, 64, 64 };
 
 		// Tile base rhombus
-		App->render->Blit_Scale(App->scene->id_mouse_tex, mouse_tile_pos.first, mouse_tile_pos.second + (21.0f * scale), 2, 2, &rect, MAP, true);
+		App->render->Blit_Scale(App->scene->id_mouse_tex, mouse_tile_pos.first, mouse_tile_pos.second + (21.0f * scale), 2, 2, &rect, DEBUG_MAP, true);
 	}
 }
 

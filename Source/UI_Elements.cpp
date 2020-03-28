@@ -12,7 +12,7 @@ UI_Element::~UI_Element()
 
 void UI_Element::Draw() const
 {
-	App->render->DrawQuadNormCoords(GetTargetNormRect());
+	App->render->DrawQuadNormCoords(GetTargetNormRect(), { 0, 0, 0, 255 }, true, EDITOR);
 }
 
 RectF UI_Element::GetTargetNormRect() const

@@ -337,7 +337,7 @@ bool Render::Blit(int texture_id, int x, int y, const SDL_Rect* section, Layer l
 			data.rect.y = y;
 		}
 
-		layers[layer][data.rect.y].push_back(data);
+		layers[layer][layer < Layer::HUD ? data.rect.y : 0].push_back(data);
 	}
 	else
 		LOG("Cannot blit to screen. Invalid id %d", texture_id);
@@ -383,70 +383,13 @@ bool Render::Blit_Scale(int texture_id, int x, int y, float scale_x, float scale
 			data.rect.h = int(float(data.rect.h) * scale_y);
 		}
 
-		layers[layer][data.rect.y].push_back(data);
+		layers[layer][layer < Layer::HUD ? data.rect.y : 0].push_back(data);
 	}
 	else
 		LOG("Cannot blit to screen. Invalid id %d", texture_id);
 
 	return ret;
 }
-
-/*
-bool Render::Blit_Rot(int texture_id, int x, int y, bool use_cam, const SDL_Rect* section, int flip, double angle, int pivot_x, int pivot_y)
-{
-	bool ret = false;
-
-	SDL_Texture* texture = App->tex.GetTexture(texture_id);
-
-	if (texture != nullptr)
-	{
-		SDL_Rect rect;
-
-		if (use_cam)
-		{
-			rect.x = x - int(cam.x);
-			rect.y = y - int(cam.y);
-		}
-		else
-		{
-			rect.x = x;
-			rect.y = y;
-		}
-
-		if (section)
-		{
-			rect.w = section->w;
-			rect.h = section->h;
-		}
-		else
-		{
-			static TextureData tex_data;
-			App->tex.GetTextureData(texture_id, tex_data);
-			rect.w = tex_data.width;
-			rect.h = tex_data.height;
-		}
-
-		SDL_Point* p = nullptr;
-		SDL_Point pivot;
-
-		if (pivot_x != INT_MAX && pivot_y != INT_MAX)
-		{
-			pivot.x = pivot_x;
-			pivot.y = pivot_y;
-			p = &pivot;
-		}
-
-		if (SDL_RenderCopyEx(renderer, texture, section, &rect, angle, p, SDL_RendererFlip(flip)) == 0)
-			ret = true;
-		else
-			LOG("Cannot blit to screen. SDL_RenderCopy error: %s", SDL_GetError());
-	}
-	else
-		LOG("Cannot blit to screen. Invalid id %d");
-
-	return ret;
-}
-*/
 
 bool Render::BlitNorm(int texture_id, RectF rect, const SDL_Rect* section, Layer layer)
 {
@@ -464,7 +407,7 @@ bool Render::BlitNorm(int texture_id, RectF rect, const SDL_Rect* section, Layer
 			data.type = RenderData::TEXTURE_SECTION;
 		}
 
-		layers[layer][data.rect.y].push_back(data);
+		layers[layer][layer < Layer::HUD ? data.rect.y : 0].push_back(data);
 	}
 	else
 		LOG("Cannot blit to screen. Invalid id %d", texture_id);
@@ -484,7 +427,7 @@ bool Render::Blit_Text(RenderedText* rendered_text, int x, int y, Layer layer)
 			data.texture = rendered_text->GetTexture();
 			data.rect = { x, y, width, height };
 
-			layers[layer][data.rect.y].push_back(data);
+			layers[layer][layer < Layer::HUD ? data.rect.y : 0].push_back(data);
 		}
 		else
 			LOG("Cannot blit text. Invalid text size");
@@ -505,7 +448,7 @@ bool Render::Blit_TextSized(RenderedText* rendered_text, SDL_Rect size, Layer la
 		data.texture = rendered_text->GetTexture();
 		data.rect = size;
 
-		layers[layer][data.rect.y].push_back(data);
+		layers[layer][layer < Layer::HUD ? data.rect.y : 0].push_back(data);
 	}
 	else
 		LOG("Cannot blit text. Invalid RenderedText");
@@ -526,7 +469,7 @@ void Render::DrawQuad(const SDL_Rect rect, const SDL_Color color, bool filled, L
 		data.rect.y -= int(cam.y);
 	}
 
-	layers[layer][data.rect.y].push_back(data);
+	layers[layer][layer < Layer::HUD ? data.rect.y : 0].push_back(data);
 }
 
 void Render::DrawQuadNormCoords(RectF rect, const SDL_Color color, bool filled, Layer layer)
@@ -536,7 +479,7 @@ void Render::DrawQuadNormCoords(RectF rect, const SDL_Color color, bool filled, 
 	data.rect = { int(rect.x * cam.w), int(rect.y * cam.h), int(rect.w * cam.w), int(rect.h * cam.h) };
 	data.extra.color = color;
 
-	layers[layer][data.rect.y].push_back(data);
+	layers[layer][layer < Layer::HUD ? data.rect.y : 0].push_back(data);
 }
 
 void Render::DrawLine(const std::pair<int, int> a, const std::pair<int, int> b, const SDL_Color color, Layer layer, bool use_camera)
@@ -554,7 +497,7 @@ void Render::DrawLine(const std::pair<int, int> a, const std::pair<int, int> b, 
 		data.rect.h -= int(cam.y);
 	}
 
-	layers[layer][data.rect.y].push_back(data);
+	layers[layer][layer < Layer::HUD ? data.rect.y : 0].push_back(data);
 }
 
 void Render::DrawCircle(const SDL_Rect rect, const SDL_Color color, Layer layer, bool use_camera)
@@ -570,7 +513,7 @@ void Render::DrawCircle(const SDL_Rect rect, const SDL_Color color, Layer layer,
 		data.rect.y -= int(cam.y);
 	}
 
-	layers[layer][data.rect.y].push_back(data);
+	layers[layer][layer < Layer::HUD ? data.rect.y : 0].push_back(data);
 }
 
 Render::RenderData::RenderData(Type t) :

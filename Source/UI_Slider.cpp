@@ -11,14 +11,14 @@ UI_Slider::~UI_Slider()
 
 void UI_Slider::Draw() const
 {
-	App->render->BlitNorm(bar_texture_id, GetTargetNormRect(), apply_section ? &section : nullptr);
+	App->render->BlitNorm(bar_texture_id, GetTargetNormRect(), apply_section ? &section : nullptr, EDITOR);
 
 	RectF target = GetTargetNormRect();
 	App->render->DrawQuadNormCoords({
 		button_rect.x * target.x,
 		button_rect.y * target.y,
 		button_rect.w * target.w,
-		button_rect.h * target.h }, button_color);
+		button_rect.h * target.h }, button_color, true, EDITOR);
 }
 
 UI_Slider* UI_Slider::ToUiSlider()

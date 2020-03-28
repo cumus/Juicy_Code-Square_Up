@@ -18,9 +18,9 @@ void UI_Text::Draw() const
 {
 	SDL_Rect rect = GetTargetRect();
 	if (scale_to_fit)
-		App->render->Blit_Text(text, rect.x, rect.y);
+		App->render->Blit_Text(text, rect.x, rect.y, EDITOR);
 	else
-		App->render->Blit_TextSized(text, rect);
+		App->render->Blit_TextSized(text, rect, EDITOR);
 }
 
 UI_Text* UI_Text::ToUiText()

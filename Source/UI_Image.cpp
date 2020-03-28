@@ -12,5 +12,5 @@ UI_Image::~UI_Image()
 
 void UI_Image::Draw() const
 {
-	App->render->BlitNorm(texture_id, GetTargetNormRect(), apply_section ? &section : nullptr);
+	App->render->BlitNorm(texture_id, GetTargetNormRect(), apply_section ? &section : nullptr, EDITOR);
 }

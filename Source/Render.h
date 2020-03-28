@@ -14,8 +14,14 @@ struct SDL_Texture;
 
 enum Layer : int
 {
+	BACKGROUND,
 	MAP,
+	WALKABILITY,
+	DEBUG_MAP,
 	SCENE,
+	DEBUG_SCENE,
+	HUD,
+	EDITOR,
 	MAX_LAYERS
 };
 

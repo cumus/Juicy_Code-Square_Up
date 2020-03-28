@@ -14,7 +14,7 @@ UI_ButtonImage::~UI_ButtonImage()
 
 void UI_ButtonImage::Draw() const
 {
-	App->render->BlitNorm(texture_id, GetTargetNormRect(), apply_section ? &section : nullptr);
+	App->render->BlitNorm(texture_id, GetTargetNormRect(), apply_section ? &section : nullptr, EDITOR);
 }
 
 UI_ButtonImage* UI_ButtonImage::ToUiButtonImage()

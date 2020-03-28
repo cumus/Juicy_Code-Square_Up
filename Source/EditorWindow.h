@@ -42,7 +42,6 @@ public:
 	const WindowState Update(float mouse_x, float mouse_y, KeyState mouse_left_button, bool sizing);
 
 	void Draw(bool draw_border = false) const;
-	void DrawBorders() const;
 
 	RectF GetBorderN_Norm() const;
 	RectF GetBorderW_Norm() const;

@@ -147,7 +147,7 @@ const WindowState EditorWindow::Update(float mouse_x, float mouse_y, KeyState mo
 void EditorWindow::Draw(bool draw_border) const
 {
 	// Draw background
-	App->render->DrawQuadNormCoords(rect, color);
+	App->render->DrawQuadNormCoords(rect, color, true, EDITOR);
 
 	// Draw contents
 	for (std::vector<UI_Element*>::const_iterator it = elements.begin(); it != elements.end(); ++it)
@@ -155,15 +155,12 @@ void EditorWindow::Draw(bool draw_border) const
 
 	// Draw Border
 	if (draw_border)
-		DrawBorders();
-}
-
-void EditorWindow::DrawBorders() const
-{
-	App->render->DrawQuadNormCoords(GetBorderN_Norm(), { 150, (state.hovering == SIDE_N || state.hovering == CORNER_NW || state.hovering == CORNER_NE ? 150u : 0), 0, 200 });
-	App->render->DrawQuadNormCoords(GetBorderW_Norm(), { 150, (state.hovering == SIDE_W || state.hovering == CORNER_NW || state.hovering == CORNER_SW ? 150u : 0), 0, 200 });
-	App->render->DrawQuadNormCoords(GetBorderE_Norm(), { 150, (state.hovering == SIDE_E || state.hovering == CORNER_SE || state.hovering == CORNER_NE ? 150u : 0), 0, 200 });
-	App->render->DrawQuadNormCoords(GetBorderS_Norm(), { 150, (state.hovering == SIDE_S || state.hovering == CORNER_SE || state.hovering == CORNER_SW ? 150u : 0), 0, 200 });
+	{
+		App->render->DrawQuadNormCoords(GetBorderN_Norm(), { 150, (state.hovering == SIDE_N || state.hovering == CORNER_NW || state.hovering == CORNER_NE ? 150u : 0), 0, 200 }, true, EDITOR);
+		App->render->DrawQuadNormCoords(GetBorderW_Norm(), { 150, (state.hovering == SIDE_W || state.hovering == CORNER_NW || state.hovering == CORNER_SW ? 150u : 0), 0, 200 }, true, EDITOR);
+		App->render->DrawQuadNormCoords(GetBorderE_Norm(), { 150, (state.hovering == SIDE_E || state.hovering == CORNER_SE || state.hovering == CORNER_NE ? 150u : 0), 0, 200 }, true, EDITOR);
+		App->render->DrawQuadNormCoords(GetBorderS_Norm(), { 150, (state.hovering == SIDE_S || state.hovering == CORNER_SE || state.hovering == CORNER_SW ? 150u : 0), 0, 200 }, true, EDITOR);
+	}
 }
 
 RectF EditorWindow::GetBorderN_Norm() const
