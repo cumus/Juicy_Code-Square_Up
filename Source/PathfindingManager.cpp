@@ -42,8 +42,7 @@ int PathfindingManager::IteratePaths(int extra_ms)
 {
 	while (!toDoPaths.empty() && extra_ms > 0)
 	{
-		std::map<int, UncompletedPath>::iterator it = toDoPaths.begin();
-		UncompletedPath path = it->second;
+		UncompletedPath path = toDoPaths.begin()->second;
 		extra_ms = ContinuePath(path.lastNode, path.end, path.ID, extra_ms);
 	}
 
