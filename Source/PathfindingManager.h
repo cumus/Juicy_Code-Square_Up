@@ -120,6 +120,9 @@ public:
 	//Utility: Return one path found by ID
 	std::vector<iPoint>* GetPath(int ID);
 
+	//Utility: Return uncompleted path by ID
+	UncompletedPath* GetToDoPath(int ID);
+
 private:
 	MapLayer map;
 	iPoint nullPoint = iPoint({ -1,-1 });

@@ -151,6 +151,18 @@ std::vector<iPoint>* PathfindingManager::GetPath(int ID)
 	return vec;
 }
 
+UncompletedPath* PathfindingManager::GetToDoPath(int ID)
+{
+	UncompletedPath* vec = nullptr;
+	std::map<int, UncompletedPath>::iterator it = toDoPaths.find(ID);
+	if (it != toDoPaths.end())
+	{
+		vec = &it->second;
+	}
+
+	return vec;
+}
+
 //Utility: Prints unit path
 void PathfindingManager::DebugShowUnitPath(int ID)
 {
@@ -424,7 +436,6 @@ void PathfindingManager::Merge(std::vector<PathNode>& vec, int l, int m, int r)
 // Main function to request a path from A to B
 std::vector<iPoint> * PathfindingManager::CreatePath(iPoint& origin, iPoint& destination, int ID)
 {
-	//OPTICK_EVENT();
 	std::vector<iPoint>* pathPointer = nullptr;
 	std::vector<iPoint> finalPath;
 	
@@ -436,12 +447,17 @@ std::vector<iPoint> * PathfindingManager::CreatePath(iPoint& origin, iPoint& des
 		UncompletedPath path(ID,originNode,destination);
 		UpdatePendingPaths(ID,path);
 		LOG("Path added to queue");
-
-		finalPath.push_back(origin);
+		//finalPath.push_back(origin);
 		UpdateStoredPaths(ID, finalPath);
 		pathPointer = GetPath(ID);
 	}
-	else LOG("Unavailable destination");
+	else
+	{
+		finalPath.push_back(origin);
+		UpdateStoredPaths(ID, finalPath);
+		pathPointer = GetPath(ID);
+		LOG("Unavailable destination");
+	}
 
 	return pathPointer;
 	/*if (IsWalkable(destination))
@@ -539,7 +555,6 @@ int PathfindingManager::ContinuePath(PathNode origin, iPoint destination, int ID
 {
 	OPTICK_EVENT();
 	Timer timer;
-	//LOG("Start time: %d", working_ms - timer.ReadI());
 
 	std::vector<iPoint> finalPath;
 	bool pathEnd = false;
@@ -588,6 +603,8 @@ int PathfindingManager::ContinuePath(PathNode origin, iPoint destination, int ID
 		adjacentCells.clear();
 	}
 
+	std::vector<iPoint>* pathPointer = GetPath(ID);
+
 	/*else //Update pending map list
 	{
 		if (checkNode.pos != origin)
@@ -607,9 +624,7 @@ int PathfindingManager::ContinuePath(PathNode origin, iPoint destination, int ID
 
 	if (!finalPath.empty())
 	{	
-		//LOG("Final path size: %d",finalPath.size());
-		std::reverse(finalPath.begin(), finalPath.end());
-		std::vector<iPoint>* pathPointer = GetPath(ID);
+		//std::reverse(finalPath.begin(), finalPath.end());		
 		for (std::vector<iPoint>::iterator it = finalPath.begin(); it != finalPath.end(); it++) //Save new path positions
 		{
 			pathPointer->push_back(*it);
