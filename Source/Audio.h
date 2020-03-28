@@ -72,6 +72,7 @@ public:
 
 	int scale	= 0;
 	int volume	= 0;
+
 };
 
 #endif // __AUDIO_H__

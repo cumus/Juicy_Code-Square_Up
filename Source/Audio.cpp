@@ -1,6 +1,7 @@
 #include "Audio.h"
 #include "Render.h"
 #include "Defs.h"
+#include "Point.h"
 #include "Log.h"
 #include "Application.h"
 #include <math.h>
@@ -268,7 +269,7 @@ int Audio::PlaySpatialFx(unsigned int id, std::pair<int, int> position, int repe
 				i = 0;
 		}
 
-		Mix_SetPosition(i, angle, 0);	// Set a channel in a position given a channel, an angle and a distance
+		Mix_SetPosition(i, angle, distance);	// Set a channel in a position given a channel, an angle and a distance
 
 		Mix_PlayChannel(i, chunk, repeat);		// Play the channel that we already placed with Mix_SetPosition()
 
@@ -296,7 +297,7 @@ unsigned int Audio::GetAngle(iPoint cam_pos, iPoint source_pos)
 
 unsigned int Audio::GetDistance(iPoint cam_pos, iPoint source_pos)
 {
-	unsigned int distance = sqrt(pow(cam_pos.x - source_pos.x, 2) + pow(cam_pos.y - source_pos.y, 2)); 
+	/*unsigned int distance = sqrt(pow(cam_pos.x - source_pos.x, 2) + pow(cam_pos.y - source_pos.y, 2)); 
 
 	int volume = (distance * MAX_DISTANCE) / SCALE;
 	if (volume < 0)
@@ -306,7 +307,18 @@ unsigned int Audio::GetDistance(iPoint cam_pos, iPoint source_pos)
 	if (volume > MAX_DISTANCE)
 	{
 		volume = MAX_DISTANCE;
+	}*/
+	int distance = source_pos.DistanceTo(cam_pos);
+	distance = distance / 2;							//to scale a bit
+	int volume = (distance * MAX_DISTANCE) / cam_pos.x;
+	if (volume < 0) 
+	{ 
+		volume = 0; 
+	} 
+	if (volume > MAX_DISTANCE)
+	{ 
+		volume = MAX_DISTANCE;
 	}
-
+	LOG("cam pos = (%d, %d), source pos = (%d, %d), distance = %d, volume = %d", cam_pos.x, cam_pos.y, source_pos.x, source_pos.y, distance, volume);
 	return volume;
 }
