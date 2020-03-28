@@ -28,11 +28,20 @@ public:
 	void Update() override;
 	void RecieveEvent(const Event& e) override;
 
+	
+
 public:
 	
 	float speed = 2;
+	float aux_speed = speed;
 	float angle;
 	std::vector<iPoint>* path = nullptr;
+	float range;
+
+	iPoint pathbegin;
+	iPoint pathend;
+	bool first_tile = false;
+	bool move = false;
 
 };
 

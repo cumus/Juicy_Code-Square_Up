@@ -118,30 +118,36 @@ void Gameobject::RecieveEvent(const Event & e)
 		for (std::vector<Component*>::iterator component = components.begin(); component != components.end(); ++component)
 			if ((*component)->IsActive())
 				Event::Push(ON_PLAY, *component);
+		break;
 	}
 	case ON_PAUSE:
 	{
 		for (std::vector<Component*>::iterator component = components.begin(); component != components.end(); ++component)
 			if ((*component)->IsActive())
 				Event::Push(ON_PAUSE, *component);
+		break;
 	}
 	case ON_STOP:
 	{
 		for (std::vector<Component*>::iterator component = components.begin(); component != components.end(); ++component)
 			if ((*component)->IsActive())
 				Event::Push(ON_STOP, *component);
+		break;
 	}
 	case ON_SELECT:
 	{
 		for (std::vector<Component*>::iterator component = components.begin(); component != components.end(); ++component)
 			if ((*component)->IsActive())
 				Event::Push(ON_SELECT, *component);
+		break;
 	}
-	case ON_MOVEMENT:
+	case ON_RIGHT_CLICK:
 	{
 		for (std::vector<Component*>::iterator component = components.begin(); component != components.end(); ++component)
 			if ((*component)->IsActive())
-				Event::Push(ON_PAUSE, *component);
+				Event::Push(ON_RIGHT_CLICK, *component, e.data1, e.data2);
+
+		break;
 	}
 	case TRANSFORM_MODIFIED:
 	{
