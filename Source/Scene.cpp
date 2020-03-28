@@ -138,6 +138,20 @@ bool Scene::Update()
 		App->pathfinding.DebugShowPaths();
 	}
 
+	if (App->input->GetMouseButtonDown(2) == KEY_DOWN)
+	{
+		Gameobject* go = App->editor->selection;
+
+		std::pair<int, int> mouseOnMap = Map::WorldToTileBase(x + cam.x, y + cam.y);
+
+
+		if (go != nullptr) {
+			LOG("Object selected");
+			Event::Push(ON_RIGHT_CLICK, go, mouseOnMap.first, mouseOnMap.second);
+			LOG("Event triggered");
+		}
+	}
+
 	return ret;
 }
 
