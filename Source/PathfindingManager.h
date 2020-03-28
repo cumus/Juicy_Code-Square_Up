@@ -11,16 +11,7 @@
 #define DEBUG_ID_TEXTURE 33
 //#define STARTING_PATH_LENGTH 5
 
-struct UncompletedPath
-{
-	UncompletedPath();
-	UncompletedPath(int ID,iPoint first, iPoint last);
-	UncompletedPath(const UncompletedPath& path);
 
-	int ID;
-	iPoint start;
-	iPoint end;
-};
 
 // ---------------------------------------------------------------------
 // Pathnode: Helper struct to represent a node in the path creation
@@ -46,6 +37,18 @@ struct PathNode
 	//PathNode* parent; // needed to reconstruct the path in the end
 };
 
+struct UncompletedPath
+{
+	UncompletedPath();
+	UncompletedPath(int ID, PathNode last, iPoint final);
+	UncompletedPath(const UncompletedPath& path);
+
+	int ID;
+	//iPoint start;
+	iPoint end;
+	PathNode lastNode;
+};
+
 class PathfindingManager
 {
 public:
@@ -64,7 +67,7 @@ public:
 	// Main function to request a path from A to B
 	std::vector<iPoint>* CreatePath( iPoint& origin, iPoint& destination,int ID=0);
 
-	int ContinuePath(iPoint origin, iPoint destination, int ID, int working_ms);
+	int ContinuePath(PathNode lastNode, iPoint destination, int ID, int working_ms);
 
 	// Utility: return true if pos is inside the map boundaries
 	bool CheckBoundaries( iPoint& pos);
@@ -122,7 +125,6 @@ private:
 	iPoint nullPoint = iPoint({ -1,-1 });
 	std::map<int, std::vector<iPoint>> storedPaths; //Stores all generated paths by units
 	std::map<int, UncompletedPath> toDoPaths; //Stores pending path for each id
-	int calls = 0;
 };
 
 #endif 
