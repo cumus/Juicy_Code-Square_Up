@@ -441,6 +441,7 @@ std::vector<iPoint> * PathfindingManager::CreatePath(iPoint& origin, iPoint& des
 	
 	if (IsWalkable(destination))
 	{
+		//LOG("Destination X: %d, Y: %d", destination.x, destination.y);
 		PathNode originNode(origin, nullPoint);
 		originNode.g = 0;
 		originNode.CalculateF(destination);
@@ -624,7 +625,7 @@ int PathfindingManager::ContinuePath(PathNode origin, iPoint destination, int ID
 
 	if (!finalPath.empty())
 	{	
-		//std::reverse(finalPath.begin(), finalPath.end());		
+		std::reverse(finalPath.begin(), finalPath.end());		
 		for (std::vector<iPoint>::iterator it = finalPath.begin(); it != finalPath.end(); it++) //Save new path positions
 		{
 			pathPointer->push_back(*it);
@@ -636,6 +637,7 @@ int PathfindingManager::ContinuePath(PathNode origin, iPoint destination, int ID
 
 	if (pathEnd)//Delete pending path from map list
 	{
+		//LOG("Destination X: %d, Y: %d", destination.x, destination.y);
 		LOG("Pending deleted");
 		DeletePendingPath(ID);
 	}

@@ -38,9 +38,8 @@ public:
 	std::vector<iPoint>* path = nullptr;
 	float range;
 
-	iPoint pathbegin;
-	iPoint pathend;
-	bool first_tile = false;
+	iPoint nextTile;
+	bool next = false;
 	bool move = false;
 
 };

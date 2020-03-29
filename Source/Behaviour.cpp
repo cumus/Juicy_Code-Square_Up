@@ -51,30 +51,30 @@ void B_Movable::RecieveEvent(const Event& e)
 };
 
 void B_Movable::Update()
-{
-		
-	if (path != nullptr && !path->empty()) {
-	
-		if (first_tile == false) {
-			
-			pathbegin = path->front();
-			//pathbegin.x += 0.5;
-			//pathbegin.y += 0.5;
-			first_tile = true;
-			path->erase(path->begin());
+{	
+	if (path != nullptr && !path->empty()) 
+	{	
+		if(!next) 
+		{		
+			nextTile = path->front();
+			LOG("Tile coords X:%d, Y:%d",nextTile.x,nextTile.y);
+			next = true;
 			move = true;
-			LOG("X: %d, Y: %d", pathbegin.x, pathbegin.y);
+			//LOG("X: %d, Y: %d", pathbegin.x, pathbegin.y);
 			LOG("X: %f, Y: %f", game_object->GetTransform()->GetGlobalPosition().x, game_object->GetTransform()->GetGlobalPosition().y);
 
 		}
 
-		if (game_object->GetTransform()->GetGlobalPosition().x == pathbegin.x && game_object->GetTransform()->GetGlobalPosition().y == pathbegin.y) {
-			first_tile = false;
-		}
-		
-		
-	}
-	
+		vec pos = game_object->GetTransform()->GetGlobalPosition();
+		iPoint actualPos = { int(pos.x), int(pos.y) };
+
+		if (actualPos.x == nextTile.x && actualPos.y == nextTile.y)
+		{
+			path->erase(path->begin());
+			next = false;
+			move = false;
+		}		
+	}	
 	else
 	{
 		move = false;
@@ -83,14 +83,14 @@ void B_Movable::Update()
 	if (move)
 	{
 		LOG("Path registered");
-		//iPoint pathend = path->back();
-		
-		if (pathbegin.x > game_object->GetTransform()->GetGlobalPosition().x) {
+		vec pos = game_object->GetTransform()->GetGlobalPosition();
+		iPoint tilePos = { int(pos.x), int(pos.y) };
+
+		if (nextTile.x > tilePos.x) {
 			//define speed properly depending on tile position in respect to the object
 			game_object->GetTransform()->MoveX(+speed * App->time.GetDeltaTime());
 			LOG("1");
 		}
-
 		else
 		{
 			game_object->GetTransform()->MoveX(-speed * App->time.GetDeltaTime());
@@ -98,12 +98,11 @@ void B_Movable::Update()
 		}
 				
 
-		if (pathbegin.y > game_object->GetTransform()->GetGlobalPosition().y) {
+		if (nextTile.y > tilePos.y) {
 			//define speed properly depending on tile position in respect to the object
 			game_object->GetTransform()->MoveY(+speed * App->time.GetDeltaTime());
 			LOG("3");
 		}
-
 		else
 		{
 			game_object->GetTransform()->MoveY(-speed * App->time.GetDeltaTime());

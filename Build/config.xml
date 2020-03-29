@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<config>
+	<app title="Square Up" organization="UPC" />
+	<textures>
+		<flags jpg="false" png="true" tif="false" webp="false" />
+	</textures>
+	<window>
+		<position x="551" y="175" />
+		<resolution width="1080" height="720" />
+		<fullscreen value="false" />
+		<fullscreen_window value="false" />
+		<borderless value="false" />
+		<resizable value="true" />
+		<minimized value="false" />
+		<maximized value="false" />
+		<input_grabbed value="false" />
+		<input_focus value="false" />
+		<mouse_focus value="false" />
+		<high_dpi value="true" />
+		<mouse_capture value="false" />
+		<always_on_top value="false" />
+		<skip_taskbar value="false" />
+	</window>
+	<audio>
+		<codecs FLAC="false" MOD="false" MP3="false" OGG="true" MID="false" OPUS="false" />
+	</audio>
+	<renderer>
+		<flags accelerated="true" vsync="false" target_texture="false" />
+	</renderer>
+</config>
