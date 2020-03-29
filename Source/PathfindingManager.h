@@ -8,8 +8,7 @@
 #include <vector>
 #include <map>
 
-#define DEBUG_ID_TEXTURE 33
-//#define STARTING_PATH_LENGTH 5
+
 
 
 
@@ -123,7 +122,13 @@ public:
 	//Utility: Return uncompleted path by ID
 	UncompletedPath* GetToDoPath(int ID);
 
+public:
+	int debugTextureID;
+
 private:
+	bool debugAll = false;
+	bool debugOne = false;
+	int unitDebugID;
 	MapLayer map;
 	iPoint nullPoint = iPoint({ -1,-1 });
 	std::map<int, std::vector<iPoint>> storedPaths; //Stores all generated paths by units

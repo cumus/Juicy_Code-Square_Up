@@ -6,6 +6,7 @@
 #include "optick-1.3.0.0/include/optick.h"
 #include "Map.h"
 #include "Render.h"
+#include "TextureManager.h"
 
 #include <vector>
 #include <algorithm>
@@ -25,7 +26,10 @@ bool PathfindingManager::Init()
 {
 	bool ret = true;
 	if (ret)
+	{
+		debugTextureID = App->tex.Load("textures/meta.png");
 		LOG("Pathfinding manager initialized!");
+	}
 	else
 		LOG("Pathfinding initialization failed!");
 	return ret;
@@ -44,6 +48,46 @@ int PathfindingManager::IteratePaths(int extra_ms)
 	{
 		UncompletedPath path = toDoPaths.begin()->second;
 		extra_ms = ContinuePath(path.lastNode, path.end, path.ID, extra_ms);
+	}
+
+	if (debugAll)
+	{
+		std::vector<iPoint> currentPath;
+		SDL_Rect rect = { 0, 0, 64, 64 };
+		int a = storedPaths.size();
+		LOG("Debug paths: %d", a);
+
+		if (!storedPaths.empty())
+		{
+			for (std::map<int, std::vector<iPoint>>::iterator it = storedPaths.begin(); it != storedPaths.end(); ++it)
+			{
+				currentPath = it->second;
+				if (!it->second.empty())
+					for (std::vector<iPoint>::const_iterator it = currentPath.cbegin(); it != currentPath.cend(); ++it)
+					{
+						std::pair<int, int> render_pos = Map::I_MapToWorld(it->x, it->y);
+						App->render->Blit(debugTextureID, render_pos.first, render_pos.second, &rect);
+					}
+			}
+		}
+	}
+
+	if (debugOne)
+	{
+		std::vector<iPoint> path;
+		SDL_Rect rect = { 0, 0, 64, 64 };
+		std::map<int, std::vector<iPoint>>::iterator it;
+		it = storedPaths.find(unitDebugID);
+
+		if (it != storedPaths.end() && !it->second.empty())
+		{
+			path = it->second;
+			for (std::vector<iPoint>::const_iterator it = path.cbegin(); it != path.cend(); ++it)
+			{
+				std::pair<int, int> render_pos = Map::I_MapToWorld(it->x, it->y);
+				App->render->Blit(debugTextureID, render_pos.first, render_pos.second, &rect);
+			}
+		}
 	}
 
 	return extra_ms;
@@ -80,26 +124,25 @@ void PathfindingManager::ClearAllPaths()
 	storedPaths.clear();
 }
 
-//Utility: Prints all paths
-void PathfindingManager::DebugShowPaths() //Not working
-{	
-	std::vector<iPoint> currentPath;
-	SDL_Rect rect = { 0, 0, 64, 64 };
-	int a = storedPaths.size();
-	LOG("Debug paths: %d",a);
-
-	if (!storedPaths.empty())
+//Utility: Prints unit path
+void PathfindingManager::DebugShowUnitPath(int ID)
+{
+	if (debugOne == false)
 	{
-		for (std::map<int, std::vector<iPoint>>::iterator it = storedPaths.begin(); it != storedPaths.end(); ++it)
-		{
-			currentPath = it->second;
-			for (std::vector<iPoint>::const_iterator it = currentPath.cbegin(); it != currentPath.cend(); ++it)
-			{
-				std::pair<int, int> render_pos = Map::I_MapToWorld(it->x, it->y);
-				App->render->Blit(DEBUG_ID_TEXTURE, render_pos.first, render_pos.second, &rect);
-			}
-		}		
+		debugOne = true;
+		unitDebugID = ID;
 	}
+	else debugOne = false;
+}
+
+//Utility: Prints all paths
+void PathfindingManager::DebugShowPaths() 
+{	
+	if (debugAll == false)
+	{
+		debugAll = true;
+	}
+	else debugAll = false;
 }
 
 //Utility: Updates already stored path or add it
@@ -161,25 +204,6 @@ UncompletedPath* PathfindingManager::GetToDoPath(int ID)
 	}
 
 	return vec;
-}
-
-//Utility: Prints unit path
-void PathfindingManager::DebugShowUnitPath(int ID)
-{
-	std::vector<iPoint> path;
-	SDL_Rect rect = { 0, 0, 64, 64 };
-	std::map<int, std::vector<iPoint>>::iterator it;
-	it = storedPaths.find(ID);
-
-	if (it != storedPaths.end())
-	{
-		path = it->second;
-		for (std::vector<iPoint>::const_iterator it = path.cbegin(); it != path.cend(); ++it)
-		{
-			std::pair<int, int> render_pos = Map::I_MapToWorld(it->x, it->y);
-			App->render->Blit(DEBUG_ID_TEXTURE, render_pos.first, render_pos.second, &rect);
-		}
-	}
 }
 
 #pragma endregion

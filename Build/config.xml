@@ -5,7 +5,7 @@
 		<flags jpg="false" png="true" tif="false" webp="false" />
 	</textures>
 	<window>
-		<position x="551" y="175" />
+		<position x="415" y="103" />
 		<resolution width="1080" height="720" />
 		<fullscreen value="false" />
 		<fullscreen_window value="false" />

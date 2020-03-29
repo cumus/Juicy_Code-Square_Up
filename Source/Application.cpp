@@ -65,7 +65,7 @@ bool Application::Init()
 		if (ret) ret = time.Init();
 		if (ret) ret = tex.Init();
 		if (ret) ret = fonts.Init();
-
+		
 		// Initialize Modules
 		for (std::list<Module*>::iterator it = modules.begin(); it != modules.end() && ret; ++it)
 		{
@@ -75,6 +75,8 @@ bool Application::Init()
 			else
 				LOG("Error initializing module: %s.", (*it)->GetName());
 		}
+
+		if (ret) ret = pathfinding.Init();
 
 		// Start Modules
 		for (std::list<Module*>::iterator it = modules.begin(); it != modules.end() && ret; ++it)
