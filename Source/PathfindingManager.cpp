@@ -71,8 +71,7 @@ int PathfindingManager::IteratePaths(int extra_ms)
 			}
 		}
 	}
-
-	if (debugOne)
+	else if (debugOne)
 	{
 		std::vector<iPoint> path;
 		SDL_Rect rect = { 0, 0, 64, 64 };
@@ -127,22 +126,14 @@ void PathfindingManager::ClearAllPaths()
 //Utility: Prints unit path
 void PathfindingManager::DebugShowUnitPath(int ID)
 {
-	if (debugOne == false)
-	{
-		debugOne = true;
-		unitDebugID = ID;
-	}
-	else debugOne = false;
+	debugOne = true;
+	unitDebugID = ID;
 }
 
 //Utility: Prints all paths
 void PathfindingManager::DebugShowPaths() 
-{	
-	if (debugAll == false)
-	{
-		debugAll = true;
-	}
-	else debugAll = false;
+{
+	debugAll = true;
 }
 
 //Utility: Updates already stored path or add it
