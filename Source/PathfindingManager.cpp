@@ -53,9 +53,7 @@ int PathfindingManager::IteratePaths(int extra_ms)
 	if (debugAll)
 	{
 		std::vector<iPoint> currentPath;
-		SDL_Rect rect = { 0, 0, 64, 64 };
-		int a = storedPaths.size();
-		LOG("Debug paths: %d", a);
+		SDL_Rect rect = { 0, 0, 64, 64 };		
 
 		if (!storedPaths.empty())
 		{
@@ -126,14 +124,18 @@ void PathfindingManager::ClearAllPaths()
 //Utility: Prints unit path
 void PathfindingManager::DebugShowUnitPath(int ID)
 {
-	debugOne = true;
+	if (debugOne) debugOne = false;
+	else debugOne = true;
 	unitDebugID = ID;
 }
 
 //Utility: Prints all paths
 void PathfindingManager::DebugShowPaths() 
 {
-	debugAll = true;
+	int a = storedPaths.size();
+	LOG("Debug paths: %d", a);
+	if (debugAll) debugAll = false;
+	else debugAll = true;	
 }
 
 //Utility: Updates already stored path or add it
@@ -580,7 +582,7 @@ int PathfindingManager::ContinuePath(PathNode origin, iPoint destination, int ID
 	//LOG("Start node added to open list");
 
 	PathNode checkNode;
-	while (openList.empty() == false && timer.ReadI() < working_ms)
+	while (openList.empty() == false && timer.ReadI() < working_ms && pathEnd==false)
 	{
 	
 		VectorQuicksort(openList, 0, openList.size() - 1);
@@ -589,12 +591,12 @@ int PathfindingManager::ContinuePath(PathNode origin, iPoint destination, int ID
 		closedList.push_back(checkNode); //Save node to evaluated list
 		openList.erase(openList.begin());
 
-		if (checkNode.pos == destination) //Final position reached
+		/*if (checkNode.pos == destination) //Final position reached
 		{
 			LOG("Destination reached");
 			pathEnd = true;
 			break;
-		}
+		}*/
 
 		std::vector<PathNode> adjacentCells;
 		adjacentCells = checkNode.FindWalkableAdjacents();
@@ -602,6 +604,13 @@ int PathfindingManager::ContinuePath(PathNode origin, iPoint destination, int ID
 
 		for (int a = 0; a < length; a++) //Check neighbour cells
 		{
+			if (adjacentCells[a].pos == destination)
+			{
+				//checkNode = adjacentCells[a];
+				closedList.push_back(adjacentCells[a]);
+				pathEnd = true;
+				break;
+			}
 			if (FindItemInVector(closedList, adjacentCells[a]) == false)
 			{
 				if (FindItemInVector(openList, adjacentCells[a]) == false)
