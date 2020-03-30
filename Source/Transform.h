@@ -16,7 +16,7 @@ public:
 
 	void RecieveEvent(const Event& e) override;
 
-	void SetParent(Transform& parent);
+	void SetParent(Transform* parent);
 
 	// Local Position
 	vec		GetLocalPos() const { return pos; }

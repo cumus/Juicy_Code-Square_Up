@@ -97,10 +97,10 @@ void Transform::RecieveEvent(const Event & e)
 	}
 }
 
-void Transform::SetParent(Transform& parent)
+void Transform::SetParent(Transform* parent)
 {
-	global_parent_pos = parent.GetGlobalPosition();
-	global_parent_scale = parent.GetGlobalScale();
+	global_parent_pos = parent->GetGlobalPosition();
+	global_parent_scale = parent->GetGlobalScale();
 }
 
 void Transform::SetLocalPos(const vec& p)

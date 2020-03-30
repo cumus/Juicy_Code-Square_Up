@@ -11,9 +11,7 @@
 #include "SDL2_mixer-2.0.4/include/SDL_mixer.h"
 
 AudioSource::AudioSource(Gameobject* go, int id) : Component(AUDIO_SOURCE, go), fx_id(id)
-{
-	if (go != nullptr) go->AddComponent(this);
-}
+{}
 
 AudioSource::~AudioSource()
 {

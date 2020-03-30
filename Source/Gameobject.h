@@ -47,7 +47,7 @@ public:
 
 private:
 
-	Transform* AddNewChild(Gameobject* child);
+	void AddNewChild(Gameobject* child);
 
 private:
 

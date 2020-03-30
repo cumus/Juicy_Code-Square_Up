@@ -10,10 +10,10 @@ double Gameobject::go_count = 0;
 
 Gameobject::Gameobject(const char* n, Gameobject* p) : id(++go_count), name(n), parent(p)
 {
-	components.push_back(transform = new Transform(this));
+	transform = new Transform(this);
 
 	if (parent != nullptr)
-		transform->SetParent(*parent->AddNewChild(this));
+		parent->AddNewChild(this);
 }
 
 Gameobject::Gameobject(const Gameobject& copy) :
@@ -334,15 +334,11 @@ bool Gameobject::operator==(Gameobject* go)
 	return go != nullptr && id == go->id;
 }
 
-Transform* Gameobject::AddNewChild(Gameobject * child)
+void Gameobject::AddNewChild(Gameobject * child)
 {
-	Transform* ret = nullptr;
-
 	if (child != nullptr)
 	{
 		childs.push_back(child);
-		ret = child->GetTransform();
+		child->transform->SetParent(transform);
 	}
-
-	return ret;
 }

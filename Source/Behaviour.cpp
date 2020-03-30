@@ -6,16 +6,12 @@
 #include "Log.h"
 
 
-Behaviour::Behaviour(Gameobject* go, ComponentType type) : Component(type, go) {
-
-	if (go != nullptr) go->AddComponent(this);
-
-}
+Behaviour::Behaviour(Gameobject* go, ComponentType type) : Component(type, go)
+{}
 
 
 void B_Movable::RecieveEvent(const Event& e)
 {
-	
 	switch (e.type)
 	{
 	case ON_SELECT: {

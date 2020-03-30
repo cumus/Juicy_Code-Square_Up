@@ -10,8 +10,6 @@
 Sprite::Sprite(Gameobject* go) : Component(SPRITE, go)
 {
 	color = { 255, 255, 255, 255 };
-
-	if (go) go->AddComponent(this);
 }
 
 Sprite::~Sprite()
