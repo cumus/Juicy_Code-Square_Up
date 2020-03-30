@@ -27,8 +27,7 @@ private:
 	int tex_up;
 
 	// Test Slider
-
-	int SliderBar_tex_id;
+	
 	RectF SliderBar_Rect;
 	RectF SliderButton_Rect;
 

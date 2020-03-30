@@ -5,7 +5,7 @@
 #include "UI_TextButton.h"
 #include "UI_Slider.h"
 #include "Input.h"
-#include "Window.h"
+#include "Render.h"
 
 ConfigWindow::ConfigWindow(const RectF rect) : EditorWindow(rect)
 {}
@@ -39,11 +39,11 @@ bool ConfigWindow::Init()
 
 	// Test UI_Slider
 
-	SliderBar_tex_id = App->tex.Load("textures/slider_bar.png");
+	int SliderBar_tex_id = App->tex.Load("textures/slider_bar.png");
 
 	SliderBar_Rect = { 0.1f, 0.1f, 0.8f, 0.1f };
 
-	SliderButton_Rect = { 1.0f, 0.98f, 0.15f, 1.4f };
+	SliderButton_Rect = { 1.00f, 0.98f, 0.15f, 1.4f };
 
 	elements.push_back(new UI_Slider(this, SliderBar_Rect, SliderButton_Rect, SliderBar_tex_id));
 
@@ -53,6 +53,17 @@ bool ConfigWindow::Init()
 
 void ConfigWindow::RecieveEvent(const Event& e)
 {
+	int mouse_x, mouse_y;
+
+	RectF camera;
+
+	App->input->GetMousePosition(mouse_x, mouse_y);
+
+	camera = App->render->GetCameraRectF();
+
+	float x = ((float)(mouse_x) / (camera.w)) / (rect.x + SliderBar_Rect.x * rect.w);
+
+    SliderButton_Rect.x = x;
 
 	switch (e.data1.AsInt())
 	{
@@ -71,6 +82,7 @@ void ConfigWindow::RecieveEvent(const Event& e)
 			// Test UI_Slider
 
 			elements[e.data1.AsInt()]->ToUiSlider()->button_color = { 255, 0, 0, 255 };
+			elements[e.data1.AsInt()]->ToUiSlider()->Setvalue();
 
 			break;
 		}
@@ -85,6 +97,7 @@ void ConfigWindow::RecieveEvent(const Event& e)
 			// Test UI_Slider
 
 			elements[e.data1.AsInt()]->ToUiSlider()->button_color = { 0, 0, 0, 255 };
+			elements[e.data1.AsInt()]->ToUiSlider()->Setvalue();
 
 			break;
 		}
@@ -96,19 +109,13 @@ void ConfigWindow::RecieveEvent(const Event& e)
 			// elements[e.data1.AsInt()]->ToUiTextButton()->color = { 0, 255, 0, 255 };
 			// elements[e.data1.AsInt()]->ToUiButtonImage()->texture_id = tex_down;
 
+
+
 			// Test UI_Slider
 
-			int mouse_x, mouse_y, window_w, window_h;
-
-			App->input->GetMousePosition(mouse_x, mouse_y);
-			
-			App->win->GetWindowSize(window_w, window_h);
-
-			float x = ((float)(mouse_x) / (float)window_w / rect.x) - 0.075f;
-
-			SliderButton_Rect.x = x;
-
 			elements[e.data1.AsInt()]->ToUiSlider()->button_rect = SliderButton_Rect;
+			elements[e.data1.AsInt()]->ToUiSlider()->button_color = { 0, 255, 0, 255 };
+			elements[e.data1.AsInt()]->ToUiSlider()->Setvalue();
 
 			break;
 		}
@@ -122,17 +129,10 @@ void ConfigWindow::RecieveEvent(const Event& e)
 
 			// Test UI_Slider
 
-			int mouse_x, mouse_y, window_w, window_h;
-
-			App->input->GetMousePosition(mouse_x, mouse_y);
-
-			App->win->GetWindowSize(window_w, window_h);
-
-			float x = ((float)(mouse_x) / (float)window_w / rect.x) - 0.075f;
-
-			SliderButton_Rect.x = x;
 
 			elements[e.data1.AsInt()]->ToUiSlider()->button_rect = SliderButton_Rect;
+			elements[e.data1.AsInt()]->ToUiSlider()->button_color = { 0, 255, 255, 255 };
+			elements[e.data1.AsInt()]->ToUiSlider()->Setvalue();
 
 			break;
 		}
@@ -145,7 +145,9 @@ void ConfigWindow::RecieveEvent(const Event& e)
 			// elements[e.data1.AsInt()]->ToUiButtonImage()->texture_id = tex_up;
 
 			// Test UI_Slider
+
 			elements[e.data1.AsInt()]->ToUiSlider()->button_color = { 255, 255, 0, 255 };
+			elements[e.data1.AsInt()]->ToUiSlider()->Setvalue();
 			
 
 			break;
