@@ -14,9 +14,9 @@ public:
 	virtual ~Behaviour() {}
 
 public:
-
+	int ID;
 	int life = 10;
-
+	bool selected = false;
 };
 
 class B_Movable: public Behaviour
@@ -34,9 +34,9 @@ public:
 	
 	float speed = 2;
 	float aux_speed = speed;
-	float angle;
+	//float angle;
 	std::vector<iPoint>* path = nullptr;
-	float range;
+	//float range;
 
 	iPoint nextTile;
 	bool next = false;
@@ -55,7 +55,6 @@ public:
 public:
 
 	int damage;
-
 };
 
 class B_Unit : public B_Movable

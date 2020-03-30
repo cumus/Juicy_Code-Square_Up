@@ -39,13 +39,14 @@ struct PathNode
 struct UncompletedPath
 {
 	UncompletedPath();
-	UncompletedPath(int ID, PathNode last, iPoint final);
+	UncompletedPath(int ID, PathNode origin,iPoint final,/*std::vector<PathNode> open,*/std::vector<PathNode> closed);
 	UncompletedPath(const UncompletedPath& path);
 
 	int ID;
-	//iPoint start;
 	iPoint end;
 	PathNode lastNode;
+	std::vector<PathNode> closedList;
+	//std::vector<PathNode> openList;
 };
 
 class PathfindingManager
@@ -66,7 +67,7 @@ public:
 	// Main function to request a path from A to B
 	std::vector<iPoint>* CreatePath( iPoint& origin, iPoint& destination,int ID=0);
 
-	int ContinuePath(PathNode lastNode, iPoint destination, int ID, int working_ms);
+	int ContinuePath(PathNode lastNode, iPoint destination,/*std::vector<PathNode> openList,*/std::vector<PathNode> closedList, int ID, int working_ms);
 
 	// Utility: return true if pos is inside the map boundaries
 	bool CheckBoundaries( iPoint& pos);
