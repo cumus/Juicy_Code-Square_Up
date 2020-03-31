@@ -434,7 +434,7 @@ bool Render::BlitNorm(int texture_id, RectF rect, const SDL_Rect* section, Layer
 	return ret;
 }
 
-bool Render::Blit_Text(RenderedText* rendered_text, int x, int y, Layer layer)
+bool Render::Blit_Text(RenderedText* rendered_text, int x, int y, Layer layer, bool use_cam)
 {
 	bool ret = false;
 	if (rendered_text != nullptr)
@@ -444,7 +444,11 @@ bool Render::Blit_Text(RenderedText* rendered_text, int x, int y, Layer layer)
 		{
 			RenderData data(RenderData::TEXTURE_FULL);
 			data.texture = rendered_text->GetTexture();
-			data.rect = { x, y, width, height };
+
+			if (use_cam)
+				data.rect = { int(cam.x) + x, int(cam.y) + y, width, height };
+			else
+				data.rect = { x, y, width, height };
 
 			layers[layer][layer < Layer::HUD ? data.rect.y : 0].push_back(data);
 		}
@@ -457,7 +461,7 @@ bool Render::Blit_Text(RenderedText* rendered_text, int x, int y, Layer layer)
 	return ret;
 }
 
-bool Render::Blit_TextSized(RenderedText* rendered_text, SDL_Rect size, Layer layer)
+bool Render::Blit_TextSized(RenderedText* rendered_text, SDL_Rect size, Layer layer, bool use_cam)
 {
 	bool ret;
 
@@ -465,7 +469,11 @@ bool Render::Blit_TextSized(RenderedText* rendered_text, SDL_Rect size, Layer la
 	{
 		RenderData data(RenderData::TEXTURE_FULL);
 		data.texture = rendered_text->GetTexture();
-		data.rect = size;
+
+		if (use_cam)
+			data.rect = { int(cam.x) + size.x, int(cam.y) + size.y, size.w, size.h };
+		else
+			data.rect = size;
 
 		layers[layer][layer < Layer::HUD ? data.rect.y : 0].push_back(data);
 	}

@@ -56,4 +56,44 @@ public:
 	SDL_Rect section;
 };
 
+class RenderedText;
+
+class C_Text : public UI_Component
+{
+public:
+
+	C_Text(Gameobject* go, const char* text = "empty", int font_id = -1);
+	~C_Text();
+
+	void PostUpdate() override;
+
+public:
+
+	bool scale_to_fit = false;
+	RenderedText* text = nullptr;
+};
+
+class C_Button : public UI_Component
+{
+public:
+
+	C_Button(Gameobject* go, const Event& e);
+	~C_Button();
+
+	void PreUpdate() override;
+	void PostUpdate() override;
+
+public:
+
+	Event event_triggered;
+	bool trigger_while_pressed = false;
+
+	int tex_id = -1;
+	SDL_Rect section;
+
+private:
+
+	bool mouse_inside = false;
+};
+
 #endif // __CANVAS_H__

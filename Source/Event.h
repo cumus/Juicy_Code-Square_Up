@@ -63,10 +63,11 @@ class Event
 public:
 
 	Event(EventType t, EventListener* lis, Cvar data = Cvar(), Cvar data2 = Cvar());
-	Event(Event& e);
+	Event(const Event& e);
 	virtual ~Event();
 
 	static void Push(EventType t, EventListener* lis, Cvar data = Cvar(), Cvar data2 = Cvar());
+	static void Push(const Event e);
 	static void PumpAll();
 	static void Pump();
 	static unsigned int RemainingEvents();

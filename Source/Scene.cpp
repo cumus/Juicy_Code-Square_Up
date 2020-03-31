@@ -263,14 +263,31 @@ bool Scene::LoadTestScene()
 		canv->target = { 0.3f, 0.3f, 0.4f, 0.4f };
 
 		Gameobject* img_go = AddGameobject("Image", canvas_go);
+
 		C_Image* img = new C_Image(img_go);
 		img->target = { 1.f, 1.f, 0.5f, 0.5f };
-		img->section = { 0, 0, 1199, 674 };
-
-		std::pair<float, float> res_ratio = Render::GetResRatio();
 		img->offset_x = -1199.f;
 		img->offset_y = -674.f;
+
+		img->section = { 0, 0, 1199, 674 };
 		img->tex_id = App->tex.Load("textures/goku.png");
+
+		Gameobject* text1_go = AddGameobject("Text 1", canvas_go);
+		C_Text* text1 = new C_Text(text1_go, "Componente texto sin ajustar");
+		text1->target = { 0.2f, 0.2f, 1.f, 1.f };
+
+		Gameobject* text2_go = AddGameobject("Text 2", canvas_go);
+		C_Text* text2 = new C_Text(text2_go, "Componente texto ajustado");
+		text2->target = { 0.2f, 0.4f, 1.f, 1.f };
+		text2->scale_to_fit = true;
+
+		Gameobject* button_go = AddGameobject("Quit Button", canvas_go);
+		C_Button* button = new C_Button(button_go, Event(REQUEST_QUIT, App));
+		button->target = { 1.f, 0.4f, 1.f, 1.f };
+		button->offset_x = -101.f;
+
+		button->section = { 359, 114, 101, 101 };
+		button->tex_id = App->tex.Load("textures/icons.png");
 	}
 
 	return ret;

@@ -9,7 +9,7 @@ Event::Event(EventType t, EventListener * lis, Cvar d1, Cvar d2)
 	: type(t), listener(lis), data1(d1), data2(d2), timestamp(SDL_GetTicks())
 {}
 
-Event::Event(Event& e)
+Event::Event(const Event& e)
 	: type(e.type), listener(e.listener), data1(e.data1), data2(e.data2), timestamp(SDL_GetTicks())
 {}
 
@@ -32,6 +32,12 @@ void Event::Push(EventType t, EventListener * lis, Cvar d1, Cvar d2)
 {
 	if (!Event::paused)
 		Event::events_queue.push(Event(t, lis, d1, d2));
+}
+
+void Event::Push(const Event e)
+{
+	if (!Event::paused)
+		Event::events_queue.push(e);
 }
 
 void Event::PumpAll()

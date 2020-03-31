@@ -7,6 +7,7 @@
 namespace JMath
 {
 	// Check Point (x,y) inside Rect
+	bool PointInsideRect(int x, int y, SDL_Rect rect);
 	bool PointInsideRect(float x, float y, RectF rect);
 
 	// Get Triangle abc Area

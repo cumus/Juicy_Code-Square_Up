@@ -60,8 +60,8 @@ public:
 
 	bool BlitNorm(int texture_id, const RectF rect, const SDL_Rect* section = nullptr, Layer layer = SCENE);
 
-	bool Blit_Text(RenderedText* rendered_text, int x, int y, Layer layer = SCENE);
-	bool Blit_TextSized(RenderedText* rendered_text, const SDL_Rect size, Layer layer = SCENE);
+	bool Blit_Text(RenderedText* rendered_text, int x, int y, Layer layer = SCENE, bool use_cam = true);
+	bool Blit_TextSized(RenderedText* rendered_text, const SDL_Rect size, Layer layer = SCENE, bool use_cam = true);
 
 	void DrawQuad(const SDL_Rect rect, const SDL_Color color = { 0, 0, 0, 255 }, bool filled = true, Layer layer = SCENE, bool use_camera = true);
 	void DrawQuadNormCoords(const RectF rect, const SDL_Color color = { 0, 0, 0, 255 }, bool filled = true, Layer layer = SCENE);

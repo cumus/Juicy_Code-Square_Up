@@ -1,9 +1,12 @@
 #include "Canvas.h"
 #include "Application.h"
+#include "Input.h"
 #include "Map.h"
 #include "Render.h"
+#include "FontManager.h"
 #include "Gameobject.h"
 #include "Transform.h"
+#include "JuicyMath.h"
 
 C_Canvas* UI_Component::canvas = nullptr;
 
@@ -85,6 +88,92 @@ C_Image::~C_Image()
 {}
 
 void C_Image::PostUpdate()
+{
+	if (parent && canvas)
+	{
+		std::pair<float, float> res_ratio = Render::GetResRatio();
+		std::pair<float, float> canvas_scale = canvas->GetScale();
+
+		std::pair<float, float> total_scale = {
+			target.w * res_ratio.first * canvas_scale.first,
+			target.h * res_ratio.second * canvas_scale.second };
+
+		SDL_Rect p_output = parent->output;
+		output.x = p_output.x + int(float(p_output.w) * target.x) + int(offset_x * total_scale.first);
+		output.y = p_output.y + int(float(p_output.h) * target.y) + int(offset_y * total_scale.second);
+		output.w = int(float(section.w) * total_scale.first);
+		output.h = int(float(section.h) * total_scale.second);
+
+		App->render->Blit_Scale(tex_id, output.x, output.y, float(output.w) / float(section.w), float(output.h) / float(section.h), &section, HUD, false);
+	}
+}
+
+C_Text::C_Text(Gameobject* go, const char* t, int font_id) :
+	UI_Component(go, go->GetUIParent(), UI_TEXT)
+{
+	text = new RenderedText(t, font_id);
+}
+
+C_Text::~C_Text()
+{
+	DEL(text);
+}
+
+void C_Text::PostUpdate()
+{
+	if (parent && canvas && text)
+	{
+		std::pair<float, float> res_ratio = Render::GetResRatio();
+		std::pair<float, float> canvas_scale = canvas->GetScale();
+
+		std::pair<float, float> total_scale = {
+			target.w * res_ratio.first * canvas_scale.first,
+			target.h * res_ratio.second * canvas_scale.second };
+
+		SDL_Rect p_output = parent->output;
+		output.x = p_output.x + int(float(p_output.w) * target.x) + int(offset_x * total_scale.first);
+		output.y = p_output.y + int(float(p_output.h) * target.y) + int(offset_y * total_scale.second);
+
+		int width, height;
+		text->GetSize(width, height);
+		output.w = int(float(width) * total_scale.first);
+		output.h = int(float(height) * total_scale.second);
+
+		if (scale_to_fit)
+			App->render->Blit_Text(text, output.x, output.y, HUD, false);
+		else
+			App->render->Blit_TextSized(text, output, HUD, false);
+	}
+}
+
+C_Button::C_Button(Gameobject* go, const Event& e) :
+	UI_Component(go, go->GetUIParent(), UI_BUTTON),
+	event_triggered(e)
+{}
+
+C_Button::~C_Button()
+{
+}
+
+void C_Button::PreUpdate()
+{
+	int x, y;
+	App->input->GetMousePosition(x, y);
+
+	if (mouse_inside = JMath::PointInsideRect(x, y, output))
+	{
+		if (event_triggered.listener)
+		{
+			KeyState mouse_click = App->input->GetMouseButtonDown(0);
+			if (mouse_click == KEY_DOWN || (trigger_while_pressed && mouse_click == KEY_REPEAT))
+			{
+				Event::Push(event_triggered);
+			}
+		}
+	}
+}
+
+void C_Button::PostUpdate()
 {
 	if (parent && canvas)
 	{
