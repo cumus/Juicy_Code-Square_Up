@@ -41,7 +41,7 @@ bool ConfigWindow::Init()
 
 	int SliderBar_tex_id = App->tex.Load("textures/slider_bar.png");
 
-	SliderBar_Rect = { 0.1f, 0.1f, 0.8f, 0.1f };
+	SliderBar_Rect = { 0.2f, 0.1f, 0.4f, 0.1f };
 
 	SliderButton_Rect = { 1.00f, 0.98f, 0.15f, 1.4f };
 
@@ -82,7 +82,7 @@ void ConfigWindow::RecieveEvent(const Event& e)
 			// Test UI_Slider
 
 			elements[e.data1.AsInt()]->ToUiSlider()->button_color = { 255, 0, 0, 255 };
-			elements[e.data1.AsInt()]->ToUiSlider()->Setvalue();
+			elements[e.data1.AsInt()]->ToUiSlider()->Set_Value();
 
 			break;
 		}
@@ -97,7 +97,7 @@ void ConfigWindow::RecieveEvent(const Event& e)
 			// Test UI_Slider
 
 			elements[e.data1.AsInt()]->ToUiSlider()->button_color = { 0, 0, 0, 255 };
-			elements[e.data1.AsInt()]->ToUiSlider()->Setvalue();
+			elements[e.data1.AsInt()]->ToUiSlider()->Set_Value();
 
 			break;
 		}
@@ -115,7 +115,7 @@ void ConfigWindow::RecieveEvent(const Event& e)
 
 			elements[e.data1.AsInt()]->ToUiSlider()->button_rect = SliderButton_Rect;
 			elements[e.data1.AsInt()]->ToUiSlider()->button_color = { 0, 255, 0, 255 };
-			elements[e.data1.AsInt()]->ToUiSlider()->Setvalue();
+			elements[e.data1.AsInt()]->ToUiSlider()->Set_Value();
 
 			break;
 		}
@@ -132,7 +132,7 @@ void ConfigWindow::RecieveEvent(const Event& e)
 
 			elements[e.data1.AsInt()]->ToUiSlider()->button_rect = SliderButton_Rect;
 			elements[e.data1.AsInt()]->ToUiSlider()->button_color = { 0, 255, 255, 255 };
-			elements[e.data1.AsInt()]->ToUiSlider()->Setvalue();
+			elements[e.data1.AsInt()]->ToUiSlider()->Set_Value();
 
 			break;
 		}
@@ -147,7 +147,7 @@ void ConfigWindow::RecieveEvent(const Event& e)
 			// Test UI_Slider
 
 			elements[e.data1.AsInt()]->ToUiSlider()->button_color = { 255, 255, 0, 255 };
-			elements[e.data1.AsInt()]->ToUiSlider()->Setvalue();
+			elements[e.data1.AsInt()]->ToUiSlider()->Set_Button(75);
 			
 
 			break;

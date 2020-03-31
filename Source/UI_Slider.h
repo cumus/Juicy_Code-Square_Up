@@ -13,7 +13,8 @@ public:
 
 	void Draw() const override;
 
-	void Setvalue();
+	void Set_Value();
+	void Set_Button(int value);
 
 	UI_Slider* ToUiSlider() override;
 
@@ -28,8 +29,9 @@ public:
 	int font_id;
 	SDL_Rect target;
 	RectF targetf;
-	int value;
+	float value;
 	bool scale_to_fit = false;
+	RenderedText* text = nullptr;
 
 };
 
