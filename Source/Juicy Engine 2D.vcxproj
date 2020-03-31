@@ -143,6 +143,7 @@
     <ClCompile Include="AudioSource.cpp" />
     <ClCompile Include="BarMenu.cpp" />
     <ClCompile Include="Behaviour.cpp" />
+    <ClCompile Include="Canvas.cpp" />
     <ClCompile Include="Collisions.cpp" />
     <ClCompile Include="Component.cpp" />
     <ClCompile Include="ConfigWindow.cpp" />
@@ -190,6 +191,7 @@
     <ClInclude Include="AudioSource.h" />
     <ClInclude Include="BarMenu.h" />
     <ClInclude Include="Behaviour.h" />
+    <ClInclude Include="Canvas.h" />
     <ClInclude Include="Collisions.h" />
     <ClInclude Include="Component.h" />
     <ClInclude Include="ConfigWindow.h" />

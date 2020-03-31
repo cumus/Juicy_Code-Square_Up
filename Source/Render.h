@@ -52,6 +52,7 @@ public:
 	// Viewport
 	void SetViewPort(const SDL_Rect& rect);
 	void ResetViewPort();
+	static std::pair<float, float> GetResRatio();
 
 	// Blit
 	bool Blit(int texture_id, int x, int y, const SDL_Rect* section = nullptr, Layer layer = SCENE, bool use_cam = true);
@@ -112,6 +113,8 @@ private:
 	// Camera
 	RectF cam;
 	float zoom = 1.0f;
+	static std::pair<float, float> target_res;
+	static std::pair<float, float> res_ratio;
 
 	// Config
 	bool accelerated = true;

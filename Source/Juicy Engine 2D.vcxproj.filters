@@ -133,6 +133,9 @@
     <ClCompile Include="UI_Slider.cpp">
       <Filter>Source\Modules\Editor\UI Elements</Filter>
     </ClCompile>
+    <ClCompile Include="Canvas.cpp">
+      <Filter>Source\Gameobjects\Components\UI</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="PugiXml\src\pugiconfig.hpp">
@@ -300,6 +303,9 @@
     <ClInclude Include="UI_Slider.h">
       <Filter>Source\Modules\Editor\UI Elements</Filter>
     </ClInclude>
+    <ClInclude Include="Canvas.h">
+      <Filter>Source\Gameobjects\Components\UI</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Source">
@@ -367,6 +373,9 @@
     </Filter>
     <Filter Include="Source\Modules\Editor\Windows">
       <UniqueIdentifier>{dae2669c-6168-4845-8f46-32b45f312fea}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Gameobjects\Components\UI">
+      <UniqueIdentifier>{adf43043-9169-4b89-9631-f699c430486a}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

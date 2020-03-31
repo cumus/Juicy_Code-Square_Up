@@ -8,18 +8,28 @@ enum ComponentType
 	COMP_NONE,
 	TRANSFORM,
 	SPRITE,
+	AUDIO_SOURCE,
+
+	// UI
+	UI_GENERAL,
+	UI_CANVAS,
+	UI_IMAGE,
+	UI_TEXT,
+	UI_BUTTON,
+	UI_MAX,
+
+	// Units
 	BEHAVIOUR,
 	B_MOVABLE,
 	B_BUILDING,
-	B_UNIT,
-	AUDIO_SOURCE,
-	AS_OBJECT
+	B_UNIT
 };
 
 class Transform;
 class Gameobject;
 class B_Unit;
 class B_Movable;
+class UI_Component;
 
 class Component : public EventListener
 {
@@ -41,6 +51,7 @@ public:
 	Transform* AsTransform() const { return (Transform*)this; }
 	B_Unit* AsBUnit() const { return (B_Unit*)this; }
 	B_Movable* AsBMovable() const { return (B_Movable*)this; }
+	UI_Component* AsUIComp() const { return (UI_Component*)this; }
 
 	double GetID() const { return id; }
 

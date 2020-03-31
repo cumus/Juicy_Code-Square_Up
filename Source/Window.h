@@ -38,7 +38,7 @@ private:
 private:
 
 	std::string	title;
-	SDL_Rect rect = { -1, -1, 1080, 720 };
+	SDL_Rect rect = { -1, -1, 1280, 720 };
 
 	int display_index = -1;
 

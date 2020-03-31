@@ -11,6 +11,7 @@
 #include "Sprite.h"
 #include "Behaviour.h"
 #include "AudioSource.h"
+#include "Canvas.h"
 #include "Defs.h"
 #include "Log.h"
 #include "PathfindingManager.h"
@@ -255,6 +256,21 @@ bool Scene::LoadTestScene()
 		//B_Unit* b1 = new B_Unit(go1);
 		
 		B_Unit* b2 = new B_Unit(go2);
+
+		// HUD
+		Gameobject* canvas_go = AddGameobject("Canvas", &root);
+		C_Canvas* canv = new C_Canvas(canvas_go);
+		canv->target = { 0.3f, 0.3f, 0.4f, 0.4f };
+
+		Gameobject* img_go = AddGameobject("Image", canvas_go);
+		C_Image* img = new C_Image(img_go);
+		img->target = { 1.f, 1.f, 0.5f, 0.5f };
+		img->section = { 0, 0, 1199, 674 };
+
+		std::pair<float, float> res_ratio = Render::GetResRatio();
+		img->offset_x = -1199.f;
+		img->offset_y = -674.f;
+		img->tex_id = App->tex.Load("textures/goku.png");
 	}
 
 	return ret;

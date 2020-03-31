@@ -118,6 +118,10 @@ void Gameobject::RecieveEvent(const Event & e)
 		for (std::vector<Component*>::iterator component = components.begin(); component != components.end(); ++component)
 			if ((*component)->IsActive())
 				Event::Push(ON_PLAY, *component);
+
+		for (std::vector<Gameobject*>::iterator child = childs.begin(); child != childs.end(); ++child)
+			if ((*child)->active)
+				Event::Push(ON_PLAY, *child);
 		break;
 	}
 	case ON_PAUSE:
@@ -125,6 +129,10 @@ void Gameobject::RecieveEvent(const Event & e)
 		for (std::vector<Component*>::iterator component = components.begin(); component != components.end(); ++component)
 			if ((*component)->IsActive())
 				Event::Push(ON_PAUSE, *component);
+
+		for (std::vector<Gameobject*>::iterator child = childs.begin(); child != childs.end(); ++child)
+			if ((*child)->active)
+				Event::Push(ON_PAUSE, *child);
 		break;
 	}
 	case ON_STOP:
@@ -132,6 +140,10 @@ void Gameobject::RecieveEvent(const Event & e)
 		for (std::vector<Component*>::iterator component = components.begin(); component != components.end(); ++component)
 			if ((*component)->IsActive())
 				Event::Push(ON_STOP, *component);
+
+		for (std::vector<Gameobject*>::iterator child = childs.begin(); child != childs.end(); ++child)
+			if ((*child)->active)
+				Event::Push(ON_STOP, *child);
 		break;
 	}
 	case ON_SELECT:
@@ -199,6 +211,16 @@ const Transform* Gameobject::GetTransform() const
 	for (std::vector<Component*>::const_iterator it = components.begin(); it != components.end(); ++it)
 		if ((*it)->GetType() == TRANSFORM)
 			return (*it)->AsTransform();
+
+	return nullptr;
+}
+
+UI_Component* Gameobject::GetUIParent() const
+{
+	if (parent)
+		for (std::vector<Component*>::const_iterator it = parent->components.begin(); it != parent->components.end(); ++it)
+			if ((*it)->GetType() > UI_GENERAL && (*it)->GetType() < UI_MAX)
+				return (*it)->AsUIComp();
 
 	return nullptr;
 }

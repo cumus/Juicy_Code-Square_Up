@@ -6,6 +6,7 @@
 #include <string>
 
 class B_Unit;
+class UI_Component;
 
 class Gameobject : public EventListener
 {
@@ -26,6 +27,8 @@ public:
 
 	Transform* GetTransform();
 	const Transform* GetTransform() const;
+
+	UI_Component* GetUIParent() const;
 
 	B_Unit* GetBUnit();
 	const B_Unit* GetBUnit() const;

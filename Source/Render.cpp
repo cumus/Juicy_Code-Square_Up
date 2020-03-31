@@ -11,6 +11,9 @@
 #include "optick-1.3.0.0/include/optick.h"
 #include "SDL2_image-2.0.5/include/SDL_image.h"
 
+std::pair<float, float> Render::target_res = { 1280.f, 720.f };
+std::pair<float, float> Render::res_ratio;
+
 Render::Render() : Module("renderer")
 {
 	SetBackgroundColor({ 0, 0, 0, 255 });
@@ -75,6 +78,8 @@ bool Render::Init()
 				cam.x = cam.y = 0;
 				cam.w = float(viewport.w);
 				cam.h = float(viewport.h);
+
+				res_ratio = { cam.w / target_res.first, cam.h / target_res.second };
 
 				ret = true;
 			}
@@ -251,6 +256,7 @@ void Render::RecieveEvent(const Event& e)
 	{
 		cam.w = float(e.data1.AsInt());
 		cam.h = float(e.data2.AsInt());
+		res_ratio = { cam.w / target_res.first, cam.h / target_res.second };
 		break;
 	}
 	default:
@@ -307,6 +313,11 @@ void Render::SetViewPort(const SDL_Rect& rect)
 void Render::ResetViewPort()
 {
 	SDL_RenderSetViewport(renderer, &viewport);
+}
+
+std::pair<float, float> Render::GetResRatio()
+{
+	return res_ratio;
 }
 
 bool Render::Blit(int texture_id, int x, int y, const SDL_Rect* section, Layer layer, bool use_cam)
