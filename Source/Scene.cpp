@@ -49,7 +49,7 @@ bool Scene::Update()
 		if (App->input->GetKey(SDL_SCANCODE_1) == KEY_DOWN)
 			Event::Push(SCENE_CHANGE, this, TEST);
 		else if (App->input->GetKey(SDL_SCANCODE_2) == KEY_DOWN)
-			Event::Push(SCENE_CHANGE, this, LOGO);
+			Event::Push(SCENE_CHANGE, this, INTRO);
 		else if (App->input->GetKey(SDL_SCANCODE_3) == KEY_DOWN)
 			Event::Push(SCENE_CHANGE, this, MENU);
 		else if (App->input->GetKey(SDL_SCANCODE_4) == KEY_DOWN)
@@ -294,6 +294,17 @@ bool Scene::LoadMainScene()
 	return map.Load("maps/iso.tmx");
 }
 
+bool Scene::LoadIntroScene()
+{
+	// Play sample track
+	bool ret = App->audio->PlayMusic("/audio/Effects/Intro/soda-open-and-pour.ogg");
+
+	// Remove fps cap
+	App->time.SetMaxFPS(60);
+
+	return ret;
+}
+
 bool Scene::ChangeToScene(Scenes scene)
 {
 	bool ret = false;
@@ -303,9 +314,11 @@ bool Scene::ChangeToScene(Scenes scene)
 	case TEST:
 		ret = LoadTestScene();
 		break;
-	case LOGO:
+	case INTRO:
+		ret = LoadIntroScene();
 		break;
 	case MENU:
+		//ret = LoadMenuScene();
 		break;
 	case MAIN:
 		ret = LoadMainScene();

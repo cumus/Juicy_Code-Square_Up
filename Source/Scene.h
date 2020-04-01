@@ -11,7 +11,7 @@
 enum Scenes : int
 {
 	TEST,
-	LOGO,
+	INTRO,
 	MENU,
 	MAIN,
 	MAIN_FROM_SAFE,
@@ -36,6 +36,8 @@ public:
 	void RecieveEvent(const Event& e) override;
 
 	bool LoadTestScene();
+	bool LoadIntroScene();
+	bool LoadMenuScene();
 	bool LoadMainScene();
 	bool ChangeToScene(Scenes scene);
 
