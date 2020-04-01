@@ -13,8 +13,7 @@ C_Canvas* UI_Component::canvas = nullptr;
 UI_Component::UI_Component(Gameobject* go, UI_Component* parent, ComponentType type) :
 	Component(type, go),
 	parent(parent),
-	offset_x(0),
-	offset_y(0),
+	offset({ 0.f, 0.f }),
 	target({ 0.f, 0.f, 1.f, 1.f }),
 	output({ 0, 0, 0, 0 })
 {
@@ -23,6 +22,22 @@ UI_Component::UI_Component(Gameobject* go, UI_Component* parent, ComponentType t
 
 UI_Component::~UI_Component()
 {}
+
+void UI_Component::ComputeOutputRect(float width, float height)
+{
+	std::pair<float, float> res_ratio = Render::GetResRatio();
+	std::pair<float, float> canvas_scale = canvas->GetScale();
+
+	std::pair<float, float> total_scale = {
+		target.w * res_ratio.first * canvas_scale.first,
+		target.h * res_ratio.second * canvas_scale.second };
+
+	SDL_Rect p_output = parent->output;
+	output.x = p_output.x + int(float(p_output.w) * target.x + (offset.first * total_scale.first));
+	output.y = p_output.y + int(float(p_output.h) * target.y + (offset.second * total_scale.second));
+	output.w = int(width * total_scale.first);
+	output.h = int(height * total_scale.second);
+}
 
 C_Canvas::C_Canvas(Gameobject* go) : UI_Component(go, go->GetUIParent(), UI_CANVAS)
 {
@@ -91,19 +106,7 @@ void C_Image::PostUpdate()
 {
 	if (parent && canvas)
 	{
-		std::pair<float, float> res_ratio = Render::GetResRatio();
-		std::pair<float, float> canvas_scale = canvas->GetScale();
-
-		std::pair<float, float> total_scale = {
-			target.w * res_ratio.first * canvas_scale.first,
-			target.h * res_ratio.second * canvas_scale.second };
-
-		SDL_Rect p_output = parent->output;
-		output.x = p_output.x + int(float(p_output.w) * target.x) + int(offset_x * total_scale.first);
-		output.y = p_output.y + int(float(p_output.h) * target.y) + int(offset_y * total_scale.second);
-		output.w = int(float(section.w) * total_scale.first);
-		output.h = int(float(section.h) * total_scale.second);
-
+		ComputeOutputRect(float(section.w), float(section.h));
 		App->render->Blit_Scale(tex_id, output.x, output.y, float(output.w) / float(section.w), float(output.h) / float(section.h), &section, HUD, false);
 	}
 }
@@ -123,21 +126,9 @@ void C_Text::PostUpdate()
 {
 	if (parent && canvas && text)
 	{
-		std::pair<float, float> res_ratio = Render::GetResRatio();
-		std::pair<float, float> canvas_scale = canvas->GetScale();
-
-		std::pair<float, float> total_scale = {
-			target.w * res_ratio.first * canvas_scale.first,
-			target.h * res_ratio.second * canvas_scale.second };
-
-		SDL_Rect p_output = parent->output;
-		output.x = p_output.x + int(float(p_output.w) * target.x) + int(offset_x * total_scale.first);
-		output.y = p_output.y + int(float(p_output.h) * target.y) + int(offset_y * total_scale.second);
-
 		int width, height;
 		text->GetSize(width, height);
-		output.w = int(float(width) * total_scale.first);
-		output.h = int(float(height) * total_scale.second);
+		ComputeOutputRect(float(width), float(height));
 
 		if (scale_to_fit)
 			App->render->Blit_Text(text, output.x, output.y, HUD, false);
@@ -167,7 +158,8 @@ void C_Button::PreUpdate()
 			KeyState mouse_click = App->input->GetMouseButtonDown(0);
 			if (mouse_click == KEY_DOWN || (trigger_while_pressed && mouse_click == KEY_REPEAT))
 			{
-				Event::Push(event_triggered);
+				if (canvas && canvas->playing)
+					Event::Push(event_triggered);
 			}
 		}
 	}
@@ -177,19 +169,7 @@ void C_Button::PostUpdate()
 {
 	if (parent && canvas)
 	{
-		std::pair<float, float> res_ratio = Render::GetResRatio();
-		std::pair<float, float> canvas_scale = canvas->GetScale();
-
-		std::pair<float, float> total_scale = {
-			target.w * res_ratio.first * canvas_scale.first,
-			target.h * res_ratio.second * canvas_scale.second };
-
-		SDL_Rect p_output = parent->output;
-		output.x = p_output.x + int(float(p_output.w) * target.x) + int(offset_x * total_scale.first);
-		output.y = p_output.y + int(float(p_output.h) * target.y) + int(offset_y * total_scale.second);
-		output.w = int(float(section.w) * total_scale.first);
-		output.h = int(float(section.h) * total_scale.second);
-
+		ComputeOutputRect(float(section.w), float(section.h));
 		App->render->Blit_Scale(tex_id, output.x, output.y, float(output.w) / float(section.w), float(output.h) / float(section.h), &section, HUD, false);
 	}
 }

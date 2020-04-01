@@ -91,11 +91,7 @@ bool Application::Init()
 		if (ret)
 		{
 			state = STOPED;
-
-			if (ret = scene->LoadTestScene())
-				LOG("Loaded Scene");
-			else
-				LOG("Error loading Scene");
+			Event::Push(SCENE_CHANGE, scene, TEST);
 		}
 	}
 	else

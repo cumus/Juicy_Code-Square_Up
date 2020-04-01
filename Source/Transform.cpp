@@ -67,28 +67,15 @@ void Transform::RecieveEvent(const Event & e)
 	{
 		global_parent_pos = e.data1.AsVec();
 		global_parent_scale = e.data2.AsVec();
+
+		if (game_object != nullptr)
+			Event::Push(TRANSFORM_MODIFIED, game_object, Cvar(GetGlobalPosition()), Cvar(GetGlobalScale()));
+
 		break;
 	}
 	case TRANSFORM_MODIFIED:
 	{
-		vec p = e.data1.AsVec();
-		vec scale = e.data2.AsVec();
-
-		float w, h;
-		Map::GetTileSize_F(w, h);
-		w *= scale.x;
-		h *= scale.y;
-
-		std::pair<float, float> pos = Map::F_MapToWorld(p.x, p.y, p.z);
-
-		points[0] = { int(pos.first),				int(pos.second + (h * 0.5f)) };
-		points[1] = { int(pos.first + (w * 0.5f)),	int(pos.second + h) };
-		points[2] = { int(pos.first + w),			int(pos.second + (h * 0.5f)) };
-		points[3] = { int(pos.first + (w * 0.5f)),	int(pos.second) };
-		points[4] = { int(pos.first),				int(pos.second + (h * 0.5f) - (scale.z * h)) };
-		points[5] = { int(pos.first + (w * 0.5f)),	int(pos.second + h - (scale.z * h)) };
-		points[6] = { int(pos.first + w),			int(pos.second + (h * 0.5f) - (scale.z * h)) };
-		points[7] = { int(pos.first + (w * 0.5f)),	int(pos.second - (scale.z * h)) };
+		ResetAABB();
 
 		break;
 	}
@@ -169,6 +156,27 @@ void Transform::MoveZ(float val)
 bool Transform::GlobalPosIsDifferentFrom(vec global_pos) const
 {
 	return global_pos != GetGlobalPosition();
+}
+
+void Transform::ResetAABB()
+{
+	vec p = GetGlobalPosition();
+	std::pair<float, float> pos = Map::F_MapToWorld(p.x, p.y, p.z);
+
+	vec s = GetGlobalScale();
+	float w, h;
+	Map::GetTileSize_F(w, h);
+	w *= s.x;
+	h *= s.y;
+
+	points[0] = { int(pos.first),				int(pos.second + (h * 0.5f)) };
+	points[1] = { int(pos.first + (w * 0.5f)),	int(pos.second + h) };
+	points[2] = { int(pos.first + w),			int(pos.second + (h * 0.5f)) };
+	points[3] = { int(pos.first + (w * 0.5f)),	int(pos.second) };
+	points[4] = { int(pos.first),				int(pos.second + (h * 0.5f) - (s.z * h)) };
+	points[5] = { int(pos.first + (w * 0.5f)),	int(pos.second + h - (s.z * h)) };
+	points[6] = { int(pos.first + w),			int(pos.second + (h * 0.5f) - (s.z * h)) };
+	points[7] = { int(pos.first + (w * 0.5f)),	int(pos.second - (s.z * h)) };
 }
 
 bool Transform::Intersects(std::pair<float, float> p) const

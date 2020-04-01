@@ -44,15 +44,18 @@ bool Scene::Update()
 
 	OPTICK_EVENT();
 
-	// Load sample maps
-	if (App->input->GetKey(SDL_SCANCODE_1) == KEY_DOWN)
+	if (App->input->GetKey(SDL_SCANCODE_LALT) == KEY_REPEAT)
 	{
-		ret = map.Load("maps/iso.tmx");
+		if (App->input->GetKey(SDL_SCANCODE_1) == KEY_DOWN)
+			Event::Push(SCENE_CHANGE, this, TEST);
+		else if (App->input->GetKey(SDL_SCANCODE_2) == KEY_DOWN)
+			Event::Push(SCENE_CHANGE, this, LOGO);
+		else if (App->input->GetKey(SDL_SCANCODE_3) == KEY_DOWN)
+			Event::Push(SCENE_CHANGE, this, MENU);
+		else if (App->input->GetKey(SDL_SCANCODE_4) == KEY_DOWN)
+			Event::Push(SCENE_CHANGE, this, MAIN);
 	}
-	else if (App->input->GetKey(SDL_SCANCODE_2) == KEY_DOWN)
-	{
-		ret = map.Load("maps/level1.tmx");
-	}
+
 
 	if (App->input->GetKey(SDL_SCANCODE_F2) == KEY_DOWN)
 		map.draw_walkability = !map.draw_walkability;
@@ -219,6 +222,11 @@ void Scene::RecieveEvent(const Event& e)
 	case SCENE_STOP:
 		Event::Push(ON_STOP, &root, e.data1);
 		break;
+	case SCENE_CHANGE:
+		root.RemoveChilds();
+		Event::PumpAll();
+		ChangeToScene(Scenes(e.data1.AsInt()));
+		break;
 	default:
 		break;
 	}
@@ -239,7 +247,7 @@ bool Scene::LoadTestScene()
 		ret = (id_mouse_tex != -1);
 	}
 
-	if (ret)
+	if (ret && map.Load("maps/iso.tmx"))
 	{
 		// Run test content
 		Gameobject* go1 = AddGameobject("g1 - son of root", &root);
@@ -266,28 +274,59 @@ bool Scene::LoadTestScene()
 
 		C_Image* img = new C_Image(img_go);
 		img->target = { 1.f, 1.f, 0.5f, 0.5f };
-		img->offset_x = -1199.f;
-		img->offset_y = -674.f;
-
+		img->offset = { -1199.f, -674.f };
 		img->section = { 0, 0, 1199, 674 };
 		img->tex_id = App->tex.Load("textures/goku.png");
 
 		Gameobject* text1_go = AddGameobject("Text 1", canvas_go);
 		C_Text* text1 = new C_Text(text1_go, "Componente texto sin ajustar");
-		text1->target = { 0.2f, 0.2f, 1.f, 1.f };
+		text1->target = { 0.4f, 0.2f, 1.f, 1.f };
 
 		Gameobject* text2_go = AddGameobject("Text 2", canvas_go);
 		C_Text* text2 = new C_Text(text2_go, "Componente texto ajustado");
-		text2->target = { 0.2f, 0.4f, 1.f, 1.f };
+		text2->target = { 0.4f, 0.4f, 1.f, 1.f };
 		text2->scale_to_fit = true;
 
 		Gameobject* button_go = AddGameobject("Quit Button", canvas_go);
 		C_Button* button = new C_Button(button_go, Event(REQUEST_QUIT, App));
 		button->target = { 1.f, 0.4f, 1.f, 1.f };
-		button->offset_x = -101.f;
-
+		button->offset = { -101.f, 0.f };
 		button->section = { 359, 114, 101, 101 };
 		button->tex_id = App->tex.Load("textures/icons.png");
+	}
+
+	return ret;
+}
+
+bool Scene::LoadMainScene()
+{
+	return map.Load("maps/iso.tmx");
+}
+
+bool Scene::ChangeToScene(Scenes scene)
+{
+	bool ret = false;
+
+	switch (scene)
+	{
+	case TEST:
+		ret = LoadTestScene();
+		break;
+	case LOGO:
+		break;
+	case MENU:
+		break;
+	case MAIN:
+		ret = LoadMainScene();
+		break;
+	case MAIN_FROM_SAFE:
+		break;
+	case END:
+		break;
+	case CREDITS:
+		break;
+	default:
+		break;
 	}
 
 	return ret;

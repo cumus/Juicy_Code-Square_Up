@@ -43,14 +43,14 @@ void UI_Slider::Draw() const
 	text->SetText(t);
 
 	if (scale_to_fit)
-		App->render->Blit_Text(text, target.x, target.y + target.h * 2, EDITOR);
+		App->render->Blit_Text(text, target.x, target.y + target.h * 2, EDITOR, false);
 	else
 		App->render->Blit_TextSized(text, {
 			target.x,
 			target.y + target.h * 2,
 			target.w / 5,
 			target.h
-			}, EDITOR);
+			}, EDITOR, false);
 }
 
 void UI_Slider::Set_Value()

@@ -33,6 +33,8 @@ float TimeManager::UpdateDeltaTime()
 	dt = ms_timer.ReadF() / 1000.f;
 	ms_timer.Start();
 
+	game_dt = game_timer.IsPlaying() ? dt : 0.f;
+
 	return dt;
 }
 
@@ -76,6 +78,7 @@ void TimeManager::SetMaxFPS(float max_fps)
 
 float TimeManager::GetMaxFPS() const { return capped_fps; }
 float TimeManager::GetDeltaTime() const { return dt; }
+float TimeManager::GetGameDeltaTime() const { return game_dt; }
 unsigned int TimeManager::GetCappedMS() const { return capped_ms; }
 unsigned int TimeManager::GetFpsCounter() const { return fps_counter; }
 unsigned int TimeManager::GetLastMs() const { return last_ms_count; }
@@ -117,6 +120,11 @@ Timer::Timer(const Timer & timer) :
 started_at(timer.started_at),
 paused_at(timer.paused_at)
 {}
+
+bool Timer::IsPlaying() const
+{
+	return !paused;
+}
 
 void Timer::Start()
 {

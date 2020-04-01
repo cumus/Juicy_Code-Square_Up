@@ -43,6 +43,7 @@ public:
 	vec GetGlobalScale() const { return global_parent_scale * scale; }
 
 	bool GlobalPosIsDifferentFrom(vec global_pos) const;
+	void ResetAABB();
 
 	// Collision
 	bool Intersects(std::pair<float, float> p) const;

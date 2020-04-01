@@ -86,12 +86,12 @@ void B_Movable::Update()
 		if (nextTile.x > tilePos.x) 
 		{
 			//define speed properly depending on tile position in respect to the object
-			game_object->GetTransform()->MoveX(+speed * App->time.GetDeltaTime());
+			game_object->GetTransform()->MoveX(+speed * App->time.GetGameDeltaTime());
 			//LOG("1");
 		}
 		else
 		{
-			game_object->GetTransform()->MoveX(-speed * App->time.GetDeltaTime());
+			game_object->GetTransform()->MoveX(-speed * App->time.GetGameDeltaTime());
 			//LOG("2");
 		}
 				
@@ -99,12 +99,12 @@ void B_Movable::Update()
 		if (nextTile.y > tilePos.y) 
 		{
 			//define speed properly depending on tile position in respect to the object
-			game_object->GetTransform()->MoveY(+speed * App->time.GetDeltaTime());
+			game_object->GetTransform()->MoveY(+speed * App->time.GetGameDeltaTime());
 			//LOG("3");
 		}
 		else
 		{
-			game_object->GetTransform()->MoveY(-speed * App->time.GetDeltaTime());
+			game_object->GetTransform()->MoveY(-speed * App->time.GetGameDeltaTime());
 			//LOG("4");
 		}		
 	}	

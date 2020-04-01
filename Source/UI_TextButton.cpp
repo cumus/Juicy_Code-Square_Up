@@ -20,9 +20,9 @@ void UI_TextButton::Draw() const
 
 	SDL_Rect rect = GetTargetRect();
 	if (scale_to_fit)
-		App->render->Blit_Text(text, rect.x, rect.y, EDITOR);
+		App->render->Blit_Text(text, rect.x, rect.y, EDITOR, false);
 	else
-		App->render->Blit_TextSized(text, rect, EDITOR);
+		App->render->Blit_TextSized(text, rect, EDITOR, false);
 }
 
 UI_TextButton* UI_TextButton::ToUiTextButton()

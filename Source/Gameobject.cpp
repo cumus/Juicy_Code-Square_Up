@@ -153,6 +153,16 @@ void Gameobject::RecieveEvent(const Event & e)
 				Event::Push(ON_SELECT, *component);
 		break;
 	}
+	case ON_DESTROY:
+	{
+		for (std::vector<Component*>::iterator component = components.begin(); component != components.end(); ++component)
+			Event::Push(ON_DESTROY, *component);
+
+		for (std::vector<Gameobject*>::iterator child = childs.begin(); child != childs.end(); ++child)
+			Event::Push(ON_DESTROY, *child);
+
+		break;
+	}
 	case ON_RIGHT_CLICK:
 	{
 		for (std::vector<Component*>::iterator component = components.begin(); component != components.end(); ++component)
@@ -297,6 +307,15 @@ void Gameobject::AddComponent(Component* comp)
 {
 	if (comp)
 		components.push_back(comp);
+}
+
+void Gameobject::RemoveChilds()
+{
+	for (std::vector<Gameobject*>::const_iterator it = childs.begin(); it != childs.end(); ++it)
+	{
+		Event::Push(ON_DESTROY, *it);
+		go_to_remove.push((*it)->id);
+	}
 }
 
 bool Gameobject::RemoveChild(Gameobject* child)
