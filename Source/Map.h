@@ -18,7 +18,7 @@ public:
 	Map();
 	~Map();
 
-	bool Load(const char* file, float target_scale = 1.0f);
+	bool Load(const char* file);
 	void CleanUp();
 
 	bool IsValid() const;

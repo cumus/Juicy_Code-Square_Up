@@ -112,25 +112,24 @@ void B_Movable::Update()
 		if (nextTile.x > tilePos.x) 
 		{
 			//define speed properly depending on tile position in respect to the object
-			game_object->GetTransform()->MoveX(+speed * App->time.GetDeltaTime());
+			game_object->GetTransform()->MoveX(+speed * App->time.GetGameDeltaTime());
 			positiveX = true;
 		}
 		else
 		{
-			game_object->GetTransform()->MoveX(-speed * App->time.GetDeltaTime());
-			positiveY = false;
-		}
-				
+			game_object->GetTransform()->MoveX(+speed * App->time.GetGameDeltaTime());
+			positiveY = false;			
+		}				
 
 		if (nextTile.y > tilePos.y) 
 		{
 			//define speed properly depending on tile position in respect to the object
-			game_object->GetTransform()->MoveY(+speed * App->time.GetDeltaTime());
+			game_object->GetTransform()->MoveX(+speed * App->time.GetGameDeltaTime());
 			positiveY = true;
 		}
 		else
 		{
-			game_object->GetTransform()->MoveY(-speed * App->time.GetDeltaTime());
+			game_object->GetTransform()->MoveX(+speed * App->time.GetGameDeltaTime());
 			positiveY = false;
 		}	
 		

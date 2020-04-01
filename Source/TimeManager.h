@@ -9,6 +9,7 @@ public:
 	Timer(const bool start_active = true);
 	Timer(const Timer& timer);
 
+	bool IsPlaying() const;
 	void Start();
 	void Pause();
 	void Stop();
@@ -41,6 +42,7 @@ public:
 	void	SetMaxFPS(float max_fps); // Set to 0 uncap fps
 	float	GetMaxFPS() const;
 	float	GetDeltaTime() const;
+	float	GetGameDeltaTime() const;
 	unsigned int GetCappedMS() const;
 	unsigned int GetFpsCounter() const;
 	unsigned int GetLastMs() const;
@@ -68,6 +70,7 @@ private:
 
 	Timer	engine_timer;
 	Timer	game_timer;
+	float	game_dt;
 };
 
 #endif // __TIMEMANAGER_H__

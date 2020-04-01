@@ -13,13 +13,15 @@ public:
 	UI_Component(Gameobject* go, UI_Component* parent, ComponentType type = UI_GENERAL);
 	virtual ~UI_Component();
 
+	void ComputeOutputRect(float width, float height);
+
 public:
 
 	static C_Canvas* canvas;
 	UI_Component* parent;
 	SDL_Rect output;
 
-	float offset_x, offset_y;
+	std::pair<float, float> offset;
 	RectF target;
 };
 
@@ -36,7 +38,7 @@ public:
 
 	std::pair<float, float> GetScale() const;
 
-private:
+public:
 
 	bool playing = false;
 };

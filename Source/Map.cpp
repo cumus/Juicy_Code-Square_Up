@@ -33,7 +33,7 @@ Map::~Map()
 	if (map == this) map = nullptr;
 }
 
-bool Map::Load(const char* file, float target_scale)
+bool Map::Load(const char* file)
 {
 	OPTICK_EVENT();
 
@@ -59,7 +59,7 @@ bool Map::Load(const char* file, float target_scale)
 				{
 					App->pathfinding.SetWalkabilityLayer(GetMapWalkabilityLayer());
 					ParseObjectGroups(map_node);
-					SetMapScale(target_scale);
+					SetMapScale(scale);
 					loaded = true;
 				}
 				else
@@ -243,7 +243,7 @@ void Map::SetMapScale(float s)
 	size_i = { int(float(tile_width) * scale), int(float(tile_height) * scale) };
 	size_f = { float(tile_width) * scale, float(tile_height) * scale };
 
-	Event::Push(TRANSFORM_MODIFIED, App->scene->GetRoot(), vec(), vec());
+	Event::Push(TRANSFORM_MODIFIED, App->scene->GetRoot(), vec(), vec(1.f));
 }
 
 bool Map::GetTilesetFromTileId(int id, TileSet& set) const

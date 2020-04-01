@@ -41,6 +41,7 @@ public:
 
 	void AddComponent(Component* comp);
 
+	void RemoveChilds();
 	bool RemoveChild(Gameobject* child);
 	bool RemoveComponent(Component* comp);
 	bool Destroy();

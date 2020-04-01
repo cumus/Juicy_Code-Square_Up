@@ -34,6 +34,7 @@ enum EventType
 	SCENE_PAUSE,
 	SCENE_TICK,
 	SCENE_STOP,
+	SCENE_CHANGE,
 
 	// Gameobjects
 	ON_PLAY,

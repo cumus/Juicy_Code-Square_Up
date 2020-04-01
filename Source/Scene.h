@@ -8,6 +8,17 @@
 
 #include <vector>
 
+enum Scenes : int
+{
+	TEST,
+	LOGO,
+	MENU,
+	MAIN,
+	MAIN_FROM_SAFE,
+	END,
+	CREDITS
+};
+
 struct SDL_Texture;
 
 class Scene : public Module
@@ -25,6 +36,8 @@ public:
 	void RecieveEvent(const Event& e) override;
 
 	bool LoadTestScene();
+	bool LoadMainScene();
+	bool ChangeToScene(Scenes scene);
 
 	Gameobject* GetRoot();
 	const Gameobject* GetRoot() const;
