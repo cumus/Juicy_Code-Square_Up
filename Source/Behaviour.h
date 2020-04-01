@@ -3,7 +3,30 @@
 
 #include "Component.h"
 #include "PathfindingManager.h"
-#include "Defs.h"
+
+//Unit types
+enum UnitType
+{
+	//////Movable units//////
+	UNKNOWN = 0,
+	USER_MELEE,
+	USER_RANGED,
+	USER_SUPER,
+	USER_SPECIAL,//Gatherer
+	IA_MELEE,
+	IA_RANGED,
+	IA_SUPER,
+	IA_SPECIAL,
+	//////Structures//////
+	TOWN_HALL,
+	LAB,
+	BARRACKS,
+	RANGED_TURRET,
+	NEAR_TURRET,
+	RESOURCE,
+	IA_SPAWN
+};
+
 
 class Gameobject;
 
@@ -45,6 +68,8 @@ public:
 	iPoint nextTile;
 	bool next = false;
 	bool move = false;
+	bool positiveX = false;
+	bool positiveY = false;
 };
 
 class B_Building : public Behaviour

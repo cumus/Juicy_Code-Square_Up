@@ -36,7 +36,6 @@ void B_Movable::RecieveEvent(const Event& e)
 		vec pos = game_object->GetTransform()->GetGlobalPosition();
 		iPoint origin = { int(pos.x), int(pos.y) };
 		iPoint destination = { e.data1.AsInt(), e.data2.AsInt() };
-		//LOG("10");
 		path = App->pathfinding.CreatePath(origin, destination,ID);
 		//LOG("Path length: %d", path->size());
 		break;
@@ -51,6 +50,9 @@ void B_Movable::Update()
 {	
 	if (path != nullptr && !path->empty()) 
 	{	
+		vec pos = game_object->GetTransform()->GetGlobalPosition();
+		fPoint actualPos = { pos.x, pos.y };		
+		
 		if(!next) 
 		{		
 			nextTile = path->front();
@@ -59,18 +61,43 @@ void B_Movable::Update()
 			move = true;
 			//LOG("X: %d, Y: %d", pathbegin.x, pathbegin.y);
 			//LOG("X: %f, Y: %f", game_object->GetTransform()->GetGlobalPosition().x, game_object->GetTransform()->GetGlobalPosition().y);
-
 		}
 
-		vec pos = game_object->GetTransform()->GetGlobalPosition();
-		iPoint actualPos = { int(pos.x), int(pos.y) };
-
-		if (actualPos.x == nextTile.x && actualPos.y == nextTile.y)
+		if (positiveX && positiveY)
 		{
-			path->erase(path->begin());
-			next = false;
-			move = false;
-		}		
+			if (actualPos.x >= nextTile.x && actualPos.y >= nextTile.y)
+			{
+				path->erase(path->begin());
+				next = false;
+			}
+		}
+
+		if (!positiveX && !positiveY)
+		{
+			if (actualPos.x <= nextTile.x && actualPos.y <= nextTile.y)
+			{
+				path->erase(path->begin());
+				next = false;
+			}
+		}
+
+		if (!positiveX && positiveY)
+		{
+			if (actualPos.x <= nextTile.x && actualPos.y >= nextTile.y)
+			{
+				path->erase(path->begin());
+				next = false;
+			}
+		}
+
+		if (positiveX && !positiveY)
+		{
+			if (actualPos.x >= nextTile.x && actualPos.y <= nextTile.y)
+			{
+				path->erase(path->begin());
+				next = false;
+			}
+		}
 	}	
 	else
 	{
@@ -79,20 +106,19 @@ void B_Movable::Update()
 
 	if (move)
 	{
-		//LOG("Path registered");
 		vec pos = game_object->GetTransform()->GetGlobalPosition();
-		iPoint tilePos = { int(pos.x), int(pos.y) };
+		fPoint tilePos = { pos.x, pos.y };
 
 		if (nextTile.x > tilePos.x) 
 		{
 			//define speed properly depending on tile position in respect to the object
 			game_object->GetTransform()->MoveX(+speed * App->time.GetDeltaTime());
-			//LOG("1");
+			positiveX = true;
 		}
 		else
 		{
 			game_object->GetTransform()->MoveX(-speed * App->time.GetDeltaTime());
-			//LOG("2");
+			positiveY = false;
 		}
 				
 
@@ -100,12 +126,13 @@ void B_Movable::Update()
 		{
 			//define speed properly depending on tile position in respect to the object
 			game_object->GetTransform()->MoveY(+speed * App->time.GetDeltaTime());
-			//LOG("3");
+			positiveY = true;
 		}
 		else
 		{
 			game_object->GetTransform()->MoveY(-speed * App->time.GetDeltaTime());
-			//LOG("4");
-		}		
+			positiveY = false;
+		}	
+		
 	}	
 }

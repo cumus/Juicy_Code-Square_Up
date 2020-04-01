@@ -458,6 +458,7 @@ std::vector<iPoint> * PathfindingManager::CreatePath(iPoint& origin, iPoint& des
 	
 	if (IsWalkable(destination))
 	{
+		OPTICK_EVENT();
 		//LOG("Destination X: %d, Y: %d", destination.x, destination.y);
 		PathNode originNode(origin, nullPoint);
 		originNode.g = 0;
@@ -574,7 +575,7 @@ std::vector<iPoint> * PathfindingManager::CreatePath(iPoint& origin, iPoint& des
 
 int PathfindingManager::ContinuePath(PathNode origin, iPoint destination,/*std::vector<PathNode> open,*/std::vector<PathNode> closed, double ID, int working_ms)
 {
-	OPTICK_EVENT();
+	
 	Timer timer;
 
 	std::vector<iPoint> finalPath;
