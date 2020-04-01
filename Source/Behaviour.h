@@ -97,4 +97,4 @@ public:
 };
 
 
-#endif // __BEHAVIOUR_H__
+#endif // __BEHAVIOUR_H_

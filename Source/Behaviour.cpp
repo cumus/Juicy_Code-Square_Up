@@ -4,7 +4,6 @@
 #include "Gameobject.h"
 #include "PathfindingManager.h"
 #include "Log.h"
-#include "Defs.h"
 
 
 
@@ -18,8 +17,7 @@ void B_Movable::RecieveEvent(const Event& e)
 	{
 	case ON_SELECT: {
 
-		currentLife -= 5;
-		LOG("Life after taking damage is: %d", currentLife);
+		currentLife -= 5;		
 
 		if (currentLife <= 0)
 		{
@@ -28,7 +26,6 @@ void B_Movable::RecieveEvent(const Event& e)
 			else
 				LOG("Error destroying GO: %s", game_object->GetName());
 		}
-
 		break;
 	}
 	case ON_RIGHT_CLICK: {
@@ -37,7 +34,8 @@ void B_Movable::RecieveEvent(const Event& e)
 		iPoint origin = { int(pos.x), int(pos.y) };
 		iPoint destination = { e.data1.AsInt(), e.data2.AsInt() };
 		path = App->pathfinding.CreatePath(origin, destination,ID);
-		//LOG("Path length: %d", path->size());
+		next = false;
+		move = false;
 		break;
 	}
 	default:
@@ -71,8 +69,7 @@ void B_Movable::Update()
 				next = false;
 			}
 		}
-
-		if (!positiveX && !positiveY)
+		else if (!positiveX && !positiveY)
 		{
 			if (actualPos.x <= nextTile.x && actualPos.y <= nextTile.y)
 			{
@@ -80,8 +77,7 @@ void B_Movable::Update()
 				next = false;
 			}
 		}
-
-		if (!positiveX && positiveY)
+		else if (!positiveX && positiveY)
 		{
 			if (actualPos.x <= nextTile.x && actualPos.y >= nextTile.y)
 			{
@@ -89,8 +85,7 @@ void B_Movable::Update()
 				next = false;
 			}
 		}
-
-		if (positiveX && !positiveY)
+		else if (positiveX && !positiveY)
 		{
 			if (actualPos.x >= nextTile.x && actualPos.y <= nextTile.y)
 			{
@@ -111,27 +106,28 @@ void B_Movable::Update()
 
 		if (nextTile.x > tilePos.x) 
 		{
-			//define speed properly depending on tile position in respect to the object
-			game_object->GetTransform()->MoveX(+speed * App->time.GetGameDeltaTime());
+			//game_object->GetTransform()->MoveX(+speed * App->time.GetGameDeltaTime());
+			game_object->GetTransform()->MoveX(+speed * App->time.GetDeltaTime());
 			positiveX = true;
 		}
 		else
 		{
-			game_object->GetTransform()->MoveX(+speed * App->time.GetGameDeltaTime());
-			positiveY = false;			
+			//game_object->GetTransform()->MoveX(-speed * App->time.GetGameDeltaTime());
+			game_object->GetTransform()->MoveX(-speed * App->time.GetDeltaTime());
+			positiveX = false;			
 		}				
 
 		if (nextTile.y > tilePos.y) 
 		{
-			//define speed properly depending on tile position in respect to the object
-			game_object->GetTransform()->MoveX(+speed * App->time.GetGameDeltaTime());
+			//game_object->GetTransform()->MoveY(+speed * App->time.GetGameDeltaTime());
+			game_object->GetTransform()->MoveY(+speed * App->time.GetDeltaTime());
 			positiveY = true;
 		}
 		else
 		{
-			game_object->GetTransform()->MoveX(+speed * App->time.GetGameDeltaTime());
+			//game_object->GetTransform()->MoveY(-speed * App->time.GetGameDeltaTime());
+			game_object->GetTransform()->MoveY(-speed * App->time.GetDeltaTime());
 			positiveY = false;
 		}	
-		
 	}	
 }
