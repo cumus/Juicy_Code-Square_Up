@@ -223,6 +223,7 @@ void Scene::RecieveEvent(const Event& e)
 		Event::Push(ON_STOP, &root, e.data1);
 		break;
 	case SCENE_CHANGE:
+		map.CleanUp();
 		root.RemoveChilds();
 		Event::PumpAll();
 		ChangeToScene(Scenes(e.data1.AsInt()));
