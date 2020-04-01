@@ -8,7 +8,7 @@
 
 
 
-Behaviour::Behaviour(Gameobject* go, ComponentType type) : Component(type, go),ID(go->GetID())
+Behaviour::Behaviour(Gameobject* go, ComponentType type) : Component(type, go),ID(GetID())
 {}
 
 
