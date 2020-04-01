@@ -59,4 +59,26 @@ template <class VALUE_TYPE> void SWAP(VALUE_TYPE& a, VALUE_TYPE& b)
 #define MEGABYTE_F 1048576.0
 #define GIGABYTE_F 1073741824.0
 
+//Unit types
+enum UnitType
+{
+	//////Movable units//////
+	UNKNOWN = 0,
+	USER_MELEE,
+	USER_RANGED,
+	USER_SUPER,
+	USER_SPECIAL,//Gatherer
+	IA_MELEE,
+	IA_RANGED,
+	IA_SUPER,
+	IA_SPECIAL,
+	//////Structures//////
+	TOWN_HALL,
+	LAB,
+	BARRACKS,
+	RANGED_TURRET,
+	NEAR_TURRET,
+	IA_SPAWN
+};
+
 #endif // __DEFS_H__

@@ -3,6 +3,7 @@
 
 #include "Component.h"
 #include "PathfindingManager.h"
+#include "Defs.h"
 
 class Gameobject;
 
@@ -14,9 +15,13 @@ public:
 	virtual ~Behaviour() {}
 
 public:
-	int ID;
-	int life = 10;
+	double ID=0;
+	int startingLife = 10;//Temporal value
+	int currentLife=startingLife;
+	int damage = 5;//Temporal value
 	bool selected = false;
+	bool canAttackUnits = true; //For gatherer set false
+	UnitType type = UNKNOWN;
 };
 
 class B_Movable: public Behaviour
@@ -27,7 +32,6 @@ public:
 	virtual ~B_Movable() {}
 	void Update() override;
 	void RecieveEvent(const Event& e) override;
-
 	
 
 public:
@@ -41,7 +45,6 @@ public:
 	iPoint nextTile;
 	bool next = false;
 	bool move = false;
-
 };
 
 class B_Building : public Behaviour
@@ -54,7 +57,6 @@ public:
 	
 public:
 
-	int damage;
 };
 
 class B_Unit : public B_Movable
@@ -64,11 +66,8 @@ public:
 	B_Unit(Gameobject* go, ComponentType type = B_UNIT) : B_Movable(go, type) {}
 	virtual ~B_Unit() {}
 
-	
 
 public:
-
-	int damage = 5;
 
 };
 

@@ -57,7 +57,7 @@ int PathfindingManager::IteratePaths(int extra_ms)
 
 		if (!storedPaths.empty())
 		{
-			for (std::map<int, std::vector<iPoint>>::iterator it = storedPaths.begin(); it != storedPaths.end(); ++it)
+			for (std::map<double, std::vector<iPoint>>::iterator it = storedPaths.begin(); it != storedPaths.end(); ++it)
 			{
 				currentPath = it->second;
 				if (!it->second.empty())
@@ -73,7 +73,7 @@ int PathfindingManager::IteratePaths(int extra_ms)
 	{
 		std::vector<iPoint> path;
 		SDL_Rect rect = { 0, 0, 64, 64 };
-		std::map<int, std::vector<iPoint>>::iterator it;
+		std::map<double, std::vector<iPoint>>::iterator it;
 		it = storedPaths.find(unitDebugID);
 
 		if (it != storedPaths.end() && !it->second.empty())
@@ -122,7 +122,7 @@ void PathfindingManager::ClearAllPaths()
 }
 
 //Utility: Prints unit path
-void PathfindingManager::DebugShowUnitPath(int ID)
+void PathfindingManager::DebugShowUnitPath(double ID)
 {
 	if (debugOne) debugOne = false;
 	else debugOne = true;
@@ -139,46 +139,46 @@ void PathfindingManager::DebugShowPaths()
 }
 
 //Utility: Updates already stored path or add it
-void PathfindingManager::UpdateStoredPaths(int ID, std::vector<iPoint> path)
+void PathfindingManager::UpdateStoredPaths(double ID, std::vector<iPoint> path)
 {
-	std::map<int, std::vector<iPoint>>::iterator it;
+	std::map<double, std::vector<iPoint>>::iterator it;
 	it = storedPaths.find(ID);
 
 	if (it != storedPaths.end()) storedPaths[ID] = path;
-	else storedPaths.insert(std::pair<int, std::vector<iPoint>>(ID, path));	
+	else storedPaths.insert(std::pair<double, std::vector<iPoint>>(ID, path));
 }
 
 //Utility: Updates already pending path
-void PathfindingManager::UpdatePendingPaths(int ID, UncompletedPath info)
+void PathfindingManager::UpdatePendingPaths(double ID, UncompletedPath info)
 {
-	std::map<int, UncompletedPath>::iterator it;
+	std::map<double, UncompletedPath>::iterator it;
 	it = toDoPaths.find(ID);
 
 	if (it != toDoPaths.end()) toDoPaths[ID] = info;
-	else toDoPaths.insert(std::pair<int, UncompletedPath>(ID, info));
+	else toDoPaths.insert(std::pair<double, UncompletedPath>(ID, info));
 }
 
 //Utility: Delete one stored path
-void PathfindingManager::DeletePath(int ID)
+void PathfindingManager::DeletePath(double ID)
 {
-	std::map<int, std::vector<iPoint>>::iterator it;
+	std::map<double, std::vector<iPoint>>::iterator it;
 	it = storedPaths.find(ID);
 	if (it != storedPaths.end()) storedPaths.erase(it);
 }
 
 //Utility: Delete one stored path
-void PathfindingManager::DeletePendingPath(int ID)
+void PathfindingManager::DeletePendingPath(double ID)
 {
-	std::map<int, UncompletedPath>::iterator it;
+	std::map<double, UncompletedPath>::iterator it;
 	it = toDoPaths.find(ID);
 	if (it != toDoPaths.end()) toDoPaths.erase(it);
 }
 
 //Utility: Return one path found by ID
-std::vector<iPoint>* PathfindingManager::GetPath(int ID)
+std::vector<iPoint>* PathfindingManager::GetPath(double ID)
 {
 	std::vector<iPoint>* vec = nullptr;
-	std::map<int, std::vector<iPoint>>::iterator it = storedPaths.find(ID);
+	std::map<double, std::vector<iPoint>>::iterator it = storedPaths.find(ID);
 	if (it != storedPaths.end())
 	{
 		vec = &it->second;
@@ -187,10 +187,10 @@ std::vector<iPoint>* PathfindingManager::GetPath(int ID)
 	return vec;
 }
 
-UncompletedPath* PathfindingManager::GetToDoPath(int ID)
+UncompletedPath* PathfindingManager::GetToDoPath(double ID)
 {
 	UncompletedPath* vec = nullptr;
-	std::map<int, UncompletedPath>::iterator it = toDoPaths.find(ID);
+	std::map<double, UncompletedPath>::iterator it = toDoPaths.find(ID);
 	if (it != toDoPaths.end())
 	{
 		vec = &it->second;
@@ -451,7 +451,7 @@ void PathfindingManager::Merge(std::vector<PathNode>& vec, int l, int m, int r)
 
 
 // Main function to request a path from A to B
-std::vector<iPoint> * PathfindingManager::CreatePath(iPoint& origin, iPoint& destination, int ID)
+std::vector<iPoint> * PathfindingManager::CreatePath(iPoint& origin, iPoint& destination, double ID)
 {
 	std::vector<iPoint>* pathPointer = nullptr;
 	std::vector<iPoint> finalPath;
@@ -572,7 +572,7 @@ std::vector<iPoint> * PathfindingManager::CreatePath(iPoint& origin, iPoint& des
 	}*/
 }
 
-int PathfindingManager::ContinuePath(PathNode origin, iPoint destination,/*std::vector<PathNode> open,*/std::vector<PathNode> closed, int ID, int working_ms)
+int PathfindingManager::ContinuePath(PathNode origin, iPoint destination,/*std::vector<PathNode> open,*/std::vector<PathNode> closed, double ID, int working_ms)
 {
 	OPTICK_EVENT();
 	Timer timer;

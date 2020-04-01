@@ -42,7 +42,7 @@ struct UncompletedPath
 	UncompletedPath(int ID, PathNode origin,iPoint final,/*std::vector<PathNode> open,*/std::vector<PathNode> closed);
 	UncompletedPath(const UncompletedPath& path);
 
-	int ID;
+	double ID;
 	iPoint end;
 	PathNode lastNode;
 	std::vector<PathNode> closedList;
@@ -65,9 +65,9 @@ public:
 	void SetWalkabilityLayer(const MapLayer& layer);
 
 	// Main function to request a path from A to B
-	std::vector<iPoint>* CreatePath( iPoint& origin, iPoint& destination,int ID=0);
+	std::vector<iPoint>* CreatePath( iPoint& origin, iPoint& destination,double ID);
 
-	int ContinuePath(PathNode lastNode, iPoint destination,/*std::vector<PathNode> openList,*/std::vector<PathNode> closedList, int ID, int working_ms);
+	int ContinuePath(PathNode lastNode, iPoint destination,/*std::vector<PathNode> openList,*/std::vector<PathNode> closedList, double ID, int working_ms);
 
 	// Utility: return true if pos is inside the map boundaries
 	bool CheckBoundaries( iPoint& pos);
@@ -103,25 +103,25 @@ public:
 	void DebugShowPaths();
 
 	//Utility: Prints unit path
-	void DebugShowUnitPath(int ID);
+	void DebugShowUnitPath(double ID);
 
 	//Utility: Updates already stored path or add it
-	void UpdateStoredPaths(int ID, std::vector<iPoint> path);
+	void UpdateStoredPaths(double ID, std::vector<iPoint> path);
 
 	//Utility: Updates already pending path
-	void UpdatePendingPaths(int ID, UncompletedPath info);
+	void UpdatePendingPaths(double ID, UncompletedPath info);
 
 	//Utility: Delete one stored path
-	void DeletePath(int ID);
+	void DeletePath(double ID);
 
 	//Utility: Delete one stored path
-	void DeletePendingPath(int ID);
+	void DeletePendingPath(double ID);
 
 	//Utility: Return one path found by ID
-	std::vector<iPoint>* GetPath(int ID);
+	std::vector<iPoint>* GetPath(double ID);
 
 	//Utility: Return uncompleted path by ID
-	UncompletedPath* GetToDoPath(int ID);
+	UncompletedPath* GetToDoPath(double ID);
 
 public:
 	int debugTextureID;
@@ -132,8 +132,8 @@ private:
 	int unitDebugID;
 	MapLayer map;
 	iPoint nullPoint = iPoint({ -1,-1 });
-	std::map<int, std::vector<iPoint>> storedPaths; //Stores all generated paths by units
-	std::map<int, UncompletedPath> toDoPaths; //Stores pending path for each id
+	std::map<double, std::vector<iPoint>> storedPaths; //Stores all generated paths by units
+	std::map<double, UncompletedPath> toDoPaths; //Stores pending path for each id
 };
 
 #endif 

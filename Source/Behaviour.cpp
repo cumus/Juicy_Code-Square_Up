@@ -4,9 +4,11 @@
 #include "Gameobject.h"
 #include "PathfindingManager.h"
 #include "Log.h"
+#include "Defs.h"
 
 
-Behaviour::Behaviour(Gameobject* go, ComponentType type) : Component(type, go)
+
+Behaviour::Behaviour(Gameobject* go, ComponentType type) : Component(type, go),ID(go->GetID())
 {}
 
 
@@ -16,10 +18,10 @@ void B_Movable::RecieveEvent(const Event& e)
 	{
 	case ON_SELECT: {
 
-		life -= 5;
-		LOG("Life after taking damage is: %d", life);
+		currentLife -= 5;
+		LOG("Life after taking damage is: %d", currentLife);
 
-		if (life <= 0)
+		if (currentLife <= 0)
 		{
 			if (game_object->Destroy())
 				LOG("Destroying GO: %s", game_object->GetName());
@@ -34,10 +36,9 @@ void B_Movable::RecieveEvent(const Event& e)
 		vec pos = game_object->GetTransform()->GetGlobalPosition();
 		iPoint origin = { int(pos.x), int(pos.y) };
 		iPoint destination = { e.data1.AsInt(), e.data2.AsInt() };
-		LOG("10");
-		path = App->pathfinding.CreatePath(origin, destination);
-		LOG("Path length: %d", path->size());
-
+		//LOG("10");
+		path = App->pathfinding.CreatePath(origin, destination,ID);
+		//LOG("Path length: %d", path->size());
 		break;
 	}
 	default:
@@ -53,11 +54,11 @@ void B_Movable::Update()
 		if(!next) 
 		{		
 			nextTile = path->front();
-			LOG("Tile coords X:%d, Y:%d",nextTile.x,nextTile.y);
+			//LOG("Tile coords X:%d, Y:%d",nextTile.x,nextTile.y);
 			next = true;
 			move = true;
 			//LOG("X: %d, Y: %d", pathbegin.x, pathbegin.y);
-			LOG("X: %f, Y: %f", game_object->GetTransform()->GetGlobalPosition().x, game_object->GetTransform()->GetGlobalPosition().y);
+			//LOG("X: %f, Y: %f", game_object->GetTransform()->GetGlobalPosition().x, game_object->GetTransform()->GetGlobalPosition().y);
 
 		}
 
@@ -78,34 +79,33 @@ void B_Movable::Update()
 
 	if (move)
 	{
-		LOG("Path registered");
+		//LOG("Path registered");
 		vec pos = game_object->GetTransform()->GetGlobalPosition();
 		iPoint tilePos = { int(pos.x), int(pos.y) };
 
-		if (nextTile.x > tilePos.x) {
+		if (nextTile.x > tilePos.x) 
+		{
 			//define speed properly depending on tile position in respect to the object
 			game_object->GetTransform()->MoveX(+speed * App->time.GetDeltaTime());
-			LOG("1");
+			//LOG("1");
 		}
 		else
 		{
 			game_object->GetTransform()->MoveX(-speed * App->time.GetDeltaTime());
-			LOG("2");
+			//LOG("2");
 		}
 				
 
-		if (nextTile.y > tilePos.y) {
+		if (nextTile.y > tilePos.y) 
+		{
 			//define speed properly depending on tile position in respect to the object
 			game_object->GetTransform()->MoveY(+speed * App->time.GetDeltaTime());
-			LOG("3");
+			//LOG("3");
 		}
 		else
 		{
 			game_object->GetTransform()->MoveY(-speed * App->time.GetDeltaTime());
-			LOG("4");
-		}
-		
-
-	}
-	
+			//LOG("4");
+		}		
+	}	
 }
