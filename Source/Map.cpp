@@ -203,8 +203,7 @@ void Map::Draw() const
 
 						if (tile_id != 0) rect.x = 64;
 						std::pair<int, int> render_pos = I_MapToWorld(x, y);
-						//App->render->Blit(App->scene->id_mouse_tex, render_pos.first, render_pos.second, &rect);
-						App->render->Blit_Scale(App->scene->id_mouse_tex, render_pos.first, render_pos.second + (21.0f * scale), 2, 2, &rect, WALKABILITY, true);
+						App->render->Blit(App->scene->id_mouse_tex, render_pos.first, render_pos.second, &rect);
 					}
 				}
 			}
@@ -217,7 +216,7 @@ void Map::Draw() const
 		SDL_Rect rect = { 0, 0, 64, 64 };
 
 		// Tile base rhombus
-		App->render->Blit_Scale(App->scene->id_mouse_tex, mouse_tile_pos.first, mouse_tile_pos.second + (21.0f * scale), 2, 2, &rect, DEBUG_MAP, true);
+		App->render->Blit(App->scene->id_mouse_tex, mouse_tile_pos.first, mouse_tile_pos.second, &rect);
 	}
 }
 
@@ -372,18 +371,18 @@ std::pair<int, int> Map::WorldToTileBase(float x, float y)
 {
 	std::pair<float, float> ret = F_WorldToMap(x, y);
 	std::pair<float, float> tile_position = F_MapToWorld(ret.first, ret.second);
-	//float base_offset = size_f.first / (2.0f * sin(60.0f * DEGTORAD));
+	float base_offset = size_f.first / (2.0f * sin(60.0f * DEGTORAD));
 
 	if (JMath::PointInsideTriangle({ x , y - scale },
 		{ tile_position.first, tile_position.second },
-		{ tile_position.first + float(tile_width) * 0.5f * scale, tile_position.second },
-		{ tile_position.first, tile_position.second + float(tile_height) * 0.5f * scale }))
+		{ tile_position.first + float(tile_width) * scale, tile_position.second },
+		{ tile_position.first, tile_position.second + base_offset }))
 		ret.first--;
 
 	if (JMath::PointInsideTriangle({ x , y - scale },
-		{ tile_position.first + float(tile_width) * 0.5f * scale, tile_position.second },
+		{ tile_position.first, tile_position.second },
 		{ tile_position.first + float(tile_width) * scale, tile_position.second },
-		{ tile_position.first + float(tile_width) * scale, tile_position.second + float(tile_height) * 0.5f * scale }))
+		{ tile_position.first + float(tile_width) * scale, tile_position.second + base_offset }))
 		ret.second--;
 
 	// Fix decimal clipping
