@@ -342,7 +342,6 @@ void PathNode::CalculateF(iPoint destination)
 	fPoint end = fPoint({ float(destination.x), float(destination.y) });
 	fPoint start = fPoint({ float(pos.x), float(pos.y) });
 	h = start.DistanceTo(end);
-	LOG("G: %d, H: %d", g, h);
 	score = g + h;
 }
 
