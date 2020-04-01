@@ -9,7 +9,7 @@
 #include <map>
 
 
-
+#define MAX_PATH_CALCULATIONS 40
 
 
 // ---------------------------------------------------------------------
@@ -19,7 +19,7 @@ struct PathNode
 {
 	// Constructors
 	PathNode();
-	PathNode(iPoint pos, iPoint parentPos);
+	PathNode(iPoint pos, iPoint parent);
 	PathNode(const PathNode& node);
 
 	// Fills a vector of all valid adjacent pathnodes
@@ -28,25 +28,26 @@ struct PathNode
 	void CalculateF(iPoint destination);
 
 	// -----------
-	int g = 0;
-	int h = 0;
-	int score=0;
+	float g = 0;
+	float h = 0;
+	float score = 0;
 	iPoint pos = iPoint({ 0, 0 });
 	iPoint parentPos = iPoint({ -1, -1 });
-	//PathNode* parent; // needed to reconstruct the path in the end
 };
 
 struct UncompletedPath
 {
 	UncompletedPath();
-	UncompletedPath(int ID, PathNode origin,iPoint final,/*std::vector<PathNode> open,*/std::vector<PathNode> closed);
+	UncompletedPath(int ID,iPoint final,std::vector<PathNode> open,std::vector<PathNode> closed);
 	UncompletedPath(const UncompletedPath& path);
 
+	int length = 0;
 	double ID;
 	iPoint end;
-	PathNode lastNode;
+	iPoint localStart;
+	//PathNode lastNode;
 	std::vector<PathNode> closedList;
-	//std::vector<PathNode> openList;
+	std::vector<PathNode> openList;
 };
 
 class PathfindingManager
@@ -67,7 +68,7 @@ public:
 	// Main function to request a path from A to B
 	std::vector<iPoint>* CreatePath( iPoint& origin, iPoint& destination,double ID);
 
-	int ContinuePath(PathNode lastNode, iPoint destination,/*std::vector<PathNode> openList,*/std::vector<PathNode> closedList, double ID, int working_ms);
+	int ContinuePath(UncompletedPath path,int working_ms);
 
 	// Utility: return true if pos is inside the map boundaries
 	bool CheckBoundaries( iPoint& pos);
@@ -85,7 +86,7 @@ public:
 	void RemoveItemInVector(std::vector<PathNode>& vec, PathNode node);
 
 	// Utility: Get node in vector 
-	PathNode GetItemInVector(std::vector<PathNode>& vec, iPoint nodePos);
+	PathNode GetItemInVector(std::vector<PathNode> vec, iPoint nodePos);
 
 	//Utility: Quicksort for vector
 	void VectorQuicksort(std::vector<PathNode>& vec,int L,int R);

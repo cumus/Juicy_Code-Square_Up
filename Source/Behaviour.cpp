@@ -102,7 +102,7 @@ void B_Movable::Update()
 	if (move)
 	{
 		vec pos = game_object->GetTransform()->GetGlobalPosition();
-		fPoint tilePos = { pos.x, pos.y };
+		iPoint tilePos = { int(pos.x), int(pos.y) };
 
 		if (nextTile.x > tilePos.x) 
 		{

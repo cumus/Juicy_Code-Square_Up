@@ -106,19 +106,11 @@ bool Scene::Update()
 
 	}
 
-	/*if (App->input->GetKey(SDL_SCANCODE_Z) == KEY_DOWN)
-	{		
-		std::pair<int, int> mouseOnMap = Map::WorldToTileBase(x + cam.x, y + cam.y);
-		startPath = iPoint(mouseOnMap.first, mouseOnMap.second);
-		path = App->pathfinding.CreatePath(startPath, destinationPath);
-	}*/
-
 	if (App->input->GetKey(SDL_SCANCODE_X) == KEY_DOWN)
 	{
 		std::pair<int, int> mouseOnMap = Map::WorldToTileBase(x + cam.x, y + cam.y);
 		destinationPath = iPoint(mouseOnMap.first, mouseOnMap.second);
 		path = App->pathfinding.CreatePath(startPath, destinationPath,0);
-		if (path != nullptr) LOG("Path length: %d", path->size());
 	}
 
 	if (App->input->GetKey(SDL_SCANCODE_C) == KEY_DOWN)
@@ -126,7 +118,6 @@ bool Scene::Update()
 		std::pair<int, int> mouseOnMap = Map::WorldToTileBase(x + cam.x, y + cam.y);
 		destinationPath = iPoint(mouseOnMap.first, mouseOnMap.second);
 		path = App->pathfinding.CreatePath(startPath, destinationPath,1);
-		if (path != nullptr) LOG("Path length: %d", path->size());
 	}
 
 	if (App->input->GetKey(SDL_SCANCODE_V) == KEY_DOWN)
@@ -134,7 +125,6 @@ bool Scene::Update()
 		std::pair<int, int> mouseOnMap = Map::WorldToTileBase(x + cam.x, y + cam.y);
 		destinationPath = iPoint(mouseOnMap.first, mouseOnMap.second);
 		path = App->pathfinding.CreatePath(startPath, destinationPath,2);
-		if(path != nullptr) LOG("Path length: %d", path->size());
 	}
 
 	if (App->input->GetKey(SDL_SCANCODE_Z) == KEY_DOWN)
