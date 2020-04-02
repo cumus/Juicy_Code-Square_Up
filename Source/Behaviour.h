@@ -30,7 +30,7 @@ enum UnitType
 
 enum BuildingState
 {
-	GOOD,
+	FULL,
 	HALF,
 	DESTROYED
 };
@@ -86,6 +86,7 @@ public:
 	void Init(int life, int damage, bool attackUnits, UnitType type);	
 	void GotDamaged(int dmg);
 	void Repair(int heal);
+	void CheckState();
 	virtual void SetTexture() {}
 	virtual void CheckSprite() {}
 	virtual void BuildingAction() {}
@@ -93,7 +94,6 @@ public:
 public:
 	BuildingState currentState;
 	int textureID;
-	bool isDestroyed;
 	Sprite* building;
 };
 

@@ -140,6 +140,9 @@ void B_Movable::Update()
 	}	
 }
 
+///////////////////////////
+// BUILDING BEHAVIOUR
+///////////////////////////
 
 void B_Building::Init(int life, int dmg, bool attackUnits, UnitType type)
 {
@@ -147,25 +150,37 @@ void B_Building::Init(int life, int dmg, bool attackUnits, UnitType type)
 	damage = dmg;
 	canAttackUnits = attackUnits;
 	this->unit = type;
-	isDestroyed = false;
+	currentState = FULL;
+	CheckSprite();
 }
 
 void B_Building::GotDamaged(int dmg)
 {
-	if (!isDestroyed)
+	if (currentState != DESTROYED)
 	{
 		currentLife -= dmg;
-		if (currentLife <= 0) { isDestroyed = true; }
-		CheckSprite();
+		CheckState();
 	}
 }
 
 void B_Building::Repair(int heal)
 {
-	if (!isDestroyed)
+	if (currentState != DESTROYED)
 	{
 		currentLife += heal;
 		if (currentLife > startingLife) { currentLife = startingLife; }
-		CheckSprite();
+		CheckState();
 	}
+}
+
+void B_Building::CheckState()
+{
+	if (currentLife < (startingLife / 2))
+	{
+		if (currentLife > 0) currentState = HALF;
+		else currentState = DESTROYED;
+	}
+	else currentState = FULL;
+	
+	CheckSprite();
 }

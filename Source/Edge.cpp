@@ -18,12 +18,18 @@ void Edge::SetTexture()
 
 void Edge::CheckSprite()
 {
-	if (currentLife < (startingLife / 2))
+	switch (currentState)
 	{
-		if (currentLife > 0) building->section = { 0, 0, 64, 64 };		
-		else building->section = { 64, 0, 64, 64 };		
+		case FULL:
+			building->section = { 128, 0, 64, 64 };
+			break;
+		case HALF:
+			building->section = { 0, 0, 64, 64 };
+			break;
+		case DESTROYED:
+			building->section = { 64, 0, 64, 64 };
+			break;
 	}
-	else building->section = { 128, 0, 64, 64 };
 }
 
 void Edge::BuildingAction()
