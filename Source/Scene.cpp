@@ -322,7 +322,7 @@ bool Scene::LoadMainScene()
 bool Scene::LoadIntroScene()
 {
 	// Play sample track
-	int id = App->audio->LoadFx("audio/Effects/Intro/soda-open-and-pour.ogg");
+	int id = App->audio->LoadFx("audio/Effects/Intro/soda-open-and-pour-left-right.wav");
 	bool ret = App->audio->PlayFx(-1, id, 0);
 
 	// Remove fps cap
