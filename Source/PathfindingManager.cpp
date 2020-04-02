@@ -206,6 +206,17 @@ UncompletedPath* PathfindingManager::GetToDoPath(double ID)
 void PathfindingManager::SetWalkabilityLayer(const MapLayer& layer)
 {
 	map = layer;
+	std::vector<bool> vec(map.height);
+	walkabilityMap.resize(map.width);
+	for (int x = 0; x < map.width; x++)
+	{
+		walkabilityMap[x] = vec;
+		for (int y = 0; y< map.height; y++)
+		{
+			iPoint point(x,y);
+			walkabilityMap[x][y] = IsWalkable(point);
+		}
+	}
 }
 
 // Utility: return true if pos is inside the map boundaries
@@ -235,6 +246,18 @@ bool PathfindingManager::GetTileAt(iPoint& pos)
 	//if (map.GetID(pos.x,pos.y) == 22 || map.GetID(pos.x, pos.y) == 23) ret = false;
 	if (map.GetID(pos.x, pos.y) == 0) ret = true;
 	return ret;
+}
+
+//Utility: Return true if tile is valid
+bool PathfindingManager::ValidTile(int x, int y)
+{
+	return walkabilityMap[x][y];
+}
+
+//Utility: Sets tile walkability
+void PathfindingManager::SetWalkabilityTile(int x, int y, bool estate)
+{
+	walkabilityMap[x][y] = estate;
 }
 
 //Utility: Returns boolean if found item
@@ -279,56 +302,56 @@ std::vector<PathNode> PathNode::FindWalkableAdjacents()
 
 	// north
 	cell.create(pos.x, pos.y + 1);
-	if (App->pathfinding.IsWalkable(cell))
+	if (App->pathfinding.ValidTile(cell.x, cell.y))
 	{
 		list.push_back(PathNode(cell, this->pos));
 	}
 
 	// south
 	cell.create(pos.x, pos.y - 1);
-	if (App->pathfinding.IsWalkable(cell))
+	if (App->pathfinding.ValidTile(cell.x, cell.y))
 	{
 		list.push_back(PathNode(cell, this->pos));
 	}
 
 	// east
 	cell.create(pos.x + 1, pos.y);
-	if (App->pathfinding.IsWalkable(cell))
+	if (App->pathfinding.ValidTile(cell.x, cell.y))
 	{
 		list.push_back(PathNode(cell, this->pos));
 	}
 
 	// west
 	cell.create(pos.x - 1, pos.y);
-	if (App->pathfinding.IsWalkable(cell))
+	if (App->pathfinding.ValidTile(cell.x, cell.y))
 	{
 		list.push_back(PathNode(cell, this->pos));
 	}
 
 	// north-east
 	cell.create(pos.x+1, pos.y + 1);
-	if (App->pathfinding.IsWalkable(cell))
+	if (App->pathfinding.ValidTile(cell.x, cell.y))
 	{
 		list.push_back(PathNode(cell, this->pos));
 	}
 
 	// north-west
 	cell.create(pos.x-1, pos.y + 1);
-	if (App->pathfinding.IsWalkable(cell))
+	if (App->pathfinding.ValidTile(cell.x, cell.y))
 	{
 		list.push_back(PathNode(cell, this->pos));
 	}
 
 	// sud-east
 	cell.create(pos.x + 1, pos.y-1);
-	if (App->pathfinding.IsWalkable(cell))
+	if (App->pathfinding.ValidTile(cell.x,cell.y))
 	{
 		list.push_back(PathNode(cell, this->pos));
 	}
 
 	// sud-west
 	cell.create(pos.x - 1, pos.y-1);
-	if (App->pathfinding.IsWalkable(cell))
+	if (App->pathfinding.ValidTile(cell.x,cell.y))
 	{
 		list.push_back(PathNode(cell, this->pos));
 	}
@@ -458,7 +481,7 @@ std::vector<iPoint> * PathfindingManager::CreatePath(iPoint& origin, iPoint& des
 	std::vector<iPoint>* pathPointer = nullptr;
 	std::vector<iPoint> finalPath;
 	
-	if (IsWalkable(destination))
+	if (ValidTile(destination.x,destination.y))
 	{
 		PathNode originNode(origin, nullPoint);
 		originNode.g = 0;
@@ -484,7 +507,7 @@ std::vector<iPoint> * PathfindingManager::CreatePath(iPoint& origin, iPoint& des
 	}
 
 	return pathPointer;
-	/*if (IsWalkable(destination))
+	/*if (ValidTile(destination.x,destination.y))
 	{
 		int loops = 0;
 		std::vector<PathNode> openList, closedList;

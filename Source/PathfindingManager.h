@@ -79,6 +79,12 @@ public:
 	// Utility: return the walkability value of a tile
 	bool GetTileAt( iPoint& pos);
 
+	//Utility: Return true if tile is valid
+	bool ValidTile(int x, int y);
+
+	//Utility: Sets tile walkability
+	void SetWalkabilityTile(int x,int y,bool estate);
+
 	//Utility: Find node in vector and returns boolean
 	bool FindItemInVector(std::vector<PathNode> vec,PathNode node);
 
@@ -133,6 +139,7 @@ private:
 	int unitDebugID;
 	MapLayer map;
 	iPoint nullPoint = iPoint({ -1,-1 });
+	std::vector<std::vector<bool> > walkabilityMap;
 	std::map<double, std::vector<iPoint>> storedPaths; //Stores all generated paths by units
 	std::map<double, UncompletedPath> toDoPaths; //Stores pending path for each id
 };
