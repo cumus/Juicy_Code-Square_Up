@@ -136,6 +136,9 @@
     <ClCompile Include="Canvas.cpp">
       <Filter>Source\Gameobjects\Components\UI</Filter>
     </ClCompile>
+    <ClCompile Include="Edge.cpp">
+      <Filter>Source\Gameobjects</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="PugiXml\src\pugiconfig.hpp">
@@ -305,6 +308,9 @@
     </ClInclude>
     <ClInclude Include="Canvas.h">
       <Filter>Source\Gameobjects\Components\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Edge.h">
+      <Filter>Source\Gameobjects</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

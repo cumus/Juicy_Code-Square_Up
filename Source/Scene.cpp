@@ -16,6 +16,7 @@
 #include "Log.h"
 #include "PathfindingManager.h"
 #include "Point.h"
+#include "Edge.h"
 
 #include "SDL/include/SDL_scancode.h"
 #include "optick-1.3.0.0/include/optick.h"
@@ -104,6 +105,30 @@ bool Scene::Update()
 		s3->tex_id = id_mouse_tex;
 		s3->section = { 64, 0, 64, 64 };
 
+	}
+
+	if (App->input->GetKey(SDL_SCANCODE_5) == KEY_DOWN) //Edge
+	{
+		std::pair<int, int> position = Map::WorldToTileBase(float(x + cam.x), float(y + cam.y));
+
+		Gameobject* edgeNode = AddGameobject("Edge resource node", &root);
+		edgeNode->GetTransform()->SetLocalPos({ float(position.first), float(position.second), 0.0f });
+
+		/*new B_Building(edgeNode);
+		new Edge(edgeNode);	
+		Edge node(edgeNode); 
+		node.Init(20, 0, false, RESOURCE);
+		node.SetTexture();
+		std::map<double, Edge>::iterator it;
+		it = edgeNodes.find(node.GetID());
+
+		if (it != edgeNodes.end()) edgeNodes[node.GetID()] = node;
+		else edgeNodes.insert(std::pair<double, Edge>(node.GetID(), node));*/
+	}
+
+	if (App->input->GetKey(SDL_SCANCODE_0) == KEY_DOWN) //Edge
+	{
+		//if(!edgeNodes.empty()) edgeNodes[0].GotDamaged(6);
 	}
 
 	if (App->input->GetKey(SDL_SCANCODE_X) == KEY_DOWN)

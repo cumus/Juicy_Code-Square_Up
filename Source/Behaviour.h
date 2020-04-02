@@ -3,6 +3,7 @@
 
 #include "Component.h"
 #include "PathfindingManager.h"
+#include "Sprite.h"
 
 //Unit types
 enum UnitType
@@ -27,6 +28,12 @@ enum UnitType
 	IA_SPAWN
 };
 
+enum BuildingState
+{
+	GOOD,
+	HALF,
+	DESTROYED
+};
 
 class Gameobject;
 
@@ -38,13 +45,13 @@ public:
 	virtual ~Behaviour() {}
 
 public:
-	double ID=0;
-	int startingLife = 10;//Temporal value
-	int currentLife=startingLife;
-	int damage = 5;//Temporal value
-	bool selected = false;
-	bool canAttackUnits = true; //For gatherer set false
-	UnitType type = UNKNOWN;
+	double ID;
+	int startingLife;
+	int currentLife;
+	int damage;
+	bool selected;
+	bool canAttackUnits; //For gatherer set false and non defensive structures
+	UnitType unit;
 };
 
 class B_Movable: public Behaviour
@@ -61,9 +68,7 @@ public:
 	
 	float speed = 2;
 	float aux_speed = speed;
-	//float angle;
 	std::vector<iPoint>* path = nullptr;
-	//float range;
 
 	iPoint nextTile;
 	bool next = false;
@@ -73,15 +78,23 @@ public:
 };
 
 class B_Building : public Behaviour
-{
+{	
 public:
 
 	B_Building(Gameobject* go, ComponentType type = B_BUILDING) : Behaviour(go, type) {}
 	virtual ~B_Building() {}
-
+	void Init(int life, int damage, bool attackUnits, UnitType type);	
+	void GotDamaged(int dmg);
+	void Repair(int heal);
+	virtual void SetTexture() {}
+	virtual void CheckSprite() {}
+	virtual void BuildingAction() {}
 	
 public:
-
+	BuildingState currentState;
+	int textureID;
+	bool isDestroyed;
+	Sprite* building;
 };
 
 class B_Unit : public B_Movable
@@ -93,7 +106,7 @@ public:
 
 
 public:
-
+	int textureID;
 };
 
 

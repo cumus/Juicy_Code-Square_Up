@@ -149,6 +149,7 @@
     <ClCompile Include="ConfigWindow.cpp" />
     <ClCompile Include="ConsoleWindow.cpp" />
     <ClCompile Include="Cvar.cpp" />
+    <ClCompile Include="Edge.cpp" />
     <ClCompile Include="Editor.cpp" />
     <ClCompile Include="EditorWindow.cpp" />
     <ClCompile Include="Event.cpp" />
@@ -197,6 +198,7 @@
     <ClInclude Include="ConfigWindow.h" />
     <ClInclude Include="ConsoleWindow.h" />
     <ClInclude Include="Cvar.h" />
+    <ClInclude Include="Edge.h" />
     <ClInclude Include="Editor.h" />
     <ClInclude Include="EditorWindow.h" />
     <ClInclude Include="Event.h" />

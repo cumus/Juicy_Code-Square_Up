@@ -8,7 +8,15 @@
 
 
 Behaviour::Behaviour(Gameobject* go, ComponentType type) : Component(type, go),ID(GetID())
-{}
+{
+	ID = 0;
+	startingLife = 10;
+	currentLife = startingLife;
+	damage = 1;
+	selected = false;
+	canAttackUnits = true;
+	unit = UNKNOWN;
+}
 
 
 void B_Movable::RecieveEvent(const Event& e)
@@ -106,28 +114,58 @@ void B_Movable::Update()
 
 		if (nextTile.x > tilePos.x) 
 		{
-			//game_object->GetTransform()->MoveX(+speed * App->time.GetGameDeltaTime());
-			game_object->GetTransform()->MoveX(+speed * App->time.GetDeltaTime());
+			game_object->GetTransform()->MoveX(+speed * App->time.GetGameDeltaTime());
+			//game_object->GetTransform()->MoveX(+speed * App->time.GetDeltaTime());
 			positiveX = true;
 		}
 		else
 		{
-			//game_object->GetTransform()->MoveX(-speed * App->time.GetGameDeltaTime());
-			game_object->GetTransform()->MoveX(-speed * App->time.GetDeltaTime());
+			game_object->GetTransform()->MoveX(-speed * App->time.GetGameDeltaTime());
+			//game_object->GetTransform()->MoveX(-speed * App->time.GetDeltaTime());
 			positiveX = false;			
 		}				
 
 		if (nextTile.y > tilePos.y) 
 		{
-			//game_object->GetTransform()->MoveY(+speed * App->time.GetGameDeltaTime());
-			game_object->GetTransform()->MoveY(+speed * App->time.GetDeltaTime());
+			game_object->GetTransform()->MoveY(+speed * App->time.GetGameDeltaTime());
+			//game_object->GetTransform()->MoveY(+speed * App->time.GetDeltaTime());
 			positiveY = true;
 		}
 		else
 		{
-			//game_object->GetTransform()->MoveY(-speed * App->time.GetGameDeltaTime());
-			game_object->GetTransform()->MoveY(-speed * App->time.GetDeltaTime());
+			game_object->GetTransform()->MoveY(-speed * App->time.GetGameDeltaTime());
+			//game_object->GetTransform()->MoveY(-speed * App->time.GetDeltaTime());
 			positiveY = false;
 		}	
 	}	
+}
+
+
+void B_Building::Init(int life, int dmg, bool attackUnits, UnitType type)
+{
+	startingLife = life;
+	damage = dmg;
+	canAttackUnits = attackUnits;
+	this->unit = type;
+	isDestroyed = false;
+}
+
+void B_Building::GotDamaged(int dmg)
+{
+	if (!isDestroyed)
+	{
+		currentLife -= dmg;
+		if (currentLife <= 0) { isDestroyed = true; }
+		CheckSprite();
+	}
+}
+
+void B_Building::Repair(int heal)
+{
+	if (!isDestroyed)
+	{
+		currentLife += heal;
+		if (currentLife > startingLife) { currentLife = startingLife; }
+		CheckSprite();
+	}
 }
