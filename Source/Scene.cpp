@@ -322,10 +322,32 @@ bool Scene::LoadMainScene()
 bool Scene::LoadIntroScene()
 {
 	// Play sample track
-	bool ret = App->audio->PlayMusic("/audio/Effects/Intro/soda-open-and-pour.ogg");
+	int id = App->audio->LoadFx("audio/Effects/Intro/soda-open-and-pour.ogg");
+	bool ret = App->audio->PlayFx(-1, id, 0);
 
 	// Remove fps cap
-	App->time.SetMaxFPS(60);
+	// App->time.SetMaxFPS(60);
+
+	// Add a canvas
+	Gameobject* canvas_go = AddGameobject("Canvas", &root);
+	C_Canvas* canv = new C_Canvas(canvas_go);
+	canv->target = { 0.f, 0.f, 1.f, 1.f };
+
+	Gameobject* background_go = AddGameobject("Background", canvas_go);
+
+	C_Image* background = new C_Image(background_go);
+	background->target = { 1.f, 1.f, 1.f, 1.f };
+	background->offset = { -1920.f, -1080.f };
+	background->section = { 0, 0, 1920, 1080 };
+	background->tex_id = App->tex.Load("textures/white.png");
+	
+	Gameobject* img_go = AddGameobject("Image", canvas_go);
+
+	C_Image* img = new C_Image(img_go);
+	img->target = { 0.5f, 0.5f, 0.5f, 0.5f };
+	img->offset = { -300.f, -400.f };
+	img->section = { 0, 0, 499, 590 };
+	img->tex_id = App->tex.Load("textures/team-logo2.png");
 
 	return ret;
 }
