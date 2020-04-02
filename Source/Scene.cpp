@@ -367,10 +367,12 @@ bool Scene::LoadMenuScene()
 	// Remove fps cap
 	// App->time.SetMaxFPS(60);
 
-	// Add a canvas
+	//------------------------- CANVAS --------------------------------------
 	Gameobject* canvas_go = AddGameobject("Canvas", &root);
 	C_Canvas* canv = new C_Canvas(canvas_go);
 	canv->target = { 0.f, 0.f, 1.f, 1.f };
+
+	//------------------------- BACKGROUND --------------------------------------
 
 	Gameobject* background_go = AddGameobject("Background", canvas_go);
 
@@ -379,6 +381,8 @@ bool Scene::LoadMenuScene()
 	background->offset = { -1920.f, -1080.f };
 	background->section = { 0, 0, 1920, 1080 };
 	background->tex_id = App->tex.Load("textures/white.png");
+
+	//------------------------- LOGO --------------------------------------
 
 	Gameobject* g_logo_go = AddGameobject("Game logo", canvas_go);
 
@@ -389,12 +393,22 @@ bool Scene::LoadMenuScene()
 	g_logo->tex_id = App->tex.Load("textures/game-logo.png");
 
 	Gameobject* start_go = AddGameobject("Start Button", canvas_go);
-
-	C_Button* start = new C_Button(start_go, Event(REQUEST_QUIT, App));
+	
+	//------------------------- START --------------------------------------
+	
+	C_Button* start = new C_Button(start_go, Event(SCENE_CHANGE, this, MAIN));
 	start->target = { 0.5f, 0.5f, 0.5f, 0.5f };
 	start->offset = { -525.f, -100.f };
 	start->section = { 0, 0, 1070, 207 };
 	start->tex_id = App->tex.Load("textures/button.png");
+
+	Gameobject* start_txt_go = AddGameobject("Start Button", start_go);
+	
+	C_Text* start_txt = new C_Text(start_txt_go, "PLAY");
+	start_txt->target = { 0.48f, 0.45f, 4.f, 4.f };
+	start_txt->scale_to_fit = true;
+
+	//------------------------- QUIT --------------------------------------
 
 	Gameobject* quit_go = AddGameobject("Quit Button", canvas_go);
 
@@ -403,6 +417,12 @@ bool Scene::LoadMenuScene()
 	quit->offset = { -525.f, 200.f };
 	quit->section = { 0, 0, 1070, 207 };
 	quit->tex_id = App->tex.Load("textures/button.png");
+
+	Gameobject* quit_txt_go = AddGameobject("Start Button", quit_go);
+
+	C_Text* quit_txt = new C_Text(quit_txt_go, "QUIT");
+	quit_txt->target = { 0.48f, 0.45f, 1.f, 1.f };
+	quit_txt->scale_to_fit = true;
 
 	return ret;
 }
