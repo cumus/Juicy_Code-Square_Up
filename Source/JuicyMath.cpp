@@ -30,7 +30,7 @@ float JMath::TriangleArea(const std::pair<float, float> a, const std::pair<float
 bool JMath::PointInsideTriangle(const std::pair<float, float> p, const std::pair<float, float> a, const std::pair<float, float> b, const std::pair<float, float> c)
 {
 	float abc = TriangleArea(a, b, c);
-	float pbc = TriangleArea(p, c, b);
+	float pbc = TriangleArea(p, b, c);
 	float apc = TriangleArea(a, p, c);
 	float abp = TriangleArea(a, b, p);
 

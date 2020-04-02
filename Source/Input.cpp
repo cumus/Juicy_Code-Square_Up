@@ -2,6 +2,7 @@
 #include "Event.h"
 #include "Application.h"
 #include "Window.h"
+#include "Render.h"
 #include "Defs.h"
 #include "Log.h"
 
@@ -192,8 +193,9 @@ KeyState Input::GetMouseButtonDown(int id) const
 
 void Input::GetMousePosition(int& x, int& y) const
 {
-	x = mouse_x;
-	y = mouse_y;
+	std::pair<int, int> offset = App->render->GetViewPortOffset();
+	x = mouse_x - offset.first;
+	y = mouse_y - offset.second;
 }
 
 void Input::GetMouseMotion(int& x, int& y) const

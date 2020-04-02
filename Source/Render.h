@@ -50,8 +50,9 @@ public:
 	float GetZoom() const;
 
 	// Viewport
-	void SetViewPort(const SDL_Rect& rect);
+	void SetupViewPort(float aspect_ratio);
 	void ResetViewPort();
+	std::pair<int, int> GetViewPortOffset();
 	static std::pair<float, float> GetResRatio();
 
 	// Blit

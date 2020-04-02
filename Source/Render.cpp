@@ -66,20 +66,16 @@ bool Render::Init()
 	renderer = SDL_CreateRenderer(App->win->GetWindow(), -1, flags);
 	if (renderer)
 	{
-		SDL_RenderGetViewport(renderer, &viewport);
-
 		// Add alpha blending
 		if (SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND) == 0)
 		{
 			// Get render drawing color
 			if (SDL_GetRenderDrawColor(renderer, &draw_color.r, &draw_color.g, &draw_color.b, &draw_color.a) == 0)
 			{
-				// Setup camera from viewport
-				cam.x = cam.y = 0;
-				cam.w = float(viewport.w);
-				cam.h = float(viewport.h);
-
-				res_ratio = { cam.w / target_res.first, cam.h / target_res.second };
+				// Setup camera & viewport
+				SDL_RenderGetViewport(renderer, &viewport);
+				cam = { 0.f, 0.f, float(viewport.w), float(viewport.h) };
+				SetupViewPort(16.0f/9.0f);
 
 				ret = true;
 			}
@@ -256,7 +252,7 @@ void Render::RecieveEvent(const Event& e)
 	{
 		cam.w = float(e.data1.AsInt());
 		cam.h = float(e.data2.AsInt());
-		res_ratio = { cam.w / target_res.first, cam.h / target_res.second };
+		SetupViewPort(16.0f / 9.0f);
 		break;
 	}
 	default:
@@ -305,14 +301,41 @@ bool Render::SetDrawColor(SDL_Color color)
 	return ret;
 }
 
-void Render::SetViewPort(const SDL_Rect& rect)
+void Render::SetupViewPort(float aspect_ratio)
 {
-	SDL_RenderSetViewport(renderer, &rect);
+	// Crop Cam's Aspect Ratio
+	float target_height = cam.w / aspect_ratio;
+	if (target_height != cam.h)
+	{
+		if (target_height > cam.h)
+		{
+			viewport = { int((cam.w - (cam.h * aspect_ratio)) * 0.5f) , 0, int(cam.h * aspect_ratio), int(cam.h) };
+			cam.w = cam.h * aspect_ratio;
+		}
+		else
+		{
+			viewport = { 0, int((cam.h - target_height) * 0.5f), int(cam.w), int(target_height) };
+			cam.h = target_height;
+		}
+	}
+	else
+	{
+		viewport = { 0, 0, int(cam.w), int(cam.h) };
+	}
+
+	// Setup Viewport
+	SDL_RenderSetViewport(renderer, &viewport);
+	res_ratio = { cam.w / target_res.first, cam.h / target_res.second };
 }
 
 void Render::ResetViewPort()
 {
 	SDL_RenderSetViewport(renderer, &viewport);
+}
+
+std::pair<int, int> Render::GetViewPortOffset()
+{
+	return { viewport.x, viewport.y };
 }
 
 std::pair<float, float> Render::GetResRatio()
