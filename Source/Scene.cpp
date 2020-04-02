@@ -128,6 +128,12 @@ bool Scene::Update()
 
 	if (App->input->GetKey(SDL_SCANCODE_0) == KEY_DOWN) //Edge
 	{
+		if (!edgeNodes.empty())
+		{
+			//TODO: Solve Edge component constructor 
+			//Event::Push(GET_DAMAGE, &edgeNodes[0], 6);
+			LOG("Event triggered");
+		}
 		//if(!edgeNodes.empty()) edgeNodes[0].GotDamaged(6);
 	}
 

@@ -2,6 +2,10 @@
 #define __EDGE_H__
 
 #include "Behaviour.h"
+#include "Gameobject.h"
+#include "Component.h"
+
+//class Gameobject;
 
 class Edge : public B_Building
 {

@@ -56,6 +56,9 @@ enum EventType
 	// Renderer
 	SET_VSYNC,
 
+	//Behaviour
+	GET_DAMAGE,
+
 	MAX_EVENT_TYPES
 };
 

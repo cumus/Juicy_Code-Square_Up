@@ -7,9 +7,9 @@
 
 
 
-Behaviour::Behaviour(Gameobject* go, ComponentType type) : Component(type, go),ID(GetID())
+Behaviour::Behaviour(Gameobject* go, ComponentType type) : Component(type, go)
 {
-	ID = 0;
+	ID = GetID();
 	startingLife = 10;
 	currentLife = startingLife;
 	damage = 1;
@@ -144,6 +144,7 @@ void B_Movable::Update()
 // BUILDING BEHAVIOUR
 ///////////////////////////
 
+
 void B_Building::Init(int life, int dmg, bool attackUnits, UnitType type)
 {
 	startingLife = life;
@@ -154,12 +155,15 @@ void B_Building::Init(int life, int dmg, bool attackUnits, UnitType type)
 	CheckSprite();
 }
 
-void B_Building::GotDamaged(int dmg)
+void B_Building::GotDamaged(const Event& e)
 {
-	if (currentState != DESTROYED)
+	if (e.type == GET_DAMAGE)
 	{
-		currentLife -= dmg;
-		CheckState();
+		if (currentState != DESTROYED)
+		{
+			currentLife -= e.data1.AsInt();
+			CheckState();
+		}
 	}
 }
 
@@ -184,3 +188,9 @@ void B_Building::CheckState()
 	
 	CheckSprite();
 }
+
+
+
+///////////////////////////
+// UNIT BEHAVIOUR
+///////////////////////////
