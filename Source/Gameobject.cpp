@@ -193,6 +193,13 @@ void Gameobject::RecieveEvent(const Event & e)
 		break;
 
 	}
+	case GET_DAMAGE:
+	{
+		for (std::vector<Component*>::iterator component = components.begin(); component != components.end(); ++component)
+			if ((*component)->IsActive())
+				Event::Push(GET_DAMAGE, *component, Cvar(e.data1));
+		break;
+	}
 	}
 }
 
@@ -255,6 +262,54 @@ const B_Movable* Gameobject::GetBMovable() const
 	for (std::vector<Component*>::const_iterator it = components.begin(); it != components.end(); ++it)
 		if ((*it)->GetType() == B_MOVABLE)
 			return (*it)->AsBMovable();
+
+	return nullptr;
+}
+
+B_Building* Gameobject::GetBBuilding()
+{
+	if (bBuilding != nullptr)
+		return bBuilding;
+
+	for (std::vector<Component*>::iterator it = components.begin(); it != components.end(); ++it)
+		if ((*it)->GetType() == B_BUILDING)
+			return bBuilding = (*it)->AsBBuilding();
+
+	return nullptr;
+}
+
+const B_Building* Gameobject::GetBBuilding() const
+{
+	if (bBuilding != nullptr)
+		return bBuilding;
+
+	for (std::vector<Component*>::const_iterator it = components.begin(); it != components.end(); ++it)
+		if ((*it)->GetType() == B_BUILDING)
+			return (*it)->AsBBuilding();
+
+	return nullptr;
+}
+
+Edge* Gameobject::GetEdgeNode()
+{
+	if (edgeNode != nullptr)
+		return edgeNode;
+
+	for (std::vector<Component*>::iterator it = components.begin(); it != components.end(); ++it)
+		if ((*it)->GetType() == EDGE)
+			return edgeNode = (*it)->AsEdge();
+
+	return nullptr;
+}
+
+const Edge* Gameobject::GetEdgeNode() const
+{
+	if (edgeNode != nullptr)
+		return edgeNode;
+
+	for (std::vector<Component*>::const_iterator it = components.begin(); it != components.end(); ++it)
+		if ((*it)->GetType() == EDGE)
+			return (*it)->AsEdge();
 
 	return nullptr;
 }

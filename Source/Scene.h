@@ -54,7 +54,7 @@ public:
 	iPoint startPath = iPoint({ 16,7 }); //Temporal
 	iPoint destinationPath;
 	std::vector<iPoint>* path = nullptr;
-	std::map<double,Edge> edgeNodes;
+	std::map<double,Edge*> edgeNodes;
 
 private:
 

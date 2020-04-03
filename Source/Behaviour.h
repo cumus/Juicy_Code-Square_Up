@@ -30,6 +30,7 @@ enum UnitType
 
 enum BuildingState
 {
+	BUILDING,
 	FULL,
 	HALF,
 	DESTROYED
@@ -82,7 +83,7 @@ public:
 	B_Building(Gameobject* go, ComponentType type = B_BUILDING) : Behaviour(go, type) {}
 	virtual ~B_Building() {}
 	void Init(int life, int damage, bool attackUnits, UnitType type);	
-	void GotDamaged(const Event& e);
+	void GotDamaged(int dmg);
 	void Repair(int heal);
 	void CheckState();
 	virtual void SetTexture() {}

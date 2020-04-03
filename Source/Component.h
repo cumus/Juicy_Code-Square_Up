@@ -18,17 +18,25 @@ enum ComponentType
 	UI_BUTTON,
 	UI_MAX,
 
-	// Units
+	// Behaviours
 	BEHAVIOUR,
 	B_MOVABLE,
 	B_BUILDING,
-	B_UNIT
+	B_UNIT,
+
+	//Units
+
+
+	//Structures
+	EDGE
 };
 
 class Transform;
 class Gameobject;
 class B_Unit;
 class B_Movable;
+class B_Building;
+class Edge;
 class UI_Component;
 
 class Component : public EventListener
@@ -51,7 +59,10 @@ public:
 	Transform* AsTransform() const { return (Transform*)this; }
 	B_Unit* AsBUnit() const { return (B_Unit*)this; }
 	B_Movable* AsBMovable() const { return (B_Movable*)this; }
+	B_Building* AsBBuilding() const { return (B_Building*)this; }
+	Edge* AsEdge() const { return (Edge*)this; }
 	UI_Component* AsUIComp() const { return (UI_Component*)this; }
+	Gameobject* GetGameobject() const { return game_object;	}
 
 	double GetID() const { return id; }
 

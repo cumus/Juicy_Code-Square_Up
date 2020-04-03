@@ -258,6 +258,7 @@ bool PathfindingManager::ValidTile(int x, int y)
 void PathfindingManager::SetWalkabilityTile(int x, int y, bool estate)
 {
 	walkabilityMap[x][y] = estate;
+	//LOG("Changed tile estate");
 }
 
 //Utility: Returns boolean if found item

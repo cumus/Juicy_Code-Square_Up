@@ -155,15 +155,12 @@ void B_Building::Init(int life, int dmg, bool attackUnits, UnitType type)
 	CheckSprite();
 }
 
-void B_Building::GotDamaged(const Event& e)
+void B_Building::GotDamaged(int dmg)
 {
-	if (e.type == GET_DAMAGE)
+	if (currentState != DESTROYED)
 	{
-		if (currentState != DESTROYED)
-		{
-			currentLife -= e.data1.AsInt();
-			CheckState();
-		}
+		currentLife -= dmg;
+		CheckState();
 	}
 }
 
@@ -185,7 +182,7 @@ void B_Building::CheckState()
 		else currentState = DESTROYED;
 	}
 	else currentState = FULL;
-	
+	LOG("State: %d", currentState);
 	CheckSprite();
 }
 
@@ -194,3 +191,4 @@ void B_Building::CheckState()
 ///////////////////////////
 // UNIT BEHAVIOUR
 ///////////////////////////
+

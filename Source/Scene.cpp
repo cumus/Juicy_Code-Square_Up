@@ -113,28 +113,24 @@ bool Scene::Update()
 
 		Gameobject* edgeNode = AddGameobject("Edge resource node", &root);
 		edgeNode->GetTransform()->SetLocalPos({ float(position.first), float(position.second), 0.0f });
+	
+		Edge* node = new Edge(edgeNode); 
+		node->Init(20, 0, false, RESOURCE);
+		node->SetTexture();
+		std::map<double, Edge*>::iterator it;
+		it = edgeNodes.find(node->GetID());
 
-		/*new B_Building(edgeNode);
-		new Edge(edgeNode);	
-		Edge node(edgeNode); 
-		node.Init(20, 0, false, RESOURCE);
-		node.SetTexture();
-		std::map<double, Edge>::iterator it;
-		it = edgeNodes.find(node.GetID());
-
-		if (it != edgeNodes.end()) edgeNodes[node.GetID()] = node;
-		else edgeNodes.insert(std::pair<double, Edge>(node.GetID(), node));*/
+		if (it != edgeNodes.end()) edgeNodes[node->GetID()] = node;
+		else edgeNodes.insert(std::pair<double, Edge*>(node->GetID(), node));
 	}
 
 	if (App->input->GetKey(SDL_SCANCODE_0) == KEY_DOWN) //Edge
 	{
 		if (!edgeNodes.empty())
 		{
-			//TODO: Solve Edge component constructor 
-			//Event::Push(GET_DAMAGE, &edgeNodes[0], 6);
-			LOG("Event triggered");
+			Event::Push(GET_DAMAGE, edgeNodes.begin()->second->GetGameobject(), 6);
+			//LOG("Event triggered");
 		}
-		//if(!edgeNodes.empty()) edgeNodes[0].GotDamaged(6);
 	}
 
 	if (App->input->GetKey(SDL_SCANCODE_X) == KEY_DOWN)

@@ -36,6 +36,12 @@ public:
 	B_Movable* GetBMovable();
 	const B_Movable* GetBMovable() const;
 
+	B_Building* GetBBuilding();
+	const B_Building* GetBBuilding() const;
+
+	Edge* GetEdgeNode();
+	const Edge* GetEdgeNode() const;
+
 	void RecursiveFillHierarchy(float deepness, std::vector<std::pair<float, Gameobject*>>& container);
 	std::vector<Gameobject*>& GetChilds();
 
@@ -71,6 +77,8 @@ private:
 	Transform* transform = nullptr;
 	B_Unit* bunit = nullptr;
 	B_Movable* bMovable = nullptr;
+	B_Building* bBuilding = nullptr;
+	Edge* edgeNode = nullptr;
 };
 
 #endif // __GAMEOBJECT_H__
