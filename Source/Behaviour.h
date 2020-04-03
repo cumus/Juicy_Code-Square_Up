@@ -43,6 +43,9 @@ class Behaviour : public Component
 public:
 	Behaviour(Gameobject* go, ComponentType type = BEHAVIOUR);
 	virtual ~Behaviour() {}
+	void DeleteObject(float time=1);
+	void Update() override;
+	virtual void FreeWalkability() {}
 
 public:
 	double ID;
@@ -51,7 +54,9 @@ public:
 	int damage;
 	bool selected;
 	bool canAttackUnits; //For gatherer set false and non defensive structures
-	UnitType unit;
+	bool deleteGO;
+	float timeToDelete,counter;
+	UnitType unitT;
 };
 
 class B_Movable: public Behaviour

@@ -15,9 +15,32 @@ Behaviour::Behaviour(Gameobject* go, ComponentType type) : Component(type, go)
 	damage = 1;
 	selected = false;
 	canAttackUnits = true;
-	unit = UNKNOWN;
+	timeToDelete = 0;
+	counter = 0;
+	unitT = UNKNOWN;
+	deleteGO = false;
 }
 
+void Behaviour::DeleteObject(float time)
+{
+	timeToDelete = time;
+	deleteGO = true;
+}
+
+void Behaviour::Update()
+{
+	if (deleteGO)
+	{
+		counter += App->time.GetDeltaTime();
+		//counter += App->time.GetGameDeltaTime();
+		if (counter >= timeToDelete)
+		{			
+			FreeWalkability();
+			game_object->Destroy();
+			LOG("Object despawned");
+		}
+	}
+}
 
 void B_Movable::RecieveEvent(const Event& e)
 {
@@ -51,6 +74,8 @@ void B_Movable::RecieveEvent(const Event& e)
 	}
 	
 };
+
+
 
 void B_Movable::Update()
 {	
@@ -150,7 +175,7 @@ void B_Building::Init(int life, int dmg, bool attackUnits, UnitType type)
 	startingLife = life;
 	damage = dmg;
 	canAttackUnits = attackUnits;
-	this->unit = type;
+	this->unitT = type;
 	currentState = FULL;
 	CheckSprite();
 }
@@ -179,10 +204,14 @@ void B_Building::CheckState()
 	if (currentLife < (startingLife / 2))
 	{
 		if (currentLife > 0) currentState = HALF;
-		else currentState = DESTROYED;
+		else
+		{
+			currentState = DESTROYED;
+			DeleteObject(5);
+		}
 	}
 	else currentState = FULL;
-	LOG("State: %d", currentState);
+	//LOG("State: %d", currentState);
 	CheckSprite();
 }
 

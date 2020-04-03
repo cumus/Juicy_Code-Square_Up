@@ -111,26 +111,36 @@ bool Scene::Update()
 	{
 		std::pair<int, int> position = Map::WorldToTileBase(float(x + cam.x), float(y + cam.y));
 
-		Gameobject* edgeNode = AddGameobject("Edge resource node", &root);
-		edgeNode->GetTransform()->SetLocalPos({ float(position.first), float(position.second), 0.0f });
-	
-		Edge* node = new Edge(edgeNode); 
-		node->Init(20, 0, false, RESOURCE);
-		node->SetTexture();
-		std::map<double, Edge*>::iterator it;
-		it = edgeNodes.find(node->GetID());
+		if (App->pathfinding.ValidTile(position.first, position.second))
+		{
+			Gameobject* edgeNode = AddGameobject("Edge resource node", &root);
+			edgeNode->GetTransform()->SetLocalPos({ float(position.first), float(position.second), 0.0f });
 
-		if (it != edgeNodes.end()) edgeNodes[node->GetID()] = node;
-		else edgeNodes.insert(std::pair<double, Edge*>(node->GetID(), node));
+			Edge* node = new Edge(edgeNode);
+			node->Init(20, 0, false, RESOURCE);
+			node->SetTexture();
+			std::map<double, Edge*>::iterator it;
+			it = edgeNodes.find(node->GetID());
+
+			if (it != edgeNodes.end()) edgeNodes[node->GetID()] = node;
+			else edgeNodes.insert(std::pair<double, Edge*>(node->GetID(), node));
+		}
+		else LOG("Invalid spawn position");
 	}
 
 	if (App->input->GetKey(SDL_SCANCODE_0) == KEY_DOWN) //Edge
 	{
-		if (!edgeNodes.empty())
+		Gameobject* node = App->editor->selection;
+		if (node != nullptr && node->GetEdgeNode() != nullptr)
 		{
-			Event::Push(GET_DAMAGE, edgeNodes.begin()->second->GetGameobject(), 6);
-			//LOG("Event triggered");
+			Event::Push(GET_DAMAGE, node, 6);
 		}
+		/*if (!edgeNodes.empty())
+		{
+			//Event::Push(GET_DAMAGE, edgeNodes.begin()->second->GetGameobject(), 6);
+			
+			//LOG("Event triggered");
+		}*/
 	}
 
 	if (App->input->GetKey(SDL_SCANCODE_X) == KEY_DOWN)

@@ -56,3 +56,8 @@ void Edge::BuildingAction()
 {
 
 }
+
+void Edge::FreeWalkability()
+{ 
+	App->pathfinding.SetWalkabilityTile(game_object->GetTransform()->GetLocalPos().x, game_object->GetTransform()->GetLocalPos().y, true);
+}
