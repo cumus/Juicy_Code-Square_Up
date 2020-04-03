@@ -111,21 +111,27 @@ bool Scene::Update()
 	{
 		std::pair<int, int> position = Map::WorldToTileBase(float(x + cam.x), float(y + cam.y));
 
-		if (App->pathfinding.ValidTile(position.first, position.second))
-		{
-			Gameobject* edgeNode = AddGameobject("Edge resource node", &root);
-			edgeNode->GetTransform()->SetLocalPos({ float(position.first), float(position.second), 0.0f });
 
+		Gameobject* edgeNode = AddGameobject("Edge resource node", &root);		
+		edgeNode->GetTransform()->SetLocalPos({ float(position.first), float(position.second), 0.0f });
+		Transform t = *edgeNode->GetTransform();
+
+		if (App->pathfinding.CheckWalkabilityArea(t.GetLocalPos(), t.GetGlobalScale()))
+		{
 			Edge* node = new Edge(edgeNode);
 			node->Init(20, 0, false, RESOURCE);
-			node->SetTexture();
+			//node->SetTexture();
 			std::map<double, Edge*>::iterator it;
 			it = edgeNodes.find(node->GetID());
 
 			if (it != edgeNodes.end()) edgeNodes[node->GetID()] = node;
 			else edgeNodes.insert(std::pair<double, Edge*>(node->GetID(), node));
 		}
-		else LOG("Invalid spawn position");
+		else
+		{
+			LOG("Invalid spawn position");
+			edgeNode->Destroy();
+		}
 	}
 
 	if (App->input->GetKey(SDL_SCANCODE_0) == KEY_DOWN) //Edge

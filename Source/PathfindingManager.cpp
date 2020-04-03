@@ -7,6 +7,7 @@
 #include "Map.h"
 #include "Render.h"
 #include "TextureManager.h"
+#include "Vector3.h"
 
 #include <vector>
 #include <algorithm>
@@ -259,6 +260,19 @@ void PathfindingManager::SetWalkabilityTile(int x, int y, bool estate)
 {
 	walkabilityMap[x][y] = estate;
 	//LOG("Changed tile estate");
+}
+
+//Utility: Check tile area
+bool PathfindingManager::CheckWalkabilityArea(vec pos, vec scale)
+{
+	for (int a = pos.x; a < scale.x+pos.x;a++)
+	{
+		for (int b = pos.y; b < scale.y+pos.y; b++)
+		{
+			if (!ValidTile(a, b)) return false;
+		}
+	}
+	return true;
 }
 
 //Utility: Returns boolean if found item

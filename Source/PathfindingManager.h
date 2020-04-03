@@ -4,6 +4,7 @@
 
 #include "Point.h"
 #include "MapContainer.h"
+#include "Vector3.h"
 
 #include <vector>
 #include <map>
@@ -129,6 +130,9 @@ public:
 
 	//Utility: Return uncompleted path by ID
 	UncompletedPath* GetToDoPath(double ID);
+
+	//Utility: Check tile area
+	bool CheckWalkabilityArea(vec pos, vec scale);
 
 public:
 	int debugTextureID;
