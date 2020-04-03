@@ -1,0 +1,173 @@
+#include "MinimapWindow.h"
+#include "Application.h"
+#include "TextureManager.h"
+#include "UI_Image.h"
+#include "Render.h"
+#include "Scene.h"
+#include "Window.h"
+#include "Editor.h"
+#include "Map.h"
+#include "Log.h"
+
+#include <string>
+
+MinimapWindow::MinimapWindow(const RectF rect) :EditorWindow(rect)
+{
+	
+	map_texture = nullptr;
+	height = 100;
+	width = 200;
+	map_height = 200;
+	scale = 1;
+	map_width = 100;
+	margin = 0;
+	corner = Corner::TOP_LEFT;
+	minimap_camera = { 0, 0, 4, 4 };
+
+}
+
+MinimapWindow::~MinimapWindow()
+{
+}
+
+bool MinimapWindow::Awake(pugi::xml_node& config)
+{
+	int window_width, window_height;
+
+	width = config.attribute("width").as_int();
+	std::string corner_string = std::string(config.attribute("corner").as_string());
+	margin = config.attribute("margin").as_int();
+
+	if (corner_string == "top_left")
+		corner = Corner::TOP_LEFT;
+
+	if (corner_string == "top_right")
+		corner = Corner::TOP_RIGHT;
+
+	if (corner_string == "bottom_left")
+		corner = Corner::BOTTOM_LEFT;
+
+	if (corner_string == "bottom_right")
+		corner = Corner::TOP_RIGHT;
+
+	return true;
+}
+
+bool MinimapWindow::Init()
+{
+	bool ret = true;
+	int window_width, window_height;
+	App->win->GetWindowSize(window_width, window_height);
+
+	map_width = App->map->data.tile_width * App->map->data.width;
+	map_height = App->map->data.tile_height * App->map->data.height;
+	scale = (width / (float)map_width);
+	height = map_height * scale;
+
+	map_texture = SDL_CreateTexture(App->render->renderer, SDL_GetWindowPixelFormat(App->win->window), SDL_TEXTUREACCESS_TARGET, 1.05F * width, 1.05F * height);
+
+	SDL_SetRenderTarget(App->render->renderer, map_texture);
+	CreateMinimap();
+	SDL_SetRenderTarget(App->render->renderer, NULL);
+
+	switch (corner)
+	{
+	case Corner::TOP_LEFT:
+	{
+		pos.x = margin;
+		pos.y = margin;
+		break;
+	}
+	case Corner::TOP_RIGHT:
+	{
+		pos.x = window_width - width - margin;
+		pos.y = margin;
+		break;
+	}
+	case Corner::BOTTOM_LEFT:
+	{
+		pos.x = margin;
+		pos.y = window_height - height - margin;
+		break;
+	}
+	case Corner::BOTTOM_RIGHT:
+	{
+		pos.x = window_width - width - margin;
+		pos.y = window_height - height - margin;
+		break;
+	}
+	break;
+	}
+
+	return ret;
+}
+
+void MinimapWindow::_Update()
+{
+	App->render->Blit((int)map_texture, pos.x, pos.y, NULL);
+
+	iPoint minimap_camera_position = App->editor->minimap->WorldToMinimap(App->scene->test_rect.x, App->scene->test_rect.y);
+	minimap_camera.x = minimap_camera_position.x;
+	minimap_camera.y = minimap_camera_position.y;
+	App->render->DrawQuad(minimap_camera, { 255, 0, 0, 255 }, true, SCENE, false);
+
+	SDL_Rect rect = { 0, 0, 0, 0 };
+	iPoint rect_position = WorldToMinimap(-App->render->camera.x, -App->render->camera.y);
+	App->render->DrawQuad({ rect_position.x, rect_position.y, (int)(App->render->camera.w * scale), (int)(App->render->camera.h * scale) }, { 255, 255, 255, 255 }, false, SCENE, false);
+
+}
+
+bool MinimapWindow::CreateMinimap()
+{
+	PERF_START(ptimer);
+
+	for (std::vector<MapLayer*>::const_iterator item = App->map->data.layers.begin(); item != App->map->data.layers.end(); ++item)
+	{
+		MapLayer* layer = item.operator[];  //Not propiate
+
+		if (layer->GetProperty("Nodraw") != 0)
+			continue;
+
+		int half_width = map_width * 0.5F;
+
+		for (int y = 0; y < App->map->data.height; ++y)
+		{
+			for (int x = 0; x < App->map->data.width; ++x)
+			{
+				int tile_id = layer->GetID(x, y);
+				if (tile_id > 0)
+				{
+					TileSet* tileset = App->map->GetTilesetFromTileId(tile_id); //The function is fucked.
+
+					SDL_Rect r = tileset->GetTileRect(tile_id);
+					iPoint pos = App->map->I_MapToWorld(x, y); //I_MapToWorld() return x and y. iPoint is only one int.
+					pos = App->render->WorldToScreen(pos.x, pos.y); //WorldToScreen() does not exist, dont know witch is equal.
+
+					App->render->Blit(tileset->texture_id, pos.x + half_width, pos.y, &r);
+				}
+			}
+		}
+	}
+
+	return true;
+}
+
+iPoint MinimapWindow::WorldToMinimap(int x, int y)
+{
+	iPoint minimap_position;
+
+	minimap_position.x = pos.x + width * 0.5F + x * scale;
+	minimap_position.y = pos.y + y * scale;
+
+	return minimap_position;
+}
+
+iPoint MinimapWindow::ScreenToMinimapToWorld(int x, int y)
+{
+	iPoint minimap_pos;
+
+	minimap_pos.x = (x - pos.x - width * 0.5F) / scale;
+	minimap_pos.y = (y - pos.y) / scale;
+
+	return minimap_pos;
+}

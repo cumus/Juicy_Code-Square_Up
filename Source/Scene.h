@@ -63,6 +63,9 @@ private:
 
 	float time = 0;
 	bool x_t, y_t;	
+public:
+
+	SDL_Rect test_rect;
 };
 
 #endif // __SCENE_H__

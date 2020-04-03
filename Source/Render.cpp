@@ -566,6 +566,18 @@ void Render::DrawCircle(const SDL_Rect rect, const SDL_Color color, Layer layer,
 	layers[layer][layer < Layer::HUD ? data.rect.y : 0].push_back(data);
 }
 
+iPoint Render::WorldToScreen(int x, int y) const
+{
+	iPoint ret;
+	int scale = App->win->GetScale();
+	ret.x = x + cam.x;
+	ret.y = y + cam.y;
+
+	return ret;
+}
+
+
+
 Render::RenderData::RenderData(Type t) :
 	type(t),
 	texture(nullptr),

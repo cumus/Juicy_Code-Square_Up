@@ -4,6 +4,7 @@
 #include "Module.h"
 #include "SDL/include/SDL_rect.h"
 #include "SDL/include/SDL_pixels.h"
+#include "Point.h"
 #include <map>
 #include <vector>
 
@@ -69,6 +70,8 @@ public:
 	void DrawLine(const std::pair<int,int> a, const std::pair<int, int> b, const SDL_Color color = { 0, 0, 0, 255 }, Layer layer = SCENE, bool use_camera = true);
 	void DrawCircle(const SDL_Rect rect, const SDL_Color color = { 0, 0, 0, 255 }, Layer layer = SCENE, bool use_camera = true);
 
+	iPoint WorldToScreen(int x, int y) const;
+
 	// Set background color
 	void SetBackgroundColor(SDL_Color color);
 
@@ -78,7 +81,6 @@ private:
 
 private:
 
-	SDL_Renderer*	renderer = nullptr;
 	SDL_Rect		viewport;
 	SDL_Color		background;
 	SDL_Color		draw_color;
@@ -111,16 +113,20 @@ private:
 
 	std::map<int, std::vector<RenderData>> layers[MAX_LAYERS] ;
 
+	// Config
+	bool accelerated = true;
+	bool vsync = false;
+	bool target_texture = false;
+
+public:
+
+	SDL_Renderer*	renderer = nullptr;
+
 	// Camera
 	RectF cam;
 	float zoom = 1.0f;
 	static std::pair<float, float> target_res;
 	static std::pair<float, float> res_ratio;
-
-	// Config
-	bool accelerated = true;
-	bool vsync = false;
-	bool target_texture = false;
 };
 
 #endif // __RENDER_H__

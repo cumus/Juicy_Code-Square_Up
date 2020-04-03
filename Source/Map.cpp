@@ -4,6 +4,7 @@
 #include "Input.h"
 #include "Scene.h"
 #include "PathfindingManager.h"
+#include "Minimap.h"
 #include "JuicyMath.h"
 #include "Defs.h"
 #include "Log.h"
@@ -12,6 +13,7 @@
 #include "SDL/include/SDL_scancode.h"
 
 #include <math.h>
+#include <vector>
 
 Map* Map::map = nullptr;
 MapOrientation Map::type = MAPTYPE_UNKNOWN;
@@ -245,24 +247,22 @@ void Map::SetMapScale(float s)
 	Event::Push(TRANSFORM_MODIFIED, App->scene->GetRoot(), vec(), vec(1.f));
 }
 
-bool Map::GetTilesetFromTileId(int id, TileSet& set) const
+TileSet* Map::GetTilesetFromTileId(int id) const
 {
-	bool ret = false;
+	std::vector<TileSet*>::const_iterator item = data.tilesets.begin();
+	TileSet* set = *item;
 
-	if (id >= tilesets.front().firstgid)
+	while (item != data.tilesets.end())
 	{
-		for (std::vector<TileSet>::const_iterator it = tilesets.begin(); it != tilesets.end(); ++it)
+		if (id < (*item)->firstgid)
 		{
-			if (id <= it->firstgid + it->tilecount)
-			{
-				set = *it;
-				ret = true;
-				break;
-			}
+			set = *item;
+			break;
 		}
+		item++;
 	}
 
-	return ret;
+	return set;
 }
 
 bool Map::GetRectAndTexId(int tile_id, SDL_Rect& section, int& text_id) const

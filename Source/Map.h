@@ -2,6 +2,8 @@
 #define __MAP_H__
 
 #include "MapContainer.h"
+#include <list>
+#include <string>
 
 enum MapOrientation
 {
@@ -9,6 +11,45 @@ enum MapOrientation
 	MAPTYPE_ORTHOGONAL,
 	MAPTYPE_ISOMETRIC,
 	MAPTYPE_STAGGERED
+};
+
+//struct Properties
+//{
+//	struct Property
+//	{
+//		std::string* name;
+//		int value;
+//	};
+//
+//	~Properties()
+//	{
+//		std::list<Property*>* item;
+//		item = list.start;
+//
+//		while (item != NULL)
+//		{
+//			DEL(item->data);
+//			item = item->next;
+//		}
+//
+//		list.clear();
+//	}
+//
+//	int Get(const char* name, int default_value = 0) const;
+//
+//	p2List<Property*>	list;
+//};
+
+struct MapData
+{
+	int						width;
+	int						height;
+	int						tile_width;
+	int						tile_height;
+	SDL_Color				background_color;
+	MapOrientation			type;
+	std::vector<TileSet*>	tilesets;
+	std::vector<MapLayer*>	layers;
 };
 
 class Map
@@ -31,7 +72,7 @@ public:
 	static void SetMapScale(float scale);
 
 	// Map Data Getters
-	bool GetTilesetFromTileId(int id, TileSet& set) const;
+	TileSet* GetTilesetFromTileId(int id) const;
 	bool GetRectAndTexId(int tile_id, SDL_Rect& section, int& text_id) const;
 	const MapLayer& GetMapWalkabilityLayer();
 
@@ -83,6 +124,10 @@ private:
 	std::vector<TileSet>		tilesets;
 	std::vector<MapLayer>		layers;
 	std::vector<MapObjectGroup>	obj_groups;
+
+public:
+
+	MapData data;
 };
 
 #endif // __MAP_H__

@@ -30,9 +30,10 @@ public:
 	SDL_Window* GetWindow() const;
 	void GetWindowSize(int& width, int& height) const;
 
+	int GetScale() const;
+
 private:
 
-	SDL_Window* window = nullptr;
 	SDL_Surface* screen_surface = nullptr; //The surface contained by the window
 
 private:
@@ -64,6 +65,11 @@ private:
 	bool mouse_capture		= false;
 	bool always_on_top		= false;
 	bool skip_taskbar		= false;
+
+public:
+
+	SDL_Window* window = nullptr;
+	int scale;
 };
 
 #endif // __WINDOW_H__

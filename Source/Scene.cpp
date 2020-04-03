@@ -15,6 +15,7 @@
 #include "Defs.h"
 #include "Log.h"
 #include "PathfindingManager.h"
+#include "Minimap.h"
 #include "Point.h"
 #include "Edge.h"
 

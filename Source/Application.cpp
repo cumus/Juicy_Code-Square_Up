@@ -1,6 +1,7 @@
 #include "Application.h"
 #include "Input.h"
 #include "Window.h"
+#include "Minimap.h"
 #include "Audio.h"
 #include "Map.h"
 #include "Scene.h"

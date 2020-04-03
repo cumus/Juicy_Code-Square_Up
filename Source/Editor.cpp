@@ -36,6 +36,7 @@ bool Editor::Init()
 	windows.push_back(console = new ConsoleWindow({ 0.0f, 0.7f, 0.4f, 0.3f }));
 	windows.push_back(config = new ConfigWindow({ 0.7f, 0.6f, 0.3f, 0.4f }));
 
+
 	return !windows.empty();
 }
 

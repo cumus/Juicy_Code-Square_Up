@@ -19,9 +19,11 @@ class Input;
 class Window;
 class Audio;
 class Map;
+class Minimap;
 class Scene;
 class Editor;
 class Render;
+
 
 // Independent Managers
 class FileManager;
@@ -74,9 +76,11 @@ public:
 	Window*		win;
 	Audio*		audio;
 	Map*		map;
+	Minimap*	minimap;
 	Scene*		scene;
 	Editor*		editor;
 	Render*		render;
+
 
 	// Independent Managers
 	FileManager		files;

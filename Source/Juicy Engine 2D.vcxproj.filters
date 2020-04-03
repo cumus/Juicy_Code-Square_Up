@@ -139,6 +139,9 @@
     <ClCompile Include="Edge.cpp">
       <Filter>Source\Gameobjects</Filter>
     </ClCompile>
+    <ClCompile Include="Minimap.cpp">
+      <Filter>Source\Modules</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="PugiXml\src\pugiconfig.hpp">
@@ -311,6 +314,9 @@
     </ClInclude>
     <ClInclude Include="Edge.h">
       <Filter>Source\Gameobjects</Filter>
+    </ClInclude>
+    <ClInclude Include="Minimap.h">
+      <Filter>Source\Modules</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

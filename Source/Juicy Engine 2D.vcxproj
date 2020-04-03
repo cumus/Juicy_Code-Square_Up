@@ -165,6 +165,7 @@
     <ClCompile Include="Input.cpp" />
     <ClCompile Include="Map.cpp" />
     <ClCompile Include="MapContainer.cpp" />
+    <ClCompile Include="Minimap.cpp" />
     <ClCompile Include="mmgr\mmgr.cpp" />
     <ClCompile Include="PathfindingManager.cpp" />
     <ClCompile Include="PlayPauseWindow.cpp" />
@@ -211,6 +212,7 @@
     <ClInclude Include="JuicyMath.h" />
     <ClInclude Include="Map.h" />
     <ClInclude Include="MapContainer.h" />
+    <ClInclude Include="Minimap.h" />
     <ClInclude Include="mmgr\mmgr.h" />
     <ClInclude Include="mmgr\nommgr.h" />
     <ClInclude Include="Optick\include\optick.config.h" />
