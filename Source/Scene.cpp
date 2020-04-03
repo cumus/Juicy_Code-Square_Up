@@ -361,8 +361,7 @@ bool Scene::LoadIntroScene()
 bool Scene::LoadMenuScene()
 {
 	// Play sample track
-	int id = App->audio->LoadFx("audio/Effects/Intro/soda-open-and-pour-left-right.wav");
-	bool ret = App->audio->PlayFx(-1, id, 0);
+	bool ret = App->audio->PlayMusic("audio/Music/alexander-nakarada-early-probe-eats-the-dust.ogg");
 
 	// Remove fps cap
 	// App->time.SetMaxFPS(60);
@@ -405,7 +404,7 @@ bool Scene::LoadMenuScene()
 	Gameobject* start_txt_go = AddGameobject("Start Button", start_go);
 	
 	C_Text* start_txt = new C_Text(start_txt_go, "PLAY");
-	start_txt->target = { 0.48f, 0.45f, 4.f, 4.f };
+	start_txt->target = { 0.48f, 0.45f, 1.f, 1.f };
 	start_txt->scale_to_fit = true;
 
 	//------------------------- QUIT --------------------------------------
