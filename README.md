@@ -43,7 +43,22 @@ Here are some links to our GitHib, Wiki, etc.
 
 
 ## Controls
-For now we have little interaction with the map, but here it is.
+* Left Alt + 1: Load Map.
+* Left Alt + 2: Load Intro.
+* Left Alt + 3: Load Menu.
+* Left Alt + 4: Load Main.
+
+* F2: Draw walkability.
+* F3: Puse the music.
+* F4: Play the music.
+
+* Space: Swap map type.
+* C,V,X: Pathfinding path.
+* Z: Show hide path.
+
+* 3: Audio effect.
+* 4: Create game unit.
+* 5: Edge source node.
 
 ### Camera:
 * W: move the camera up
@@ -62,6 +77,23 @@ For now we have little interaction with the map, but here it is.
 * Left-Click: Select Gameobject
 * F1: Toggle editor windows visible
 * Hold LeftCtrl: Allow editor window size editing
+
+### Updates from v0.2
+* Pathfinding added.
+* Behaviour components added.
+* Heriarchy window added.
+* Slider added.
+
+### Updates from v0.3
+* Moving behaviour updated.
+* Pathfinding render.
+* UI Slider.
+* UI Components updated.
+* Render sprite ordering.
+* Scene managment.
+* Building behaviour.
+* Some bug fixed.
+* Timer: press start to start the game and stop to stop it.
 
 ##
 ![University Logo](https://www.citm.upc.edu/templates/new/img/logoCITM.png?1401879059) 
