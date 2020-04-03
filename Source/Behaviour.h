@@ -36,6 +36,13 @@ enum BuildingState
 	DESTROYED
 };
 
+enum UnitState {
+	IDLE,
+	ATTACKING,
+	ALIVE,
+	DEAD
+};
+
 class Gameobject;
 
 class Behaviour : public Component 
@@ -54,6 +61,7 @@ public:
 	int damage;
 	bool selected;
 	bool canAttackUnits; //For gatherer set false and non defensive structures
+	bool allied;
 	bool deleteGO;
 	float timeToDelete,counter;
 	UnitType unitT;
@@ -107,10 +115,22 @@ public:
 
 	B_Unit(Gameobject* go, ComponentType type = B_UNIT) : B_Movable(go, type) {}
 	virtual ~B_Unit() {}
+	void Init(int life, int damage, bool attackUnits, bool ally, UnitType type);
+	void GotDamaged(const Event& e);
+	void Attack(int heal);
+	//void Die(int life);
+	void CheckState();
+	virtual void SetTexture() {}
+	virtual void CheckSprite() {}
+	virtual void BuildingAction() {}
 
 
 public:
 	int textureID;
+	int attack_value = 2;
+	int attack_range = 2;
+	UnitState currentState;
+	Sprite* unitsprite;
 };
 
 

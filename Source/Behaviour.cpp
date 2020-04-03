@@ -221,3 +221,41 @@ void B_Building::CheckState()
 // UNIT BEHAVIOUR
 ///////////////////////////
 
+void B_Unit::Init(int life, int dmg, bool attackUnits, bool ally, UnitType type)
+{
+	startingLife = life;
+	damage = dmg;
+	canAttackUnits = attackUnits;
+	allied = ally;
+	this->unitT = type;
+	currentState = ALIVE;
+	CheckSprite();
+}
+
+void B_Unit::GotDamaged(const Event& e)
+{
+	if (e.type == GET_DAMAGE)
+	{
+		if (currentState != DEAD)
+		{
+			currentLife -= e.data1.AsInt();
+			CheckState();
+		}
+	}
+}
+
+void B_Unit::Attack(int heal)
+{
+	//Click on tile->check tile for enemies->if enemies->move to attack from range->keep moving as they get away->if not->walk to tile
+}
+
+void B_Unit::CheckState()
+{
+	if (currentLife < 0)
+	{
+		currentState = DEAD;
+	}
+	else currentState = ALIVE;
+
+	CheckSprite();
+}
