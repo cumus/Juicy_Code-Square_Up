@@ -254,27 +254,32 @@ bool PathfindingManager::GetTileAt(iPoint& pos)
 //Utility: Return true if tile is valid
 bool PathfindingManager::ValidTile(int x, int y)
 {
-	return walkabilityMap[x][y];
+	if(x >= 0 && y >= 0) walkabilityMap[x][y];
+	return false;
 }
 
 //Utility: Sets tile walkability
 void PathfindingManager::SetWalkabilityTile(int x, int y, bool estate)
 {
-	walkabilityMap[x][y] = estate;
-	//LOG("Changed tile estate");
+	if( x >= 0 && y >= 0) walkabilityMap[x][y] = estate;
+	else LOG("Not valid coordinates!");
 }
 
 //Utility: Check tile area
 bool PathfindingManager::CheckWalkabilityArea(vec pos, vec scale)
 {
-	for (int a = pos.x; a < scale.x+pos.x;a++)
+	if (pos.x >= 0 && pos.y >= 0)
 	{
-		for (int b = pos.y; b < scale.y+pos.y; b++)
+		for (int a = pos.x; a < scale.x + pos.x; a++)
 		{
-			if (!ValidTile(a, b)) return false;
+			for (int b = pos.y; b < scale.y + pos.y; b++)
+			{
+				if (!ValidTile(a, b)) return false;
+			}
 		}
+		return true;
 	}
-	return true;
+	else return false;
 }
 
 //Utility: Returns boolean if found item
