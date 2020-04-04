@@ -269,6 +269,7 @@ void Scene::RecieveEvent(const Event& e)
 
 bool Scene::LoadTestScene()
 {
+	OPTICK_EVENT();
 	// Play sample track
 	bool ret = App->audio->PlayMusic("audio/Music/alexander-nakarada-buzzkiller.ogg");
 
@@ -335,11 +336,13 @@ bool Scene::LoadTestScene()
 
 bool Scene::LoadMainScene()
 {
+	OPTICK_EVENT();
 	return map.Load("maps/iso.tmx");
 }
 
 bool Scene::LoadIntroScene()
 {
+	OPTICK_EVENT();
 	// Play sample track
 	int id = App->audio->LoadFx("audio/Effects/Intro/soda-open-and-pour-left-right.wav");
 	bool ret = App->audio->PlayFx(-1, id, 0);
@@ -373,6 +376,7 @@ bool Scene::LoadIntroScene()
 
 bool Scene::LoadMenuScene()
 {
+	OPTICK_EVENT();
 	// Play sample track
 	bool ret = App->audio->PlayMusic("audio/Music/alexander-nakarada-early-probe-eats-the-dust.ogg");
 
