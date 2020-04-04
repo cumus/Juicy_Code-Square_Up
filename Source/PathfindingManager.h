@@ -146,6 +146,7 @@ private:
 	std::vector<std::vector<bool> > walkabilityMap;
 	std::map<double, std::vector<iPoint>> storedPaths; //Stores all generated paths by units
 	std::map<double, UncompletedPath> toDoPaths; //Stores pending path for each id
+	float msCount = 0;
 };
 
 #endif 

@@ -135,8 +135,10 @@ void PathfindingManager::DebugShowPaths()
 {
 	int a = storedPaths.size();
 	LOG("Debug paths: %d", a);
+	LOG("ms taken to compute: %f",msCount);
 	if (debugAll) debugAll = false;
 	else debugAll = true;	
+	msCount = 0;
 }
 
 //Utility: Updates already stored path or add it
@@ -620,13 +622,12 @@ int PathfindingManager::ContinuePath(UncompletedPath pathToDo, int working_ms)
 
 	UncompletedPath path = pathToDo;	
 	bool pathEnd = false;
-	std::vector<iPoint>* pathPointer = GetPath(path.ID);
-	//std::vector<PathNode> openList, closedList = closed;		
+	std::vector<iPoint>* pathPointer = GetPath(path.ID);	
 	PathNode checkNode;
 	while (!path.openList.empty() && timer.ReadI() < working_ms)
 	{	
 		VectorQuicksort(path.openList, 0, path.openList.size() - 1);
-		//VectorMergesort(openList,openList.size());
+		//VectorMergesort(path.openList,path.openList.size());
 		checkNode = path.openList.front();	
 		path.openList.erase(path.openList.begin());
 		path.closedList.push_back(checkNode); //Save node to evaluated list				
@@ -735,5 +736,6 @@ int PathfindingManager::ContinuePath(UncompletedPath pathToDo, int working_ms)
 		UpdatePendingPaths(path.ID, path);
 	}
 
+	msCount += App->time.GetDeltaTime();
 	return working_ms - timer.ReadI();
 }
