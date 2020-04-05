@@ -18,6 +18,8 @@ public:
 	void CheckSprite() override;
 	void BuildingAction() override;
 	void FreeWalkability() override;
+	void Selected() override;
+	void UnSelected() override;
 };
 
 #endif

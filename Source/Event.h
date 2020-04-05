@@ -57,7 +57,10 @@ enum EventType
 	SET_VSYNC,
 
 	//Behaviour
+	SPAWNED,
 	GET_DAMAGE,
+	SELECTED,
+	UNSELECTED,
 
 	MAX_EVENT_TYPES
 };

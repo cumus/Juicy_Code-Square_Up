@@ -38,6 +38,7 @@ public:
 	ConfigWindow* config = nullptr;
 
 	Gameobject* selection = nullptr;
+	std::vector <Gameobject*> selectedUnits;
 
 private:
 

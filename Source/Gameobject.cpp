@@ -78,7 +78,15 @@ void Gameobject::Update()
 			{
 				if (App->editor->selection == *it)
 					App->editor->selection = nullptr;
-
+				/*for (std::vector<Gameobject*>::iterator at = App->editor->selectedUnits.begin(); at != App->editor->selectedUnits.end(); ++at)
+				{
+					if (*at == *it)
+					{
+						App->editor->selectedUnits.erase(at); 
+						break;
+					}
+				}*/
+				
 				DEL(*it);
 				childs.erase(it);
 				break;
@@ -198,6 +206,27 @@ void Gameobject::RecieveEvent(const Event & e)
 		for (std::vector<Component*>::iterator component = components.begin(); component != components.end(); ++component)
 			if ((*component)->IsActive())
 				Event::Push(GET_DAMAGE, *component, Cvar(e.data1));
+		break;
+	}
+	case SELECTED:
+	{
+		for (std::vector<Component*>::iterator component = components.begin(); component != components.end(); ++component)
+			if ((*component)->IsActive())
+				Event::Push(SELECTED, *component);
+		break;
+	}
+	case UNSELECTED:
+	{
+		for (std::vector<Component*>::iterator component = components.begin(); component != components.end(); ++component)
+			if ((*component)->IsActive())
+				Event::Push(UNSELECTED, *component);
+		break;
+	}
+	case SPAWNED:
+	{
+		for (std::vector<Component*>::iterator component = components.begin(); component != components.end(); ++component)
+			if ((*component)->IsActive())
+				Event::Push(SPAWNED, *component);
 		break;
 	}
 	}

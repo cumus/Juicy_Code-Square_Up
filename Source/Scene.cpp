@@ -117,16 +117,19 @@ bool Scene::Update()
 		edgeNode->GetTransform()->SetLocalPos({ float(position.first), float(position.second), 0.0f });
 		Transform t = *edgeNode->GetTransform();
 
-		if (App->pathfinding.CheckWalkabilityArea(t.GetLocalPos(), t.GetGlobalScale()))
+		if (App->pathfinding.CheckWalkabilityArea(position, t.GetGlobalScale()))
 		{
 			Edge* node = new Edge(edgeNode);
 			node->Init(20, 0, false, RESOURCE);
-			//node->SetTexture();
-			std::map<double, Edge*>::iterator it;
-			it = edgeNodes.find(node->GetID());
 
-			if (it != edgeNodes.end()) edgeNodes[node->GetID()] = node;
-			else edgeNodes.insert(std::pair<double, Edge*>(node->GetID(), node));
+			Event::Push(SPAWNED, node);
+
+			//node->SetTexture();
+			//std::map<double, Edge*>::iterator it;
+			//it = edgeNodes.find(node->GetID());
+
+			//if (it != edgeNodes.end()) edgeNodes[node->GetID()] = node;
+			//else edgeNodes.insert(std::pair<double, Edge*>(node->GetID(), node));
 		}
 		else
 		{
@@ -137,17 +140,17 @@ bool Scene::Update()
 
 	if (App->input->GetKey(SDL_SCANCODE_0) == KEY_DOWN) //Edge
 	{
+		/*if (App->editor->selectedUnits.empty() == false)
+		{
+			//LOG("Units selected");
+			Event::Push(GET_DAMAGE, App->editor->selectedUnits[0], 6);
+		}*/
 		Gameobject* node = App->editor->selection;
 		if (node != nullptr && node->GetEdgeNode() != nullptr)
 		{
 			Event::Push(GET_DAMAGE, node, 6);
 		}
-		/*if (!edgeNodes.empty())
-		{
-			//Event::Push(GET_DAMAGE, edgeNodes.begin()->second->GetGameobject(), 6);
-			
-			//LOG("Event triggered");
-		}*/
+		
 	}
 
 	if (App->input->GetKey(SDL_SCANCODE_X) == KEY_DOWN)
@@ -182,8 +185,8 @@ bool Scene::Update()
 
 		std::pair<int, int> mouseOnMap = Map::WorldToTileBase(x + cam.x, y + cam.y);
 
-
-		if (go != nullptr) {
+		if (go != nullptr) 
+		{
 			LOG("Object selected");
 			Event::Push(ON_RIGHT_CLICK, go, mouseOnMap.first, mouseOnMap.second);
 			LOG("Event triggered");

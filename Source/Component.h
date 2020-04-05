@@ -5,7 +5,7 @@
 
 enum ComponentType
 {
-	COMP_NONE,
+	COMP_NONE = 0,
 	TRANSFORM,
 	SPRITE,
 	AUDIO_SOURCE,
@@ -25,10 +25,12 @@ enum ComponentType
 	B_UNIT,
 
 	//Units
-
+	GATHERER,
 
 	//Structures
-	EDGE
+	EDGE,
+
+	MAX_TYPES
 };
 
 class Transform;

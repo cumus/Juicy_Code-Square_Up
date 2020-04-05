@@ -11,6 +11,7 @@
 #include "ConsoleWindow.h"
 #include "ConfigWindow.h"
 #include "Defs.h"
+#include "Log.h"
 
 #include "SDL/include/SDL_scancode.h"
 
@@ -95,7 +96,25 @@ bool Editor::Update()
 
 	// Select Gameobject
 	if (mouse_left_button == KEY_DOWN && mouse_over_windows == 0u && !sizing)
+	{
+		if(selection != nullptr) Event::Push(UNSELECTED, selection);
 		selection = App->scene->MouseClickSelect(x, y);
+		Event::Push(SELECTED, selection);
+		//selectedUnits.push_back(App->scene->MouseClickSelect(x, y));
+
+		/*if (selectedUnits.empty() == false)
+		{
+			for (std::vector<Gameobject*>::const_iterator it = selectedUnits.begin(); it != selectedUnits.end(); ++it)
+			{
+				if((*it) != nullptr) Event::Push(UNSELECTED, *it);
+			}
+			LOG("Previous units diselected");
+			selectedUnits.clear();
+		}			
+		selectedUnits.push_back(App->scene->MouseClickSelect(x, y));
+		LOG("Saved selection");
+		Event::Push(SELECTED, selectedUnits[0]);*/	
+	}
 
 	return true;
 }

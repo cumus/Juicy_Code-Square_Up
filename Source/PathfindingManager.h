@@ -132,7 +132,7 @@ public:
 	UncompletedPath* GetToDoPath(double ID);
 
 	//Utility: Check tile area
-	bool CheckWalkabilityArea(vec pos, vec scale);
+	bool CheckWalkabilityArea(std::pair<int,int> pos, vec scale);
 
 public:
 	int debugTextureID;

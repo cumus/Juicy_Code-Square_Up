@@ -11,7 +11,6 @@
 Edge::Edge(Gameobject* go, ComponentType type) : B_Building(go, type)
 {
 	SetTexture();
-	App->pathfinding.SetWalkabilityTile(game_object->GetTransform()->GetLocalPos().x, game_object->GetTransform()->GetLocalPos().y,false);
 }
 
 Edge::Edge(const Edge& node) : B_Building(node.game_object, node.GetType())
@@ -22,7 +21,27 @@ Edge::~Edge()
 
 void Edge::RecieveEvent(const Event& e) 
 {
-	if (e.type == GET_DAMAGE) GotDamaged(e.data1.AsInt());	
+	switch (e.type)
+	{
+		case GET_DAMAGE: GotDamaged(e.data1.AsInt()); break;
+		case SELECTED: Selected(); break;
+		case UNSELECTED: UnSelected(); break;
+		case SPAWNED: 
+			App->pathfinding.SetWalkabilityTile(game_object->GetTransform()->GetLocalPos().x, game_object->GetTransform()->GetLocalPos().y, false); 
+			break;
+	}
+}
+
+void Edge::Selected()
+{
+	selectionMark->section = { 0, 0, 64, 64 };
+	selected = true;
+}
+
+void Edge::UnSelected()
+{
+	selectionMark->section = { 64, 0, 64, 64 };
+	selected = false;
 }
 
 void Edge::SetTexture()
@@ -31,6 +50,10 @@ void Edge::SetTexture()
 	building = new Sprite(this->game_object); 
 	building->tex_id = textureID;//Temporal texture
 
+	textureSelectionID = App->tex.Load("textures/selectionMark.png");
+	selectionMark = new Sprite(this->game_object);
+	selectionMark->tex_id = textureSelectionID;
+	
 	CheckSprite();
 }
 

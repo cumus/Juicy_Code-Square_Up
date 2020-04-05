@@ -15,7 +15,12 @@ Sprite::Sprite(Gameobject* go) : Component(SPRITE, go)
 Sprite::~Sprite()
 {}
 
-void Sprite::PostUpdate()
+void Sprite::SetLayer(Layer layer) 
+{
+	spriteLayer = layer;
+}
+
+void Sprite::PostUpdate() 
 {
 	OPTICK_EVENT();
 
@@ -28,7 +33,7 @@ void Sprite::PostUpdate()
 			std::pair<float, float> map_pos = Map::F_MapToWorld(pos.x, pos.y);
 
 			if (tex_id >= 0)
-				App->render->Blit(tex_id, int(map_pos.first), int(map_pos.second), &section);
+				App->render->Blit(tex_id, int(map_pos.first), int(map_pos.second), &section,spriteLayer);
 			else
 				App->render->DrawQuad({ int(map_pos.first), int(map_pos.second), section.w, section.h }, color);
 		}

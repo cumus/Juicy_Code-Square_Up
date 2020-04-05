@@ -254,7 +254,7 @@ bool PathfindingManager::GetTileAt(iPoint& pos)
 //Utility: Return true if tile is valid
 bool PathfindingManager::ValidTile(int x, int y)
 {
-	if(x >= 0 && y >= 0) walkabilityMap[x][y];
+	if(x >= 0 && y >= 0) return walkabilityMap[x][y];
 	return false;
 }
 
@@ -266,13 +266,15 @@ void PathfindingManager::SetWalkabilityTile(int x, int y, bool estate)
 }
 
 //Utility: Check tile area
-bool PathfindingManager::CheckWalkabilityArea(vec pos, vec scale)
+bool PathfindingManager::CheckWalkabilityArea(std::pair<int, int> pos, vec scale)
 {
-	if (pos.x >= 0 && pos.y >= 0)
+	//LOG("Pos x: %d / Pos y: %d",pos.first,pos.second);
+	//LOG("Scale x:%f / Scale y:%f",scale.x,scale.y);
+	if (pos.first >= 0 && pos.second >= 0)
 	{
-		for (int a = pos.x; a < scale.x + pos.x; a++)
+		for (int a = pos.first; a < scale.x + pos.first; a++)
 		{
-			for (int b = pos.y; b < scale.y + pos.y; b++)
+			for (int b = pos.second; b < scale.y + pos.second; b++)
 			{
 				if (!ValidTile(a, b)) return false;
 			}

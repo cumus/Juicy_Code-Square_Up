@@ -36,7 +36,8 @@ enum BuildingState
 	DESTROYED
 };
 
-enum UnitState {
+enum UnitState 
+{
 	IDLE,
 	ATTACKING,
 	ALIVE,
@@ -53,6 +54,9 @@ public:
 	void DeleteObject(float time=1);
 	void Update() override;
 	virtual void FreeWalkability() {}
+	virtual void Selected() {}
+	virtual void UnSelected() {}
+	virtual void GotDamage() {}
 
 public:
 	double ID;
@@ -65,6 +69,9 @@ public:
 	bool deleteGO;
 	float timeToDelete,counter;
 	UnitType unitT;
+	Sprite* selectionMark;
+	int textureID;
+	int textureSelectionID;
 };
 
 class B_Movable: public Behaviour
@@ -76,7 +83,6 @@ public:
 	void Update() override;
 	void RecieveEvent(const Event& e) override;
 	
-
 public:
 	
 	float speed = 2;
@@ -105,7 +111,6 @@ public:
 	
 public:
 	BuildingState currentState;
-	int textureID;
 	Sprite* building;
 };
 
