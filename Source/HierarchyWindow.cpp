@@ -6,20 +6,16 @@
 
 #include <stack>
 
-HierarchyWindow::HierarchyWindow(const RectF rect) : EditorWindow(rect)
-{
-}
+HierarchyWindow::HierarchyWindow(const RectF rect, int total_elements) : EditorWindow(rect), total_elements(total_elements)
+{}
 
 HierarchyWindow::~HierarchyWindow()
-{
-}
+{}
 
 bool HierarchyWindow::Init()
 {
-	for (float i = 0.0f; i < 20.0f; ++i)
-	{
+	for (float i = 0.0f; i < total_elements; ++i)
 		elements.push_back(new UI_TextButton(this, {0.0f, 0.05f * i, 0.5f, 0.05f}, " "));
-	}
 
 	root = App->scene->GetRoot();
 
@@ -28,12 +24,15 @@ bool HierarchyWindow::Init()
 
 void HierarchyWindow::RecieveEvent(const Event& e)
 {
-	int id = e.data1.AsInt();
-	if (id >= 0 && id < int(gos.size()) && e.type == MOUSE_UP)
+	if (e.type == MOUSE_UP)
 	{
-		Gameobject* go = gos[id].second;
-		App->editor->selection = go;
-		Event::Push(ON_SELECT, go);
+		int id = e.data1.AsInt();
+		if (id >= 0 && id < int(gos.size()))
+		{
+			Gameobject* go = gos[id].second;
+			App->editor->selection = go;
+			Event::Push(ON_SELECT, go);
+		}
 	}
 }
 
@@ -62,7 +61,7 @@ void HierarchyWindow::_Update()
 	}
 
 	// Set UI_Elements from gos vector
-	for (unsigned int i = 0; i < 20; ++i)
+	for (unsigned int i = 0; i < total_elements; ++i)
 	{
 		if (i < gos.size())
 		{

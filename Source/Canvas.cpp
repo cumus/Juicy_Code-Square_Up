@@ -50,7 +50,6 @@ C_Canvas::~C_Canvas()
 void C_Canvas::PostUpdate()
 {
 	output = App->render->GetCameraRect();
-
 	if (!playing)
 	{
 		output.x = int(target.x * float(output.w));
@@ -58,13 +57,13 @@ void C_Canvas::PostUpdate()
 		output.w = int(target.w * float(output.w));
 		output.h = int(target.h * float(output.h));
 
+		App->render->DrawQuad(output, { 255, 255, 255, 40 }, true, HUD, false);
+
 	}
 	else
 	{
 		output.x = output.y = 0;
 	}
-
-	App->render->DrawQuad(output, { 255, 255, 255, 40 }, true, HUD, false);
 }
 
 void C_Canvas::RecieveEvent(const Event& e)

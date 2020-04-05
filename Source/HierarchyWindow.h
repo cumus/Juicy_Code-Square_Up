@@ -9,7 +9,7 @@ class HierarchyWindow : public EditorWindow
 {
 public:
 
-	HierarchyWindow(const RectF rect);
+	HierarchyWindow(const RectF rect, int total_elements = 60);
 	~HierarchyWindow();
 
 	bool Init() override;
@@ -21,8 +21,8 @@ private:
 
 private:
 
+	int total_elements;
 	Gameobject* root = nullptr;
-
 	std::vector<std::pair<float,Gameobject*>> gos;
 };
 #endif // __HIERARCHY_WINDOW_H__

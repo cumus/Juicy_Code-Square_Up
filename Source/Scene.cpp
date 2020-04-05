@@ -242,7 +242,7 @@ bool Scene::LoadTestScene()
 		// HUD
 		Gameobject* canvas_go = AddGameobject("Canvas", &root);
 		C_Canvas* canv = new C_Canvas(canvas_go);
-		canv->target = { 0.3f, 0.3f, 0.4f, 0.4f };
+		canv->target = { 0.6f, 0.6f, 0.4f, 0.4f };
 
 		Gameobject* img_go = AddGameobject("Image", canvas_go);
 
@@ -287,7 +287,7 @@ bool Scene::LoadIntroScene()
 	// Add a canvas
 	Gameobject* canvas_go = AddGameobject("Canvas", &root);
 	C_Canvas* canv = new C_Canvas(canvas_go);
-	canv->target = { 0.f, 0.f, 1.f, 1.f };
+	canv->target = { 0.6f, 0.6f, 0.4f, 0.4f };
 
 	Gameobject* background_go = AddGameobject("Background", canvas_go);
 
@@ -317,7 +317,7 @@ bool Scene::LoadMenuScene()
 	//------------------------- CANVAS --------------------------------------
 	Gameobject* canvas_go = AddGameobject("Canvas", &root);
 	C_Canvas* canv = new C_Canvas(canvas_go);
-	canv->target = { 0.f, 0.f, 1.f, 1.f };
+	canv->target = { 0.6f, 0.6f, 0.4f, 0.4f };
 
 	//------------------------- BACKGROUND --------------------------------------
 
