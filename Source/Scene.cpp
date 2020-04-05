@@ -4,20 +4,17 @@
 #include "Audio.h"
 #include "Window.h"
 #include "Render.h"
-#include "Map.h"
 #include "Editor.h"
-#include "TimeManager.h"
-#include "TextureManager.h"
+
+#include "Transform.h"
 #include "Sprite.h"
 #include "Behaviour.h"
+#include "Edge.h"
 #include "AudioSource.h"
 #include "Canvas.h"
+
 #include "Defs.h"
 #include "Log.h"
-#include "PathfindingManager.h"
-#include "Minimap.h"
-#include "Point.h"
-#include "Edge.h"
 
 #include "SDL/include/SDL_scancode.h"
 #include "optick-1.3.0.0/include/optick.h"
@@ -83,29 +80,21 @@ bool Scene::Update()
 	{
 		std::pair<int, int> position = Map::WorldToTileBase(float(x + cam.x), float(y + cam.y));
 
-		Gameobject* audio_go = AddGameobject("AudioSource - son of root", &root);
+		Gameobject* audio_go = AddGameobject("AudioSource - son of root");
 		audio_go->GetTransform()->SetLocalPos({ float(position.first), float(position.second), 0.0f });
-		audio_go->GetTransform()->GetGlobalPosition();
-		new AudioSource(audio_go, HAMMER, -1);
 
-		Sprite* s3 = new Sprite(audio_go);
-		s3->tex_id = id_mouse_tex;
-		s3->section = { 128, 0, 64, 64 };
+		(new AudioSource(audio_go))->Play(HAMMER, -1);
+		new Sprite(audio_go, id_mouse_tex, { 128, 0, 64, 64 });
 	}
 
 	if (App->input->GetKey(SDL_SCANCODE_4) == KEY_DOWN)
 	{
 		std::pair<int, int> position = Map::WorldToTileBase(float(x + cam.x), float(y + cam.y));
 
-		Gameobject* unit_go = AddGameobject("Game Unit - son of root", &root);
+		Gameobject* unit_go = AddGameobject("Game Unit - son of root");
 		unit_go->GetTransform()->SetLocalPos({ float(position.first), float(position.second), 0.0f });
 
-		new B_Movable(unit_go);
-
-		Sprite* s3 = new Sprite(unit_go);
-		s3->tex_id = id_mouse_tex;
-		s3->section = { 64, 0, 64, 64 };
-
+		new B_Unit(unit_go, UNIT_MELEE, IDLE);
 	}
 
 	if (App->input->GetKey(SDL_SCANCODE_5) == KEY_DOWN) //Edge
@@ -113,42 +102,13 @@ bool Scene::Update()
 		std::pair<int, int> position = Map::WorldToTileBase(float(x + cam.x), float(y + cam.y));
 		if (App->pathfinding.CheckWalkabilityArea(position, vec(1.0f)))
 		{
-			Gameobject* edgeNode = AddGameobject("Edge resource node", &root);
+			Gameobject* edge_go = AddGameobject("Edge resource node");
+			edge_go->GetTransform()->SetLocalPos({ float(position.first), float(position.second), 0.0f });
 
-			// Move to mouse pos
-			Transform* t = edgeNode->GetTransform();
-			t->SetLocalPos({ float(position.first), float(position.second), 0.0f });
-
-			Edge* node = new Edge(edgeNode);
-			node->Init(20, 0, false, RESOURCE);
-			Event::Push(SPAWNED, node);
-
-			//node->SetTexture();
-			//std::map<double, Edge*>::iterator it;
-			//it = edgeNodes.find(node->GetID());
-
-			//if (it != edgeNodes.end()) edgeNodes[node->GetID()] = node;
-			//else edgeNodes.insert(std::pair<double, Edge*>(node->GetID(), node));
+			new Edge(edge_go);
 		}
 		else
-		{
 			LOG("Invalid spawn position");
-		}
-	}
-
-	if (App->input->GetKey(SDL_SCANCODE_0) == KEY_DOWN) //Edge
-	{
-		/*if (App->editor->selectedUnits.empty() == false)
-		{
-			//LOG("Units selected");
-			Event::Push(GET_DAMAGE, App->editor->selectedUnits[0], 6);
-		}*/
-		Gameobject* node = App->editor->selection;
-		if (node != nullptr && node->GetEdgeNode() != nullptr)
-		{
-			Event::Push(GET_DAMAGE, node, 6);
-		}
-		
 	}
 
 	if (App->input->GetKey(SDL_SCANCODE_X) == KEY_DOWN)
@@ -180,14 +140,10 @@ bool Scene::Update()
 	if (App->input->GetMouseButtonDown(2) == KEY_DOWN)
 	{
 		Gameobject* go = App->editor->selection;
-
-		std::pair<int, int> mouseOnMap = Map::WorldToTileBase(x + cam.x, y + cam.y);
-
-		if (go != nullptr) 
+		if (go) 
 		{
-			LOG("Object selected");
+			std::pair<int, int> mouseOnMap = Map::WorldToTileBase(x + cam.x, y + cam.y);
 			Event::Push(ON_RIGHT_CLICK, go, mouseOnMap.first, mouseOnMap.second);
-			LOG("Event triggered");
 		}
 	}
 
@@ -283,22 +239,6 @@ bool Scene::LoadTestScene()
 
 	if (ret && map.Load("maps/iso.tmx"))
 	{
-		// Run test content
-		Gameobject* go1 = AddGameobject("g1 - son of root", &root);
-		Gameobject* go2 = AddGameobject("g2 - son of g1", go1);
-
-		Sprite* s1 = new Sprite(go1);
-		s1->tex_id = id_mouse_tex;
-		s1->section = { 0, 0, 64, 64 };
-		
-		Sprite* s2 = new Sprite(go2);
-		s2->tex_id = id_mouse_tex;
-		s2->section = { 64, 0, 64, 64 };
-
-		//B_Unit* b1 = new B_Unit(go1);
-		
-		B_Unit* b2 = new B_Unit(go2);
-
 		// HUD
 		Gameobject* canvas_go = AddGameobject("Canvas", &root);
 		C_Canvas* canv = new C_Canvas(canvas_go);
@@ -518,9 +458,6 @@ Gameobject* Scene::MouseClickSelect(int mouse_x, int mouse_y)
 			queue.pop();
 		}
 	}
-
-	if (ret != nullptr)
-		Event::Push(ON_SELECT, ret);
 
 	return ret;
 }

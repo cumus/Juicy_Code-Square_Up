@@ -5,7 +5,6 @@
 #include "Map.h"
 #include "Gameobject.h"
 #include "Point.h"
-#include "Edge.h"
 
 #include <vector>
 
@@ -54,7 +53,6 @@ public:
 	iPoint startPath = iPoint({ 16,7 }); //Temporal
 	iPoint destinationPath;
 	std::vector<iPoint>* path = nullptr;
-	std::map<double,Edge*> edgeNodes;
 
 private:
 

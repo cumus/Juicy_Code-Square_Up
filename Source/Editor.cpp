@@ -97,9 +97,25 @@ bool Editor::Update()
 	// Select Gameobject
 	if (mouse_left_button == KEY_DOWN && mouse_over_windows == 0u && !sizing)
 	{
-		if(selection != nullptr) Event::Push(UNSELECTED, selection);
+		Gameobject* prev = selection;
 		selection = App->scene->MouseClickSelect(x, y);
-		Event::Push(SELECTED, selection);
+
+		if (selection != nullptr)
+		{
+			if (prev != nullptr)
+			{
+				if (prev != selection)
+				{
+					Event::Push(ON_UNSELECT, prev);
+					Event::Push(ON_SELECT, selection);
+				}
+			}
+			else
+				Event::Push(ON_SELECT, selection);
+		}
+		else if (prev != nullptr)
+			Event::Push(ON_UNSELECT, prev);
+
 		//selectedUnits.push_back(App->scene->MouseClickSelect(x, y));
 
 		/*if (selectedUnits.empty() == false)

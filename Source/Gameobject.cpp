@@ -51,6 +51,14 @@ void Gameobject::Update()
 {
 	OPTICK_EVENT();
 
+	if (death_timer > 0.f)
+	{
+		death_timer -= App->time.GetGameDeltaTime();
+
+		if (death_timer <= 0.f)
+			Destroy();
+	}
+
 	while (!comp_to_remove.empty())
 	{
 		double comp_id = comp_to_remove.front();
@@ -95,7 +103,6 @@ void Gameobject::Update()
 
 		go_to_remove.pop();
 	}
-
 
 	for (std::vector<Component*>::iterator component = components.begin(); component != components.end(); ++component)
 		if ((*component)->IsActive())
@@ -161,6 +168,13 @@ void Gameobject::RecieveEvent(const Event & e)
 				Event::Push(ON_SELECT, *component);
 		break;
 	}
+	case ON_UNSELECT:
+	{
+		for (std::vector<Component*>::iterator component = components.begin(); component != components.end(); ++component)
+			if ((*component)->IsActive())
+				Event::Push(ON_UNSELECT, *component);
+		break;
+	}
 	case ON_DESTROY:
 	{
 		for (std::vector<Component*>::iterator component = components.begin(); component != components.end(); ++component)
@@ -188,8 +202,8 @@ void Gameobject::RecieveEvent(const Event & e)
 		for (std::vector<Gameobject*>::iterator child = childs.begin(); child != childs.end(); ++child)
 			if ((*child)->active)
 				Event::Push(PARENT_TRANSFORM_MODIFIED, *child, e.data1, e.data2);
-		break;
 
+		break;
 	}
 	case PARENT_TRANSFORM_MODIFIED:
 	{
@@ -199,175 +213,28 @@ void Gameobject::RecieveEvent(const Event & e)
 					Cvar(e.data1),
 					Cvar(e.data2));
 		break;
-
-	}
-	case GET_DAMAGE:
-	{
-		for (std::vector<Component*>::iterator component = components.begin(); component != components.end(); ++component)
-			if ((*component)->IsActive())
-				Event::Push(GET_DAMAGE, *component, Cvar(e.data1));
-		break;
-	}
-	case SELECTED:
-	{
-		for (std::vector<Component*>::iterator component = components.begin(); component != components.end(); ++component)
-			if ((*component)->IsActive())
-				Event::Push(SELECTED, *component);
-		break;
-	}
-	case UNSELECTED:
-	{
-		for (std::vector<Component*>::iterator component = components.begin(); component != components.end(); ++component)
-			if ((*component)->IsActive())
-				Event::Push(UNSELECTED, *component);
-		break;
-	}
-	case SPAWNED:
-	{
-		for (std::vector<Component*>::iterator component = components.begin(); component != components.end(); ++component)
-			if ((*component)->IsActive())
-				Event::Push(SPAWNED, *component);
-		break;
 	}
 	}
-}
-
-const char* Gameobject::GetName() const
-{
-	return name.c_str();
-}
-
-Transform * Gameobject::GetTransform()
-{
-	if (transform != nullptr)
-		return transform;
-
-	for (std::vector<Component*>::iterator it = components.begin(); it != components.end(); ++it)
-		if ((*it)->GetType() == TRANSFORM)
-			return transform = (*it)->AsTransform();
-
-	return nullptr;
-}
-
-const Transform* Gameobject::GetTransform() const
-{
-	if (transform != nullptr)
-		return transform;
-
-	for (std::vector<Component*>::const_iterator it = components.begin(); it != components.end(); ++it)
-		if ((*it)->GetType() == TRANSFORM)
-			return (*it)->AsTransform();
-
-	return nullptr;
 }
 
 UI_Component* Gameobject::GetUIParent() const
 {
+	UI_Component* ret = nullptr;
+
 	if (parent)
-		for (std::vector<Component*>::const_iterator it = parent->components.begin(); it != parent->components.end(); ++it)
+	{
+		for (std::vector<Component*>::iterator it = parent->components.begin(); it != parent->components.end(); ++it)
+		{
 			if ((*it)->GetType() > UI_GENERAL && (*it)->GetType() < UI_MAX)
-				return (*it)->AsUIComp();
+			{
+				ret = (*it)->AsUIComp();
+				break;
+			}
+		}
+	}
 
-	return nullptr;
+	return ret;
 }
-
-B_Movable* Gameobject::GetBMovable()
-{
-	if (bMovable != nullptr)
-		return bMovable;
-
-	for (std::vector<Component*>::iterator it = components.begin(); it != components.end(); ++it)
-		if ((*it)->GetType() == B_MOVABLE)
-			return bMovable = (*it)->AsBMovable();
-
-	return nullptr;
-}
-
-const B_Movable* Gameobject::GetBMovable() const
-{
-	if (bMovable != nullptr)
-		return bMovable;
-
-	for (std::vector<Component*>::const_iterator it = components.begin(); it != components.end(); ++it)
-		if ((*it)->GetType() == B_MOVABLE)
-			return (*it)->AsBMovable();
-
-	return nullptr;
-}
-
-B_Building* Gameobject::GetBBuilding()
-{
-	if (bBuilding != nullptr)
-		return bBuilding;
-
-	for (std::vector<Component*>::iterator it = components.begin(); it != components.end(); ++it)
-		if ((*it)->GetType() == B_BUILDING)
-			return bBuilding = (*it)->AsBBuilding();
-
-	return nullptr;
-}
-
-const B_Building* Gameobject::GetBBuilding() const
-{
-	if (bBuilding != nullptr)
-		return bBuilding;
-
-	for (std::vector<Component*>::const_iterator it = components.begin(); it != components.end(); ++it)
-		if ((*it)->GetType() == B_BUILDING)
-			return (*it)->AsBBuilding();
-
-	return nullptr;
-}
-
-Edge* Gameobject::GetEdgeNode()
-{
-	if (edgeNode != nullptr)
-		return edgeNode;
-
-	for (std::vector<Component*>::iterator it = components.begin(); it != components.end(); ++it)
-		if ((*it)->GetType() == EDGE)
-			return edgeNode = (*it)->AsEdge();
-
-	return nullptr;
-}
-
-const Edge* Gameobject::GetEdgeNode() const
-{
-	if (edgeNode != nullptr)
-		return edgeNode;
-
-	for (std::vector<Component*>::const_iterator it = components.begin(); it != components.end(); ++it)
-		if ((*it)->GetType() == EDGE)
-			return (*it)->AsEdge();
-
-	return nullptr;
-}
-
-B_Unit* Gameobject::GetBUnit()
-{
-	if (bunit != nullptr)
-		return bunit;
-
-	for (std::vector<Component*>::iterator it = components.begin(); it != components.end(); ++it)
-		if ((*it)->GetType() == B_UNIT)
-			return bunit = (*it)->AsBUnit();
-
-	return nullptr;
-}
-
-const B_Unit* Gameobject::GetBUnit() const
-{
-	if (bunit != nullptr)
-		return bunit;
-
-	for (std::vector<Component*>::const_iterator it = components.begin(); it != components.end(); ++it)
-		if ((*it)->GetType() == B_UNIT)
-			return (*it)->AsBUnit();
-
-	return nullptr;
-}
-
-
 
 void Gameobject::RecursiveFillHierarchy(float deepness, std::vector<std::pair<float, Gameobject*>>& container)
 {
@@ -377,20 +244,18 @@ void Gameobject::RecursiveFillHierarchy(float deepness, std::vector<std::pair<fl
 		(*child)->RecursiveFillHierarchy(++deepness, container);
 }
 
-std::vector<Gameobject*>& Gameobject::GetChilds()
-{
-	return childs;
-}
-
-void Gameobject::SetName(const char * n)
-{
-	name = n;
-}
-
 void Gameobject::AddComponent(Component* comp)
 {
 	if (comp)
+	{
+		ComponentType type = comp->GetType();
+		if (type == TRANSFORM)
+			transform = comp->AsTransform();
+		else if (type >= BEHAVIOUR && type < MAX_BEHAVIOUR)
+			behaviour = comp->AsBehaviour();
+
 		components.push_back(comp);
+	}
 }
 
 void Gameobject::RemoveChilds()
@@ -444,19 +309,14 @@ bool Gameobject::RemoveComponent(Component* comp)
 	return ret;
 }
 
-bool Gameobject::Destroy()
+bool Gameobject::Destroy(float ms)
 {
-	return parent != nullptr && parent->RemoveChild(this);
-}
+	bool ret = true;
 
-double Gameobject::GetID() const
-{
-	return id;
-}
+	if ((death_timer = ms) <= 0.f)
+		ret = (parent != nullptr && parent->RemoveChild(this));
 
-bool Gameobject::operator==(Gameobject* go)
-{
-	return go != nullptr && id == go->id;
+	return ret;
 }
 
 void Gameobject::AddNewChild(Gameobject * child)

@@ -500,7 +500,7 @@ void PathfindingManager::Merge(std::vector<PathNode>& vec, int l, int m, int r)
 
 
 // Main function to request a path from A to B
-std::vector<iPoint> * PathfindingManager::CreatePath(iPoint& origin, iPoint& destination, double ID)
+std::vector<iPoint> * PathfindingManager::CreatePath(iPoint origin, iPoint destination, double ID)
 {
 	std::vector<iPoint>* pathPointer = nullptr;
 	std::vector<iPoint> finalPath;

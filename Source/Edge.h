@@ -2,24 +2,16 @@
 #define __EDGE_H__
 
 #include "Behaviour.h"
-#include "Gameobject.h"
-#include "Component.h"
 
-//class Gameobject;
-
-class Edge : public B_Building
+class Edge : public Behaviour
 {
 public:
-	Edge(Gameobject* go, ComponentType type = EDGE);
-	Edge(const Edge& node);
+	Edge(Gameobject* go);
 	~Edge();
-	void RecieveEvent(const Event& e) override;
-	void SetTexture() override;
-	void CheckSprite() override;
-	void BuildingAction() override;
-	void FreeWalkability() override;
-	void Selected() override;
-	void UnSelected() override;
+
+	void OnRightClick(int x, int y) override;
+	void OnDamage(int damage) override;
+	void OnKill() override;
 };
 
-#endif
+#endif // __EDGE_H__

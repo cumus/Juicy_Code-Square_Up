@@ -67,7 +67,7 @@ public:
 	void SetWalkabilityLayer(const MapLayer& layer);
 
 	// Main function to request a path from A to B
-	std::vector<iPoint>* CreatePath( iPoint& origin, iPoint& destination,double ID);
+	std::vector<iPoint>* CreatePath(iPoint origin, iPoint destination, double ID);
 
 	int ContinuePath(UncompletedPath path,int working_ms);
 

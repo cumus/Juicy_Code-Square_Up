@@ -1,83 +1,74 @@
 #include "Behaviour.h"
 #include "Application.h"
 #include "TimeManager.h"
-#include "Gameobject.h"
 #include "PathfindingManager.h"
+#include "Gameobject.h"
+#include "Transform.h"
+#include "Sprite.h"
+#include "AudioSource.h"
 #include "Log.h"
 
-
-
-Behaviour::Behaviour(Gameobject* go, ComponentType type) : Component(type, go)
+Behaviour::Behaviour(Gameobject* go, UnitType t, UnitState starting_state, ComponentType comp_type) :
+	Component(comp_type, go),
+	type(t),
+	current_state(starting_state)
 {
-	ID = GetID();
-	startingLife = 10;
-	currentLife = startingLife;
-	damage = 1;
-	selected = false;
-	canAttackUnits = true;
-	timeToDelete = 0;
-	counter = 0;
-	unitT = UNKNOWN;
-	deleteGO = false;
+	current_life = max_life = damage = 10;
+	attack_range = vision_range = 5.0f;
+
+	audio = new AudioSource(game_object);
+	new AnimatedSprite(this);
+	selection_highlight = new Sprite(go, App->tex.Load("textures/selectionMark.png"), { 0, 0, 64, 64 }, BACK_SCENE);
 }
 
-void Behaviour::DeleteObject(float time)
-{
-	timeToDelete = time;
-	deleteGO = true;
-}
-
-void Behaviour::Update()
-{
-	if (deleteGO)
-	{
-		counter += App->time.GetDeltaTime();
-		//counter += App->time.GetGameDeltaTime();
-		if (counter >= timeToDelete)
-		{			
-			FreeWalkability();
-			game_object->Destroy();
-			LOG("Object despawned");
-		}
-	}
-}
-
-void B_Movable::RecieveEvent(const Event& e)
+void Behaviour::RecieveEvent(const Event& e)
 {
 	switch (e.type)
 	{
-	case ON_SELECT: {
-
-		currentLife -= 5;		
-
-		if (currentLife <= 0)
-		{
-			if (game_object->Destroy())
-				LOG("Destroying GO: %s", game_object->GetName());
-			else
-				LOG("Error destroying GO: %s", game_object->GetName());
-		}
-		break;
+	case ON_PLAY: break;
+	case ON_PAUSE: break;
+	case ON_STOP: break;
+	case ON_SELECT: Selected(); break;
+	case ON_UNSELECT: UnSelected(); break;
+	case ON_DESTROY: break;
+	case ON_RIGHT_CLICK: OnRightClick(e.data1.AsInt(), e.data2.AsInt()); break;
+	case DAMAGE: OnDamage(e.data1.AsInt()); break;
 	}
-	case ON_RIGHT_CLICK: {
+}
 
-		vec pos = game_object->GetTransform()->GetGlobalPosition();
-		iPoint origin = { int(pos.x), int(pos.y) };
-		iPoint destination = { e.data1.AsInt(), e.data2.AsInt() };
-		path = App->pathfinding.CreatePath(origin, destination,ID);
-		next = false;
-		move = false;
-		break;
-	}
-	default:
-		break;
-	}
-	
-};
+void Behaviour::Selected()
+{
+	selection_highlight->SetActive();
+}
+
+void Behaviour::UnSelected()
+{
+	selection_highlight->SetInactive();
+}
+
+void Behaviour::OnDamage(int d)
+{
+	current_life -= d;
+
+	if (current_life <= 0)
+		OnKill();
+}
+
+void Behaviour::OnKill()
+{
+	game_object->Destroy();
+}
 
 
+///////////////////////////
+// UNIT BEHAVIOUR
+///////////////////////////
 
-void B_Movable::Update()
+B_Unit::B_Unit(Gameobject* go, UnitType t, UnitState s, ComponentType comp_type) :
+	Behaviour(go, t, s, comp_type)
+{}
+
+void B_Unit::Update()
 {	
 	if (path != nullptr && !path->empty()) 
 	{	
@@ -90,6 +81,7 @@ void B_Movable::Update()
 			//LOG("Tile coords X:%d, Y:%d",nextTile.x,nextTile.y);
 			next = true;
 			move = true;
+
 			//LOG("X: %d, Y: %d", pathbegin.x, pathbegin.y);
 			//LOG("X: %f, Y: %f", game_object->GetTransform()->GetGlobalPosition().x, game_object->GetTransform()->GetGlobalPosition().y);
 		}
@@ -140,122 +132,37 @@ void B_Movable::Update()
 		if (nextTile.x > tilePos.x) 
 		{
 			game_object->GetTransform()->MoveX(+speed * App->time.GetGameDeltaTime());
-			//game_object->GetTransform()->MoveX(+speed * App->time.GetDeltaTime());
 			positiveX = true;
 		}
 		else
 		{
 			game_object->GetTransform()->MoveX(-speed * App->time.GetGameDeltaTime());
-			//game_object->GetTransform()->MoveX(-speed * App->time.GetDeltaTime());
 			positiveX = false;			
 		}				
 
 		if (nextTile.y > tilePos.y) 
 		{
 			game_object->GetTransform()->MoveY(+speed * App->time.GetGameDeltaTime());
-			//game_object->GetTransform()->MoveY(+speed * App->time.GetDeltaTime());
 			positiveY = true;
 		}
 		else
 		{
 			game_object->GetTransform()->MoveY(-speed * App->time.GetGameDeltaTime());
-			//game_object->GetTransform()->MoveY(-speed * App->time.GetDeltaTime());
 			positiveY = false;
 		}	
 	}	
 }
 
-///////////////////////////
-// BUILDING BEHAVIOUR
-///////////////////////////
-
-
-void B_Building::Init(int life, int dmg, bool attackUnits, UnitType type)
+void B_Unit::OnRightClick(int x, int y)
 {
-	startingLife = life;
-	damage = dmg;
-	canAttackUnits = attackUnits;
-	this->unitT = type;
-	currentState = FULL;
-	CheckSprite();
-}
-
-void B_Building::GotDamaged(int dmg)
-{
-	if (currentState != DESTROYED)
+	Transform* t = game_object->GetTransform();
+	if (t)
 	{
-		currentLife -= dmg;
-		CheckState();
+		vec pos = t->GetGlobalPosition();
+		path = App->pathfinding.CreatePath({ int(pos.x), int(pos.y) }, { x, y }, GetID());
+		next = false;
+		move = false;
+
+		audio->Play(HAMMER);
 	}
-}
-
-void B_Building::Repair(int heal)
-{
-	if (currentState != DESTROYED)
-	{
-		currentLife += heal;
-		if (currentLife > startingLife) { currentLife = startingLife; }
-		CheckState();
-	}
-}
-
-void B_Building::CheckState()
-{
-	if (currentLife < (startingLife / 2))
-	{
-		if (currentLife > 0) currentState = HALF;
-		else
-		{
-			currentState = DESTROYED;
-			DeleteObject(5);
-		}
-	}
-	else currentState = FULL;
-	//LOG("State: %d", currentState);
-	CheckSprite();
-}
-
-
-
-///////////////////////////
-// UNIT BEHAVIOUR
-///////////////////////////
-
-void B_Unit::Init(int life, int dmg, bool attackUnits, bool ally, UnitType type)
-{
-	startingLife = life;
-	damage = dmg;
-	canAttackUnits = attackUnits;
-	allied = ally;
-	this->unitT = type;
-	currentState = ALIVE;
-	CheckSprite();
-}
-
-void B_Unit::GotDamaged(const Event& e)
-{
-	if (e.type == GET_DAMAGE)
-	{
-		if (currentState != DEAD)
-		{
-			currentLife -= e.data1.AsInt();
-			CheckState();
-		}
-	}
-}
-
-void B_Unit::Attack(int heal)
-{
-	//Click on tile->check tile for enemies->if enemies->move to attack from range->keep moving as they get away->if not->walk to tile
-}
-
-void B_Unit::CheckState()
-{
-	if (currentLife < 0)
-	{
-		currentState = DEAD;
-	}
-	else currentState = ALIVE;
-
-	CheckSprite();
 }

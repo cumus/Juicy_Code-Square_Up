@@ -2,10 +2,10 @@
 #define __GAMEOBJECT_H__
 
 #include "Component.h"
-#include "Transform.h"
 #include <string>
 
-class B_Unit;
+class Transform;
+class Behaviour;
 class UI_Component;
 
 class Gameobject : public EventListener
@@ -22,38 +22,29 @@ public:
 
 	void RecieveEvent(const Event& e) override;
 
-	const char* GetName() const;
-	void SetName(const char* name);
+	double GetID() const { return id; }
+	bool operator==(Gameobject* go) { return go && id == go->id; }
 
-	Transform* GetTransform();
-	const Transform* GetTransform() const;
+	const char* GetName() const { return name.c_str(); };
+	void SetName(const char* str) { name = str; }
+
+	Transform*			GetTransform() { return transform; }
+	Behaviour*			GetBehaviour() { return behaviour; }
+
+	const Transform*	GetTransform() const { return transform; }
+	const Behaviour*	GetBehaviour() const { return behaviour; }
+
+	std::vector<Gameobject*>& GetChilds() { return childs; }
 
 	UI_Component* GetUIParent() const;
 
-	B_Unit* GetBUnit();
-	const B_Unit* GetBUnit() const;
-
-	B_Movable* GetBMovable();
-	const B_Movable* GetBMovable() const;
-
-	B_Building* GetBBuilding();
-	const B_Building* GetBBuilding() const;
-
-	Edge* GetEdgeNode();
-	const Edge* GetEdgeNode() const;
-
 	void RecursiveFillHierarchy(float deepness, std::vector<std::pair<float, Gameobject*>>& container);
-	std::vector<Gameobject*>& GetChilds();
-
 	void AddComponent(Component* comp);
-
 	void RemoveChilds();
 	bool RemoveChild(Gameobject* child);
 	bool RemoveComponent(Component* comp);
-	bool Destroy();
+	bool Destroy(float ms = 0.f);
 
-	double GetID() const;
-	bool operator==(Gameobject* go);
 
 private:
 
@@ -63,9 +54,10 @@ private:
 
 	static double go_count;
 
-	double id = -1;
+	double id;
 	bool active = true;
 	std::string name;
+	float death_timer = -1;
 
 	std::vector<Component*> components;
 	std::vector<Gameobject*> childs;
@@ -75,10 +67,7 @@ private:
 
 	Gameobject* parent = nullptr;
 	Transform* transform = nullptr;
-	B_Unit* bunit = nullptr;
-	B_Movable* bMovable = nullptr;
-	B_Building* bBuilding = nullptr;
-	Edge* edgeNode = nullptr;
+	Behaviour* behaviour = nullptr;
 };
 
 #endif // __GAMEOBJECT_H__

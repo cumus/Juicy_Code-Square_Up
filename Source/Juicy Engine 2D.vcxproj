@@ -144,7 +144,6 @@
     <ClCompile Include="BarMenu.cpp" />
     <ClCompile Include="Behaviour.cpp" />
     <ClCompile Include="Canvas.cpp" />
-    <ClCompile Include="Collisions.cpp" />
     <ClCompile Include="Component.cpp" />
     <ClCompile Include="ConfigWindow.cpp" />
     <ClCompile Include="ConsoleWindow.cpp" />
@@ -153,7 +152,6 @@
     <ClCompile Include="Editor.cpp" />
     <ClCompile Include="EditorWindow.cpp" />
     <ClCompile Include="Event.cpp" />
-    <ClCompile Include="FadetoBlack.cpp" />
     <ClCompile Include="FileManager.cpp" />
     <ClCompile Include="FontManager.cpp" />
     <ClCompile Include="Gameobject.cpp" />
@@ -189,12 +187,10 @@
     <ClCompile Include="PugiXml\src\pugixml.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Animation.h" />
     <ClInclude Include="AudioSource.h" />
     <ClInclude Include="BarMenu.h" />
     <ClInclude Include="Behaviour.h" />
     <ClInclude Include="Canvas.h" />
-    <ClInclude Include="Collisions.h" />
     <ClInclude Include="Component.h" />
     <ClInclude Include="ConfigWindow.h" />
     <ClInclude Include="ConsoleWindow.h" />
@@ -204,7 +200,6 @@
     <ClInclude Include="EditorWindow.h" />
     <ClInclude Include="Event.h" />
     <ClInclude Include="EventListener.h" />
-    <ClInclude Include="FadetoBlack.h" />
     <ClInclude Include="FileManager.h" />
     <ClInclude Include="FontManager.h" />
     <ClInclude Include="Gameobject.h" />

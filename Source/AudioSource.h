@@ -8,16 +8,12 @@ class AudioSource : public Component
 {
 public:
 
-	AudioSource(Gameobject* go, Audio_FX fx, int loops = 0);
+	AudioSource(Gameobject* go);
 	~AudioSource();
 
-	bool Play();
+	bool Play(Audio_FX fx, int loops = 0);
+
 	void RecieveEvent(const Event& e) override;
-
-public:
-
-	Audio_FX fx;
-	int loops;
 };
 
 #endif // !__AUDIO_SOURCE_H__

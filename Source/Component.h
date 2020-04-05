@@ -8,6 +8,7 @@ enum ComponentType
 	COMP_NONE = 0,
 	TRANSFORM,
 	SPRITE,
+	ANIM_SPRITE,
 	AUDIO_SOURCE,
 
 	// UI
@@ -20,25 +21,17 @@ enum ComponentType
 
 	// Behaviours
 	BEHAVIOUR,
-	B_MOVABLE,
-	B_BUILDING,
 	B_UNIT,
-
-	//Units
-	GATHERER,
-
-	//Structures
-	EDGE,
+	B_GATHERER,
+	B_EDGE,
+	MAX_BEHAVIOUR,
 
 	MAX_TYPES
 };
 
-class Transform;
 class Gameobject;
-class B_Unit;
-class B_Movable;
-class B_Building;
-class Edge;
+class Transform;
+class Behaviour;
 class UI_Component;
 
 class Component : public EventListener
@@ -59,10 +52,7 @@ public:
 
 	ComponentType GetType() const { return type; }
 	Transform* AsTransform() const { return (Transform*)this; }
-	B_Unit* AsBUnit() const { return (B_Unit*)this; }
-	B_Movable* AsBMovable() const { return (B_Movable*)this; }
-	B_Building* AsBBuilding() const { return (B_Building*)this; }
-	Edge* AsEdge() const { return (Edge*)this; }
+	Behaviour* AsBehaviour() const { return (Behaviour*)this; }
 	UI_Component* AsUIComp() const { return (UI_Component*)this; }
 	Gameobject* GetGameobject() const { return game_object;	}
 

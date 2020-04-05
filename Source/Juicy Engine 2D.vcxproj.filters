@@ -55,12 +55,6 @@
     <ClCompile Include="mmgr\mmgr.cpp">
       <Filter>Source\3rd Party\mmgr</Filter>
     </ClCompile>
-    <ClCompile Include="Collisions.cpp">
-      <Filter>Source\Modules\Other</Filter>
-    </ClCompile>
-    <ClCompile Include="FadetoBlack.cpp">
-      <Filter>Source\Modules\Other</Filter>
-    </ClCompile>
     <ClCompile Include="Sprite.cpp">
       <Filter>Source\Gameobjects\Components</Filter>
     </ClCompile>
@@ -222,17 +216,8 @@
     <ClInclude Include="mmgr\nommgr.h">
       <Filter>Source\3rd Party\mmgr</Filter>
     </ClInclude>
-    <ClInclude Include="Collisions.h">
-      <Filter>Source\Modules\Other</Filter>
-    </ClInclude>
-    <ClInclude Include="FadetoBlack.h">
-      <Filter>Source\Modules\Other</Filter>
-    </ClInclude>
     <ClInclude Include="Module.h">
       <Filter>Source\Main</Filter>
-    </ClInclude>
-    <ClInclude Include="Animation.h">
-      <Filter>Source\Modules\Other</Filter>
     </ClInclude>
     <ClInclude Include="Sprite.h">
       <Filter>Source\Gameobjects\Components</Filter>
@@ -361,9 +346,6 @@
     </Filter>
     <Filter Include="Source\Modules\Map">
       <UniqueIdentifier>{09bfed4b-6c59-4dbf-b077-8a850cc733c0}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\Modules\Other">
-      <UniqueIdentifier>{323347ab-fdf8-4ead-8ba9-ab634e6c3ba5}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source\Modules\Editor">
       <UniqueIdentifier>{d82a7a8a-4c42-42b6-9915-e43fb9545b2c}</UniqueIdentifier>

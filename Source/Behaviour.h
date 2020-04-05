@@ -2,22 +2,24 @@
 #define __BEHAVIOUR_H__
 
 #include "Component.h"
-#include "PathfindingManager.h"
-#include "Sprite.h"
+#include "Point.h"
+#include <vector>
 
-//Unit types
 enum UnitType
 {
-	//////Movable units//////
-	UNKNOWN = 0,
-	USER_MELEE,
+	EDGE,
+	UNIT_MELEE,
+	ENEMY_MELEE
+
+	/*USER_GATHERER,
 	USER_RANGED,
 	USER_SUPER,
-	USER_SPECIAL,//Gatherer
+	USER_SPECIAL,
 	IA_MELEE,
 	IA_RANGED,
 	IA_SUPER,
 	IA_SPECIAL,
+
 	//////Structures//////
 	TOWN_HALL,
 	LAB,
@@ -25,118 +27,92 @@ enum UnitType
 	RANGED_TURRET,
 	NEAR_TURRET,
 	RESOURCE,
-	IA_SPAWN
+	IA_SPAWN*/
 };
 
-enum BuildingState
+enum UnitState
 {
+	// Unit
+	IDLE = 0,
+	MOVING_N,
+	MOVING_S,
+	MOVING_W,
+	MOVING_E,
+	MOVING_NE,
+	MOVING_NW,
+	MOVING_SE,
+	MOVING_SW,
+	ATTACKING_N,
+	ATTACKING_S,
+	ATTACKING_W,
+	ATTACKING_E,
+	ATTACKING_NE,
+	ATTACKING_NW,
+	ATTACKING_SE,
+	ATTACKING_SW,
+	DEAD,
+
+	// Building
 	BUILDING,
-	FULL,
-	HALF,
+	FULL_LIFE,
+	HALF_LIFE,
 	DESTROYED
 };
 
-enum UnitState 
-{
-	IDLE,
-	ATTACKING,
-	ALIVE,
-	DEAD
-};
-
-class Gameobject;
+class Sprite;
+class AudioSource;
 
 class Behaviour : public Component 
 {
 public:
-	Behaviour(Gameobject* go, ComponentType type = BEHAVIOUR);
+	Behaviour(Gameobject* go, UnitType type, UnitState starting_state, ComponentType comp_type = BEHAVIOUR);
 	virtual ~Behaviour() {}
-	void DeleteObject(float time=1);
-	void Update() override;
-	virtual void FreeWalkability() {}
-	virtual void Selected() {}
-	virtual void UnSelected() {}
-	virtual void GotDamage() {}
 
-public:
-	double ID;
-	int startingLife;
-	int currentLife;
-	int damage;
-	bool selected;
-	bool canAttackUnits; //For gatherer set false and non defensive structures
-	bool allied;
-	bool deleteGO;
-	float timeToDelete,counter;
-	UnitType unitT;
-	Sprite* selectionMark;
-	int textureID;
-	int textureSelectionID;
+	void RecieveEvent(const Event& e) override;
+
+	virtual void Selected();
+	virtual void UnSelected();
+	virtual void OnRightClick(int x, int y) {}
+	virtual void OnDamage(int damage);
+	virtual void OnKill();
+
+	UnitType GetType() const { return type; }
+	UnitState* GetStatePtr() { return &current_state; }
+
+protected:
+
+	UnitType type;
+	UnitState current_state;
+
+	// Stats
+	int max_life, current_life, damage;
+	float attack_range, vision_range;
+
+	// Complementary components
+	AudioSource* audio;
+	Sprite* selection_highlight;
 };
 
-class B_Movable: public Behaviour
+class B_Unit : public Behaviour
 {
 public:
 
-	B_Movable(Gameobject* go, ComponentType type = B_MOVABLE) : Behaviour(go, type) {}
-	virtual ~B_Movable() {}
+	B_Unit(Gameobject* go, UnitType type, UnitState starting_state, ComponentType comp_type = B_UNIT);
+	virtual ~B_Unit() {}
+
 	void Update() override;
-	void RecieveEvent(const Event& e) override;
+	void OnRightClick(int x, int y) override;
 	
-public:
-	
+protected:
+
 	float speed = 2;
 	float aux_speed = speed;
 	std::vector<iPoint>* path = nullptr;
-
 	iPoint nextTile;
 	bool next = false;
 	bool move = false;
 	bool positiveX = false;
 	bool positiveY = false;
 };
-
-class B_Building : public Behaviour
-{	
-public:
-	B_Building(Gameobject* go, ComponentType type = B_BUILDING) : Behaviour(go, type) {}
-	virtual ~B_Building() {}
-	void Init(int life, int damage, bool attackUnits, UnitType type);	
-	void GotDamaged(int dmg);
-	void Repair(int heal);
-	void CheckState();
-	virtual void SetTexture() {}
-	virtual void CheckSprite() {}
-	virtual void BuildingAction() {}
-	
-public:
-	BuildingState currentState;
-	Sprite* building;
-};
-
-class B_Unit : public B_Movable
-{
-public:
-
-	B_Unit(Gameobject* go, ComponentType type = B_UNIT) : B_Movable(go, type) {}
-	virtual ~B_Unit() {}
-	void Init(int life, int damage, bool attackUnits, bool ally, UnitType type);
-	void GotDamaged(const Event& e);
-	void Attack(int heal);
-	//void Die(int life);
-	void CheckState();
-	virtual void SetTexture() {}
-	virtual void CheckSprite() {}
-	virtual void BuildingAction() {}
-
-
-public:
-	int textureID;
-	int attack_value = 2;
-	int attack_range = 2;
-	UnitState currentState;
-	Sprite* unitsprite;
-};
-
 
 #endif // __BEHAVIOUR_H_

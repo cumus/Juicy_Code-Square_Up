@@ -1,86 +1,48 @@
 #include "Edge.h"
-#include "Behaviour.h"
 #include "Application.h"
-#include "TextureManager.h"
 #include "Gameobject.h"
-#include "Component.h"
+#include "Transform.h"
 #include "Log.h"
 
-
-
-Edge::Edge(Gameobject* go, ComponentType type) : B_Building(go, type)
+Edge::Edge(Gameobject* go) : Behaviour(go, EDGE, FULL_LIFE, B_EDGE)
 {
-	SetTexture();
+	current_life = max_life = damage = 10;
 }
-
-Edge::Edge(const Edge& node) : B_Building(node.game_object, node.GetType())
-{}
 
 Edge::~Edge() 
-{}
-
-void Edge::RecieveEvent(const Event& e) 
 {
-	switch (e.type)
+	Transform* t = game_object->GetTransform();
+	if (t)
 	{
-		case GET_DAMAGE: GotDamaged(e.data1.AsInt()); break;
-		case SELECTED: Selected(); break;
-		case UNSELECTED: UnSelected(); break;
-		case SPAWNED: 
-			App->pathfinding.SetWalkabilityTile(game_object->GetTransform()->GetLocalPos().x, game_object->GetTransform()->GetLocalPos().y, false); 
-			break;
+		vec pos = t->GetGlobalPosition();
+		App->pathfinding.SetWalkabilityTile(int(pos.x), int(pos.y), true);
 	}
 }
 
-void Edge::Selected()
+void Edge::OnRightClick(int x, int y)
 {
-	selectionMark->section = { 0, 0, 64, 64 };
-	selected = true;
+	OnDamage(3);
 }
 
-void Edge::UnSelected()
+void Edge::OnDamage(int d)
 {
-	selectionMark->section = { 64, 0, 64, 64 };
-	selected = false;
-}
-
-void Edge::SetTexture()
-{
-	textureID = App->tex.Load("textures/meta.png");
-	building = new Sprite(this->game_object); 
-	building->tex_id = textureID;//Temporal texture
-
-	textureSelectionID = App->tex.Load("textures/selectionMark.png");
-	selectionMark = new Sprite(this->game_object);
-	selectionMark->tex_id = textureSelectionID;
-	
-	CheckSprite();
-}
-
-void Edge::CheckSprite()
-{
-	if (building == nullptr) SetTexture();
-
-	switch (currentState)
+	if (current_state != DESTROYED)
 	{
-	case FULL:
-		building->section = { 128, 0, 64, 64 };
-		break;
-	case HALF:
-		building->section = { 0, 0, 64, 64 };
-		break;
-	case DESTROYED:
-		building->section = { 64, 0, 64, 64 };
-		break;
+		current_life -= d;
+
+		LOG("Current life: %d", current_life);
+
+		if (current_life <= 0)
+			OnKill();
+		else if (current_life >= max_life * 0.5f)
+			current_state = FULL_LIFE;
+		else
+			current_state = HALF_LIFE;
 	}
 }
 
-void Edge::BuildingAction()
+void Edge::OnKill()
 {
-
-}
-
-void Edge::FreeWalkability()
-{ 
-	App->pathfinding.SetWalkabilityTile(game_object->GetTransform()->GetLocalPos().x, game_object->GetTransform()->GetLocalPos().y, true);
+	current_state = DESTROYED;
+	game_object->Destroy(5.0f);
 }
