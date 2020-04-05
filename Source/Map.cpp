@@ -353,6 +353,11 @@ std::pair<float, float> Map::F_MapToWorld(float x, float y, float z)
 	}
 }
 
+std::pair<float, float> Map::F_MapToWorld(vec vec)
+{
+	return F_MapToWorld(vec.x, vec.y, vec.z);
+}
+
 std::pair<float, float> Map::F_WorldToMap(float x, float y)
 {
 	switch (type)

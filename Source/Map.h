@@ -2,6 +2,7 @@
 #define __MAP_H__
 
 #include "MapContainer.h"
+#include "Vector3.h"
 #include <list>
 #include <string>
 
@@ -83,6 +84,7 @@ public:
 	static std::pair<int, int> I_MapToWorld(int x, int y, int z = 0);
 	static std::pair<int, int> I_WorldToMap(int x, int y);
 	static std::pair<float, float> F_MapToWorld(float x, float y, float z = 0.0f);
+	static std::pair<float, float> F_MapToWorld(vec vec);
 	static std::pair<float, float> F_WorldToMap(float x, float y);
 	static std::pair<int, int> WorldToTileBase(float x, float y);
 

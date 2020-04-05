@@ -86,7 +86,7 @@ bool Scene::Update()
 		Gameobject* audio_go = AddGameobject("AudioSource - son of root", &root);
 		audio_go->GetTransform()->SetLocalPos({ float(position.first), float(position.second), 0.0f });
 		audio_go->GetTransform()->GetGlobalPosition();
-		new AudioSource(audio_go, App->audio->LoadFx("audio/Effects/Buildings/Nails/HamerNail13Hits.wav"));
+		new AudioSource(audio_go, HAMMER, -1);
 
 		Sprite* s3 = new Sprite(audio_go);
 		s3->tex_id = id_mouse_tex;
@@ -276,9 +276,6 @@ bool Scene::LoadTestScene()
 	// Play sample track
 	bool ret = App->audio->PlayMusic("audio/Music/alexander-nakarada-buzzkiller.ogg");
 
-	// Remove fps cap
-	App->time.SetMaxFPS(60);
-
 	// Load mouse debug texture for identifying tiles
 	if (ret)
 	{
@@ -347,11 +344,7 @@ bool Scene::LoadIntroScene()
 {
 	OPTICK_EVENT();
 	// Play sample track
-	int id = App->audio->LoadFx("audio/Effects/Intro/soda-open-and-pour-left-right.wav");
-	bool ret = App->audio->PlayFx(-1, id, 0);
-
-	// Remove fps cap
-	// App->time.SetMaxFPS(60);
+	bool ret = App->audio->PlayFx(LOGO);
 
 	// Add a canvas
 	Gameobject* canvas_go = AddGameobject("Canvas", &root);
@@ -382,9 +375,6 @@ bool Scene::LoadMenuScene()
 	OPTICK_EVENT();
 	// Play sample track
 	bool ret = App->audio->PlayMusic("audio/Music/alexander-nakarada-early-probe-eats-the-dust.ogg");
-
-	// Remove fps cap
-	// App->time.SetMaxFPS(60);
 
 	//------------------------- CANVAS --------------------------------------
 	Gameobject* canvas_go = AddGameobject("Canvas", &root);

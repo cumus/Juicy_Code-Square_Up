@@ -4,7 +4,7 @@
 #include "Point.h"
 #include "Log.h"
 #include "Application.h"
-#include <math.h>
+#include "JuicyMath.h"
 
 #include "optick-1.3.0.0/include/optick.h"
 #include "SDL/include/SDL.h"
@@ -16,11 +16,9 @@
 #pragma comment( lib, "SDL2_mixer-2.0.4/lib/x64/SDL2_mixer.lib" )
 #endif
 
-
 Audio::Audio() : Module("audio")
 {}
 
-// Destructor
 Audio::~Audio()
 {}
 
@@ -62,7 +60,6 @@ void Audio::SaveConfig() const
 	codecs.attribute("OPUS").set_value(using_OPUS);
 }
 
-// Called before render is available
 bool Audio::Init()
 {
 	OPTICK_EVENT();
@@ -89,8 +86,8 @@ bool Audio::Init()
 			// Initialize SDL_mixer with default frequecy & format
 			if (Mix_OpenAudio(MIX_DEFAULT_FREQUENCY, MIX_DEFAULT_FORMAT, 2, 2048) == 0)
 			{
-				channels = Mix_AllocateChannels(360);
-				LOG("SDL_Mixer opened correctly. Allocated channels: %d", channels);
+				total_channels = Mix_AllocateChannels(total_channels);
+				LOG("SDL_Mixer opened correctly. Allocated %d channels.", total_channels);
 			}
 			else
 				LOG("SDL_mixer could not initialize! SDL_mixer Error: %s\n", Mix_GetError());
@@ -104,26 +101,94 @@ bool Audio::Init()
 	return ret;
 }
 
-// Called before quitting
+bool Audio::Update()
+{
+	/*
+
+	TODO: Play/Pause Channels
+
+	void  Mix_Pause(int channel);
+	void  Mix_Resume(int channel);
+	int Mix_Paused(int channel);
+
+
+	
+	TODO: Free channels
+
+	if (sources.size() > Mix_Playing(-1) - Mix_Playing(0))
+	{
+		// Free sources map
+		bool erased = false;
+		for (std::map<double, SpatialData>::iterator it = sources.begin(); it != sources.end(); ++it)
+		{
+			if (erased)
+			{
+				erased = false;
+				if (it != sources.begin())
+					--it;
+			}
+
+			if (!Mix_Playing(it->second.channel))
+			{
+				Mix_UnregisterAllEffects(it->second.channel);
+				sources.erase(it);
+				erased = true;
+			}
+		}
+	}
+	*/
+
+	return true;
+}
+
 bool Audio::CleanUp()
 {
-	if(!active)
-		return true;
-
 	LOG("Freeing sound FX, closing Mixer and Audio subsystem");
 
-	if(music) Mix_FreeMusic(music);
-
-	for(std::vector<Mix_Chunk*>::iterator it = fx.begin(); it != fx.end(); ++it)
-		Mix_FreeChunk(*it);
-
-	fx.clear();
+	UnloadFx();
 
 	Mix_CloseAudio();
+	if (music)
+		Mix_FreeMusic(music);
+
 	Mix_Quit();
 	SDL_QuitSubSystem(SDL_INIT_AUDIO);
 
 	return true;
+}
+
+void Audio::RecieveEvent(const Event& e)
+{
+	switch (e.type)
+	{
+	case TRANSFORM_MODIFIED:
+	{
+		std::map<double, SpatialData>::iterator it = sources.find(e.data1.AsDouble());
+		if (it != sources.end())
+		{
+			std::pair<float, float> cam = App->render->GetCameraCenter();
+			vec pos = e.data2.AsVec();
+
+			Mix_SetPosition(it->second.channel,
+				it->second.angle = JMath::HorizontalAxisAngle_F(cam, it->second.pos = { pos.x, pos.y }, -90.0f),
+				it->second.distance = JMath::DistanceSquared(cam, it->second.pos));
+		}
+		break;
+	}
+	case CAMERA_MOVED:
+	{
+		std::pair<float, float> cam = App->render->GetCameraCenter();
+		for (std::map<double, SpatialData>::iterator it = sources.begin(); it != sources.end(); ++it)
+		{
+			Mix_SetPosition(it->second.channel,
+				it->second.angle = JMath::HorizontalAxisAngle_F(cam, it->second.pos, -90.0f),
+				it->second.distance = JMath::DistanceSquared(cam, it->second.pos));
+		}
+		break;
+	}
+	default:
+		break;
+	}
 }
 
 // Play a music file
@@ -131,10 +196,7 @@ bool Audio::PlayMusic(const char* path, float fade_time)
 {
 	OPTICK_EVENT();
 
-	bool ret = true;
-
-	if(!active)
-		return false;
+	bool ret = false;
 
 	if(music)
 	{
@@ -146,195 +208,141 @@ bool Audio::PlayMusic(const char* path, float fade_time)
 		// this call blocks until fade out is done
 		Mix_FreeMusic(music);
 	}
-
-	music = Mix_LoadMUS_RW(App->files.LoadRWops(path), 1);
-
-	if(music)
+;
+	if(music = Mix_LoadMUS_RW(App->files.LoadRWops(path), 1))
 	{
 		if (fade_time > 0.0f)
 		{
-			if (Mix_FadeInMusic(music, -1, (int)(fade_time * 1000.0f)) < 0)
-			{
+			if (ret = (Mix_FadeInMusic(music, -1, (int)(fade_time * 1000.0f)) >= 0))
+				LOG("Successfully playing %s", path);
+			else
 				LOG("Cannot fade in music %s. Mix_GetError(): %s", path, Mix_GetError());
-				ret = false;
-			}
 		}
-		else
-		{
-			if (Mix_PlayMusic(music, -1) < 0)
-			{
-				LOG("Cannot play in music %s. Mix_GetError(): %s", path, Mix_GetError());
-				ret = false;
-			}
-		}
+		else if (Mix_PlayMusic(music, -1) < 0)
+			LOG("Cannot play in music %s. Mix_GetError(): %s", path, Mix_GetError());
 	}
 	else
-	{
 		LOG("Cannot load music %s. Mix_GetError(): %s\n", path, Mix_GetError());
-		ret = false;
-	}
 
-	LOG("Successfully playing %s", path);
 	return ret;
 }
 
-bool Audio::PauseMusic()
+void Audio::PauseMusic() const
 {
-	OPTICK_EVENT();
-
-	bool ret = true;
-	
-	if (!active)
-		return false;
-
 	Mix_HaltMusic();
-	
-	return ret;
 }
 
-// Load WAV
-unsigned int Audio::LoadFx(const char* path)
+bool Audio::LoadFx(Audio_FX audio_fx)
 {
 	OPTICK_EVENT();
 
-	unsigned int ret = 0;
-
-	if(!active)
-		return 0;
-
+	bool ret;
 	std::string audio_path = App->files.GetBasePath();
-	audio_path += path;
-	Mix_Chunk* chunk = Mix_LoadWAV(audio_path.c_str());
 
-	if (chunk)
+	switch (audio_fx)
 	{
-		fx.push_back(chunk);
-		ret = fx.size() - 1;
+	case LOGO: audio_path += "audio/Effects/Intro/soda-open-and-pour-left-right.wav"; break;
+	case HAMMER: audio_path += "audio/Effects/Buildings/Nails/HamerNail13Hits.wav"; break;
+	default: break;
 	}
-	else
-	{
-		LOG("Cannot load wav %s. Mix_GetError(): %s", audio_path.c_str(), Mix_GetError());
-	}
+
+	fx[audio_fx] = Mix_LoadWAV(audio_path.c_str());
+
+	if (!(ret = (fx[audio_fx] != nullptr)))
+		LOG("Cannot load %s. Mix_GetError(): %s", audio_path.c_str(), Mix_GetError());
 
 	return ret;
 }
 
-bool Audio::UnloadFx(unsigned int id)
+void Audio::UnloadFx()
 {
-	if (!active)
-		return true;
-
-	bool ret = false;
-
-	Mix_Chunk* chunk = NULL;
-	
-	if (chunk != nullptr)
+	for (unsigned int i = 0u; i < MAX_FX; ++i)
 	{
-		Mix_FreeChunk(chunk);
-		chunk = fx[id];
-		ret = true;
+		if (fx[i] != nullptr)
+		{
+			Mix_FreeChunk(fx[i]);
+			fx[i] = nullptr;
+		}
 	}
 
-	return ret;
+	Mix_AllocateChannels(0);
+	total_channels = Mix_AllocateChannels(1);
 }
 
-// Play WAV
-bool Audio::PlayFx(int channel, unsigned int id, int repeat)
+bool Audio::PlayFx(Audio_FX audio_fx, int repeat)
+{
+	if (!fx[audio_fx])
+		LoadFx(audio_fx);
+
+	return Mix_PlayChannel(0, fx[audio_fx], repeat) == 0;
+}
+
+bool Audio::PlaySpatialFx(Audio_FX audio_fx, double id, const std::pair<float, float> position, int repeat, int ticks, int fade_ms)
 {
 	OPTICK_EVENT();
 
-	bool ret = (active && id > 0 && id <= fx.size());
+	if (!fx[audio_fx])
+		LoadFx(audio_fx);
 
-	if (fx[id] != nullptr)
+	// Get channel to play. New sources will return -1 by default.
+	int target_channel = sources[id].channel;
+	sources[id].pos = position;
+	if (target_channel < 0)
 	{
-		Mix_PlayChannel(-1, fx[id], repeat);
-		ret = true;
-	}
+		// Increase channel count on needing more channels
+		if (total_channels - 1 < int(sources.size()))
+			total_channels += Mix_AllocateChannels(total_channels + 1);
 
-	return ret;
-}
-
-int Audio::PlaySpatialFx(unsigned int id, std::pair<int, int> position, int repeat)
-{
-	int ret = -1;
-	 
-	if (!active)
-		return false;
-
-	Mix_Chunk* chunk = NULL;
-
-	SDL_Rect cam = App->render->GetCameraRect();
-	cam.x = cam.x + cam.w / 2;
-	cam.y = cam.y - cam.h / 2;
-
-	unsigned int angle = GetAngle({ cam.x, cam.y }, {position.first, position.second});
-	unsigned int distance = GetDistance({ cam.x, cam.y }, { position.first, position.second });
-
-	chunk = fx[id];
-
-	if (chunk != nullptr)
-	{
-		int i = 0;
-		while (Mix_Playing(i) == 1)	// If the channel is already playing, choose the next channel that we already allocated with Mix_AllocateChannels()
+		// Search for empty channel
+		for (target_channel = 1; target_channel < total_channels; ++target_channel)
 		{
-			i++;
-
-			if (i > channels)
-				i = 0;
+			if (!Mix_Playing(target_channel))
+			{
+				sources[id].channel = target_channel;
+				break;
+			}
 		}
-
-		Mix_SetPosition(i, angle, distance);	// Set a channel in a position given a channel, an angle and a distance
-
-		Mix_PlayChannel(i, chunk, repeat);		// Play the channel that we already placed with Mix_SetPosition()
-		
-		LOG("channel: %i", i);
-		
-		ret = i;
 	}
 	
+	// Setup channel spatial properties and play
+	std::pair<float, float> cam = App->render->GetCameraCenter();
+	Mix_SetPosition(target_channel,
+		sources[id].angle = JMath::HorizontalAxisAngle_F(cam, position, -90.0f),
+		sources[id].distance = JMath::DistanceSquared(cam,  position));
+
+	// Play fx
+	return (fade_ms > 0) ?
+		(Mix_FadeInChannelTimed(target_channel, fx[audio_fx], repeat, fade_ms, ticks) != -1) :
+		(Mix_PlayChannelTimed(target_channel, fx[audio_fx], repeat, ticks) != -1);
+}
+
+bool Audio::StopFXChannel(double id, int ms, bool fade)
+{
+	bool ret = false;
+	std::map<double, SpatialData>::iterator it = sources.find(id);
+	if (it != sources.end())
+	{
+		if (fade)
+			ret = (Mix_FadeOutChannel(it->second.channel, ms) != -1);
+		else if (ms > 0)
+			ret = (Mix_ExpireChannel(it->second.channel, ms) != -1);
+		else
+			ret = (Mix_HaltChannel(it->second.channel) != -1);
+	}
+
 	return ret;
 }
 
+Audio::SpatialData::SpatialData() :
+	channel(-1),
+	angle(-1.f),
+	distance(-1.f),
+	pos({ 0.f, 0.f })
+{}
 
-unsigned int Audio::GetAngle(iPoint cam_pos, iPoint source_pos)
-{	
-	iPoint pos = cam_pos;
-	pos -= source_pos;
-	iPoint axis = { 0, 1 };								// vector to get the angle from
-
-	double prod_x = axis.y * pos.y;						// product of two vectors to get x
-	double det_y = - (axis.y * pos.x);					// determinant of the vectors to get y
-
-	float angle = (atan2(det_y, prod_x)) * RAD_TO_DEG;	// arctangent of x and y multiplied by 57.32f to get radiants
-	if (angle < 0) angle += 360;						// this needs to be positive so we add 360 if angle < 0
-
-	return angle;
-}
-
-unsigned int Audio::GetDistance(iPoint cam_pos, iPoint source_pos)
-{
-	/*unsigned int distance = sqrt(pow(cam_pos.x - source_pos.x, 2) + pow(cam_pos.y - source_pos.y, 2)); 
-
-	int volume = (distance * MAX_DISTANCE) / SCALE;
-	if (volume < 0)
-	{
-		volume = 0;
-	}
-	if (volume > MAX_DISTANCE)
-	{
-		volume = MAX_DISTANCE;
-	}*/
-	int distance = cam_pos.DistanceTo(source_pos);
-	distance = distance / 3;							//to scale a bit
-	int volume = (distance * MAX_DISTANCE) / cam_pos.x;
-	if (volume < 0) 
-	{ 
-		volume = 0; 
-	} 
-	if (volume > MAX_DISTANCE)
-	{ 
-		volume = MAX_DISTANCE;
-	}
-	LOG("cam pos = (%d, %d), source pos = (%d, %d), distance = %d, volume = %d", cam_pos.x, cam_pos.y, source_pos.x, source_pos.y, distance, volume);
-	return volume;
-}
+Audio::SpatialData::SpatialData(const SpatialData& copy) :
+	channel(copy.channel),
+	angle(copy.angle),
+	distance(copy.distance),
+	pos(copy.pos)
+{}

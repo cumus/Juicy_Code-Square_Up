@@ -55,6 +55,7 @@ enum EventType
 
 	// Renderer
 	SET_VSYNC,
+	CAMERA_MOVED,
 
 	//Behaviour
 	SPAWNED,

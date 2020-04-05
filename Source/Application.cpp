@@ -91,6 +91,8 @@ bool Application::Init()
 		// Load sample scene
 		if (ret)
 		{
+			// Remove fps cap
+			time.SetMaxFPS(60);
 			state = STOPED;
 			Event::Push(SCENE_CHANGE, scene, TEST);
 		}
@@ -119,15 +121,18 @@ int Application::Update()
 
 	OPTICK_CATEGORY("PreUpdate Application", Optick::Category::GameLogic);
 	for (it = modules.begin(); it != modules.end() && no_error; ++it)
-		no_error = (*it)->PreUpdate();
+		if (!(no_error = (*it)->PreUpdate()))
+			LOG("Module %s encuntered an error during PreUpdate!", (*it)->GetName());
 
 	OPTICK_CATEGORY("Update Application", Optick::Category::GameLogic);
 	for (it = modules.begin(); it != modules.end() && no_error; ++it)
-		no_error = (*it)->Update();
+		if (!(no_error = (*it)->Update()))
+			LOG("Module %s encuntered an error during Update!", (*it)->GetName());
 
 	OPTICK_CATEGORY("PostUpdate Application", Optick::Category::GameLogic);
 	for (it = modules.begin(); it != modules.end() && no_error; ++it)
-		no_error = (*it)->PostUpdate();
+		if (!(no_error = (*it)->PostUpdate()))
+			LOG("Module %s encuntered an error during PostUpdate!", (*it)->GetName());
 
 	if (!no_error)
 		return -1; // error

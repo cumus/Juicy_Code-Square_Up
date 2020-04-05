@@ -10,24 +10,24 @@
 #include "SDL/include/SDL_scancode.h"
 #include "SDL2_mixer-2.0.4/include/SDL_mixer.h"
 
-AudioSource::AudioSource(Gameobject* go, int id) : Component(AUDIO_SOURCE, go), fx_id(id)
+AudioSource::AudioSource(Gameobject* go, Audio_FX fx, int loops) :
+	Component(AUDIO_SOURCE, go),
+	fx(fx),
+	loops(loops)
 {}
 
 AudioSource::~AudioSource()
 {
 	LOG("Deleting Audio Source");
-	App->audio->UnloadFx(fx_id);
+	App->audio->StopFXChannel(GetID());
 }
 
 bool AudioSource::Play()
 {
-	vec position = game_object->GetTransform()->GetGlobalPosition();
-
-	Map::I_MapToWorld(position.x, position.y);
-	std::pair<int, int> source_pos = Map::I_MapToWorld(position.x, position.y);
-	channel = App->audio->PlaySpatialFx(fx_id, source_pos, 0);
-	LOG("BEEP! from x = %d, y = %d", source_pos.first, source_pos.second);
-	return channel != 1;
+	Transform* t = game_object->GetTransform();
+	return t ?
+		App->audio->PlaySpatialFx(fx, GetID(), Map::F_MapToWorld(t->GetGlobalPosition()), loops) :
+		App->audio->PlayFx(fx, loops);
 }
 
 void AudioSource::RecieveEvent(const Event& e)
@@ -37,6 +37,11 @@ void AudioSource::RecieveEvent(const Event& e)
 	case ON_SELECT:
 	{
 		Play();
+		break;
+	}
+	case TRANSFORM_MODIFIED:
+	{
+		Event::Push(TRANSFORM_MODIFIED, App->audio, GetID(), e.data1);
 		break;
 	}
 	default:

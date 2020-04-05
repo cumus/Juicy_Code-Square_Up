@@ -51,6 +51,7 @@ public:
 	SDL_Rect GetCameraRect() const;
 	RectF GetCameraRectF() const;
 	float GetZoom() const;
+	std::pair<float, float> GetCameraCenter() const;
 
 	// Viewport
 	void SetupViewPort(float aspect_ratio);

@@ -2,6 +2,7 @@
 #include "Application.h"
 #include "Window.h"
 #include "Input.h"
+#include "Audio.h"
 #include "Map.h"
 #include "TextureManager.h"
 #include "TimeManager.h"
@@ -137,13 +138,15 @@ bool Render::Update()
 	}
 
 	// Move camera
+	bool moved = false;
 	float moveSpeed = 200.000f * App->time.GetDeltaTime() / zoom;
-	if (App->input->GetKey(SDL_SCANCODE_LSHIFT) == KEY_REPEAT) moveSpeed *= 5.000f;
-	if (App->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT) cam.x -= moveSpeed;
-	if (App->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT) cam.x += moveSpeed;
-	if (App->input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT) cam.y -= moveSpeed;
-	if (App->input->GetKey(SDL_SCANCODE_S) == KEY_REPEAT) cam.y += moveSpeed;
+	if (App->input->GetKey(SDL_SCANCODE_LSHIFT) == KEY_REPEAT) moveSpeed *= 5.000f; moved = true;
+	if (App->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT) cam.x -= moveSpeed; moved = true;
+	if (App->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT) cam.x += moveSpeed; moved = true;
+	if (App->input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT) cam.y -= moveSpeed; moved = true;
+	if (App->input->GetKey(SDL_SCANCODE_S) == KEY_REPEAT) cam.y += moveSpeed; moved = true;
 
+	if (moved) Event::Push(CAMERA_MOVED, App->audio);
 	return true;
 }
 
@@ -278,6 +281,11 @@ RectF Render::GetCameraRectF() const
 float Render::GetZoom() const
 {
 	return zoom;
+}
+
+std::pair<float, float> Render::GetCameraCenter() const
+{
+	return { cam.x + (cam.w * 0.5f), cam.y + (cam.h * 0.5f) };
 }
 
 void Render::SetBackgroundColor(SDL_Color color)

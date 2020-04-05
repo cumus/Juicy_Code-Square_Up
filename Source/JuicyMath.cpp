@@ -1,4 +1,5 @@
 #include "JuicyMath.h"
+#include "Defs.h"
 
 bool JMath::PointInsideRect(int x, int y, SDL_Rect rect)
 {
@@ -35,4 +36,35 @@ bool JMath::PointInsideTriangle(const std::pair<float, float> p, const std::pair
 	float abp = TriangleArea(a, b, p);
 
 	return (abc == pbc + apc + abp);
+}
+
+int JMath::HorizontalAxisAngle_I(const std::pair<int, int> origin, const std::pair<int, int> p, int offset)
+{
+	int angle = int(atan2(float(origin.second - p.second), float(origin.first - p.first)) * RADTODEG) + offset;
+
+	if (angle < 0) angle += 360;
+	angle %= 360;
+
+	return angle;
+}
+
+float JMath::HorizontalAxisAngle_F(const std::pair<float, float> origin, const std::pair<float, float> p, float offset)
+{
+	float angle = (atan2(origin.second - p.second, origin.first - p.first) * RADTODEG) + offset;
+
+	if (angle < 0) angle += 360.0f;
+	else if (angle > 360.0f) angle -= 360.0f;
+
+	return angle;
+}
+
+float JMath::Distance(const std::pair<float, float> origin, const std::pair<float, float> p)
+{
+	return sqrtf(DistanceSquared(origin, p));
+}
+
+float JMath::DistanceSquared(const std::pair<float, float> origin, const std::pair<float, float> p)
+{
+	std::pair<float, float> dist = { origin.second - p.second, origin.first - p.first };
+	return (dist.first * dist.first) + (dist.second * dist.second);
 }

@@ -22,6 +22,14 @@ namespace JMath
 		const std::pair<float, float> a,
 		const std::pair<float, float> b,
 		const std::pair<float, float> c);
+
+	// Calculate y axis angle from origin to point p
+	int		HorizontalAxisAngle_I(const std::pair<int, int> origin, const std::pair<int, int> p, int offset = 0);
+	float	HorizontalAxisAngle_F(const std::pair<float, float> origin, const std::pair<float, float> p, float offset = 0.0f);
+
+	// distance between origin to point p
+	float	Distance(const std::pair<float, float> origin, const std::pair<float, float> p);
+	float	DistanceSquared(const std::pair<float, float> origin, const std::pair<float, float> p);
 };
 
 

@@ -3,26 +3,21 @@
 
 #include "Component.h"
 #include "Audio.h"
-#include <vector>
-
-class Gameobject;
 
 class AudioSource : public Component
 {
 public:
 
-	AudioSource(Gameobject* go, int id = -1);
+	AudioSource(Gameobject* go, Audio_FX fx, int loops = 0);
 	~AudioSource();
 
 	bool Play();
-	int channel;
-
 	void RecieveEvent(const Event& e) override;
 
-public: 
+public:
 
-	int fx_id;
-	iPoint source_pos;
+	Audio_FX fx;
+	int loops;
 };
 
 #endif // !__AUDIO_SOURCE_H__
