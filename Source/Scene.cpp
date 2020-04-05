@@ -111,17 +111,16 @@ bool Scene::Update()
 	if (App->input->GetKey(SDL_SCANCODE_5) == KEY_DOWN) //Edge
 	{
 		std::pair<int, int> position = Map::WorldToTileBase(float(x + cam.x), float(y + cam.y));
-
-
-		Gameobject* edgeNode = AddGameobject("Edge resource node", &root);		
-		edgeNode->GetTransform()->SetLocalPos({ float(position.first), float(position.second), 0.0f });
-		Transform t = *edgeNode->GetTransform();
-
-		if (App->pathfinding.CheckWalkabilityArea(position, t.GetGlobalScale()))
+		if (App->pathfinding.CheckWalkabilityArea(position, vec(1.0f)))
 		{
+			Gameobject* edgeNode = AddGameobject("Edge resource node", &root);
+
+			// Move to mouse pos
+			Transform* t = edgeNode->GetTransform();
+			t->SetLocalPos({ float(position.first), float(position.second), 0.0f });
+
 			Edge* node = new Edge(edgeNode);
 			node->Init(20, 0, false, RESOURCE);
-
 			Event::Push(SPAWNED, node);
 
 			//node->SetTexture();
@@ -134,7 +133,6 @@ bool Scene::Update()
 		else
 		{
 			LOG("Invalid spawn position");
-			edgeNode->Destroy();
 		}
 	}
 
