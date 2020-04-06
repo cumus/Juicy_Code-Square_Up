@@ -36,7 +36,7 @@ public:
 
 	// Music
 	bool PlayMusic(const char* path, float fade_time = 2.0f);
-	void PauseMusic() const;
+	void PauseMusic(float fade_time) const;
 
 	// FX
 	bool LoadFx(Audio_FX audio_fx);
