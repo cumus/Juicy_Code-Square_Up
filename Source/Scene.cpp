@@ -62,7 +62,7 @@ bool Scene::Update()
 		map.draw_walkability = !map.draw_walkability;
 
 	if (App->input->GetKey(SDL_SCANCODE_F3) == KEY_DOWN)
-		App->audio->PauseMusic();
+		App->audio->PauseMusic(1.f);
 
 	if (App->input->GetKey(SDL_SCANCODE_F4) == KEY_DOWN)
 		App->audio->PlayMusic("audio/Music/alexander-nakarada-buzzkiller.ogg");
@@ -254,6 +254,8 @@ void Scene::RecieveEvent(const Event& e)
 		break;
 	case SCENE_CHANGE:
 		map.CleanUp();
+		App->audio->UnloadFx();
+		App->audio->PauseMusic(1.f);
 		App->editor->SetSelection(nullptr, false);
 		root.RemoveChilds();
 		Event::PumpAll();

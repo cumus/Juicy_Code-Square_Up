@@ -227,9 +227,15 @@ bool Audio::PlayMusic(const char* path, float fade_time)
 	return ret;
 }
 
-void Audio::PauseMusic() const
+void Audio::PauseMusic(float fade_time) const
 {
-	Mix_HaltMusic();
+	if (music)
+	{
+		if (fade_time > 0.0f)
+			Mix_FadeOutMusic(int(fade_time * 1000.0f));
+		else
+			Mix_HaltMusic();
+	}
 }
 
 bool Audio::LoadFx(Audio_FX audio_fx)
