@@ -11,7 +11,8 @@
 
 MeleeUnit::MeleeUnit(Gameobject* go) : B_Unit(go, ENEMY_MELEE, IDLE, B_UNIT)
 {
-
+	current_life = 100;
+	//damage = 2;
 }
 
 MeleeUnit::~MeleeUnit()

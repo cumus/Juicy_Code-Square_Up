@@ -11,7 +11,8 @@
 
 EnemyMeleeUnit::EnemyMeleeUnit(Gameobject* go) : B_Unit(go, ENEMY_MELEE, IDLE, B_UNIT)
 {
-	
+	current_life = 100;
+	//damage = 1;
 }
 
 EnemyMeleeUnit::~EnemyMeleeUnit()

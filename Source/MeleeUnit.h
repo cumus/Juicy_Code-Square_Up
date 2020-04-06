@@ -18,8 +18,7 @@ public:
 
 protected:
 
-	int MU_lvl = 1;
-	int MU_max_lvl = 5;
+	
 	int MU_damage = 5;
 	int attack_speed = 1;
 
