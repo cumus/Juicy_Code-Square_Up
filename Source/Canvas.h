@@ -97,5 +97,4 @@ private:
 
 	bool mouse_inside = false;
 };
-
 #endif // __CANVAS_H__

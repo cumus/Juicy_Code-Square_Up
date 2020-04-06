@@ -34,6 +34,13 @@ void Event::Push(EventType t, EventListener * lis, Cvar d1, Cvar d2)
 		Event::events_queue.push(Event(t, lis, d1, d2));
 }
 
+void Event::Push(EventType t, std::vector<EventListener*>& lis, Cvar d1, Cvar d2)
+{
+	if (!Event::paused)
+		for (std::vector<EventListener*>::iterator it = lis.begin(); it != lis.end(); ++it)
+			Event::events_queue.push(Event(t, *it, d1, d2));
+}
+
 void Event::Push(const Event e)
 {
 	if (!Event::paused)

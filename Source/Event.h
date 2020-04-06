@@ -3,6 +3,7 @@
 
 #include "Cvar.h"
 #include <queue>
+#include <vector>
 
 class EventListener;
 
@@ -74,6 +75,7 @@ public:
 	virtual ~Event();
 
 	static void Push(EventType t, EventListener* lis, Cvar data = Cvar(), Cvar data2 = Cvar());
+	static void Push(EventType t, std::vector<EventListener*>& lis, Cvar data = Cvar(), Cvar data2 = Cvar());
 	static void Push(const Event e);
 	static void PumpAll();
 	static void Pump();

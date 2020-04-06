@@ -18,8 +18,6 @@
 class Input;
 class Window;
 class Audio;
-class Map;
-class Minimap;
 class Scene;
 class Editor;
 class Render;
@@ -75,8 +73,6 @@ public:
 	Input*		input;
 	Window*		win;
 	Audio*		audio;
-	Map*		map;
-	Minimap*	minimap;
 	Scene*		scene;
 	Editor*		editor;
 	Render*		render;
