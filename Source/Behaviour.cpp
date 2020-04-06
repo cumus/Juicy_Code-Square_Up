@@ -105,7 +105,7 @@ B_Unit::B_Unit(Gameobject* go, UnitType t, UnitState s, ComponentType comp_type)
 {
 	speed = 5;//MAX SPEED 60
 	aux_speed = speed;
-	attackRange = 1;
+	attackRange = 3.0f;
 	damage = 1;
 	path = nullptr;
 	nextTile;
@@ -117,61 +117,72 @@ B_Unit::B_Unit(Gameobject* go, UnitType t, UnitState s, ComponentType comp_type)
 	cornerNE = false;
 	cornerSW = false;
 	cornerSE = false;
-	objectiveID = 0;
 	dirX = 0;
 	dirY = 0;
+	inRange = false;
+	attackObjective = nullptr;
 }
 
 void B_Unit::Update()
 {	
 	current_state = IDLE;
-	if (objectiveID != 0) //Attack
+	if (attackObjective !=nullptr && attackObjective->GetState() != DESTROYED) //Attack
 	{
-		std::map<double, Behaviour*>::iterator it;
-		it = b_map.find(objectiveID);
-		if (b_map.empty() == false && it != b_map.end())
-		{
-			vec pos = it->second->GetGameobject()->GetTransform()->GetLocalPos();
-			float d = game_object->GetTransform()->DistanceTo(pos);
-			
-			if (d <= attackRange) //Arriba izquierda
-			{
-				cornerNW = true;
-				DoAttack(pos);
-				Event::Push(DAMAGE, it->second, damage);				
-			}
-			
-			pos.x += it->second->GetGameobject()->GetTransform()->GetLocalScaleX();
-			pos.y += it->second->GetGameobject()->GetTransform()->GetLocalScaleY();
-			d = game_object->GetTransform()->DistanceTo(pos);
-			if (d <= attackRange)//Abajo derecha
-			{
-				cornerSE = true;
-				DoAttack(pos);
-				Event::Push(DAMAGE, it->second, damage);
-			}
-				
-			pos.x -= it->second->GetGameobject()->GetTransform()->GetLocalScaleX();
-			d = game_object->GetTransform()->DistanceTo(pos);
-			if (d <= attackRange)//Abajo izquierda
-			{
-				cornerSW = true;
-				DoAttack(pos);
-				Event::Push(DAMAGE, it->second, damage);
-			}
-					
-			pos.x += it->second->GetGameobject()->GetTransform()->GetLocalScaleX();
-			pos.y -= it->second->GetGameobject()->GetTransform()->GetLocalScaleY();
-			d = game_object->GetTransform()->DistanceTo(pos);
-			if (d <= attackRange)//Arriba derecha
-			{
-				cornerNE = true;
-				DoAttack(pos);
-				Event::Push(DAMAGE, it->second, damage);
-			}
-									
+		//LOG("FOUND");
+		attackPos = attackObjective->GetGameobject()->GetTransform()->GetLocalPos();
+		float d = game_object->GetTransform()->DistanceTo(attackPos);
+		//LOG("Distance 1:%f",d);
+		if (d <= attackRange) //Arriba izquierda
+		{				
+			cornerNW = true;
+			inRange = true;
 		}
+		attackPos.x += attackObjective->GetGameobject()->GetTransform()->GetLocalScaleX();
+		attackPos.y += attackObjective->GetGameobject()->GetTransform()->GetLocalScaleY();
+		d = game_object->GetTransform()->DistanceTo(attackPos);
+		//LOG("Distance 2:%f", d);
+		if (d <= attackRange)//Abajo derecha
+		{
+
+			cornerSE = true;
+			inRange = true;
+		}
+				
+		attackPos.x -= attackObjective->GetGameobject()->GetTransform()->GetLocalScaleX();
+		d = game_object->GetTransform()->DistanceTo(attackPos);
+		//LOG("Distance 3:%f", d);
+		if (d <= attackRange)//Abajo izquierda
+		{
+			cornerSW = true;
+			inRange = true;
+		}
+					
+		attackPos.x += attackObjective->GetGameobject()->GetTransform()->GetLocalScaleX();
+		attackPos.y -= attackObjective->GetGameobject()->GetTransform()->GetLocalScaleY();
+		d = game_object->GetTransform()->DistanceTo(attackPos);
+		//LOG("Distance 4:%f", d);
+		if (d <= attackRange)//Arriba derecha
+		{
+			cornerNE = true;
+			inRange = true;
+		}					
 	}
+	else
+	{
+		attackObjective = nullptr;
+		cornerNW = false;
+		cornerSE = false;
+		cornerNE = false;
+		cornerSW = false;
+		inRange = false;
+	}
+
+	if (inRange)
+	{
+		//LOG("In Range");
+		DoAttack(attackPos);
+		Event::Push(DAMAGE, attackObjective, damage);
+	}		
 	else if (path != nullptr && !path->empty()) //Movement
 	{	
 		vec pos = game_object->GetTransform()->GetGlobalPosition();
@@ -269,9 +280,9 @@ void B_Unit::Update()
 	{
 		vec pos = game_object->GetTransform()->GetLocalPos();
 		iPoint tilePos = { int(pos.x), int(pos.y) };
-		LOG("X:%d / Y:%d",dirX,dirY);
-		LOG("POS X:%d  /  Y:%d",tilePos.x,tilePos.y);
-		LOG("DestinationPOS X:%d  /  Y:%d", nextTile.x, nextTile.y);
+		//LOG("X:%d / Y:%d",dirX,dirY);
+		//LOG("POS X:%d  /  Y:%d",tilePos.x,tilePos.y);
+		//LOG("DestinationPOS X:%d  /  Y:%d", nextTile.x, nextTile.y);
 		if (nextTile.x > tilePos.x)
 		{
 			dirX = 1;
@@ -373,9 +384,9 @@ void B_Unit::DoAttack(vec objectivePos)
 		current_state = ATTACKING_SE;
 	}
 	cornerNW = false;
+	cornerSE = false;
 	cornerNE = false;
 	cornerSW = false;
-	cornerSE = false;
 }
 
 void B_Unit::OnDestroy()
@@ -400,6 +411,7 @@ void B_Unit::OnRightClick(float x, float y)
 		float distance = 0;
 		if (total_found > 0)
 		{
+			LOG("Unit cliked");
 			//LOG("%d behaviours found neer right click (%f, %f):", total_found, pos.x, pos.y);
 			for (std::map<float, Behaviour*>::iterator it = out.begin(); it != out.end(); ++it)
 			{
@@ -409,7 +421,7 @@ void B_Unit::OnRightClick(float x, float y)
 					{
 						if (distance == 0)
 						{
-							objectiveID = it->second->GetID();
+							attackObjective = it->second;
 							distance = it->first;
 						}
 						else
@@ -417,17 +429,17 @@ void B_Unit::OnRightClick(float x, float y)
 							if (it->first < distance)
 							{
 								distance = it->first;
-								objectiveID = it->second->GetID();
+								attackObjective = it->second;
 							}
 						}
-						
+
 					}
 				}
-				else if(it->second->GetType() == ENEMY_MELEE || it->second->GetType() == ENEMY_RANGED)
+				else if (it->second->GetType() == ENEMY_MELEE || it->second->GetType() == ENEMY_RANGED || it->second->GetType() == EDGE)//Temporal
 				{
 					if (distance == 0)
 					{
-						objectiveID = it->second->GetID();
+						attackObjective = it->second;
 						distance = it->first;
 					}
 					else
@@ -435,14 +447,15 @@ void B_Unit::OnRightClick(float x, float y)
 						if (it->first < distance)
 						{
 							distance = it->first;
-							objectiveID = it->second->GetID();
+							attackObjective = it->second;
 						}
 					}
-				
+
 				}
 				//std::string name = it->second->GetGameobject()->GetName();
 				//LOG(" - %s, id: %d, type: %d, at %f distance", name.c_str(), it->second->GetID(), int(it->second->GetType()), it->first);
 			}
 		}
+		else attackObjective = nullptr;
 	}
 }

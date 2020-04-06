@@ -56,7 +56,6 @@ enum UnitState
 	ATTACKING_NW,
 	ATTACKING_SE,
 	ATTACKING_SW,
-	DEAD,
 
 	// Building
 	BUILDING,
@@ -87,6 +86,7 @@ public:
 
 	UnitType GetType() const { return type; }
 	UnitState* GetStatePtr() { return &current_state; }
+	UnitState GetState() const { return current_state; }
 
 	//void QuickSort();
 	unsigned int GetBehavioursInRange(vec pos, float dist, std::map<float, Behaviour*>& res) const;
@@ -124,6 +124,9 @@ protected:
 	float aux_speed;
 	float attackRange;
 	int damage;
+	bool inRange;
+	Behaviour* attackObjective;
+	vec attackPos;
 	std::vector<iPoint>* path;
 	iPoint nextTile;
 	bool next;
@@ -136,7 +139,6 @@ protected:
 	bool cornerNE;
 	bool cornerSW;
 	bool cornerSE;
-	double objectiveID;
 };
 
 #endif // __BEHAVIOUR_H_

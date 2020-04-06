@@ -6,7 +6,8 @@
 
 Edge::Edge(Gameobject* go) : Behaviour(go, EDGE, FULL_LIFE, B_EDGE)
 {
-	current_life = max_life = damage = 10;
+	current_life = max_life = 100;
+	damage = 0;
 }
 
 Edge::~Edge() 
