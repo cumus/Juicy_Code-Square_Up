@@ -227,9 +227,15 @@ bool Audio::PlayMusic(const char* path, float fade_time)
 	return ret;
 }
 
-void Audio::PauseMusic() const
+void Audio::PauseMusic(float fade_time) const
 {
-	Mix_HaltMusic();
+	if (music)
+	{
+		if (fade_time > 0.0f)
+			Mix_FadeOutMusic(int(fade_time * 1000.0f));
+		else
+			Mix_HaltMusic();
+	}
 }
 
 bool Audio::LoadFx(Audio_FX audio_fx)
@@ -243,6 +249,8 @@ bool Audio::LoadFx(Audio_FX audio_fx)
 	{
 	case LOGO: audio_path += "audio/Effects/Intro/soda-open-and-pour-left-right.wav"; break;
 	case HAMMER: audio_path += "audio/Effects/Buildings/Nails/HamerNail13Hits.wav"; break;
+	case B_DESTROYED: audio_path += "audio/Effects/Buildings/Destroyed/PowerDown.wav"; break;
+	case B_BUILDED: audio_path += "audio/Effects/Buildings/Nails/HamerNail4Hits.wav"; break;
 	default: break;
 	}
 

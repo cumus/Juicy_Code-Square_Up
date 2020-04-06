@@ -142,6 +142,7 @@
   <ItemGroup>
     <ClCompile Include="AudioSource.cpp" />
     <ClCompile Include="BarMenu.cpp" />
+    <ClCompile Include="BaseCenter.cpp" />
     <ClCompile Include="Behaviour.cpp" />
     <ClCompile Include="Canvas.cpp" />
     <ClCompile Include="Component.cpp" />
@@ -151,6 +152,7 @@
     <ClCompile Include="Edge.cpp" />
     <ClCompile Include="Editor.cpp" />
     <ClCompile Include="EditorWindow.cpp" />
+    <ClCompile Include="EnemyMeleeUnit.cpp" />
     <ClCompile Include="Event.cpp" />
     <ClCompile Include="FileManager.cpp" />
     <ClCompile Include="FontManager.cpp" />
@@ -163,6 +165,7 @@
     <ClCompile Include="Input.cpp" />
     <ClCompile Include="Map.cpp" />
     <ClCompile Include="MapContainer.cpp" />
+    <ClCompile Include="MeleeUnit.cpp" />
     <ClCompile Include="Minimap.cpp" />
     <ClCompile Include="mmgr\mmgr.cpp" />
     <ClCompile Include="PathfindingManager.cpp" />
@@ -174,6 +177,7 @@
     <ClCompile Include="Sprite.cpp" />
     <ClCompile Include="TextureManager.cpp" />
     <ClCompile Include="TimeManager.cpp" />
+    <ClCompile Include="Tower.cpp" />
     <ClCompile Include="Transform.cpp" />
     <ClCompile Include="UI_Button.cpp" />
     <ClCompile Include="UI_ButtonImage.cpp" />
@@ -189,6 +193,7 @@
   <ItemGroup>
     <ClInclude Include="AudioSource.h" />
     <ClInclude Include="BarMenu.h" />
+    <ClInclude Include="BaseCenter.h" />
     <ClInclude Include="Behaviour.h" />
     <ClInclude Include="Canvas.h" />
     <ClInclude Include="Component.h" />
@@ -198,6 +203,7 @@
     <ClInclude Include="Edge.h" />
     <ClInclude Include="Editor.h" />
     <ClInclude Include="EditorWindow.h" />
+    <ClInclude Include="EnemyMeleeUnit.h" />
     <ClInclude Include="Event.h" />
     <ClInclude Include="EventListener.h" />
     <ClInclude Include="FileManager.h" />
@@ -207,6 +213,7 @@
     <ClInclude Include="JuicyMath.h" />
     <ClInclude Include="Map.h" />
     <ClInclude Include="MapContainer.h" />
+    <ClInclude Include="MeleeUnit.h" />
     <ClInclude Include="Minimap.h" />
     <ClInclude Include="mmgr\mmgr.h" />
     <ClInclude Include="mmgr\nommgr.h" />
@@ -229,6 +236,7 @@
     <ClInclude Include="Sprite.h" />
     <ClInclude Include="TextureManager.h" />
     <ClInclude Include="TimeManager.h" />
+    <ClInclude Include="Tower.h" />
     <ClInclude Include="Transform.h" />
     <ClInclude Include="UI_Button.h" />
     <ClInclude Include="UI_ButtonImage.h" />

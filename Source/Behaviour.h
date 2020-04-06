@@ -4,12 +4,18 @@
 #include "Component.h"
 #include "Point.h"
 #include <vector>
+#include <map>
 
 enum UnitType
 {
 	EDGE,
+	GATHERER,
 	UNIT_MELEE,
-	ENEMY_MELEE
+	UNIT_RANGED,
+	ENEMY_MELEE,
+	ENEMY_RANGED,
+	BASE_CENTER,
+	TOWER,
 
 	/*USER_GATHERER,
 	USER_RANGED,
@@ -42,14 +48,6 @@ enum UnitState
 	MOVING_NW,
 	MOVING_SE,
 	MOVING_SW,
-	ATTACKING_N,
-	ATTACKING_S,
-	ATTACKING_W,
-	ATTACKING_E,
-	ATTACKING_NE,
-	ATTACKING_NW,
-	ATTACKING_SE,
-	ATTACKING_SW,
 	DEAD,
 
 	// Building
@@ -59,6 +57,19 @@ enum UnitState
 	DESTROYED
 };
 
+enum AttackDirection
+{
+	NONE = 0,
+	ATTACKING_N,
+	ATTACKING_S,
+	ATTACKING_W,
+	ATTACKING_E,
+	ATTACKING_NE,
+	ATTACKING_NW,
+	ATTACKING_SE,
+	ATTACKING_SW,
+};
+
 class Sprite;
 class AudioSource;
 
@@ -66,20 +77,26 @@ class Behaviour : public Component
 {
 public:
 	Behaviour(Gameobject* go, UnitType type, UnitState starting_state, ComponentType comp_type = BEHAVIOUR);
-	virtual ~Behaviour() {}
+	virtual ~Behaviour();
 
 	void RecieveEvent(const Event& e) override;
 
 	virtual void Selected();
 	virtual void UnSelected();
-	virtual void OnRightClick(int x, int y) {}
+	virtual void OnRightClick(float x, float y) {}
 	virtual void OnDamage(int damage);
 	virtual void OnKill();
+	virtual void DoAttack(vec pos) {}
 
 	UnitType GetType() const { return type; }
 	UnitState* GetStatePtr() { return &current_state; }
 
+	//void QuickSort();
+	unsigned int GetBehavioursInRange(vec pos, float dist, std::map<float, Behaviour*>& res) const;
+
 protected:
+
+	static std::map<double, Behaviour*> b_map;
 
 	UnitType type;
 	UnitState current_state;
@@ -98,21 +115,29 @@ class B_Unit : public Behaviour
 public:
 
 	B_Unit(Gameobject* go, UnitType type, UnitState starting_state, ComponentType comp_type = B_UNIT);
-	virtual ~B_Unit() {}
 
 	void Update() override;
-	void OnRightClick(int x, int y) override;
+	void OnRightClick(float x, float y) override;
+	void DoAttack(vec pos) override;
 	
 protected:
 
-	float speed = 2;
-	float aux_speed = speed;
-	std::vector<iPoint>* path = nullptr;
+	float speed;
+	float aux_speed;
+	float attackRange;
+	int damage;
+	std::vector<iPoint>* path;
 	iPoint nextTile;
-	bool next = false;
-	bool move = false;
-	bool positiveX = false;
-	bool positiveY = false;
+	bool next;
+	bool move;
+	bool positiveX;
+	bool positiveY;
+	bool cornerNW;
+	bool cornerNE;
+	bool cornerSW;
+	bool cornerSE;
+	double objectiveID;
+	AttackDirection direction;
 };
 
 #endif // __BEHAVIOUR_H_

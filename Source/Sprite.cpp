@@ -52,6 +52,22 @@ AnimatedSprite::AnimatedSprite(Behaviour* unit) : Sprite(unit->GetGameobject(), 
 
 	switch (unit->GetType())
 	{
+	case BASE_CENTER:
+	{
+		tex_id = App->tex.Load("textures/Base_Center.png");
+		animations[FULL_LIFE].Setup(section = { 0, 0, 166, 534 }, 1);
+		animations[HALF_LIFE].Setup({ 0, 0, 166, 534 }, 1);
+		animations[DESTROYED].Setup({ 0, 0, 166, 534 }, 1);
+		break;
+	}
+	case TOWER:
+	{
+		tex_id = App->tex.Load("textures/Tower.png");
+		animations[FULL_LIFE].Setup(section = { 0, 0, 62, 115 }, 1);
+		animations[HALF_LIFE].Setup({ 0, 0, 62, 115 }, 1);
+		animations[DESTROYED].Setup({ 0, 0, 62, 115 }, 1);
+		break;
+	}
 	case EDGE:
 	{
 		tex_id = App->tex.Load("textures/Char_killia1.png");

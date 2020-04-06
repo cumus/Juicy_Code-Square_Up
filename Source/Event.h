@@ -60,6 +60,7 @@ enum EventType
 
 	//Behaviour
 	DAMAGE,
+	//ATTACK,
 
 	MAX_EVENT_TYPES
 };

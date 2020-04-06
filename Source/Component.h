@@ -24,6 +24,8 @@ enum ComponentType
 	B_UNIT,
 	B_GATHERER,
 	B_EDGE,
+	B_BASE_CENTER,
+	B_TOWER,
 	MAX_BEHAVIOUR,
 
 	MAX_TYPES

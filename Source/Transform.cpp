@@ -153,6 +153,33 @@ void Transform::MoveZ(float val)
 	}
 }
 
+void Transform::ScaleX(float val)
+{
+	if (val != 1.0f)
+	{
+		scale.x *= val;
+		modified = true;
+	}
+}
+
+void Transform::ScaleY(float val)
+{
+	if (val != 1.0f)
+	{
+		scale.y *= val;
+		modified = true;
+	}
+}
+
+void Transform::ScaleZ(float val)
+{
+	if (val != 1.0f)
+	{
+		scale.z *= val;
+		modified = true;
+	}
+}
+
 bool Transform::GlobalPosIsDifferentFrom(vec global_pos) const
 {
 	return global_pos != GetGlobalPosition();
@@ -189,4 +216,9 @@ bool Transform::Intersects(std::pair<float, float> p) const
 		g_pos.y - (0.5f * g_scale.y),
 		g_scale.x,
 		g_scale.y });
+}
+
+float Transform::DistanceTo(vec pos)
+{
+	return GetGlobalPosition().Distance(pos);
 }

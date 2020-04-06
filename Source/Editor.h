@@ -28,6 +28,8 @@ public:
 
 	bool MouseOnWindow() const;
 
+	void SetSelection(Gameobject* go = nullptr, bool call_unselect = true);
+
 public:
 
 	BarMenu* bar_menu = nullptr;

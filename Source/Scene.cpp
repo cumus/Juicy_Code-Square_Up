@@ -10,6 +10,8 @@
 #include "Sprite.h"
 #include "Behaviour.h"
 #include "Edge.h"
+#include "BaseCenter.h"
+#include "Tower.h"
 #include "AudioSource.h"
 #include "Canvas.h"
 
@@ -60,7 +62,7 @@ bool Scene::Update()
 		map.draw_walkability = !map.draw_walkability;
 
 	if (App->input->GetKey(SDL_SCANCODE_F3) == KEY_DOWN)
-		App->audio->PauseMusic();
+		App->audio->PauseMusic(1.f);
 
 	if (App->input->GetKey(SDL_SCANCODE_F4) == KEY_DOWN)
 		App->audio->PlayMusic("audio/Music/alexander-nakarada-buzzkiller.ogg");
@@ -110,6 +112,35 @@ bool Scene::Update()
 		else
 			LOG("Invalid spawn position");
 	}
+	if (App->input->GetKey(SDL_SCANCODE_8) == KEY_DOWN) //Base_Center
+	{
+		std::pair<int, int> position = Map::WorldToTileBase(float(x + cam.x), float(y + cam.y));
+		if (App->pathfinding.CheckWalkabilityArea(position, vec(1.0f)))
+		{
+			Gameobject* base_go = AddGameobject("Base Center");
+			base_go->GetTransform()->SetLocalPos({ float(position.first), float(position.second), 0.0f });
+
+			App->audio->PlayFx(B_BUILDED);
+			new Base_Center(base_go);
+		}
+		else
+			LOG("Invalid spawn position");
+	}
+
+	if (App->input->GetKey(SDL_SCANCODE_7) == KEY_DOWN) //Defensive tower
+	{
+		std::pair<int, int> position = Map::WorldToTileBase(float(x + cam.x), float(y + cam.y));
+		if (App->pathfinding.CheckWalkabilityArea(position, vec(1.0f)))
+		{
+			Gameobject* tower_go = AddGameobject("Tower");
+			tower_go->GetTransform()->SetLocalPos({ float(position.first), float(position.second), 0.0f });
+
+			App->audio->PlayFx(B_BUILDED);
+			new Tower(tower_go);
+		}
+		else
+			LOG("Invalid spawn position");
+	}
 
 	if (App->input->GetKey(SDL_SCANCODE_X) == KEY_DOWN)
 	{
@@ -137,12 +168,20 @@ bool Scene::Update()
 		App->pathfinding.DebugShowPaths();
 	}
 
+	if (App->input->GetKey(SDL_SCANCODE_DELETE) == KEY_DOWN)
+	{
+		if (App->editor->selection)
+		{
+			App->editor->selection->Destroy();
+		}
+	}
+
 	if (App->input->GetMouseButtonDown(2) == KEY_DOWN)
 	{
 		Gameobject* go = App->editor->selection;
 		if (go) 
 		{
-			std::pair<int, int> mouseOnMap = Map::WorldToTileBase(x + cam.x, y + cam.y);
+			std::pair<float, float> mouseOnMap = Map::F_WorldToMap(float(x + cam.x), float(y + cam.y));
 			Event::Push(ON_RIGHT_CLICK, go, mouseOnMap.first, mouseOnMap.second);
 		}
 	}
@@ -215,6 +254,9 @@ void Scene::RecieveEvent(const Event& e)
 		break;
 	case SCENE_CHANGE:
 		map.CleanUp();
+		App->audio->UnloadFx();
+		App->audio->PauseMusic(1.f);
+		App->editor->SetSelection(nullptr, false);
 		root.RemoveChilds();
 		Event::PumpAll();
 		ChangeToScene(Scenes(e.data1.AsInt()));

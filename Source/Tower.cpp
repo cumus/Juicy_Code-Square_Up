@@ -1,15 +1,17 @@
-#include "Edge.h"
+#include "Tower.h"
 #include "Application.h"
 #include "Gameobject.h"
+#include "Audio.h"
+#include "AudioSource.h"
 #include "Transform.h"
 #include "Log.h"
 
-Edge::Edge(Gameobject* go) : Behaviour(go, EDGE, FULL_LIFE, B_EDGE)
+Tower::Tower(Gameobject* go) : Behaviour(go, TOWER, FULL_LIFE, B_TOWER)
 {
-	current_life = max_life = damage = 10;
+	current_life = max_life = 50;
 }
 
-Edge::~Edge() 
+Tower::~Tower()
 {
 	Transform* t = game_object->GetTransform();
 	if (t)
@@ -17,16 +19,11 @@ Edge::~Edge()
 		vec pos = t->GetGlobalPosition();
 		App->pathfinding.SetWalkabilityTile(int(pos.x), int(pos.y), true);
 	}
-
-	b_map.erase(GetID());
 }
 
-void Edge::OnRightClick(float x, float y)
-{
-	OnDamage(3);
-}
 
-void Edge::OnDamage(int d)
+
+void Tower::OnDamage(int d)
 {
 	if (current_state != DESTROYED)
 	{
@@ -43,9 +40,11 @@ void Edge::OnDamage(int d)
 	}
 }
 
-void Edge::OnKill()
+void Tower::OnKill()
 {
-	current_life = 0;
+	App->audio->PlayFx(B_DESTROYED);
 	current_state = DESTROYED;
-	game_object->Destroy(5.0f);
+	game_object->Destroy(1.0f);
+
 }
+

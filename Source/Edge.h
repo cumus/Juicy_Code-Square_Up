@@ -9,7 +9,7 @@ public:
 	Edge(Gameobject* go);
 	~Edge();
 
-	void OnRightClick(int x, int y) override;
+	void OnRightClick(float x, float y) override;
 	void OnDamage(int damage) override;
 	void OnKill() override;
 };
