@@ -373,8 +373,8 @@ bool Scene::LoadTestScene()
 		ret = (id_mouse_tex != -1);
 	}
 
-	if (ret && map.Load("maps/iso.tmx"))
-	{
+	if (ret) map.Load("maps/iso.tmx");
+	/*
 		// HUD
 		Gameobject* canvas_go = AddGameobject("Canvas", &root);
 		C_Canvas* canv = new C_Canvas(canvas_go);
@@ -407,8 +407,8 @@ bool Scene::LoadTestScene()
 		Minimap* minimap = new Minimap(minimap_go);
 		minimap->target = { 0.f, 0.6f, 0.4f, 0.4f };
 		minimap->CreateMinimap();
-		minimap->SetActive();
-	}
+		minimap->SetActive();*/
+	
 
 	return ret;
 }
