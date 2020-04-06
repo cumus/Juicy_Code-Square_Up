@@ -10,6 +10,8 @@
 #include "Sprite.h"
 #include "Behaviour.h"
 #include "Edge.h"
+#include "BaseCenter.h"
+#include "Tower.h"
 #include "AudioSource.h"
 #include "Canvas.h"
 
@@ -106,6 +108,35 @@ bool Scene::Update()
 			edge_go->GetTransform()->SetLocalPos({ float(position.first), float(position.second), 0.0f });
 
 			new Edge(edge_go);
+		}
+		else
+			LOG("Invalid spawn position");
+	}
+	if (App->input->GetKey(SDL_SCANCODE_8) == KEY_DOWN) //Base_Center
+	{
+		std::pair<int, int> position = Map::WorldToTileBase(float(x + cam.x), float(y + cam.y));
+		if (App->pathfinding.CheckWalkabilityArea(position, vec(1.0f)))
+		{
+			Gameobject* base_go = AddGameobject("Base Center");
+			base_go->GetTransform()->SetLocalPos({ float(position.first), float(position.second), 0.0f });
+
+			App->audio->PlayFx(B_BUILDED);
+			new Base_Center(base_go);
+		}
+		else
+			LOG("Invalid spawn position");
+	}
+
+	if (App->input->GetKey(SDL_SCANCODE_7) == KEY_DOWN) //Defensive tower
+	{
+		std::pair<int, int> position = Map::WorldToTileBase(float(x + cam.x), float(y + cam.y));
+		if (App->pathfinding.CheckWalkabilityArea(position, vec(1.0f)))
+		{
+			Gameobject* tower_go = AddGameobject("Tower");
+			tower_go->GetTransform()->SetLocalPos({ float(position.first), float(position.second), 0.0f });
+
+			App->audio->PlayFx(B_BUILDED);
+			new Tower(tower_go);
 		}
 		else
 			LOG("Invalid spawn position");

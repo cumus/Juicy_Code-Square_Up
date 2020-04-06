@@ -243,6 +243,8 @@ bool Audio::LoadFx(Audio_FX audio_fx)
 	{
 	case LOGO: audio_path += "audio/Effects/Intro/soda-open-and-pour-left-right.wav"; break;
 	case HAMMER: audio_path += "audio/Effects/Buildings/Nails/HamerNail13Hits.wav"; break;
+	case B_DESTROYED: audio_path += "audio/Effects/Buildings/Destroyed/PowerDown.wav"; break;
+	case B_BUILDED: audio_path += "audio/Effects/Buildings/Nails/HamerNail4Hits.wav"; break;
 	default: break;
 	}
 

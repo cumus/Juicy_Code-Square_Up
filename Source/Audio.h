@@ -13,6 +13,8 @@ enum Audio_FX : unsigned int
 {
 	LOGO = 0u,
 	HAMMER,
+	B_DESTROYED,
+	B_BUILDED,
 	MAX_FX
 };
 
