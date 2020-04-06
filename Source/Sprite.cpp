@@ -89,10 +89,49 @@ AnimatedSprite::AnimatedSprite(Behaviour* unit) : Sprite(unit->GetGameobject(), 
 	case UNIT_MELEE:
 	{
 		tex_id = App->tex.Load("textures/Char_killia1.png");
-		animations[IDLE].Setup(section = { 30, 20, 100, 180}, 6);
+		animations[IDLE].Setup(section = { 41, 24, 89, 167 }, 6, 0.2f);
+		//animations[MOVING_E].Setup();
+		//animations[MOVING_W].Setup();
+		//animations[MOVING_N].Setup();
+		//animations[MOVING_S].Setup();
+		animations[MOVING_NE].Setup(section = { 41, 24, 89, 167 }, 6, 0.2f);
+		animations[MOVING_NW].Setup(section = { 41, 24, 89, 167 }, 6, 0.2f);
+		animations[MOVING_SE].Setup(section = { 41, 24, 89, 167 }, 6, 0.2f);
+		animations[MOVING_SW].Setup(section = { 41, 24, 89, 167 }, 6, 0.2f);
+		animations[ATTACKING_E].Setup(section = { 30, 20, 100, 180 }, 6);
+		animations[ATTACKING_W].Setup(section = { 30, 20, 100, 180 }, 6);
+		animations[ATTACKING_N].Setup(section = { 30, 20, 100, 180 }, 6);
+		animations[ATTACKING_S].Setup(section = { 30, 20, 100, 180 }, 6);
+		animations[ATTACKING_NE].Setup(section = { 30, 20, 100, 180 }, 6);
+		animations[ATTACKING_NW].Setup(section = { 30, 20, 100, 180 }, 6);
+		animations[ATTACKING_SE].Setup(section = { 30, 20, 100, 180 }, 6);
+		animations[ATTACKING_SW].Setup(section = { 30, 20, 100, 180 }, 6);
+		//animations[DESTROYED].Setup();
+		offset = { 5.f, -160.f, 0.6f, 0.6f };
 		break; 
 	}
 	case ENEMY_MELEE:
+		tex_id = App->tex.Load("textures/Enemy_hobbit1.png");
+		animations[IDLE].Setup(section = { 30, 20, 100, 180 }, 6, 0.2f);
+		//animations[MOVING_E].Setup();
+		//animations[MOVING_W].Setup();
+		//animations[MOVING_N].Setup();
+		//animations[MOVING_S].Setup();
+		animations[MOVING_NE].Setup(section = { 30, 20, 100, 180 }, 6);
+		animations[MOVING_NW].Setup(section = { 30, 20, 100, 180 }, 6);
+		animations[MOVING_SE].Setup(section = { 30, 20, 100, 180 }, 6);
+		animations[MOVING_SW].Setup(section = { 30, 20, 100, 180 }, 6);
+		animations[ATTACKING_E].Setup(section = { 30, 20, 100, 180 }, 6);
+		animations[ATTACKING_W].Setup(section = { 30, 20, 100, 180 }, 6);
+		animations[ATTACKING_N].Setup(section = { 30, 20, 100, 180 }, 6);
+		animations[ATTACKING_S].Setup(section = { 30, 20, 100, 180 }, 6);
+		animations[ATTACKING_NE].Setup(section = { 30, 20, 100, 180 }, 6);
+		animations[ATTACKING_NW].Setup(section = { 30, 20, 100, 180 }, 6);
+		animations[ATTACKING_SE].Setup(section = { 30, 20, 100, 180 }, 6);
+		animations[ATTACKING_SW].Setup(section = { 30, 20, 100, 180 }, 6);
+		//animations[DESTROYED].Setup();
+		offset = { 0.f, 0.f, 0.5f, 0.5f };
+		break;
 		break;
 	default:
 		break;

@@ -1,29 +1,34 @@
 #include "MeleeUnit.h"
 #include "Behaviour.h"
 #include "Application.h"
-#include "TextureManager.h"
+#include "Sprite.h"
+#include "Transform.h"
 #include "Gameobject.h"
 #include "Component.h"
 #include "Log.h"
 
 
-/*
-MeleeUnit::MeleeUnit(Gameobject* go, UnitType type) : B_Unit(go, type)
+
+MeleeUnit::MeleeUnit(Gameobject* go) : B_Unit(go, ENEMY_MELEE, IDLE, B_UNIT)
 {
-	SetTexture();
-	App->pathfinding.SetWalkabilityTile(game_object->GetTransform()->GetLocalPos().x, game_object->GetTransform()->GetLocalPos().y, false);
-	
+
 }
 
-MeleeUnit::MeleeUnit(const MeleeUnit& node) : B_Unit(node.game_object, node.GetType())
-{}
-
 MeleeUnit::~MeleeUnit()
-{}
-
-void MeleeUnit::RecieveEvent(const Event& e)
 {
-	if (current_state != DEAD)
+	Transform* t = game_object->GetTransform();
+	if (t)
+	{
+		vec pos = t->GetGlobalPosition();
+		App->pathfinding.SetWalkabilityTile(int(pos.x), int(pos.y), true);
+	}
+
+	b_map.erase(GetID());
+}
+
+void MeleeUnit::OnDamage(int d)
+{
+	if (current_state != DESTROYED)
 	{
 		current_life -= d;
 
@@ -31,28 +36,19 @@ void MeleeUnit::RecieveEvent(const Event& e)
 
 		if (current_life <= 0)
 			OnKill();
-}
 
-void MeleeUnit::SetTexture()
-{
-	textureID = App->tex.Load("textures/meta.png");
-	unitsprite = new Sprite(this->game_object);
-	unitsprite->tex_id = textureID;
-
-	CheckSprite();
+	}
 }
 
 void MeleeUnit::CheckSprite()
 {
-	if (unitsprite == nullptr) SetTexture();
-
 	switch (current_state)
 	{
 	case IDLE:
-		
+
 		break;
 	case MOVING_E:
-		
+
 		break;
 	case MOVING_W:
 
@@ -99,14 +95,13 @@ void MeleeUnit::CheckSprite()
 	case ATTACKING_NW:
 
 		break;
-	case DEAD:
-		
-		break;
 	}
 }
 
 void MeleeUnit::OnKill()
 {
-	current_state = DEAD;
+	current_life = 0;
+	current_state = DESTROYED;
 	game_object->Destroy(5.0f);
-}*/
+}
+

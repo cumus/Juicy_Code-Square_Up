@@ -4,19 +4,25 @@
 #include "Behaviour.h"
 #include "Gameobject.h"
 #include "Component.h"
-/*
+
 class Gameobject;
 
 class EnemyMeleeUnit : public B_Unit
 {
 public:
-	EnemyMeleeUnit(Gameobject* go, UnitType type = ENEMY_MELEE);
-	EnemyMeleeUnit(const EnemyMeleeUnit& node);
+	EnemyMeleeUnit(Gameobject* go);
 	~EnemyMeleeUnit();
-	void RecieveEvent(const Event& e) override;
-	void SetTexture() override;
-	void CheckSprite() override;
-	void OnKill() override;
+	void OnDamage(int d);
+	void CheckSprite();
+	void OnKill();
+
+protected:
+
+	int EM_lvl = 1;
+	int EM_max_lvl = 5;
+	int EM_damage = 5;
+	int attack_speed = 1;
+
 };
-*/
+
 #endif
