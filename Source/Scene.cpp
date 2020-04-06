@@ -75,24 +75,24 @@ bool Scene::Update()
 			{
 				if (it->second->GetType() == UNIT_MELEE || it->second->GetType() == GATHERER || it->second->GetType() == UNIT_RANGED)
 				{
-					LOG("StartPOS X:%d / Y:%d", groupStart.x, groupStart.y);
-					LOG("FinishPOS X:%d / Y:%d", mouseExtend.x, mouseExtend.y);
+					//LOG("StartPOS X:%d / Y:%d", groupStart.x, groupStart.y);
+					//LOG("FinishPOS X:%d / Y:%d", mouseExtend.x, mouseExtend.y);
 					vec pos = it->second->GetGameobject()->GetTransform()->GetGlobalPosition();
 					std::pair<float, float> posToWorld = Map::F_MapToWorld(pos.x,pos.y,pos.z);
 					posToWorld.first -= cam.x; 
 					posToWorld.second -= cam.y;
-					LOG("ObjectPOS X:%f / Y:%f", posToWorld.first, posToWorld.second);
-					if (posToWorld.first > groupStart.x && pos.x < mouseExtend.x) //Right
+					//LOG("ObjectPOS X:%f / Y:%f", posToWorld.first, posToWorld.second);
+					if (posToWorld.first > groupStart.x && posToWorld.first < mouseExtend.x) //Right
 					{		
 						LOG("+X fine");
-						if (posToWorld.second > groupStart.y && pos.y < mouseExtend.y)//Up
+						if (posToWorld.second > groupStart.y && posToWorld.second < mouseExtend.y)//Up
 						{
 							LOG("1");
 							group.push_back(it->second->GetGameobject());
 							//App->editor->SetSelection(it->second->GetGameobject());
 							Event::Push(ON_SELECT, it->second->GetGameobject());
 						}
-						else if (posToWorld.second < groupStart.y && pos.y > mouseExtend.y)//Down
+						else if (posToWorld.second < groupStart.y && posToWorld.second > mouseExtend.y)//Down
 						{
 							LOG("2");
 							group.push_back(it->second->GetGameobject());
@@ -100,17 +100,17 @@ bool Scene::Update()
 							Event::Push(ON_SELECT, it->second->GetGameobject());
 						}
 					}
-					else if (posToWorld.first < groupStart.x && pos.x > mouseExtend.x)//Left
+					else if (posToWorld.first < groupStart.x && posToWorld.first > mouseExtend.x)//Left
 					{
 						LOG("-X fine");
-						if (posToWorld.second > groupStart.y && pos.y < mouseExtend.y)//Up
+						if (posToWorld.second > groupStart.y && posToWorld.second < mouseExtend.y)//Up
 						{
 							LOG("3");
 							group.push_back(it->second->GetGameobject());
 							//App->editor->SetSelection(it->second->GetGameobject());
 							Event::Push(ON_SELECT, it->second->GetGameobject());
 						}
-						else if (posToWorld.second < groupStart.y && pos.y > mouseExtend.y)//Down
+						else if (posToWorld.second < groupStart.y && posToWorld.second > mouseExtend.y)//Down
 						{
 							LOG("4");
 							group.push_back(it->second->GetGameobject());
