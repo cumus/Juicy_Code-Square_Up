@@ -1,4 +1,3 @@
-#pragma once
 #ifndef __TOWER_H__
 #define __TOWER_H__
 
