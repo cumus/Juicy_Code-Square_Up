@@ -136,6 +136,12 @@
     <ClCompile Include="Minimap.cpp">
       <Filter>Source\Modules</Filter>
     </ClCompile>
+    <ClCompile Include="Tower.cpp">
+      <Filter>Source\Gameobjects</Filter>
+    </ClCompile>
+    <ClCompile Include="BaseCenter.cpp">
+      <Filter>Source\Gameobjects</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="PugiXml\src\pugiconfig.hpp">
@@ -302,6 +308,12 @@
     </ClInclude>
     <ClInclude Include="Minimap.h">
       <Filter>Source\Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="Tower.h">
+      <Filter>Source\Gameobjects</Filter>
+    </ClInclude>
+    <ClInclude Include="BaseCenter.h">
+      <Filter>Source\Gameobjects</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

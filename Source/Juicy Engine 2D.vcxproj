@@ -142,6 +142,7 @@
   <ItemGroup>
     <ClCompile Include="AudioSource.cpp" />
     <ClCompile Include="BarMenu.cpp" />
+    <ClCompile Include="BaseCenter.cpp" />
     <ClCompile Include="Behaviour.cpp" />
     <ClCompile Include="Canvas.cpp" />
     <ClCompile Include="Component.cpp" />
@@ -174,6 +175,7 @@
     <ClCompile Include="Sprite.cpp" />
     <ClCompile Include="TextureManager.cpp" />
     <ClCompile Include="TimeManager.cpp" />
+    <ClCompile Include="Tower.cpp" />
     <ClCompile Include="Transform.cpp" />
     <ClCompile Include="UI_Button.cpp" />
     <ClCompile Include="UI_ButtonImage.cpp" />
@@ -189,6 +191,7 @@
   <ItemGroup>
     <ClInclude Include="AudioSource.h" />
     <ClInclude Include="BarMenu.h" />
+    <ClInclude Include="BaseCenter.h" />
     <ClInclude Include="Behaviour.h" />
     <ClInclude Include="Canvas.h" />
     <ClInclude Include="Component.h" />
@@ -229,6 +232,7 @@
     <ClInclude Include="Sprite.h" />
     <ClInclude Include="TextureManager.h" />
     <ClInclude Include="TimeManager.h" />
+    <ClInclude Include="Tower.h" />
     <ClInclude Include="Transform.h" />
     <ClInclude Include="UI_Button.h" />
     <ClInclude Include="UI_ButtonImage.h" />
