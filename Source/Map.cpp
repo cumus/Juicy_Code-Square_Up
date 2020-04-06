@@ -106,6 +106,8 @@ void Map::Draw() const
 	mouse_x += cam.x;
 	mouse_y += cam.y;
 
+	App->render->DrawQuad(cam, { 100, 0,0,150 }, false);
+
 	std::pair<int, int> up_left = I_WorldToMap(cam.x, cam.y);
 	std::pair<int, int> down_right = I_WorldToMap(cam.x + cam.w, cam.y + cam.h);
 
@@ -163,33 +165,38 @@ void Map::Draw() const
 		// Get corner coordinates
 		std::pair<int, int> up_right = I_WorldToMap(cam.x + cam.w, cam.y);
 		std::pair<int, int> down_left = I_WorldToMap(cam.x, cam.y + cam.h);
+		SDL_Rect cam_area = { cam.x - size_i.first, cam.y - (size_i.second * 2), cam.w +size_i.first, cam.h + (size_i.second * 2) };
 
 		for (std::vector<MapLayer>::const_iterator it = layers.begin(); it != layers.end(); ++it)
 		{
 			if (it->drawable)
 			{
-				for (int y = up_right.second - 1; y <= down_left.second; ++y)
+				for (int y = up_right.second - 2; y <= down_left.second; ++y)
 				{
-					for (int x = up_left.first - 1; x <= down_right.first + 1; ++x)
+					for (int x = up_left.first - 2; x <= down_right.first; ++x)
 					{
-						unsigned int tile_id = it->GetID(x, y);
-						int tex_id;
-						SDL_Rect section;
-						if (GetRectAndTexId(tile_id, section, tex_id))
+						std::pair<int, int> p = I_MapToWorld(x, y);
+						if (JMath::PointInsideRect(p.first, p.second, cam_area))
 						{
-							// Draw tileset spite at render_pos
-							std::pair<int, int> render_pos = I_MapToWorld(x, y);
-							App->render->Blit(tex_id, render_pos.first, render_pos.second, &section, MAP);
-						}
+							unsigned int tile_id = it->GetID(x, y);
+							int tex_id;
+							SDL_Rect section;
+							if (GetRectAndTexId(tile_id, section, tex_id))
+							{
+								// Draw tileset spite at render_pos
+								std::pair<int, int> render_pos = I_MapToWorld(x, y);
+								App->render->Blit(tex_id, render_pos.first, render_pos.second, &section, MAP);
+							}
 #ifdef DEBUG
-						else if (it == layers.begin())
-						{
-							// Draw debug spite at empty position
-							SDL_Rect rect = { 64, 0, 64, 64 };
-							std::pair<int, int> render_pos = I_MapToWorld(x, y);
-							App->render->Blit(App->scene->id_mouse_tex, render_pos.first, render_pos.second, &rect, BACKGROUND);
-						}
+							else if (it == layers.begin())
+							{
+								// Draw debug spite at empty position
+								SDL_Rect rect = { 64, 0, 64, 64 };
+								std::pair<int, int> render_pos = I_MapToWorld(x, y);
+								App->render->Blit(App->scene->id_mouse_tex, render_pos.first, render_pos.second, &rect, BACKGROUND);
+							}
 #endif // DEBUG
+						}
 					}
 				}
 			}
