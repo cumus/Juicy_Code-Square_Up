@@ -5,6 +5,7 @@
 #include "AudioSource.h"
 #include "Transform.h"
 #include "Log.h"
+#include "MapContainer.h"
 
 Tower::Tower(Gameobject* go) : Behaviour(go, TOWER, FULL_LIFE, B_TOWER)
 {
@@ -47,4 +48,33 @@ void Tower::OnKill()
 	game_object->Destroy(1.0f);
 
 }
+
+
+void Tower::Upgrade()
+{
+	if (t_lvl < t_max_lvl) {
+		
+		t_lvl += 1;
+		max_life += 25;
+		t_damage += 2;
+		App->audio->PlayFx(B_BUILDED);
+		LOG("LIFE AFTER UPGRADE: %d", max_life);
+		LOG("Tower LEVEL: %d", t_lvl);
+	}
+
+}
+
+void Tower::OnRightClick(float x, float y)
+{
+	Upgrade();
+	//OnDamage(10);
+}
+
+void Tower::DoAttack(vec pos)
+{
+	
+	
+}
+
+
 
