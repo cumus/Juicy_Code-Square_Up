@@ -36,6 +36,7 @@ enum EventType
 	SCENE_TICK,
 	SCENE_STOP,
 	SCENE_CHANGE,
+	SELECT_FX,
 
 	// Gameobjects
 	ON_PLAY,

@@ -355,6 +355,8 @@ void Scene::RecieveEvent(const Event& e)
 		Event::PumpAll();
 		ChangeToScene(SceneType(e.data1.AsInt()));
 		break;
+	case SELECT_FX:
+		App->audio->PlayFx(SELECT);
 	default:
 		break;
 	}
@@ -491,16 +493,21 @@ bool Scene::LoadMenuScene()
 	g_logo->offset = { -525.f, -500.f };
 	g_logo->section = { 0, 0, 1070, 207 };
 	g_logo->tex_id = App->tex.Load("textures/game-logo.png");
-
-	Gameobject* start_go = AddGameobject("Start Button", canvas_go);
 	
 	//------------------------- START --------------------------------------
+
+	Gameobject* start_go = AddGameobject("Start Button", canvas_go);
 	
 	C_Button* start = new C_Button(start_go, Event(SCENE_CHANGE, this, MAIN));
 	start->target = { 0.5f, 0.5f, 0.5f, 0.5f };
 	start->offset = { -525.f, -100.f };
 	start->section = { 0, 0, 1070, 207 };
 	start->tex_id = App->tex.Load("textures/button.png");
+
+	C_Button* start_fx = new C_Button(start_go, Event(SELECT_FX, this, App));
+	start_fx->target = { 0.5f, 0.5f, 0.5f, 0.5f };
+	start_fx->offset = { -525.f, -100.f };
+	start_fx->section = { 0, 0, 1070, 207 };
 
 	Gameobject* start_txt_go = AddGameobject("Start Button", start_go);
 	
@@ -517,6 +524,11 @@ bool Scene::LoadMenuScene()
 	quit->offset = { -525.f, 200.f };
 	quit->section = { 0, 0, 1070, 207 };
 	quit->tex_id = App->tex.Load("textures/button.png");
+
+	C_Button* quit_fx = new C_Button(quit_go, Event(SELECT_FX, this, App));
+	quit_fx->target = { 0.5f, 0.5f, 0.5f, 0.5f };
+	quit_fx->offset = { -525.f, 200.f };
+	quit_fx->section = { 0, 0, 1070, 207 };
 
 	Gameobject* quit_txt_go = AddGameobject("Start Button", quit_go);
 

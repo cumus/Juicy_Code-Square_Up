@@ -13,6 +13,8 @@ enum Audio_FX : unsigned int
 {
 	LOGO = 0u,
 	HAMMER,
+	SELECT,
+	TITLE,
 	B_DESTROYED,
 	B_BUILDED,
 	MAX_FX
@@ -37,6 +39,7 @@ public:
 	// Music
 	bool PlayMusic(const char* path, float fade_time = 2.0f);
 	void PauseMusic(float fade_time) const;
+	// void ClearMusic(float fade_time);
 
 	// FX
 	bool LoadFx(Audio_FX audio_fx);
