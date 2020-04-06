@@ -152,6 +152,7 @@
     <ClCompile Include="Edge.cpp" />
     <ClCompile Include="Editor.cpp" />
     <ClCompile Include="EditorWindow.cpp" />
+    <ClCompile Include="EnemyMeleeUnit.cpp" />
     <ClCompile Include="Event.cpp" />
     <ClCompile Include="FileManager.cpp" />
     <ClCompile Include="FontManager.cpp" />
@@ -164,6 +165,7 @@
     <ClCompile Include="Input.cpp" />
     <ClCompile Include="Map.cpp" />
     <ClCompile Include="MapContainer.cpp" />
+    <ClCompile Include="MeleeUnit.cpp" />
     <ClCompile Include="Minimap.cpp" />
     <ClCompile Include="mmgr\mmgr.cpp" />
     <ClCompile Include="PathfindingManager.cpp" />
@@ -201,6 +203,7 @@
     <ClInclude Include="Edge.h" />
     <ClInclude Include="Editor.h" />
     <ClInclude Include="EditorWindow.h" />
+    <ClInclude Include="EnemyMeleeUnit.h" />
     <ClInclude Include="Event.h" />
     <ClInclude Include="EventListener.h" />
     <ClInclude Include="FileManager.h" />
@@ -210,6 +213,7 @@
     <ClInclude Include="JuicyMath.h" />
     <ClInclude Include="Map.h" />
     <ClInclude Include="MapContainer.h" />
+    <ClInclude Include="MeleeUnit.h" />
     <ClInclude Include="Minimap.h" />
     <ClInclude Include="mmgr\mmgr.h" />
     <ClInclude Include="mmgr\nommgr.h" />
