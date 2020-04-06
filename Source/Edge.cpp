@@ -8,6 +8,12 @@ Edge::Edge(Gameobject* go) : Behaviour(go, EDGE, FULL_LIFE, B_EDGE)
 {
 	current_life = max_life = 100;
 	damage = 0;
+	Transform* t = game_object->GetTransform();
+	if (t)
+	{
+		vec pos = t->GetGlobalPosition();
+		App->pathfinding.SetWalkabilityTile(int(pos.x), int(pos.y), false);
+	}	
 }
 
 Edge::~Edge() 

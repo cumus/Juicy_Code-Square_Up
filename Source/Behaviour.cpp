@@ -345,9 +345,10 @@ void B_Unit::Update()
 			current_state = MOVING_W;
 		}			
 	}	
+	//Colision check
 	vec pos = game_object->GetTransform()->GetGlobalPosition();
 	std::map<float, Behaviour*> out;
-	unsigned int total_found = GetBehavioursInRange(pos, 1.5f, out);
+	unsigned int total_found = GetBehavioursInRange(pos, 1.4f, out);
 	if (total_found > 0)
 	{
 		LOG("found");
@@ -364,7 +365,7 @@ void B_Unit::Update()
 			fPoint separationSpd(0, 0);
 			separationSpd.x = pos.x - otherPos.x;
 			separationSpd.y = pos.y - otherPos.y;
-			Event::Push(IMPULSE, it->second->AsBehaviour(), -separationSpd.x,-separationSpd.y);
+			Event::Push(IMPULSE, it->second->AsBehaviour(), -separationSpd.x, -separationSpd.y);
 		}
 	}	
 }
@@ -456,7 +457,7 @@ void B_Unit::OnRightClick(float x, float y)
 
 					}
 				}
-				else if (it->second->GetType() == ENEMY_MELEE || it->second->GetType() == ENEMY_RANGED || it->second->GetType() == EDGE)//Temporal
+				else if (it->second->GetType() == ENEMY_MELEE || it->second->GetType() == ENEMY_RANGED /*|| it->second->GetType() == EDGE*/)//Temporal
 				{
 					if (distance == 0)
 					{
@@ -481,16 +482,17 @@ void B_Unit::OnRightClick(float x, float y)
  
 void B_Unit::OnGetImpulse(float x, float y)
 {
-	LOG("Got impulse");
-	game_object->GetTransform()->MoveX(4 * x * App->time.GetGameDeltaTime());//Move x
-	game_object->GetTransform()->MoveY(4 * y * App->time.GetGameDeltaTime());//Move y
-
 	float tempX = game_object->GetTransform()->GetGlobalPosition().x;
 	float tempY = game_object->GetTransform()->GetGlobalPosition().y;
-	if (App->pathfinding.ValidTile(int(tempX),int(tempY)) == false)
+	if (App->pathfinding.ValidTile(int(tempX), int(tempY)) == false)
 	{
-		game_object->GetTransform()->MoveX(-4 * x * App->time.GetGameDeltaTime());//Move x
-		game_object->GetTransform()->MoveY(-4 * y * App->time.GetGameDeltaTime());//Move y
-	}	
+		game_object->GetTransform()->MoveX(-6 * x * App->time.GetGameDeltaTime());//Move x
+		game_object->GetTransform()->MoveY(-6 * y * App->time.GetGameDeltaTime());//Move y
+	}
+	else
+	{
+		game_object->GetTransform()->MoveX(6 * x * App->time.GetGameDeltaTime());//Move x
+		game_object->GetTransform()->MoveY(6 * y * App->time.GetGameDeltaTime());//Move y
+	}
 }
 
