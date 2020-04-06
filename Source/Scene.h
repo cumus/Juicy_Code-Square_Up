@@ -41,9 +41,7 @@ public:
 	bool LoadMainScene();
 	bool ChangeToScene(Scenes scene);
 
-	void create_base_bar(const char* name, float* health);
-	void create_building_bar(const char* name, const char* type, float* health, int* upgrades);
-	void create_unit_bar(const char* name, const char* type, float* health, const char* action);
+	
 
 	Gameobject* GetRoot();
 	const Gameobject* GetRoot() const;
@@ -61,15 +59,15 @@ public:
 	bool groupSelect;
 	std::vector<Gameobject*> group;
 
+	Gameobject* hud_canvas_go;
+
+	int building_bars_created = 0;
+	int unit_bars_created = 0;
+
 private:
 
 	Map map;
 	Gameobject root;
-	Gameobject* hud_canvas_go;
-
-
-	int building_bars_created = 0;
-	int unit_bars_created = 0;
 
 	float time = 0;
 	bool x_t, y_t;	
