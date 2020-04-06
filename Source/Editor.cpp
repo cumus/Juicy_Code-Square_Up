@@ -97,8 +97,10 @@ bool Editor::Update()
 	// Select Gameobject
 	if (mouse_left_button == KEY_DOWN && mouse_over_windows == 0u && !sizing)
 	{
-		Gameobject* prev = selection;
-		selection = App->scene->MouseClickSelect(x, y);
+		SetSelection(App->scene->MouseClickSelect(x, y));
+
+
+		/*Gameobject* prev = selection;
 
 		if (selection != nullptr)
 		{
@@ -114,7 +116,7 @@ bool Editor::Update()
 				Event::Push(ON_SELECT, selection);
 		}
 		else if (prev != nullptr)
-			Event::Push(ON_UNSELECT, prev);
+			Event::Push(ON_UNSELECT, prev);*/
 
 		//selectedUnits.push_back(App->scene->MouseClickSelect(x, y));
 
@@ -167,4 +169,25 @@ bool Editor::CleanUp()
 bool Editor::MouseOnWindow() const
 {
 	return mouse_over_windows > 0u;
+}
+
+void Editor::SetSelection(Gameobject* go)
+{
+	if (go != nullptr)
+	{
+		if (selection != nullptr)
+		{
+			if (selection != go)
+			{
+				Event::Push(ON_UNSELECT, selection);
+				Event::Push(ON_SELECT, go);
+			}
+		}
+		else
+			Event::Push(ON_SELECT, go);
+	}
+	else if (selection != nullptr)
+		Event::Push(ON_UNSELECT, selection);
+
+	selection = go;
 }

@@ -16,6 +16,17 @@ public:
 		x = y = z = val;
 	}
 
+	inline float Distance(const Vector3& v) const
+	{
+		return sqrt((((x - v.x) * (x - v.x)) + ((y - v.y) * (y - v.y)) + ((z - v.z) * (z - v.z))));
+	}
+
+	inline float DistanceSquared(const Vector3& v) const
+	{
+		return (((x - v.x) * (x - v.x)) + ((y - v.y) * (y - v.y)) + ((z - v.z) * (z - v.z)));
+	}
+
+
 	Vector3 operator -(const Vector3 &v) const
 	{
 		Vector3 r;

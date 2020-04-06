@@ -8,6 +8,8 @@
 #include "AudioSource.h"
 #include "Log.h"
 
+std::map<double, Behaviour*> Behaviour::b_map;
+
 Behaviour::Behaviour(Gameobject* go, UnitType t, UnitState starting_state, ComponentType comp_type) :
 	Component(comp_type, go),
 	type(t),
@@ -19,6 +21,9 @@ Behaviour::Behaviour(Gameobject* go, UnitType t, UnitState starting_state, Compo
 	audio = new AudioSource(game_object);
 	new AnimatedSprite(this);
 	selection_highlight = new Sprite(go, App->tex.Load("textures/selectionMark.png"), { 0, 0, 64, 64 }, BACK_SCENE);
+	selection_highlight->SetInactive();
+
+	b_map.insert({ GetID(), this });
 }
 
 void Behaviour::RecieveEvent(const Event& e)
@@ -31,7 +36,7 @@ void Behaviour::RecieveEvent(const Event& e)
 	case ON_SELECT: Selected(); break;
 	case ON_UNSELECT: UnSelected(); break;
 	case ON_DESTROY: break;
-	case ON_RIGHT_CLICK: OnRightClick(e.data1.AsInt(), e.data2.AsInt()); break;
+	case ON_RIGHT_CLICK: OnRightClick(e.data1.AsFloat(), e.data2.AsFloat()); break;
 	case DAMAGE: OnDamage(e.data1.AsInt()); break;
 	}
 }
@@ -57,6 +62,30 @@ void Behaviour::OnDamage(int d)
 void Behaviour::OnKill()
 {
 	game_object->Destroy();
+}
+
+unsigned int Behaviour::GetBehavioursInRange(vec pos, float dist, std::map<float, Behaviour*>& res) const
+{
+	unsigned int ret = 0;
+
+	for (std::map<double, Behaviour*>::iterator it = b_map.begin(); it != b_map.end(); ++it)
+	{
+		if (it->first != GetID())
+		{
+			Transform* t = it->second->game_object->GetTransform();
+			if (t)
+			{
+				float d = t->DistanceTo(pos);
+				if (d < dist)
+				{
+					ret++;
+					res.insert({ d, it->second });
+				}
+			}
+		}
+	}
+
+	return ret;
 }
 
 
@@ -153,16 +182,28 @@ void B_Unit::Update()
 	}	
 }
 
-void B_Unit::OnRightClick(int x, int y)
+void B_Unit::OnRightClick(float x, float y)
 {
 	Transform* t = game_object->GetTransform();
 	if (t)
 	{
 		vec pos = t->GetGlobalPosition();
-		path = App->pathfinding.CreatePath({ int(pos.x), int(pos.y) }, { x, y }, GetID());
+		path = App->pathfinding.CreatePath({ int(pos.x), int(pos.y) }, { int(x), int(y) }, GetID());
 		next = false;
 		move = false;
 
 		audio->Play(HAMMER);
+
+		std::map<float, Behaviour*> out;
+		unsigned int total_found = GetBehavioursInRange(vec(x, y, 0.5f), 1.5f, out);
+		if (total_found > 0)
+		{
+			LOG("%d behaviours found neer right click (%f, %f):", total_found, pos.x, pos.y);
+			for (std::map<float, Behaviour*>::iterator it = out.begin(); it != out.end(); ++it)
+			{
+				std::string name = it->second->GetGameobject()->GetName();
+				LOG(" - %s, id: %d, type: %d, at %f distance", name.c_str(), it->second->GetID(), int(it->second->GetType()), it->first);
+			}
+		}
 	}
 }

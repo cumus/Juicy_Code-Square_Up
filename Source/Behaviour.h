@@ -4,6 +4,7 @@
 #include "Component.h"
 #include "Point.h"
 #include <vector>
+#include <map>
 
 enum UnitType
 {
@@ -72,14 +73,18 @@ public:
 
 	virtual void Selected();
 	virtual void UnSelected();
-	virtual void OnRightClick(int x, int y) {}
+	virtual void OnRightClick(float x, float y) {}
 	virtual void OnDamage(int damage);
 	virtual void OnKill();
 
 	UnitType GetType() const { return type; }
 	UnitState* GetStatePtr() { return &current_state; }
 
+	unsigned int GetBehavioursInRange(vec pos, float dist, std::map<float, Behaviour*>& res) const;
+
 protected:
+
+	static std::map<double, Behaviour*> b_map;
 
 	UnitType type;
 	UnitState current_state;
@@ -101,7 +106,7 @@ public:
 	virtual ~B_Unit() {}
 
 	void Update() override;
-	void OnRightClick(int x, int y) override;
+	void OnRightClick(float x, float y) override;
 	
 protected:
 

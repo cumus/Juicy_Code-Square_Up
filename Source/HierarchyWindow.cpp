@@ -28,11 +28,7 @@ void HierarchyWindow::RecieveEvent(const Event& e)
 	{
 		int id = e.data1.AsInt();
 		if (id >= 0 && id < int(gos.size()))
-		{
-			Gameobject* go = gos[id].second;
-			App->editor->selection = go;
-			Event::Push(ON_SELECT, go);
-		}
+			App->editor->SetSelection(gos[id].second);
 	}
 }
 

@@ -142,7 +142,7 @@ bool Scene::Update()
 		Gameobject* go = App->editor->selection;
 		if (go) 
 		{
-			std::pair<int, int> mouseOnMap = Map::WorldToTileBase(x + cam.x, y + cam.y);
+			std::pair<float, float> mouseOnMap = Map::F_WorldToMap(float(x + cam.x), float(y + cam.y));
 			Event::Push(ON_RIGHT_CLICK, go, mouseOnMap.first, mouseOnMap.second);
 		}
 	}
@@ -215,6 +215,7 @@ void Scene::RecieveEvent(const Event& e)
 		break;
 	case SCENE_CHANGE:
 		map.CleanUp();
+		App->editor->SetSelection();
 		root.RemoveChilds();
 		Event::PumpAll();
 		ChangeToScene(Scenes(e.data1.AsInt()));

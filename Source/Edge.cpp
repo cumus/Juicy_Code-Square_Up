@@ -19,7 +19,7 @@ Edge::~Edge()
 	}
 }
 
-void Edge::OnRightClick(int x, int y)
+void Edge::OnRightClick(float x, float y)
 {
 	OnDamage(3);
 }

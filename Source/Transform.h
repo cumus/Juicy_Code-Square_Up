@@ -31,6 +31,9 @@ public:
 	void MoveX(float val);
 	void MoveY(float val);
 	void MoveZ(float val);
+	void ScaleX(float val);
+	void ScaleY(float val);
+	void ScaleZ(float val);
 
 	// Local Scale
 	vec		GetLocalScale() const { return scale; }
@@ -47,6 +50,7 @@ public:
 
 	// Collision
 	bool Intersects(std::pair<float, float> p) const;
+	float DistanceTo(vec pos);
 
 private:
 
