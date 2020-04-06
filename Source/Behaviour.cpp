@@ -143,7 +143,6 @@ void B_Unit::Update()
 		//LOG("Distance 2:%f", d);
 		if (d <= attackRange)//Abajo derecha
 		{
-
 			cornerSE = true;
 			inRange = true;
 		}

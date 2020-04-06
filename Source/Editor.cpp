@@ -173,6 +173,14 @@ bool Editor::MouseOnWindow() const
 
 void Editor::SetSelection(Gameobject* go, bool call_unselect)
 {
+	if (App->scene->group.empty() == false)
+	{
+		for (std::vector<Gameobject*>::iterator it = App->scene->group.begin(); it != App->scene->group.end(); ++it)
+		{
+			Event::Push(ON_UNSELECT, *it);
+		}
+	}
+		
 	if (go != nullptr)
 	{
 		if (selection != nullptr)

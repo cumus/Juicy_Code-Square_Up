@@ -91,9 +91,11 @@ public:
 	//void QuickSort();
 	unsigned int GetBehavioursInRange(vec pos, float dist, std::map<float, Behaviour*>& res) const;
 
-protected:
-
+public: 
+	
 	static std::map<double, Behaviour*> b_map;
+
+protected:	
 
 	UnitType type;
 	UnitState current_state;

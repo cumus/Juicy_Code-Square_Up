@@ -42,8 +42,9 @@ bool Scene::PreUpdate()
 bool Scene::Update()
 {
 	bool ret = true;
-
 	OPTICK_EVENT();
+
+	SDL_Rect cam = App->render->GetCameraRect();
 
 	if (App->input->GetKey(SDL_SCANCODE_LALT) == KEY_REPEAT)
 	{
@@ -55,6 +56,75 @@ bool Scene::Update()
 			Event::Push(SCENE_CHANGE, this, MENU);
 		else if (App->input->GetKey(SDL_SCANCODE_4) == KEY_DOWN)
 			Event::Push(SCENE_CHANGE, this, MAIN);
+
+		//GROUP SELECTION//
+		if (App->input->GetMouseButtonDown(0) == KEY_DOWN)
+		{
+			App->input->GetMousePosition(groupStart.x, groupStart.y);
+		}
+		if (App->input->GetMouseButtonDown(0) == KEY_REPEAT)
+		{
+			App->input->GetMousePosition(mouseExtend.x, mouseExtend.y);
+			App->render->DrawQuad({ groupStart.x, groupStart.y, mouseExtend.x - groupStart.x, mouseExtend.y - groupStart.y }, { 0, 200, 0, 100 }, false,SCENE,false);
+			App->render->DrawQuad({ groupStart.x, groupStart.y, mouseExtend.x - groupStart.x, mouseExtend.y - groupStart.y }, { 0, 200, 0, 50 },true,SCENE,false);
+		}
+		if (App->input->GetMouseButtonDown(0) == KEY_UP)
+		{
+			for (std::map<double, Behaviour*>::iterator it = Behaviour::b_map.begin(); it != Behaviour::b_map.end(); ++it)
+			{
+				if (it->second->GetType() == UNIT_MELEE || it->second->GetType() == GATHERER || it->second->GetType() == UNIT_RANGED)
+				{
+					LOG("StartPOS X:%d / Y:%d", groupStart.x, groupStart.y);
+					LOG("FinishPOS X:%d / Y:%d", mouseExtend.x, mouseExtend.y);
+					vec pos = it->second->GetGameobject()->GetTransform()->GetGlobalPosition();
+					std::pair<float, float> posToWorld = Map::F_MapToWorld(pos.x,pos.y,pos.z);
+					posToWorld.first -= cam.x; 
+					posToWorld.second -= cam.y;
+					LOG("ObjectPOS X:%f / Y:%f", posToWorld.first, posToWorld.second);
+					if (posToWorld.first > groupStart.x && pos.x < mouseExtend.x) //Right
+					{		
+						LOG("+X fine");
+						if (posToWorld.second > groupStart.y && pos.y < mouseExtend.y)//Up
+						{
+							LOG("1");
+							group.push_back(it->second->GetGameobject());
+							//App->editor->SetSelection(it->second->GetGameobject());
+							Event::Push(ON_SELECT, it->second->GetGameobject());
+						}
+						else if (posToWorld.second < groupStart.y && pos.y > mouseExtend.y)//Down
+						{
+							LOG("2");
+							group.push_back(it->second->GetGameobject());
+							//App->editor->SetSelection(it->second->GetGameobject());
+							Event::Push(ON_SELECT, it->second->GetGameobject());
+						}
+					}
+					else if (posToWorld.first < groupStart.x && pos.x > mouseExtend.x)//Left
+					{
+						LOG("-X fine");
+						if (posToWorld.second > groupStart.y && pos.y < mouseExtend.y)//Up
+						{
+							LOG("3");
+							group.push_back(it->second->GetGameobject());
+							//App->editor->SetSelection(it->second->GetGameobject());
+							Event::Push(ON_SELECT, it->second->GetGameobject());
+						}
+						else if (posToWorld.second < groupStart.y && pos.y > mouseExtend.y)//Down
+						{
+							LOG("4");
+							group.push_back(it->second->GetGameobject());
+							//App->editor->SetSelection(MouseClickSelect(pos.x, pos.y));
+							Event::Push(ON_SELECT, it->second->GetGameobject());
+						}
+					}
+					
+				}
+			}
+			if (group.empty() == false)
+			{
+				groupSelect = true;
+			}
+		}
 	}
 
 
@@ -76,7 +146,7 @@ bool Scene::Update()
 
 	int x, y;
 	App->input->GetMousePosition(x, y);
-	SDL_Rect cam = App->render->GetCameraRect();
+	
 
 	if (App->input->GetKey(SDL_SCANCODE_3) == KEY_DOWN)
 	{
@@ -142,7 +212,7 @@ bool Scene::Update()
 			LOG("Invalid spawn position");
 	}
 
-	if (App->input->GetKey(SDL_SCANCODE_X) == KEY_DOWN)
+	/*if (App->input->GetKey(SDL_SCANCODE_X) == KEY_DOWN)
 	{
 		std::pair<int, int> mouseOnMap = Map::WorldToTileBase(x + cam.x, y + cam.y);
 		destinationPath = iPoint(mouseOnMap.first, mouseOnMap.second);
@@ -161,7 +231,7 @@ bool Scene::Update()
 		std::pair<int, int> mouseOnMap = Map::WorldToTileBase(x + cam.x, y + cam.y);
 		destinationPath = iPoint(mouseOnMap.first, mouseOnMap.second);
 		path = App->pathfinding.CreatePath(startPath, destinationPath,2);
-	}
+	}*/
 
 	if (App->input->GetKey(SDL_SCANCODE_Z) == KEY_DOWN)
 	{
@@ -178,14 +248,37 @@ bool Scene::Update()
 
 	if (App->input->GetMouseButtonDown(2) == KEY_DOWN)
 	{
-		Gameobject* go = App->editor->selection;
-		if (go) 
+		if (groupSelect && group.empty() == false)//Move group selected
 		{
-			std::pair<float, float> mouseOnMap = Map::F_WorldToMap(float(x + cam.x), float(y + cam.y));
-			Event::Push(ON_RIGHT_CLICK, go, mouseOnMap.first, mouseOnMap.second);
+			std::vector<Gameobject*>::iterator it;
+			it = group.begin();
+			for(it = group.begin(); it != group.end();++it) 
+			{				
+				std::pair<float, float> mouseOnMap = Map::F_WorldToMap(float(x + cam.x), float(y + cam.y));
+				Event::Push(ON_RIGHT_CLICK, *it, mouseOnMap.first, mouseOnMap.second);				
+			}			
 		}
+		else//Move one selected
+		{
+			Gameobject* go = App->editor->selection;
+			if (go)
+			{
+				std::pair<float, float> mouseOnMap = Map::F_WorldToMap(float(x + cam.x), float(y + cam.y));
+				Event::Push(ON_RIGHT_CLICK, go, mouseOnMap.first, mouseOnMap.second);
+				groupSelect = false;
+			}
+			else groupSelect = false;
+		}		
 	}
-
+	if (!groupSelect && group.empty() == false)
+	{
+		std::vector<Gameobject*>::iterator it;
+		for (it = group.begin(); it != group.end(); ++it)
+		{			
+			Event::Push(ON_UNSELECT, *it);
+		}
+		group.clear();
+	}
 	return ret;
 }
 
@@ -198,17 +291,17 @@ bool Scene::PostUpdate()
 	SDL_Rect cam_rect = App->render->GetCameraRect();
 	SDL_Rect rect = { 0, 0, 64, 64 };
 
-	std::pair<int, int> render_pos = Map::I_MapToWorld(startPath.x, startPath.y);
-	App->render->Blit(id_mouse_tex, render_pos.first, render_pos.second, &rect, DEBUG_MAP);
+	//std::pair<int, int> render_pos = Map::I_MapToWorld(startPath.x, startPath.y);
+	//App->render->Blit(id_mouse_tex, render_pos.first, render_pos.second, &rect, DEBUG_MAP);
 
-	if (path != nullptr && !path->empty())
+	/*if (path != nullptr && !path->empty())
 	{
 		for (std::vector<iPoint>::const_iterator it = path->cbegin(); it != path->cend(); ++it)
 		{
 			std::pair<int, int> render_pos = Map::I_MapToWorld(it->x, it->y);
 			App->render->Blit(id_mouse_tex, render_pos.first, render_pos.second, &rect, DEBUG_MAP);
 		}
-	}
+	}*/
 
 	// Debug Pointer Info on Window Title
 	int mouse_x, mouse_y;

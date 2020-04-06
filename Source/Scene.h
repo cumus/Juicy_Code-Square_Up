@@ -54,9 +54,12 @@ public:
 
 	int id_mouse_tex;
 	int image_text_id;
-	iPoint startPath = iPoint({ 16,7 }); //Temporal
-	iPoint destinationPath;
-	std::vector<iPoint>* path = nullptr;
+	//iPoint startPath = iPoint({ 16,7 }); //Temporal
+	//iPoint destinationPath;
+	//std::vector<iPoint>* path = nullptr;
+	iPoint groupStart,mouseExtend;
+	bool groupSelect;
+	std::vector<Gameobject*> group;
 
 private:
 
