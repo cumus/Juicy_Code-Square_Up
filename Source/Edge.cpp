@@ -17,6 +17,8 @@ Edge::~Edge()
 		vec pos = t->GetGlobalPosition();
 		App->pathfinding.SetWalkabilityTile(int(pos.x), int(pos.y), true);
 	}
+
+	b_map.erase(GetID());
 }
 
 void Edge::OnRightClick(float x, float y)
@@ -43,6 +45,7 @@ void Edge::OnDamage(int d)
 
 void Edge::OnKill()
 {
+	current_life = 0;
 	current_state = DESTROYED;
 	game_object->Destroy(5.0f);
 }

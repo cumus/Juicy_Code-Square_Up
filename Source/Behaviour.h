@@ -69,7 +69,7 @@ class Behaviour : public Component
 {
 public:
 	Behaviour(Gameobject* go, UnitType type, UnitState starting_state, ComponentType comp_type = BEHAVIOUR);
-	virtual ~Behaviour() {}
+	virtual ~Behaviour();
 
 	void RecieveEvent(const Event& e) override;
 
@@ -105,7 +105,6 @@ class B_Unit : public Behaviour
 public:
 
 	B_Unit(Gameobject* go, UnitType type, UnitState starting_state, ComponentType comp_type = B_UNIT);
-	virtual ~B_Unit() {}
 
 	void Update() override;
 	void OnRightClick(float x, float y) override;

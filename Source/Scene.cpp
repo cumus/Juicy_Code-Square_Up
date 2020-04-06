@@ -168,6 +168,14 @@ bool Scene::Update()
 		App->pathfinding.DebugShowPaths();
 	}
 
+	if (App->input->GetKey(SDL_SCANCODE_DELETE) == KEY_DOWN)
+	{
+		if (App->editor->selection)
+		{
+			App->editor->selection->Destroy();
+		}
+	}
+
 	if (App->input->GetMouseButtonDown(2) == KEY_DOWN)
 	{
 		Gameobject* go = App->editor->selection;
@@ -246,7 +254,7 @@ void Scene::RecieveEvent(const Event& e)
 		break;
 	case SCENE_CHANGE:
 		map.CleanUp();
-		App->editor->SetSelection();
+		App->editor->SetSelection(nullptr, false);
 		root.RemoveChilds();
 		Event::PumpAll();
 		ChangeToScene(Scenes(e.data1.AsInt()));

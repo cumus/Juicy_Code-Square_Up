@@ -85,7 +85,7 @@ void Gameobject::Update()
 			if (go_id == (*it)->id)
 			{
 				if (App->editor->selection == *it)
-					App->editor->SetSelection();
+					App->editor->SetSelection(nullptr, false);
 				/*for (std::vector<Gameobject*>::iterator at = App->editor->selectedUnits.begin(); at != App->editor->selectedUnits.end(); ++at)
 				{
 					if (*at == *it)

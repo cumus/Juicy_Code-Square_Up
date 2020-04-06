@@ -171,7 +171,7 @@ bool Editor::MouseOnWindow() const
 	return mouse_over_windows > 0u;
 }
 
-void Editor::SetSelection(Gameobject* go)
+void Editor::SetSelection(Gameobject* go, bool call_unselect)
 {
 	if (go != nullptr)
 	{
@@ -179,14 +179,16 @@ void Editor::SetSelection(Gameobject* go)
 		{
 			if (selection != go)
 			{
-				Event::Push(ON_UNSELECT, selection);
+				if (call_unselect)
+					Event::Push(ON_UNSELECT, selection);
+
 				Event::Push(ON_SELECT, go);
 			}
 		}
 		else
 			Event::Push(ON_SELECT, go);
 	}
-	else if (selection != nullptr)
+	else if (selection != nullptr && call_unselect)
 		Event::Push(ON_UNSELECT, selection);
 
 	selection = go;

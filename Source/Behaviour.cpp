@@ -26,6 +26,11 @@ Behaviour::Behaviour(Gameobject* go, UnitType t, UnitState starting_state, Compo
 	b_map.insert({ GetID(), this });
 }
 
+Behaviour::~Behaviour()
+{
+	b_map.erase(GetID());
+}
+
 void Behaviour::RecieveEvent(const Event& e)
 {
 	switch (e.type)
@@ -61,6 +66,7 @@ void Behaviour::OnDamage(int d)
 
 void Behaviour::OnKill()
 {
+	current_life = 0;
 	game_object->Destroy();
 }
 
