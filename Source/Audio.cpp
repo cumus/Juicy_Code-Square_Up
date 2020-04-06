@@ -17,7 +17,9 @@
 #endif
 
 Audio::Audio() : Module("audio")
-{}
+{
+	for (int i = 0; i < MAX_FX; ++i) fx[i] = nullptr;
+}
 
 Audio::~Audio()
 {}

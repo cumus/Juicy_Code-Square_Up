@@ -48,6 +48,14 @@ enum UnitState
 	MOVING_NW,
 	MOVING_SE,
 	MOVING_SW,
+	ATTACKING_N,
+	ATTACKING_S,
+	ATTACKING_W,
+	ATTACKING_E,
+	ATTACKING_NE,
+	ATTACKING_NW,
+	ATTACKING_SE,
+	ATTACKING_SW,
 	DEAD,
 
 	// Building
@@ -57,18 +65,6 @@ enum UnitState
 	DESTROYED
 };
 
-enum AttackDirection
-{
-	NONE = 0,
-	ATTACKING_N,
-	ATTACKING_S,
-	ATTACKING_W,
-	ATTACKING_E,
-	ATTACKING_NE,
-	ATTACKING_NW,
-	ATTACKING_SE,
-	ATTACKING_SW,
-};
 
 class Sprite;
 class AudioSource;
@@ -87,6 +83,7 @@ public:
 	virtual void OnDamage(int damage);
 	virtual void OnKill();
 	virtual void DoAttack(vec pos) {}
+	virtual void OnDestroy(){}
 
 	UnitType GetType() const { return type; }
 	UnitState* GetStatePtr() { return &current_state; }
@@ -119,6 +116,7 @@ public:
 	void Update() override;
 	void OnRightClick(float x, float y) override;
 	void DoAttack(vec pos) override;
+	void OnDestroy() override;
 	
 protected:
 
@@ -132,12 +130,13 @@ protected:
 	bool move;
 	bool positiveX;
 	bool positiveY;
+	int dirX;
+	int dirY;
 	bool cornerNW;
 	bool cornerNE;
 	bool cornerSW;
 	bool cornerSE;
 	double objectiveID;
-	AttackDirection direction;
 };
 
 #endif // __BEHAVIOUR_H_

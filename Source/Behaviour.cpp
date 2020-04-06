@@ -40,7 +40,7 @@ void Behaviour::RecieveEvent(const Event& e)
 	case ON_STOP: break;
 	case ON_SELECT: Selected(); break;
 	case ON_UNSELECT: UnSelected(); break;
-	case ON_DESTROY: break;
+	case ON_DESTROY: OnDestroy(); break;
 	case ON_RIGHT_CLICK: OnRightClick(e.data1.AsFloat(), e.data2.AsFloat()); break;
 	case DAMAGE: OnDamage(e.data1.AsInt()); break;
 	}
@@ -103,7 +103,7 @@ unsigned int Behaviour::GetBehavioursInRange(vec pos, float dist, std::map<float
 B_Unit::B_Unit(Gameobject* go, UnitType t, UnitState s, ComponentType comp_type) :
 	Behaviour(go, t, s, comp_type)
 {
-	speed = 2;
+	speed = 5;//MAX SPEED 60
 	aux_speed = speed;
 	attackRange = 1;
 	damage = 1;
@@ -118,12 +118,14 @@ B_Unit::B_Unit(Gameobject* go, UnitType t, UnitState s, ComponentType comp_type)
 	cornerSW = false;
 	cornerSE = false;
 	objectiveID = 0;
-	direction = NONE;
+	dirX = 0;
+	dirY = 0;
 }
 
 void B_Unit::Update()
 {	
-	if (objectiveID != 0)
+	current_state = IDLE;
+	if (objectiveID != 0) //Attack
 	{
 		std::map<double, Behaviour*>::iterator it;
 		it = b_map.find(objectiveID);
@@ -170,7 +172,7 @@ void B_Unit::Update()
 									
 		}
 	}
-	else if (path != nullptr && !path->empty()) 
+	else if (path != nullptr && !path->empty()) //Movement
 	{	
 		vec pos = game_object->GetTransform()->GetGlobalPosition();
 		fPoint actualPos = { pos.x, pos.y };		
@@ -186,7 +188,7 @@ void B_Unit::Update()
 			//LOG("X: %f, Y: %f", game_object->GetTransform()->GetGlobalPosition().x, game_object->GetTransform()->GetGlobalPosition().y);
 		}
 
-		if (positiveX && positiveY)
+		if (dirX == 1 && dirY == 1)
 		{
 			if (actualPos.x >= nextTile.x && actualPos.y >= nextTile.y)
 			{
@@ -194,7 +196,7 @@ void B_Unit::Update()
 				next = false;
 			}
 		}
-		else if (!positiveX && !positiveY)
+		else if (dirX == -1 && dirY == -1)
 		{
 			if (actualPos.x <= nextTile.x && actualPos.y <= nextTile.y)
 			{
@@ -202,7 +204,7 @@ void B_Unit::Update()
 				next = false;
 			}
 		}
-		else if (!positiveX && positiveY)
+		else if (dirX == -1 && dirY == 1)
 		{
 			if (actualPos.x <= nextTile.x && actualPos.y >= nextTile.y)
 			{
@@ -210,7 +212,7 @@ void B_Unit::Update()
 				next = false;
 			}
 		}
-		else if (positiveX && !positiveY)
+		else if (dirX == 1 && dirY == -1)
 		{
 			if (actualPos.x >= nextTile.x && actualPos.y <= nextTile.y)
 			{
@@ -218,55 +220,118 @@ void B_Unit::Update()
 				next = false;
 			}
 		}
+		else if(dirX == 0 && dirY ==- 1)
+		{
+			if (actualPos.y <= nextTile.y)
+			{
+				path->erase(path->begin());
+				next = false;
+			}
+		}
+		else if (dirX == 0 && dirY == 1)
+		{
+			if (actualPos.y >= nextTile.y)
+			{
+				path->erase(path->begin());
+				next = false;
+			}
+		}
+		else if (dirX == 1 && dirY == 0)
+		{
+			if (actualPos.x >= nextTile.x)
+			{
+				path->erase(path->begin());
+				next = false;
+			}
+		}
+		else if (dirX == -1 && dirY == 0)
+		{
+			if (actualPos.x <= nextTile.x)
+			{
+				path->erase(path->begin());
+				next = false;
+			}
+		}
+		else if (dirX == 0 && dirY == 0)
+		{
+			path->erase(path->begin());
+			next = false;
+		}
 	}	
 	else
 	{
 		move = false;
+		//dirX = 0;
+		//dirY = 0;
 	}
 
 	if (move)
 	{
-		vec pos = game_object->GetTransform()->GetGlobalPosition();
+		vec pos = game_object->GetTransform()->GetLocalPos();
 		iPoint tilePos = { int(pos.x), int(pos.y) };
-
-		if (nextTile.x > tilePos.x) 
+		LOG("X:%d / Y:%d",dirX,dirY);
+		LOG("POS X:%d  /  Y:%d",tilePos.x,tilePos.y);
+		LOG("DestinationPOS X:%d  /  Y:%d", nextTile.x, nextTile.y);
+		if (nextTile.x > tilePos.x)
 		{
-			game_object->GetTransform()->MoveX(+speed * App->time.GetGameDeltaTime());
-			positiveX = true;
+			dirX = 1;
 		}
-		else
+		else if (nextTile.x < tilePos.x)
 		{
-			game_object->GetTransform()->MoveX(-speed * App->time.GetGameDeltaTime());
-			positiveX = false;			
-		}				
-
-		if (nextTile.y > tilePos.y) 
-		{
-			game_object->GetTransform()->MoveY(+speed * App->time.GetGameDeltaTime());
-			positiveY = true;
+			dirX = -1;
 		}
-		else
-		{
-			game_object->GetTransform()->MoveY(-speed * App->time.GetGameDeltaTime());
-			positiveY = false;
-		}	
+		else dirX = 0;
 
-		if (positiveX && positiveY)//NE
+		if (nextTile.y > tilePos.y)
+		{
+			dirY = 1;
+		}
+		else if (nextTile.y < tilePos.y)
+		{
+			dirY = -1;
+		}
+		else dirY = 0;
+
+		game_object->GetTransform()->MoveX(dirX * speed* App->time.GetGameDeltaTime());//Move x
+		game_object->GetTransform()->MoveY(dirY * speed* App->time.GetGameDeltaTime());//Move y
+
+		//Change state to change sprite
+		if (dirX == 0 && dirY == 0)
+		{
+			current_state = IDLE;
+		}
+		else if(dirX == 1 && dirY==1)//NE
 		{
 			current_state = MOVING_NE;
 		}
-		else if (!positiveX && !positiveY)//SW
+		else if (dirX == -1 && dirY == -1)//SO
 		{
 			current_state = MOVING_SW;
 		}
-		else if (!positiveX && !positiveY)//SW
+		else if (dirX == 1 && dirY == -1)//SE
 		{
-			current_state = MOVING_SW;
+			current_state = MOVING_SE;
 		}
-		else if (!positiveX && !positiveY)//SW
+		else if (dirX == -1 && dirY == 1)//NO
 		{
-			current_state = MOVING_SW;
+			current_state = MOVING_NW;
 		}
+		else if (dirX == 0 && dirY == 1)//N
+		{
+			current_state = MOVING_N;
+		}
+		else if (dirX == 1 && dirY == 0)//E
+		{
+			current_state = MOVING_E;
+		}
+		else if (dirX == 0 && dirY == -1)//S
+		{
+			current_state = MOVING_S;
+		}
+		else if (dirX == -1 && dirY == 0)//O
+		{
+			current_state = MOVING_W;
+		}	
 	}	
 }
 
@@ -277,45 +342,45 @@ void B_Unit::DoAttack(vec objectivePos)
 
 	if (cornerNW && cornerNE)//arriba
 	{
-		direction = ATTACKING_N;
+		current_state = ATTACKING_N;
 	}
 	else if (cornerSW && cornerSE)//abajo
 	{
-		direction = ATTACKING_S;
+		current_state = ATTACKING_S;
 	}
 	else if (cornerSW && cornerNW)//izquierda
 	{
-		direction = ATTACKING_W;
+		current_state = ATTACKING_W;
 	}
 	else if (cornerNE && cornerSE)//derecha
 	{
-		direction = ATTACKING_E;
+		current_state = ATTACKING_E;
 	}
 	else if (cornerNW && !cornerNE && !cornerSE && !cornerSW)//arriba izquierda
 	{
-		direction = ATTACKING_NW;
+		current_state = ATTACKING_NW;
 	}
 	else if (cornerNE && !cornerNW && !cornerSE && !cornerSW)//arriba derecha
 	{
-		direction = ATTACKING_NE;
+		current_state = ATTACKING_NE;
 	}
 	else if (cornerSW && !cornerSE && !cornerNW && !cornerNE)//abajo izquierda
 	{
-		direction = ATTACKING_SW;
+		current_state = ATTACKING_SW;
 	}
 	else if (cornerSE && !cornerSW && !cornerNW && !cornerNE)//abajo derecha
 	{
-		direction = ATTACKING_SE;
+		current_state = ATTACKING_SE;
 	}
 	cornerNW = false;
 	cornerNE = false;
 	cornerSW = false;
 	cornerSE = false;
+}
 
-	switch (direction)
-	{
-		
-	}
+void B_Unit::OnDestroy()
+{
+	App->pathfinding.DeletePath(GetID());
 }
 
 void B_Unit::OnRightClick(float x, float y)

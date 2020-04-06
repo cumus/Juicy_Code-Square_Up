@@ -46,7 +46,7 @@ void MeleeUnit::CheckSprite()
 {
 	if (unitsprite == nullptr) SetTexture();
 
-	switch (unitstate)
+	switch (current_state)
 	{
 	case IDLE:
 		

@@ -254,7 +254,7 @@ bool PathfindingManager::GetTileAt(iPoint& pos)
 //Utility: Return true if tile is valid
 bool PathfindingManager::ValidTile(int x, int y)
 {
-	if(x >= 0 && y >= 0) return walkabilityMap[x][y];
+	if(x >= 0 && y >= 0 && x <= map.width && y <= map.height) return walkabilityMap[x][y];
 	return false;
 }
 
