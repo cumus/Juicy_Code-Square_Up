@@ -41,6 +41,10 @@ public:
 	bool LoadMainScene();
 	bool ChangeToScene(Scenes scene);
 
+	void create_base_bar(const char* name, float* health);
+	void create_building_bar(const char* name, const char* type, float* health, int* upgrades);
+	void create_unit_bar(const char* name, const char* type, float* health, const char* action);
+
 	Gameobject* GetRoot();
 	const Gameobject* GetRoot() const;
 	Gameobject* AddGameobject(const char* name, Gameobject* parent = nullptr);
@@ -58,6 +62,11 @@ private:
 
 	Map map;
 	Gameobject root;
+	Gameobject* hud_canvas_go;
+
+
+	int building_bars_created = 0;
+	int unit_bars_created = 0;
 
 	float time = 0;
 	bool x_t, y_t;	
