@@ -136,13 +136,14 @@ bool Minimap::CreateMinimap()
 				int tile_id = layer->GetID(x, y);
 				if (tile_id > 0)
 				{
-					TileSet* tileset = App->map->GetTilesetFromTileId(tile_id);
-
-					SDL_Rect r = tileset->GetTileRect(tile_id);
-					std::pair<int, int> pos = App->map->I_MapToWorld(x, y); //I_MapToWorld() return x and y. iPoint is only one int.
-					iPoint position = App->render->WorldToScreen(pos.first, pos.second);
-
-					App->render->Blit(tileset->texture_id, position.x + half_width, position.y, &r);
+					SDL_Rect r;
+					int text_id;
+					if (App->map->GetRectAndTexId(tile_id, r, text_id))
+					{
+						std::pair<int, int> pos = App->map->I_MapToWorld(x, y); //I_MapToWorld() return x and y. iPoint is only one int.
+						iPoint position = App->render->WorldToScreen(pos.first, pos.second);
+						App->render->Blit(text_id, position.x + half_width, position.y, &r);
+					}
 				}
 			}
 		}

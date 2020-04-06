@@ -18,6 +18,7 @@
 Map* Map::map = nullptr;
 MapOrientation Map::type = MAPTYPE_UNKNOWN;
 float Map::scale = 1.0f;
+float Map::base_offset = 0.0f;
 int Map::width = 0;
 int Map::height = 0;
 int Map::tile_width = 0;
@@ -244,25 +245,29 @@ void Map::SetMapScale(float s)
 	size_i = { int(float(tile_width) * scale), int(float(tile_height) * scale) };
 	size_f = { float(tile_width) * scale, float(tile_height) * scale };
 
+	base_offset = size_f.first / (2.0f * sin(60.0f * DEGTORAD));
+
 	Event::Push(TRANSFORM_MODIFIED, App->scene->GetRoot(), vec(), vec(1.f));
 }
 
-TileSet* Map::GetTilesetFromTileId(int id) const
+bool Map::GetTilesetFromTileId(int id, TileSet& set) const
 {
-	std::vector<TileSet*>::const_iterator item = data.tilesets.begin();
-	TileSet* set = *item;
+	bool ret = false;
 
-	while (item != data.tilesets.end())
+	if (id >= tilesets.front().firstgid)
 	{
-		if (id < (*item)->firstgid)
+		for (std::vector<TileSet>::const_iterator it = tilesets.begin(); it != tilesets.end(); ++it)
 		{
-			set = *item;
-			break;
+			if (id <= it->firstgid + it->tilecount)
+			{
+				set = *it;
+				ret = true;
+				break;
+			}
 		}
-		item++;
 	}
 
-	return set;
+	return ret;
 }
 
 bool Map::GetRectAndTexId(int tile_id, SDL_Rect& section, int& text_id) const
@@ -311,6 +316,11 @@ void Map::GetTileSize_F(float& w, float& h)
 	h = size_f.second;
 }
 
+float Map::GetBaseOffset()
+{
+	return base_offset;
+}
+
 std::pair<int, int> Map::I_MapToWorld(int x, int y, int z)
 {
 	switch (type)
@@ -320,7 +330,7 @@ std::pair<int, int> Map::I_MapToWorld(int x, int y, int z)
 		(x + y) * size_i.second / 2 };
 	case MAPTYPE_ORTHOGONAL: return {
 		x * size_i.first,
-		(y - z)* size_i.second };
+		y * size_i.second };
 	default: return { x, y };
 	}
 }
@@ -345,10 +355,10 @@ std::pair<float, float> Map::F_MapToWorld(float x, float y, float z)
 	{
 	case MAPTYPE_ISOMETRIC: return {
 		(x - y) * size_f.first * 0.5f,
-		(x + y) * size_f.second * 0.5f };
+		(x + y - z) * size_f.second * 0.5f };
 	case MAPTYPE_ORTHOGONAL: return {
 		x * size_f.first,
-		(y - z) * size_f.second };
+		y * size_f.second };
 	default: return { x, y };
 	}
 }
@@ -376,7 +386,6 @@ std::pair<int, int> Map::WorldToTileBase(float x, float y)
 {
 	std::pair<float, float> ret = F_WorldToMap(x, y);
 	std::pair<float, float> tile_position = F_MapToWorld(ret.first, ret.second);
-	float base_offset = size_f.first / (2.0f * sin(60.0f * DEGTORAD));
 
 	if (JMath::PointInsideTriangle({ x , y - scale },
 		{ tile_position.first, tile_position.second },

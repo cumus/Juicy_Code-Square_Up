@@ -12,14 +12,16 @@ Sprite::Sprite(Gameobject* go, ComponentType type) :
 	tex_id(-1),
 	section({ 0, 0, 0, 0 }),
 	layer(SCENE),
+	offset({ 0.f, 0.f, 1.f, 1.f }),
 	color({ 0, 0, 0, 255 })
 {}
 
-Sprite::Sprite(Gameobject* go, int id, SDL_Rect s, Layer l, SDL_Color c) :
+Sprite::Sprite(Gameobject* go, int id, SDL_Rect s, Layer l, RectF o, SDL_Color c) :
 	Component(SPRITE, go),
 	tex_id(id),
 	section(s),
 	layer(l),
+	offset(o),
 	color(c)
 {}
 
@@ -35,7 +37,12 @@ void Sprite::PostUpdate()
 		std::pair<float, float> map_pos = Map::F_MapToWorld(pos.x, pos.y, pos.z);
 
 		if (tex_id >= 0)
-			App->render->Blit_Scale(tex_id, int(map_pos.first), int(map_pos.second), scale.x, scale.y, &section, layer);
+			App->render->Blit_Scale(tex_id,
+				int(map_pos.first + (offset.x * offset.w * scale.x)),
+				int(map_pos.second + (((offset.y * offset.h) + Map::GetBaseOffset()) * scale.y)),
+				scale.x * offset.w,
+				scale.y * offset.h,
+				&section, layer);
 		else
 			App->render->DrawQuad({ int(map_pos.first), int(map_pos.second), section.w, section.h }, color, layer);
 	}
@@ -58,6 +65,7 @@ AnimatedSprite::AnimatedSprite(Behaviour* unit) : Sprite(unit->GetGameobject(), 
 		animations[FULL_LIFE].Setup(section = { 0, 0, 166, 534 }, 1);
 		animations[HALF_LIFE].Setup({ 0, 0, 166, 534 }, 1);
 		animations[DESTROYED].Setup({ 0, 0, 166, 534 }, 1);
+		offset = { 20.f, -434.f + Map::GetBaseOffset(), 0.3f, 0.3f };
 		break;
 	}
 	case TOWER:
@@ -70,10 +78,12 @@ AnimatedSprite::AnimatedSprite(Behaviour* unit) : Sprite(unit->GetGameobject(), 
 	}
 	case EDGE:
 	{
-		tex_id = App->tex.Load("textures/Char_killia1.png");
-		animations[FULL_LIFE].Setup(section = { 30, 20, 100, 180 }, 6);
-		animations[HALF_LIFE].Setup({ 30, 200, 100, 180 }, 6);
-		animations[DESTROYED].Setup({ 30, 380, 100, 180 }, 7);
+		tex_id = App->tex.Load("textures/Base_Center.png");
+		animations[FULL_LIFE].Setup(section = { 0, 0, 166, 534 }, 1);
+		animations[HALF_LIFE].Setup({ 0, 0, 166, 534 }, 1);
+		animations[DESTROYED].Setup({ 0, 0, 166, 534 }, 1);
+		offset = { 20.f, -460.f, 0.3f, 0.3f };
+
 		break; 
 	}
 	case UNIT_MELEE:

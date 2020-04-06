@@ -13,7 +13,7 @@ class Sprite : public Component
 public:
 
 	Sprite(Gameobject* game_object, ComponentType type = SPRITE);
-	Sprite(Gameobject* game_object, int tex_id, SDL_Rect section, Layer layer = SCENE, SDL_Color color = { 0, 0, 0, 255 });
+	Sprite(Gameobject* game_object, int tex_id, SDL_Rect section, Layer layer = SCENE, RectF offset = { 0.f, 0.f, 1.f, 1.f }, SDL_Color color = { 0, 0, 0, 255 });
 	virtual ~Sprite() {}
 
 	void PostUpdate() override;
@@ -24,8 +24,9 @@ protected:
 
 	int tex_id = -1;
 	SDL_Rect section;
-	SDL_Color color;
 	Layer layer = SCENE;
+	RectF offset;
+	SDL_Color color;
 };
 
 class Anim

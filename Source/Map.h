@@ -73,12 +73,13 @@ public:
 	static void SetMapScale(float scale);
 
 	// Map Data Getters
-	TileSet* GetTilesetFromTileId(int id) const;
+	bool GetTilesetFromTileId(int id, TileSet& set) const;
 	bool GetRectAndTexId(int tile_id, SDL_Rect& section, int& text_id) const;
 	const MapLayer& GetMapWalkabilityLayer();
 
 	static void GetTileSize_I(int& width, int& height);
 	static void GetTileSize_F(float& width, float& height);
+	static float GetBaseOffset();
 
 	// Coordinate conversions
 	static std::pair<int, int> I_MapToWorld(int x, int y, int z = 0);
@@ -109,6 +110,7 @@ private:
 	static MapOrientation type;
 
 	static float	scale;
+	static float	base_offset;
 	static int		width;
 	static int		height;
 	static int		tile_width;

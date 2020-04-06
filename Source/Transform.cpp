@@ -204,6 +204,10 @@ void Transform::ResetAABB()
 	points[5] = { int(pos.first + (w * 0.5f)),	int(pos.second + h - (s.z * h)) };
 	points[6] = { int(pos.first + w),			int(pos.second + (h * 0.5f) - (s.z * h)) };
 	points[7] = { int(pos.first + (w * 0.5f)),	int(pos.second - (s.z * h)) };
+
+	float y_offset = Map::GetBaseOffset();
+	for (int i = 0; i < 8; ++i)
+		points[i].second += y_offset;// *0.5f;
 }
 
 bool Transform::Intersects(std::pair<float, float> p) const
