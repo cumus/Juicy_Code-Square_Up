@@ -18,8 +18,6 @@ public:
 
 protected:
 
-	int EM_lvl = 1;
-	int EM_max_lvl = 5;
 	int EM_damage = 5;
 	int attack_speed = 1;
 
