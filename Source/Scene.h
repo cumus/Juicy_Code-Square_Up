@@ -8,7 +8,7 @@
 
 #include <vector>
 
-enum Scenes : int
+enum SceneType : int
 {
 	TEST,
 	INTRO,
@@ -39,9 +39,7 @@ public:
 	bool LoadIntroScene();
 	bool LoadMenuScene();
 	bool LoadMainScene();
-	bool ChangeToScene(Scenes scene);
-
-	
+	bool ChangeToScene(SceneType scene);
 
 	Gameobject* GetRoot();
 	const Gameobject* GetRoot() const;
@@ -51,16 +49,17 @@ public:
 public:
 
 	int id_mouse_tex;
-	int image_text_id;
-	//iPoint startPath = iPoint({ 16,7 }); //Temporal
-	//iPoint destinationPath;
-	//std::vector<iPoint>* path = nullptr;
+
+	// Selection
 	iPoint groupStart,mouseExtend;
 	bool groupSelect;
 	std::vector<Gameobject*> group;
 
+	// Minimap
+	SDL_Rect test_rect;
+	
+	// HUD
 	Gameobject* hud_canvas_go;
-
 	int building_bars_created = 0;
 	int unit_bars_created = 0;
 
@@ -69,11 +68,17 @@ private:
 	Map map;
 	Gameobject root;
 
-	float time = 0;
-	bool x_t, y_t;	
-public:
+	enum SceneState : int
+	{
+		SCENE_STOPPED = 0,
+		SCENE_PLAYING,
+		SCENE_PAUSED,
+		SCENE_FADE_OUT,
+		SCENE_FADE_IN
+	} state = SCENE_STOPPED;
 
-	SDL_Rect test_rect;
+	SceneType current_scene;
+	SceneType next_scene;
 };
 
 #endif // __SCENE_H__

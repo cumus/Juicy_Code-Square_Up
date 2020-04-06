@@ -353,7 +353,7 @@ void Scene::RecieveEvent(const Event& e)
 		App->editor->SetSelection(nullptr, false);
 		root.RemoveChilds();
 		Event::PumpAll();
-		ChangeToScene(Scenes(e.data1.AsInt()));
+		ChangeToScene(SceneType(e.data1.AsInt()));
 		break;
 	default:
 		break;
@@ -527,7 +527,7 @@ bool Scene::LoadMenuScene()
 	return ret;
 }
 
-bool Scene::ChangeToScene(Scenes scene)
+bool Scene::ChangeToScene(SceneType scene)
 {
 	bool ret = false;
 
