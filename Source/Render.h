@@ -83,6 +83,7 @@ private:
 
 private:
 
+	SDL_Renderer* renderer = nullptr;
 	SDL_Rect		viewport;
 	SDL_Color		background;
 	SDL_Color		draw_color;
@@ -121,8 +122,6 @@ private:
 	bool target_texture = false;
 
 public:
-
-	SDL_Renderer*	renderer = nullptr;
 
 	// Camera
 	RectF cam;

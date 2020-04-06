@@ -62,11 +62,11 @@ bool Minimap::Start()
 	scale = (width / (float)map_width);
 	height = map_height * scale;
 
-	map_texture = SDL_CreateTexture(App->render->renderer, SDL_GetWindowPixelFormat(App->win->window), SDL_TEXTUREACCESS_TARGET, 1.05F * width, 1.05F * height);
+	map_texture = SDL_CreateTexture(renderer, SDL_GetWindowPixelFormat(App->win->GetWindow()), SDL_TEXTUREACCESS_TARGET, 1.05F * width, 1.05F * height);
 
-	SDL_SetRenderTarget(App->render->renderer, map_texture);
+	SDL_SetRenderTarget(renderer, map_texture);
 	CreateMinimap();
-	SDL_SetRenderTarget(App->render->renderer, NULL);
+	SDL_SetRenderTarget(renderer, NULL);
 
 	switch (corner)
 	{

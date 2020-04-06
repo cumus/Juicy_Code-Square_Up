@@ -34,6 +34,7 @@ public:
 
 private:
 
+	SDL_Window* window = nullptr;
 	SDL_Surface* screen_surface = nullptr; //The surface contained by the window
 
 private:
@@ -68,7 +69,6 @@ private:
 
 public:
 
-	SDL_Window* window = nullptr;
 	int scale;
 };
 
