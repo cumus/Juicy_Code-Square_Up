@@ -83,6 +83,7 @@ public:
 	virtual void OnKill();
 	virtual void DoAttack(vec pos) {}
 	virtual void OnDestroy(){}
+	virtual void OnGetImpulse(float x,float y) {}
 
 	UnitType GetType() const { return type; }
 	UnitState* GetStatePtr() { return &current_state; }
@@ -119,7 +120,8 @@ public:
 	void OnRightClick(float x, float y) override;
 	void DoAttack(vec pos) override;
 	void OnDestroy() override;
-	
+	void OnGetImpulse(float x, float y) override;
+
 protected:
 
 	float speed;

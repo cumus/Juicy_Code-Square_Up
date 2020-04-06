@@ -61,6 +61,7 @@ enum EventType
 
 	//Behaviour
 	DAMAGE,
+	IMPULSE,
 	//ATTACK,
 
 	MAX_EVENT_TYPES

@@ -7,6 +7,7 @@
 #include "Sprite.h"
 #include "AudioSource.h"
 #include "Log.h"
+#include "Vector3.h"
 
 std::map<double, Behaviour*> Behaviour::b_map;
 
@@ -43,6 +44,7 @@ void Behaviour::RecieveEvent(const Event& e)
 	case ON_DESTROY: OnDestroy(); break;
 	case ON_RIGHT_CLICK: OnRightClick(e.data1.AsFloat(), e.data2.AsFloat()); break;
 	case DAMAGE: OnDamage(e.data1.AsInt()); break;
+	case IMPULSE: OnGetImpulse(e.data1.AsFloat(),e.data2.AsFloat()); break;
 	}
 }
 
@@ -302,8 +304,8 @@ void B_Unit::Update()
 		}
 		else dirY = 0;
 
-		game_object->GetTransform()->MoveX(dirX * speed* App->time.GetGameDeltaTime());//Move x
-		game_object->GetTransform()->MoveY(dirY * speed* App->time.GetGameDeltaTime());//Move y
+		game_object->GetTransform()->MoveX(dirX * speed * App->time.GetGameDeltaTime());//Move x
+		game_object->GetTransform()->MoveY(dirY * speed * App->time.GetGameDeltaTime());//Move y
 
 		//Change state to change sprite
 		if (dirX == 0 && dirY == 0)
@@ -341,13 +343,34 @@ void B_Unit::Update()
 		else if (dirX == -1 && dirY == 0)//O
 		{
 			current_state = MOVING_W;
-		}	
+		}			
+	}	
+	vec pos = game_object->GetTransform()->GetGlobalPosition();
+	std::map<float, Behaviour*> out;
+	unsigned int total_found = GetBehavioursInRange(pos, 1.5f, out);
+	if (total_found > 0)
+	{
+		LOG("found");
+		fPoint pos(0, 0);
+		pos.x = game_object->GetTransform()->GetGlobalPosition().x;
+		pos.y = game_object->GetTransform()->GetGlobalPosition().y;
+		//LOG("speed X:%f / Y:%f",separationSpd.x,separationSpd.y);
+		//fPoint cohesionSpd = CohesionSpeed(out, pos);
+		//game_object->GetTransform()->MoveX(separationSpd.x + speed * App->time.GetGameDeltaTime());//Move x
+		//game_object->GetTransform()->MoveY(separationSpd.y + speed * App->time.GetGameDeltaTime());//Move y
+		for (std::map<float, Behaviour*>::iterator it = out.begin(); it != out.end(); ++it)
+		{
+			vec otherPos = it->second->GetGameobject()->GetTransform()->GetGlobalPosition();
+			fPoint separationSpd(0, 0);
+			separationSpd.x = pos.x - otherPos.x;
+			separationSpd.y = pos.y - otherPos.y;
+			Event::Push(IMPULSE, it->second->AsBehaviour(), -separationSpd.x,-separationSpd.y);
+		}
 	}	
 }
 
 void B_Unit::DoAttack(vec objectivePos)
 {
-	LOG("Do attack");
 	vec localPos = game_object->GetTransform()->GetLocalPos();
 
 	if (cornerNW && cornerNE)//arriba
@@ -411,7 +434,6 @@ void B_Unit::OnRightClick(float x, float y)
 		if (total_found > 0)
 		{
 			LOG("Unit cliked");
-			//LOG("%d behaviours found neer right click (%f, %f):", total_found, pos.x, pos.y);
 			for (std::map<float, Behaviour*>::iterator it = out.begin(); it != out.end(); ++it)
 			{
 				if (GetType() == GATHERER)
@@ -451,10 +473,24 @@ void B_Unit::OnRightClick(float x, float y)
 					}
 
 				}
-				//std::string name = it->second->GetGameobject()->GetName();
-				//LOG(" - %s, id: %d, type: %d, at %f distance", name.c_str(), it->second->GetID(), int(it->second->GetType()), it->first);
 			}
 		}
 		else attackObjective = nullptr;
 	}
 }
+ 
+void B_Unit::OnGetImpulse(float x, float y)
+{
+	LOG("Got impulse");
+	game_object->GetTransform()->MoveX(4 * x * App->time.GetGameDeltaTime());//Move x
+	game_object->GetTransform()->MoveY(4 * y * App->time.GetGameDeltaTime());//Move y
+
+	float tempX = game_object->GetTransform()->GetGlobalPosition().x;
+	float tempY = game_object->GetTransform()->GetGlobalPosition().y;
+	if (App->pathfinding.ValidTile(int(tempX),int(tempY)) == false)
+	{
+		game_object->GetTransform()->MoveX(-4 * x * App->time.GetGameDeltaTime());//Move x
+		game_object->GetTransform()->MoveY(-4 * y * App->time.GetGameDeltaTime());//Move y
+	}	
+}
+
