@@ -9,8 +9,11 @@
 enum UnitType
 {
 	EDGE,
+	GATHERER,
 	UNIT_MELEE,
+	UNIT_RANGED,
 	ENEMY_MELEE,
+	ENEMY_RANGED,
 	BASE_CENTER,
 	TOWER,
 
@@ -45,6 +48,18 @@ enum UnitState
 	MOVING_NW,
 	MOVING_SE,
 	MOVING_SW,
+	DEAD,
+
+	// Building
+	BUILDING,
+	FULL_LIFE,
+	HALF_LIFE,
+	DESTROYED
+};
+
+enum AttackDirection
+{
+	NONE = 0,
 	ATTACKING_N,
 	ATTACKING_S,
 	ATTACKING_W,
@@ -53,13 +68,6 @@ enum UnitState
 	ATTACKING_NW,
 	ATTACKING_SE,
 	ATTACKING_SW,
-	DEAD,
-
-	// Building
-	BUILDING,
-	FULL_LIFE,
-	HALF_LIFE,
-	DESTROYED
 };
 
 class Sprite;
@@ -78,10 +86,12 @@ public:
 	virtual void OnRightClick(float x, float y) {}
 	virtual void OnDamage(int damage);
 	virtual void OnKill();
+	virtual void DoAttack(vec pos) {}
 
 	UnitType GetType() const { return type; }
 	UnitState* GetStatePtr() { return &current_state; }
 
+	//void QuickSort();
 	unsigned int GetBehavioursInRange(vec pos, float dist, std::map<float, Behaviour*>& res) const;
 
 protected:
@@ -108,17 +118,26 @@ public:
 
 	void Update() override;
 	void OnRightClick(float x, float y) override;
+	void DoAttack(vec pos) override;
 	
 protected:
 
-	float speed = 2;
-	float aux_speed = speed;
-	std::vector<iPoint>* path = nullptr;
+	float speed;
+	float aux_speed;
+	float attackRange;
+	int damage;
+	std::vector<iPoint>* path;
 	iPoint nextTile;
-	bool next = false;
-	bool move = false;
-	bool positiveX = false;
-	bool positiveY = false;
+	bool next;
+	bool move;
+	bool positiveX;
+	bool positiveY;
+	bool cornerNW;
+	bool cornerNE;
+	bool cornerSW;
+	bool cornerSE;
+	double objectiveID;
+	AttackDirection direction;
 };
 
 #endif // __BEHAVIOUR_H_
