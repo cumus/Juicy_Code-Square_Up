@@ -355,17 +355,16 @@ void B_Unit::Update()
 		fPoint pos(0, 0);
 		pos.x = game_object->GetTransform()->GetGlobalPosition().x;
 		pos.y = game_object->GetTransform()->GetGlobalPosition().y;
-		//LOG("speed X:%f / Y:%f",separationSpd.x,separationSpd.y);
-		//fPoint cohesionSpd = CohesionSpeed(out, pos);
-		//game_object->GetTransform()->MoveX(separationSpd.x + speed * App->time.GetGameDeltaTime());//Move x
-		//game_object->GetTransform()->MoveY(separationSpd.y + speed * App->time.GetGameDeltaTime());//Move y
 		for (std::map<float, Behaviour*>::iterator it = out.begin(); it != out.end(); ++it)
 		{
 			vec otherPos = it->second->GetGameobject()->GetTransform()->GetGlobalPosition();
 			fPoint separationSpd(0, 0);
 			separationSpd.x = pos.x - otherPos.x;
 			separationSpd.y = pos.y - otherPos.y;
-			Event::Push(IMPULSE, it->second->AsBehaviour(), -separationSpd.x, -separationSpd.y);
+			if (it->second->GetState() != DESTROYED)
+			{
+				Event::Push(IMPULSE, it->second->AsBehaviour(), -separationSpd.x, -separationSpd.y);
+			}			
 		}
 	}	
 }
