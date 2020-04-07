@@ -28,34 +28,6 @@ Minimap::Minimap(Gameobject* go) :
 
 	App->win->GetWindowSize(window_width, window_height);
 
-	switch (corner)
-	{
-	case Corner::TOP_LEFT:
-	{
-		pos.x = margin;
-		pos.y = margin;
-		break;
-	}
-	case Corner::TOP_RIGHT:
-	{
-		pos.x = window_width - width - margin;
-		pos.y = margin;
-		break;
-	}
-	case Corner::BOTTOM_LEFT:
-	{
-		pos.x = margin;
-		pos.y = window_height - height - margin;
-		break;
-	}
-	case Corner::BOTTOM_RIGHT:
-	{
-		pos.x = window_width - width - margin;
-		pos.y = window_height - height - margin;
-		break;
-	}
-	break;
-	}
 
 	//SDL_SetRenderTarget(renderer, map_texture);
 	CreateMinimap();
@@ -66,39 +38,20 @@ Minimap::~Minimap()
 {
 }
 
-bool Minimap::Awake(pugi::xml_node& config)
-{
-	width = config.attribute("width").as_int();
-	std::string corner_string = std::string(config.attribute("corner").as_string());
-	margin = config.attribute("margin").as_int();
-
-	if (corner_string == "top_left")
-		corner = Corner::TOP_LEFT;
-
-	if (corner_string == "top_right")
-		corner = Corner::TOP_RIGHT;
-
-	if (corner_string == "bottom_left")
-		corner = Corner::BOTTOM_LEFT;
-
-	if (corner_string == "bottom_right")
-		corner = Corner::TOP_RIGHT;
-
-	return true;
-}
-
 void Minimap::Update()
 {
 	//App->render->Blit((int)map_texture, pos.x, pos.y, NULL);
 
-	//iPoint minimap_camera_position = WorldToMinimap(App->render->cam.x, App->render->cam.y);
+	SDL_Rect camera_getter = App->render->GetCameraRect();
+	//iPoint minimap_camera_position = camera_getter.x, camera_getter.y);
 
-	minimap_camera.x = App->render->cam.x; //minimap_camera_position.x;
-	minimap_camera.y = App->render->cam.y; //minimap_camera_position.y;
-	minimap_camera.w = App->render->cam.w * scale;
-	minimap_camera.h = App->render->cam.h * scale;
 
-	App->render->DrawQuad(minimap_camera, camera_color, false, SCENE, false);
+	//minimap_camera.x = minimap_camera_position.x;
+	//minimap_camera.y = minimap_camera_position.y;
+
+	App->render->DrawQuad(output, camera_color, false, EDITOR, false);
+
+	App->render->DrawQuad( { camera_getter.x, camera_getter.y, (int)(camera_getter.w * scale), (int)(camera_getter.h * scale) }, { 255,255,255,255 }, false, EDITOR, false);
 
 }
 
@@ -139,27 +92,4 @@ bool Minimap::CreateMinimap()
 	}*/
 
 	return true;
-}
-
-iPoint Minimap::WorldToMinimap(int x, int y)
-{
-
-	iPoint minimap_position;
-
-	minimap_position.x = pos.x + width * 0.5F + x * scale;
-	minimap_position.y = pos.y + y * scale;
-
-	return minimap_position;
-	
-}
-
-iPoint Minimap::ScreenToMinimapToWorld(int x, int y)
-{
-
-	iPoint minimap_pos;
-
-	minimap_pos.x = (x - pos.x - width * 0.5F) / scale;
-	minimap_pos.y = (y - pos.y) / scale;
-
-	return minimap_pos;
 }

@@ -28,16 +28,11 @@ public:
 private:
 
 	void Update() override;
-	bool Awake(pugi::xml_node& config);
-
-	iPoint WorldToMinimap(int x, int y);
-	iPoint ScreenToMinimapToWorld(int x, int y);
 
 private:
 
 	SDL_Renderer*	renderer;
 	SDL_Texture*	map_texture;
-	iPoint			pos;
 	Corner			corner;
 	SDL_Rect		minimap_camera;
 	SDL_Color		camera_color;
