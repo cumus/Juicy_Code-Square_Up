@@ -157,6 +157,7 @@
     <ClCompile Include="FileManager.cpp" />
     <ClCompile Include="FontManager.cpp" />
     <ClCompile Include="Gameobject.cpp" />
+    <ClCompile Include="Gatherer.cpp" />
     <ClCompile Include="HierarchyWindow.cpp" />
     <ClCompile Include="JuicyMath.cpp" />
     <ClCompile Include="Main.cpp" />
@@ -209,6 +210,7 @@
     <ClInclude Include="FileManager.h" />
     <ClInclude Include="FontManager.h" />
     <ClInclude Include="Gameobject.h" />
+    <ClInclude Include="Gatherer.h" />
     <ClInclude Include="HierarchyWindow.h" />
     <ClInclude Include="JuicyMath.h" />
     <ClInclude Include="Map.h" />
