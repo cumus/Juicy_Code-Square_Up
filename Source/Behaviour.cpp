@@ -56,7 +56,8 @@ void Behaviour::RecieveEvent(const Event& e)
 void Behaviour::Selected()
 {
 	selection_highlight->SetActive();
-	App->audio->PlayFx(SELECT);
+	//App->audio->PlayFx(SELECT);
+	audio->Play(SELECT);
 }
 
 void Behaviour::UnSelected()
@@ -76,7 +77,8 @@ void Behaviour::OnKill()
 {
 	current_life = 0;
 	current_state = DESTROYED;
-	App->audio->PlayFx(deathFX);
+	//App->audio->PlayFx(deathFX);
+	audio->Play(deathFX);
 	game_object->Destroy(dieDelay);
 }
 
