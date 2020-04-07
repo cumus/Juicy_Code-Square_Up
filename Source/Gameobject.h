@@ -20,6 +20,10 @@ public:
 	void Update();
 	void PostUpdate();
 
+	bool IsActive() const { return active; }
+	void SetActive() { active = true; }
+	void SetInactive() { active = false; }
+
 	void RecieveEvent(const Event& e) override;
 
 	double GetID() const { return id; }

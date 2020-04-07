@@ -72,7 +72,7 @@ public:
 	virtual void DoAttack(vec pos) {}
 	virtual void OnDestroy(){}
 	virtual void OnGetImpulse(float x,float y) {}
-	virtual void create_unit_bar();
+	virtual void create_unit_bar() {}
 
 	UnitType GetType() const { return type; }
 	UnitState* GetStatePtr() { return &current_state; }
@@ -98,6 +98,15 @@ protected:
 	// Complementary components
 	AudioSource* audio;
 	Sprite* selection_highlight;
+
+	float pos_y_HUD;
+	int unit_bar_text_id;
+	Gameobject* unit_bar_go;
+	C_Button* unit_bar;
+	C_Image* unit_portrait;
+	C_Text* unit_text;
+	C_Image* unit_healthbar;
+	C_Image* unit_health;
 };
 
 class B_Unit : public Behaviour
@@ -116,17 +125,6 @@ public:
 	void update_health_ui();
 
 protected:
-
-	float pos_y;
-	int unit_bar_text_id;
-
-	Gameobject* unit_bar_go;
-	C_Button* unit_bar;
-	C_Image* unit_portrait;
-	C_Text* unit_text;
-	C_Image* unit_healthbar;
-	C_Image* unit_health;
-
 	float speed;
 	int damage;
 	float atkDelay;

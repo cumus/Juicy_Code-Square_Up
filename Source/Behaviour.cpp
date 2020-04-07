@@ -30,7 +30,6 @@ Behaviour::Behaviour(Gameobject* go, UnitType t, UnitState starting_state, Compo
 	selection_highlight->SetInactive();
 
 	b_map.insert({ GetID(), this });
-	create_unit_bar();
 }
 
 Behaviour::~Behaviour()
@@ -59,12 +58,13 @@ void Behaviour::Selected()
 	selection_highlight->SetActive();
 	//App->audio->PlayFx(SELECT);
 	audio->Play(SELECT);
-	//create_unit_bar();
+	//unit_bar_go->SetActive();
 }
 
 void Behaviour::UnSelected()
 {
 	selection_highlight->SetInactive();
+	//unit_bar_go->SetInactive();
 }
 
 void Behaviour::OnDamage(int d)
@@ -141,7 +141,7 @@ B_Unit::B_Unit(Gameobject* go, UnitType t, UnitState s, ComponentType comp_type)
 	attackObjective = nullptr;
 	msCount = 0;
 
-	//create_unit_bar();
+	create_unit_bar();
 }
 
 void B_Unit::Update()
@@ -519,11 +519,12 @@ void B_Unit::OnGetImpulse(float x, float y)
 	}
 }
 
-void B_Unit::create_unit_bar() {
+void B_Unit::create_unit_bar() 
+{
 
 	App->scene->unit_bars_created++;
 
-	pos_y = 0.5 + 0.07 * App->scene->unit_bars_created;
+	pos_y_HUD = 0.5 + 0.07 * App->scene->unit_bars_created;
 
 	unit_bar_text_id = App->tex.Load("textures/creation_bars_test.png");
 
@@ -531,7 +532,7 @@ void B_Unit::create_unit_bar() {
 
 	unit_bar_go = App->scene->AddGameobject("Unit Bar", App->scene->hud_canvas_go);
 	unit_bar = new C_Button(unit_bar_go, Event(REQUEST_QUIT, App));
-	unit_bar->target = { 0.365f, pos_y, 1.3f, 1.2f };
+	unit_bar->target = { 0.365f, pos_y_HUD, 1.3f, 1.2f };
 	unit_bar->offset = { -349.0f, -32.0f };
 	unit_bar->section = { 4, 135, 349, 32 };
 	unit_bar->tex_id = unit_bar_text_id;
@@ -539,7 +540,7 @@ void B_Unit::create_unit_bar() {
 	//------------------------- UNIT PORTRAIT --------------------------------------
 
 	unit_portrait = new C_Image(unit_bar_go);
-	unit_portrait->target = { 0.06f, pos_y - 0.001f, 0.45f, 0.38f };
+	unit_portrait->target = { 0.06f, pos_y_HUD - 0.001f, 0.45f, 0.38f };
 	unit_portrait->offset = { -109.0f, -93.0f };
 	unit_portrait->section = { 349, 185, 109, 93 };
 	unit_portrait->tex_id = unit_bar_text_id;
@@ -547,13 +548,13 @@ void B_Unit::create_unit_bar() {
 	//------------------------- UNIT TEXT --------------------------------------
 
 	unit_text = new C_Text(unit_bar_go, "Unit");
-	unit_text->target = { 0.07f, pos_y - 0.05f, 1.2f, 1.2f };
+	unit_text->target = { 0.07f, pos_y_HUD - 0.05f, 1.2f, 1.2f };
 
 	//------------------------- UNIT HEALTHBAR --------------------------------------
 
 
 	unit_healthbar = new C_Image(unit_bar_go);
-	unit_healthbar->target = { 0.31f, pos_y - 0.007f, 1.255f, 0.4f };
+	unit_healthbar->target = { 0.31f, pos_y_HUD - 0.007f, 1.255f, 0.4f };
 	unit_healthbar->offset = { -245.0f, -23.0f };
 	unit_healthbar->section = { 56, 192, 245, 23 };
 	unit_healthbar->tex_id = unit_bar_text_id;
@@ -562,7 +563,7 @@ void B_Unit::create_unit_bar() {
 
 
 	unit_health = new C_Image(unit_bar_go);
-	unit_health->target = { 0.31f, pos_y - 0.007f, 1.255f, 0.4f };
+	unit_health->target = { 0.31f, pos_y_HUD - 0.007f, 1.255f, 0.4f };
 	unit_health->offset = { -245.0f, -23.0f };
 	unit_health->section = { 57, 238, 245, 23 };
 	unit_health->tex_id = unit_bar_text_id;
@@ -572,6 +573,6 @@ void B_Unit::create_unit_bar() {
 
 void B_Unit::update_health_ui() {
 
-	unit_health->target = { (0.31f) - ((0.31f - 0.07f) * (1.0f - float(current_life) / float(max_life))), pos_y - 0.007f, 1.255f * (float(current_life) / float(max_life)), 0.4f };
+	unit_health->target = { (0.31f) - ((0.31f - 0.07f) * (1.0f - float(current_life) / float(max_life))), pos_y_HUD - 0.007f, 1.255f * (float(current_life) / float(max_life)), 0.4f };
 
 }

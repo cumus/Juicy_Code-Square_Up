@@ -22,17 +22,6 @@ public:
 
 protected:
 
-	float pos_y;
-	int tower_bar_text_id;
-
-	Gameobject* tower_bar_go;
-	C_Button* tower_bar;
-	C_Image* tower_portrait;
-	C_Text* tower_text;
-	C_Image* tower_helathbar;
-	C_Image* tower_health;
-
-
 	int t_lvl = 1;
 	int t_max_lvl = 5;
 	int t_damage = 5;
