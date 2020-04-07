@@ -58,9 +58,6 @@ public:
 	iPoint groupStart,mouseExtend;
 	bool groupSelect;
 	std::vector<Gameobject*> group;
-
-	// Minimap
-	SDL_Rect test_rect;
 	
 	// HUD
 	Gameobject* hud_canvas_go;

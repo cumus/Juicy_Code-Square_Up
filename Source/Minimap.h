@@ -40,7 +40,7 @@ private:
 	iPoint			pos;
 	Corner			corner;
 	SDL_Rect		minimap_camera;
-	RectF			test_rect;
+	SDL_Color		camera_color;
 	Timer			ptimer;
 	Map				map;
 
@@ -52,6 +52,5 @@ private:
 	int		window_width;
 	int		window_height;
 	float	scale;
-	bool	going_up;
 };
 #endif // !__MINIMAP_H__

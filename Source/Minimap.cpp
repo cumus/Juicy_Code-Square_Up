@@ -19,12 +19,12 @@ Minimap::Minimap(Gameobject* go) :
 	//renderer = App->render->GetSDLRenderer();
 	//map_texture = SDL_CreateTexture(renderer, SDL_GetWindowPixelFormat(App->win->GetWindow()), SDL_TEXTUREACCESS_TARGET, 1.05F * width, 1.05F * height);
 	map_height = 200;
-	scale = (width / (float)map_width);
+	scale = ((float)width / (float)map_width);
 	height = map_height * scale;
 	map_width = 100;
 	minimap_camera = { 0, 0, 4, 4 };
-	tex_id = App->tex.Load("textures/white.png");
-	test_rect = { App->render->cam.x, App->render->cam.y, App->render->cam.w * scale, App->render->cam.h * scale };
+	camera_color = { 255, 0, 0, 255 };
+	tex_id = App->tex.Load("textures/darkimg.png");
 
 	App->win->GetWindowSize(window_width, window_height);
 
@@ -89,36 +89,24 @@ bool Minimap::Awake(pugi::xml_node& config)
 
 void Minimap::Update()
 {
-	//App->render->DrawQuad(section, { 0, 0, 0, 255 }, true);
-
 	//App->render->Blit((int)map_texture, pos.x, pos.y, NULL);
 
-	iPoint minimap_camera_position = WorldToMinimap(test_rect.x, test_rect.y);
-	minimap_camera.x = minimap_camera_position.x;
-	minimap_camera.y = minimap_camera_position.y;
-	App->render->DrawQuad(minimap_camera, { 255, 0, 0, 255 }, true, SCENE, false);
+	//iPoint minimap_camera_position = WorldToMinimap(App->render->cam.x, App->render->cam.y);
 
-	/*SDL_Rect rect = { 0, 0, 0, 0 };
-	iPoint rect_position = WorldToMinimap(-App->render->cam.x, -App->render->cam.y);
-	App->render->DrawQuad({ rect_position.x, rect_position.y, (int)(App->render->cam.w * scale), (int)(App->render->cam.h * scale) }, { 0, 0, 0, 255 }, false, SCENE, false);
-	
-	if (test_rect.y < 250)
-		going_up = false;
-	if (test_rect.y > 550)
-		going_up = true;
+	minimap_camera.x = App->render->cam.x; //minimap_camera_position.x;
+	minimap_camera.y = App->render->cam.y; //minimap_camera_position.y;
+	minimap_camera.w = App->render->cam.w * scale;
+	minimap_camera.h = App->render->cam.h * scale;
 
-	if (going_up)
-		test_rect.y--;
-	else
-		test_rect.y++;*/
+	App->render->DrawQuad(minimap_camera, camera_color, false, SCENE, false);
 
 }
 
 bool Minimap::CreateMinimap()
 {
 	PERF_START(ptimer);
-	int half_width = map_width * 0.5F;
 
+	int half_width = map_width * 0.5F;
 	App->render->DrawQuad(section, {0, 0, 0, 255}, true);
 
 	/*for (std::vector<MapLayer*>::const_iterator item = map.layers.begin(); item != map.layers.end(); ++item)
