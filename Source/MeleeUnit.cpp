@@ -11,7 +11,7 @@ MeleeUnit::MeleeUnit(Gameobject* go) : B_Unit(go, ENEMY_MELEE, IDLE, B_UNIT)
 {
 	current_life = max_life = 100;
 	atkDelay = 1.0;
-	speed = 5;
+	speed = 3;
 	damage = 2;
 	attack_range = 2.0f;
 	vision_range = 10.0f;

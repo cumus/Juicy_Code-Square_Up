@@ -12,9 +12,9 @@ class EnemyMeleeUnit : public B_Unit
 public:
 	EnemyMeleeUnit(Gameobject* go);
 	~EnemyMeleeUnit();
-	void OnDamage(int d);
+	/*void OnDamage(int d);
 	void CheckSprite();
-	void OnKill();
+	void OnKill();*/
 
 protected:
 
