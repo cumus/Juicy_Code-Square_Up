@@ -30,13 +30,15 @@ enum EventType
 	WINDOW_FOCUS_LEAVE,
 	WINDOW_QUIT,
 
+	// Audio
+	PLAY_FX,
+
 	// Scene
 	SCENE_PLAY,
 	SCENE_PAUSE,
 	SCENE_TICK,
 	SCENE_STOP,
 	SCENE_CHANGE,
-	SELECT_FX,
 
 	// Gameobjects
 	ON_PLAY,

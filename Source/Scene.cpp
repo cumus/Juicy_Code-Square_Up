@@ -49,6 +49,84 @@ bool Scene::Update()
 
 	if (god_mode)
 		GodMode();
+
+	//GROUP SELECTION//
+	switch (App->input->GetMouseButtonDown(0))
+	{
+	case KEY_DOWN:
+	{
+		App->input->GetMousePosition(groupStart.x, groupStart.y);
+		break;
+	}
+	case KEY_REPEAT:
+	{
+		App->input->GetMousePosition(mouseExtend.x, mouseExtend.y);
+		App->render->DrawQuad({ groupStart.x, groupStart.y, mouseExtend.x - groupStart.x, mouseExtend.y - groupStart.y }, { 0, 200, 0, 100 }, false, SCENE, false);
+		App->render->DrawQuad({ groupStart.x, groupStart.y, mouseExtend.x - groupStart.x, mouseExtend.y - groupStart.y }, { 0, 200, 0, 50 }, true, SCENE, false);
+		break;
+	}
+	case KEY_UP:
+	{
+		SDL_Rect cam = App->render->GetCameraRect();
+		for (std::map<double, Behaviour*>::iterator it = Behaviour::b_map.begin(); it != Behaviour::b_map.end(); ++it)
+		{
+			if (it->second->GetType() == UNIT_MELEE || it->second->GetType() == GATHERER || it->second->GetType() == UNIT_RANGED)
+			{
+				//LOG("StartPOS X:%d / Y:%d", groupStart.x, groupStart.y);
+				//LOG("FinishPOS X:%d / Y:%d", mouseExtend.x, mouseExtend.y);
+				vec pos = it->second->GetGameobject()->GetTransform()->GetGlobalPosition();
+				std::pair<float, float> posToWorld = Map::F_MapToWorld(pos.x, pos.y, pos.z);
+				posToWorld.first -= cam.x;
+				posToWorld.second -= cam.y;
+				//LOG("ObjectPOS X:%f / Y:%f", posToWorld.first, posToWorld.second);
+				if (posToWorld.first > groupStart.x && posToWorld.first < mouseExtend.x) //Right
+				{
+					LOG("+X fine");
+					if (posToWorld.second > groupStart.y && posToWorld.second < mouseExtend.y)//Up
+					{
+						LOG("1");
+						group.push_back(it->second->GetGameobject());
+						//App->editor->SetSelection(it->second->GetGameobject());
+						Event::Push(ON_SELECT, it->second->GetGameobject());
+					}
+					else if (posToWorld.second < groupStart.y && posToWorld.second > mouseExtend.y)//Down
+					{
+						LOG("2");
+						group.push_back(it->second->GetGameobject());
+						//App->editor->SetSelection(it->second->GetGameobject());
+						Event::Push(ON_SELECT, it->second->GetGameobject());
+					}
+				}
+				else if (posToWorld.first < groupStart.x && posToWorld.first > mouseExtend.x)//Left
+				{
+					LOG("-X fine");
+					if (posToWorld.second > groupStart.y && posToWorld.second < mouseExtend.y)//Up
+					{
+						LOG("3");
+						group.push_back(it->second->GetGameobject());
+						//App->editor->SetSelection(it->second->GetGameobject());
+						Event::Push(ON_SELECT, it->second->GetGameobject());
+					}
+					else if (posToWorld.second < groupStart.y && posToWorld.second > mouseExtend.y)//Down
+					{
+						LOG("4");
+						group.push_back(it->second->GetGameobject());
+						//App->editor->SetSelection(MouseClickSelect(pos.x, pos.y));
+						Event::Push(ON_SELECT, it->second->GetGameobject());
+					}
+				}
+
+			}
+		}
+
+		if (!group.empty())
+			groupSelect = true;
+
+		break;
+	}
+	default:
+		break;
+	}
 	
 	return true;
 }
@@ -57,27 +135,6 @@ bool Scene::PostUpdate()
 {
 	root.PostUpdate();
 	map.Draw();
-
-	SDL_Rect cam_rect = App->render->GetCameraRect();
-
-	// Debug Pointer Info on Window Title
-	int mouse_x, mouse_y;
-	App->input->GetMousePosition(mouse_x, mouse_y);
-	std::pair<int, int> map_coordinates = Map::WorldToTileBase(cam_rect.x + mouse_x, cam_rect.y + mouse_y);
-
-	// Editor Selection
-	Gameobject* sel = App->editor->selection;
-
-	// Log onto window title
-	static char tmp_str[220];
-	sprintf_s(tmp_str, 220, "FPS: %d, Zoom: %0.2f, Mouse: %dx%d, Tile: %dx%d, Selection: %s",
-		App->time.GetLastFPS(),
-		App->render->GetZoom(),
-		mouse_x, mouse_y,
-		map_coordinates.first, map_coordinates.second,
-		sel != nullptr ? sel->GetName() : "none selected");
-
-	App->win->SetTitle(tmp_str);
 
 	return true;
 }
@@ -111,8 +168,6 @@ void Scene::RecieveEvent(const Event& e)
 		Event::PumpAll();
 		ChangeToScene(SceneType(e.data1.AsInt()));
 		break;
-	case SELECT_FX:
-		App->audio->PlayFx(SELECT);
 	default:
 		break;
 	}
@@ -260,7 +315,7 @@ bool Scene::LoadMenuScene()
 	start->section = { 0, 0, 1070, 207 };
 	start->tex_id = App->tex.Load("textures/button.png");
 
-	C_Button* start_fx = new C_Button(start_go, Event(SELECT_FX, this, App));
+	C_Button* start_fx = new C_Button(start_go, Event(PLAY_FX, App->audio, int(SELECT), 0));
 	start_fx->target = { 0.5f, 0.5f, 0.5f, 0.5f };
 	start_fx->offset = { -525.f, -100.f };
 	start_fx->section = { 0, 0, 1070, 207 };
@@ -281,7 +336,7 @@ bool Scene::LoadMenuScene()
 	quit->section = { 0, 0, 1070, 207 };
 	quit->tex_id = App->tex.Load("textures/button.png");
 
-	C_Button* quit_fx = new C_Button(quit_go, Event(SELECT_FX, this, App));
+	C_Button* quit_fx = new C_Button(quit_go, Event(PLAY_FX, App->audio, int(SELECT), 0));
 	quit_fx->target = { 0.5f, 0.5f, 0.5f, 0.5f };
 	quit_fx->offset = { -525.f, 200.f };
 	quit_fx->section = { 0, 0, 1070, 207 };
@@ -400,75 +455,6 @@ void Scene::GodMode()
 			Event::Push(SCENE_CHANGE, this, MENU);
 		else if (App->input->GetKey(SDL_SCANCODE_4) == KEY_DOWN)
 			Event::Push(SCENE_CHANGE, this, MAIN);
-
-		//GROUP SELECTION//
-		if (App->input->GetMouseButtonDown(0) == KEY_DOWN)
-		{
-			App->input->GetMousePosition(groupStart.x, groupStart.y);
-		}
-		if (App->input->GetMouseButtonDown(0) == KEY_REPEAT)
-		{
-			App->input->GetMousePosition(mouseExtend.x, mouseExtend.y);
-			App->render->DrawQuad({ groupStart.x, groupStart.y, mouseExtend.x - groupStart.x, mouseExtend.y - groupStart.y }, { 0, 200, 0, 100 }, false, SCENE, false);
-			App->render->DrawQuad({ groupStart.x, groupStart.y, mouseExtend.x - groupStart.x, mouseExtend.y - groupStart.y }, { 0, 200, 0, 50 }, true, SCENE, false);
-		}
-		if (App->input->GetMouseButtonDown(0) == KEY_UP)
-		{
-			for (std::map<double, Behaviour*>::iterator it = Behaviour::b_map.begin(); it != Behaviour::b_map.end(); ++it)
-			{
-				if (it->second->GetType() == UNIT_MELEE || it->second->GetType() == GATHERER || it->second->GetType() == UNIT_RANGED)
-				{
-					//LOG("StartPOS X:%d / Y:%d", groupStart.x, groupStart.y);
-					//LOG("FinishPOS X:%d / Y:%d", mouseExtend.x, mouseExtend.y);
-					vec pos = it->second->GetGameobject()->GetTransform()->GetGlobalPosition();
-					std::pair<float, float> posToWorld = Map::F_MapToWorld(pos.x, pos.y, pos.z);
-					posToWorld.first -= cam.x;
-					posToWorld.second -= cam.y;
-					//LOG("ObjectPOS X:%f / Y:%f", posToWorld.first, posToWorld.second);
-					if (posToWorld.first > groupStart.x && posToWorld.first < mouseExtend.x) //Right
-					{
-						LOG("+X fine");
-						if (posToWorld.second > groupStart.y && posToWorld.second < mouseExtend.y)//Up
-						{
-							LOG("1");
-							group.push_back(it->second->GetGameobject());
-							//App->editor->SetSelection(it->second->GetGameobject());
-							Event::Push(ON_SELECT, it->second->GetGameobject());
-						}
-						else if (posToWorld.second < groupStart.y && posToWorld.second > mouseExtend.y)//Down
-						{
-							LOG("2");
-							group.push_back(it->second->GetGameobject());
-							//App->editor->SetSelection(it->second->GetGameobject());
-							Event::Push(ON_SELECT, it->second->GetGameobject());
-						}
-					}
-					else if (posToWorld.first < groupStart.x && posToWorld.first > mouseExtend.x)//Left
-					{
-						LOG("-X fine");
-						if (posToWorld.second > groupStart.y && posToWorld.second < mouseExtend.y)//Up
-						{
-							LOG("3");
-							group.push_back(it->second->GetGameobject());
-							//App->editor->SetSelection(it->second->GetGameobject());
-							Event::Push(ON_SELECT, it->second->GetGameobject());
-						}
-						else if (posToWorld.second < groupStart.y && posToWorld.second > mouseExtend.y)//Down
-						{
-							LOG("4");
-							group.push_back(it->second->GetGameobject());
-							//App->editor->SetSelection(MouseClickSelect(pos.x, pos.y));
-							Event::Push(ON_SELECT, it->second->GetGameobject());
-						}
-					}
-
-				}
-			}
-			if (group.empty() == false)
-			{
-				groupSelect = true;
-			}
-		}
 	}
 
 

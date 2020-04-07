@@ -163,6 +163,11 @@ void Audio::RecieveEvent(const Event& e)
 {
 	switch (e.type)
 	{
+	case PLAY_FX:
+	{
+		PlayFx(Audio_FX(e.data1.AsInt()), e.data2.AsInt());
+		break;
+	}
 	case TRANSFORM_MODIFIED:
 	{
 		std::map<double, SpatialData>::iterator it = sources.find(e.data1.AsDouble());

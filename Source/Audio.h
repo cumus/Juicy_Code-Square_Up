@@ -9,9 +9,9 @@ struct Mix_Chunk;
 class Transform;
 enum Scenes;
 
-enum Audio_FX : unsigned int
+enum Audio_FX : int
 {
-	LOGO = 0u,
+	LOGO,
 	HAMMER,
 	SELECT,
 	TITLE,
