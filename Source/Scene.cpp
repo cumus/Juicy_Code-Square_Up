@@ -522,7 +522,7 @@ void Scene::GodMode()
 	{
 		std::pair<int, int> position = Map::WorldToTileBase(float(x + cam.x), float(y + cam.y));
 
-		Gameobject* audio_go = AddGameobject("AudioSource - son of root");
+		Gameobject* audio_go = AddGameobject("AudioSource - Hammer Loop");
 		audio_go->GetTransform()->SetLocalPos({ float(position.first), float(position.second), 0.0f });
 
 		(new AudioSource(audio_go))->Play(HAMMER, -1);
@@ -533,7 +533,7 @@ void Scene::GodMode()
 	{
 		std::pair<int, int> position = Map::WorldToTileBase(float(x + cam.x), float(y + cam.y));
 
-		Gameobject* unit_go = AddGameobject("Game Unit - son of root - Ally");
+		Gameobject* unit_go = AddGameobject("Ally Melee unit");
 		unit_go->GetTransform()->SetLocalPos({ float(position.first), float(position.second), 0.0f });
 
 		new B_Unit(unit_go, UNIT_MELEE, IDLE);
@@ -557,7 +557,7 @@ void Scene::GodMode()
 	{
 		std::pair<int, int> position = Map::WorldToTileBase(float(x + cam.x), float(y + cam.y));
 
-		Gameobject* unit_go = AddGameobject("Game Unit - son of root - Enemy");
+		Gameobject* unit_go = AddGameobject("Enemy Melee unit");
 		unit_go->GetTransform()->SetLocalPos({ float(position.first), float(position.second), 0.0f });
 
 		new B_Unit(unit_go, ENEMY_MELEE, IDLE);
