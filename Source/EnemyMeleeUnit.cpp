@@ -11,8 +11,11 @@
 
 EnemyMeleeUnit::EnemyMeleeUnit(Gameobject* go) : B_Unit(go, ENEMY_MELEE, IDLE, B_UNIT)
 {
-	current_life = 100;
-	//damage = 1;
+	speed = 4;
+	current_life = max_life = 75;
+	attackRange = vision_range = 2.0f;
+	damage = 3;
+	atkDelay = 1.25f;
 }
 
 EnemyMeleeUnit::~EnemyMeleeUnit()
