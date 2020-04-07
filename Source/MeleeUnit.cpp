@@ -11,23 +11,27 @@
 
 MeleeUnit::MeleeUnit(Gameobject* go) : B_Unit(go, ENEMY_MELEE, IDLE, B_UNIT)
 {
-	current_life = 100;
-	//damage = 2;
+	current_life = max_life = 100;
+	atkDelay = 1.0;
+	speed = 5;
+	damage = 2;
+	attack_range = 2.0f;
+	vision_range = 10.0f;
 }
 
 MeleeUnit::~MeleeUnit()
 {
-	Transform* t = game_object->GetTransform();
+	/*Transform* t = game_object->GetTransform();
 	if (t)
 	{
 		vec pos = t->GetGlobalPosition();
 		App->pathfinding.SetWalkabilityTile(int(pos.x), int(pos.y), true);
 	}
 
-	b_map.erase(GetID());
+	b_map.erase(GetID());*/
 }
 
-void MeleeUnit::OnDamage(int d)
+/*void MeleeUnit::OnDamage(int d)
 {
 	if (current_state != DESTROYED)
 	{
@@ -39,9 +43,9 @@ void MeleeUnit::OnDamage(int d)
 			OnKill();
 
 	}
-}
+}*/
 
-void MeleeUnit::CheckSprite()
+/*void MeleeUnit::CheckSprite()
 {
 	switch (current_state)
 	{
@@ -97,12 +101,12 @@ void MeleeUnit::CheckSprite()
 
 		break;
 	}
-}
+}*/
 
-void MeleeUnit::OnKill()
+/*void MeleeUnit::OnKill()
 {
 	current_life = 0;
 	current_state = DESTROYED;
 	game_object->Destroy(5.0f);
-}
+}*/
 

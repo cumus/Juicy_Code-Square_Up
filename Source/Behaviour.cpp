@@ -70,8 +70,9 @@ void Behaviour::OnDamage(int d)
 void Behaviour::OnKill()
 {
 	current_life = 0;
-	//Change sprite
-	game_object->Destroy();
+	current_state = DESTROYED;
+	current_state = DESTROYED;
+	game_object->Destroy(2.0f);
 }
 
 unsigned int Behaviour::GetBehavioursInRange(vec pos, float dist, std::map<float, Behaviour*>& res) const
@@ -106,11 +107,13 @@ unsigned int Behaviour::GetBehavioursInRange(vec pos, float dist, std::map<float
 B_Unit::B_Unit(Gameobject* go, UnitType t, UnitState s, ComponentType comp_type) :
 	Behaviour(go, t, s, comp_type)
 {
-	msCount = 0;
+	//Depending on unit
+	atkDelay = 1.0;
 	speed = 5;//MAX SPEED 60
-	aux_speed = speed;
-	attackRange = 3.0f;
+	attack_range = 3.0f;
 	damage = 5;
+
+	//Needed
 	path = nullptr;
 	nextTile;
 	next = false;
@@ -125,7 +128,7 @@ B_Unit::B_Unit(Gameobject* go, UnitType t, UnitState s, ComponentType comp_type)
 	dirY = 0;
 	inRange = false;
 	attackObjective = nullptr;
-	atkDelay = 1.0;
+	msCount = 0;
 }
 
 void B_Unit::Update()
@@ -137,7 +140,7 @@ void B_Unit::Update()
 		attackPos = attackObjective->GetGameobject()->GetTransform()->GetGlobalPosition();
 		float d = game_object->GetTransform()->DistanceTo(attackPos);
 		//LOG("Distance 1:%f",d);
-		if (d <= attackRange) //Arriba izquierda
+		if (d <= attack_range) //Arriba izquierda
 		{				
 			cornerNW = true;
 			inRange = true;
@@ -146,7 +149,7 @@ void B_Unit::Update()
 		attackPos.y += attackObjective->GetGameobject()->GetTransform()->GetLocalScaleY();
 		d = game_object->GetTransform()->DistanceTo(attackPos);
 		//LOG("Distance 2:%f", d);
-		if (d <= attackRange)//Abajo derecha
+		if (d <= attack_range)//Abajo derecha
 		{
 			cornerSE = true;
 			inRange = true;
@@ -155,7 +158,7 @@ void B_Unit::Update()
 		attackPos.x -= attackObjective->GetGameobject()->GetTransform()->GetLocalScaleX();
 		d = game_object->GetTransform()->DistanceTo(attackPos);
 		//LOG("Distance 3:%f", d);
-		if (d <= attackRange)//Abajo izquierda
+		if (d <= attack_range)//Abajo izquierda
 		{
 			cornerSW = true;
 			inRange = true;
@@ -165,7 +168,7 @@ void B_Unit::Update()
 		attackPos.y -= attackObjective->GetGameobject()->GetTransform()->GetLocalScaleY();
 		d = game_object->GetTransform()->DistanceTo(attackPos);
 		//LOG("Distance 4:%f", d);
-		if (d <= attackRange)//Arriba derecha
+		if (d <= attack_range)//Arriba derecha
 		{
 			cornerNE = true;
 			inRange = true;

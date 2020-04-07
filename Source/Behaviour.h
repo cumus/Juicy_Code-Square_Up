@@ -8,32 +8,16 @@
 
 enum UnitType
 {
-	EDGE,
 	GATHERER,
 	UNIT_MELEE,
 	UNIT_RANGED,
 	ENEMY_MELEE,
 	ENEMY_RANGED,
+
+	//Structures//
 	BASE_CENTER,
 	TOWER,
-
-	/*USER_GATHERER,
-	USER_RANGED,
-	USER_SUPER,
-	USER_SPECIAL,
-	IA_MELEE,
-	IA_RANGED,
-	IA_SUPER,
-	IA_SPECIAL,
-
-	//////Structures//////
-	TOWN_HALL,
-	LAB,
-	BARRACKS,
-	RANGED_TURRET,
-	NEAR_TURRET,
-	RESOURCE,
-	IA_SPAWN*/
+	EDGE,
 };
 
 enum UnitState
@@ -125,8 +109,6 @@ public:
 protected:
 
 	float speed;
-	float aux_speed;
-	float attackRange;
 	int damage;
 	float atkDelay;
 	float msCount;

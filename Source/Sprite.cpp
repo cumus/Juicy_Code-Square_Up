@@ -132,7 +132,24 @@ AnimatedSprite::AnimatedSprite(Behaviour* unit) : Sprite(unit->GetGameobject(), 
 		//animations[DESTROYED].Setup();
 		offset = { 5.f, -160.f, 0.6f, 0.6f };
 		break;
+	case GATHERER:
+		tex_id = App->tex.Load("textures/Char_killia1.png");
+		animations[MOVING_NE].Setup(section = { 41, 24, 89, 167 }, 6, 0.2f);
+		animations[MOVING_NW].Setup(section = { 41, 24, 89, 167 }, 6, 0.2f);
+		animations[MOVING_SE].Setup(section = { 41, 24, 89, 167 }, 6, 0.2f);
+		animations[MOVING_SW].Setup(section = { 41, 24, 89, 167 }, 6, 0.2f);
+		animations[ATTACKING_E].Setup(section = { 30, 20, 100, 180 }, 6);
+		animations[ATTACKING_W].Setup(section = { 30, 20, 100, 180 }, 6);
+		animations[ATTACKING_N].Setup(section = { 30, 20, 100, 180 }, 6);
+		animations[ATTACKING_S].Setup(section = { 30, 20, 100, 180 }, 6);
+		animations[ATTACKING_NE].Setup(section = { 30, 20, 100, 180 }, 6);
+		animations[ATTACKING_NW].Setup(section = { 30, 20, 100, 180 }, 6);
+		animations[ATTACKING_SE].Setup(section = { 30, 20, 100, 180 }, 6);
+		animations[ATTACKING_SW].Setup(section = { 30, 20, 100, 180 }, 6);
+		//animations[DESTROYED].Setup();
+		offset = { 5.f, -160.f, 0.6f, 0.6f };
 		break;
+
 	default:
 		break;
 	}
