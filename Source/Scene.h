@@ -46,6 +46,10 @@ public:
 	Gameobject* AddGameobject(const char* name, Gameobject* parent = nullptr);
 	Gameobject* MouseClickSelect(int mouse_x, int mouse_y);
 
+private:
+
+	void GodMode();
+
 public:
 
 	int id_mouse_tex;
@@ -76,6 +80,7 @@ private:
 		SCENE_FADE_OUT,
 		SCENE_FADE_IN
 	} state = SCENE_STOPPED;
+	bool god_mode = true;
 
 	SceneType current_scene;
 	SceneType next_scene;
