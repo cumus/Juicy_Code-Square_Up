@@ -584,6 +584,17 @@ void Scene::GodMode()
 
 	if (App->input->GetKey(SDL_SCANCODE_DELETE) == KEY_DOWN)
 	{
+
+		if (!group.empty()) {
+			std::vector<Gameobject*>::iterator it;
+			for (it = group.begin(); it != group.end(); ++it)
+			{
+				(*it)->Destroy();
+
+			}
+			groupSelect = false;
+		}
+
 		if (App->editor->selection)
 		{
 			App->editor->selection->Destroy();
