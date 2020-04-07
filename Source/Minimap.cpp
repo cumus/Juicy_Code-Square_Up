@@ -23,6 +23,8 @@ Minimap::Minimap(Gameobject* go) :
 	height = map_height * scale;
 	map_width = 100;
 	minimap_camera = { 0, 0, 4, 4 };
+	tex_id = App->tex.Load("textures/white.png");
+	test_rect = { App->render->cam.x, App->render->cam.y, App->render->cam.w * scale, App->render->cam.h * scale };
 
 	App->win->GetWindowSize(window_width, window_height);
 
@@ -85,26 +87,37 @@ bool Minimap::Awake(pugi::xml_node& config)
 	return true;
 }
 
-void Minimap::PostUpdate()
+void Minimap::Update()
 {
-	App->render->Blit((int)map_texture, pos.x, pos.y, NULL);
+	//App->render->DrawQuad(section, { 0, 0, 0, 255 }, true);
 
-	iPoint minimap_camera_position = WorldToMinimap(App->scene->test_rect.x, App->scene->test_rect.y);
+	//App->render->Blit((int)map_texture, pos.x, pos.y, NULL);
+
+	iPoint minimap_camera_position = WorldToMinimap(test_rect.x, test_rect.y);
 	minimap_camera.x = minimap_camera_position.x;
 	minimap_camera.y = minimap_camera_position.y;
 	App->render->DrawQuad(minimap_camera, { 255, 0, 0, 255 }, true, SCENE, false);
 
-	SDL_Rect rect = { 0, 0, 0, 0 };
+	/*SDL_Rect rect = { 0, 0, 0, 0 };
 	iPoint rect_position = WorldToMinimap(-App->render->cam.x, -App->render->cam.y);
-	App->render->DrawQuad({ rect_position.x, rect_position.y, (int)(App->render->cam.w * scale), (int)(App->render->cam.h * scale) }, { 255, 255, 255, 255 }, false, SCENE, false);
+	App->render->DrawQuad({ rect_position.x, rect_position.y, (int)(App->render->cam.w * scale), (int)(App->render->cam.h * scale) }, { 0, 0, 0, 255 }, false, SCENE, false);
+	
+	if (test_rect.y < 250)
+		going_up = false;
+	if (test_rect.y > 550)
+		going_up = true;
+
+	if (going_up)
+		test_rect.y--;
+	else
+		test_rect.y++;*/
+
 }
 
 bool Minimap::CreateMinimap()
 {
 	PERF_START(ptimer);
 	int half_width = map_width * 0.5F;
-
-	SDL_Rect section = { 0, 0, 1, 1 };
 
 	App->render->DrawQuad(section, {0, 0, 0, 255}, true);
 
@@ -142,16 +155,19 @@ bool Minimap::CreateMinimap()
 
 iPoint Minimap::WorldToMinimap(int x, int y)
 {
+
 	iPoint minimap_position;
 
 	minimap_position.x = pos.x + width * 0.5F + x * scale;
 	minimap_position.y = pos.y + y * scale;
 
 	return minimap_position;
+	
 }
 
 iPoint Minimap::ScreenToMinimapToWorld(int x, int y)
 {
+
 	iPoint minimap_pos;
 
 	minimap_pos.x = (x - pos.x - width * 0.5F) / scale;

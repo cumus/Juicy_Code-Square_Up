@@ -27,7 +27,7 @@ public:
 
 private:
 
-	void PostUpdate() override;
+	void Update() override;
 	bool Awake(pugi::xml_node& config);
 
 	iPoint WorldToMinimap(int x, int y);
@@ -40,6 +40,7 @@ private:
 	iPoint			pos;
 	Corner			corner;
 	SDL_Rect		minimap_camera;
+	RectF			test_rect;
 	Timer			ptimer;
 	Map				map;
 
@@ -51,5 +52,6 @@ private:
 	int		window_width;
 	int		window_height;
 	float	scale;
+	bool	going_up;
 };
 #endif // !__MINIMAP_H__
