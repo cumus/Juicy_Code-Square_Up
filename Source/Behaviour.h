@@ -80,7 +80,7 @@ public:
 	virtual void UnSelected();
 	virtual void OnRightClick(float x, float y) {}
 	virtual void OnDamage(int damage);
-	virtual void OnKill();
+	virtual void OnKill();//Die
 	virtual void DoAttack(vec pos) {}
 	virtual void OnDestroy(){}
 	virtual void OnGetImpulse(float x,float y) {}
@@ -128,6 +128,8 @@ protected:
 	float aux_speed;
 	float attackRange;
 	int damage;
+	float atkDelay;
+	float msCount;
 	bool inRange;
 	Behaviour* attackObjective;
 	vec attackPos;

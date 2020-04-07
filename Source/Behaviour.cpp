@@ -70,6 +70,7 @@ void Behaviour::OnDamage(int d)
 void Behaviour::OnKill()
 {
 	current_life = 0;
+	//Change sprite
 	game_object->Destroy();
 }
 
@@ -105,10 +106,11 @@ unsigned int Behaviour::GetBehavioursInRange(vec pos, float dist, std::map<float
 B_Unit::B_Unit(Gameobject* go, UnitType t, UnitState s, ComponentType comp_type) :
 	Behaviour(go, t, s, comp_type)
 {
+	msCount = 0;
 	speed = 5;//MAX SPEED 60
 	aux_speed = speed;
 	attackRange = 3.0f;
-	damage = 1;
+	damage = 5;
 	path = nullptr;
 	nextTile;
 	next = false;
@@ -123,6 +125,7 @@ B_Unit::B_Unit(Gameobject* go, UnitType t, UnitState s, ComponentType comp_type)
 	dirY = 0;
 	inRange = false;
 	attackObjective = nullptr;
+	atkDelay = 1.0;
 }
 
 void B_Unit::Update()
@@ -131,7 +134,7 @@ void B_Unit::Update()
 	if (attackObjective !=nullptr && attackObjective->GetState() != DESTROYED) //Attack
 	{
 		//LOG("FOUND");
-		attackPos = attackObjective->GetGameobject()->GetTransform()->GetLocalPos();
+		attackPos = attackObjective->GetGameobject()->GetTransform()->GetGlobalPosition();
 		float d = game_object->GetTransform()->DistanceTo(attackPos);
 		//LOG("Distance 1:%f",d);
 		if (d <= attackRange) //Arriba izquierda
@@ -178,11 +181,20 @@ void B_Unit::Update()
 		inRange = false;
 	}
 
+	if (msCount < atkDelay)
+	{
+		msCount += App->time.GetGameDeltaTime();
+	}
+
 	if (inRange)
 	{
-		//LOG("In Range");
-		DoAttack(attackPos);
-		Event::Push(DAMAGE, attackObjective, damage);
+		if (msCount >= atkDelay)
+		{
+			LOG("Do attack");
+			DoAttack(attackPos);
+			Event::Push(DAMAGE, attackObjective, damage);
+			msCount = 0;
+		}
 	}		
 	else if (path != nullptr && !path->empty()) //Movement
 	{	
@@ -192,12 +204,8 @@ void B_Unit::Update()
 		if(!next) 
 		{		
 			nextTile = path->front();
-			//LOG("Tile coords X:%d, Y:%d",nextTile.x,nextTile.y);
 			next = true;
 			move = true;
-
-			//LOG("X: %d, Y: %d", pathbegin.x, pathbegin.y);
-			//LOG("X: %f, Y: %f", game_object->GetTransform()->GetGlobalPosition().x, game_object->GetTransform()->GetGlobalPosition().y);
 		}
 
 		if (dirX == 1 && dirY == 1)
@@ -273,17 +281,12 @@ void B_Unit::Update()
 	else
 	{
 		move = false;
-		//dirX = 0;
-		//dirY = 0;
 	}
 
 	if (move)
 	{
 		vec pos = game_object->GetTransform()->GetLocalPos();
 		iPoint tilePos = { int(pos.x), int(pos.y) };
-		//LOG("X:%d / Y:%d",dirX,dirY);
-		//LOG("POS X:%d  /  Y:%d",tilePos.x,tilePos.y);
-		//LOG("DestinationPOS X:%d  /  Y:%d", nextTile.x, nextTile.y);
 		if (nextTile.x > tilePos.x)
 		{
 			dirX = 1;
@@ -344,14 +347,14 @@ void B_Unit::Update()
 		{
 			current_state = MOVING_W;
 		}			
-	}	
+	}
+
 	//Colision check
 	vec pos = game_object->GetTransform()->GetGlobalPosition();
 	std::map<float, Behaviour*> out;
 	unsigned int total_found = GetBehavioursInRange(pos, 1.4f, out);
 	if (total_found > 0)
 	{
-		LOG("found");
 		fPoint pos(0, 0);
 		pos.x = game_object->GetTransform()->GetGlobalPosition().x;
 		pos.y = game_object->GetTransform()->GetGlobalPosition().y;
@@ -421,8 +424,7 @@ void B_Unit::OnRightClick(float x, float y)
 	Transform* t = game_object->GetTransform();
 	if (t)
 	{
-		vec pos = t->GetGlobalPosition();
-		path = App->pathfinding.CreatePath({ int(pos.x), int(pos.y) }, { int(x), int(y) }, GetID());
+		vec pos = t->GetGlobalPosition();		
 		next = false;
 		move = false;
 
@@ -440,7 +442,7 @@ void B_Unit::OnRightClick(float x, float y)
 				{
 					if (it->second->GetType() == EDGE)
 					{
-						if (distance == 0)
+						if (distance == 0)//Chose closest
 						{
 							attackObjective = it->second;
 							distance = it->first;
@@ -456,9 +458,9 @@ void B_Unit::OnRightClick(float x, float y)
 
 					}
 				}
-				else if (it->second->GetType() == ENEMY_MELEE || it->second->GetType() == ENEMY_RANGED /*|| it->second->GetType() == EDGE*/)//Temporal
+				else if (it->second->GetType() == ENEMY_MELEE || it->second->GetType() == ENEMY_RANGED || it->second->GetType() == EDGE)//Temporal
 				{
-					if (distance == 0)
+					if (distance == 0)//Closest distance
 					{
 						attackObjective = it->second;
 						distance = it->first;
@@ -474,8 +476,13 @@ void B_Unit::OnRightClick(float x, float y)
 
 				}
 			}
+			path = App->pathfinding.CreatePath({ int(pos.x), int(pos.y) }, { int(x-1), int(y-1) }, GetID());
 		}
-		else attackObjective = nullptr;
+		else
+		{
+			path = App->pathfinding.CreatePath({ int(pos.x), int(pos.y) }, { int(x), int(y) }, GetID());
+			attackObjective = nullptr;
+		}
 	}
 }
  
