@@ -20,7 +20,7 @@ Minimap::Minimap(Gameobject* go) :
 	//map_texture = SDL_CreateTexture(renderer, SDL_GetWindowPixelFormat(App->win->GetWindow()), SDL_TEXTUREACCESS_TARGET, 1.05F * width, 1.05F * height);
 	
 	minimap_camera = { 0, 0, 4, 4 };
-	camera_color = { 0, 0, 0, 255 };
+	camera_color = { 255, 255, 255, 255 };
 	tex_id = App->tex.Load("textures/darkimg.png");
 
 	App->win->GetWindowSize(window_width, window_height);
