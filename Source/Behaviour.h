@@ -73,6 +73,7 @@ public:
 	virtual void OnDestroy(){}
 	virtual void OnGetImpulse(float x,float y) {}
 	virtual void create_unit_bar() {}
+	virtual void update_health_ui() {}
 
 	UnitType GetType() const { return type; }
 	UnitState* GetStatePtr() { return &current_state; }
@@ -122,7 +123,7 @@ public:
 	void OnGetImpulse(float x, float y) override;
 
 	void create_unit_bar() override;
-	void update_health_ui();
+	void update_health_ui() override;
 
 protected:
 	float speed;

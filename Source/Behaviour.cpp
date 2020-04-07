@@ -65,14 +65,19 @@ void Behaviour::UnSelected()
 {
 	selection_highlight->SetInactive();
 	unit_bar_go->SetInactive();
+
 }
 
 void Behaviour::OnDamage(int d)
 {
 	LOG("Got damage");
 	current_life -= d;
+
+	update_health_ui();
+
 	if (current_life <= 0)
 		OnKill();
+
 }
 
 void Behaviour::OnKill()
