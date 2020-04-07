@@ -42,6 +42,8 @@ public:
 	static void GetTileSize_F(float& width, float& height);
 	static float GetBaseOffset();
 
+	static void GetMapSize(float& w, float& h);
+
 	// Coordinate conversions
 	static std::pair<int, int> I_MapToWorld(int x, int y, int z = 0);
 	static std::pair<int, int> I_WorldToMap(int x, int y);

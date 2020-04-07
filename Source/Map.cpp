@@ -328,6 +328,12 @@ float Map::GetBaseOffset()
 	return base_offset;
 }
 
+void Map::GetMapSize(float& w, float& h)
+{
+	w = width;
+	h = height;
+}
+
 std::pair<int, int> Map::I_MapToWorld(int x, int y, int z)
 {
 	switch (type)

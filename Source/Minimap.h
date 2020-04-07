@@ -33,19 +33,15 @@ private:
 
 	SDL_Renderer*	renderer;
 	SDL_Texture*	map_texture;
-	Corner			corner;
-	SDL_Rect		minimap_camera;
 	SDL_Color		camera_color;
-	Timer			ptimer;
+	SDL_Rect		minimap_camera;
 	Map				map;
 
-	int		width;
-	int		height;
-	int		map_width;
-	int		map_height;
-	int		margin;
+	int		minimap_width;
+	int		minimap_height;
 	int		window_width;
 	int		window_height;
-	float	scale;
 };
+
+
 #endif // !__MINIMAP_H__
