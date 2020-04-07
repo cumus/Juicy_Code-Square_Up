@@ -68,19 +68,21 @@ private:
 
 	Map map;
 	Gameobject root;
-
-	enum SceneState : int
-	{
-		SCENE_STOPPED = 0,
-		SCENE_PLAYING,
-		SCENE_PAUSED,
-		SCENE_FADE_OUT,
-		SCENE_FADE_IN
-	} state = SCENE_STOPPED;
 	bool god_mode = true;
 
+	// Scene Transitions
+	enum Fade : int
+	{
+		NO_FADE = 0,
+		FADE_OUT,
+		FADE_IN
+	} fading = NO_FADE;
+	float fade_timer;
+	float fade_duration;
 	SceneType current_scene;
 	SceneType next_scene;
+
+	// Player stats
 	int resources = 100;
 };
 

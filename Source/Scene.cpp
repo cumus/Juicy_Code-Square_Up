@@ -48,74 +48,108 @@ bool Scene::Update()
 
 	root.Update();
 
-	if (god_mode)
-		GodMode();
+	if (fading != NO_FADE)
+	{
+		float alpha;
 
-	//GROUP SELECTION//
-	switch (App->input->GetMouseButtonDown(0))
-	{
-	case KEY_DOWN:
-	{
-		App->input->GetMousePosition(groupStart.x, groupStart.y);
-		break;
-	}
-	case KEY_REPEAT:
-	{
-		App->input->GetMousePosition(mouseExtend.x, mouseExtend.y);
-		App->render->DrawQuad({ groupStart.x, groupStart.y, mouseExtend.x - groupStart.x, mouseExtend.y - groupStart.y }, { 0, 200, 0, 100 }, false, SCENE, false);
-		App->render->DrawQuad({ groupStart.x, groupStart.y, mouseExtend.x - groupStart.x, mouseExtend.y - groupStart.y }, { 0, 200, 0, 50 }, true, SCENE, false);
-		break;
-	}
-	case KEY_UP:
-	{
-		SDL_Rect cam = App->render->GetCameraRect();
-		for (std::map<double, Behaviour*>::iterator it = Behaviour::b_map.begin(); it != Behaviour::b_map.end(); ++it)
+		if (fading == FADE_OUT)
 		{
-			if (it->second->GetType() == UNIT_MELEE || it->second->GetType() == GATHERER || it->second->GetType() == UNIT_RANGED)
-			{
-				vec pos = it->second->GetGameobject()->GetTransform()->GetGlobalPosition();
-				std::pair<float, float> posToWorld = Map::F_MapToWorld(pos.x, pos.y, pos.z);
-				posToWorld.first -= cam.x;
-				posToWorld.second -= cam.y;
+			fade_timer += App->time.GetDeltaTime();
+			alpha = fade_timer / fade_duration * 255.f;
 
-				if (posToWorld.first > groupStart.x && posToWorld.first < mouseExtend.x) //Right
-				{
-					if (posToWorld.second > groupStart.y && posToWorld.second < mouseExtend.y)//Up
-					{
-						group.push_back(it->second->GetGameobject());
-						Event::Push(ON_SELECT, it->second->GetGameobject());
-					}
-					else if (posToWorld.second < groupStart.y && posToWorld.second > mouseExtend.y)//Down
-					{
-						group.push_back(it->second->GetGameobject());
-						Event::Push(ON_SELECT, it->second->GetGameobject());
-					}
-				}
-				else if (posToWorld.first < groupStart.x && posToWorld.first > mouseExtend.x)//Left
-				{
-					if (posToWorld.second > groupStart.y && posToWorld.second < mouseExtend.y)//Up
-					{
-						group.push_back(it->second->GetGameobject());
-						Event::Push(ON_SELECT, it->second->GetGameobject());
-					}
-					else if (posToWorld.second < groupStart.y && posToWorld.second > mouseExtend.y)//Down
-					{
-						group.push_back(it->second->GetGameobject());
-						Event::Push(ON_SELECT, it->second->GetGameobject());
-					}
-				}
+			if (fade_timer >= fade_duration)
+			{
+				ChangeToScene(next_scene);
+				Event::Push(SCENE_PLAY, App);
+				fading = FADE_IN;
+				fade_timer = 0.f;
+			}
+		}
+		else if (fading == FADE_IN)
+		{
+			fade_timer += App->time.GetDeltaTime();
+			alpha = (fade_duration - fade_timer) / fade_duration * 255.f;
+
+			if (fade_timer >= fade_duration)
+			{
+				fading = NO_FADE;
 			}
 		}
 
-		if (!group.empty())
-			groupSelect = true;
+		if (fading != NO_FADE)
+			App->render->DrawQuadNormCoords({ 0.f, 0.f, 1.f, 1.f }, { 0, 0, 0, unsigned char(alpha) }, true, FADE);
+	}
+	else
+	{
+		if (god_mode)
+			GodMode();
 
-		break;
+		//GROUP SELECTION//
+		switch (App->input->GetMouseButtonDown(0))
+		{
+		case KEY_DOWN:
+		{
+			App->input->GetMousePosition(groupStart.x, groupStart.y);
+			break;
+		}
+		case KEY_REPEAT:
+		{
+			App->input->GetMousePosition(mouseExtend.x, mouseExtend.y);
+			App->render->DrawQuad({ groupStart.x, groupStart.y, mouseExtend.x - groupStart.x, mouseExtend.y - groupStart.y }, { 0, 200, 0, 100 }, false, SCENE, false);
+			App->render->DrawQuad({ groupStart.x, groupStart.y, mouseExtend.x - groupStart.x, mouseExtend.y - groupStart.y }, { 0, 200, 0, 50 }, true, SCENE, false);
+			break;
+		}
+		case KEY_UP:
+		{
+			SDL_Rect cam = App->render->GetCameraRect();
+			for (std::map<double, Behaviour*>::iterator it = Behaviour::b_map.begin(); it != Behaviour::b_map.end(); ++it)
+			{
+				if (it->second->GetType() == UNIT_MELEE || it->second->GetType() == GATHERER || it->second->GetType() == UNIT_RANGED)
+				{
+					vec pos = it->second->GetGameobject()->GetTransform()->GetGlobalPosition();
+					std::pair<float, float> posToWorld = Map::F_MapToWorld(pos.x, pos.y, pos.z);
+					posToWorld.first -= cam.x;
+					posToWorld.second -= cam.y;
+
+					if (posToWorld.first > groupStart.x && posToWorld.first < mouseExtend.x) //Right
+					{
+						if (posToWorld.second > groupStart.y && posToWorld.second < mouseExtend.y)//Up
+						{
+							group.push_back(it->second->GetGameobject());
+							Event::Push(ON_SELECT, it->second->GetGameobject());
+						}
+						else if (posToWorld.second < groupStart.y && posToWorld.second > mouseExtend.y)//Down
+						{
+							group.push_back(it->second->GetGameobject());
+							Event::Push(ON_SELECT, it->second->GetGameobject());
+						}
+					}
+					else if (posToWorld.first < groupStart.x && posToWorld.first > mouseExtend.x)//Left
+					{
+						if (posToWorld.second > groupStart.y && posToWorld.second < mouseExtend.y)//Up
+						{
+							group.push_back(it->second->GetGameobject());
+							Event::Push(ON_SELECT, it->second->GetGameobject());
+						}
+						else if (posToWorld.second < groupStart.y && posToWorld.second > mouseExtend.y)//Down
+						{
+							group.push_back(it->second->GetGameobject());
+							Event::Push(ON_SELECT, it->second->GetGameobject());
+						}
+					}
+				}
+			}
+
+			if (!group.empty())
+				groupSelect = true;
+
+			break;
+		}
+		default:
+			break;
+		}
 	}
-	default:
-		break;
-	}
-	
+
 	return true;
 }
 
@@ -148,14 +182,19 @@ void Scene::RecieveEvent(const Event& e)
 		Event::Push(ON_STOP, &root, e.data1);
 		break;
 	case SCENE_CHANGE:
-		map.CleanUp();
-		App->audio->UnloadFx();
-		App->audio->PauseMusic(1.f);
-		App->editor->SetSelection(nullptr, false);
-		root.RemoveChilds();
-		Event::PumpAll();
-		ChangeToScene(SceneType(e.data1.AsInt()));
-		break;
+	{
+		if ((fade_duration = e.data2.AsFloat()) > 0.f)
+		{
+			next_scene = SceneType(e.data1.AsInt());
+			fading = FADE_OUT;
+			fade_timer = 0.f;
+		}
+		else
+		{
+			ChangeToScene(SceneType(e.data1.AsInt()));
+			Event::Push(ON_PLAY, &root);
+		}
+		break; }
 	case RESOURCE: 
 		resources += e.data1.AsInt();
 		LOG("Current resources: %d",resources);
@@ -312,7 +351,7 @@ bool Scene::LoadMenuScene()
 
 	Gameobject* start_go = AddGameobject("Start Button", canvas_go);
 	
-	C_Button* start = new C_Button(start_go, Event(SCENE_CHANGE, this, MAIN));
+	C_Button* start = new C_Button(start_go, Event(SCENE_CHANGE, this, MAIN, 2.f));
 	start->target = { 0.5f, 0.5f, 0.5f, 0.5f };
 	start->offset = { -525.f, -100.f };
 	start->section = { 0, 0, 1070, 207 };
@@ -355,9 +394,15 @@ bool Scene::LoadMenuScene()
 
 bool Scene::ChangeToScene(SceneType scene)
 {
-	bool ret = false;
+	map.CleanUp();
+	App->audio->UnloadFx();
+	App->audio->PauseMusic(1.f);
+	App->editor->SetSelection(nullptr, false);
+	root.RemoveChilds();
+	Event::PumpAll();
 
-	switch (scene)
+	bool ret = false;
+	switch (current_scene = scene)
 	{
 	case TEST:
 		ret = LoadTestScene();
@@ -453,11 +498,11 @@ void Scene::GodMode()
 		if (App->input->GetKey(SDL_SCANCODE_1) == KEY_DOWN)
 			Event::Push(SCENE_CHANGE, this, TEST);
 		else if (App->input->GetKey(SDL_SCANCODE_2) == KEY_DOWN)
-			Event::Push(SCENE_CHANGE, this, INTRO);
+			Event::Push(SCENE_CHANGE, this, INTRO, 2.f);
 		else if (App->input->GetKey(SDL_SCANCODE_3) == KEY_DOWN)
-			Event::Push(SCENE_CHANGE, this, MENU);
+			Event::Push(SCENE_CHANGE, this, MENU, 2.f);
 		else if (App->input->GetKey(SDL_SCANCODE_4) == KEY_DOWN)
-			Event::Push(SCENE_CHANGE, this, MAIN);
+			Event::Push(SCENE_CHANGE, this, MAIN, 2.f);
 	}
 
 

@@ -25,6 +25,7 @@ enum Layer : int
 	DEBUG_SCENE,
 	HUD,
 	EDITOR,
+	FADE,
 	MAX_LAYERS
 };
 
