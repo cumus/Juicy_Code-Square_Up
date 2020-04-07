@@ -15,6 +15,7 @@
 #include "AudioSource.h"
 #include "Canvas.h"
 #include "Minimap.h"
+#include "Gatherer.h"
 
 #include "Defs.h"
 #include "Log.h"
@@ -72,50 +73,37 @@ bool Scene::Update()
 		{
 			if (it->second->GetType() == UNIT_MELEE || it->second->GetType() == GATHERER || it->second->GetType() == UNIT_RANGED)
 			{
-				//LOG("StartPOS X:%d / Y:%d", groupStart.x, groupStart.y);
-				//LOG("FinishPOS X:%d / Y:%d", mouseExtend.x, mouseExtend.y);
 				vec pos = it->second->GetGameobject()->GetTransform()->GetGlobalPosition();
 				std::pair<float, float> posToWorld = Map::F_MapToWorld(pos.x, pos.y, pos.z);
 				posToWorld.first -= cam.x;
 				posToWorld.second -= cam.y;
-				//LOG("ObjectPOS X:%f / Y:%f", posToWorld.first, posToWorld.second);
+
 				if (posToWorld.first > groupStart.x && posToWorld.first < mouseExtend.x) //Right
 				{
-					LOG("+X fine");
 					if (posToWorld.second > groupStart.y && posToWorld.second < mouseExtend.y)//Up
 					{
-						LOG("1");
 						group.push_back(it->second->GetGameobject());
-						//App->editor->SetSelection(it->second->GetGameobject());
 						Event::Push(ON_SELECT, it->second->GetGameobject());
 					}
 					else if (posToWorld.second < groupStart.y && posToWorld.second > mouseExtend.y)//Down
 					{
-						LOG("2");
 						group.push_back(it->second->GetGameobject());
-						//App->editor->SetSelection(it->second->GetGameobject());
 						Event::Push(ON_SELECT, it->second->GetGameobject());
 					}
 				}
 				else if (posToWorld.first < groupStart.x && posToWorld.first > mouseExtend.x)//Left
 				{
-					LOG("-X fine");
 					if (posToWorld.second > groupStart.y && posToWorld.second < mouseExtend.y)//Up
 					{
-						LOG("3");
 						group.push_back(it->second->GetGameobject());
-						//App->editor->SetSelection(it->second->GetGameobject());
 						Event::Push(ON_SELECT, it->second->GetGameobject());
 					}
 					else if (posToWorld.second < groupStart.y && posToWorld.second > mouseExtend.y)//Down
 					{
-						LOG("4");
 						group.push_back(it->second->GetGameobject());
-						//App->editor->SetSelection(MouseClickSelect(pos.x, pos.y));
 						Event::Push(ON_SELECT, it->second->GetGameobject());
 					}
 				}
-
 			}
 		}
 
@@ -167,6 +155,10 @@ void Scene::RecieveEvent(const Event& e)
 		root.RemoveChilds();
 		Event::PumpAll();
 		ChangeToScene(SceneType(e.data1.AsInt()));
+		break;
+	case RESOURCE: 
+		resources += e.data1.AsInt();
+		LOG("Current resources: %d",resources);
 		break;
 	default:
 		break;
@@ -492,7 +484,7 @@ void Scene::GodMode()
 		new Sprite(audio_go, id_mouse_tex, { 128, 0, 64, 64 });
 	}
 
-	if (App->input->GetKey(SDL_SCANCODE_4) == KEY_DOWN)
+	if (App->input->GetKey(SDL_SCANCODE_4) == KEY_DOWN)//Melee unit
 	{
 		std::pair<int, int> position = Map::WorldToTileBase(float(x + cam.x), float(y + cam.y));
 
@@ -516,7 +508,7 @@ void Scene::GodMode()
 			LOG("Invalid spawn position");
 	}
 
-	if (App->input->GetKey(SDL_SCANCODE_6) == KEY_DOWN)
+	if (App->input->GetKey(SDL_SCANCODE_6) == KEY_DOWN)// Enemy melee
 	{
 		std::pair<int, int> position = Map::WorldToTileBase(float(x + cam.x), float(y + cam.y));
 
@@ -556,26 +548,25 @@ void Scene::GodMode()
 			LOG("Invalid spawn position");
 	}
 
-	/*if (App->input->GetKey(SDL_SCANCODE_X) == KEY_DOWN)
+	if (App->input->GetKey(SDL_SCANCODE_9) == KEY_DOWN) //Gatherer
 	{
-		std::pair<int, int> mouseOnMap = Map::WorldToTileBase(x + cam.x, y + cam.y);
-		destinationPath = iPoint(mouseOnMap.first, mouseOnMap.second);
-		path = App->pathfinding.CreatePath(startPath, destinationPath,0);
-	}
+		if (resources > 10)
+		{
+			std::pair<int, int> position = Map::WorldToTileBase(float(x + cam.x), float(y + cam.y));
+			if (App->pathfinding.CheckWalkabilityArea(position, vec(1.0f)))
+			{
+				Gameobject* gather_go = AddGameobject("Gatherer unit");
+				gather_go->GetTransform()->SetLocalPos({ float(position.first), float(position.second), 0.0f });
 
-	if (App->input->GetKey(SDL_SCANCODE_C) == KEY_DOWN)
-	{
-		std::pair<int, int> mouseOnMap = Map::WorldToTileBase(x + cam.x, y + cam.y);
-		destinationPath = iPoint(mouseOnMap.first, mouseOnMap.second);
-		path = App->pathfinding.CreatePath(startPath, destinationPath,1);
+				new Gatherer(gather_go);
+				resources -= 10;
+				LOG("Current resources: %d", resources);
+			}
+			else
+				LOG("Invalid spawn position");
+		}
+		
 	}
-
-	if (App->input->GetKey(SDL_SCANCODE_V) == KEY_DOWN)
-	{
-		std::pair<int, int> mouseOnMap = Map::WorldToTileBase(x + cam.x, y + cam.y);
-		destinationPath = iPoint(mouseOnMap.first, mouseOnMap.second);
-		path = App->pathfinding.CreatePath(startPath, destinationPath,2);
-	}*/
 
 	if (App->input->GetKey(SDL_SCANCODE_Z) == KEY_DOWN)
 	{

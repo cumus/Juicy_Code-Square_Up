@@ -40,7 +40,7 @@ void Edge::OnDamage(int d)
 	if (current_state != DESTROYED)
 	{
 		current_life -= d;
-
+		Event::Push(RESOURCE,App->scene,5);
 		LOG("Current life: %d", current_life);
 
 		if (current_life <= 0)

@@ -473,7 +473,7 @@ void B_Unit::OnRightClick(float x, float y)
 
 					}
 				}
-				else if (it->second->GetType() == ENEMY_MELEE || it->second->GetType() == ENEMY_RANGED || it->second->GetType() == EDGE)//Temporal
+				else if (it->second->GetType() == ENEMY_MELEE || it->second->GetType() == ENEMY_RANGED)//Temporal
 				{
 					if (distance == 0)//Closest distance
 					{

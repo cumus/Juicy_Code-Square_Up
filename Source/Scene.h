@@ -84,6 +84,7 @@ private:
 
 	SceneType current_scene;
 	SceneType next_scene;
+	int resources = 100;
 };
 
 #endif // __SCENE_H__
