@@ -261,6 +261,7 @@ bool Audio::LoadFx(Audio_FX audio_fx)
 	case B_DESTROYED: audio_path += "audio/Effects/Buildings/Destroyed/PowerDown.wav"; break;
 	case B_BUILDED: audio_path += "audio/Effects/Buildings/Nails/HamerNail4Hits.wav"; break;
 	case UNIT_DIES: audio_path += "audio/Effects/Enemies/realistic_death_effect.wav"; break;
+	case EDGE_FX: audio_path += "audio/Effects/Buildings/Destroyed/superDestroy.ogg"; break;
 	default: break;
 	}
 

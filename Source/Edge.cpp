@@ -8,6 +8,8 @@ Edge::Edge(Gameobject* go) : Behaviour(go, EDGE, FULL_LIFE, B_EDGE)
 {
 	current_life = max_life = 100;
 	damage = 0;
+	dieDelay = 5.0f;
+	//deathFX = EDGE_FX;
 	Transform* t = game_object->GetTransform();
 	if (t)
 	{
@@ -48,11 +50,4 @@ void Edge::OnDamage(int d)
 		else
 			current_state = HALF_LIFE;
 	}
-}
-
-void Edge::OnKill()
-{
-	current_life = 0;
-	current_state = DESTROYED;
-	game_object->Destroy(5.0f);
 }

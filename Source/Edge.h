@@ -11,7 +11,6 @@ public:
 
 	void OnRightClick(float x, float y) override;
 	void OnDamage(int damage) override;
-	void OnKill() override;
 };
 
 #endif // __EDGE_H__

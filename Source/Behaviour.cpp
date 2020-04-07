@@ -10,6 +10,7 @@
 #include "Vector3.h"
 #include "Canvas.h"
 #include "Scene.h"
+#include "Audio.h"
 
 std::map<double, Behaviour*> Behaviour::b_map;
 
@@ -20,6 +21,8 @@ Behaviour::Behaviour(Gameobject* go, UnitType t, UnitState starting_state, Compo
 {
 	current_life = max_life = damage = 10;
 	attack_range = vision_range = 5.0f;
+	dieDelay = 2.0f;
+	deathFX = EDGE_FX; //temp
 
 	audio = new AudioSource(game_object);
 	new AnimatedSprite(this);
@@ -53,6 +56,7 @@ void Behaviour::RecieveEvent(const Event& e)
 void Behaviour::Selected()
 {
 	selection_highlight->SetActive();
+	audio->Play(SELECT);
 }
 
 void Behaviour::UnSelected()
@@ -64,7 +68,6 @@ void Behaviour::OnDamage(int d)
 {
 	LOG("Got damage");
 	current_life -= d;
-
 	if (current_life <= 0)
 		OnKill();
 }
@@ -73,8 +76,8 @@ void Behaviour::OnKill()
 {
 	current_life = 0;
 	current_state = DESTROYED;
-	current_state = DESTROYED;
-	game_object->Destroy(2.0f);
+	audio->Play(deathFX);
+	game_object->Destroy(dieDelay);
 }
 
 unsigned int Behaviour::GetBehavioursInRange(vec pos, float dist, std::map<float, Behaviour*>& res) const
@@ -114,6 +117,8 @@ B_Unit::B_Unit(Gameobject* go, UnitType t, UnitState s, ComponentType comp_type)
 	speed = 5;//MAX SPEED 60
 	attack_range = 3.0f;
 	damage = 5;
+	deathFX = UNIT_DIES;
+	attackFX = SELECT;
 
 	//Needed
 	path = nullptr;
@@ -382,7 +387,7 @@ void B_Unit::Update()
 void B_Unit::DoAttack(vec objectivePos)
 {
 	vec localPos = game_object->GetTransform()->GetLocalPos();
-
+	audio->Play(attackFX);
 	if (cornerNW && cornerNE)//arriba
 	{
 		current_state = ATTACKING_N;

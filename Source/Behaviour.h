@@ -5,6 +5,7 @@
 #include "Point.h"
 #include "Canvas.h"
 #include "Scene.h"
+#include "Audio.h"
 
 #include <vector>
 #include <map>
@@ -90,7 +91,8 @@ protected:
 
 	// Stats
 	int max_life, current_life, damage;
-	float attack_range, vision_range;
+	float attack_range, vision_range,dieDelay;
+	Audio_FX deathFX;
 
 	// Complementary components
 	AudioSource* audio;
@@ -127,6 +129,7 @@ protected:
 	float speed;
 	int damage;
 	float atkDelay;
+	Audio_FX attackFX;
 	float msCount;
 	bool inRange;
 	Behaviour* attackObjective;
