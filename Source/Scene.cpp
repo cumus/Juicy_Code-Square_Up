@@ -164,7 +164,7 @@ bool Scene::Update()
 	{
 		std::pair<int, int> position = Map::WorldToTileBase(float(x + cam.x), float(y + cam.y));
 
-		Gameobject* unit_go = AddGameobject("Game Unit - son of root");
+		Gameobject* unit_go = AddGameobject("Game Unit - son of root - Ally");
 		unit_go->GetTransform()->SetLocalPos({ float(position.first), float(position.second), 0.0f });
 
 		new B_Unit(unit_go, UNIT_MELEE, IDLE);
@@ -181,14 +181,14 @@ bool Scene::Update()
 			new Edge(edge_go);
 		}
 		else
-			LOG("Invalid spawn position");
+		LOG("Invalid spawn position");
 	}
 
 	if (App->input->GetKey(SDL_SCANCODE_6) == KEY_DOWN)
 	{
 		std::pair<int, int> position = Map::WorldToTileBase(float(x + cam.x), float(y + cam.y));
 
-		Gameobject* unit_go = AddGameobject("Game Unit - son of root");
+		Gameobject* unit_go = AddGameobject("Game Unit - son of root - Enemy");
 		unit_go->GetTransform()->SetLocalPos({ float(position.first), float(position.second), 0.0f });
 
 		new B_Unit(unit_go, ENEMY_MELEE, IDLE);
