@@ -17,11 +17,6 @@ Base_Center::Base_Center(Gameobject* go) : Behaviour(go, BASE_CENTER, FULL_LIFE,
 {
 	current_life = max_life = 100;
 	create_base_bar();
-
-	Upgrade();
-	Upgrade();
-	Upgrade();
-	Upgrade();
 }
 
 Base_Center::~Base_Center()
@@ -59,6 +54,7 @@ void Base_Center::OnKill()
 	App->audio->PlayFx(B_DESTROYED);
 	current_state = DESTROYED;
 	game_object->Destroy(1.0f);
+	main_base_bar_go->Destroy(1.0f);
 
 }
 

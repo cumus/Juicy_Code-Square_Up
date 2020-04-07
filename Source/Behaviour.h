@@ -3,6 +3,9 @@
 
 #include "Component.h"
 #include "Point.h"
+#include "Canvas.h"
+#include "Scene.h"
+
 #include <vector>
 #include <map>
 
@@ -106,7 +109,20 @@ public:
 	void OnDestroy() override;
 	void OnGetImpulse(float x, float y) override;
 
+	void create_unit_bar();
+	void update_health_ui();
+
 protected:
+
+	float pos_y;
+	int unit_bar_text_id;
+
+	Gameobject* unit_bar_go;
+	C_Button* unit_bar;
+	C_Image* unit_portrait;
+	C_Text* unit_text;
+	C_Image* unit_healthbar;
+	C_Image* unit_health;
 
 	float speed;
 	int damage;

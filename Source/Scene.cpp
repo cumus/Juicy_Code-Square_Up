@@ -187,6 +187,16 @@ bool Scene::LoadTestScene()
 	}
 
 	if (ret) map.Load("maps/iso.tmx");
+	
+	building_bars_created = 0;
+	unit_bars_created = 0;
+
+	//------------------------- HUD CANVAS --------------------------------------
+
+	hud_canvas_go = AddGameobject("HUD Canvas", &root);
+	C_Canvas* hud_canv = new C_Canvas(hud_canvas_go);
+	hud_canv->target = { 0.3f, 0.3f, 0.4f, 0.4f };
+	
 	/*
 		// HUD
 		Gameobject* canvas_go = AddGameobject("Canvas", &root);

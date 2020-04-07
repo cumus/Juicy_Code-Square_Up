@@ -25,12 +25,12 @@ protected:
 	float pos_y;
 	int tower_bar_text_id;
 
-	Gameobject* building_bar_go;
-	C_Button* building_bar;
-	C_Image* building_portrait;
-	C_Text* building_text;
-	C_Image* building_helathbar;
-	C_Image* building_health;
+	Gameobject* tower_bar_go;
+	C_Button* tower_bar;
+	C_Image* tower_portrait;
+	C_Text* tower_text;
+	C_Image* tower_helathbar;
+	C_Image* tower_health;
 
 
 	int t_lvl = 1;

@@ -7,8 +7,6 @@
 #include "Component.h"
 #include "Log.h"
 
-
-
 MeleeUnit::MeleeUnit(Gameobject* go) : B_Unit(go, ENEMY_MELEE, IDLE, B_UNIT)
 {
 	current_life = max_life = 100;
@@ -30,6 +28,7 @@ MeleeUnit::~MeleeUnit()
 
 	b_map.erase(GetID());*/
 }
+
 
 /*void MeleeUnit::OnDamage(int d)
 {
