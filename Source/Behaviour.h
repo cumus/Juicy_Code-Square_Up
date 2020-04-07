@@ -72,6 +72,7 @@ public:
 	virtual void DoAttack(vec pos) {}
 	virtual void OnDestroy(){}
 	virtual void OnGetImpulse(float x,float y) {}
+	virtual void create_unit_bar();
 
 	UnitType GetType() const { return type; }
 	UnitState* GetStatePtr() { return &current_state; }
@@ -111,7 +112,7 @@ public:
 	void OnDestroy() override;
 	void OnGetImpulse(float x, float y) override;
 
-	void create_unit_bar();
+	void create_unit_bar() override;
 	void update_health_ui();
 
 protected:

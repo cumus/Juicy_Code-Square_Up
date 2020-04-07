@@ -12,7 +12,6 @@
 Tower::Tower(Gameobject* go) : Behaviour(go, TOWER, FULL_LIFE, B_TOWER)
 {
 	current_life = max_life = 50;
-	create_tower_bar();
 }
 
 Tower::~Tower()
@@ -85,7 +84,7 @@ void Tower::DoAttack(vec pos)
 	
 }
 
-void Tower::create_tower_bar() {
+void Tower::create_unit_bar() {
 
 	App->scene->building_bars_created++;
 

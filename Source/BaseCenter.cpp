@@ -16,7 +16,6 @@
 Base_Center::Base_Center(Gameobject* go) : Behaviour(go, BASE_CENTER, FULL_LIFE, B_BASE_CENTER)
 {
 	current_life = max_life = 100;
-	create_base_bar();
 }
 
 Base_Center::~Base_Center()
@@ -82,15 +81,14 @@ void Base_Center::OnRightClick(float x, float y)
 }
 
 void Base_Center::SpawnUnit(float x,float y) 
-{
-		
+{		
 	Gameobject* unit_go = App->scene->AddGameobject("Game Unit - son of root");
 	unit_go->GetTransform()->SetLocalPos({x, y, 0.0f });
 	new B_Unit(unit_go, UNIT_MELEE, IDLE);
 	
 }
 
-void Base_Center::create_base_bar() {
+void Base_Center::create_unit_bar() {
 
 	pos_y = 0.17;
 

@@ -16,7 +16,7 @@ public:
 	void OnKill() override;
 	void virtual DoAttack(vec pos) override;
 
-	void create_tower_bar();
+	void create_unit_bar() override;
 	void update_health_ui();
 	void update_upgrades_ui();
 

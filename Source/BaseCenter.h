@@ -16,7 +16,7 @@ public:
 	void OnDamage(int damage) override;
 	void OnKill() override;
 
-	void create_base_bar();
+	void create_unit_bar() override;
 	void update_health_ui();
 	void update_upgrades_ui();
 

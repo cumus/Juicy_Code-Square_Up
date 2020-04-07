@@ -30,6 +30,7 @@ Behaviour::Behaviour(Gameobject* go, UnitType t, UnitState starting_state, Compo
 	selection_highlight->SetInactive();
 
 	b_map.insert({ GetID(), this });
+	create_unit_bar();
 }
 
 Behaviour::~Behaviour()
@@ -58,6 +59,7 @@ void Behaviour::Selected()
 	selection_highlight->SetActive();
 	//App->audio->PlayFx(SELECT);
 	audio->Play(SELECT);
+	//create_unit_bar();
 }
 
 void Behaviour::UnSelected()
@@ -139,7 +141,7 @@ B_Unit::B_Unit(Gameobject* go, UnitType t, UnitState s, ComponentType comp_type)
 	attackObjective = nullptr;
 	msCount = 0;
 
-	create_unit_bar();
+	//create_unit_bar();
 }
 
 void B_Unit::Update()
@@ -567,6 +569,7 @@ void B_Unit::create_unit_bar() {
 
 
 }
+
 void B_Unit::update_health_ui() {
 
 	unit_health->target = { (0.31f) - ((0.31f - 0.07f) * (1.0f - float(current_life) / float(max_life))), pos_y - 0.007f, 1.255f * (float(current_life) / float(max_life)), 0.4f };
