@@ -17,6 +17,7 @@ Base_Center::Base_Center(Gameobject* go) : Behaviour(go, BASE_CENTER, FULL_LIFE,
 {
 	current_life = max_life = 100;
 	create_unit_bar();
+	unit_bar_go->SetInactive();
 }
 
 Base_Center::~Base_Center()

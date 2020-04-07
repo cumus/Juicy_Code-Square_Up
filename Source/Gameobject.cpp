@@ -87,14 +87,6 @@ void Gameobject::Update()
 			{
 				if (App->editor->selection == *it)
 					App->editor->SetSelection(nullptr, false);
-				/*for (std::vector<Gameobject*>::iterator at = App->editor->selectedUnits.begin(); at != App->editor->selectedUnits.end(); ++at)
-				{
-					if (*at == *it)
-					{
-						App->editor->selectedUnits.erase(at); 
-						break;
-					}
-				}*/
 				
 				DEL(*it);
 				childs.erase(it);

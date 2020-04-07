@@ -13,6 +13,7 @@ Tower::Tower(Gameobject* go) : Behaviour(go, TOWER, FULL_LIFE, B_TOWER)
 {
 	current_life = max_life = 50;
 	create_unit_bar();
+	unit_bar_go->SetInactive();
 }
 
 Tower::~Tower()

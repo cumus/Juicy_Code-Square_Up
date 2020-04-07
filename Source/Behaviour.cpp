@@ -58,13 +58,13 @@ void Behaviour::Selected()
 	selection_highlight->SetActive();
 	//App->audio->PlayFx(SELECT);
 	audio->Play(SELECT);
-	//unit_bar_go->SetActive();
+	unit_bar_go->SetActive();
 }
 
 void Behaviour::UnSelected()
 {
 	selection_highlight->SetInactive();
-	//unit_bar_go->SetInactive();
+	unit_bar_go->SetInactive();
 }
 
 void Behaviour::OnDamage(int d)
@@ -142,6 +142,7 @@ B_Unit::B_Unit(Gameobject* go, UnitType t, UnitState s, ComponentType comp_type)
 	msCount = 0;
 
 	create_unit_bar();
+	unit_bar_go->SetInactive();
 }
 
 void B_Unit::Update()
