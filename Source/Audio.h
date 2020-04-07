@@ -17,6 +17,7 @@ enum Audio_FX : unsigned int
 	TITLE,
 	B_DESTROYED,
 	B_BUILDED,
+	UNIT_DIES,
 	MAX_FX
 };
 
