@@ -18,6 +18,12 @@ Base_Center::Base_Center(Gameobject* go) : Behaviour(go, BASE_CENTER, FULL_LIFE,
 	current_life = max_life = 100;
 	create_unit_bar();
 	unit_bar_go->SetInactive();
+	Transform* t = game_object->GetTransform();
+	if (t)
+	{
+		vec pos = t->GetGlobalPosition();
+		App->pathfinding.SetWalkabilityTile(int(pos.x), int(pos.y), false);
+	}
 }
 
 Base_Center::~Base_Center()
@@ -28,36 +34,20 @@ Base_Center::~Base_Center()
 		vec pos = t->GetGlobalPosition();
 		App->pathfinding.SetWalkabilityTile(int(pos.x), int(pos.y), true);
 	}
+	b_map.erase(GetID());
 }
 
 
-void Base_Center::OnDamage(int d)
+void Base_Center::AfterDamageAction()
 {
-	if (current_state != DESTROYED)
-	{
-		current_life -= d;
-
-		LOG("Current life: %d", current_life);
-
-		update_health_ui();
-
-		if (current_life <= 0)
-			OnKill();
-		else if (current_life >= max_life * 0.5f)
-			current_state = FULL_LIFE;
-		else
-			current_state = HALF_LIFE;
-	}
+	if (current_life <= 0)
+		OnKill();
+	else if (current_life >= max_life * 0.5f)
+		current_state = FULL_LIFE;
+	else
+		current_state = HALF_LIFE;
 }
 
-void Base_Center::OnKill()
-{
-	App->audio->PlayFx(B_DESTROYED);
-	current_state = DESTROYED;
-	game_object->Destroy(1.0f);
-	unit_bar_go->Destroy(1.0f);
-
-}
 
 void Base_Center::Upgrade()
 {
@@ -82,7 +72,7 @@ void Base_Center::OnRightClick(float x, float y)
 
 void Base_Center::SpawnUnit(float x,float y) 
 {		
-	Gameobject* unit_go = App->scene->AddGameobject("Game Unit - son of root");
+	Gameobject* unit_go = App->scene->AddGameobject("Melee Unit - son of root");
 	unit_go->GetTransform()->SetLocalPos({x, y, 0.0f });
 	new B_Unit(unit_go, UNIT_MELEE, IDLE);
 	

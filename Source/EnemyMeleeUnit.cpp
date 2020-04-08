@@ -8,20 +8,20 @@
 #include "Log.h"
 
 
-
 EnemyMeleeUnit::EnemyMeleeUnit(Gameobject* go) : B_Unit(go, ENEMY_MELEE, IDLE, B_UNIT)
 {
 	//Stats
-	current_life = max_life = 50;
+	current_life = 75;
+	max_life = current_life;
 	atkDelay = 1.25;
 	speed = 4;
-	damage = 3;
+	damage = 7;
 	attack_range = 2.0f;
 	vision_range = 10.0f;
 
 	//SFX
-	deathFX = IA_MELEE_DIE_FX;
-	attackFX = IA_MELEE_ATK_FX;
+	//deathFX = IA_MELEE_DIE_FX;
+	//attackFX = IA_MELEE_ATK_FX;
 }
 
 EnemyMeleeUnit::~EnemyMeleeUnit()

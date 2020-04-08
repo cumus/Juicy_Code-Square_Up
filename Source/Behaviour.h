@@ -28,8 +28,7 @@ enum UnitType
 
 enum UnitState
 {
-	// Unit
-	IDLE = 0,
+	IDLE,
 	MOVING_N,
 	MOVING_S,
 	MOVING_W,
@@ -51,14 +50,14 @@ enum UnitState
 	BUILDING,
 	FULL_LIFE,
 	HALF_LIFE,
-	DESTROYED
+	DESTROYED,
 };
 
 
 class Sprite;
 class AudioSource;
 
-class Behaviour : public Component 
+class Behaviour : public Component
 {
 public:
 	Behaviour(Gameobject* go, UnitType type, UnitState starting_state, ComponentType comp_type = BEHAVIOUR);
@@ -66,21 +65,21 @@ public:
 
 	void RecieveEvent(const Event& e) override;
 
-	virtual void Selected();
-	virtual void UnSelected();
+	void Selected();
+	void UnSelected();
+	void OnDamage(int damage);
+	void OnKill();
+	virtual void AfterDamageAction() {}
 	virtual void OnRightClick(float x, float y) {}
-	virtual void OnDamage(int damage);
-	virtual void OnKill();//Die
 	virtual void DoAttack() {}
 	virtual void OnDestroy(){}
 	virtual void OnGetImpulse(float x,float y) {}
 	virtual void create_unit_bar() {}
 	virtual void update_health_ui() {}
-	//void CastRay(float time);
 
 	UnitType GetType() const { return type; }
 	UnitState* GetStatePtr() { return &current_state; }
-	UnitState GetState() const { return current_state; }
+	UnitState GetState() { return current_state; }
 
 	//void QuickSort();
 	unsigned int GetBehavioursInRange(vec pos, float dist, std::map<float, Behaviour*>& res) const;
@@ -88,12 +87,12 @@ public:
 public: 
 	
 	static std::map<double, Behaviour*> b_map;
+	UnitState current_state;
 
 protected:	
 
 	UnitType type;
-	UnitState current_state;
-
+	
 	// Stats
 	int max_life, current_life, damage;
 	float attack_range, vision_range,dieDelay;

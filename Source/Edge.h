@@ -10,7 +10,7 @@ public:
 	~Edge();
 
 	void OnRightClick(float x, float y) override;
-	void OnDamage(int damage) override;
+	void AfterDamageAction() override;
 };
 
 #endif // __EDGE_H__

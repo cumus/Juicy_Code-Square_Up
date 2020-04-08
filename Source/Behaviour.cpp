@@ -26,6 +26,7 @@ Behaviour::Behaviour(Gameobject* go, UnitType t, UnitState starting_state, Compo
 	rayCastTimer = 0;
 	shoot = false;
 
+	current_state = IDLE;
 	audio = new AudioSource(game_object);
 	new AnimatedSprite(this);
 	selection_highlight = new Sprite(go, App->tex.Load("textures/selectionMark.png"), { 0, 0, 64, 64 }, BACK_SCENE, { 0, -32, 1.f, 1.f });
@@ -67,28 +68,33 @@ void Behaviour::UnSelected()
 {
 	selection_highlight->SetInactive();
 	unit_bar_go->SetInactive();
-
 }
 
 void Behaviour::OnDamage(int d)
 {
-	LOG("Got damage");
-	current_life -= d;
-	LOG("Life: %d", current_life);
-	update_health_ui();
+	//LOG("Got damage: %d",d);
+	LOG("Current state: %d", current_state);
+	if (current_state != DESTROYED)
+	{
+		if (current_life <= 0)
+			OnKill();
+		else current_life -= d;
 
-	if (current_life <= 0)
-		OnKill();
-
+		LOG("Life: %d", current_life);
+		update_health_ui();
+		AfterDamageAction();
+	}
 }
 
 void Behaviour::OnKill()
 {
 	current_life = 0;
+	LOG("Unit killed");
 	current_state = DESTROYED;
 	//App->audio->PlayFx(deathFX);
 	audio->Play(deathFX);
 	game_object->Destroy(dieDelay);
+	unit_bar_go->Destroy(dieDelay);
 }
 
 unsigned int Behaviour::GetBehavioursInRange(vec pos, float dist, std::map<float, Behaviour*>& res) const
@@ -506,7 +512,7 @@ void B_Unit::OnRightClick(float x, float y)
 
 					}
 				}
-
+				///////Temporal
 				else if (GetType() == ENEMY_MELEE)
 				{
 					if (it->second->GetType() == UNIT_MELEE || it->second->GetType() == GATHERER)
@@ -527,7 +533,7 @@ void B_Unit::OnRightClick(float x, float y)
 
 					}
 				}
-
+				//////
 				else if (it->second->GetType() == ENEMY_MELEE || it->second->GetType() == ENEMY_RANGED)//Temporal
 				{
 					if (distance == 0)//Closest distance

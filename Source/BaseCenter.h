@@ -13,8 +13,7 @@ public:
 	void SpawnUnit(float x, float y);
 	void OnRightClick(float x, float y) override;
 	void Upgrade();
-	void OnDamage(int damage) override;
-	void OnKill() override;
+	void AfterDamageAction() override;
 
 	void create_unit_bar() override;
 	void update_health_ui();

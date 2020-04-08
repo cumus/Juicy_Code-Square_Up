@@ -35,19 +35,15 @@ void Edge::OnRightClick(float x, float y)
 	OnDamage(3);
 }
 
-void Edge::OnDamage(int d)
-{
-	if (current_state != DESTROYED)
-	{
-		current_life -= d;
-		Event::Push(RESOURCE,App->scene,5);
-		LOG("Current life: %d", current_life);
 
-		if (current_life <= 0)
-			OnKill();
-		else if (current_life >= max_life * 0.5f)
-			current_state = FULL_LIFE;
-		else
-			current_state = HALF_LIFE;
-	}
+void Edge::AfterDamageAction()
+{
+	Event::Push(RESOURCE, App->scene, 5);
+	if (current_life <= 0)
+		OnKill();
+	else if (current_life >= max_life * 0.5f)
+		current_state = FULL_LIFE;
+	else
+		current_state = HALF_LIFE;
 }
+

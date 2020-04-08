@@ -19,13 +19,21 @@ Tower::Tower(Gameobject* go) : Behaviour(go, TOWER, FULL_LIFE, B_TOWER)
 	ms_count = 0;
 	atkDelay = 1.5;
 	shoot = false;
+	current_state = FULL_LIFE;
 	vec pos = game_object->GetTransform()->GetGlobalPosition();
 	localPos = Map::F_MapToWorld(pos.x, pos.y, pos.z);
-	localPos.first -= App->render->GetCameraRect().x;
-	localPos.second -= App->render->GetCameraRect().y;
+	//localPos.first -= App->render->GetCameraRect().x;
+	//localPos.second -= App->render->GetCameraRect().y;
 
 	create_unit_bar();
 	unit_bar_go->SetInactive();
+
+	Transform* t = game_object->GetTransform();
+	if (t)
+	{
+		vec pos = t->GetGlobalPosition();
+		App->pathfinding.SetWalkabilityTile(int(pos.x), int(pos.y), false);
+	}
 }
 
 Tower::~Tower()
@@ -36,78 +44,78 @@ Tower::~Tower()
 		vec pos = t->GetGlobalPosition();
 		App->pathfinding.SetWalkabilityTile(int(pos.x), int(pos.y), true);
 	}
+	b_map.erase(GetID());
 }
 
 void Tower::Update()
 {
-	if (!shoot)
+	if (current_state != DESTROYED)
 	{
-		std::map<float, Behaviour*> inRange;
-		int found = GetBehavioursInRange(game_object->GetTransform()->GetGlobalPosition(), attack_range, inRange);
-		float d = 0;
-		if (found > 0)
+		if (!shoot)
 		{
-			for (std::map<float, Behaviour*>::iterator it = inRange.begin(); it != inRange.end(); ++it)
+			std::map<float, Behaviour*> inRange;
+			int found = GetBehavioursInRange(game_object->GetTransform()->GetGlobalPosition(), attack_range, inRange);
+			float d = 0;
+			if (found > 0)
 			{
-				if ((it->second->GetType() == ENEMY_MELEE || it->second->GetType() == ENEMY_RANGED) && it->second->GetState() != DESTROYED)
+				for (std::map<float, Behaviour*>::iterator it = inRange.begin(); it != inRange.end(); ++it)
 				{
-					if (d == 0)
+					if ((it->second->GetType() == ENEMY_MELEE || it->second->GetType() == ENEMY_RANGED) && it->second->GetState() != DESTROYED)
 					{
-						atkObj = it->second;
-						d = it->first;
-					}
-					else
-					{
-						if (it->first < d)
+						if (d == 0)
 						{
 							atkObj = it->second;
 							d = it->first;
 						}
+						else
+						{
+							if (it->first < d)
+							{
+								atkObj = it->second;
+								d = it->first;
+							}
+						}
 					}
-				}
+				}				
 			}
-			if (d != 0)
+		}
+
+		if (atkObj != nullptr && atkObj->GetState() != DESTROYED)
+		{
+			if (ms_count >= atkDelay)
 			{
-				if (ms_count >= atkDelay)
-				{
-					DoAttack();
-				}
-
+				DoAttack();
 			}
-		}
-	}
 
-	if (ms_count < atkDelay)
-	{
-		ms_count += App->time.GetGameDeltaTime();
-	}
-
-	if (shoot)
-	{
-		rayCastTimer += App->time.GetGameDeltaTime();
-		if (rayCastTimer < RAYCAST_TIME)
-		{
-			App->render->DrawLine(localPos, atkPos, { 34,191,255,255 },SCENE,true);
 		}
-		else
+
+		if (ms_count < atkDelay)
 		{
-			shoot = false;
-			rayCastTimer = 0;
-			atkObj = nullptr;
+			ms_count += App->time.GetGameDeltaTime();
+		}
+
+		if (shoot)
+		{
+			rayCastTimer += App->time.GetGameDeltaTime();
+			if (rayCastTimer < RAYCAST_TIME)
+			{
+				App->render->DrawLine(localPos, atkPos, { 34,191,255,255 }, SCENE, false);
+			}
+			else
+			{
+				shoot = false;
+				rayCastTimer = 0;
+				atkObj = nullptr;
+			}
 		}
 	}
 }
 
-void Tower::OnDamage(int d)
+void Tower::AfterDamageAction()
 {
 	if (current_state != DESTROYED)
 	{
-		current_life -= d;
-
-		LOG("Current life: %d", current_life);
-
 		update_health_ui();
-
 		if (current_life <= 0)
 			OnKill();
 		else if (current_life >= max_life * 0.5f)
@@ -117,15 +125,6 @@ void Tower::OnDamage(int d)
 	}
 }
 
-void Tower::OnKill()
-{
-	App->audio->PlayFx(B_DESTROYED);
-	current_state = DESTROYED;
-	game_object->Destroy(1.0f);
-	unit_bar_go->Destroy(1.0f);
-
-}
-
 
 void Tower::Upgrade()
 {
@@ -133,7 +132,7 @@ void Tower::Upgrade()
 		
 		t_lvl += 1;
 		max_life += 25;
-		t_damage += 2;
+		damage += 2;
 		App->audio->PlayFx(B_BUILDED);
 		LOG("LIFE AFTER UPGRADE: %d", max_life);
 		LOG("Tower LEVEL: %d", t_lvl);
@@ -154,8 +153,8 @@ void Tower::DoAttack()
 {
 	vec pos = atkObj->GetGameobject()->GetTransform()->GetGlobalPosition();
 	localPos = Map::F_MapToWorld(pos.x, pos.y, pos.z);
-	atkPos.first -= App->render->GetCameraRect().x;
-	atkPos.second -= App->render->GetCameraRect().y;
+	//atkPos.first -= App->render->GetCameraRect().x;
+	//atkPos.second -= App->render->GetCameraRect().y;
 	Event::Push(DAMAGE, atkObj, damage);
 	shoot = true;
 	ms_count = 0;
