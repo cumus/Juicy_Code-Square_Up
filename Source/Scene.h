@@ -41,6 +41,8 @@ public:
 	bool LoadMainScene();
 	bool ChangeToScene(SceneType scene);
 
+	//bool PauseMenu();
+
 	Gameobject* GetRoot();
 	const Gameobject* GetRoot() const;
 	Gameobject* AddGameobject(const char* name, Gameobject* parent = nullptr);
@@ -63,6 +65,13 @@ public:
 	Gameobject* hud_canvas_go;
 	int building_bars_created = 0;
 	int unit_bars_created = 0;
+
+	// END SCREEN
+	int time = 0;
+	int edge_collected = 0;
+	int units_created = 0;
+	int	units_lost = 0;
+	int	units_killed = 0;
 
 private:
 

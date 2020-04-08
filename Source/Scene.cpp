@@ -306,7 +306,7 @@ bool Scene::LoadMainScene()
 	hud_canv->target = { 0.3f, 0.3f, 0.4f, 0.4f };
 
 
-	return map.Load("maps/iso.tmx");
+	return map.Load("maps/iso.tmx") && App->audio->PlayMusic("audio/Music/alexander-nakarada-buzzkiller.ogg");
 }
 
 bool Scene::LoadIntroScene()
@@ -322,7 +322,7 @@ bool Scene::LoadIntroScene()
 
 	Gameobject* background_go = AddGameobject("Background", canvas_go);
 
-	C_Image* background = new C_Image(background_go);
+	C_Button* background = new C_Button(background_go, Event(SCENE_CHANGE, this, MENU, 2.f));
 	background->target = { 1.f, 1.f, 1.f, 1.f };
 	background->offset = { -1920.f, -1080.f };
 	background->section = { 0, 0, 1920, 1080 };
@@ -344,7 +344,7 @@ bool Scene::LoadMenuScene()
 {
 	OPTICK_EVENT();
 	// Play sample track
-	bool ret = App->audio->PlayMusic("audio/Music/alexander-nakarada-early-probe-eats-the-dust.ogg");
+	bool ret = App->audio->PlayMusic("audio/Music/alexander-nakarada-early-probe-eats-the-dust.ogg") && App->audio->PlayFx(TITLE);
 
 	//------------------------- CANVAS --------------------------------------
 	Gameobject* canvas_go = AddGameobject("Canvas", &root);
@@ -379,18 +379,12 @@ bool Scene::LoadMenuScene()
 	start->target = { 0.5f, 0.5f, 0.5f, 0.5f };
 	start->offset = { -525.f, -100.f };
 	start->section = { 0, 0, 1070, 207 };
-	start->tex_id = App->tex.Load("textures/button.png");
+	start->tex_id = App->tex.Load("textures/play.png");
 
 	C_Button* start_fx = new C_Button(start_go, Event(PLAY_FX, App->audio, int(SELECT), 0));
 	start_fx->target = { 0.5f, 0.5f, 0.5f, 0.5f };
 	start_fx->offset = { -525.f, -100.f };
 	start_fx->section = { 0, 0, 1070, 207 };
-
-	Gameobject* start_txt_go = AddGameobject("Start Button", start_go);
-	
-	C_Text* start_txt = new C_Text(start_txt_go, "PLAY");
-	start_txt->target = { 0.48f, 0.45f, 1.f, 1.f };
-	start_txt->scale_to_fit = true;
 
 	//------------------------- QUIT --------------------------------------
 
@@ -400,18 +394,12 @@ bool Scene::LoadMenuScene()
 	quit->target = { 0.5f, 0.5f, 0.5f, 0.5f };
 	quit->offset = { -525.f, 200.f };
 	quit->section = { 0, 0, 1070, 207 };
-	quit->tex_id = App->tex.Load("textures/button.png");
+	quit->tex_id = App->tex.Load("textures/quit.png");
 
 	C_Button* quit_fx = new C_Button(quit_go, Event(PLAY_FX, App->audio, int(SELECT), 0));
 	quit_fx->target = { 0.5f, 0.5f, 0.5f, 0.5f };
 	quit_fx->offset = { -525.f, 200.f };
 	quit_fx->section = { 0, 0, 1070, 207 };
-
-	Gameobject* quit_txt_go = AddGameobject("Start Button", quit_go);
-
-	C_Text* quit_txt = new C_Text(quit_txt_go, "QUIT");
-	quit_txt->target = { 0.48f, 0.45f, 1.f, 1.f };
-	quit_txt->scale_to_fit = true;
 
 	return ret;
 }
