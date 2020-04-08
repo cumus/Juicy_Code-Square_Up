@@ -90,8 +90,8 @@ void Minimap::Update()
 			x -= output.x;
 			y -= output.y;
 
-			App->render->cam.x = (x / scale_x) - map_pixelwidth / 2;
-			App->render->cam.y = y / scale_y;
+			App->render->cam.x = (x / scale_x) - map_pixelwidth / 2 - App->render->cam.w / 2;
+			App->render->cam.y = y / scale_y - App->render->cam.h / 2;
 		}
 	}
 
