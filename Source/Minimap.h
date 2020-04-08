@@ -29,6 +29,8 @@ private:
 
 	void Update() override;
 
+
+
 private:
 
 	SDL_Renderer*	renderer;
@@ -37,10 +39,15 @@ private:
 	SDL_Rect		minimap_camera;
 	Map				map;
 
+	SDL_Rect		ally;
+	SDL_Rect		enemy;
+	SDL_Rect		building;
+
 	int		minimap_width;
 	int		minimap_height;
 	int		window_width;
 	int		window_height;
+	bool	mouse_inside;
 };
 
 
