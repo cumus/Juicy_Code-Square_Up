@@ -10,6 +10,8 @@
 #include <vector>
 #include <map>
 
+#define RAYCAST_TIME 0.2
+
 enum UnitType
 {
 	GATHERER,
@@ -74,6 +76,7 @@ public:
 	virtual void OnGetImpulse(float x,float y) {}
 	virtual void create_unit_bar() {}
 	virtual void update_health_ui() {}
+	//void CastRay(float time);
 
 	UnitType GetType() const { return type; }
 	UnitState* GetStatePtr() { return &current_state; }
@@ -94,6 +97,8 @@ protected:
 	// Stats
 	int max_life, current_life, damage;
 	float attack_range, vision_range,dieDelay;
+	float rayCastTimer;
+	bool shot;
 	Audio_FX deathFX;
 
 	// Complementary components
@@ -121,7 +126,6 @@ public:
 	void DoAttack(vec pos) override;
 	void OnDestroy() override;
 	void OnGetImpulse(float x, float y) override;
-
 	void create_unit_bar() override;
 	void update_health_ui() override;
 
@@ -146,6 +150,9 @@ protected:
 	bool cornerNE;
 	bool cornerSW;
 	bool cornerSE;
+
+	std::pair<int, int> atkObj;
+	std::pair<int, int> shootPos;
 };
 
 #endif // __BEHAVIOUR_H_

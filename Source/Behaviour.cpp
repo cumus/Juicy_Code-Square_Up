@@ -23,6 +23,8 @@ Behaviour::Behaviour(Gameobject* go, UnitType t, UnitState starting_state, Compo
 	attack_range = vision_range = 5.0f;
 	dieDelay = 2.0f;
 	deathFX = EDGE_FX; //temp
+	rayCastTimer = 0;
+	shot = false;
 
 	audio = new AudioSource(game_object);
 	new AnimatedSprite(this);
@@ -392,12 +394,36 @@ void B_Unit::Update()
 			}			
 		}
 	}	
+
+	//Raycast
+	if (shot)
+	{		
+		rayCastTimer += App->time.GetGameDeltaTime();
+		if (rayCastTimer < RAYCAST_TIME)
+		{
+			App->render->DrawLine(shootPos, atkObj, { 0,0,255,255 });
+		}
+		else
+		{
+			shot = false;
+			rayCastTimer = 0;
+		}
+	}
 }
 
 void B_Unit::DoAttack(vec objectivePos)
 {
 	vec localPos = game_object->GetTransform()->GetLocalPos();
 	audio->Play(attackFX);
+	if (GetType() == UNIT_RANGED)
+	{
+		
+		atkObj.first = attackObjective->AsTransform()->GetGlobalPosition().x;
+		atkObj.second = attackObjective->AsTransform()->GetGlobalPosition().y;
+		shootPos.first = game_object->GetTransform()->GetGlobalPosition().x;
+		shootPos.second = game_object->GetTransform()->GetGlobalPosition().y;
+		shot = true;
+	}
 	if (cornerNW && cornerNE)//arriba
 	{
 		current_state = ATTACKING_N;

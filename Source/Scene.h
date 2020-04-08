@@ -81,7 +81,10 @@ private:
 	float fade_duration;
 	SceneType current_scene;
 	SceneType next_scene;
-
+	/*bool shoot = false;//temp
+	std::pair<int, int> pos;
+	std::pair<int, int> atkPos;
+	float rayCastTimer = 0;*/
 	// Player stats
 	int resources = 100;
 };

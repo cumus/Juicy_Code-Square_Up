@@ -48,6 +48,30 @@ bool Scene::Update()
 
 	root.Update();
 
+	/////Temp
+	/*if (App->input->GetKey(SDL_SCANCODE_H) == KEY_DOWN)
+	{
+		App->input->GetMousePosition(atkPos.first, atkPos.second);
+		pos.first = 10;
+		pos.second = 10;
+		shoot = true;
+	}
+
+	if (shoot)
+	{
+		rayCastTimer += App->time.GetDeltaTime();
+		if (rayCastTimer < RAYCAST_TIME)
+		{
+			App->render->DrawLine(pos, atkPos, { 0,0,255,255 }, SCENE,false);
+		}
+		else
+		{
+			shoot = false;
+			rayCastTimer = 0;
+		}
+	}*/
+	/////
+
 	if (fading != NO_FADE)
 	{
 		float alpha;
