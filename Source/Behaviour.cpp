@@ -24,7 +24,7 @@ Behaviour::Behaviour(Gameobject* go, UnitType t, UnitState starting_state, Compo
 	dieDelay = 2.0f;
 	deathFX = EDGE_FX; //temp
 	rayCastTimer = 0;
-	shot = false;
+	shoot = false;
 
 	audio = new AudioSource(game_object);
 	new AnimatedSprite(this);
@@ -74,7 +74,7 @@ void Behaviour::OnDamage(int d)
 {
 	LOG("Got damage");
 	current_life -= d;
-
+	LOG("Life: %d", current_life);
 	update_health_ui();
 
 	if (current_life <= 0)
@@ -215,7 +215,7 @@ void B_Unit::Update()
 		if (msCount >= atkDelay)
 		{
 			LOG("Do attack");
-			DoAttack(attackPos);
+			DoAttack();
 			Event::Push(DAMAGE, attackObjective, damage);
 			msCount = 0;
 		}
@@ -396,7 +396,7 @@ void B_Unit::Update()
 	}	
 
 	//Raycast
-	if (shot)
+	if (shoot)
 	{		
 		rayCastTimer += App->time.GetGameDeltaTime();
 		if (rayCastTimer < RAYCAST_TIME)
@@ -405,24 +405,23 @@ void B_Unit::Update()
 		}
 		else
 		{
-			shot = false;
+			shoot = false;
 			rayCastTimer = 0;
 		}
 	}
 }
 
-void B_Unit::DoAttack(vec objectivePos)
+void B_Unit::DoAttack()
 {
-	vec localPos = game_object->GetTransform()->GetLocalPos();
+	//vec localPos = game_object->GetTransform()->GetGlobalPosition();
 	audio->Play(attackFX);
 	if (GetType() == UNIT_RANGED)
-	{
-		
+	{	
 		atkObj.first = attackObjective->AsTransform()->GetGlobalPosition().x;
 		atkObj.second = attackObjective->AsTransform()->GetGlobalPosition().y;
 		shootPos.first = game_object->GetTransform()->GetGlobalPosition().x;
 		shootPos.second = game_object->GetTransform()->GetGlobalPosition().y;
-		shot = true;
+		shoot = true;
 	}
 	if (cornerNW && cornerNE)//arriba
 	{

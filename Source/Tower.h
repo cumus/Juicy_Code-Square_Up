@@ -14,8 +14,8 @@ public:
 	void Upgrade();
 	void OnDamage(int damage) override;
 	void OnKill() override;
-	void virtual DoAttack(vec pos) override;
-
+	void DoAttack() override;
+	void Update() override;
 	void create_unit_bar() override;
 	void update_health_ui();
 	void update_upgrades_ui();
@@ -26,6 +26,12 @@ protected:
 	int t_max_lvl = 5;
 	int t_damage = 5;
 	int attack_speed = 1;
+	std::pair<int, int> localPos;
+	std::pair<int, int> atkPos;
+	Behaviour* atkObj;
+	float atkDelay;
+	Audio_FX attackFX;
+	float ms_count;
 };
 
 #endif // __TOWER_H__

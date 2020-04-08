@@ -71,7 +71,7 @@ public:
 	virtual void OnRightClick(float x, float y) {}
 	virtual void OnDamage(int damage);
 	virtual void OnKill();//Die
-	virtual void DoAttack(vec pos) {}
+	virtual void DoAttack() {}
 	virtual void OnDestroy(){}
 	virtual void OnGetImpulse(float x,float y) {}
 	virtual void create_unit_bar() {}
@@ -98,7 +98,7 @@ protected:
 	int max_life, current_life, damage;
 	float attack_range, vision_range,dieDelay;
 	float rayCastTimer;
-	bool shot;
+	bool shoot;
 	Audio_FX deathFX;
 
 	// Complementary components
@@ -123,7 +123,7 @@ public:
 
 	void Update() override;
 	void OnRightClick(float x, float y) override;
-	void DoAttack(vec pos) override;
+	void DoAttack() override;
 	void OnDestroy() override;
 	void OnGetImpulse(float x, float y) override;
 	void create_unit_bar() override;

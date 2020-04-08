@@ -1,5 +1,6 @@
 #include "Tower.h"
 #include "Application.h"
+#include "Render.h"
 #include "Gameobject.h"
 #include "Audio.h"
 #include "AudioSource.h"
@@ -12,6 +13,17 @@
 Tower::Tower(Gameobject* go) : Behaviour(go, TOWER, FULL_LIFE, B_TOWER)
 {
 	current_life = max_life = 50;
+	attack_range = 10;
+	vision_range = 13;
+	damage = 20;
+	ms_count = 0;
+	atkDelay = 1.5;
+	shoot = false;
+	vec pos = game_object->GetTransform()->GetGlobalPosition();
+	localPos = Map::F_MapToWorld(pos.x, pos.y, pos.z);
+	localPos.first -= App->render->GetCameraRect().x;
+	localPos.second -= App->render->GetCameraRect().y;
+
 	create_unit_bar();
 	unit_bar_go->SetInactive();
 }
@@ -26,7 +38,65 @@ Tower::~Tower()
 	}
 }
 
+void Tower::Update()
+{
+	if (!shoot)
+	{
+		std::map<float, Behaviour*> inRange;
+		int found = GetBehavioursInRange(game_object->GetTransform()->GetGlobalPosition(), attack_range, inRange);
+		float d = 0;
+		if (found > 0)
+		{
+			for (std::map<float, Behaviour*>::iterator it = inRange.begin(); it != inRange.end(); ++it)
+			{
+				if ((it->second->GetType() == ENEMY_MELEE || it->second->GetType() == ENEMY_RANGED) && it->second->GetState() != DESTROYED)
+				{
+					if (d == 0)
+					{
+						atkObj = it->second;
+						d = it->first;
+					}
+					else
+					{
+						if (it->first < d)
+						{
+							atkObj = it->second;
+							d = it->first;
+						}
+					}
+				}
+			}
+			if (d != 0)
+			{
+				if (ms_count >= atkDelay)
+				{
+					DoAttack();
+				}
 
+			}
+		}
+	}
+
+	if (ms_count < atkDelay)
+	{
+		ms_count += App->time.GetGameDeltaTime();
+	}
+
+	if (shoot)
+	{
+		rayCastTimer += App->time.GetGameDeltaTime();
+		if (rayCastTimer < RAYCAST_TIME)
+		{
+			App->render->DrawLine(localPos, atkPos, { 34,191,255,255 },SCENE,true);
+		}
+		else
+		{
+			shoot = false;
+			rayCastTimer = 0;
+			atkObj = nullptr;
+		}
+	}
+}
 
 void Tower::OnDamage(int d)
 {
@@ -80,10 +150,15 @@ void Tower::OnRightClick(float x, float y)
 	//OnDamage(10);
 }
 
-void Tower::DoAttack(vec pos)
+void Tower::DoAttack()
 {
-	
-	
+	vec pos = atkObj->GetGameobject()->GetTransform()->GetGlobalPosition();
+	localPos = Map::F_MapToWorld(pos.x, pos.y, pos.z);
+	atkPos.first -= App->render->GetCameraRect().x;
+	atkPos.second -= App->render->GetCameraRect().y;
+	Event::Push(DAMAGE, atkObj, damage);
+	shoot = true;
+	ms_count = 0;
 }
 
 void Tower::create_unit_bar() {
@@ -139,7 +214,6 @@ void Tower::create_unit_bar() {
 void Tower::update_health_ui() {
 
 	unit_health->target = { (0.338f) - ((0.338f - 0.07f) * (1.0f - float(current_life) / float(max_life))), pos_y_HUD - 0.01f, 1.4f * (float(current_life) / float(max_life)), 0.5f };
-
 }
 
 void Tower::update_upgrades_ui() {
