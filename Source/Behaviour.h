@@ -10,7 +10,7 @@
 #include <vector>
 #include <map>
 
-#define RAYCAST_TIME 0.2
+#define RAYCAST_TIME 0.1
 
 enum UnitType
 {

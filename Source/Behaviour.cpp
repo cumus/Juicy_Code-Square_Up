@@ -73,7 +73,6 @@ void Behaviour::UnSelected()
 void Behaviour::OnDamage(int d)
 {
 	//LOG("Got damage: %d",d);
-	LOG("Current state: %d", current_state);
 	if (current_state != DESTROYED)
 	{
 		if (current_life <= 0)
@@ -160,259 +159,261 @@ B_Unit::B_Unit(Gameobject* go, UnitType t, UnitState s, ComponentType comp_type)
 
 void B_Unit::Update()
 {	
-	current_state = IDLE;
-	if (attackObjective !=nullptr && attackObjective->GetState() != DESTROYED) //Attack
+	if (current_state != DESTROYED)
 	{
-		//LOG("FOUND");
-		attackPos = attackObjective->GetGameobject()->GetTransform()->GetGlobalPosition();
-		float d = game_object->GetTransform()->DistanceTo(attackPos);
-		//LOG("Distance 1:%f",d);
-		if (d <= attack_range) //Arriba izquierda
-		{				
-			cornerNW = true;
-			inRange = true;
-		}
-		attackPos.x += attackObjective->GetGameobject()->GetTransform()->GetLocalScaleX();
-		attackPos.y += attackObjective->GetGameobject()->GetTransform()->GetLocalScaleY();
-		d = game_object->GetTransform()->DistanceTo(attackPos);
-		//LOG("Distance 2:%f", d);
-		if (d <= attack_range)//Abajo derecha
+		if (attackObjective != nullptr && attackObjective->GetState() != DESTROYED) //Attack
 		{
-			cornerSE = true;
-			inRange = true;
-		}
-				
-		attackPos.x -= attackObjective->GetGameobject()->GetTransform()->GetLocalScaleX();
-		d = game_object->GetTransform()->DistanceTo(attackPos);
-		//LOG("Distance 3:%f", d);
-		if (d <= attack_range)//Abajo izquierda
-		{
-			cornerSW = true;
-			inRange = true;
-		}
-					
-		attackPos.x += attackObjective->GetGameobject()->GetTransform()->GetLocalScaleX();
-		attackPos.y -= attackObjective->GetGameobject()->GetTransform()->GetLocalScaleY();
-		d = game_object->GetTransform()->DistanceTo(attackPos);
-		//LOG("Distance 4:%f", d);
-		if (d <= attack_range)//Arriba derecha
-		{
-			cornerNE = true;
-			inRange = true;
-		}					
-	}
-	else
-	{
-		attackObjective = nullptr;
-		cornerNW = false;
-		cornerSE = false;
-		cornerNE = false;
-		cornerSW = false;
-		inRange = false;
-	}
-
-	if (msCount < atkDelay)
-	{
-		msCount += App->time.GetGameDeltaTime();
-	}
-
-	if (inRange)
-	{
-		if (msCount >= atkDelay)
-		{
-			LOG("Do attack");
-			DoAttack();
-			Event::Push(DAMAGE, attackObjective, damage);
-			msCount = 0;
-		}
-	}		
-	else if (path != nullptr && !path->empty()) //Movement
-	{	
-		vec pos = game_object->GetTransform()->GetGlobalPosition();
-		fPoint actualPos = { pos.x, pos.y };		
-		
-		if(!next) 
-		{		
-			nextTile = path->front();
-			next = true;
-			move = true;
-		}
-
-		if (dirX == 1 && dirY == 1)
-		{
-			if (actualPos.x >= nextTile.x && actualPos.y >= nextTile.y)
+			//LOG("FOUND");
+			attackPos = attackObjective->GetGameobject()->GetTransform()->GetGlobalPosition();
+			float d = game_object->GetTransform()->DistanceTo(attackPos);
+			//LOG("Distance 1:%f",d);
+			if (d <= attack_range) //Arriba izquierda
 			{
-				path->erase(path->begin());
-				next = false;
+				cornerNW = true;
+				inRange = true;
 			}
-		}
-		else if (dirX == -1 && dirY == -1)
-		{
-			if (actualPos.x <= nextTile.x && actualPos.y <= nextTile.y)
+			attackPos.x += attackObjective->GetGameobject()->GetTransform()->GetLocalScaleX();
+			attackPos.y += attackObjective->GetGameobject()->GetTransform()->GetLocalScaleY();
+			d = game_object->GetTransform()->DistanceTo(attackPos);
+			//LOG("Distance 2:%f", d);
+			if (d <= attack_range)//Abajo derecha
 			{
-				path->erase(path->begin());
-				next = false;
+				cornerSE = true;
+				inRange = true;
 			}
-		}
-		else if (dirX == -1 && dirY == 1)
-		{
-			if (actualPos.x <= nextTile.x && actualPos.y >= nextTile.y)
-			{
-				path->erase(path->begin());
-				next = false;
-			}
-		}
-		else if (dirX == 1 && dirY == -1)
-		{
-			if (actualPos.x >= nextTile.x && actualPos.y <= nextTile.y)
-			{
-				path->erase(path->begin());
-				next = false;
-			}
-		}
-		else if(dirX == 0 && dirY ==- 1)
-		{
-			if (actualPos.y <= nextTile.y)
-			{
-				path->erase(path->begin());
-				next = false;
-			}
-		}
-		else if (dirX == 0 && dirY == 1)
-		{
-			if (actualPos.y >= nextTile.y)
-			{
-				path->erase(path->begin());
-				next = false;
-			}
-		}
-		else if (dirX == 1 && dirY == 0)
-		{
-			if (actualPos.x >= nextTile.x)
-			{
-				path->erase(path->begin());
-				next = false;
-			}
-		}
-		else if (dirX == -1 && dirY == 0)
-		{
-			if (actualPos.x <= nextTile.x)
-			{
-				path->erase(path->begin());
-				next = false;
-			}
-		}
-		else if (dirX == 0 && dirY == 0)
-		{
-			path->erase(path->begin());
-			next = false;
-		}
-	}	
-	else
-	{
-		move = false;
-	}
 
-	if (move)
-	{
-		vec pos = game_object->GetTransform()->GetLocalPos();
-		iPoint tilePos = { int(pos.x), int(pos.y) };
-		if (nextTile.x > tilePos.x)
-		{
-			dirX = 1;
-		}
-		else if (nextTile.x < tilePos.x)
-		{
-			dirX = -1;
-		}
-		else dirX = 0;
-
-		if (nextTile.y > tilePos.y)
-		{
-			dirY = 1;
-		}
-		else if (nextTile.y < tilePos.y)
-		{
-			dirY = -1;
-		}
-		else dirY = 0;
-
-		game_object->GetTransform()->MoveX(dirX * speed * App->time.GetGameDeltaTime());//Move x
-		game_object->GetTransform()->MoveY(dirY * speed * App->time.GetGameDeltaTime());//Move y
-
-		//Change state to change sprite
-		if (dirX == 0 && dirY == 0)
-		{
-			current_state = IDLE;
-		}
-		else if(dirX == 1 && dirY==1)//NE
-		{
-			current_state = MOVING_NE;
-		}
-		else if (dirX == -1 && dirY == -1)//SO
-		{
-			current_state = MOVING_SW;
-		}
-		else if (dirX == 1 && dirY == -1)//SE
-		{
-			current_state = MOVING_SE;
-		}
-		else if (dirX == -1 && dirY == 1)//NO
-		{
-			current_state = MOVING_NW;
-		}
-		else if (dirX == 0 && dirY == 1)//N
-		{
-			current_state = MOVING_N;
-		}
-		else if (dirX == 1 && dirY == 0)//E
-		{
-			current_state = MOVING_E;
-		}
-		else if (dirX == 0 && dirY == -1)//S
-		{
-			current_state = MOVING_S;
-		}
-		else if (dirX == -1 && dirY == 0)//O
-		{
-			current_state = MOVING_W;
-		}			
-	}
-
-	//Colision check
-	vec pos = game_object->GetTransform()->GetGlobalPosition();
-	std::map<float, Behaviour*> out;
-	unsigned int total_found = GetBehavioursInRange(pos, 1.4f, out);
-	if (total_found > 0)
-	{
-		fPoint pos(0, 0);
-		pos.x = game_object->GetTransform()->GetGlobalPosition().x;
-		pos.y = game_object->GetTransform()->GetGlobalPosition().y;
-		for (std::map<float, Behaviour*>::iterator it = out.begin(); it != out.end(); ++it)
-		{
-			vec otherPos = it->second->GetGameobject()->GetTransform()->GetGlobalPosition();
-			fPoint separationSpd(0, 0);
-			separationSpd.x = pos.x - otherPos.x;
-			separationSpd.y = pos.y - otherPos.y;
-			if (it->second->GetState() != DESTROYED)
+			attackPos.x -= attackObjective->GetGameobject()->GetTransform()->GetLocalScaleX();
+			d = game_object->GetTransform()->DistanceTo(attackPos);
+			//LOG("Distance 3:%f", d);
+			if (d <= attack_range)//Abajo izquierda
 			{
-				Event::Push(IMPULSE, it->second->AsBehaviour(), -separationSpd.x, -separationSpd.y);
-			}			
-		}
-	}	
+				cornerSW = true;
+				inRange = true;
+			}
 
-	//Raycast
-	if (shoot)
-	{		
-		rayCastTimer += App->time.GetGameDeltaTime();
-		if (rayCastTimer < RAYCAST_TIME)
-		{
-			App->render->DrawLine(shootPos, atkObj, { 0,0,255,255 });
+			attackPos.x += attackObjective->GetGameobject()->GetTransform()->GetLocalScaleX();
+			attackPos.y -= attackObjective->GetGameobject()->GetTransform()->GetLocalScaleY();
+			d = game_object->GetTransform()->DistanceTo(attackPos);
+			//LOG("Distance 4:%f", d);
+			if (d <= attack_range)//Arriba derecha
+			{
+				cornerNE = true;
+				inRange = true;
+			}
 		}
 		else
 		{
-			shoot = false;
-			rayCastTimer = 0;
+			attackObjective = nullptr;
+			cornerNW = false;
+			cornerSE = false;
+			cornerNE = false;
+			cornerSW = false;
+			inRange = false;
+		}
+
+		if (msCount < atkDelay)
+		{
+			msCount += App->time.GetGameDeltaTime();
+		}
+
+		if (inRange)
+		{
+			if (msCount >= atkDelay)
+			{
+				LOG("Do attack");
+				DoAttack();
+				Event::Push(DAMAGE, attackObjective, damage);
+				msCount = 0;
+			}
+		}
+		else if (path != nullptr && !path->empty()) //Movement
+		{
+			vec pos = game_object->GetTransform()->GetGlobalPosition();
+			fPoint actualPos = { pos.x, pos.y };
+
+			if (!next)
+			{
+				nextTile = path->front();
+				next = true;
+				move = true;
+			}
+
+			if (dirX == 1 && dirY == 1)
+			{
+				if (actualPos.x >= nextTile.x && actualPos.y >= nextTile.y)
+				{
+					path->erase(path->begin());
+					next = false;
+				}
+			}
+			else if (dirX == -1 && dirY == -1)
+			{
+				if (actualPos.x <= nextTile.x && actualPos.y <= nextTile.y)
+				{
+					path->erase(path->begin());
+					next = false;
+				}
+			}
+			else if (dirX == -1 && dirY == 1)
+			{
+				if (actualPos.x <= nextTile.x && actualPos.y >= nextTile.y)
+				{
+					path->erase(path->begin());
+					next = false;
+				}
+			}
+			else if (dirX == 1 && dirY == -1)
+			{
+				if (actualPos.x >= nextTile.x && actualPos.y <= nextTile.y)
+				{
+					path->erase(path->begin());
+					next = false;
+				}
+			}
+			else if (dirX == 0 && dirY == -1)
+			{
+				if (actualPos.y <= nextTile.y)
+				{
+					path->erase(path->begin());
+					next = false;
+				}
+			}
+			else if (dirX == 0 && dirY == 1)
+			{
+				if (actualPos.y >= nextTile.y)
+				{
+					path->erase(path->begin());
+					next = false;
+				}
+			}
+			else if (dirX == 1 && dirY == 0)
+			{
+				if (actualPos.x >= nextTile.x)
+				{
+					path->erase(path->begin());
+					next = false;
+				}
+			}
+			else if (dirX == -1 && dirY == 0)
+			{
+				if (actualPos.x <= nextTile.x)
+				{
+					path->erase(path->begin());
+					next = false;
+				}
+			}
+			else if (dirX == 0 && dirY == 0)
+			{
+				path->erase(path->begin());
+				next = false;
+			}
+		}
+		else
+		{
+			move = false;
+		}
+
+		if (move)
+		{
+			vec pos = game_object->GetTransform()->GetLocalPos();
+			iPoint tilePos = { int(pos.x), int(pos.y) };
+			if (nextTile.x > tilePos.x)
+			{
+				dirX = 1;
+			}
+			else if (nextTile.x < tilePos.x)
+			{
+				dirX = -1;
+			}
+			else dirX = 0;
+
+			if (nextTile.y > tilePos.y)
+			{
+				dirY = 1;
+			}
+			else if (nextTile.y < tilePos.y)
+			{
+				dirY = -1;
+			}
+			else dirY = 0;
+
+			game_object->GetTransform()->MoveX(dirX * speed * App->time.GetGameDeltaTime());//Move x
+			game_object->GetTransform()->MoveY(dirY * speed * App->time.GetGameDeltaTime());//Move y
+
+			//Change state to change sprite
+			if (dirX == 0 && dirY == 0)
+			{
+				current_state = IDLE;
+			}
+			else if (dirX == 1 && dirY == 1)//NE
+			{
+				current_state = MOVING_NE;
+			}
+			else if (dirX == -1 && dirY == -1)//SO
+			{
+				current_state = MOVING_SW;
+			}
+			else if (dirX == 1 && dirY == -1)//SE
+			{
+				current_state = MOVING_SE;
+			}
+			else if (dirX == -1 && dirY == 1)//NO
+			{
+				current_state = MOVING_NW;
+			}
+			else if (dirX == 0 && dirY == 1)//N
+			{
+				current_state = MOVING_N;
+			}
+			else if (dirX == 1 && dirY == 0)//E
+			{
+				current_state = MOVING_E;
+			}
+			else if (dirX == 0 && dirY == -1)//S
+			{
+				current_state = MOVING_S;
+			}
+			else if (dirX == -1 && dirY == 0)//O
+			{
+				current_state = MOVING_W;
+			}
+		}
+
+		//Colision check
+		vec pos = game_object->GetTransform()->GetGlobalPosition();
+		std::map<float, Behaviour*> out;
+		unsigned int total_found = GetBehavioursInRange(pos, 1.4f, out);
+		if (total_found > 0)
+		{
+			fPoint pos(0, 0);
+			pos.x = game_object->GetTransform()->GetGlobalPosition().x;
+			pos.y = game_object->GetTransform()->GetGlobalPosition().y;
+			for (std::map<float, Behaviour*>::iterator it = out.begin(); it != out.end(); ++it)
+			{
+				vec otherPos = it->second->GetGameobject()->GetTransform()->GetGlobalPosition();
+				fPoint separationSpd(0, 0);
+				separationSpd.x = pos.x - otherPos.x;
+				separationSpd.y = pos.y - otherPos.y;
+				if (it->second->GetState() != DESTROYED)
+				{
+					Event::Push(IMPULSE, it->second->AsBehaviour(), -separationSpd.x, -separationSpd.y);
+				}
+			}
+		}
+
+		//Raycast
+		if (shoot)
+		{
+			rayCastTimer += App->time.GetGameDeltaTime();
+			if (rayCastTimer < RAYCAST_TIME)
+			{
+				App->render->DrawLine(shootPos, atkObj, { 0,0,255,255 });
+			}
+			else
+			{
+				shoot = false;
+				rayCastTimer = 0;
+			}
 		}
 	}
 }

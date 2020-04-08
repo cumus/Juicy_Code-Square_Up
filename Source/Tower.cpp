@@ -12,7 +12,8 @@
 
 Tower::Tower(Gameobject* go) : Behaviour(go, TOWER, FULL_LIFE, B_TOWER)
 {
-	current_life = max_life = 50;
+	max_life = 50;
+	current_life = max_life;
 	attack_range = 10;
 	vision_range = 13;
 	damage = 20;
@@ -103,6 +104,7 @@ void Tower::Update()
 			}
 			else
 			{
+				Event::Push(DAMAGE, atkObj, damage);
 				shoot = false;
 				rayCastTimer = 0;
 				atkObj = nullptr;
@@ -155,7 +157,6 @@ void Tower::DoAttack()
 	localPos = Map::F_MapToWorld(pos.x, pos.y, pos.z);
 	//atkPos.first -= App->render->GetCameraRect().x;
 	//atkPos.second -= App->render->GetCameraRect().y;
-	Event::Push(DAMAGE, atkObj, damage);
 	shoot = true;
 	ms_count = 0;
 }
