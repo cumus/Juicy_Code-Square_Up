@@ -16,6 +16,8 @@
 #include "Canvas.h"
 #include "Minimap.h"
 #include "Gatherer.h"
+#include "EnemyMeleeUnit.h"
+#include "MeleeUnit.h"
 
 #include "Defs.h"
 #include "Log.h"
@@ -548,7 +550,7 @@ void Scene::GodMode()
 		Gameobject* unit_go = AddGameobject("Ally Melee unit");
 		unit_go->GetTransform()->SetLocalPos({ float(position.first), float(position.second), 0.0f });
 
-		new B_Unit(unit_go, UNIT_MELEE, IDLE);
+		new MeleeUnit(unit_go);
 	}
 
 	if (App->input->GetKey(SDL_SCANCODE_5) == KEY_DOWN) //Edge
@@ -572,7 +574,7 @@ void Scene::GodMode()
 		Gameobject* unit_go = AddGameobject("Enemy Melee unit");
 		unit_go->GetTransform()->SetLocalPos({ float(position.first), float(position.second), 0.0f });
 
-		new B_Unit(unit_go, ENEMY_MELEE, IDLE);
+		new EnemyMeleeUnit(unit_go);
 	}
 
 	if (App->input->GetKey(SDL_SCANCODE_8) == KEY_DOWN) //Base_Center
@@ -643,7 +645,7 @@ void Scene::GodMode()
 			groupSelect = false;
 		}
 
-		if (App->editor->selection)
+		if (App->editor->selection != nullptr)
 		{
 			App->editor->selection->Destroy();
 		}
