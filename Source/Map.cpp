@@ -33,6 +33,9 @@ Map::Map()
 
 Map::~Map()
 {
+	if (loaded)
+		CleanUp();
+
 	if (map == this) map = nullptr;
 }
 
