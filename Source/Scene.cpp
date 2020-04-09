@@ -362,7 +362,7 @@ bool Scene::LoadMenuScene()
 {
 	OPTICK_EVENT();
 	// Play sample track
-	bool ret = App->audio->PlayMusic("audio/Music/alexander-nakarada-early-probe-eats-the-dust.ogg") && App->audio->PlayFx(TITLE);
+	bool ret = App->audio->PlayMusic("audio/Music/alexander-nakarada-curiosity.ogg") && App->audio->PlayFx(TITLE);
 
 	//------------------------- CANVAS --------------------------------------
 	Gameobject* canvas_go = AddGameobject("Canvas", &root);
@@ -422,6 +422,120 @@ bool Scene::LoadMenuScene()
 	return ret;
 }
 
+bool Scene::LoadEndScene()
+{
+	OPTICK_EVENT();
+
+	bool ret;
+
+	//------------------------- CANVAS --------------------------------------
+	Gameobject* canvas_go = AddGameobject("Canvas", &root);
+	C_Canvas* canv = new C_Canvas(canvas_go);
+	canv->target = { 0.6f, 0.6f, 0.4f, 0.4f };
+
+	//------------------------- BACKGROUND --------------------------------------
+
+	Gameobject* background_go = AddGameobject("Background", canvas_go);
+
+	C_Image* background = new C_Image(background_go);
+	background->target = { 1.f, 1.f, 1.f, 1.f };
+	background->offset = { -1920.f, -1080.f };
+	background->section = { 0, 0, 1920, 1080 };
+	background->tex_id = App->tex.Load("textures/white.png");
+
+	//------------------------- WIN/LOSE --------------------------------------
+	if (win)
+	{
+		Gameobject* win_go = AddGameobject("Background", canvas_go);
+
+		C_Image* win = new C_Image(win_go);
+		win->target = { 0.58f, 0.2f, 0.5f, 0.5f };
+		win->offset = { -442.f, -117.f };
+		win->section = { 0, 0, 442, 117 };
+		win->tex_id = App->tex.Load("textures/youwin.png");
+	}
+	else
+	{
+		Gameobject* lose_go = AddGameobject("Background", canvas_go);
+
+		C_Image* lose = new C_Image(lose_go);
+		lose->target = { 0.59f, 0.2f, 0.5f, 0.5f };
+		lose->offset = { -495.f, -117.f };
+		lose->section = { 0, 0, 495, 117 };
+		lose->tex_id = App->tex.Load("textures/youlose.png");
+	}
+
+	//------------------------- BACK --------------------------------------
+
+	Gameobject* back_go = AddGameobject("Background", canvas_go);
+
+	C_Image* back = new C_Image(back_go);
+	back->target = { 0.68f, 0.9f, 0.6f, 0.65f };
+	back->offset = { -783.f, -735.f };
+	back->section = { 0, 0, 783, 735 };
+	back->tex_id = App->tex.Load("textures/back.png");
+
+	//------------------------- TIME --------------------------------------
+
+	Gameobject* time_go = AddGameobject("Time", canvas_go);
+
+	C_Image* time = new C_Image(time_go);
+	time->target = { 0.66f, 0.37f, 0.6f, 0.65f };
+	time->offset = { -693.f, -100.f };
+	time->section = { 0, 0, 693, 100 };
+	if (win) time->tex_id = App->tex.Load("textures/wtime.png");
+	else time->tex_id = App->tex.Load("textures/ltime.png");
+
+	//------------------------- EDGE --------------------------------------
+
+	Gameobject* edge_go = AddGameobject("edge", canvas_go);
+
+	C_Image* edge = new C_Image(edge_go);
+	edge->target = { 0.66f, 0.49f, 0.6f, 0.65f };
+	edge->offset = { -693.f, -100.f };
+	edge->section = { 0, 0, 693, 100 };
+	if (win) edge->tex_id = App->tex.Load("textures/wedge.png");
+	else edge->tex_id = App->tex.Load("textures/ledge.png");
+
+	//------------------------- UNITS CREATED --------------------------------------
+
+	Gameobject* units_c_go = AddGameobject("created", canvas_go);
+
+	C_Image* units_c = new C_Image(units_c_go);
+	units_c->target = { 0.66f, 0.61f, 0.6f, 0.65f };
+	units_c->offset = { -693.f, -100.f };
+	units_c->section = { 0, 0, 693, 100 };
+	if (win) units_c->tex_id = App->tex.Load("textures/wunits_c.png");
+	else units_c->tex_id = App->tex.Load("textures/lunits_c.png");
+
+	//------------------------- UNITS LOST --------------------------------------
+
+	Gameobject* units_l_go = AddGameobject("lost", canvas_go);
+
+	C_Image* units_l = new C_Image(units_l_go);
+	units_l->target = { 0.66f, 0.73f, 0.6f, 0.65f };
+	units_l->offset = { -693.f, -100.f };
+	units_l->section = { 0, 0, 693, 100 };
+	if (win) units_l->tex_id = App->tex.Load("textures/wunits_l.png");
+	else units_l->tex_id = App->tex.Load("textures/lunits_l.png");
+
+	//------------------------- UNITS KILLED --------------------------------------
+
+	Gameobject* units_k_go = AddGameobject("killed", canvas_go);
+
+	C_Image* units_k = new C_Image(units_k_go);
+	units_k->target = { 0.66f, 0.85f, 0.6f, 0.65f };
+	units_k->offset = { -693.f, -100.f };
+	units_k->section = { 0, 0, 693, 100 };
+	if (win) units_k->tex_id = App->tex.Load("textures/wunits_k.png");
+	else units_k->tex_id = App->tex.Load("textures/lunits_k.png");
+
+	if (win) ret = App->audio->PlayMusic("audio/Music/alexander-nakarada-early-probe-eats-the-dust.ogg");
+	else ret = App->audio->PlayMusic("audio/Music/alexander-nakarada-inter7ude.ogg");
+
+	return ret;
+}
+
 bool Scene::ChangeToScene(SceneType scene)
 {
 	map.CleanUp();
@@ -449,6 +563,7 @@ bool Scene::ChangeToScene(SceneType scene)
 	case MAIN_FROM_SAFE:
 		break;
 	case END:
+		ret = LoadEndScene();
 		break;
 	case CREDITS:
 		break;
@@ -523,7 +638,7 @@ void Scene::GodMode()
 	App->input->GetMousePosition(x, y);
 	SDL_Rect cam = App->render->GetCameraRect();
 
-	if (App->input->GetKey(SDL_SCANCODE_LALT) == KEY_REPEAT)
+	if (App->input->GetKey(SDL_SCANCODE_LCTRL) == KEY_REPEAT)
 	{
 		if (App->input->GetKey(SDL_SCANCODE_1) == KEY_DOWN)
 			Event::Push(SCENE_CHANGE, this, TEST, 0.f);
@@ -533,6 +648,8 @@ void Scene::GodMode()
 			Event::Push(SCENE_CHANGE, this, MENU, 2.f);
 		else if (App->input->GetKey(SDL_SCANCODE_4) == KEY_DOWN)
 			Event::Push(SCENE_CHANGE, this, MAIN, 2.f);
+		else if (App->input->GetKey(SDL_SCANCODE_5) == KEY_DOWN)
+			Event::Push(SCENE_CHANGE, this, END, 2.f);
 	}
 
 

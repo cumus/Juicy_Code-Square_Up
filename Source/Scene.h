@@ -51,6 +51,7 @@ private:
 	bool LoadIntroScene();
 	bool LoadMenuScene();
 	bool LoadMainScene();
+	bool LoadEndScene();
 
 	bool ChangeToScene(SceneType scene);
 
@@ -69,6 +70,7 @@ public:
 	int unit_bars_created = 0;
 
 	// END SCREEN
+	bool win = true;
 	int time = 0;
 	int edge_collected = 0;
 	int units_created = 0;
