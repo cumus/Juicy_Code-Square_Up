@@ -261,6 +261,8 @@ bool Scene::LoadTestScene()
 
 	if (ret) map.Load("maps/iso.tmx");
 	
+	test = true;
+
 	building_bars_created = 0;
 	unit_bars_created = 0;
 
@@ -314,6 +316,8 @@ bool Scene::LoadMainScene()
 {
 	OPTICK_EVENT();
 
+	level = true;
+
 	building_bars_created = 0;
 	unit_bars_created = 0;
 
@@ -332,6 +336,9 @@ bool Scene::LoadIntroScene()
 	OPTICK_EVENT();
 	// Play sample track
 	bool ret = App->audio->PlayFx(LOGO);
+
+	level = false;
+	test = false;
 
 	// Add a canvas
 	Gameobject* canvas_go = AddGameobject("Canvas", &root);
@@ -363,6 +370,9 @@ bool Scene::LoadMenuScene()
 	OPTICK_EVENT();
 	// Play sample track
 	bool ret = App->audio->PlayMusic("audio/Music/alexander-nakarada-curiosity.ogg") && App->audio->PlayFx(TITLE);
+
+	level = false;
+	test = false;
 
 	//------------------------- CANVAS --------------------------------------
 	Gameobject* canvas_go = AddGameobject("Canvas", &root);
@@ -427,6 +437,9 @@ bool Scene::LoadEndScene()
 	OPTICK_EVENT();
 
 	bool ret;
+
+	level = false;
+	test = false;
 
 	//------------------------- CANVAS --------------------------------------
 	Gameobject* canvas_go = AddGameobject("Canvas", &root);
@@ -532,6 +545,133 @@ bool Scene::LoadEndScene()
 
 	if (win) ret = App->audio->PlayMusic("audio/Music/alexander-nakarada-early-probe-eats-the-dust.ogg");
 	else ret = App->audio->PlayMusic("audio/Music/alexander-nakarada-inter7ude.ogg");
+
+	return ret;
+}
+
+bool Scene::PauseMenu()
+{
+	bool ret = true;
+	//------------------------- CANVAS --------------------------------------
+
+	Gameobject* canvas_go = AddGameobject("Canvas", &root);
+	C_Canvas* canv = new C_Canvas(canvas_go);
+	canv->target = { 0.6f, 0.6f, 0.4f, 0.4f };
+
+	//------------------------- BACKGROUND -----------------------------------
+
+	Gameobject* background_go = AddGameobject("Background", canvas_go);
+
+	C_Image* background = new C_Image(background_go);
+	background->target = { 1.f, 1.f, 1.f, 1.f };
+	background->offset = { -640.f, -985.f };
+	background->section = { 0, 0, 640, 985 };
+	background->tex_id = App->tex.Load("textures/pause-bg.png");
+
+	//------------------------- RESUME -----------------------------------------
+
+	Gameobject* resume_go = AddGameobject("resume Button", canvas_go);
+
+	C_Button* resume = new C_Button(resume_go, Event(SCENE_PLAY, this, App));
+	resume->target = { 0.5f, 0.5f, 0.5f, 0.5f };
+	resume->offset = { -525.f, -100.f };
+	resume->section = { 0, 0, 1070, 207 };
+	resume->tex_id = App->tex.Load("textures/button.png");
+
+	C_Button* resume_fx = new C_Button(resume_go, Event(PLAY_FX, App->audio, int(SELECT), 0));
+	resume_fx->target = { 0.5f, 0.5f, 0.5f, 0.5f };
+	resume_fx->offset = { -525.f, -100.f };
+	resume_fx->section = { 0, 0, 1070, 207 };
+
+	Gameobject* resume_txt_go = AddGameobject("resume Button", resume_go);
+
+	C_Text* resume_txt = new C_Text(resume_txt_go, "RESUME");
+	resume_txt->target = { 0.48f, 0.45f, 1.f, 1.f };
+	resume_txt->scale_to_fit = true;
+
+	//------------------------- SAVE --------------------------------------
+
+	Gameobject* save_go = AddGameobject("save button", canvas_go);
+
+	C_Button* save = new C_Button(save_go, Event(SCENE_CHANGE, this, MAIN));
+	save->target = { 0.5f, 0.5f, 0.5f, 0.5f };
+	save->offset = { -525.f, 200.f };
+	save->section = { 0, 0, 1070, 207 };
+	save->tex_id = App->tex.Load("textures/button.png");
+
+	C_Button* save_fx = new C_Button(save_go, Event(PLAY_FX, App->audio, int(SELECT), 0));
+	save_fx->target = { 0.5f, 0.5f, 0.5f, 0.5f };
+	save_fx->offset = { -525.f, 200.f };
+	save_fx->section = { 0, 0, 1070, 207 };
+
+	Gameobject* save_txt_go = AddGameobject("save Button", save_go);
+
+	C_Text* save_txt = new C_Text(save_txt_go, "SAVE");
+	save_txt->target = { 0.48f, 0.45f, 1.f, 1.f };
+	save_txt->scale_to_fit = true;
+
+	//------------------------- LOAD --------------------------------------
+
+	Gameobject* load_go = AddGameobject("load Button", canvas_go);
+
+	C_Button* load = new C_Button(load_go, Event(SCENE_CHANGE, this, MAIN));
+	load->target = { 0.5f, 0.5f, 0.5f, 0.5f };
+	load->offset = { -525.f, 200.f };
+	load->section = { 0, 0, 1070, 207 };
+	load->tex_id = App->tex.Load("textures/button.png");
+
+	C_Button* load_fx = new C_Button(load_go, Event(PLAY_FX, App->audio, int(SELECT), 0));
+	load_fx->target = { 0.5f, 0.5f, 0.5f, 0.5f };
+	load_fx->offset = { -525.f, 200.f };
+	load_fx->section = { 0, 0, 1070, 207 };
+
+	Gameobject* load_txt_go = AddGameobject("Start Button", load_go);
+
+	C_Text* load_txt = new C_Text(load_txt_go, "LOAD");
+	load_txt->target = { 0.48f, 0.45f, 1.f, 1.f };
+	load_txt->scale_to_fit = true;
+
+	//------------------------- OPTIONS --------------------------------------
+
+	Gameobject* options_go = AddGameobject("options Button", canvas_go);
+
+	C_Button* options = new C_Button(options_go, Event(SCENE_CHANGE, this, MAIN));
+	options->target = { 0.5f, 0.5f, 0.5f, 0.5f };
+	options->offset = { -525.f, 200.f };
+	options->section = { 0, 0, 1070, 207 };
+	options->tex_id = App->tex.Load("textures/button.png");
+
+	C_Button* options_fx = new C_Button(options_go, Event(PLAY_FX, App->audio, int(SELECT), 0));
+	options_fx->target = { 0.5f, 0.5f, 0.5f, 0.5f };
+	options_fx->offset = { -525.f, 200.f };
+	options_fx->section = { 0, 0, 1070, 207 };
+
+	Gameobject* options_txt_go = AddGameobject("options Button", options_go);
+
+	C_Text* options_txt = new C_Text(options_txt_go, "OPTIONS");
+	options_txt->target = { 0.48f, 0.45f, 1.f, 1.f };
+	options_txt->scale_to_fit = true;
+
+	//------------------------- MAIN MENU --------------------------------------
+
+	Gameobject* main_menu_go = AddGameobject("main menu Button", canvas_go);
+
+	C_Button* main_menu = new C_Button(main_menu_go, Event(SCENE_CHANGE, this, MENU));
+	main_menu->target = { 0.5f, 0.5f, 0.5f, 0.5f };
+	main_menu->offset = { -525.f, 400.f };
+	main_menu->section = { 0, 0, 1070, 207 };
+	main_menu->tex_id = App->tex.Load("textures/button.png");
+
+	C_Button* main_menu_fx = new C_Button(main_menu_go, Event(PLAY_FX, App->audio, int(SELECT), 0));
+	main_menu_fx->target = { 0.5f, 0.5f, 0.5f, 0.5f };
+	main_menu_fx->offset = { -525.f, 400.f };
+	main_menu_fx->section = { 0, 0, 1070, 207 };
+
+	Gameobject* main_menu_txt_go = AddGameobject("main_menu Button", main_menu_go);
+
+	C_Text* main_menu_txt = new C_Text(main_menu_txt_go, "MAIN MENU");
+	main_menu_txt->target = { 0.48f, 0.45f, 1.f, 1.f };
+	main_menu_txt->scale_to_fit = true;
 
 	return ret;
 }
@@ -651,7 +791,21 @@ void Scene::GodMode()
 		else if (App->input->GetKey(SDL_SCANCODE_5) == KEY_DOWN)
 			Event::Push(SCENE_CHANGE, this, END, 2.f);
 	}
-
+	
+	if (test || level)
+	{
+		if (App->input->GetKey(SDL_SCANCODE_ESCAPE) == KEY_DOWN && !pause)
+		{
+			Event::Push(SCENE_PAUSE, App);
+			PauseMenu();
+			pause;
+		}
+		else if (App->input->GetKey(SDL_SCANCODE_ESCAPE) == KEY_DOWN && pause)
+		{
+			Event::Push(SCENE_PLAY, App);
+			!pause;
+		}
+	}
 
 	if (App->input->GetKey(SDL_SCANCODE_F2) == KEY_DOWN)
 		map.draw_walkability = !map.draw_walkability;

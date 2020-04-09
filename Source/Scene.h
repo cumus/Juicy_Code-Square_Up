@@ -36,7 +36,7 @@ public:
 
 	void RecieveEvent(const Event& e) override;
 
-	//bool PauseMenu();
+	bool PauseMenu();
 
 	Gameobject* GetRoot();
 	const Gameobject* GetRoot() const;
@@ -59,6 +59,10 @@ public:
 
 	int id_mouse_tex;
 
+	bool pause = false;
+	bool test = true;
+	bool level = true;
+
 	// Selection
 	iPoint groupStart,mouseExtend;
 	bool groupSelect;
@@ -70,7 +74,7 @@ public:
 	int unit_bars_created = 0;
 
 	// END SCREEN
-	bool win = true;
+	bool win = false;
 	int time = 0;
 	int edge_collected = 0;
 	int units_created = 0;
