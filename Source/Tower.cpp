@@ -14,8 +14,8 @@ Tower::Tower(Gameobject* go) : Behaviour(go, TOWER, FULL_LIFE, B_TOWER)
 {
 	max_life = 50;
 	current_life = max_life;
-	attack_range = 10;
-	vision_range = 13;
+	attack_range = 20;
+	vision_range = 25;
 	damage = 20;
 	ms_count = 0;
 	atkDelay = 1.5;
@@ -23,8 +23,8 @@ Tower::Tower(Gameobject* go) : Behaviour(go, TOWER, FULL_LIFE, B_TOWER)
 	current_state = FULL_LIFE;
 	vec pos = game_object->GetTransform()->GetGlobalPosition();
 	localPos = Map::F_MapToWorld(pos.x, pos.y, pos.z);
-	//localPos.first -= App->render->GetCameraRect().x;
-	//localPos.second -= App->render->GetCameraRect().y;
+	localPos.first += 30.0f;
+	localPos.second += 20.0f;
 
 	create_bar();
 	bar_go->SetInactive();
@@ -83,24 +83,17 @@ void Tower::Update()
 
 		if (atkObj != nullptr && atkObj->GetState() != DESTROYED)
 		{
-			if (ms_count >= atkDelay)
-			{
-				DoAttack();
-			}
-
+			if (ms_count >= atkDelay) DoAttack();			
 		}
 
-		if (ms_count < atkDelay)
-		{
-			ms_count += App->time.GetGameDeltaTime();
-		}
-
+		if (ms_count < atkDelay) ms_count += App->time.GetGameDeltaTime();
+		
 		if (shoot)
 		{
 			rayCastTimer += App->time.GetGameDeltaTime();
 			if (rayCastTimer < RAYCAST_TIME)
 			{
-				App->render->DrawLine(localPos, atkPos, { 34,191,255,255 }, SCENE, false);
+				App->render->DrawLine(localPos, atkPos, { 34,191,255,255 }, FRONT_SCENE, true);
 			}
 			else
 			{
@@ -153,12 +146,16 @@ void Tower::OnRightClick(float x, float y)
 
 void Tower::DoAttack()
 {
+	atkPos.first = 0;
+	atkPos.second = 0;
 	vec pos = atkObj->GetGameobject()->GetTransform()->GetGlobalPosition();
-	localPos = Map::F_MapToWorld(pos.x, pos.y, pos.z);
-	//atkPos.first -= App->render->GetCameraRect().x;
-	//atkPos.second -= App->render->GetCameraRect().y;
+	atkPos = Map::F_MapToWorld(pos.x, pos.y, pos.z);
+	atkPos.first += 30.0f;
+	atkPos.second += 20.0f;
 	shoot = true;
 	ms_count = 0;
+	LOG("LX: %f / LY:%f", localPos.first, localPos.second);
+	LOG("OX: %f / OY:%f", atkPos.first,atkPos.second);
 }
 
 void Tower::create_bar() {
