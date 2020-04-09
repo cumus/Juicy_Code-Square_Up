@@ -151,6 +151,9 @@
     <ClCompile Include="Gatherer.cpp">
       <Filter>Source\Gameobjects</Filter>
     </ClCompile>
+    <ClCompile Include="RangedUnit.cpp">
+      <Filter>Source\Gameobjects</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="PugiXml\src\pugiconfig.hpp">
@@ -331,6 +334,9 @@
       <Filter>Source\Gameobjects</Filter>
     </ClInclude>
     <ClInclude Include="Gatherer.h">
+      <Filter>Source\Gameobjects</Filter>
+    </ClInclude>
+    <ClInclude Include="RangedUnit.h">
       <Filter>Source\Gameobjects</Filter>
     </ClInclude>
   </ItemGroup>

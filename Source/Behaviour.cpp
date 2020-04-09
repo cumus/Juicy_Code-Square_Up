@@ -15,6 +15,7 @@
 #include "Gatherer.h"
 #include "Tower.h"
 #include "BaseCenter.h"
+#include "RangedUnit.h"
 
 std::map<double, Behaviour*> Behaviour::b_map;
 
@@ -100,7 +101,10 @@ void Behaviour::BuildMelee(float x, float y)
 
 void Behaviour::BuildRanged(float x, float y)
 {
+	Gameobject* ranged_go = App->scene->AddGameobject("Ranged unit");
+	ranged_go->GetTransform()->SetLocalPos({ x, y, 0.0f });
 
+	new RangedUnit(ranged_go);
 }
 
 void Behaviour::BuildSuper(float x, float y)
@@ -224,6 +228,13 @@ B_Unit::B_Unit(Gameobject* go, UnitType t, UnitState s, ComponentType comp_type)
 
 	create_bar();
 	bar_go->SetInactive();
+
+
+	//Info for ranged units constructor
+	/*vec pos = game_object->GetTransform()->GetGlobalPosition();
+	shootPos = Map::F_MapToWorld(pos.x, pos.y, pos.z);
+	shootPos.first += 30.0f;
+	shootPos.second += 20.0f;*/
 }
 
 void B_Unit::Update()
@@ -291,6 +302,7 @@ void B_Unit::Update()
 			{
 				LOG("Do attack");
 				DoAttack();
+				UnitAttackType();
 				Event::Push(DAMAGE, attackObjective, damage);
 				msCount = 0;
 			}
@@ -476,7 +488,7 @@ void B_Unit::Update()
 			rayCastTimer += App->time.GetGameDeltaTime();
 			if (rayCastTimer < RAYCAST_TIME)
 			{
-				App->render->DrawLine(shootPos, atkObj, { 0,0,255,255 });
+				App->render->DrawLine(shootPos, atkObj, { 34,191,255,255 }, FRONT_SCENE, true);
 			}
 			else
 			{
@@ -703,5 +715,4 @@ void B_Unit::create_bar()
 void B_Unit::update_health_ui() {
 
 	health->target = { (0.31f) - ((0.31f - 0.07f) * (1.0f - float(current_life) / float(max_life))), pos_y_HUD - 0.007f, 1.255f * (float(current_life) / float(max_life)), 0.4f };
-
 }

@@ -139,6 +139,7 @@ public:
 	void OnGetImpulse(float x, float y) override;
 	void create_bar() override;
 	void update_health_ui() override;
+	virtual void UnitAttackType() {}
 
 protected:
 	float speed;

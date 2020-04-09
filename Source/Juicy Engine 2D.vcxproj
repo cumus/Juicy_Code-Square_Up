@@ -172,6 +172,7 @@
     <ClCompile Include="PathfindingManager.cpp" />
     <ClCompile Include="PlayPauseWindow.cpp" />
     <ClCompile Include="PropertiesWindow.cpp" />
+    <ClCompile Include="RangedUnit.cpp" />
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="Log.cpp" />
     <ClCompile Include="Render.cpp" />
@@ -224,6 +225,7 @@
     <ClInclude Include="PathfindingManager.h" />
     <ClInclude Include="PlayPauseWindow.h" />
     <ClInclude Include="PropertiesWindow.h" />
+    <ClInclude Include="RangedUnit.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="Audio.h" />
     <ClInclude Include="Input.h" />

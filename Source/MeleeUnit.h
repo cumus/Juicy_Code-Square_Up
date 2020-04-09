@@ -16,11 +16,6 @@ public:
 	// void CheckSprite();
 	// void OnKill();
 
-protected:
-	
-	int MU_damage = 5;
-	int attack_speed = 1;
-
 };
 
 #endif

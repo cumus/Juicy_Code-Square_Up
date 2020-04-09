@@ -9,9 +9,9 @@
 
 MeleeUnit::MeleeUnit(Gameobject* go) : B_Unit(go, UNIT_MELEE, IDLE, B_UNIT)
 {
-	//Stats
-	current_life = 100;
+	//Stats	
 	max_life = 100;
+	current_life = max_life;
 	atkDelay = 1.0;
 	speed = 3;
 	damage = 5;

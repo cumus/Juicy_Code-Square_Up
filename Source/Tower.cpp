@@ -154,8 +154,6 @@ void Tower::DoAttack()
 	atkPos.second += 20.0f;
 	shoot = true;
 	ms_count = 0;
-	LOG("LX: %f / LY:%f", localPos.first, localPos.second);
-	LOG("OX: %f / OY:%f", atkPos.first,atkPos.second);
 }
 
 void Tower::create_bar() {
