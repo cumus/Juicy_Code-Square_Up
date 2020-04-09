@@ -11,6 +11,10 @@
 #include "Canvas.h"
 #include "Scene.h"
 #include "Audio.h"
+#include "MeleeUnit.h"
+#include "Gatherer.h"
+#include "Tower.h"
+#include "BaseCenter.h"
 
 std::map<double, Behaviour*> Behaviour::b_map;
 
@@ -79,12 +83,19 @@ void Behaviour::UnSelected()
 
 void Behaviour::BuildGatherer(float x, float y)
 {
+	Gameobject* gather_go = App->scene->AddGameobject("Gatherer");
+	gather_go->GetTransform()->SetLocalPos({ x, y, 0.0f });
 
+	new Gatherer(gather_go);
+	//resources -= 10;
 }
 
 void Behaviour::BuildMelee(float x, float y)
 {
+	Gameobject* melee_go = App->scene->AddGameobject("Melee unit");
+	melee_go->GetTransform()->SetLocalPos({ x, y, 0.0f });
 
+	new MeleeUnit(melee_go);
 }
 
 void Behaviour::BuildRanged(float x, float y)
@@ -93,6 +104,37 @@ void Behaviour::BuildRanged(float x, float y)
 }
 
 void Behaviour::BuildSuper(float x, float y)
+{
+
+}
+
+void Behaviour::BuildTower(float x, float y)
+{
+	Gameobject* tower_go = App->scene->AddGameobject("Defense tower");
+	tower_go->GetTransform()->SetLocalPos({ x, y, 0.0f });
+
+	new Tower(tower_go);
+}
+
+void Behaviour::BuildCenter(float x, float y)
+{
+	Gameobject* center_go = App->scene->AddGameobject("Base center");
+	center_go->GetTransform()->SetLocalPos({ x, y, 0.0f });
+
+	new Base_Center(center_go);
+}
+
+void Behaviour::BuildWall(float x, float y) 
+{
+
+}
+
+void Behaviour::BuildLab(float x, float y) 
+{
+
+}
+
+void Behaviour::BuildBarrack(float x, float y) 
 {
 
 }

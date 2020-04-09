@@ -73,6 +73,11 @@ public:
 	void BuildMelee(float x, float y);
 	void BuildRanged(float x, float y);
 	void BuildSuper(float x, float y);
+	void BuildTower(float x, float y);
+	void BuildCenter(float x, float y);
+	void BuildWall(float x, float y);
+	void BuildLab(float x, float y);
+	void BuildBarrack(float x, float y);
 	virtual void AfterDamageAction() {}
 	virtual void OnRightClick(float x, float y) {}
 	virtual void DoAttack() {}

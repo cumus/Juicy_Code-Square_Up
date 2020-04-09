@@ -31,11 +31,12 @@ protected:
 
 	float posY_panel;
 	int panel_tex_ID;
-	C_Button* gatherer;
-	//C_Button* meleeUnit;
-	//C_Button* rangedUnit;
-	//C_Button* superUnit;
-	C_Image* gatherer_img;
+	C_Image* panel;
+	C_Button* gatherer_btn;
+	C_Button* meleeUnit_btn;
+	C_Button* rangedUnit_btn;
+	C_Button* superUnit_btn;
+	//C_Image* gatherer_img;
 	//C_Image* melee_img;
 	//C_Image* ranged_img;
 	//C_Image* super_img;
