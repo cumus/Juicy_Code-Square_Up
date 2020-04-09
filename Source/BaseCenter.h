@@ -18,11 +18,31 @@ public:
 	void create_bar() override;
 	void update_health_ui();
 	void update_upgrades_ui();
+	void CreatePanel() override;
+	void UpdatePanel() override;
 
 protected:
 
-	int bc_lvl = 1;
-	int bc_max_lvl = 5;
+	int bc_lvl;
+	int bc_max_lvl;
+	int buildQueue;
+	float spawnPointX;
+	float spawnPointY;
+
+	float posY_panel;
+	int panel_tex_ID;
+	C_Button* gatherer;
+	//C_Button* meleeUnit;
+	//C_Button* rangedUnit;
+	//C_Button* superUnit;
+	C_Image* gatherer_img;
+	//C_Image* melee_img;
+	//C_Image* ranged_img;
+	//C_Image* super_img;
+	C_Text* gatherer_buildNum;
+	//C_Text* melee_buildNum;
+	//C_Text* ranged_buildNum;
+	//C_Text* super_buildNum;
 	
 };
 

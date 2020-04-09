@@ -15,11 +15,21 @@
 
 Base_Center::Base_Center(Gameobject* go) : Behaviour(go, BASE_CENTER, FULL_LIFE, B_BASE_CENTER)
 {
-	 max_life = 100;
-	 current_life = max_life;
+	Transform* t = game_object->GetTransform();
+
+	max_life = 100;
+	current_life = max_life;
+	buildQueue = 0;
+	bc_lvl = 1;
+	bc_max_lvl = 5;
+	spawnPointX = t->GetLocalPos().x - 1;
+	spawnPointY = t->GetLocalPos().y - 1;
+
 	create_bar();
 	bar_go->SetInactive();
-	Transform* t = game_object->GetTransform();
+	CreatePanel();
+	selectionPanel->SetInactive();
+
 	if (t)
 	{
 		vec pos = t->GetGlobalPosition();
@@ -37,6 +47,7 @@ Base_Center::~Base_Center()
 	}
 	b_map.erase(GetID());
 }
+
 
 
 void Base_Center::AfterDamageAction()
@@ -64,6 +75,26 @@ void Base_Center::Upgrade()
 	}
 }
 
+void Base_Center::CreatePanel()
+{
+	posY_panel = 0.3f;
+	panel_tex_ID = App->tex.Load("textures/buildPanelSample.png");
+
+	//------------------------- BASE PANEL --------------------------------------
+
+	selectionPanel = App->scene->AddGameobject("Main Base Build Panel", App->scene->hud_canvas_go);
+
+	gatherer = new C_Button(selectionPanel, Event(BUILD_GATHERER, this->game_object, spawnPointX, spawnPointY));
+	gatherer->target = { 0.5f, pos_y_HUD, 1.3f, 1.2f };
+	gatherer->offset = { -482.0f, -44.0f };
+	gatherer->section = { 4, 7, 482, 44 };
+	gatherer->tex_id = bar_text_id;
+}
+
+void Base_Center::UpdatePanel()
+{
+
+}
 
 void Base_Center::OnRightClick(float x, float y)
 {

@@ -69,6 +69,10 @@ public:
 	void UnSelected();
 	void OnDamage(int damage);
 	void OnKill();
+	void BuildGatherer(float x, float y);
+	void BuildMelee(float x, float y);
+	void BuildRanged(float x, float y);
+	void BuildSuper(float x, float y);
 	virtual void AfterDamageAction() {}
 	virtual void OnRightClick(float x, float y) {}
 	virtual void DoAttack() {}
@@ -76,6 +80,8 @@ public:
 	virtual void OnGetImpulse(float x,float y) {}
 	virtual void create_bar() {}
 	virtual void update_health_ui() {}
+	virtual void CreatePanel() {}
+	virtual void UpdatePanel() {}
 
 	UnitType GetType() const { return type; }
 	UnitState* GetStatePtr() { return &current_state; }
@@ -106,6 +112,7 @@ protected:
 
 	float pos_y_HUD;
 	int bar_text_id;
+	Gameobject* selectionPanel;
 	Gameobject* bar_go;
 	C_Button* bar;
 	C_Image* portrait;

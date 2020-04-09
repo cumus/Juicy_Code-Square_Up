@@ -25,6 +25,7 @@ Behaviour::Behaviour(Gameobject* go, UnitType t, UnitState starting_state, Compo
 	deathFX = EDGE_FX; //temp
 	rayCastTimer = 0;
 	shoot = false;
+	selectionPanel = nullptr;
 
 	current_state = IDLE;
 	audio = new AudioSource(game_object);
@@ -53,6 +54,10 @@ void Behaviour::RecieveEvent(const Event& e)
 	case ON_RIGHT_CLICK: OnRightClick(e.data1.AsFloat(), e.data2.AsFloat()); break;
 	case DAMAGE: OnDamage(e.data1.AsInt()); break;
 	case IMPULSE: OnGetImpulse(e.data1.AsFloat(),e.data2.AsFloat()); break;
+	case BUILD_GATHERER: BuildGatherer(e.data1.AsFloat(), e.data2.AsFloat()); break;
+	case BUILD_RANGED: BuildRanged(e.data1.AsFloat(), e.data2.AsFloat()); break;
+	case BUILD_MELEE: BuildMelee(e.data1.AsFloat(), e.data2.AsFloat()); break;
+	case BUILD_SUPER: BuildSuper(e.data1.AsFloat(), e.data2.AsFloat()); break;
 	}
 }
 
@@ -61,13 +66,35 @@ void Behaviour::Selected()
 	selection_highlight->SetActive();
 	//App->audio->PlayFx(SELECT);
 	audio->Play(SELECT);
-	bar_go->SetActive();
+	if (bar_go != nullptr) bar_go->SetActive();
+	if (selectionPanel != nullptr) selectionPanel->SetActive();
 }
 
 void Behaviour::UnSelected()
 {
 	selection_highlight->SetInactive();
-	bar_go->SetInactive();
+	if (bar_go != nullptr) bar_go->SetInactive();
+	if (selectionPanel != nullptr) selectionPanel->SetInactive();
+}
+
+void Behaviour::BuildGatherer(float x, float y)
+{
+
+}
+
+void Behaviour::BuildMelee(float x, float y)
+{
+
+}
+
+void Behaviour::BuildRanged(float x, float y)
+{
+
+}
+
+void Behaviour::BuildSuper(float x, float y)
+{
+
 }
 
 void Behaviour::OnDamage(int d)
