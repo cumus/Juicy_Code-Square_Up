@@ -15,7 +15,7 @@ public:
 	void AfterDamageAction() override;
 	void DoAttack() override;
 	void Update() override;
-	void create_unit_bar() override;
+	void create_bar() override;
 	void update_health_ui();
 	void update_upgrades_ui();
 

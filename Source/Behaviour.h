@@ -74,7 +74,7 @@ public:
 	virtual void DoAttack() {}
 	virtual void OnDestroy(){}
 	virtual void OnGetImpulse(float x,float y) {}
-	virtual void create_unit_bar() {}
+	virtual void create_bar() {}
 	virtual void update_health_ui() {}
 
 	UnitType GetType() const { return type; }
@@ -105,13 +105,13 @@ protected:
 	Sprite* selection_highlight;
 
 	float pos_y_HUD;
-	int unit_bar_text_id;
-	Gameobject* unit_bar_go;
-	C_Button* unit_bar;
-	C_Image* unit_portrait;
-	C_Text* unit_text;
-	C_Image* unit_healthbar;
-	C_Image* unit_health;
+	int bar_text_id;
+	Gameobject* bar_go;
+	C_Button* bar;
+	C_Image* portrait;
+	C_Text* text;
+	C_Image* healthbar;
+	C_Image* health;
 };
 
 class B_Unit : public Behaviour
@@ -125,7 +125,7 @@ public:
 	void DoAttack() override;
 	void OnDestroy() override;
 	void OnGetImpulse(float x, float y) override;
-	void create_unit_bar() override;
+	void create_bar() override;
 	void update_health_ui() override;
 
 protected:
