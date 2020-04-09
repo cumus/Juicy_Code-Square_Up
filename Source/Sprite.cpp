@@ -83,8 +83,25 @@ AnimatedSprite::AnimatedSprite(Behaviour* unit) : Sprite(unit->GetGameobject(), 
 		animations[HALF_LIFE].Setup({ 0, 0, 166, 534 }, 1);
 		animations[DESTROYED].Setup({ 0, 0, 166, 534 }, 1);
 		offset = { 20.f, -460.f, 0.3f, 0.3f };
-
 		break; 
+	}
+	case WALL:
+	{
+		tex_id = App->tex.Load("textures/Base_Center.png");
+		animations[FULL_LIFE].Setup(section = { 0, 0, 166, 534 }, 1);
+		animations[HALF_LIFE].Setup({ 0, 0, 166, 534 }, 1);
+		animations[DESTROYED].Setup({ 0, 0, 166, 534 }, 1);
+		offset = { 20.f, -460.f, 0.3f, 0.3f };
+		break;
+	}
+	case BARRACKS:
+	{
+		tex_id = App->tex.Load("textures/Base_Center.png");
+		animations[FULL_LIFE].Setup(section = { 0, 0, 166, 534 }, 1);
+		animations[HALF_LIFE].Setup({ 0, 0, 166, 534 }, 1);
+		animations[DESTROYED].Setup({ 0, 0, 166, 534 }, 1);
+		offset = { 20.f, -460.f, 0.3f, 0.3f };
+		break;
 	}
 	case UNIT_MELEE:
 	{
@@ -133,6 +150,57 @@ AnimatedSprite::AnimatedSprite(Behaviour* unit) : Sprite(unit->GetGameobject(), 
 		offset = { 5.f, -160.f, 0.6f, 0.6f };
 		break;
 	case GATHERER:
+		tex_id = App->tex.Load("textures/Char_killia1.png");
+		animations[MOVING_NE].Setup(section = { 41, 24, 89, 167 }, 6, 0.2f);
+		animations[MOVING_NW].Setup(section = { 41, 24, 89, 167 }, 6, 0.2f);
+		animations[MOVING_SE].Setup(section = { 41, 24, 89, 167 }, 6, 0.2f);
+		animations[MOVING_SW].Setup(section = { 41, 24, 89, 167 }, 6, 0.2f);
+		animations[ATTACKING_E].Setup(section = { 30, 20, 100, 180 }, 6);
+		animations[ATTACKING_W].Setup(section = { 30, 20, 100, 180 }, 6);
+		animations[ATTACKING_N].Setup(section = { 30, 20, 100, 180 }, 6);
+		animations[ATTACKING_S].Setup(section = { 30, 20, 100, 180 }, 6);
+		animations[ATTACKING_NE].Setup(section = { 30, 20, 100, 180 }, 6);
+		animations[ATTACKING_NW].Setup(section = { 30, 20, 100, 180 }, 6);
+		animations[ATTACKING_SE].Setup(section = { 30, 20, 100, 180 }, 6);
+		animations[ATTACKING_SW].Setup(section = { 30, 20, 100, 180 }, 6);
+		//animations[DESTROYED].Setup();
+		offset = { 5.f, -160.f, 0.6f, 0.6f };
+		break;
+	case UNIT_RANGED:
+		tex_id = App->tex.Load("textures/Char_killia1.png");
+		animations[MOVING_NE].Setup(section = { 41, 24, 89, 167 }, 6, 0.2f);
+		animations[MOVING_NW].Setup(section = { 41, 24, 89, 167 }, 6, 0.2f);
+		animations[MOVING_SE].Setup(section = { 41, 24, 89, 167 }, 6, 0.2f);
+		animations[MOVING_SW].Setup(section = { 41, 24, 89, 167 }, 6, 0.2f);
+		animations[ATTACKING_E].Setup(section = { 30, 20, 100, 180 }, 6);
+		animations[ATTACKING_W].Setup(section = { 30, 20, 100, 180 }, 6);
+		animations[ATTACKING_N].Setup(section = { 30, 20, 100, 180 }, 6);
+		animations[ATTACKING_S].Setup(section = { 30, 20, 100, 180 }, 6);
+		animations[ATTACKING_NE].Setup(section = { 30, 20, 100, 180 }, 6);
+		animations[ATTACKING_NW].Setup(section = { 30, 20, 100, 180 }, 6);
+		animations[ATTACKING_SE].Setup(section = { 30, 20, 100, 180 }, 6);
+		animations[ATTACKING_SW].Setup(section = { 30, 20, 100, 180 }, 6);
+		//animations[DESTROYED].Setup();
+		offset = { 5.f, -160.f, 0.6f, 0.6f };
+		break;
+	case UNIT_SUPER:
+		tex_id = App->tex.Load("textures/Char_killia1.png");
+		animations[MOVING_NE].Setup(section = { 41, 24, 89, 167 }, 6, 0.2f);
+		animations[MOVING_NW].Setup(section = { 41, 24, 89, 167 }, 6, 0.2f);
+		animations[MOVING_SE].Setup(section = { 41, 24, 89, 167 }, 6, 0.2f);
+		animations[MOVING_SW].Setup(section = { 41, 24, 89, 167 }, 6, 0.2f);
+		animations[ATTACKING_E].Setup(section = { 30, 20, 100, 180 }, 6);
+		animations[ATTACKING_W].Setup(section = { 30, 20, 100, 180 }, 6);
+		animations[ATTACKING_N].Setup(section = { 30, 20, 100, 180 }, 6);
+		animations[ATTACKING_S].Setup(section = { 30, 20, 100, 180 }, 6);
+		animations[ATTACKING_NE].Setup(section = { 30, 20, 100, 180 }, 6);
+		animations[ATTACKING_NW].Setup(section = { 30, 20, 100, 180 }, 6);
+		animations[ATTACKING_SE].Setup(section = { 30, 20, 100, 180 }, 6);
+		animations[ATTACKING_SW].Setup(section = { 30, 20, 100, 180 }, 6);
+		//animations[DESTROYED].Setup();
+		offset = { 5.f, -160.f, 0.6f, 0.6f };
+		break;
+	case UNIT_SPECIAL:
 		tex_id = App->tex.Load("textures/Char_killia1.png");
 		animations[MOVING_NE].Setup(section = { 41, 24, 89, 167 }, 6, 0.2f);
 		animations[MOVING_NW].Setup(section = { 41, 24, 89, 167 }, 6, 0.2f);
