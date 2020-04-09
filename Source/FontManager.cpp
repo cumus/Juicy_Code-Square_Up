@@ -29,7 +29,8 @@ bool FontManager::Init()
 		// Load default font
 		ret = (
 			Load("fonts/OpenSans-Regular.ttf") >= 0 &&
-			Load("fonts/OpenSans-Regular.ttf", 56) >= 0);
+			Load("fonts/OpenSans-Regular.ttf", 56) >= 0) &&
+			Load("fonts/BEBAS__.ttf") >= 0;
 	}
 	else
 		LOG("SDL_ttf could not initialize! SDL_ttf Error: %s\n", TTF_GetError());
