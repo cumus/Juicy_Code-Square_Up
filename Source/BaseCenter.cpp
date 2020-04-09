@@ -22,8 +22,8 @@ Base_Center::Base_Center(Gameobject* go) : Behaviour(go, BASE_CENTER, FULL_LIFE,
 	buildQueue = 0;
 	bc_lvl = 1;
 	bc_max_lvl = 5;
-	spawnPointX = t->GetLocalPos().x - 1;
-	spawnPointY = t->GetLocalPos().y - 1;
+	spawnPointX = t->GetLocalPos().x;
+	spawnPointY = t->GetLocalPos().y + 1;
 
 	create_bar();
 	bar_go->SetInactive();
@@ -77,7 +77,7 @@ void Base_Center::Upgrade()
 
 void Base_Center::CreatePanel()
 {
-	posY_panel = 0.3f;
+	posY_panel = 0.8f;
 	panel_tex_ID = App->tex.Load("textures/buildPanelSample.png");
 
 	//------------------------- BASE PANEL --------------------------------------
@@ -85,34 +85,34 @@ void Base_Center::CreatePanel()
 	selectionPanel = App->scene->AddGameobject("Main Base Build Panel", App->scene->hud_canvas_go);
 
 	panel = new C_Image(bar_go);
-	panel->target = { 0.06f, pos_y_HUD - 0.003f, 0.5f, 0.5f };
-	panel->offset = { -109.0f, -89.0f };
+	panel->target = { 0.9f, posY_panel, 1.0f, 1.0f };
+	panel->offset = { 0.0f, 0.0f };
 	panel->section = { 0, 0, 119, 119 };
 	panel->tex_id = panel_tex_ID;
 
-	gatherer_btn = new C_Button(selectionPanel, Event(BUILD_GATHERER, this->game_object, spawnPointX, spawnPointY));
-	gatherer_btn->target = { 0.5f, posY_panel, 1.3f, 1.2f };
-	gatherer_btn->offset = { -482.0f, -44.0f };
+	gatherer_btn = new C_Button(selectionPanel, Event(BUILD_GATHERER, this->game_object, spawnPointX, spawnPointY));//Top left
+	gatherer_btn->target = { 0.912f, posY_panel+0.02f, 1.0f, 1.0f };
+	gatherer_btn->offset = { 0.0f, 0.0f };
 	gatherer_btn->section = { 121, 38, 38, 38 };
 	gatherer_btn->tex_id = panel_tex_ID;
 
-	/*meleeUnit_btn = new C_Button(selectionPanel, Event(BUILD_MELEE, this->game_object, spawnPointX, spawnPointY));
-	meleeUnit_btn->target = { 0.5f, posY_panel, 1.3f, 1.2f };
-	meleeUnit_btn->offset = { -482.0f, -44.0f };
+	meleeUnit_btn = new C_Button(selectionPanel, Event(BUILD_MELEE, this->game_object, spawnPointX, spawnPointY));//Top right
+	meleeUnit_btn->target = { 0.95f, posY_panel+0.02f, 1.0f, 1.0f };
+	meleeUnit_btn->offset = { 0.0f,0.0f };
 	meleeUnit_btn->section = { 121, 0, 38, 38 };
-	meleeUnit_btn->tex_id = panel_tex_ID;*/
+	meleeUnit_btn->tex_id = panel_tex_ID;
 
-	/*rangedUnit_btn = new C_Button(selectionPanel, Event(BUILD_RANGED, this->game_object, spawnPointX, spawnPointY));
-	rangedUnit_btn->target = { 0.5f, posY_panel, 1.3f, 1.2f };
-	rangedUnit_btn->offset = { -482.0f, -44.0f };
-	rangedUnit_btn->section = { 121, 0, 38, 38 };
-	rangedUnit_btn->tex_id = panel_tex_ID;*/
+	rangedUnit_btn = new C_Button(selectionPanel, Event(BUILD_RANGED, this->game_object, spawnPointX, spawnPointY));//Bottom left
+	rangedUnit_btn->target = { 0.912f, posY_panel+0.085f, 1.0f, 1.0f };
+	rangedUnit_btn->offset = { 0.0f, 0.0f };
+	rangedUnit_btn->section = { 161, 0, 38, 38 };
+	rangedUnit_btn->tex_id = panel_tex_ID;
 
-	/*superUnit_btn = new C_Button(selectionPanel, Event(BUILD_SUPER, this->game_object, spawnPointX, spawnPointY));
-	superUnit_btn->target = { 0.5f, posY_panel, 1.3f, 1.2f };
-	superUnit_btn->offset = { -482.0f, -44.0f };
+	superUnit_btn = new C_Button(selectionPanel, Event(BUILD_SUPER, this->game_object, spawnPointX, spawnPointY));//Bottom right
+	superUnit_btn->target = { 0.95f, posY_panel+0.085f, 1.0f, 1.0f };
+	superUnit_btn->offset = { 0.0f, 0.0f };
 	superUnit_btn->section = { 162, 38, 38, 38 };
-	superUnit_btn->tex_id = panel_tex_ID;*/
+	superUnit_btn->tex_id = panel_tex_ID;
 }
 
 void Base_Center::UpdatePanel()
