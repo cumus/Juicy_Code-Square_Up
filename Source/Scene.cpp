@@ -30,7 +30,7 @@
 
 Scene::Scene() : Module("scene")
 {
-	root.SetName("______root______");
+	root.SetName("root");
 }
 
 Scene::~Scene()
@@ -50,37 +50,13 @@ bool Scene::Update()
 
 	root.Update();
 
-	/////Temp
-	/*if (App->input->GetKey(SDL_SCANCODE_H) == KEY_DOWN)
-	{
-		App->input->GetMousePosition(atkPos.first, atkPos.second);
-		pos.first = 10;
-		pos.second = 10;
-		shoot = true;
-	}
-
-	if (shoot)
-	{
-		rayCastTimer += App->time.GetDeltaTime();
-		if (rayCastTimer < RAYCAST_TIME)
-		{
-			App->render->DrawLine(pos, atkPos, { 0,0,255,255 }, SCENE,false);
-		}
-		else
-		{
-			shoot = false;
-			rayCastTimer = 0;
-		}
-	}*/
-	/////
-
 	if (fading != NO_FADE)
 	{
 		float alpha;
+		fade_timer += App->time.GetDeltaTime();
 
 		if (fading == FADE_OUT)
 		{
-			fade_timer += App->time.GetDeltaTime();
 			alpha = fade_timer / fade_duration * 255.f;
 
 			if (fade_timer >= fade_duration)
@@ -93,13 +69,10 @@ bool Scene::Update()
 		}
 		else if (fading == FADE_IN)
 		{
-			fade_timer += App->time.GetDeltaTime();
 			alpha = (fade_duration - fade_timer) / fade_duration * 255.f;
 
 			if (fade_timer >= fade_duration)
-			{
 				fading = NO_FADE;
-			}
 		}
 
 		if (fading != NO_FADE)
@@ -174,6 +147,40 @@ bool Scene::Update()
 		default:
 			break;
 		}
+
+		//GROUP MOVEMENT//
+		if (App->input->GetMouseButtonDown(2) == KEY_DOWN)
+		{
+			int x, y;
+			App->input->GetMousePosition(x, y);
+			RectF cam = App->render->GetCameraRectF();
+			std::pair<float, float> mouseOnMap = Map::F_WorldToMap(float(x) + cam.x, float(y) + cam.y);
+
+			if (groupSelect && !group.empty())//Move group selected
+			{
+				for (std::vector<Gameobject*>::iterator it = group.begin(); it != group.end(); ++it)
+					Event::Push(ON_RIGHT_CLICK, *it, mouseOnMap.first, mouseOnMap.second);
+			}
+			else//Move one selected
+			{
+				Gameobject* go = App->editor->selection;
+				if (go)
+				{
+					Event::Push(ON_RIGHT_CLICK, go, mouseOnMap.first, mouseOnMap.second);
+					groupSelect = false;
+				}
+				else groupSelect = false;
+			}
+		}
+		if (!groupSelect && group.empty() == false)
+		{
+			std::vector<Gameobject*>::iterator it;
+			for (it = group.begin(); it != group.end(); ++it)
+			{
+				Event::Push(ON_UNSELECT, *it);
+			}
+			group.clear();
+		}
 	}
 
 	return true;
@@ -189,7 +196,7 @@ bool Scene::PostUpdate()
 
 bool Scene::CleanUp()
 {
-	LOG("Freeing scene");
+	map.CleanUp();
 	
 	return true;
 }
@@ -199,26 +206,35 @@ void Scene::RecieveEvent(const Event& e)
 	switch (e.type)
 	{
 	case SCENE_PLAY:
-		Event::Push(ON_PLAY, &root, e.data1);
+	{
+		Event::Push(ON_PLAY, &root);
 		break;
+	}
 	case SCENE_PAUSE:
-		Event::Push(ON_PAUSE, &root, e.data1);
+		Event::Push(ON_PAUSE, &root);
 		break;
 	case SCENE_STOP:
-		Event::Push(ON_STOP, &root, e.data1);
+		Event::Push(ON_STOP, &root);
 		break;
 	case SCENE_CHANGE:
 	{
-		if ((fade_duration = e.data2.AsFloat()) > 0.f)
+		if ((fade_duration = e.data2.AsFloat()) != 0.f)
 		{
 			next_scene = SceneType(e.data1.AsInt());
-			fading = FADE_OUT;
+			fade_duration = e.data2.AsFloat();
+
 			fade_timer = 0.f;
+			if (fade_duration < 0)
+			{
+				fade_duration *= -1.0f;
+				fading = FADE_IN;
+			}
+			else
+				fading = FADE_OUT;
 		}
 		else
 		{
 			ChangeToScene(SceneType(e.data1.AsInt()));
-			Event::Push(ON_PLAY, &root);
 		}
 		break; }
 	case RESOURCE: 
@@ -510,7 +526,7 @@ void Scene::GodMode()
 	if (App->input->GetKey(SDL_SCANCODE_LALT) == KEY_REPEAT)
 	{
 		if (App->input->GetKey(SDL_SCANCODE_1) == KEY_DOWN)
-			Event::Push(SCENE_CHANGE, this, TEST);
+			Event::Push(SCENE_CHANGE, this, TEST, 0.f);
 		else if (App->input->GetKey(SDL_SCANCODE_2) == KEY_DOWN)
 			Event::Push(SCENE_CHANGE, this, INTRO, 2.f);
 		else if (App->input->GetKey(SDL_SCANCODE_3) == KEY_DOWN)
@@ -651,39 +667,30 @@ void Scene::GodMode()
 		}
 	}
 
-	if (App->input->GetMouseButtonDown(2) == KEY_DOWN)
+
+	/////Temp
+	/*if (App->input->GetKey(SDL_SCANCODE_H) == KEY_DOWN)
 	{
-		if (groupSelect && group.empty() == false)//Move group selected
-		{
-			std::vector<Gameobject*>::iterator it;
-			it = group.begin();
-			for (it = group.begin(); it != group.end(); ++it)
-			{
-				std::pair<float, float> mouseOnMap = Map::F_WorldToMap(float(x + cam.x), float(y + cam.y));
-				Event::Push(ON_RIGHT_CLICK, *it, mouseOnMap.first, mouseOnMap.second);
-			}
-		}
-		else//Move one selected
-		{
-			Gameobject* go = App->editor->selection;
-			if (go)
-			{
-				std::pair<float, float> mouseOnMap = Map::F_WorldToMap(float(x + cam.x), float(y + cam.y));
-				Event::Push(ON_RIGHT_CLICK, go, mouseOnMap.first, mouseOnMap.second);
-				groupSelect = false;
-			}
-			else groupSelect = false;
-		}
+		App->input->GetMousePosition(atkPos.first, atkPos.second);
+		pos.first = 10;
+		pos.second = 10;
+		shoot = true;
 	}
-	if (!groupSelect && group.empty() == false)
+
+	if (shoot)
 	{
-		std::vector<Gameobject*>::iterator it;
-		for (it = group.begin(); it != group.end(); ++it)
+		rayCastTimer += App->time.GetDeltaTime();
+		if (rayCastTimer < RAYCAST_TIME)
 		{
-			Event::Push(ON_UNSELECT, *it);
+			App->render->DrawLine(pos, atkPos, { 0,0,255,255 }, SCENE,false);
 		}
-		group.clear();
-	}
+		else
+		{
+			shoot = false;
+			rayCastTimer = 0;
+		}
+	}*/
+	/////
 
 	// Update window title
 	std::pair<int, int> map_coordinates = Map::WorldToTileBase(cam.x + x, cam.y + y);

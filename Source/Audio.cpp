@@ -115,7 +115,7 @@ bool Audio::Update()
 
 
 	
-	TODO: Free channels
+	/*TODO: Free channels
 
 	if (sources.size() > Mix_Playing(-1) - Mix_Playing(0))
 	{
@@ -190,6 +190,42 @@ void Audio::RecieveEvent(const Event& e)
 			Mix_SetPosition(it->second.channel,
 				it->second.angle = JMath::HorizontalAxisAngle_F(cam, it->second.pos, -90.0f),
 				it->second.distance = JMath::DistanceSquared(cam, it->second.pos));
+		}
+		break;
+	}
+	case SCENE_PLAY:
+	{
+		for (std::map<double, SpatialData>::iterator it = sources.begin(); it != sources.end(); ++it)
+		{
+			if (Mix_Paused(it->second.channel))
+				Mix_Resume(it->second.channel);
+		}
+		break;
+	}
+	case SCENE_PAUSE:
+	{
+		std::pair<float, float> cam = App->render->GetCameraCenter();
+		for (std::map<double, SpatialData>::iterator it = sources.begin(); it != sources.end(); ++it)
+		{
+			if (Mix_Playing(it->second.channel))
+				Mix_Pause(it->second.channel);
+		}
+		break;
+	}
+	case SCENE_TICK:
+	{
+		for (std::map<double, SpatialData>::iterator it = sources.begin(); it != sources.end(); ++it)
+		{
+			if (Mix_Paused(it->second.channel))
+				Mix_Resume(it->second.channel);
+		}
+		break;
+	}
+	case SCENE_STOP:
+	{
+		for (std::map<double, SpatialData>::iterator it = sources.begin(); it != sources.end(); ++it)
+		{
+			Mix_HaltChannel(it->second.channel);
 		}
 		break;
 	}

@@ -10,6 +10,7 @@
 
 enum SceneType : int
 {
+	EMPTY,
 	TEST,
 	INTRO,
 	MENU,
@@ -35,12 +36,6 @@ public:
 
 	void RecieveEvent(const Event& e) override;
 
-	bool LoadTestScene();
-	bool LoadIntroScene();
-	bool LoadMenuScene();
-	bool LoadMainScene();
-	bool ChangeToScene(SceneType scene);
-
 	//bool PauseMenu();
 
 	Gameobject* GetRoot();
@@ -51,6 +46,13 @@ public:
 private:
 
 	void GodMode();
+
+	bool LoadTestScene();
+	bool LoadIntroScene();
+	bool LoadMenuScene();
+	bool LoadMainScene();
+
+	bool ChangeToScene(SceneType scene);
 
 public:
 
@@ -90,10 +92,12 @@ private:
 	float fade_duration;
 	SceneType current_scene;
 	SceneType next_scene;
+
 	/*bool shoot = false;//temp
 	std::pair<int, int> pos;
 	std::pair<int, int> atkPos;
 	float rayCastTimer = 0;*/
+
 	// Player stats
 	int resources = 100;
 };

@@ -91,10 +91,15 @@ bool Application::Init()
 		// Load sample scene
 		if (ret)
 		{
-			// Remove fps cap
-			time.SetMaxFPS(60);
 			state = STOPED;
-			Event::Push(SCENE_CHANGE, scene, TEST);
+#ifdef DEBUG
+			Event::Push(SCENE_CHANGE, scene, TEST, 0.f);
+#else
+			time.SetMaxFPS(60);
+			Event::Push(SCENE_CHANGE, scene, INTRO, 0.f);
+			Event::PumpAll();
+			Event::Push(SCENE_PLAY, this);
+#endif // DEBUG
 		}
 	}
 	else
@@ -231,24 +236,28 @@ void Application::RecieveEvent(const Event & e)
 	case SCENE_PLAY:
 		time.StartGameTimer();
 		Event::Push(SCENE_PLAY, scene, int(state));
+		Event::Push(SCENE_PLAY, audio, int(state));
 		Event::PumpAll();
 		state = PLAYING;
 		break;
 	case SCENE_PAUSE:
 		time.PauseGameTimer();
 		Event::Push(SCENE_PAUSE, scene, int(state));
+		Event::Push(SCENE_PAUSE, audio, int(state));
 		Event::PumpAll();
 		state = PAUSED;
 		break;
 	case SCENE_TICK:
 		time.StartGameTimer();
 		Event::Push(SCENE_PLAY, scene, int(state));
+		Event::Push(SCENE_PLAY, audio, int(state));
 		Event::PumpAll();
 		state = TICKING;
 		break;
 	case SCENE_STOP:
 		time.StopGameTimer();
 		Event::Push(SCENE_STOP, scene, int(state));
+		Event::Push(SCENE_STOP, audio, int(state));
 		Event::PumpAll();
 		state = STOPED;
 		break;
