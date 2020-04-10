@@ -84,7 +84,7 @@ void Base_Center::CreatePanel()
 
 	selectionPanel = App->scene->AddGameobject("Main Base Build Panel", App->scene->hud_canvas_go);
 
-	panel = new C_Image(bar_go);
+	panel = new C_Image(selectionPanel);
 	panel->target = { 0.9f, posY_panel, 1.0f, 1.0f };
 	panel->offset = { 0.0f, 0.0f };
 	panel->section = { 0, 0, 119, 119 };
@@ -193,5 +193,4 @@ void Base_Center::update_upgrades_ui() {
 	main_base_upgrade->offset = { -79.0f, -93.0f };
 	main_base_upgrade->section = { 398, 78, 79, 93 };
 	main_base_upgrade->tex_id = bar_text_id;
-
 }

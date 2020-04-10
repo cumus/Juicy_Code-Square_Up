@@ -251,6 +251,7 @@ B_Unit::B_Unit(Gameobject* go, UnitType t, UnitState s, ComponentType comp_type)
 
 void B_Unit::Update()
 {	
+	vec pos = game_object->GetTransform()->GetGlobalPosition();
 	if (current_state != DESTROYED)
 	{
 		if (attackObjective != nullptr && attackObjective->GetState() != DESTROYED) //Attack
@@ -321,7 +322,6 @@ void B_Unit::Update()
 		}
 		else if (path != nullptr && !path->empty()) //Movement
 		{
-			vec pos = game_object->GetTransform()->GetGlobalPosition();
 			fPoint actualPos = { pos.x, pos.y };
 
 			if (!next)
@@ -408,7 +408,6 @@ void B_Unit::Update()
 
 		if (move)
 		{
-			vec pos = game_object->GetTransform()->GetLocalPos();
 			iPoint tilePos = { int(pos.x), int(pos.y) };
 			if (nextTile.x > tilePos.x)
 			{
@@ -469,11 +468,10 @@ void B_Unit::Update()
 			else if (dirX == -1 && dirY == 0)//O
 			{
 				current_state = MOVING_W;
-			}
+			}			
 		}
 
 		//Colision check
-		vec pos = game_object->GetTransform()->GetGlobalPosition();
 		std::map<float, Behaviour*> out;
 		unsigned int total_found = GetBehavioursInRange(pos, 1.4f, out);
 		if (total_found > 0)
