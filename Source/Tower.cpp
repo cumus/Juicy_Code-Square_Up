@@ -25,6 +25,7 @@ Tower::Tower(Gameobject* go) : Behaviour(go, TOWER, FULL_LIFE, B_TOWER)
 	localPos = Map::F_MapToWorld(pos.x, pos.y, pos.z);
 	localPos.first += 30.0f;
 	localPos.second += 20.0f;
+	atkObj = nullptr;
 
 	create_bar();
 	bar_go->SetInactive();
@@ -77,14 +78,14 @@ void Tower::Update()
 							}
 						}
 					}
-				}				
+				}
 			}
 		}
 
-		if (atkObj != nullptr && atkObj->GetState() != DESTROYED)
-		{
-			if (ms_count >= atkDelay) DoAttack();			
-		}
+		if (atkObj != nullptr) 
+			if(atkObj->GetState() != DESTROYED) 
+				if (ms_count >= atkDelay) DoAttack();
+		
 
 		if (ms_count < atkDelay) ms_count += App->time.GetGameDeltaTime();
 		
