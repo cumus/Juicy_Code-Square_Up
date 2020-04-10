@@ -28,6 +28,9 @@
 #include <queue>
 #include <vector>
 
+#include <sstream>
+#include <string.h>
+
 Scene::Scene() : Module("scene")
 {
 	root.SetName("root");
@@ -82,6 +85,20 @@ bool Scene::Update()
 	{
 		if (god_mode)
 			GodMode();
+		
+		//Mob Drop Print Updated Value
+		std::stringstream ss;
+		ss << mob_drop;
+		std::string temp_str = ss.str();
+		const char* t = (char*)temp_str.c_str();
+		text_mobdrop_value->text->SetText(t);
+
+		//Edge Print Updated Value
+		std::stringstream ss1;
+		ss1 << edge_value;
+		std::string temp_str1 = ss1.str();
+		const char* t1 = (char*)temp_str1.c_str();
+		text_edge_value->text->SetText(t1);
 
 		//GROUP SELECTION//
 		switch (App->input->GetMouseButtonDown(0))
@@ -238,8 +255,8 @@ void Scene::RecieveEvent(const Event& e)
 		}
 		break; }
 	case RESOURCE: 
-		resources += e.data1.AsInt();
-		LOG("Current resources: %d",resources);
+		edge_value += e.data1.AsInt();
+		LOG("Current resources: %d",edge_value);
 		break;
 	default:
 		break;
@@ -301,6 +318,33 @@ bool Scene::LoadTestScene()
 	button->section = { 359, 114, 101, 101 };
 	button->tex_id = App->tex.Load("textures/icons.png");*/
 
+	//Resources
+	Gameobject* resource_counter_go = AddGameobject("Resources", canvas_go);
+	C_Image* img = new C_Image(resource_counter_go);
+	img->target = { 0.1f, 1.f, 1.f , 1.f };
+	img->offset = { -119.f, -119.f };
+	img->section = { 22, 333, 119, 119 };
+	img->tex_id = App->tex.Load("textures/Iconos_square_up.png");
+
+	//Edge
+	resources_go = AddGameobject("Text Edge", resource_counter_go);
+	C_Text* text_edge = new C_Text(resources_go, "Edge");
+	text_edge->target = { 0.1f, 0.1f, 1.f, 1.f };
+	
+	Gameobject* resources_value_go = AddGameobject("Mob Drop Value", resource_counter_go);
+	text_edge_value = new C_Text(resources_go, "100");
+	text_edge_value->target = { 0.1f, 0.4f, 1.f, 1.f };
+
+	//MobDrop
+	resources_2_go = AddGameobject("Text Mob Drop", resource_counter_go);
+	C_Text* text_mobdrop = new C_Text(resources_2_go, "Mob Drop");
+	text_mobdrop->target = { 0.5f, 0.1f, 1.f, 1.f };
+	
+	Gameobject* resources_value_2_go = AddGameobject("Mob Drop Value", resource_counter_go);
+	text_mobdrop_value = new C_Text(resources_2_go, "0");
+	text_mobdrop_value->target = { 0.5f, 0.4f, 1.f, 1.f };
+	
+	//Minimap
 	Gameobject* minimap_go = AddGameobject("Minimap", canvas_go);
 	Minimap* minimap = new Minimap(minimap_go);
 	minimap->target = { 1.f, 0.f, 0.3f, 0.3f };
@@ -899,7 +943,7 @@ void Scene::GodMode()
 
 	if (App->input->GetKey(SDL_SCANCODE_9) == KEY_DOWN) //Gatherer
 	{
-		if (resources > 10)
+		if (edge_value > 10)
 		{
 			std::pair<int, int> position = Map::WorldToTileBase(float(x + cam.x), float(y + cam.y));
 			if (App->pathfinding.CheckWalkabilityArea(position, vec(1.0f)))
@@ -908,8 +952,8 @@ void Scene::GodMode()
 				gather_go->GetTransform()->SetLocalPos({ float(position.first), float(position.second), 0.0f });
 
 				new Gatherer(gather_go);
-				resources -= 10;
-				LOG("Current resources: %d", resources);
+				edge_value -= 10;
+				LOG("Current resources: %d", edge_value);
 			}
 			else
 				LOG("Invalid spawn position");

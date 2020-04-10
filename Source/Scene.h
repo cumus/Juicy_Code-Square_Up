@@ -5,6 +5,7 @@
 #include "Map.h"
 #include "Gameobject.h"
 #include "Point.h"
+#include "Canvas.h"
 
 #include <vector>
 
@@ -108,7 +109,12 @@ private:
 	float rayCastTimer = 0;*/
 
 	// Player stats
-	int resources = 100;
+	Gameobject* resources_go;
+	Gameobject* resources_2_go;
+	int edge_value = 100;
+	C_Text* text_mobdrop_value;
+	C_Text* text_edge_value;
+
 	
 };
 
