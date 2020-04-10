@@ -170,8 +170,8 @@ protected:
 	bool cornerSW;
 	bool cornerSE;
 
-	std::pair<int, int> atkObj;
-	std::pair<int, int> shootPos;
+	std::pair<float, float> atkObj;
+	std::pair<float, float> shootPos;
 };
 
 #endif // __BEHAVIOUR_H_

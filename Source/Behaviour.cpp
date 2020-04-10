@@ -513,14 +513,6 @@ void B_Unit::DoAttack()
 {
 	//vec localPos = game_object->GetTransform()->GetGlobalPosition();
 	audio->Play(attackFX);
-	if (GetType() == UNIT_RANGED)
-	{	
-		atkObj.first = attackObjective->AsTransform()->GetGlobalPosition().x;
-		atkObj.second = attackObjective->AsTransform()->GetGlobalPosition().y;
-		shootPos.first = game_object->GetTransform()->GetGlobalPosition().x;
-		shootPos.second = game_object->GetTransform()->GetGlobalPosition().y;
-		shoot = true;
-	}
 	if (cornerNW && cornerNE)//arriba
 	{
 		current_state = ATTACKING_N;

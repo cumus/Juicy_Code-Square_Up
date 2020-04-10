@@ -17,7 +17,6 @@ RangedUnit::RangedUnit(Gameobject* go) : B_Unit(go, UNIT_RANGED, IDLE, B_UNIT)
 	damage = 15;
 	attack_range = 10.0f;
 	vision_range = 15.0f;
-
 	//SFX
 	//deathFX = RANGED_DIE_FX;
 	//attackFX = RANGED_ATK_FX;
@@ -37,7 +36,12 @@ RangedUnit::~RangedUnit()
 
 void RangedUnit::UnitAttackType()
 {
-	vec pos = attackObjective->GetGameobject()->GetTransform()->GetGlobalPosition();
+	vec pos = game_object->GetTransform()->GetGlobalPosition();
+	shootPos = Map::F_MapToWorld(pos.x, pos.y, pos.z);
+	shootPos.first += 30.0f;
+	shootPos.second += 20.0f;
+
+	pos = attackObjective->GetGameobject()->GetTransform()->GetGlobalPosition();
 	atkObj = Map::F_MapToWorld(pos.x, pos.y, pos.z);
 	atkObj.first += 30.0f;
 	atkObj.second += 20.0f;
