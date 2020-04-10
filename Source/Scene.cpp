@@ -760,6 +760,9 @@ bool Scene::PauseMenu()
 
 bool Scene::ChangeToScene(SceneType scene)
 {
+	text_mobdrop_value = nullptr;
+	text_edge_value = nullptr;
+
 	map.CleanUp();
 	App->audio->UnloadFx();
 	App->audio->PauseMusic(1.f);
