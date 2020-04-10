@@ -665,59 +665,65 @@ void B_Unit::OnGetImpulse(float x, float y)
 	}
 }
 
-void B_Unit::create_bar() 
+void B_Unit::create_bar()
 {
 
 	App->scene->unit_bars_created++;
 
-	pos_y_HUD = 0.5 + 0.07 * App->scene->unit_bars_created;
+	pos_y_HUD = 0.56 + 0.1 * App->scene->unit_bars_created;
 
-	bar_text_id = App->tex.Load("textures/creation_bars_test.png");
+	bar_text_id = App->tex.Load("textures/Iconos_square_up.png");
 
 	//------------------------- UNIT BAR --------------------------------------
 
 	bar_go = App->scene->AddGameobject("Unit Bar", App->scene->hud_canvas_go);
-	bar = new C_Button(bar_go, Event(REQUEST_QUIT, App));
-	bar->target = { 0.365f, pos_y_HUD, 1.3f, 1.2f };
-	bar->offset = { -349.0f, -32.0f };
-	bar->section = { 4, 135, 349, 32 };
+	bar = new C_Image(bar_go);
+	bar->target = { 0.388f, pos_y_HUD, 1.3f, 1.2f };
+	bar->offset = { -345.0f, -45.0f };
+	bar->section = { 17, 509, 345, 45 };
 	bar->tex_id = bar_text_id;
 
 	//------------------------- UNIT PORTRAIT --------------------------------------
 
 	portrait = new C_Image(bar_go);
-	portrait->target = { 0.06f, pos_y_HUD - 0.001f, 0.45f, 0.38f };
-	portrait->offset = { -109.0f, -93.0f };
-	portrait->section = { 349, 185, 109, 93 };
+	portrait->target = { 0.08f, pos_y_HUD - 0.013f, 1.0f, 1.0f };
+	portrait->offset = { -48.0f, -35.0f };
+	portrait->section = { 22, 463, 48, 35 };
 	portrait->tex_id = bar_text_id;
 
 	//------------------------- UNIT TEXT --------------------------------------
 
 	text = new C_Text(bar_go, "Unit");
-	text->target = { 0.07f, pos_y_HUD - 0.05f, 1.2f, 1.2f };
+	text->target = { 0.09f, pos_y_HUD - 0.07f, 1.2f, 1.2f };
 
-	//------------------------- UNIT HEALTHBAR --------------------------------------
+	//------------------------- UNIT RED HEALTH --------------------------------------
 
-
-	healthbar = new C_Image(bar_go);
-	healthbar->target = { 0.31f, pos_y_HUD - 0.007f, 1.255f, 0.4f };
-	healthbar->offset = { -245.0f, -23.0f };
-	healthbar->section = { 56, 192, 245, 23 };
-	healthbar->tex_id = bar_text_id;
+	red_health = new C_Image(bar_go);
+	red_health->target = { 0.37f, pos_y_HUD - 0.02f, 1.63f, 0.6f };
+	red_health->offset = { -220.0f, -20.0f };
+	red_health->section = { 39, 729, 220, 20 };
+	red_health->tex_id = bar_text_id;
 
 	//------------------------- UNIT HEALTH --------------------------------------
 
-
 	health = new C_Image(bar_go);
-	health->target = { 0.31f, pos_y_HUD - 0.007f, 1.255f, 0.4f };
-	health->offset = { -245.0f, -23.0f };
-	health->section = { 57, 238, 245, 23 };
+	health->target = { 0.37f, pos_y_HUD - 0.02f, 1.63f, 0.6f };
+	health->offset = { -220.0f, -20.0f };
+	health->section = { 39, 749, 220, 20 };
 	health->tex_id = bar_text_id;
+
+	//------------------------- UNIT HEALTH BOARDER --------------------------------------
+
+	health_boarder = new C_Image(bar_go);
+	health_boarder->target = { 0.37f, pos_y_HUD - 0.02f, 1.63f, 0.6f };
+	health_boarder->offset = { -220.0f, -20.0f };
+	health_boarder->section = { 39, 707, 220, 20 };
+	health_boarder->tex_id = bar_text_id;
 
 
 }
 
 void B_Unit::update_health_ui() {
 
-	health->target = { (0.31f) - ((0.31f - 0.07f) * (1.0f - float(current_life) / float(max_life))), pos_y_HUD - 0.007f, 1.255f * (float(current_life) / float(max_life)), 0.4f };
+	health->target = { (0.37f) - ((0.37f - 0.09f) * (1.0f - float(current_life) / float(max_life))), pos_y_HUD - 0.02f, 1.63f * (float(current_life) / float(max_life)), 0.6f };
 }

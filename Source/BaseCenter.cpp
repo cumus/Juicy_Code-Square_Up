@@ -138,59 +138,69 @@ void Base_Center::create_bar() {
 
 	pos_y_HUD = 0.17;
 
-	bar_text_id = App->tex.Load("textures/creation_bars_test.png");
+	bar_text_id = App->tex.Load("textures/Iconos_square_up.png");
 
 	//------------------------- BASE BAR --------------------------------------
 
 	bar_go = App->scene->AddGameobject("Main Base Bar", App->scene->hud_canvas_go);
 
-	bar = new C_Button(bar_go, Event(REQUEST_QUIT, App));
+	bar = new C_Image(bar_go);
 	bar->target = { 0.5f, pos_y_HUD, 1.3f, 1.2f };
-	bar->offset = { -482.0f, -44.0f };
-	bar->section = { 4, 7, 482, 44 };
+	bar->offset = { -455.0f, -62.0f };
+	bar->section = { 17, 561, 455, 62 };
 	bar->tex_id = bar_text_id;
 
 	//------------------------- BASE PORTRAIT --------------------------------------
 
 	portrait = new C_Image(bar_go);
-	portrait->target = { 0.06f, pos_y_HUD - 0.003f, 0.5f, 0.5f };
-	portrait->offset = { -109.0f, -89.0f };
-	portrait->section = { 126, 295, 109, 95 };
-	portrait->tex_id = App->tex.Load("textures/creation_bars_test.png");
+	portrait->target = { 0.08f, pos_y_HUD - 0.013f, 0.28f, 0.28f };
+	portrait->offset = { -166.0f, -185.0f };
+	portrait->section = { 0, 0, 166, 185 };
+	portrait->tex_id = App->tex.Load("textures/base_center.png");
 
 	//------------------------- BASE TEXT --------------------------------------
 
 	text = new C_Text(bar_go, "Base");
-	text->target = { 0.07f, pos_y_HUD - 0.07f, 1.5f, 1.5f };
+	text->target = { 0.09f, pos_y_HUD - 0.085f, 1.5f, 1.5f };
 
-	//------------------------- BASE HEALTHBAR --------------------------------------
+	//------------------------- BASE RED HEALTH --------------------------------------
 
-	healthbar = new C_Image(bar_go);
-	healthbar->target = { 0.415f, pos_y_HUD - 0.01f, 1.8f, 0.7f };
-	healthbar->offset = { -245.0f, -23.0f };
-	healthbar->section = { 56, 192, 245, 23 };
-	healthbar->tex_id = bar_text_id;
+	red_health = new C_Image(bar_go);
+	red_health->target = { 0.4f, pos_y_HUD - 0.02f, 1.8f, 1.0f };
+	red_health->offset = { -220.0f, -20.0f };
+	red_health->section = { 39, 729, 220, 20 };
+	red_health->tex_id = bar_text_id;
 
 	//------------------------- BASE HEALTH --------------------------------------
 
 	health = new C_Image(bar_go);
-	health->target = { 0.415f, pos_y_HUD - 0.01f, 1.8f, 0.7f };
-	health->offset = { -245.0f, -23.0f };
-	health->section = { 57, 238, 245, 23 };
+	health->target = { 0.4f, pos_y_HUD - 0.02f, 1.8f, 1.0f };
+	health->offset = { -220.0f, -20.0f };
+	health->section = { 39, 749, 220, 20 };
 	health->tex_id = bar_text_id;
+
+	//------------------------- BASE HEALTH BOARDER --------------------------------------
+
+	health_boarder = new C_Image(bar_go);
+	health_boarder->target = { 0.4f, pos_y_HUD - 0.02f, 1.8f, 1.0f };
+	health_boarder->offset = { -220.0f, -20.0f };
+	health_boarder->section = { 39, 707, 220, 20 };
+	health_boarder->tex_id = bar_text_id;
+
+
 }
 
 void Base_Center::update_health_ui() {
 
-	health->target = { (0.415f) - ((0.415f - 0.07f) * (1.0f - float(current_life) / float(max_life))), pos_y_HUD - 0.01f, 1.8f * (float(current_life) / float(max_life)), 0.7f };
+	health->target = { (0.4f) - ((0.4f - 0.093f) * (1.0f - float(current_life) / float(max_life))), pos_y_HUD - 0.02f, 1.8f * (float(current_life) / float(max_life)), 1.0f };
 
 }
 
 void Base_Center::update_upgrades_ui() {
 
 	C_Image* main_base_upgrade = new C_Image(bar_go);
-	main_base_upgrade->target = { 0.415f + (bc_lvl - 1) * 0.018f, pos_y_HUD - 0.01f, 0.18f, 0.4f };
-	main_base_upgrade->offset = { -79.0f, -93.0f };
-	main_base_upgrade->section = { 398, 78, 79, 93 };
+	main_base_upgrade->target = { 0.405f + (bc_lvl - 1) * 0.02f, pos_y_HUD - 0.04f, 1.5f, 1.5f };
+	main_base_upgrade->offset = { -12.0f, -12.0f };
+	main_base_upgrade->section = { 372, 336, 12, 12 };
 	main_base_upgrade->tex_id = bar_text_id;
 }

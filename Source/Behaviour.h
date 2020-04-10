@@ -127,11 +127,13 @@ protected:
 	int bar_text_id;
 	Gameobject* selectionPanel = nullptr;
 	Gameobject* bar_go = nullptr;
-	C_Button* bar;
+	C_Image* bar;
 	C_Image* portrait;
 	C_Text* text;
 	C_Image* healthbar;
+	C_Image* red_health;
 	C_Image* health;
+	C_Image* health_boarder;
 };
 
 class B_Unit : public Behaviour

@@ -144,7 +144,7 @@ bool Scene::Update()
 				SDL_Rect cam = App->render->GetCameraRect();
 				for (std::map<double, Behaviour*>::iterator it = Behaviour::b_map.begin(); it != Behaviour::b_map.end(); ++it)
 				{
-					if (it->second->GetType() == UNIT_MELEE || it->second->GetType() == GATHERER || it->second->GetType() == UNIT_RANGED)
+					if (it->second->GetType() == UNIT_MELEE || it->second->GetType() == GATHERER || it->second->GetType() == UNIT_RANGED || it->second->GetType() == BASE_CENTER || it->second->GetType() == TOWER)
 					{
 						vec pos = it->second->GetGameobject()->GetTransform()->GetGlobalPosition();
 						std::pair<float, float> posToWorld = Map::F_MapToWorld(pos.x, pos.y, pos.z);
