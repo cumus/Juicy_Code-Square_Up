@@ -8,6 +8,18 @@
 #include "TimeManager.h"
 #include "MapContainer.h"
 
+struct _Point
+{
+	SDL_Color	color;
+	SDL_Rect	rect;
+};
+
+struct _Sprite
+{
+	SDL_Surface*	sprite_img;
+	SDL_Rect		section;
+};
+
 enum class Corner
 {
 	TOP_LEFT,
@@ -23,16 +35,16 @@ public:
 	Minimap(Gameobject* go);
 	~Minimap();
 
-	bool CreateMinimap();
+	void AddToMinimap(SDL_Rect rect, SDL_Color color);
+	void Draw_Sprite(SDL_Surface* img, int x, int y);
 
 private:
 
 	void Update() override;
 
-
-
 private:
 
+	SDL_Surface*	base_image;
 	SDL_Renderer*	renderer;
 	SDL_Texture*	map_texture;
 	SDL_Color		camera_color;
@@ -48,6 +60,11 @@ private:
 	int		window_width;
 	int		window_height;
 	bool	mouse_inside;
+
+public:
+
+	std::list<_Point> point_queue;
+	std::list<_Sprite> sprite_queue;
 };
 
 

@@ -1,9 +1,6 @@
 #include "Minimap.h"
 #include "Application.h"
 #include "TextureManager.h"
-#include "MeleeUnit.h"
-#include "EnemyMeleeUnit.h"
-#include "UI_Image.h"
 #include "Render.h"
 #include "Scene.h"
 #include "Window.h"
@@ -20,22 +17,15 @@ Minimap::Minimap(Gameobject* go) :
 {
 	LOG("Starting minimap");
 
-	//renderer = App->render->GetSDLRenderer();
-	//map_texture = SDL_CreateTexture(renderer, SDL_GetWindowPixelFormat(App->win->GetWindow()), SDL_TEXTUREACCESS_TARGET, 1.05F * width, 1.05F * height);
-
 	ally = { 0, 0, 0, 0 };
 	enemy = { 0, 0, 0, 0 };
 	building = { 0, 0, 0, 0 };
 
 	minimap_camera = { 0, 0, 4, 4 };
 	camera_color = { 255, 255, 255, 255 };
-	tex_id = App->tex.Load("textures/darkimg.png");
+	tex_id = App->render->GetMinimap();
 
 	App->win->GetWindowSize(window_width, window_height);
-
-	//SDL_SetRenderTarget(renderer, map_texture);
-	CreateMinimap();
-	//SDL_SetRenderTarget(renderer, NULL);
 }
 
 Minimap::~Minimap()
@@ -44,15 +34,11 @@ Minimap::~Minimap()
 
 void Minimap::Update()
 {
-	//App->render->Blit((int)map_texture, pos.x, pos.y, NULL);
-
 	SDL_Rect camera_getter = App->render->GetCameraRect();
 
 	App->render->DrawQuad(output, { 255, 0, 0, 255 }, false, EDITOR, false);
 
-	//App->render->DrawQuad( { camera_getter.x, camera_getter.y, (int)(camera_getter.w * scale), (int)(camera_getter.h * scale) }, { 255,255,255,255 }, false, EDITOR, false);
-
-	//From camera to minimap camera (SDL_Rect)
+	//From map to minimap viewport
 	float tile_width, tile_height;
 	map.GetTileSize_F(tile_width, tile_height);
 
@@ -78,8 +64,9 @@ void Minimap::Update()
 	minimap_camera.y += output.y;
 
 	App->render->DrawQuad(minimap_camera, camera_color, false, EDITOR, false);
-//-------------------------------------------------------------------------
-
+//-------------------------------------------------------------------------------------
+	
+	//From minimap to map drag viewport
 	if (App->input->GetMouseButtonDown(0) == KeyState::KEY_REPEAT)
 	{
 		int x, y;
@@ -94,42 +81,78 @@ void Minimap::Update()
 			App->render->cam.y = y / scale_y - App->render->cam.h / 2;
 		}
 	}
+//-------------------------------------------------------------------------------------
 
+	/*SDL_Surface* manipulable = new SDL_Surface();
+	manipulable = SDL_ConvertSurface(base_image, base_image->format, SDL_SWSURFACE);
 
-}
-
-bool Minimap::CreateMinimap()
-{
-	App->render->DrawQuad(section, {0, 0, 0, 255}, true);
-
-	/*for (std::vector<MapLayer*>::const_iterator item = map.layers.begin(); item != map.layers.end(); ++item)
+	for (std::list<_Point>::iterator it = point_queue.begin(); it != point_queue.end(); it++)
 	{
-		MapLayer* layer = *item;
+		SDL_Rect representation;
 
-		if (layer->GetProperty("Nodraw") != 0)
-			continue;
+		representation.x = scale_x * it->rect.x;
+		representation.y = scale_y * it->rect.y;
+		representation.w = scale_x * it->rect.w;
+		representation.h = scale_y * it->rect.h;
 
-		int half_width = map_width * 0.5F;
+		SDL_FillRect(manipulable, &representation, SDL_MapRGB(manipulable->format, it->color.r, it->color.g, it->color.b));
+	}
+	point_queue.clear();
 
-		for (int y = 0; y < map.height; ++y)
-		{
-			for (int x = 0; x < map.width; ++x)
-			{
-				unsigned int tile_id = layer->GetID(x, y);
-				if (tile_id > 0)
-				{
-					SDL_Rect section;
-					int text_id;
-					if (map.GetRectAndTexId(tile_id, section, text_id))
-					{
-						std::pair<int, int> pos = map.I_MapToWorld(x, y);
-						iPoint position = App->render->WorldToScreen(pos.first, pos.second);
-						App->render->Blit(text_id, position.x + half_width, position.y, &section);
-					}
-				}
-			}
-		}
-	}*/
+	for (std::list<_Sprite>::iterator it = sprite_queue.begin(); it != sprite_queue.end(); it++)
+	{
+		SDL_Surface* img_to_map;
+		img_to_map = it->sprite_img;
 
-	return true;
+		img_to_map->clip_rect.x = scale_x * it->section.x;
+		img_to_map->clip_rect.y = scale_y * it->section.y;
+		img_to_map->clip_rect.w = scale_x * it->section.w;
+		img_to_map->clip_rect.h = scale_y * it->section.h;
+
+		SDL_BlitSurface(it->sprite_img, &it->section, manipulable, &img_to_map->clip_rect);
+	}
+	sprite_queue.clear();
+
+	SDL_Rect up = { -App->render->cam.x * scale_x,-App->render->cam.y * scale_y ,App->render->cam.w * scale_x, 1 };
+	SDL_FillRect(manipulable, &up, SDL_MapRGB(manipulable->format, 255, 255, 255));
+
+	SDL_Rect down = { -App->render->cam.x * scale_x,-(App->render->cam.y - App->render->cam.h) * scale_y - 1 ,App->render->cam.w * scale_x, 1 };
+	SDL_FillRect(manipulable, &down, SDL_MapRGB(manipulable->format, 255, 255, 255));
+
+	SDL_Rect left = { -App->render->cam.x * scale_x,-App->render->cam.y * scale_y ,1 , App->render->cam.h * scale_y };
+	SDL_FillRect(manipulable, &left, SDL_MapRGB(manipulable->format, 255, 255, 255));
+
+	SDL_Rect right = { -(App->render->cam.x - App->render->cam.w) * scale_x - 1 , -App->render->cam.y * scale_y ,1, App->render->cam.h * scale_y };
+	SDL_FillRect(manipulable, &right, SDL_MapRGB(manipulable->format, 255, 255, 255));
+
+
+	SDL_Texture* texture_to_blit = SDL_CreateTextureFromSurface(renderer, manipulable);
+	App->render->Blit(0, output.x - App->render->cam.x, output.y - App->render->cam.y);
+
+	SDL_DestroyTexture(texture_to_blit);
+	SDL_FreeSurface(manipulable);
+	manipulable = nullptr;*/
 }
+
+void Minimap::AddToMinimap(SDL_Rect rect, SDL_Color color)
+{
+	_Point p;
+	p.rect = rect;
+	p.color = color;
+
+	point_queue.push_back(p);
+}
+
+void Minimap::Draw_Sprite(SDL_Surface* img, int x, int y)
+{
+	_Sprite sprite;
+
+	sprite.sprite_img = img;
+	sprite.section.x = x;
+	sprite.section.y = y;
+	sprite.section.w = img->w;
+	sprite.section.h = img->h;
+	
+	sprite_queue.push_back(sprite);
+}
+

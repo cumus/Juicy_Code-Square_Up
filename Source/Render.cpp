@@ -76,9 +76,7 @@ bool Render::Init()
 				// Setup camera & viewport
 				SDL_RenderGetViewport(renderer, &viewport);
 				cam = { 0.f, 0.f, float(viewport.w), float(viewport.h) };
-				SetupViewPort(16.0f/9.0f);
-
-				GetMinimap();
+				SetupViewPort(16.0f / 9.0f);
 
 				ret = true;
 			}
@@ -195,8 +193,6 @@ bool Render::PostUpdate()
 		update_minimap = false;
 		ret = (SDL_SetRenderTarget(renderer, nullptr) == 0);
 	}
-
-	Blit(minimap_texture, 230, 200);
 
 	// Render by layers
 	for (int i = 0; i < MAX_LAYERS; ++i)
