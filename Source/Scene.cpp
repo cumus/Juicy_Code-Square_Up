@@ -85,6 +85,23 @@ bool Scene::Update()
 	{
 		if (god_mode)
 			GodMode();
+
+		//Pause Game
+		if ((test || level) && !placing_building)
+		{
+			if (App->input->GetKey(SDL_SCANCODE_ESCAPE) == KEY_DOWN && pause == false)
+			{
+				Event::Push(SCENE_PAUSE, App);
+				PauseMenu();
+				pause = true;
+			}
+			else if (App->input->GetKey(SDL_SCANCODE_ESCAPE) == KEY_DOWN && pause == true)
+			{
+				pause_canvas_go->Destroy();
+				Event::Push(SCENE_PLAY, App);
+				pause = false;
+			}
+		}
 		
 		//Mob Drop Print Updated Value
 		if (text_mobdrop_value) {
@@ -636,13 +653,13 @@ bool Scene::PauseMenu()
 	bool ret = true;
 	//------------------------- CANVAS --------------------------------------
 
-	Gameobject* canvas_go = AddGameobject("Canvas", &root);
-	C_Canvas* canv = new C_Canvas(canvas_go);
+	pause_canvas_go = AddGameobject("Canvas", &root);
+	C_Canvas* canv = new C_Canvas(pause_canvas_go);
 	canv->target = { 0.6f, 0.6f, 0.4f, 0.4f };
 
 	//------------------------- BACKGROUND -----------------------------------
 
-	Gameobject* background_go = AddGameobject("Background", canvas_go);
+	Gameobject* background_go = AddGameobject("Background", pause_canvas_go);
 
 	C_Image* background = new C_Image(background_go);
 	background->target = { 0.66f, 0.95f, 0.6f, 0.6f };
@@ -652,7 +669,7 @@ bool Scene::PauseMenu()
 
 	//------------------------- RESUME -----------------------------------------
 
-	Gameobject* resume_go = AddGameobject("resume Button", canvas_go);
+	Gameobject* resume_go = AddGameobject("resume Button", pause_canvas_go);
 
 	C_Button* resume = new C_Button(resume_go, Event(SCENE_PLAY, this, App));
 	resume->target = { 0.51f, 0.3f, 0.3f, 0.3f };
@@ -665,15 +682,9 @@ bool Scene::PauseMenu()
 	resume_fx->offset = { -525.f, -100.f };
 	resume_fx->section = { 0, 0, 1070, 207 };
 
-	Gameobject* resume_txt_go = AddGameobject("resume Button", resume_go);
+	/*//------------------------- SAVE --------------------------------------
 
-	C_Text* resume_txt = new C_Text(resume_txt_go, "RESUME");
-	resume_txt->target = { 0.48f, 0.45f, 1.f, 1.f };
-	resume_txt->scale_to_fit = true;
-
-	//------------------------- SAVE --------------------------------------
-
-	Gameobject* save_go = AddGameobject("save button", canvas_go);
+	Gameobject* save_go = AddGameobject("save button", pause_canvas_go);
 
 	C_Button* save = new C_Button(save_go, Event(SCENE_CHANGE, this, MAIN));
 	save->target = { 0.51f, 0.3f, 0.3f, 0.3f };
@@ -686,15 +697,9 @@ bool Scene::PauseMenu()
 	save_fx->offset = { -525.f, 200.f };
 	save_fx->section = { 0, 0, 1070, 207 };
 
-	Gameobject* save_txt_go = AddGameobject("save Button", save_go);
-
-	C_Text* save_txt = new C_Text(save_txt_go, "SAVE");
-	save_txt->target = { 0.48f, 0.45f, 1.f, 1.f };
-	save_txt->scale_to_fit = true;
-
 	//------------------------- LOAD --------------------------------------
 
-	Gameobject* load_go = AddGameobject("load Button", canvas_go);
+	Gameobject* load_go = AddGameobject("load Button", pause_canvas_go);
 
 	C_Button* load = new C_Button(load_go, Event(SCENE_CHANGE, this, MAIN));
 	load->target = { 0.51f, 0.3f, 0.3f, 0.3f };
@@ -707,15 +712,9 @@ bool Scene::PauseMenu()
 	load_fx->offset = { -525.f, 500.f };
 	load_fx->section = { 0, 0, 1070, 207 };
 
-	Gameobject* load_txt_go = AddGameobject("Start Button", load_go);
-
-	C_Text* load_txt = new C_Text(load_txt_go, "LOAD");
-	load_txt->target = { 0.48f, 0.45f, 1.f, 1.f };
-	load_txt->scale_to_fit = true;
-
 	//------------------------- OPTIONS --------------------------------------
 
-	Gameobject* options_go = AddGameobject("options Button", canvas_go);
+	Gameobject* options_go = AddGameobject("options Button", pause_canvas_go);
 
 	C_Button* options = new C_Button(options_go, Event(SCENE_CHANGE, this, MAIN));
 	options->target = { 0.51f, 0.3f, 0.3f, 0.3f };
@@ -726,37 +725,34 @@ bool Scene::PauseMenu()
 	C_Button* options_fx = new C_Button(options_go, Event(PLAY_FX, App->audio, int(SELECT), 0));
 	options_fx->target = { 0.51f, 0.3f, 0.3f, 0.3f };
 	options_fx->offset = { -525.f, 800.f };
-	options_fx->section = { 0, 0, 1070, 207 };
-
-	Gameobject* options_txt_go = AddGameobject("options Button", options_go);
-
-	C_Text* options_txt = new C_Text(options_txt_go, "OPTIONS");
-	options_txt->target = { 0.48f, 0.45f, 1.f, 1.f };
-	options_txt->scale_to_fit = true;
+	options_fx->section = { 0, 0, 1070, 207 };*/
 
 	//------------------------- MAIN MENU --------------------------------------
 
-	Gameobject* main_menu_go = AddGameobject("main menu Button", canvas_go);
+	Gameobject* main_menu_go = AddGameobject("main menu Button", pause_canvas_go);
 
 	C_Button* main_menu = new C_Button(main_menu_go, Event(SCENE_CHANGE, this, MENU));
 	main_menu->target = { 0.51f, 0.3f, 0.3f, 0.3f };
-	main_menu->offset = { -525.f, 1100.f };
+	main_menu->offset = { -525.f, 200.f  };
 	main_menu->section = { 0, 0, 1070, 207 };
 	main_menu->tex_id = App->tex.Load("textures/button.png");
 
 	C_Button* main_menu_fx = new C_Button(main_menu_go, Event(PLAY_FX, App->audio, int(SELECT), 0));
 	main_menu_fx->target = { 0.51f, 0.3f, 0.3f, 0.3f };
-	main_menu_fx->offset = { -525.f, 1100.f };
+	main_menu_fx->offset = { -525.f, 200.f };
 	main_menu_fx->section = { 0, 0, 1070, 207 };
-
-	Gameobject* main_menu_txt_go = AddGameobject("main_menu Button", main_menu_go);
-
-	C_Text* main_menu_txt = new C_Text(main_menu_txt_go, "MAIN MENU");
-	main_menu_txt->target = { 0.48f, 0.45f, 1.f, 1.f };
-	main_menu_txt->scale_to_fit = true;
 
 	return ret;
 }
+
+/*bool Scene::DestroyPauseMenu()
+{
+	bool ret = true;
+
+	pause_canvas_go->Destroy();
+
+	return true;
+}*/
 
 bool Scene::ChangeToScene(SceneType scene)
 {
@@ -898,21 +894,6 @@ void Scene::GodMode()
 			Event::Push(SCENE_CHANGE, this, MAIN, 2.f);
 		else if (App->input->GetKey(SDL_SCANCODE_5) == KEY_DOWN)
 			Event::Push(SCENE_CHANGE, this, END, 2.f);
-	}
-	
-	if ((test || level) && !placing_building)
-	{
-		if (App->input->GetKey(SDL_SCANCODE_ESCAPE) == KEY_DOWN && pause==false)
-		{
-			Event::Push(SCENE_PAUSE, App);
-			PauseMenu();
-			pause=true;
-		}
-		else if (App->input->GetKey(SDL_SCANCODE_ESCAPE) == KEY_DOWN && pause==true)
-		{
-			Event::Push(SCENE_PLAY, App);
-			pause=false;
-		}
 	}
 
 	if (App->input->GetKey(SDL_SCANCODE_F2) == KEY_DOWN)

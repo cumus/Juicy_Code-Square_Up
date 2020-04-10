@@ -37,8 +37,6 @@ public:
 
 	void RecieveEvent(const Event& e) override;
 
-	bool PauseMenu();
-
 	Gameobject* GetRoot();
 	const Gameobject* GetRoot() const;
 	Gameobject* AddGameobject(const char* name, Gameobject* parent = nullptr);
@@ -54,6 +52,9 @@ private:
 	bool LoadMainScene();
 	bool LoadEndScene();
 
+	bool PauseMenu();
+	//bool DestroyPauseMenu();
+
 	bool ChangeToScene(SceneType scene);
 
 	void PlaceMode(int building_type);
@@ -65,6 +66,9 @@ public:
 	bool pause = false;
 	bool test = true;
 	bool level = true;
+
+	// PAUSE
+	Gameobject* pause_canvas_go;
 
 	// Selection
 	iPoint groupStart,mouseExtend;
@@ -117,9 +121,7 @@ private:
 	C_Text* text_mobdrop_value = nullptr;
 	C_Text* text_edge_value = nullptr;
 
-
 	Transform* placing_building = nullptr;
-
 	
 };
 
