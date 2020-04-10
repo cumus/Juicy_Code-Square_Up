@@ -178,7 +178,9 @@ void Behaviour::OnKill(const UnitType type)
 	//App->audio->PlayFx(deathFX);
 	audio->Play(deathFX);
 	game_object->Destroy(dieDelay);
-	bar_go->Destroy(dieDelay);
+	if (bar_go) {
+		bar_go->Destroy(dieDelay);
+	}
 }
 
 unsigned int Behaviour::GetBehavioursInRange(vec pos, float dist, std::map<float, Behaviour*>& res) const

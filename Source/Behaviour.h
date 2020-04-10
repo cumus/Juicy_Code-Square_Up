@@ -125,8 +125,8 @@ protected:
 
 	float pos_y_HUD;
 	int bar_text_id;
-	Gameobject* selectionPanel;
-	Gameobject* bar_go;
+	Gameobject* selectionPanel = nullptr;
+	Gameobject* bar_go = nullptr;
 	C_Button* bar;
 	C_Image* portrait;
 	C_Text* text;

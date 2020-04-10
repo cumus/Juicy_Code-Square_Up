@@ -87,18 +87,22 @@ bool Scene::Update()
 			GodMode();
 		
 		//Mob Drop Print Updated Value
-		std::stringstream ss;
-		ss << mob_drop;
-		std::string temp_str = ss.str();
-		const char* t = (char*)temp_str.c_str();
-		text_mobdrop_value->text->SetText(t);
+		if (text_mobdrop_value) {
+			std::stringstream ss;
+			ss << mob_drop;
+			std::string temp_str = ss.str();
+			//const char* t = (char*)temp_str.c_str();
+			text_mobdrop_value->text->SetText(temp_str.c_str());
+		}
 
 		//Edge Print Updated Value
-		std::stringstream ss1;
-		ss1 << edge_value;
-		std::string temp_str1 = ss1.str();
-		const char* t1 = (char*)temp_str1.c_str();
-		text_edge_value->text->SetText(t1);
+		if (text_edge_value) {
+			std::stringstream ss1;
+			ss1 << edge_value;
+			std::string temp_str1 = ss1.str();
+			//const char* t1 = (char*)temp_str1.c_str();
+			text_edge_value->text->SetText(temp_str1.c_str());
+		}
 
 		//GROUP SELECTION//
 		switch (App->input->GetMouseButtonDown(0))

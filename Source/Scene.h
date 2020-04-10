@@ -112,8 +112,8 @@ private:
 	Gameobject* resources_go;
 	Gameobject* resources_2_go;
 	int edge_value = 100;
-	C_Text* text_mobdrop_value;
-	C_Text* text_edge_value;
+	C_Text* text_mobdrop_value = nullptr;
+	C_Text* text_edge_value = nullptr;
 
 	
 };
