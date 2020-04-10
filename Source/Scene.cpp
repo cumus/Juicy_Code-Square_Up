@@ -563,7 +563,7 @@ bool Scene::PauseMenu()
 	Gameobject* background_go = AddGameobject("Background", canvas_go);
 
 	C_Image* background = new C_Image(background_go);
-	background->target = { 1.f, 1.f, 1.f, 1.f };
+	background->target = { 0.66f, 0.95f, 0.6f, 0.6f };
 	background->offset = { -640.f, -985.f };
 	background->section = { 0, 0, 640, 985 };
 	background->tex_id = App->tex.Load("textures/pause-bg.png");
@@ -573,13 +573,13 @@ bool Scene::PauseMenu()
 	Gameobject* resume_go = AddGameobject("resume Button", canvas_go);
 
 	C_Button* resume = new C_Button(resume_go, Event(SCENE_PLAY, this, App));
-	resume->target = { 0.5f, 0.5f, 0.5f, 0.5f };
+	resume->target = { 0.51f, 0.3f, 0.3f, 0.3f };
 	resume->offset = { -525.f, -100.f };
 	resume->section = { 0, 0, 1070, 207 };
 	resume->tex_id = App->tex.Load("textures/button.png");
 
 	C_Button* resume_fx = new C_Button(resume_go, Event(PLAY_FX, App->audio, int(SELECT), 0));
-	resume_fx->target = { 0.5f, 0.5f, 0.5f, 0.5f };
+	resume_fx->target = { 0.51f, 0.3f, 0.3f, 0.3f };
 	resume_fx->offset = { -525.f, -100.f };
 	resume_fx->section = { 0, 0, 1070, 207 };
 
@@ -594,13 +594,13 @@ bool Scene::PauseMenu()
 	Gameobject* save_go = AddGameobject("save button", canvas_go);
 
 	C_Button* save = new C_Button(save_go, Event(SCENE_CHANGE, this, MAIN));
-	save->target = { 0.5f, 0.5f, 0.5f, 0.5f };
+	save->target = { 0.51f, 0.3f, 0.3f, 0.3f };
 	save->offset = { -525.f, 200.f };
 	save->section = { 0, 0, 1070, 207 };
 	save->tex_id = App->tex.Load("textures/button.png");
 
 	C_Button* save_fx = new C_Button(save_go, Event(PLAY_FX, App->audio, int(SELECT), 0));
-	save_fx->target = { 0.5f, 0.5f, 0.5f, 0.5f };
+	save_fx->target = { 0.51f, 0.3f, 0.3f, 0.3f };
 	save_fx->offset = { -525.f, 200.f };
 	save_fx->section = { 0, 0, 1070, 207 };
 
@@ -615,14 +615,14 @@ bool Scene::PauseMenu()
 	Gameobject* load_go = AddGameobject("load Button", canvas_go);
 
 	C_Button* load = new C_Button(load_go, Event(SCENE_CHANGE, this, MAIN));
-	load->target = { 0.5f, 0.5f, 0.5f, 0.5f };
-	load->offset = { -525.f, 200.f };
+	load->target = { 0.51f, 0.3f, 0.3f, 0.3f };
+	load->offset = { -525.f, 500.f };
 	load->section = { 0, 0, 1070, 207 };
 	load->tex_id = App->tex.Load("textures/button.png");
 
 	C_Button* load_fx = new C_Button(load_go, Event(PLAY_FX, App->audio, int(SELECT), 0));
-	load_fx->target = { 0.5f, 0.5f, 0.5f, 0.5f };
-	load_fx->offset = { -525.f, 200.f };
+	load_fx->target = { 0.51f, 0.3f, 0.3f, 0.3f };
+	load_fx->offset = { -525.f, 500.f };
 	load_fx->section = { 0, 0, 1070, 207 };
 
 	Gameobject* load_txt_go = AddGameobject("Start Button", load_go);
@@ -636,14 +636,14 @@ bool Scene::PauseMenu()
 	Gameobject* options_go = AddGameobject("options Button", canvas_go);
 
 	C_Button* options = new C_Button(options_go, Event(SCENE_CHANGE, this, MAIN));
-	options->target = { 0.5f, 0.5f, 0.5f, 0.5f };
-	options->offset = { -525.f, 200.f };
+	options->target = { 0.51f, 0.3f, 0.3f, 0.3f };
+	options->offset = { -525.f, 800.f };
 	options->section = { 0, 0, 1070, 207 };
 	options->tex_id = App->tex.Load("textures/button.png");
 
 	C_Button* options_fx = new C_Button(options_go, Event(PLAY_FX, App->audio, int(SELECT), 0));
-	options_fx->target = { 0.5f, 0.5f, 0.5f, 0.5f };
-	options_fx->offset = { -525.f, 200.f };
+	options_fx->target = { 0.51f, 0.3f, 0.3f, 0.3f };
+	options_fx->offset = { -525.f, 800.f };
 	options_fx->section = { 0, 0, 1070, 207 };
 
 	Gameobject* options_txt_go = AddGameobject("options Button", options_go);
@@ -657,14 +657,14 @@ bool Scene::PauseMenu()
 	Gameobject* main_menu_go = AddGameobject("main menu Button", canvas_go);
 
 	C_Button* main_menu = new C_Button(main_menu_go, Event(SCENE_CHANGE, this, MENU));
-	main_menu->target = { 0.5f, 0.5f, 0.5f, 0.5f };
-	main_menu->offset = { -525.f, 400.f };
+	main_menu->target = { 0.51f, 0.3f, 0.3f, 0.3f };
+	main_menu->offset = { -525.f, 1100.f };
 	main_menu->section = { 0, 0, 1070, 207 };
 	main_menu->tex_id = App->tex.Load("textures/button.png");
 
 	C_Button* main_menu_fx = new C_Button(main_menu_go, Event(PLAY_FX, App->audio, int(SELECT), 0));
-	main_menu_fx->target = { 0.5f, 0.5f, 0.5f, 0.5f };
-	main_menu_fx->offset = { -525.f, 400.f };
+	main_menu_fx->target = { 0.51f, 0.3f, 0.3f, 0.3f };
+	main_menu_fx->offset = { -525.f, 1100.f };
 	main_menu_fx->section = { 0, 0, 1070, 207 };
 
 	Gameobject* main_menu_txt_go = AddGameobject("main_menu Button", main_menu_go);
@@ -794,16 +794,16 @@ void Scene::GodMode()
 	
 	if (test || level)
 	{
-		if (App->input->GetKey(SDL_SCANCODE_ESCAPE) == KEY_DOWN && !pause)
+		if (App->input->GetKey(SDL_SCANCODE_ESCAPE) == KEY_DOWN && pause==false)
 		{
 			Event::Push(SCENE_PAUSE, App);
 			PauseMenu();
-			pause;
+			pause=true;
 		}
-		else if (App->input->GetKey(SDL_SCANCODE_ESCAPE) == KEY_DOWN && pause)
+		else if (App->input->GetKey(SDL_SCANCODE_ESCAPE) == KEY_DOWN && pause==true)
 		{
 			Event::Push(SCENE_PLAY, App);
-			!pause;
+			pause=false;
 		}
 	}
 
