@@ -29,6 +29,8 @@ Tower::Tower(Gameobject* go) : Behaviour(go, TOWER, FULL_LIFE, B_TOWER)
 
 	create_bar();
 	bar_go->SetInactive();
+	CreatePanel();
+	selectionPanel->SetInactive();
 
 	Transform* t = game_object->GetTransform();
 	if (t)
@@ -123,8 +125,8 @@ void Tower::AfterDamageAction()
 
 void Tower::Upgrade()
 {
-	if (t_lvl < t_max_lvl) {
-		
+	if (t_lvl < t_max_lvl) 
+	{
 		t_lvl += 1;
 		max_life += 25;
 		damage += 2;
@@ -135,7 +137,6 @@ void Tower::Upgrade()
 		update_upgrades_ui();
 		update_health_ui();
 	}
-
 }
 
 void Tower::OnRightClick(float x, float y)
@@ -157,6 +158,28 @@ void Tower::DoAttack()
 	shoot = true;
 	ms_count = 0;
 	atkObj = nullptr;
+}
+
+void Tower::CreatePanel()
+{
+	posY_panel = 0.8f;
+	panel_tex_ID = App->tex.Load("textures/buildPanelSample.png");
+
+	//------------------------- TOWER PANEL --------------------------------------
+
+	selectionPanel = App->scene->AddGameobject("Tower Panel", App->scene->hud_canvas_go);
+
+
+	upgrade_btn = new C_Button(selectionPanel, Event(DO_UPGRADE, this->AsBehaviour()));//Top left
+	upgrade_btn->target = { 0.912f, posY_panel + 0.02f, 1.0f, 1.0f };
+	upgrade_btn->offset = { 0.0f, 0.0f };
+	upgrade_btn->section = { 121, 38, 38, 38 };
+	upgrade_btn->tex_id = panel_tex_ID;
+}
+
+void Tower::UpdatePanel()
+{
+
 }
 
 void Tower::create_bar() {

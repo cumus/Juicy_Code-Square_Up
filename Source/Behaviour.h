@@ -94,6 +94,7 @@ public:
 	virtual void update_health_ui() {}
 	virtual void CreatePanel() {}
 	virtual void UpdatePanel() {}
+	virtual void Upgrade() {}
 
 	UnitType GetType() const { return type; }
 	UnitState* GetStatePtr() { return &current_state; }

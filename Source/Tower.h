@@ -11,13 +11,21 @@ public:
 	~Tower();
 
 	void OnRightClick(float x, float y) override;
-	void Upgrade();
+	void Upgrade() override;
 	void AfterDamageAction() override;
 	void DoAttack() override;
 	void Update() override;
 	void create_bar() override;
 	void update_health_ui();
 	void update_upgrades_ui();
+	void CreatePanel() override;
+	void UpdatePanel() override;
+
+public:
+
+	float posY_panel;
+	int panel_tex_ID;
+	C_Button* upgrade_btn;
 
 protected:
 

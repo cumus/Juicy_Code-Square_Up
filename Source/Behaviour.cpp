@@ -63,6 +63,7 @@ void Behaviour::RecieveEvent(const Event& e)
 	case BUILD_RANGED: BuildRanged(e.data1.AsFloat(), e.data2.AsFloat()); break;
 	case BUILD_MELEE: BuildMelee(e.data1.AsFloat(), e.data2.AsFloat()); break;
 	case BUILD_SUPER: BuildSuper(e.data1.AsFloat(), e.data2.AsFloat()); break;
+	case DO_UPGRADE: Upgrade(); break;
 	}
 }
 

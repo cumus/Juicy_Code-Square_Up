@@ -12,7 +12,7 @@ public:
 
 	void SpawnUnit(float x, float y);
 	void OnRightClick(float x, float y) override;
-	void Upgrade();
+	void Upgrade() override;
 	void AfterDamageAction() override;
 
 	void create_bar() override;
