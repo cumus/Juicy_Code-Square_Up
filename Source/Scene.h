@@ -73,6 +73,9 @@ public:
 	int building_bars_created = 0;
 	int unit_bars_created = 0;
 
+	//Player Resources
+	int mob_drop = 0;
+
 	// END SCREEN
 	bool win = false;
 	int time = 0;
@@ -106,6 +109,7 @@ private:
 
 	// Player stats
 	int resources = 100;
+	
 };
 
 #endif // __SCENE_H__

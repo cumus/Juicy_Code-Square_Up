@@ -112,7 +112,7 @@ void Tower::AfterDamageAction()
 	{
 		update_health_ui();
 		if (current_life <= 0)
-			OnKill();
+			OnKill(type);
 		else if (current_life >= max_life * 0.5f)
 			current_state = FULL_LIFE;
 		else

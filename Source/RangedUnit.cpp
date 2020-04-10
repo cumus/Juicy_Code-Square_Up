@@ -11,7 +11,7 @@ RangedUnit::RangedUnit(Gameobject* go) : B_Unit(go, UNIT_RANGED, IDLE, B_UNIT)
 {
 	//Stats
 	max_life = 100;
-	current_life = max_life;	
+	current_life = max_life;
 	atkDelay = 2.0;
 	speed = 3;
 	damage = 15;

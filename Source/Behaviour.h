@@ -75,7 +75,7 @@ public:
 	void Selected();
 	void UnSelected();
 	void OnDamage(int damage);
-	void OnKill();
+	void OnKill(const UnitType type);
 	void BuildGatherer(float x, float y);
 	void BuildMelee(float x, float y);
 	void BuildRanged(float x, float y);

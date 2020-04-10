@@ -148,8 +148,9 @@ void Behaviour::OnDamage(int d)
 	//LOG("Got damage: %d",d);
 	if (current_state != DESTROYED)
 	{
-		if (current_life <= 0)
-			OnKill();
+		if (current_life <= 0) {
+			OnKill(type);			
+		}
 		else current_life -= d;
 
 		LOG("Life: %d", current_life);
@@ -158,10 +159,20 @@ void Behaviour::OnDamage(int d)
 	}
 }
 
-void Behaviour::OnKill()
+void Behaviour::OnKill(const UnitType type)
 {
 	current_life = 0;
 	LOG("Unit killed");
+	
+	switch (type)
+	{
+	case ENEMY_MELEE: App->scene->mob_drop += 5; LOG("Player Mob Drop Value: %i", App->scene->mob_drop); break;
+	case ENEMY_RANGED: App->scene->mob_drop += 10; LOG("Player Mob Drop Value: %i", App->scene->mob_drop); break;
+	case ENEMY_SPECIAL: App->scene->mob_drop += 15; LOG("Player Mob Drop Value: %i", App->scene->mob_drop); break;
+	case ENEMY_SUPER: App->scene->mob_drop += 20; LOG("Player Mob Drop Value: %i", App->scene->mob_drop); break;
+	}
+	LOG("Debug Mob Drop Value: %i", App->scene->mob_drop);
+
 	current_state = DESTROYED;
 	//App->audio->PlayFx(deathFX);
 	audio->Play(deathFX);
@@ -197,6 +208,7 @@ unsigned int Behaviour::GetBehavioursInRange(vec pos, float dist, std::map<float
 ///////////////////////////
 // UNIT BEHAVIOUR
 ///////////////////////////
+
 
 B_Unit::B_Unit(Gameobject* go, UnitType t, UnitState s, ComponentType comp_type) :
 	Behaviour(go, t, s, comp_type)

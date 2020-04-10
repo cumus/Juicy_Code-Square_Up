@@ -41,7 +41,7 @@ void Edge::AfterDamageAction()
 {
 	Event::Push(RESOURCE, App->scene, 5);
 	if (current_life <= 0)
-		OnKill();
+		OnKill(type);
 	else if (current_life >= max_life * 0.5f)
 		current_state = FULL_LIFE;
 	else
