@@ -6,6 +6,7 @@
 #include "Gameobject.h"
 #include "Point.h"
 #include "Canvas.h"
+#include "Minimap.h"
 
 #include <vector>
 
@@ -94,6 +95,7 @@ public:
 private:
 
 	Map map;
+	Minimap* minimap;
 	Gameobject root;
 	bool god_mode = true;
 

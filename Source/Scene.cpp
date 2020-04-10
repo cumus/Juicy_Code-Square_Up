@@ -392,7 +392,7 @@ bool Scene::LoadTestScene()
 	
 	//Minimap
 	Gameobject* minimap_go = AddGameobject("Minimap", canvas_go);
-	Minimap* minimap = new Minimap(minimap_go);
+	minimap = new Minimap(minimap_go);
 	minimap->target = { 1.f, 0.f, 0.3f, 0.3f };
 	minimap->offset = { -1280, 0 };
 	minimap->section = { 0, 0, 1280, 720 };
@@ -925,6 +925,8 @@ void Scene::GodMode()
 
 		Gameobject* unit_go = AddGameobject("Ally Melee unit");
 		unit_go->GetTransform()->SetLocalPos({ float(position.first), float(position.second), 0.0f });
+
+		minimap->AddToMinimap(unit_go);
 
 		new MeleeUnit(unit_go);
 	}

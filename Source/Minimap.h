@@ -6,19 +6,7 @@
 #include "Map.h"
 #include "SDL/include/SDL.h"
 #include "TimeManager.h"
-#include "MapContainer.h"
-
-struct _Point
-{
-	SDL_Color	color;
-	SDL_Rect	rect;
-};
-
-struct _Sprite
-{
-	SDL_Surface*	sprite_img;
-	SDL_Rect		section;
-};
+#include "Map.h"
 
 enum class Corner
 {
@@ -35,8 +23,7 @@ public:
 	Minimap(Gameobject* go);
 	~Minimap();
 
-	void AddToMinimap(SDL_Rect rect, SDL_Color color);
-	void Draw_Sprite(SDL_Surface* img, int x, int y);
+	void AddToMinimap(Gameobject* object);
 
 private:
 
@@ -51,6 +38,7 @@ private:
 	SDL_Rect		minimap_camera;
 	Map				map;
 
+
 	SDL_Rect		ally;
 	SDL_Rect		enemy;
 	SDL_Rect		building;
@@ -63,8 +51,7 @@ private:
 
 public:
 
-	std::list<_Point> point_queue;
-	std::list<_Sprite> sprite_queue;
+	std::list<Gameobject*> object_queue;
 };
 
 
