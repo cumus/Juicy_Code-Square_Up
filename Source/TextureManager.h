@@ -7,6 +7,7 @@
 
 struct SDL_Texture;
 struct SDL_Surface;
+struct SDL_Renderer;
 
 struct TextureData
 {
@@ -42,6 +43,7 @@ public:
 	int Load(const char* path);
 	int LoadSurface(SDL_Surface* surface);
 	TextureData* CreateEmpty();
+	int CreateEmptyTexture(SDL_Renderer* renderer, int width, int height, const char* source = "undefined");
 
 	bool Remove(int id);
 

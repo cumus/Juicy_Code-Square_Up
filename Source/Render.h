@@ -54,6 +54,10 @@ public:
 	float GetZoom() const;
 	std::pair<float, float> GetCameraCenter() const;
 
+	// Minimap
+	int GetMinimap(int width = 780, int height = 280, float scale = 0.05f, SDL_Rect offset = { 384, 10, 8, 8 });
+	void UpdateMinimap();
+
 	// Viewport
 	void SetupViewPort(float aspect_ratio);
 	void ResetViewPort();
@@ -115,7 +119,13 @@ private:
 		} extra;
 	};
 
-	std::map<int, std::vector<RenderData>> layers[MAX_LAYERS] ;
+	std::map<int, std::vector<RenderData>> layers[MAX_LAYERS];
+
+	// Minimap
+	int minimap_texture = -1;
+	bool update_minimap = false;
+	float minimap_scale;
+	SDL_Rect minimap_offset;
 
 	// Config
 	bool accelerated = true;

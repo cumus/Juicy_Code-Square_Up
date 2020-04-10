@@ -109,8 +109,6 @@ void Map::Draw() const
 	mouse_x += cam.x;
 	mouse_y += cam.y;
 
-	App->render->DrawQuad(cam, { 100, 0,0,150 }, false);
-
 	std::pair<int, int> up_left = I_WorldToMap(cam.x, cam.y);
 	std::pair<int, int> down_right = I_WorldToMap(cam.x + cam.w, cam.y + cam.h);
 
@@ -178,16 +176,14 @@ void Map::Draw() const
 				{
 					for (int x = up_left.first - 2; x <= down_right.first; ++x)
 					{
-						std::pair<int, int> p = I_MapToWorld(x, y);
-						if (JMath::PointInsideRect(p.first, p.second, cam_area))
+						std::pair<int, int> render_pos = I_MapToWorld(x, y);
+						if (JMath::PointInsideRect(render_pos.first, render_pos.second, cam_area))
 						{
-							unsigned int tile_id = it->GetID(x, y);
 							int tex_id;
 							SDL_Rect section;
-							if (GetRectAndTexId(tile_id, section, tex_id))
+							if (GetRectAndTexId(it->GetID(x, y), section, tex_id))
 							{
 								// Draw tileset spite at render_pos
-								std::pair<int, int> render_pos = I_MapToWorld(x, y);
 								App->render->Blit(tex_id, render_pos.first, render_pos.second, &section, MAP);
 							}
 #ifdef DEBUG
@@ -195,7 +191,6 @@ void Map::Draw() const
 							{
 								// Draw debug spite at empty position
 								SDL_Rect rect = { 64, 0, 64, 64 };
-								std::pair<int, int> render_pos = I_MapToWorld(x, y);
 								App->render->Blit(App->scene->id_mouse_tex, render_pos.first, render_pos.second, &rect, BACKGROUND);
 							}
 #endif // DEBUG
@@ -421,6 +416,34 @@ std::pair<int, int> Map::WorldToTileBase(float x, float y)
 	if (ret.second < 0.0f) ret.second--;
 
 	return { int(ret.first), int(ret.second) };
+}
+
+SDL_Texture* Map::GetFullMap(std::vector<std::pair<SDL_Rect, SDL_Rect>>& rects) const
+{
+	SDL_Texture* ret = nullptr;
+
+	if (loaded)
+	{
+		int tex_id;
+
+		for (int y = 0; y < width; ++y)
+		{
+			for (int x = 0; x < height; ++x)
+			{
+				std::pair<SDL_Rect, SDL_Rect> target;
+				if (GetRectAndTexId(layers.cbegin()->GetID(x, y), target.first, tex_id))
+				{
+					std::pair<int, int> render_pos = I_MapToWorld(x, y);
+					target.second = { render_pos.first, render_pos.second, target.first.w, target.first.h };
+					rects.push_back(target);
+				}
+			}
+		}
+
+		ret = App->tex.GetTexture(tex_id);
+	}
+
+	return ret;
 }
 
 void Map::ParseHeader(pugi::xml_node& node)

@@ -14,6 +14,8 @@ enum MapOrientation
 	MAPTYPE_STAGGERED
 };
 
+struct SDL_Texture;
+
 class Map
 {
 public:
@@ -54,6 +56,9 @@ public:
 
 	//Debug Draw
 	bool draw_walkability = false;
+
+	// Minimap
+	SDL_Texture* GetFullMap(std::vector<std::pair<SDL_Rect, SDL_Rect>>& rects) const;
 
 private:
 

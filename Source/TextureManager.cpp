@@ -206,6 +206,28 @@ TextureData* TextureManager::CreateEmpty()
 	return &textures.insert({ data.id, data }).first->second;
 }
 
+int TextureManager::CreateEmptyTexture(SDL_Renderer* r, int width, int height, const char* source)
+{
+	int ret = -1;
+	TextureData data;
+
+	if ((data.texture = SDL_CreateTexture(r, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, data.width = width, data.height = height)) != nullptr)
+	{
+		if (SDL_SetTextureBlendMode(data.texture, SDL_BLENDMODE_BLEND) == 0)
+		{
+			data.source = source;
+			textures.insert({ ret = data.id, data });
+		}
+		else
+			LOG("Unable to SDL_SetTextureBlendMode to SDL_BLENDMODE_BLEND! SDL Error: %s\n", SDL_GetError());
+	}
+	else
+		LOG("Unable to create texture ! SDL Error: %s\n", SDL_GetError());
+		
+
+	return ret;
+}
+
 bool TextureManager::Remove(int id)
 {
 	bool ret = false;
