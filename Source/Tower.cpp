@@ -58,6 +58,7 @@ void Tower::Update()
 			std::map<float, Behaviour*> inRange;
 			int found = GetBehavioursInRange(game_object->GetTransform()->GetGlobalPosition(), attack_range, inRange);
 			float d = 0;
+			atkObj = nullptr;
 			if (found > 0)
 			{
 				for (std::map<float, Behaviour*>::iterator it = inRange.begin(); it != inRange.end(); ++it)
@@ -98,10 +99,8 @@ void Tower::Update()
 			}
 			else
 			{
-				Event::Push(DAMAGE, atkObj, damage);
 				shoot = false;
 				rayCastTimer = 0;
-				atkObj = nullptr;
 			}
 		}
 	}
@@ -153,8 +152,11 @@ void Tower::DoAttack()
 	atkPos = Map::F_MapToWorld(pos.x, pos.y, pos.z);
 	atkPos.first += 30.0f;
 	atkPos.second += 20.0f;
+	Event::Push(DAMAGE, atkObj, damage);
+
 	shoot = true;
 	ms_count = 0;
+	atkObj = nullptr;
 }
 
 void Tower::create_bar() {
