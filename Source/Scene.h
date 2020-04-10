@@ -56,6 +56,8 @@ private:
 
 	bool ChangeToScene(SceneType scene);
 
+	void PlaceMode(int building_type);
+
 public:
 
 	int id_mouse_tex;
@@ -114,6 +116,9 @@ private:
 	int edge_value = 100;
 	C_Text* text_mobdrop_value = nullptr;
 	C_Text* text_edge_value = nullptr;
+
+
+	Transform* placing_building = nullptr;
 
 	
 };

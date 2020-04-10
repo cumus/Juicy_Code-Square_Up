@@ -12,7 +12,7 @@
 
 #define RAYCAST_TIME 0.1
 
-enum UnitType
+enum UnitType : int
 {
 	GATHERER,
 	UNIT_MELEE,
@@ -33,7 +33,7 @@ enum UnitType
 	EDGE,
 };
 
-enum UnitState
+enum UnitState : int
 {
 	IDLE,
 	MOVING_N,

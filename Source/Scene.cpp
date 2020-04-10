@@ -104,104 +104,124 @@ bool Scene::Update()
 			text_edge_value->text->SetText(temp_str1.c_str());
 		}
 
-		//GROUP SELECTION//
-		switch (App->input->GetMouseButtonDown(0))
-		{
-		case KEY_DOWN:
-		{
-			App->input->GetMousePosition(groupStart.x, groupStart.y);
-			break;
-		}
-		case KEY_REPEAT:
-		{
-			App->input->GetMousePosition(mouseExtend.x, mouseExtend.y);
-			App->render->DrawQuad({ groupStart.x, groupStart.y, mouseExtend.x - groupStart.x, mouseExtend.y - groupStart.y }, { 0, 200, 0, 100 }, false, SCENE, false);
-			App->render->DrawQuad({ groupStart.x, groupStart.y, mouseExtend.x - groupStart.x, mouseExtend.y - groupStart.y }, { 0, 200, 0, 50 }, true, SCENE, false);
-			break;
-		}
-		case KEY_UP:
-		{
-			SDL_Rect cam = App->render->GetCameraRect();
-			for (std::map<double, Behaviour*>::iterator it = Behaviour::b_map.begin(); it != Behaviour::b_map.end(); ++it)
-			{
-				if (it->second->GetType() == UNIT_MELEE || it->second->GetType() == GATHERER || it->second->GetType() == UNIT_RANGED)
-				{
-					vec pos = it->second->GetGameobject()->GetTransform()->GetGlobalPosition();
-					std::pair<float, float> posToWorld = Map::F_MapToWorld(pos.x, pos.y, pos.z);
-					posToWorld.first -= cam.x;
-					posToWorld.second -= cam.y;
-
-					if (posToWorld.first > groupStart.x && posToWorld.first < mouseExtend.x) //Right
-					{
-						if (posToWorld.second > groupStart.y && posToWorld.second < mouseExtend.y)//Up
-						{
-							group.push_back(it->second->GetGameobject());
-							Event::Push(ON_SELECT, it->second->GetGameobject());
-						}
-						else if (posToWorld.second < groupStart.y && posToWorld.second > mouseExtend.y)//Down
-						{
-							group.push_back(it->second->GetGameobject());
-							Event::Push(ON_SELECT, it->second->GetGameobject());
-						}
-					}
-					else if (posToWorld.first < groupStart.x && posToWorld.first > mouseExtend.x)//Left
-					{
-						if (posToWorld.second > groupStart.y && posToWorld.second < mouseExtend.y)//Up
-						{
-							group.push_back(it->second->GetGameobject());
-							Event::Push(ON_SELECT, it->second->GetGameobject());
-						}
-						else if (posToWorld.second < groupStart.y && posToWorld.second > mouseExtend.y)//Down
-						{
-							group.push_back(it->second->GetGameobject());
-							Event::Push(ON_SELECT, it->second->GetGameobject());
-						}
-					}
-				}
-			}
-			if (!group.empty()) groupSelect = true;
-			break;
-		}
-		default:
-			break;
-		}
-
-		//GROUP MOVEMENT//
-		if (!groupSelect && group.empty() == false)
-		{
-			std::vector<Gameobject*>::iterator it;
-			for (it = group.begin(); it != group.end(); ++it)
-			{
-				Event::Push(ON_UNSELECT, *it);
-			}
-			group.clear();
-		}
-
-		if (App->input->GetMouseButtonDown(2) == KEY_DOWN)
+		if (placing_building)
 		{
 			int x, y;
 			App->input->GetMousePosition(x, y);
 			RectF cam = App->render->GetCameraRectF();
-			std::pair<float, float> mouseOnMap = Map::F_WorldToMap(float(x) + cam.x, float(y) + cam.y);
+			std::pair<int, int> pos = Map::WorldToTileBase(float(x) + cam.x, float(y) + cam.y);
+			placing_building->SetLocalPos(vec(float(pos.first), float(pos.second), 0.f));
 
-			if (groupSelect && !group.empty())//Move group selected
+			if (App->input->GetKey(SDL_SCANCODE_ESCAPE) == KEY_DOWN)
 			{
-				for (std::vector<Gameobject*>::iterator it = group.begin(); it != group.end(); ++it)
-					Event::Push(ON_RIGHT_CLICK, *it, mouseOnMap.first, mouseOnMap.second);
+				placing_building->GetGameobject()->Destroy();
+				placing_building = nullptr;
 			}
-			else//Move one selected
+			else if (App->input->GetMouseButtonDown(0) == KEY_DOWN)
 			{
-				Gameobject* go = App->editor->selection;
-				if (go)
-				{
-					Event::Push(ON_RIGHT_CLICK, go, mouseOnMap.first, mouseOnMap.second);
-					groupSelect = false;
-				}
-				else groupSelect = false;
+				PlaceMode(placing_building->GetGameobject()->GetBehaviour()->GetType());
 			}
 		}
+		else
+		{
+			//GROUP SELECTION//
+			switch (App->input->GetMouseButtonDown(0))
+			{
+			case KEY_DOWN:
+			{
+				App->input->GetMousePosition(groupStart.x, groupStart.y);
+				break;
+			}
+			case KEY_REPEAT:
+			{
+				App->input->GetMousePosition(mouseExtend.x, mouseExtend.y);
+				App->render->DrawQuad({ groupStart.x, groupStart.y, mouseExtend.x - groupStart.x, mouseExtend.y - groupStart.y }, { 0, 200, 0, 100 }, false, SCENE, false);
+				App->render->DrawQuad({ groupStart.x, groupStart.y, mouseExtend.x - groupStart.x, mouseExtend.y - groupStart.y }, { 0, 200, 0, 50 }, true, SCENE, false);
+				break;
+			}
+			case KEY_UP:
+			{
+				SDL_Rect cam = App->render->GetCameraRect();
+				for (std::map<double, Behaviour*>::iterator it = Behaviour::b_map.begin(); it != Behaviour::b_map.end(); ++it)
+				{
+					if (it->second->GetType() == UNIT_MELEE || it->second->GetType() == GATHERER || it->second->GetType() == UNIT_RANGED)
+					{
+						vec pos = it->second->GetGameobject()->GetTransform()->GetGlobalPosition();
+						std::pair<float, float> posToWorld = Map::F_MapToWorld(pos.x, pos.y, pos.z);
+						posToWorld.first -= cam.x;
+						posToWorld.second -= cam.y;
 
-		
+						if (posToWorld.first > groupStart.x && posToWorld.first < mouseExtend.x) //Right
+						{
+							if (posToWorld.second > groupStart.y && posToWorld.second < mouseExtend.y)//Up
+							{
+								group.push_back(it->second->GetGameobject());
+								Event::Push(ON_SELECT, it->second->GetGameobject());
+							}
+							else if (posToWorld.second < groupStart.y && posToWorld.second > mouseExtend.y)//Down
+							{
+								group.push_back(it->second->GetGameobject());
+								Event::Push(ON_SELECT, it->second->GetGameobject());
+							}
+						}
+						else if (posToWorld.first < groupStart.x && posToWorld.first > mouseExtend.x)//Left
+						{
+							if (posToWorld.second > groupStart.y && posToWorld.second < mouseExtend.y)//Up
+							{
+								group.push_back(it->second->GetGameobject());
+								Event::Push(ON_SELECT, it->second->GetGameobject());
+							}
+							else if (posToWorld.second < groupStart.y && posToWorld.second > mouseExtend.y)//Down
+							{
+								group.push_back(it->second->GetGameobject());
+								Event::Push(ON_SELECT, it->second->GetGameobject());
+							}
+						}
+					}
+				}
+				if (!group.empty()) groupSelect = true;
+				break;
+			}
+			default:
+				break;
+			}
+
+			//GROUP MOVEMENT//
+			if (!groupSelect && group.empty() == false)
+			{
+				std::vector<Gameobject*>::iterator it;
+				for (it = group.begin(); it != group.end(); ++it)
+				{
+					Event::Push(ON_UNSELECT, *it);
+				}
+				group.clear();
+			}
+
+			//SELECTION RIGHT CLICK//
+			if (App->input->GetMouseButtonDown(2) == KEY_DOWN)
+			{
+				int x, y;
+				App->input->GetMousePosition(x, y);
+				RectF cam = App->render->GetCameraRectF();
+				std::pair<float, float> mouseOnMap = Map::F_WorldToMap(float(x) + cam.x, float(y) + cam.y);
+
+				if (groupSelect && !group.empty())//Move group selected
+				{
+					for (std::vector<Gameobject*>::iterator it = group.begin(); it != group.end(); ++it)
+						Event::Push(ON_RIGHT_CLICK, *it, mouseOnMap.first, mouseOnMap.second);
+				}
+				else//Move one selected
+				{
+					Gameobject* go = App->editor->selection;
+					if (go)
+					{
+						Event::Push(ON_RIGHT_CLICK, go, mouseOnMap.first, mouseOnMap.second);
+						groupSelect = false;
+					}
+					else groupSelect = false;
+				}
+			}
+		}
 	}
 
 	return true;
@@ -262,6 +282,11 @@ void Scene::RecieveEvent(const Event& e)
 		edge_value += e.data1.AsInt();
 		LOG("Current resources: %d",edge_value);
 		break;
+	case PLACE_BUILDING:
+	{
+		PlaceMode(e.data1.AsInt());
+		break;
+	}
 	default:
 		break;
 	}
@@ -355,6 +380,16 @@ bool Scene::LoadTestScene()
 	minimap->offset = { -1280, 0 };
 	minimap->section = { 0, 0, 1280, 720 };
 
+	// Build mode
+	Gameobject* builder = AddGameobject("Building Mode", canvas_go);
+	C_Button* base = new C_Button(builder, Event(PLACE_BUILDING, this, int(BASE_CENTER)));
+	C_Button* tower = new C_Button(builder, Event(PLACE_BUILDING, this, int(TOWER)));
+	C_Button* edge = new C_Button(builder, Event(PLACE_BUILDING, this, int(EDGE)));
+	base->target = { 0.5f, 1.f, 1.f , 1.f };
+	tower->target = { 0.6f, 1.f, 1.f , 1.f };
+	edge->target = { 0.7f, 1.f, 1.f , 1.f };
+	base->offset = tower->offset = edge->offset ={ -40.f, -80.f };
+	base->section = tower->section = edge->section = { 0, 0, 80, 80 };
 
 	return ret;
 }
@@ -761,6 +796,26 @@ bool Scene::ChangeToScene(SceneType scene)
 	return ret;
 }
 
+void Scene::PlaceMode(int type)
+{
+	placing_building = nullptr;
+	Gameobject* go = nullptr;
+
+	switch (UnitType(type))
+	{
+	case BASE_CENTER: new Base_Center(go = AddGameobject("Base Center")); break;
+	case TOWER: new Tower(go = AddGameobject("Tower")); break;
+	case WALL: break;
+	case BARRACKS: break;
+	case LAB: break;
+	case EDGE: new Edge(go = AddGameobject("Tower")); break;
+	default: break;
+	}
+
+	if (go)
+		placing_building = go->GetTransform();
+}
+
 
 Gameobject* Scene::GetRoot()
 {
@@ -842,7 +897,7 @@ void Scene::GodMode()
 			Event::Push(SCENE_CHANGE, this, END, 2.f);
 	}
 	
-	if (test || level)
+	if ((test || level) && !placing_building)
 	{
 		if (App->input->GetKey(SDL_SCANCODE_ESCAPE) == KEY_DOWN && pause==false)
 		{

@@ -169,6 +169,10 @@ void C_Button::PostUpdate()
 	if (parent && canvas)
 	{
 		ComputeOutputRect(float(section.w), float(section.h));
-		App->render->Blit_Scale(tex_id, output.x, output.y, float(output.w) / float(section.w), float(output.h) / float(section.h), &section, HUD, false);
+
+		if (tex_id >= 0)
+			App->render->Blit_Scale(tex_id, output.x, output.y, float(output.w) / float(section.w), float(output.h) / float(section.h), &section, HUD, false);
+		else
+			App->render->DrawQuad(output, { 0, 0, 0, 255 }, true, HUD, false);
 	}
 }
