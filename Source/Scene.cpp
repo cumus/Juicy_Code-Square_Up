@@ -138,10 +138,7 @@ bool Scene::Update()
 					}
 				}
 			}
-
-			if (!group.empty())
-				groupSelect = true;
-
+			if (!group.empty()) groupSelect = true;
 			break;
 		}
 		default:
@@ -149,6 +146,16 @@ bool Scene::Update()
 		}
 
 		//GROUP MOVEMENT//
+		if (!groupSelect && group.empty() == false)
+		{
+			std::vector<Gameobject*>::iterator it;
+			for (it = group.begin(); it != group.end(); ++it)
+			{
+				Event::Push(ON_UNSELECT, *it);
+			}
+			group.clear();
+		}
+
 		if (App->input->GetMouseButtonDown(2) == KEY_DOWN)
 		{
 			int x, y;
@@ -172,15 +179,8 @@ bool Scene::Update()
 				else groupSelect = false;
 			}
 		}
-		if (!groupSelect && group.empty() == false)
-		{
-			std::vector<Gameobject*>::iterator it;
-			for (it = group.begin(); it != group.end(); ++it)
-			{
-				Event::Push(ON_UNSELECT, *it);
-			}
-			group.clear();
-		}
+
+		
 	}
 
 	return true;
@@ -756,7 +756,10 @@ Gameobject* Scene::MouseClickSelect(int mouse_x, int mouse_y)
 				{
 					// Check intersection
 					if (t->Intersects(map_coordinates))
+					{
 						ret = go;
+						groupSelect = false;
+					}
 
 					// Push childs
 					std::vector<Gameobject*> go_childs = go->GetChilds();
