@@ -146,53 +146,13 @@ bool Render::Update()
 	if (App->input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT) cam.y -= moveSpeed; moved = true;
 	if (App->input->GetKey(SDL_SCANCODE_S) == KEY_REPEAT) cam.y += moveSpeed; moved = true;
 
-	if (moved) Event::Push(CAMERA_MOVED, App->audio); update_minimap = true;
+	if (moved) Event::Push(CAMERA_MOVED, App->audio);
 	return true;
 }
 
 bool Render::PostUpdate()
 {
 	bool ret = true;
-
-	// Update minimap texture
-	if (update_minimap)
-	{
-		TextureData data;
-		if (App->tex.GetTextureData(minimap_texture, data))
-		{
-			if (SDL_SetRenderTarget(renderer, data.texture) == 0)
-			{
-				std::vector<std::pair<SDL_Rect, SDL_Rect>> rects;
-				Map::SetMapScale(minimap_scale);
-				SDL_Texture* tex = Map::GetMapC()->GetFullMap(rects);
-				if (tex && !rects.empty())
-				{
-					for (std::vector<std::pair<SDL_Rect, SDL_Rect>>::const_iterator it = rects.cbegin(); it != rects.cend() && ret; ++it)
-					{
-						SDL_Rect r = {
-							it->second.x + minimap_offset.x,
-							it->second.y + minimap_offset.y,
-							it->second.w / minimap_offset.w,
-							it->second.h / minimap_offset.h };
-
-						if (!(ret = SDL_RenderCopy(renderer, tex, &it->first, &r) == 0))
-							LOG("Cannot blit to minimap texture. SDL_RenderCopy error: %s", SDL_GetError());
-					}
-				}
-				else
-					LOG("Map error drawing minimap");
-
-				Map::SetMapScale(zoom);
-			}
-			else
-				LOG("Error setting minimap render target. SDL_SetRenderTarget error: %s", SDL_GetError());
-		}
-		else
-			LOG("Error retrieving minimap texture (id = %d)", minimap_texture);
-
-		update_minimap = false;
-		ret = (SDL_SetRenderTarget(renderer, nullptr) == 0);
-	}
 
 	// Render by layers
 	for (int i = 0; i < MAX_LAYERS; ++i)
@@ -298,6 +258,10 @@ void Render::RecieveEvent(const Event& e)
 		SetupViewPort(16.0f / 9.0f);
 		break;
 	}
+	case UPDATE_MINIMAP_TEXTURE:
+	{
+		RenderMinimap();
+	}
 	default:
 		break;
 	}
@@ -349,23 +313,58 @@ bool Render::SetDrawColor(SDL_Color color)
 	return ret;
 }
 
+bool Render::RenderMinimap()
+{
+	bool ret = false;
+	TextureData data;
+
+	if (App->tex.GetTextureData(minimap_texture, data))
+	{
+		if (SDL_SetRenderTarget(renderer, data.texture) == 0)
+		{
+			std::vector<std::pair<SDL_Rect, SDL_Rect>> rects;
+			Map::SetMapScale(minimap_scale);
+			SDL_Texture* tex = Map::GetMapC()->GetFullMap(rects);
+			if (ret = (tex && !rects.empty()))
+			{
+				for (std::vector<std::pair<SDL_Rect, SDL_Rect>>::const_iterator it = rects.cbegin(); it != rects.cend() && ret; ++it)
+				{
+					SDL_Rect r = {
+						it->second.x + minimap_offset.x,
+						it->second.y + minimap_offset.y,
+						it->second.w / minimap_offset.w,
+						it->second.h / minimap_offset.h };
+
+					if (!(ret = SDL_RenderCopy(renderer, tex, &it->first, &r) == 0))
+						LOG("Cannot blit to minimap texture. SDL_RenderCopy error: %s", SDL_GetError());
+				}
+			}
+			else
+				LOG("Map error drawing minimap");
+
+			Map::SetMapScale(zoom);
+			SDL_SetRenderTarget(renderer, nullptr);
+		}
+		else
+			LOG("Error setting minimap render target. SDL_SetRenderTarget error: %s", SDL_GetError());
+	}
+	else
+		LOG("Error retrieving minimap texture (id = %d)", minimap_texture);
+
+	return ret;
+}
+
 int Render::GetMinimap(int width, int height, float s, SDL_Rect offset)
 {
 	if (minimap_texture < 0)
 	{
 		// Setup Minimap
 		minimap_texture = App->tex.CreateEmptyTexture(renderer, width, height);
-		update_minimap = true;
 		minimap_scale = s;
 		minimap_offset = offset;
 	}
 
 	return minimap_texture;
-}
-
-void Render::UpdateMinimap()
-{
-	update_minimap = (minimap_texture >= 0);
 }
 
 void Render::SetupViewPort(float aspect_ratio)

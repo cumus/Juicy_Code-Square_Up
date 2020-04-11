@@ -56,7 +56,6 @@ public:
 
 	// Minimap
 	int GetMinimap(int width = 780, int height = 280, float scale = 0.05f, SDL_Rect offset = { 384, 10, 8, 8 });
-	void UpdateMinimap();
 
 	// Viewport
 	void SetupViewPort(float aspect_ratio);
@@ -85,6 +84,7 @@ public:
 private:
 
 	bool SetDrawColor(SDL_Color color);
+	bool RenderMinimap();
 
 private:
 
@@ -123,7 +123,6 @@ private:
 
 	// Minimap
 	int minimap_texture = -1;
-	bool update_minimap = false;
 	float minimap_scale;
 	SDL_Rect minimap_offset;
 

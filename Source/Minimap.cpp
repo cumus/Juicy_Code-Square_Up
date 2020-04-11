@@ -27,6 +27,7 @@ Minimap::Minimap(Gameobject* go) :
 
 	App->win->GetWindowSize(window_width, window_height);
 	tex_id = App->render->GetMinimap();
+	Event::Push(UPDATE_MINIMAP_TEXTURE, App->render);
 }
 
 Minimap::~Minimap()

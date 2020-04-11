@@ -62,6 +62,7 @@ enum EventType
 	// Renderer
 	SET_VSYNC,
 	CAMERA_MOVED,
+	UPDATE_MINIMAP_TEXTURE,
 
 	//Behaviour
 	DAMAGE,
