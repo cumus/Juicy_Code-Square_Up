@@ -26,8 +26,6 @@ Minimap::Minimap(Gameobject* go) :
 	camera_color = { 255, 255, 255, 255 };
 
 	App->win->GetWindowSize(window_width, window_height);
-	tex_id = App->render->GetMinimap();
-	Event::Push(UPDATE_MINIMAP_TEXTURE, App->render);
 }
 
 Minimap::~Minimap()
@@ -107,4 +105,11 @@ void Minimap::Update()
 void Minimap::AddToMinimap(Gameobject* object)
 {
 	object_queue.push_back(object);
+}
+
+void Minimap::GetMinimap()
+{
+	ComputeOutputRect(float(section.w), float(section.h));
+	tex_id = App->render->GetMinimap(output.w, output.h, 0.05f, { output.w / 2, 0, 12, 12 });
+	Event::Push(UPDATE_MINIMAP_TEXTURE, App->render);
 }

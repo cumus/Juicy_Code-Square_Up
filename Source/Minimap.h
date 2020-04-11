@@ -24,6 +24,7 @@ public:
 	~Minimap();
 
 	void AddToMinimap(Gameobject* object);
+	void GetMinimap();
 
 private:
 
@@ -48,6 +49,7 @@ private:
 	int		window_width;
 	int		window_height;
 	bool	mouse_inside;
+	bool	map_charged;
 
 public:
 
