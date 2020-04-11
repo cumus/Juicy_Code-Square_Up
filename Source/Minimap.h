@@ -24,7 +24,6 @@ public:
 	~Minimap();
 
 	void AddToMinimap(Gameobject* object);
-	void GetMinimap();
 
 private:
 

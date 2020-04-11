@@ -26,6 +26,15 @@ Minimap::Minimap(Gameobject* go) :
 	camera_color = { 255, 255, 255, 255 };
 
 	App->win->GetWindowSize(window_width, window_height);
+
+	target = { 1.f, 0.f, 0.03f, 0.03f };
+	std::pair<int, int> map_size = Map::GetMapSize_I();
+	std::pair<int, int> tile_size = Map::GetTileSize_I();
+	section = { 0, 0, map_size.first * tile_size.first, map_size.second * tile_size.second };
+	offset = { -section.w, 0 };
+
+	tex_id = App->render->GetMinimap(section.w, section.h);
+	Event::Push(UPDATE_MINIMAP_TEXTURE, App->render);
 }
 
 Minimap::~Minimap()
@@ -39,14 +48,11 @@ void Minimap::Update()
 	App->render->DrawQuad(output, { 255, 0, 0, 255 }, false, EDITOR, false);
 
 	//From map to minimap viewport
-	float tile_width, tile_height;
-	map.GetTileSize_F(tile_width, tile_height);
+	std::pair<float, float> tile_size = Map::GetTileSize_F();
+	std::pair<float, float> map_size = Map::GetMapSize_F();
 
-	float map_width, map_height;
-	map.GetMapSize(map_width, map_height);
-
-	float map_pixelwidth = map_width * tile_width;
-	float map_pixelheight = map_height * tile_height;
+	float map_pixelwidth = map_size.first * tile_size.first;
+	float map_pixelheight = map_size.second * tile_size.second;
 
 	float scale_x, scale_y;
 	scale_x = output.w / map_pixelwidth;
@@ -105,11 +111,4 @@ void Minimap::Update()
 void Minimap::AddToMinimap(Gameobject* object)
 {
 	object_queue.push_back(object);
-}
-
-void Minimap::GetMinimap()
-{
-	ComputeOutputRect(float(section.w), float(section.h));
-	tex_id = App->render->GetMinimap(output.w, output.h, 0.05f, { output.w / 2, 0, 12, 12 });
-	Event::Push(UPDATE_MINIMAP_TEXTURE, App->render);
 }

@@ -188,13 +188,12 @@ bool Transform::GlobalPosIsDifferentFrom(vec global_pos) const
 void Transform::ResetAABB()
 {
 	vec p = GetGlobalPosition();
+	vec s = GetGlobalScale();
+	std::pair<float, float> tile_size = Map::GetTileSize_F();
 	std::pair<float, float> pos = Map::F_MapToWorld(p.x, p.y, p.z);
 
-	vec s = GetGlobalScale();
-	float w, h;
-	Map::GetTileSize_F(w, h);
-	w *= s.x;
-	h *= s.y;
+	float w = tile_size.first *= s.x;
+	float h = tile_size.second *= s.y;
 
 	points[0] = { int(pos.first),				int(pos.second + (h * 0.5f)) };
 	points[1] = { int(pos.first + (w * 0.5f)),	int(pos.second + h) };

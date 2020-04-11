@@ -393,10 +393,6 @@ bool Scene::LoadTestScene()
 	//Minimap
 	Gameobject* minimap_go = AddGameobject("Minimap", canvas_go);
 	minimap = new Minimap(minimap_go);
-	minimap->target = { 1.f, 0.f, 0.3f, 0.3f };
-	minimap->offset = { -1280, 0 };
-	minimap->section = { 0, 0, 1280, 720 };
-	minimap->GetMinimap();
 
 	// Build mode
 	Gameobject* builder = AddGameobject("Building Mode", canvas_go);

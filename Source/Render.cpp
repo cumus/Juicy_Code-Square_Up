@@ -323,17 +323,14 @@ bool Render::RenderMinimap()
 		if (SDL_SetRenderTarget(renderer, data.texture) == 0)
 		{
 			std::vector<std::pair<SDL_Rect, SDL_Rect>> rects;
-			Map::SetMapScale(minimap_scale);
+			Map::SetMapScale(1.0f);
 			SDL_Texture* tex = Map::GetMapC()->GetFullMap(rects);
 			if (ret = (tex && !rects.empty()))
 			{
 				for (std::vector<std::pair<SDL_Rect, SDL_Rect>>::const_iterator it = rects.cbegin(); it != rects.cend() && ret; ++it)
 				{
-					SDL_Rect r = {
-						it->second.x + minimap_offset.x,
-						it->second.y + minimap_offset.y,
-						it->second.w / minimap_offset.w,
-						it->second.h / minimap_offset.h };
+					SDL_Rect r = it->second;
+					r.x += minimap_half_width;
 
 					if (!(ret = SDL_RenderCopy(renderer, tex, &it->first, &r) == 0))
 						LOG("Cannot blit to minimap texture. SDL_RenderCopy error: %s", SDL_GetError());
@@ -354,14 +351,13 @@ bool Render::RenderMinimap()
 	return ret;
 }
 
-int Render::GetMinimap(int width, int height, float s, SDL_Rect offset)
+int Render::GetMinimap(int width, int height)
 {
 	if (minimap_texture < 0)
 	{
 		// Setup Minimap
 		minimap_texture = App->tex.CreateEmptyTexture(renderer, width, height);
-		minimap_scale = s;
-		minimap_offset = offset;
+		minimap_half_width = width / 2;
 	}
 
 	return minimap_texture;
