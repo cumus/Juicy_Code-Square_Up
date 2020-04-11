@@ -137,22 +137,6 @@ bool Editor::Update()
 	return true;
 }
 
-bool Editor::PostUpdate()
-{
-	if (App->input->GetKey(SDL_SCANCODE_F1) == KEY_DOWN)
-		hide_windows = !hide_windows;
-
-	if (!hide_windows)
-	{
-		bool draw_border = (App->input->GetKey(SDL_SCANCODE_LCTRL) == KEY_REPEAT);
-
-		for (std::vector<EditorWindow*>::const_reverse_iterator it = windows.rbegin(); it != windows.rend(); ++it)
-			(*it)->Draw(draw_border);
-	}
-
-	return true;
-}
-
 bool Editor::CleanUp()
 {
 	for (std::vector<EditorWindow*>::reverse_iterator it = windows.rbegin(); it != windows.rend(); ++it)
@@ -169,6 +153,22 @@ bool Editor::CleanUp()
 bool Editor::MouseOnWindow() const
 {
 	return mouse_over_windows > 0u;
+}
+
+bool Editor::Draw()
+{
+	if (App->input->GetKey(SDL_SCANCODE_F1) == KEY_DOWN)
+		hide_windows = !hide_windows;
+
+	if (!hide_windows)
+	{
+		bool draw_border = (App->input->GetKey(SDL_SCANCODE_LCTRL) == KEY_REPEAT);
+
+		for (std::vector<EditorWindow*>::const_reverse_iterator it = windows.rbegin(); it != windows.rend(); ++it)
+			(*it)->Draw(draw_border);
+	}
+
+	return true;
 }
 
 void Editor::SetSelection(Gameobject* go, bool call_unselect)

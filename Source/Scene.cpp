@@ -83,25 +83,12 @@ bool Scene::Update()
 	}
 	else
 	{
+		if (App->input->GetKey(SDL_SCANCODE_F10) == KEY_DOWN)
+			god_mode = !god_mode;
+
 		if (god_mode)
 			GodMode();
 
-		//Pause Game
-		if ((test || level) && !placing_building)
-		{
-			if (App->input->GetKey(SDL_SCANCODE_ESCAPE) == KEY_DOWN && pause == false)
-			{
-				Event::Push(SCENE_PAUSE, App);
-				PauseMenu();
-				pause = true;
-			}
-			else if (App->input->GetKey(SDL_SCANCODE_ESCAPE) == KEY_DOWN && pause == true)
-			{
-				pause_canvas_go->Destroy();
-				Event::Push(SCENE_PLAY, App);
-				pause = false;
-			}
-		}
 		
 		//Mob Drop Print Updated Value
 		if (text_mobdrop_value) {
@@ -137,6 +124,25 @@ bool Scene::Update()
 			else if (App->input->GetMouseButtonDown(0) == KEY_DOWN)
 			{
 				PlaceMode(placing_building->GetGameobject()->GetBehaviour()->GetType());
+			}
+		}
+		else if (test || level)
+		{
+			//Pause Game
+			if (App->input->GetKey(SDL_SCANCODE_ESCAPE) == KEY_DOWN)
+			{
+				if (pause)
+				{
+					pause_canvas_go->Destroy();
+					Event::Push(SCENE_PLAY, App);
+					pause = false;
+				}
+				else
+				{
+					Event::Push(SCENE_PAUSE, App);
+					PauseMenu();
+					pause = true;
+				}
 			}
 		}
 		else
@@ -276,23 +282,26 @@ void Scene::RecieveEvent(const Event& e)
 		break;
 	case SCENE_CHANGE:
 	{
-		if ((fade_duration = e.data2.AsFloat()) != 0.f)
+		if (fading == NO_FADE)
 		{
-			next_scene = SceneType(e.data1.AsInt());
-			fade_duration = e.data2.AsFloat();
-
-			fade_timer = 0.f;
-			if (fade_duration < 0)
+			if ((fade_duration = e.data2.AsFloat()) != 0.f)
 			{
-				fade_duration *= -1.0f;
-				fading = FADE_IN;
+				next_scene = SceneType(e.data1.AsInt());
+				fade_duration = e.data2.AsFloat();
+
+				fade_timer = 0.f;
+				if (fade_duration < 0)
+				{
+					fade_duration *= -1.0f;
+					fading = FADE_IN;
+				}
+				else
+					fading = FADE_OUT;
 			}
 			else
-				fading = FADE_OUT;
-		}
-		else
-		{
-			ChangeToScene(SceneType(e.data1.AsInt()));
+			{
+				ChangeToScene(SceneType(e.data1.AsInt()));
+			}
 		}
 		break; }
 	case RESOURCE: 
@@ -312,6 +321,9 @@ void Scene::RecieveEvent(const Event& e)
 bool Scene::LoadTestScene()
 {
 	OPTICK_EVENT();
+
+	god_mode = true;
+
 	// Play sample track
 	bool ret = App->audio->PlayMusic("audio/Music/alexander-nakarada-buzzkiller.ogg");
 
@@ -1065,4 +1077,6 @@ void Scene::GodMode()
 		sel != nullptr ? sel->GetName() : "none selected");
 
 	App->win->SetTitle(tmp_str);
+
+	App->editor->Draw();
 }

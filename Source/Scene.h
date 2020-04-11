@@ -97,7 +97,7 @@ private:
 	Map map;
 	Minimap* minimap;
 	Gameobject root;
-	bool god_mode = true;
+	bool god_mode = false;
 
 	// Scene Transitions
 	enum Fade : int

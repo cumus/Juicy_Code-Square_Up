@@ -23,10 +23,10 @@ public:
 	bool Init() override;
 	bool Start() override;
 	bool Update() override;
-	bool PostUpdate() override;
 	bool CleanUp() override;
 
 	bool MouseOnWindow() const;
+	bool Draw();
 
 	void SetSelection(Gameobject* go = nullptr, bool call_unselect = true);
 
