@@ -126,14 +126,14 @@ bool Scene::Update()
 				PlaceMode(placing_building->GetGameobject()->GetBehaviour()->GetType());
 			}
 		}
-		else if (test || level)
+		else
 		{
 			//Pause Game
-			if (App->input->GetKey(SDL_SCANCODE_ESCAPE) == KEY_DOWN)
+			if ((test || level) && App->input->GetKey(SDL_SCANCODE_ESCAPE) == KEY_DOWN)
 			{
 				if (pause)
 				{
-					pause_canvas_go->Destroy();
+					pause_canvas_go->SetInactive();
 					Event::Push(SCENE_PLAY, App);
 					pause = false;
 				}
@@ -144,9 +144,7 @@ bool Scene::Update()
 					pause = true;
 				}
 			}
-		}
-		else
-		{
+
 			//GROUP SELECTION//
 			switch (App->input->GetMouseButtonDown(0))
 			{
