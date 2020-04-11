@@ -197,10 +197,11 @@ void Base_Center::update_health_ui() {
 }
 
 void Base_Center::update_upgrades_ui() {
-
+    /*
 	C_Image* main_base_upgrade = new C_Image(bar_go);
 	main_base_upgrade->target = { 0.405f + (bc_lvl - 1) * 0.02f, pos_y_HUD - 0.04f, 1.5f, 1.5f };
 	main_base_upgrade->offset = { -12.0f, -12.0f };
 	main_base_upgrade->section = { 372, 336, 12, 12 };
 	main_base_upgrade->tex_id = bar_text_id;
+	*/
 }

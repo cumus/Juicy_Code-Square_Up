@@ -184,8 +184,6 @@ void Tower::UpdatePanel()
 
 void Tower::create_bar() {
 
-	App->scene->building_bars_created++;
-
 	pos_y_HUD = 0.17 + 0.1 * App->scene->building_bars_created;
 
 	bar_text_id = App->tex.Load("textures/Iconos_square_up.png");
@@ -246,9 +244,9 @@ void Tower::update_health_ui() {
 
 void Tower::update_upgrades_ui() {
 
-	C_Image* tower_upgrades = new C_Image(bar_go);
+	/*C_Image* tower_upgrades = new C_Image(bar_go);
 	tower_upgrades->target = { 0.34f + (t_lvl - 1) * 0.02f, pos_y_HUD - 0.03f, 1.5f, 1.5f };
 	tower_upgrades->offset = { -12.0f, -12.0f };
 	tower_upgrades->section = { 372, 336, 12, 12 };
-	tower_upgrades->tex_id = bar_text_id;
+	tower_upgrades->tex_id = bar_text_id;*/
 }

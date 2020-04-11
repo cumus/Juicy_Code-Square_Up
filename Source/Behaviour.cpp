@@ -74,6 +74,31 @@ void Behaviour::Selected()
 	audio->Play(SELECT);
 	if (bar_go != nullptr) bar_go->SetActive();
 	if (selectionPanel != nullptr) selectionPanel->SetActive();
+	if (type == TOWER) {
+		if (App->scene->building_bars_created < 4)
+			App->scene->building_bars_created++;
+
+		pos_y_HUD = 0.17 + 0.1 * App->scene->building_bars_created;
+		bar->target.y = pos_y_HUD;
+		portrait->target.y = pos_y_HUD - 0.013f;
+		text->target.y = pos_y_HUD - 0.073f;
+		red_health->target.y = pos_y_HUD - 0.02f;
+		health->target.y = pos_y_HUD - 0.02f;
+		health_boarder->target.y = pos_y_HUD - 0.02f;
+	}
+	if (type == UNIT_MELEE || type == UNIT_RANGED || type == GATHERER) {
+		if (App->scene->unit_bars_created < 4)
+			App->scene->unit_bars_created++;
+
+		pos_y_HUD = 0.56 + 0.1 * App->scene->unit_bars_created;
+		bar->target.y = pos_y_HUD;
+		portrait->target.y = pos_y_HUD - 0.013f;
+		text->target.y = pos_y_HUD - 0.07f;
+		red_health->target.y = pos_y_HUD - 0.02f;
+		health->target.y = pos_y_HUD - 0.02f;
+		health_boarder->target.y = pos_y_HUD - 0.02f;
+	}
+	
 }
 
 void Behaviour::UnSelected()
@@ -81,6 +106,16 @@ void Behaviour::UnSelected()
 	selection_highlight->SetInactive();
 	if (bar_go != nullptr) bar_go->SetInactive();
 	if (selectionPanel != nullptr) selectionPanel->SetInactive();
+	if (type == TOWER) {
+		if (App->scene->building_bars_created > 0)
+			App->scene->building_bars_created--;
+	}
+		
+	if (type == UNIT_MELEE || type == UNIT_RANGED || type == GATHERER) {
+		if (App->scene->unit_bars_created > 0)
+			App->scene->unit_bars_created--;
+	}
+
 }
 
 void Behaviour::BuildGatherer(float x, float y)
@@ -667,9 +702,6 @@ void B_Unit::OnGetImpulse(float x, float y)
 
 void B_Unit::create_bar()
 {
-
-	App->scene->unit_bars_created++;
-
 	pos_y_HUD = 0.56 + 0.1 * App->scene->unit_bars_created;
 
 	bar_text_id = App->tex.Load("textures/Iconos_square_up.png");
@@ -727,3 +759,4 @@ void B_Unit::update_health_ui() {
 
 	health->target = { (0.37f) - ((0.37f - 0.09f) * (1.0f - float(current_life) / float(max_life))), pos_y_HUD - 0.02f, 1.63f * (float(current_life) / float(max_life)), 0.6f };
 }
+
