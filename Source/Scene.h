@@ -79,7 +79,6 @@ public:
 	// HUD
 	Gameobject* hud_canvas_go;
 	int building_bars_created = 0;
-	int unit_bars_created = 0;
 
 	//Player Resources
 	int mob_drop = 0;

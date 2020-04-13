@@ -337,7 +337,7 @@ bool Scene::LoadTestScene()
 	test = true;
 
 	building_bars_created = 0;
-	unit_bars_created = 0;
+	
 
 	//------------------------- HUD CANVAS --------------------------------------
 
@@ -345,11 +345,11 @@ bool Scene::LoadTestScene()
 	C_Canvas* hud_canv = new C_Canvas(hud_canvas_go);
 	hud_canv->target = { 0.3f, 0.3f, 0.4f, 0.4f };
 
-
 	// HUD
 	Gameobject* canvas_go = AddGameobject("Canvas", &root);
 	C_Canvas* canv = new C_Canvas(canvas_go);
 	canv->target = { 0.6f, 0.6f, 0.4f, 0.4f };
+
 	/*
 	Gameobject* img_go = AddGameobject("Image", canvas_go);
 	C_Image* img = new C_Image(img_go);
@@ -425,7 +425,6 @@ bool Scene::LoadMainScene()
 	level = true;
 
 	building_bars_created = 0;
-	unit_bars_created = 0;
 
 	//------------------------- HUD CANVAS --------------------------------------
 

@@ -134,6 +134,7 @@ protected:
 	C_Image* red_health;
 	C_Image* health;
 	C_Image* health_boarder;
+	C_Image* upgrades;
 };
 
 class B_Unit : public Behaviour
@@ -147,8 +148,6 @@ public:
 	void DoAttack() override;
 	void OnDestroy() override;
 	void OnGetImpulse(float x, float y) override;
-	void create_bar() override;
-	void update_health_ui() override;
 	virtual void UnitAttackType() {}
 
 protected:

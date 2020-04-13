@@ -82,21 +82,10 @@ void Behaviour::Selected()
 		bar->target.y = pos_y_HUD;
 		portrait->target.y = pos_y_HUD - 0.013f;
 		text->target.y = pos_y_HUD - 0.073f;
-		red_health->target.y = pos_y_HUD - 0.02f;
-		health->target.y = pos_y_HUD - 0.02f;
-		health_boarder->target.y = pos_y_HUD - 0.02f;
-	}
-	if (type == UNIT_MELEE || type == UNIT_RANGED || type == GATHERER) {
-		if (App->scene->unit_bars_created < 4)
-			App->scene->unit_bars_created++;
-
-		pos_y_HUD = 0.56 + 0.1 * App->scene->unit_bars_created;
-		bar->target.y = pos_y_HUD;
-		portrait->target.y = pos_y_HUD - 0.013f;
-		text->target.y = pos_y_HUD - 0.07f;
-		red_health->target.y = pos_y_HUD - 0.02f;
-		health->target.y = pos_y_HUD - 0.02f;
-		health_boarder->target.y = pos_y_HUD - 0.02f;
+		red_health->target.y = pos_y_HUD - 0.018f;
+		health->target.y = pos_y_HUD - 0.018f;
+		health_boarder->target.y = pos_y_HUD - 0.018f;
+		upgrades->target.y = pos_y_HUD - 0.018f;
 	}
 	
 }
@@ -110,12 +99,7 @@ void Behaviour::UnSelected()
 		if (App->scene->building_bars_created > 0)
 			App->scene->building_bars_created--;
 	}
-		
-	if (type == UNIT_MELEE || type == UNIT_RANGED || type == GATHERER) {
-		if (App->scene->unit_bars_created > 0)
-			App->scene->unit_bars_created--;
-	}
-
+	
 }
 
 void Behaviour::BuildGatherer(float x, float y)
@@ -275,9 +259,6 @@ B_Unit::B_Unit(Gameobject* go, UnitType t, UnitState s, ComponentType comp_type)
 	inRange = false;
 	attackObjective = nullptr;
 	msCount = 0;
-
-	create_bar();
-	bar_go->SetInactive();
 
 
 	//Info for ranged units constructor
@@ -698,65 +679,5 @@ void B_Unit::OnGetImpulse(float x, float y)
 		game_object->GetTransform()->MoveX(6 * x * App->time.GetGameDeltaTime());//Move x
 		game_object->GetTransform()->MoveY(6 * y * App->time.GetGameDeltaTime());//Move y
 	}
-}
-
-void B_Unit::create_bar()
-{
-	pos_y_HUD = 0.56 + 0.1 * App->scene->unit_bars_created;
-
-	bar_text_id = App->tex.Load("textures/Iconos_square_up.png");
-
-	//------------------------- UNIT BAR --------------------------------------
-
-	bar_go = App->scene->AddGameobject("Unit Bar", App->scene->hud_canvas_go);
-	bar = new C_Image(bar_go);
-	bar->target = { 0.388f, pos_y_HUD, 1.3f, 1.2f };
-	bar->offset = { -345.0f, -45.0f };
-	bar->section = { 17, 509, 345, 45 };
-	bar->tex_id = bar_text_id;
-
-	//------------------------- UNIT PORTRAIT --------------------------------------
-
-	portrait = new C_Image(bar_go);
-	portrait->target = { 0.08f, pos_y_HUD - 0.013f, 1.0f, 1.0f };
-	portrait->offset = { -48.0f, -35.0f };
-	portrait->section = { 22, 463, 48, 35 };
-	portrait->tex_id = bar_text_id;
-
-	//------------------------- UNIT TEXT --------------------------------------
-
-	text = new C_Text(bar_go, "Unit");
-	text->target = { 0.09f, pos_y_HUD - 0.07f, 1.2f, 1.2f };
-
-	//------------------------- UNIT RED HEALTH --------------------------------------
-
-	red_health = new C_Image(bar_go);
-	red_health->target = { 0.37f, pos_y_HUD - 0.02f, 1.63f, 0.6f };
-	red_health->offset = { -220.0f, -20.0f };
-	red_health->section = { 39, 729, 220, 20 };
-	red_health->tex_id = bar_text_id;
-
-	//------------------------- UNIT HEALTH --------------------------------------
-
-	health = new C_Image(bar_go);
-	health->target = { 0.37f, pos_y_HUD - 0.02f, 1.63f, 0.6f };
-	health->offset = { -220.0f, -20.0f };
-	health->section = { 39, 749, 220, 20 };
-	health->tex_id = bar_text_id;
-
-	//------------------------- UNIT HEALTH BOARDER --------------------------------------
-
-	health_boarder = new C_Image(bar_go);
-	health_boarder->target = { 0.37f, pos_y_HUD - 0.02f, 1.63f, 0.6f };
-	health_boarder->offset = { -220.0f, -20.0f };
-	health_boarder->section = { 39, 707, 220, 20 };
-	health_boarder->tex_id = bar_text_id;
-
-
-}
-
-void B_Unit::update_health_ui() {
-
-	health->target = { (0.37f) - ((0.37f - 0.09f) * (1.0f - float(current_life) / float(max_life))), pos_y_HUD - 0.02f, 1.63f * (float(current_life) / float(max_life)), 0.6f };
 }
 

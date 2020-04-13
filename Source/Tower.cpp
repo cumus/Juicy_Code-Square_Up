@@ -38,6 +38,8 @@ Tower::Tower(Gameobject* go) : Behaviour(go, TOWER, FULL_LIFE, B_TOWER)
 		vec pos = t->GetGlobalPosition();
 		App->pathfinding.SetWalkabilityTile(int(pos.x), int(pos.y), false);
 	}
+	
+	
 }
 
 Tower::~Tower()
@@ -215,7 +217,7 @@ void Tower::create_bar() {
 	//------------------------- BUILDING RED HEALTH --------------------------------------
 
 	red_health = new C_Image(bar_go);
-	red_health->target = { 0.33f, pos_y_HUD - 0.02f, 1.4f, 0.75f };
+	red_health->target = { 0.38f, pos_y_HUD - 0.018f, 1.68f, 0.75f };
 	red_health->offset = { -220.0f, -20.0f };
 	red_health->section = { 39, 729, 220, 20 };
 	red_health->tex_id = bar_text_id;
@@ -223,7 +225,7 @@ void Tower::create_bar() {
 	//------------------------- BUILDING HEALTH --------------------------------------
 
 	health = new C_Image(bar_go);
-	health->target = { 0.33f, pos_y_HUD - 0.02f, 1.4f, 0.75f };
+	health->target = { 0.38f, pos_y_HUD - 0.018f, 1.68f, 0.75f };
 	health->offset = { -220.0f, -20.0f };
 	health->section = { 39, 749, 220, 20 };
 	health->tex_id = bar_text_id;
@@ -231,22 +233,27 @@ void Tower::create_bar() {
 	//------------------------- BUILDING HEALTH BOARDER --------------------------------------
 
 	health_boarder = new C_Image(bar_go);
-	health_boarder->target = { 0.33f, pos_y_HUD - 0.02f, 1.4f, 0.75f };
+	health_boarder->target = { 0.38f, pos_y_HUD - 0.018f, 1.68f, 0.75f };
 	health_boarder->offset = { -220.0f, -20.0f };
 	health_boarder->section = { 39, 707, 220, 20 };
 	health_boarder->tex_id = bar_text_id;
+
+	//------------------------- BUILDING UPGRADES --------------------------------------
+
+	upgrades = new C_Image(bar_go);
+	upgrades->target = { 0.42f, pos_y_HUD - 0.018f, 1.1f, 1.1f };
+	upgrades->offset = { -33.0f, -33.0f };
+	upgrades->section = { 543, 706, 33, 33 };
+	upgrades->tex_id = bar_text_id;
+
 }
 
 void Tower::update_health_ui() {
 
-	health->target = { (0.33f) - ((0.33f - 0.092f) * (1.0f - float(current_life) / float(max_life))), pos_y_HUD - 0.02f, 1.4f * (float(current_life) / float(max_life)), 0.75f };
+	health->target = { (0.38f) - ((0.38f - 0.091f) * (1.0f - float(current_life) / float(max_life))), pos_y_HUD - 0.018f, 1.68f * (float(current_life) / float(max_life)), 0.75f };
 }
 
 void Tower::update_upgrades_ui() {
 
-	/*C_Image* tower_upgrades = new C_Image(bar_go);
-	tower_upgrades->target = { 0.34f + (t_lvl - 1) * 0.02f, pos_y_HUD - 0.03f, 1.5f, 1.5f };
-	tower_upgrades->offset = { -12.0f, -12.0f };
-	tower_upgrades->section = { 372, 336, 12, 12 };
-	tower_upgrades->tex_id = bar_text_id;*/
+	upgrades->section = { 543 + 36 * (t_lvl - 1), 706, 33, 33 };
 }
