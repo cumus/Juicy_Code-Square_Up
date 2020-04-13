@@ -6,6 +6,7 @@
 #include "Map.h"
 #include "TextureManager.h"
 #include "TimeManager.h"
+#include "JuicyMath.h"
 #include "Defs.h"
 #include "Log.h"
 
@@ -140,11 +141,11 @@ bool Render::Update()
 	// Move camera
 	bool moved = false;
 	float moveSpeed = 200.000f * App->time.GetDeltaTime() / zoom;
-	if (App->input->GetKey(SDL_SCANCODE_LSHIFT) == KEY_REPEAT) moveSpeed *= 5.000f; moved = true;
-	if (App->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT) cam.x -= moveSpeed; moved = true;
-	if (App->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT) cam.x += moveSpeed; moved = true;
-	if (App->input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT) cam.y -= moveSpeed; moved = true;
-	if (App->input->GetKey(SDL_SCANCODE_S) == KEY_REPEAT) cam.y += moveSpeed; moved = true;
+	if (App->input->GetKey(SDL_SCANCODE_LSHIFT) == KEY_REPEAT) { moveSpeed *= 5.000f; moved = true; }
+	if (App->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT) {cam.x -= moveSpeed; moved = true;}
+	if (App->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT) {cam.x += moveSpeed; moved = true;}
+	if (App->input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT) {cam.y -= moveSpeed; moved = true;}
+	if (App->input->GetKey(SDL_SCANCODE_S) == KEY_REPEAT) {cam.y += moveSpeed; moved = true;}
 
 	if (moved) Event::Push(CAMERA_MOVED, App->audio);
 	return true;
@@ -290,6 +291,11 @@ float Render::GetZoom() const
 std::pair<float, float> Render::GetCameraCenter() const
 {
 	return { cam.x + (cam.w * 0.5f), cam.y + (cam.h * 0.5f) };
+}
+
+bool Render::InsideCam(float x, float y) const
+{
+	return JMath::PointInsideRect(x, y, cam);
 }
 
 void Render::SetBackgroundColor(SDL_Color color)
@@ -627,18 +633,6 @@ void Render::DrawCircle(const SDL_Rect rect, const SDL_Color color, Layer layer,
 
 	layers[layer][layer < Layer::HUD ? data.rect.y : 0].push_back(data);
 }
-
-iPoint Render::WorldToScreen(int x, int y) const
-{
-	iPoint ret;
-	int scale = App->win->GetScale();
-	ret.x = x + cam.x;
-	ret.y = y + cam.y;
-
-	return ret;
-}
-
-
 
 Render::RenderData::RenderData(Type t) :
 	type(t),

@@ -47,12 +47,13 @@ public:
 
 	void RecieveEvent(const Event& e) override;
 
-	// Getters
+	// Getters & Camera
 	SDL_Renderer* GetSDLRenderer() const;
 	SDL_Rect GetCameraRect() const;
 	RectF GetCameraRectF() const;
 	float GetZoom() const;
 	std::pair<float, float> GetCameraCenter() const;
+	bool InsideCam(float x, float y) const;
 
 	// Minimap
 	int GetMinimap(int width, int height);
@@ -75,8 +76,6 @@ public:
 	void DrawQuadNormCoords(const RectF rect, const SDL_Color color = { 0, 0, 0, 255 }, bool filled = true, Layer layer = SCENE);
 	void DrawLine(const std::pair<int,int> a, const std::pair<int, int> b, const SDL_Color color = { 0, 0, 0, 255 }, Layer layer = SCENE, bool use_camera = true);
 	void DrawCircle(const SDL_Rect rect, const SDL_Color color = { 0, 0, 0, 255 }, Layer layer = SCENE, bool use_camera = true);
-
-	iPoint WorldToScreen(int x, int y) const;
 
 	// Set background color
 	void SetBackgroundColor(SDL_Color color);

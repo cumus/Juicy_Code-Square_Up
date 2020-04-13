@@ -30,8 +30,6 @@ public:
 	SDL_Window* GetWindow() const;
 	void GetWindowSize(int& width, int& height) const;
 
-	int GetScale() const;
-
 private:
 
 	SDL_Window* window = nullptr;
@@ -66,10 +64,6 @@ private:
 	bool mouse_capture		= false;
 	bool always_on_top		= false;
 	bool skip_taskbar		= false;
-
-public:
-
-	int scale;
 };
 
 #endif // __WINDOW_H__

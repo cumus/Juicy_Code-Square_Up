@@ -84,9 +84,14 @@ private:
 		SpatialData();
 		SpatialData(const SpatialData& copy);
 
+		void Update(const std::pair<float, float> cam, const std::pair<float, float> position);
+
+		bool inside_cam;
 		int channel;
 		float angle, distance;
 		std::pair<float, float> pos;
+
+		static bool channels_paused;
 	};
 	std::map<double, SpatialData> sources;
 	Mix_Chunk* fx[MAX_FX];

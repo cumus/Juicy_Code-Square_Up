@@ -34,7 +34,6 @@ void Window::LoadConfig(bool empty_config)
 		pugi::xml_node res = window_node.append_child("resolution");
 		res.append_attribute("width").set_value(rect.w);
 		res.append_attribute("height").set_value(rect.h);
-		res.append_attribute("scale").set_value(scale);
 
 		// Window flags
 		window_node.append_child("fullscreen").append_attribute("value").set_value(fullscreen);
@@ -341,9 +340,4 @@ void Window::GetWindowSize(int& w, int& h) const
 {
 	w = rect.w;
 	h = rect.h;
-}
-
-int Window::GetScale() const
-{
-	return scale;
 }

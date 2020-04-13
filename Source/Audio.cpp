@@ -16,6 +16,8 @@
 #pragma comment( lib, "SDL2_mixer-2.0.4/lib/x64/SDL2_mixer.lib" )
 #endif
 
+bool Audio::SpatialData::channels_paused = true;
+
 Audio::Audio() : Module("audio")
 {
 	for (int i = 0; i < MAX_FX; ++i) fx[i] = nullptr;
@@ -173,12 +175,8 @@ void Audio::RecieveEvent(const Event& e)
 		std::map<double, SpatialData>::iterator it = sources.find(e.data1.AsDouble());
 		if (it != sources.end())
 		{
-			std::pair<float, float> cam = App->render->GetCameraCenter();
-			vec pos = e.data2.AsVec();
-
-			Mix_SetPosition(it->second.channel,
-				it->second.angle = JMath::HorizontalAxisAngle_F(cam, it->second.pos = { pos.x, pos.y }, -90.0f),
-				it->second.distance = JMath::DistanceSquared(cam, it->second.pos));
+			const vec global_pos = e.data2.AsVec();
+			it->second.Update(App->render->GetCameraCenter(), { global_pos.x, global_pos.y });
 		}
 		break;
 	}
@@ -187,14 +185,14 @@ void Audio::RecieveEvent(const Event& e)
 		std::pair<float, float> cam = App->render->GetCameraCenter();
 		for (std::map<double, SpatialData>::iterator it = sources.begin(); it != sources.end(); ++it)
 		{
-			Mix_SetPosition(it->second.channel,
-				it->second.angle = JMath::HorizontalAxisAngle_F(cam, it->second.pos, -90.0f),
-				it->second.distance = JMath::DistanceSquared(cam, it->second.pos));
+			it->second.Update(cam, it->second.pos);
+			LOG("Distance: %f cam(%f,%f), source(%f,%f)", it->second.distance, cam.first, cam.second, it->second.pos.first, it->second.pos.second);
 		}
 		break;
 	}
 	case SCENE_PLAY:
 	{
+		SpatialData::channels_paused = false;
 		for (std::map<double, SpatialData>::iterator it = sources.begin(); it != sources.end(); ++it)
 		{
 			if (Mix_Paused(it->second.channel))
@@ -204,6 +202,7 @@ void Audio::RecieveEvent(const Event& e)
 	}
 	case SCENE_PAUSE:
 	{
+		SpatialData::channels_paused = true;
 		std::pair<float, float> cam = App->render->GetCameraCenter();
 		for (std::map<double, SpatialData>::iterator it = sources.begin(); it != sources.end(); ++it)
 		{
@@ -214,6 +213,7 @@ void Audio::RecieveEvent(const Event& e)
 	}
 	case SCENE_TICK:
 	{
+		SpatialData::channels_paused = false;
 		for (std::map<double, SpatialData>::iterator it = sources.begin(); it != sources.end(); ++it)
 		{
 			if (Mix_Paused(it->second.channel))
@@ -223,6 +223,7 @@ void Audio::RecieveEvent(const Event& e)
 	}
 	case SCENE_STOP:
 	{
+		SpatialData::channels_paused = true;
 		for (std::map<double, SpatialData>::iterator it = sources.begin(); it != sources.end(); ++it)
 		{
 			Mix_HaltChannel(it->second.channel);
@@ -326,49 +327,55 @@ void Audio::UnloadFx()
 
 bool Audio::PlayFx(Audio_FX audio_fx, int repeat)
 {
-	if (!fx[audio_fx])
-		LoadFx(audio_fx);
+	bool ret = false;
 
-	return Mix_PlayChannel(0, fx[audio_fx], repeat) == 0;
+	if (fx[audio_fx] || LoadFx(audio_fx))
+		ret = Mix_PlayChannel(0, fx[audio_fx], repeat) == 0;
+
+	return ret;
 }
 
 bool Audio::PlaySpatialFx(Audio_FX audio_fx, double id, const std::pair<float, float> position, int repeat, int ticks, int fade_ms)
 {
 	OPTICK_EVENT();
 
-	if (!fx[audio_fx])
-		LoadFx(audio_fx);
+	bool ret = false;
 
-	// Get channel to play. New sources will return -1 by default.
-	int target_channel = sources[id].channel;
-	sources[id].pos = position;
-	if (target_channel < 0)
+	if (fx[audio_fx] || LoadFx(audio_fx))
 	{
-		// Increase channel count on needing more channels
-		if (total_channels - 1 < int(sources.size()))
-			total_channels += Mix_AllocateChannels(total_channels + 1);
-
-		// Search for empty channel
-		for (target_channel = 1; target_channel < total_channels; ++target_channel)
+		// Get channel to play. New sources will return -1 by default.
+		int target_channel = sources[id].channel;
+		sources[id].pos = position;
+		if (target_channel < 0)
 		{
-			if (!Mix_Playing(target_channel))
+			// Increase channel count on needing more channels
+			if (total_channels - 1 < int(sources.size()))
+				total_channels += Mix_AllocateChannels(total_channels + 1);
+
+			// Search for empty channel
+			for (target_channel = 1; target_channel < total_channels; ++target_channel)
 			{
-				sources[id].channel = target_channel;
-				break;
+				if (!Mix_Playing(target_channel))
+				{
+					sources[id].channel = target_channel;
+					break;
+				}
 			}
 		}
-	}
-	
-	// Setup channel spatial properties and play
-	std::pair<float, float> cam = App->render->GetCameraCenter();
-	Mix_SetPosition(target_channel,
-		sources[id].angle = JMath::HorizontalAxisAngle_F(cam, position, -90.0f),
-		sources[id].distance = JMath::DistanceSquared(cam,  position));
 
-	// Play fx
-	return (fade_ms > 0) ?
-		(Mix_FadeInChannelTimed(target_channel, fx[audio_fx], repeat, fade_ms, ticks) != -1) :
-		(Mix_PlayChannelTimed(target_channel, fx[audio_fx], repeat, ticks) != -1);
+		// Setup channel spatial properties and play
+		std::pair<float, float> cam = App->render->GetCameraCenter();
+		Mix_SetPosition(target_channel,
+			sources[id].angle = JMath::HorizontalAxisAngle_F(cam, position, -90.0f),
+			sources[id].distance = JMath::DistanceSquared(cam, position));
+
+		// Play fx
+		ret = (fade_ms > 0) ?
+			(Mix_FadeInChannelTimed(target_channel, fx[audio_fx], repeat, fade_ms, ticks) != -1) :
+			(Mix_PlayChannelTimed(target_channel, fx[audio_fx], repeat, ticks) != -1);
+	}
+
+	return ret;
 }
 
 bool Audio::StopFXChannel(double id, int ms, bool fade)
@@ -401,3 +408,15 @@ Audio::SpatialData::SpatialData(const SpatialData& copy) :
 	distance(copy.distance),
 	pos(copy.pos)
 {}
+
+void Audio::SpatialData::Update(const std::pair<float, float> cam, const std::pair<float, float> position)
+{
+	Mix_SetPosition(channel,
+		angle = JMath::HorizontalAxisAngle_F(cam, pos = position, -90.0f),
+		distance = JMath::Distance(cam, position));
+
+	if ((inside_cam = App->render->InsideCam(position.first, position.second)) && !channels_paused)
+		Mix_Resume(channel);
+	else
+		Mix_Pause(channel);
+}
