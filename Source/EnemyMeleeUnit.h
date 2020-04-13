@@ -12,15 +12,13 @@ class EnemyMeleeUnit : public B_Unit
 public:
 	EnemyMeleeUnit(Gameobject* go);
 	~EnemyMeleeUnit();
-	/*void OnDamage(int d);
-	void CheckSprite();
-	void OnKill();*/
+	void UpdatePath(int x,int y) override;
+	void IARangeCheck() override;
 
 protected:
 
-	int EM_damage = 5;
-	int attack_speed = 1;
-
+	bool going_base;
+	bool going_enemy;
 };
 
 #endif

@@ -34,6 +34,8 @@
 Scene::Scene() : Module("scene")
 {
 	root.SetName("root");
+	baseCenterPos.first = -1;
+	baseCenterPos.second = -1;
 }
 
 Scene::~Scene()
@@ -808,7 +810,10 @@ void Scene::PlaceMode(int type)
 
 	switch (UnitType(type))
 	{
-	case BASE_CENTER: new Base_Center(go = AddGameobject("Base Center")); break;
+	case BASE_CENTER: new Base_Center(go = AddGameobject("Base Center")); 
+		baseCenterPos.first = go->GetTransform()->GetGlobalPosition().x;
+		baseCenterPos.second = go->GetTransform()->GetGlobalPosition().y;
+		break;
 	case TOWER: new Tower(go = AddGameobject("Tower")); break;
 	case WALL: break;
 	case BARRACKS: break;
@@ -818,7 +823,13 @@ void Scene::PlaceMode(int type)
 	}
 
 	if (go)
+	{
 		placing_building = go->GetTransform();
+		for (std::map<double, Behaviour*>::iterator it = Behaviour::b_map.begin(); it != Behaviour::b_map.end(); ++it)//Update paths 
+		{
+			Event::Push(UPDATE_PATH, it->second,baseCenterPos.first,baseCenterPos.second);
+		}		
+	}
 }
 
 

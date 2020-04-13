@@ -64,6 +64,7 @@ void Behaviour::RecieveEvent(const Event& e)
 	case BUILD_MELEE: BuildMelee(e.data1.AsFloat(), e.data2.AsFloat()); break;
 	case BUILD_SUPER: BuildSuper(e.data1.AsFloat(), e.data2.AsFloat()); break;
 	case DO_UPGRADE: Upgrade(); break;
+	case UPDATE_PATH: UpdatePath(e.data1.AsInt(),e.data2.AsInt()); break;
 	}
 }
 
@@ -273,6 +274,7 @@ void B_Unit::Update()
 	vec pos = game_object->GetTransform()->GetGlobalPosition();
 	if (current_state != DESTROYED)
 	{
+		IARangeCheck();
 		if (attackObjective != nullptr && attackObjective->GetState() != DESTROYED) //Attack
 		{
 			//LOG("FOUND");

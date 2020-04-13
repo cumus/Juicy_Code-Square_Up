@@ -80,8 +80,12 @@ public:
 	Gameobject* hud_canvas_go;
 	int building_bars_created = 0;
 
+	//IA
+	std::pair<int, int> baseCenterPos;
+
 	//Player Resources
 	int mob_drop = 0;
+	int edge_value = 100;
 
 	// END SCREEN
 	bool win = false;
@@ -118,7 +122,7 @@ private:
 	// Player stats
 	Gameobject* resources_go;
 	Gameobject* resources_2_go;
-	int edge_value = 100;
+	
 	C_Text* text_mobdrop_value = nullptr;
 	C_Text* text_edge_value = nullptr;
 

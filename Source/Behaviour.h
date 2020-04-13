@@ -31,6 +31,7 @@ enum UnitType : int
 	BARRACKS,
 	LAB,
 	EDGE,
+	SPAWNER,
 };
 
 enum UnitState : int
@@ -85,6 +86,7 @@ public:
 	void BuildWall(float x, float y);
 	void BuildLab(float x, float y);
 	void BuildBarrack(float x, float y);
+	virtual void UpdatePath(int x,int y) {}
 	virtual void AfterDamageAction() {}
 	virtual void OnRightClick(float x, float y) {}
 	virtual void DoAttack() {}
@@ -95,6 +97,7 @@ public:
 	virtual void CreatePanel() {}
 	virtual void UpdatePanel() {}
 	virtual void Upgrade() {}
+
 
 	UnitType GetType() const { return type; }
 	UnitState* GetStatePtr() { return &current_state; }
@@ -149,6 +152,7 @@ public:
 	void OnDestroy() override;
 	void OnGetImpulse(float x, float y) override;
 	virtual void UnitAttackType() {}
+	virtual void IARangeCheck() {}
 
 protected:
 	float speed;
