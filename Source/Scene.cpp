@@ -91,6 +91,59 @@ bool Scene::Update()
 		if (god_mode)
 			GodMode();
 
+		//Current Melee Units Updated Value
+		if (text_current_melee_units) {
+			std::stringstream ss;
+			ss << current_melee_units;
+			std::string temp_str = ss.str();
+			//const char* t = (char*)temp_str.c_str();
+			text_current_melee_units->text->SetText(temp_str.c_str());
+		}
+
+		//Melee Units Created Updated Value
+		if (text_melee_units_created) {
+			std::stringstream ss;
+			ss << melee_units_created;
+			std::string temp_str = ss.str();
+			//const char* t = (char*)temp_str.c_str();
+			text_melee_units_created->text->SetText(temp_str.c_str());
+		}
+
+		//Current Ranged Units Updated Value
+		if (text_current_ranged_units) {
+			std::stringstream ss;
+			ss << current_ranged_units;
+			std::string temp_str = ss.str();
+			//const char* t = (char*)temp_str.c_str();
+			text_current_ranged_units->text->SetText(temp_str.c_str());
+		}
+
+		//Ranged Units Created Updated Value
+		if (text_ranged_units_created) {
+			std::stringstream ss;
+			ss << ranged_units_created;
+			std::string temp_str = ss.str();
+			//const char* t = (char*)temp_str.c_str();
+			text_ranged_units_created->text->SetText(temp_str.c_str());
+		}
+
+		//Current Gatherer Units Updated Value
+		if (text_current_ranged_units) {
+			std::stringstream ss;
+			ss << current_gatherer_units;
+			std::string temp_str = ss.str();
+			//const char* t = (char*)temp_str.c_str();
+			text_current_gatherer_units->text->SetText(temp_str.c_str());
+		}
+
+		//Gatherer Units Created Updated Value
+		if (text_ranged_units_created) {
+			std::stringstream ss;
+			ss << gatherer_units_created;
+			std::string temp_str = ss.str();
+			//const char* t = (char*)temp_str.c_str();
+			text_gatherer_units_created->text->SetText(temp_str.c_str());
+		}
 		
 		//Mob Drop Print Updated Value
 		if (text_mobdrop_value) {
@@ -338,7 +391,15 @@ bool Scene::LoadTestScene()
 	
 	test = true;
 
+	int icons_text_id = App->tex.Load("textures/Iconos_square_up.png");
+
 	building_bars_created = 0;
+	int current_melee_units = 0;
+	int melee_units_created = 0;
+	int current_ranged_units = 0;
+	int ranged_units_created = 0;
+	int current_gatherer_units = 0;
+	int gatherer_units_created = 0;
 	
 
 	//------------------------- HUD CANVAS --------------------------------------
@@ -376,13 +437,87 @@ bool Scene::LoadTestScene()
 	button->section = { 359, 114, 101, 101 };
 	button->tex_id = App->tex.Load("textures/icons.png");*/
 
+
+	// Unit icon (Melee Unit)
+	Gameobject* melee_counter_go = AddGameobject("Melee Unit Counter", canvas_go);
+
+	C_Image* melee_counter_box = new C_Image(melee_counter_go);
+	melee_counter_box->target = { 0.153f, 0.64f, 0.55f , 1.f };
+	melee_counter_box->offset = { -345.f, -45.f };
+	melee_counter_box->section = { 17, 509, 345, 45 };
+	melee_counter_box->tex_id = icons_text_id;
+
+	C_Image* melee_counter_icon = new C_Image(melee_counter_go);
+	melee_counter_icon->target = { 0.047f, 0.628f, 0.9f , 0.9f };
+	melee_counter_icon->offset = { -48.f, -35.f };
+	melee_counter_icon->section = { 22, 463, 48, 35 };
+	melee_counter_icon->tex_id = icons_text_id;
+
+	text_current_melee_units = new C_Text(melee_counter_go, "0");
+	text_current_melee_units->target = { 0.049f, 0.587f, 1.6f, 1.6f };
+
+	C_Text* melee_diagonal = new C_Text(melee_counter_go, "/");
+	melee_diagonal->target = { 0.088f, 0.587f, 1.6f, 1.6f };
+
+	text_melee_units_created = new C_Text(melee_counter_go, "0");
+	text_melee_units_created->target = { 0.099f, 0.587f, 1.6f, 1.6f };
+
+	// Unit icon (Ranged Unit)
+	Gameobject* ranged_counter_go = AddGameobject("Ranged Unit Counter", canvas_go);
+
+	C_Image* ranged_counter_box = new C_Image(ranged_counter_go);
+	ranged_counter_box->target = { 0.153f, 0.72f, 0.55f , 1.f };
+	ranged_counter_box->offset = { -345.f, -45.f };
+	ranged_counter_box->section = { 17, 509, 345, 45 };
+	ranged_counter_box->tex_id = icons_text_id;
+
+	C_Image* ranged_counter_icon = new C_Image(ranged_counter_go);
+	ranged_counter_icon->target = { 0.047f, 0.708f, 0.9f , 0.9f };
+	ranged_counter_icon->offset = { -48.f, -35.f };
+	ranged_counter_icon->section = { 22, 463, 48, 35 };
+	ranged_counter_icon->tex_id = icons_text_id;
+
+	text_current_ranged_units = new C_Text(ranged_counter_go, "0");
+	text_current_ranged_units->target = { 0.049f, 0.667f, 1.6f, 1.6f };
+
+	C_Text* ranged_diagonal = new C_Text(ranged_counter_go, "/");
+	ranged_diagonal->target = { 0.088f, 0.667f, 1.6f, 1.6f };
+
+	text_ranged_units_created = new C_Text(ranged_counter_go, "0");
+	text_ranged_units_created->target = { 0.099f, 0.667f, 1.6f, 1.6f };
+
+	// Unit icon (Gatherer Unit)
+	Gameobject* gatherer_counter_go = AddGameobject("Gatherer Unit Counter", canvas_go);
+
+	C_Image* gatherer_counter_box = new C_Image(gatherer_counter_go);
+	gatherer_counter_box->target = { 0.153f, 0.80f, 0.55f , 1.f };
+	gatherer_counter_box->offset = { -345.f, -45.f };
+	gatherer_counter_box->section = { 17, 509, 345, 45 };
+	gatherer_counter_box->tex_id = icons_text_id;
+
+	C_Image* gatherer_counter_icon = new C_Image(gatherer_counter_go);
+	gatherer_counter_icon->target = { 0.047f, 0.788f, 0.9f , 0.9f };
+	gatherer_counter_icon->offset = { -48.f, -35.f };
+	gatherer_counter_icon->section = { 22, 463, 48, 35 };
+	gatherer_counter_icon->tex_id = icons_text_id;
+
+	text_current_gatherer_units = new C_Text(gatherer_counter_go, "0");
+	text_current_gatherer_units->target = { 0.049f, 0.747f, 1.6f, 1.6f };
+
+	C_Text* gatherer_diagonal = new C_Text(gatherer_counter_go, "/");
+	gatherer_diagonal->target = { 0.088f, 0.747f, 1.6f, 1.6f };
+
+	text_gatherer_units_created = new C_Text(gatherer_counter_go, "0");
+	text_gatherer_units_created->target = { 0.099f, 0.747f, 1.6f, 1.6f };
+
+
 	//Resources
 	Gameobject* resource_counter_go = AddGameobject("Resources", canvas_go);
 	C_Image* img = new C_Image(resource_counter_go);
 	img->target = { 0.1f, 1.f, 1.f , 1.f };
 	img->offset = { -119.f, -119.f };
 	img->section = { 22, 333, 119, 119 };
-	img->tex_id = App->tex.Load("textures/Iconos_square_up.png");
+	img->tex_id = icons_text_id;
 
 	//Edge
 	resources_go = AddGameobject("Text Edge", resource_counter_go);

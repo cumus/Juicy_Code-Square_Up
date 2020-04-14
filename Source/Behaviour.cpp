@@ -267,6 +267,21 @@ B_Unit::B_Unit(Gameobject* go, UnitType t, UnitState s, ComponentType comp_type)
 	shootPos = Map::F_MapToWorld(pos.x, pos.y, pos.z);
 	shootPos.first += 30.0f;
 	shootPos.second += 20.0f;*/
+
+	switch (t) {
+	case UNIT_MELEE:
+		App->scene->current_melee_units += 1;
+		App->scene->melee_units_created += 1;
+		break;
+	case UNIT_RANGED:
+		App->scene->current_ranged_units += 1;
+		App->scene->ranged_units_created += 1;
+		break;
+	case GATHERER:
+		App->scene->current_gatherer_units += 1;
+		App->scene->gatherer_units_created += 1;
+		break;
+	}
 }
 
 void B_Unit::Update()
@@ -576,6 +591,19 @@ void B_Unit::OnDestroy()
 {
 	App->pathfinding.DeletePath(GetID());
 	bar_go->Destroy(1.0f);
+	switch (type) {
+	case UNIT_MELEE:
+		App->scene->current_melee_units -= 1;
+		break;
+	case UNIT_RANGED:
+		App->scene->current_ranged_units -= 1;
+		break;
+	case GATHERER:
+		App->scene->current_gatherer_units -= 1;
+		break;
+	}
+
+
 }
 
 void B_Unit::OnRightClick(float x, float y)

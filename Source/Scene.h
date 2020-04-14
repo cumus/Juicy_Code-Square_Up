@@ -79,6 +79,13 @@ public:
 	// HUD
 	Gameobject* hud_canvas_go;
 	int building_bars_created = 0;
+	int current_melee_units = 0;
+	int melee_units_created = 0;
+	int current_ranged_units = 0;
+	int ranged_units_created = 0;
+	int current_gatherer_units = 0;
+	int gatherer_units_created = 0;
+
 
 	//IA
 	std::pair<int, int> baseCenterPos;
@@ -125,6 +132,12 @@ private:
 	
 	C_Text* text_mobdrop_value = nullptr;
 	C_Text* text_edge_value = nullptr;
+	C_Text* text_current_melee_units = nullptr;
+	C_Text* text_melee_units_created = nullptr;
+	C_Text* text_current_ranged_units = nullptr;
+	C_Text* text_ranged_units_created = nullptr;
+	C_Text* text_current_gatherer_units = nullptr;
+	C_Text* text_gatherer_units_created = nullptr;
 
 	Transform* placing_building = nullptr;
 	
