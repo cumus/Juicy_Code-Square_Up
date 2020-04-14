@@ -103,6 +103,15 @@ AnimatedSprite::AnimatedSprite(Behaviour* unit) : Sprite(unit->GetGameobject(), 
 		offset = { 20.f, -460.f, 0.3f, 0.3f };
 		break;
 	}
+	case SPAWNER:
+	{
+		tex_id = App->tex.Load("textures/Base_Center.png");
+		animations[FULL_LIFE].Setup(section = { 0, 0, 166, 534 }, 1);
+		animations[HALF_LIFE].Setup({ 0, 0, 166, 534 }, 1);
+		animations[DESTROYED].Setup({ 0, 0, 166, 534 }, 1);
+		offset = { 20.f, -460.f, 0.3f, 0.3f };
+		break;
+	}
 	case UNIT_MELEE:
 	{
 		tex_id = App->tex.Load("textures/Char_killia1.png");

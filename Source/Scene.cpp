@@ -1201,6 +1201,20 @@ void Scene::GodMode()
 		
 	}
 
+	/*if (App->input->GetKey(SDL_SCANCODE_0) == KEY_DOWN) //Spawner
+	{
+		std::pair<int, int> position = Map::WorldToTileBase(float(x + cam.x), float(y + cam.y));
+		if (App->pathfinding.CheckWalkabilityArea(position, vec(1.0f)))
+		{
+			Gameobject* spawner_go = AddGameobject("Enemy spawner");
+			spawner_go->GetTransform()->SetLocalPos({ float(position.first), float(position.second), 0.0f });
+
+			new Spawner(spawner_go);
+		}
+		else
+			LOG("Invalid spawn position");
+	}*/
+
 	if (App->input->GetKey(SDL_SCANCODE_Z) == KEY_DOWN)
 	{
 		App->pathfinding.DebugShowPaths();
