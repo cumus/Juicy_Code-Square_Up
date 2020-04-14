@@ -228,6 +228,8 @@ unsigned int Behaviour::GetBehavioursInRange(vec pos, float dist, std::map<float
 }
 
 
+
+
 ///////////////////////////
 // UNIT BEHAVIOUR
 ///////////////////////////
@@ -338,6 +340,7 @@ void B_Unit::Update()
 			cornerNE = false;
 			cornerSW = false;
 			inRange = false;
+			LOG("Not in attack range");
 		}
 
 		if (msCount < atkDelay)
@@ -590,7 +593,7 @@ void B_Unit::DoAttack()
 void B_Unit::OnDestroy()
 {
 	App->pathfinding.DeletePath(GetID());
-	bar_go->Destroy(1.0f);
+	//bar_go->Destroy(1.0f);
 	switch (type) {
 	case UNIT_MELEE:
 		App->scene->current_melee_units -= 1;
@@ -706,8 +709,17 @@ void B_Unit::OnGetImpulse(float x, float y)
 	}
 	else
 	{
-		game_object->GetTransform()->MoveX(6 * x * App->time.GetGameDeltaTime());//Move x
-		game_object->GetTransform()->MoveY(6 * y * App->time.GetGameDeltaTime());//Move y
+		if (!move)
+		{
+			game_object->GetTransform()->MoveX(4 * x * App->time.GetGameDeltaTime());//Move x
+			game_object->GetTransform()->MoveY(4 * y * App->time.GetGameDeltaTime());//Move y
+		}
+		else
+		{
+			game_object->GetTransform()->MoveX(6 * x * App->time.GetGameDeltaTime());//Move x
+			game_object->GetTransform()->MoveY(6 * y * App->time.GetGameDeltaTime());//Move y
+		}
+		
 	}
 }
 

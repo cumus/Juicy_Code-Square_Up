@@ -19,6 +19,7 @@ protected:
 
 	bool going_base;
 	bool going_enemy;
+	bool base_found;
 };
 
 #endif

@@ -962,7 +962,7 @@ void Scene::PlaceMode(int type)
 		placing_building = go->GetTransform();
 		for (std::map<double, Behaviour*>::iterator it = Behaviour::b_map.begin(); it != Behaviour::b_map.end(); ++it)//Update paths 
 		{
-			Event::Push(UPDATE_PATH, it->second,baseCenterPos.first,baseCenterPos.second);
+			Event::Push(UPDATE_PATH, it->second,baseCenterPos.first - 1,baseCenterPos.second - 1);
 		}		
 	}
 }
@@ -1092,6 +1092,10 @@ void Scene::GodMode()
 			edge_go->GetTransform()->SetLocalPos({ float(position.first), float(position.second), 0.0f });
 
 			new Edge(edge_go);
+			for (std::map<double, Behaviour*>::iterator it = Behaviour::b_map.begin(); it != Behaviour::b_map.end(); ++it)//Update paths 
+			{
+				Event::Push(UPDATE_PATH, it->second, baseCenterPos.first - 1, baseCenterPos.second - 1);
+			}
 		}
 		else
 			LOG("Invalid spawn position");
@@ -1117,6 +1121,12 @@ void Scene::GodMode()
 
 			App->audio->PlayFx(B_BUILDED);
 			new Base_Center(base_go);
+			baseCenterPos.first = base_go->GetTransform()->GetGlobalPosition().x;
+			baseCenterPos.second = base_go->GetTransform()->GetGlobalPosition().y;
+			for (std::map<double, Behaviour*>::iterator it = Behaviour::b_map.begin(); it != Behaviour::b_map.end(); ++it)//Update paths 
+			{
+				Event::Push(UPDATE_PATH, it->second, baseCenterPos.first - 1, baseCenterPos.second - 1);
+			}
 		}
 		else
 			LOG("Invalid spawn position");
@@ -1132,6 +1142,10 @@ void Scene::GodMode()
 
 			App->audio->PlayFx(B_BUILDED);
 			new Tower(tower_go);
+			for (std::map<double, Behaviour*>::iterator it = Behaviour::b_map.begin(); it != Behaviour::b_map.end(); ++it)//Update paths 
+			{
+				Event::Push(UPDATE_PATH, it->second, baseCenterPos.first - 1, baseCenterPos.second - 1);
+			}
 		}
 		else
 			LOG("Invalid spawn position");
