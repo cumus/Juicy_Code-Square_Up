@@ -24,7 +24,7 @@ EnemyMeleeUnit::EnemyMeleeUnit(Gameobject* go) : B_Unit(go, ENEMY_MELEE, IDLE, B
 
 	if (App->scene->baseCenterPos.first != -1)
 	{
-		LOG("Base center found");
+		//LOG("Base center found");
 		UpdatePath(App->scene->baseCenterPos.first - 1, App->scene->baseCenterPos.second - 1);
 		going_base = true;
 	}
@@ -50,7 +50,7 @@ void EnemyMeleeUnit::UpdatePath(int x, int y)
 {
 	if (x != -1 && y != -1)
 	{
-		LOG("Update path");
+		//LOG("Update path");
 		Transform* t = game_object->GetTransform();
 		vec pos = t->GetGlobalPosition();
 		path = App->pathfinding.CreatePath({ int(pos.x), int(pos.y) }, { x, y }, GetID());
@@ -72,7 +72,7 @@ void EnemyMeleeUnit::IARangeCheck()
 		float distance = 0;
 		if (total_found > 0)
 		{
-			LOG("Behaviours found");
+			//LOG("Behaviours found");
 			for (std::map<float, Behaviour*>::iterator it = out.begin(); it != out.end(); ++it)
 			{
 				if (it->second->GetType() != ENEMY_MELEE && it->second->GetType() != ENEMY_RANGED &&
@@ -91,7 +91,6 @@ void EnemyMeleeUnit::IARangeCheck()
 							attackObjective = it->second;
 						}
 					}
-
 				}
 			}
 		}
@@ -102,30 +101,27 @@ void EnemyMeleeUnit::IARangeCheck()
 
 		if (attackObjective != nullptr)//Check if there is a valid objective
 		{
-			LOG("Valid objective");
+			//LOG("Valid objective");
 			going_base = false;
 			attackPos = attackObjective->GetGameobject()->GetTransform()->GetGlobalPosition();
+			//LOG("Distance to enemy: %f", game_object->GetTransform()->DistanceTo(attackPos));
 			if (game_object->GetTransform()->DistanceTo(attackPos) > attack_range)
 			{
-				//if (!going_enemy)
-				//{
-				LOG("Path to enemy");
+
+				//LOG("Path to enemy");
+				if (arriveDestination)
+				{
 					Transform* t = attackObjective->GetGameobject()->GetTransform();
-					Event::Push(UPDATE_PATH, this->AsBehaviour(), int(t->GetGlobalPosition().x-1), int(t->GetGlobalPosition().y-1));
-				//	going_enemy = true;
-				//}
-				
+					Event::Push(UPDATE_PATH, this->AsBehaviour(), int(t->GetGlobalPosition().x - 1), int(t->GetGlobalPosition().y - 1));
+					arriveDestination = false;
+				}				
 			}
-			/*else
-			{
-				going_enemy = true;
-			}*/
 		}
 		else
 		{
 			if (!going_base)//If no valid objective and not going to base, set path to base
 			{
-				LOG("Path to base");
+				//LOG("Path to base");
 				Event::Push(UPDATE_PATH, this->AsBehaviour(), App->scene->baseCenterPos.first-1, App->scene->baseCenterPos.second-1);
 				going_base = true;
 			}

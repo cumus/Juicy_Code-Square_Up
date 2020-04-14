@@ -262,7 +262,7 @@ B_Unit::B_Unit(Gameobject* go, UnitType t, UnitState s, ComponentType comp_type)
 	inRange = false;
 	attackObjective = nullptr;
 	msCount = 0;
-
+	arriveDestination = false;
 
 	//Info for ranged units constructor
 	/*vec pos = game_object->GetTransform()->GetGlobalPosition();
@@ -331,6 +331,7 @@ void B_Unit::Update()
 				cornerNE = true;
 				inRange = true;
 			}
+			//LOG("%d",inRange);
 		}
 		else
 		{
@@ -340,7 +341,7 @@ void B_Unit::Update()
 			cornerNE = false;
 			cornerSW = false;
 			inRange = false;
-			LOG("Not in attack range");
+			//LOG("Not in attack range");
 		}
 
 		if (msCount < atkDelay)
@@ -350,9 +351,10 @@ void B_Unit::Update()
 
 		if (inRange)
 		{
+			//LOG("Unit in range");
 			if (msCount >= atkDelay)
 			{
-				LOG("Do attack");
+				//LOG("Do attack");
 				DoAttack();
 				UnitAttackType();
 				Event::Push(DAMAGE, attackObjective, damage);
@@ -361,6 +363,7 @@ void B_Unit::Update()
 		}
 		else if (path != nullptr && !path->empty()) //Movement
 		{
+			//LOG("moving");
 			fPoint actualPos = { pos.x, pos.y };
 
 			if (!next)
@@ -443,6 +446,7 @@ void B_Unit::Update()
 		else
 		{
 			move = false;
+			arriveDestination = true;
 		}
 
 		if (move)
@@ -605,8 +609,6 @@ void B_Unit::OnDestroy()
 		App->scene->current_gatherer_units -= 1;
 		break;
 	}
-
-
 }
 
 void B_Unit::OnRightClick(vec posClick, vec modPos)
@@ -720,8 +722,7 @@ void B_Unit::OnGetImpulse(float x, float y)
 		{
 			game_object->GetTransform()->MoveX(6 * x * App->time.GetGameDeltaTime());//Move x
 			game_object->GetTransform()->MoveY(6 * y * App->time.GetGameDeltaTime());//Move y
-		}
-		
+		}		
 	}
 }
 

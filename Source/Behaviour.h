@@ -175,6 +175,7 @@ protected:
 	bool cornerNE;
 	bool cornerSW;
 	bool cornerSE;
+	bool arriveDestination;
 
 	std::pair<float, float> atkObj;
 	std::pair<float, float> shootPos;

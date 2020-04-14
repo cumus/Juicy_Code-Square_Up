@@ -291,7 +291,6 @@ bool Scene::Update()
 					{
 						while (App->pathfinding.ValidTile(int(modPos.first), int(modPos.second)) == false)
 						{
-							LOG("change point");
 							if (incX) 
 							{
 								modPos.first++;
@@ -314,7 +313,6 @@ bool Scene::Update()
 							modPos.second++;
 							incX = true;
 						}
-						LOG("Point ok");
 					}
 				}
 				else//Move one selected
