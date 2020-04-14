@@ -88,7 +88,7 @@ public:
 	void BuildBarrack(float x, float y);
 	virtual void UpdatePath(int x,int y) {}
 	virtual void AfterDamageAction() {}
-	virtual void OnRightClick(float x, float y) {}
+	virtual void OnRightClick(vec pos, vec modPos) {}
 	virtual void DoAttack() {}
 	virtual void OnDestroy(){}
 	virtual void OnGetImpulse(float x,float y) {}
@@ -147,7 +147,7 @@ public:
 	B_Unit(Gameobject* go, UnitType type, UnitState starting_state, ComponentType comp_type = B_UNIT);
 
 	void Update() override;
-	void OnRightClick(float x, float y) override;
+	void OnRightClick(vec pos, vec modPos) override;
 	void DoAttack() override;
 	void OnDestroy() override;
 	void OnGetImpulse(float x, float y) override;

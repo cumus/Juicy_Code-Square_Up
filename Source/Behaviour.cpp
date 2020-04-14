@@ -56,7 +56,7 @@ void Behaviour::RecieveEvent(const Event& e)
 	case ON_SELECT: Selected(); break;
 	case ON_UNSELECT: UnSelected(); break;
 	case ON_DESTROY: OnDestroy(); break;
-	case ON_RIGHT_CLICK: OnRightClick(e.data1.AsFloat(), e.data2.AsFloat()); break;
+	case ON_RIGHT_CLICK: OnRightClick(e.data1.AsVec(), e.data2.AsVec()); break;
 	case DAMAGE: OnDamage(e.data1.AsInt()); break;
 	case IMPULSE: OnGetImpulse(e.data1.AsFloat(),e.data2.AsFloat()); break;
 	case BUILD_GATHERER: BuildGatherer(e.data1.AsFloat(), e.data2.AsFloat()); break;
@@ -609,7 +609,7 @@ void B_Unit::OnDestroy()
 
 }
 
-void B_Unit::OnRightClick(float x, float y)
+void B_Unit::OnRightClick(vec posClick, vec modPos)
 {
 	Transform* t = game_object->GetTransform();
 	if (t)
@@ -621,7 +621,7 @@ void B_Unit::OnRightClick(float x, float y)
 		audio->Play(HAMMER);
 
 		std::map<float, Behaviour*> out;
-		unsigned int total_found = GetBehavioursInRange(vec(x, y, 0.5f), 1.5f, out);
+		unsigned int total_found = GetBehavioursInRange(vec(posClick.x, posClick.y, 0.5f), 1.5f, out);
 		float distance = 0;
 		if (total_found > 0)
 		{
@@ -649,7 +649,7 @@ void B_Unit::OnRightClick(float x, float y)
 					}
 				}
 				///////Temporal
-				else if (GetType() == ENEMY_MELEE)
+				/*else if (GetType() == ENEMY_MELEE)
 				{
 					if (it->second->GetType() == UNIT_MELEE || it->second->GetType() == GATHERER)
 					{
@@ -668,7 +668,7 @@ void B_Unit::OnRightClick(float x, float y)
 						}
 
 					}
-				}
+				}*/
 				//////
 				else if (it->second->GetType() == ENEMY_MELEE || it->second->GetType() == ENEMY_RANGED)//Temporal
 				{
@@ -688,11 +688,13 @@ void B_Unit::OnRightClick(float x, float y)
 
 				}
 			}
-			path = App->pathfinding.CreatePath({ int(pos.x), int(pos.y) }, { int(x-1), int(y-1) }, GetID());
+			path = App->pathfinding.CreatePath({ int(pos.x), int(pos.y) }, { int(posClick.x-1), int(posClick.y-1) }, GetID());
 		}
 		else
 		{
-			path = App->pathfinding.CreatePath({ int(pos.x), int(pos.y) }, { int(x), int(y) }, GetID());
+			if (modPos.x != -1 && modPos.y != -1) path = App->pathfinding.CreatePath({ int(pos.x), int(pos.y) }, { int(modPos.x), int(modPos.y) }, GetID());
+			else path = App->pathfinding.CreatePath({ int(pos.x), int(pos.y) }, { int(posClick.x), int(posClick.y) }, GetID());
+
 			attackObjective = nullptr;
 		}
 	}

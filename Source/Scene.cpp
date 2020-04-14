@@ -280,18 +280,49 @@ bool Scene::Update()
 				App->input->GetMousePosition(x, y);
 				RectF cam = App->render->GetCameraRectF();
 				std::pair<float, float> mouseOnMap = Map::F_WorldToMap(float(x) + cam.x, float(y) + cam.y);
+				std::pair<float, float> modPos;
+				modPos.first = mouseOnMap.first;
+				modPos.second = mouseOnMap.second;
 
 				if (groupSelect && !group.empty())//Move group selected
 				{
+					bool incX = false;
 					for (std::vector<Gameobject*>::iterator it = group.begin(); it != group.end(); ++it)
-						Event::Push(ON_RIGHT_CLICK, *it, mouseOnMap.first, mouseOnMap.second);
+					{
+						while (App->pathfinding.ValidTile(int(modPos.first), int(modPos.second)) == false)
+						{
+							LOG("change point");
+							if (incX) 
+							{
+								modPos.first++;
+								incX = false;
+							}
+							else
+							{
+								modPos.second++;
+								incX = true;
+							}
+						} 
+						Event::Push(ON_RIGHT_CLICK, *it, vec (mouseOnMap.first, mouseOnMap.second,0.5f),vec(modPos.first, modPos.second,0.5f));
+						if (incX)
+						{
+							modPos.first++;
+							incX = false;
+						}
+						else
+						{
+							modPos.second++;
+							incX = true;
+						}
+						LOG("Point ok");
+					}
 				}
 				else//Move one selected
 				{
 					Gameobject* go = App->editor->selection;
 					if (go)
 					{
-						Event::Push(ON_RIGHT_CLICK, go, mouseOnMap.first, mouseOnMap.second);
+						Event::Push(ON_RIGHT_CLICK, go, vec (mouseOnMap.first, mouseOnMap.second,0.5f),vec(-1,-1,-1));
 						groupSelect = false;
 					}
 					else groupSelect = false;

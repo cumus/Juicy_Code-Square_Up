@@ -141,7 +141,7 @@ void Tower::Upgrade()
 	}
 }
 
-void Tower::OnRightClick(float x, float y)
+void Tower::OnRightClick(vec pos, vec modPos)
 {
 	Upgrade();
 	//OnDamage(10);

@@ -120,10 +120,10 @@ void Base_Center::UpdatePanel()
 
 }
 
-void Base_Center::OnRightClick(float x, float y)
+void Base_Center::OnRightClick(vec pos, vec modPos)
 {
 	//Upgrade();
-	SpawnUnit(x,y);
+	SpawnUnit(pos.x,pos.y);
 }
 
 void Base_Center::SpawnUnit(float x,float y) 
