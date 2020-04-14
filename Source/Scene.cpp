@@ -18,6 +18,7 @@
 #include "Gatherer.h"
 #include "EnemyMeleeUnit.h"
 #include "MeleeUnit.h"
+#include "Spawner.h"
 
 #include "Defs.h"
 #include "Log.h"
