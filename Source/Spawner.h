@@ -1,4 +1,4 @@
-/*#ifndef __SPAWNER_H__
+#ifndef __SPAWNER_H__
 #define __SPAWNER_H__
 
 #include "Behaviour.h"
@@ -28,4 +28,4 @@ private:
 	int maxSpawns, currentSpawns;
 };
 
-#endif // __SPAWNER_H__*/
+#endif // __SPAWNER_H__

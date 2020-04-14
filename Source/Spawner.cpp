@@ -1,16 +1,13 @@
-/*#include "Spawner.h"
+#include "Spawner.h"
 #include "Application.h"
 #include "Gameobject.h"
-#include "Render.h"
-#include "Audio.h"
-#include "AudioSource.h"
 #include "Transform.h"
 #include "Log.h"
 #include "Scene.h"
 
 #include "EnemyMeleeUnit.h"
 
-//#include <time.h>
+#include <time.h>
 
 Spawner::Spawner(Gameobject* go) : Behaviour(go, SPAWNER, FULL_LIFE, B_SPAWNER)
 {
@@ -62,7 +59,7 @@ void Spawner::SpawnMelee(float x,float y)
 void Spawner::SpawnRanged(float x, float y)
 {
 	//Temporal
-	Gameobject* melee_go = App->scene->AddGameobject("Ranged enemy");
+	Gameobject* melee_go = App->scene->AddGameobject("Melee enemy");
 	melee_go->GetTransform()->SetLocalPos({ x, y, 0.0f });
 
 	new EnemyMeleeUnit(melee_go);
@@ -71,7 +68,7 @@ void Spawner::SpawnRanged(float x, float y)
 void Spawner::SpawnSuper(float x, float y)
 {
 	//Temporal
-	Gameobject* melee_go = App->scene->AddGameobject("Super Enemy");
+	Gameobject* melee_go = App->scene->AddGameobject("Melee Enemy");
 	melee_go->GetTransform()->SetLocalPos({ x, y, 0.0f });
 
 	new EnemyMeleeUnit(melee_go);
@@ -80,7 +77,7 @@ void Spawner::SpawnSuper(float x, float y)
 void Spawner::SpawnSpecial(float x, float y)
 {
 	//Temporal
-	Gameobject* melee_go = App->scene->AddGameobject("Special enemy");
+	Gameobject* melee_go = App->scene->AddGameobject("Melee enemy");
 	melee_go->GetTransform()->SetLocalPos({ x, y, 0.0f });
 
 	new EnemyMeleeUnit(melee_go);
@@ -114,7 +111,7 @@ void Spawner::Update()
 
 			int random = std::rand() % 100 + 1;
 			LOG("Random %d", random);
-			if (random < MELEE_RATE) //Spawn melee
+			/*if (random < MELEE_RATE) //Spawn melee
 			{
 				LOG("melee");
 				SpawnMelee(pos.x,pos.y);
@@ -133,7 +130,7 @@ void Spawner::Update()
 			{
 				LOG("Special");
 				SpawnSpecial(pos.x, pos.y);
-			}
+			}*/
 			currentSpawns++;
 			LOG("Spawned one");
 		}
@@ -146,4 +143,4 @@ void Spawner::Update()
 	{
 		ms_counter += App->time.GetGameDeltaTime();
 	}
-}*/
+}

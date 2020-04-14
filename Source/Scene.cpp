@@ -1201,7 +1201,7 @@ void Scene::GodMode()
 		
 	}
 
-	/*if (App->input->GetKey(SDL_SCANCODE_0) == KEY_DOWN) //Spawner
+	if (App->input->GetKey(SDL_SCANCODE_0) == KEY_DOWN) //Spawner
 	{
 		std::pair<int, int> position = Map::WorldToTileBase(float(x + cam.x), float(y + cam.y));
 		if (App->pathfinding.CheckWalkabilityArea(position, vec(1.0f)))
@@ -1213,7 +1213,7 @@ void Scene::GodMode()
 		}
 		else
 			LOG("Invalid spawn position");
-	}*/
+	}
 
 	if (App->input->GetKey(SDL_SCANCODE_Z) == KEY_DOWN)
 	{
