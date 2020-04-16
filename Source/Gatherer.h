@@ -4,6 +4,7 @@
 #include "Behaviour.h"
 #include "Gameobject.h"
 #include "Component.h"
+#include "Canvas.h"
 
 class Gameobject;
 
@@ -12,6 +13,19 @@ class Gatherer : public B_Unit
 public:
 	Gatherer(Gameobject* go);
 	~Gatherer();
+
+	void CreatePanel() override;
+	void UpdatePanel() override;
+
+public:
+
+	float posY_panel;
+	int panel_tex_ID;
+	C_Image* panel;
+	//C_Button* barracks_btn;
+	C_Button* tower_btn;
+	//C_Button* wall_btn;
+	C_Button* baseBtn;
 };
 
 #endif
