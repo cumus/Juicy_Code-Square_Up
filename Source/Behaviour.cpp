@@ -253,10 +253,6 @@ B_Unit::B_Unit(Gameobject* go, UnitType t, UnitState s, ComponentType comp_type)
 	move = false;
 	positiveX = false;
 	positiveY = false;
-	cornerNW = false;
-	cornerNE = false;
-	cornerSW = false;
-	cornerSE = false;
 	dirX = 0;
 	dirY = 0;
 	inRange = false;
@@ -301,8 +297,8 @@ void B_Unit::Update()
 			//LOG("Distance 1:%f",d);
 			if (d <= attack_range) //Arriba izquierda
 			{
-				//cornerNW = true;
 				inRange = true;
+				//LOG("In range");
 			}
 			attackPos.x += attackObjective->GetGameobject()->GetTransform()->GetLocalScaleX();
 			attackPos.y += attackObjective->GetGameobject()->GetTransform()->GetLocalScaleY();
@@ -310,8 +306,8 @@ void B_Unit::Update()
 			//LOG("Distance 2:%f", d);
 			if (d <= attack_range)//Abajo derecha
 			{
-				//cornerSE = true;
 				inRange = true;
+				//LOG("In range");
 			}
 
 			attackPos.x -= attackObjective->GetGameobject()->GetTransform()->GetLocalScaleX();
@@ -319,8 +315,8 @@ void B_Unit::Update()
 			//LOG("Distance 3:%f", d);
 			if (d <= attack_range)//Abajo izquierda
 			{
-				//cornerSW = true;
 				inRange = true;
+				//LOG("In range");
 			}
 
 			attackPos.x += attackObjective->GetGameobject()->GetTransform()->GetLocalScaleX();
@@ -329,18 +325,14 @@ void B_Unit::Update()
 			//LOG("Distance 4:%f", d);
 			if (d <= attack_range)//Arriba derecha
 			{
-				//cornerNE = true;
 				inRange = true;
+				//LOG("In range");
 			}
 			//LOG("%d",inRange);
 		}
 		else
 		{
 			attackObjective = nullptr;
-			/*cornerNW = false;
-			cornerSE = false;
-			cornerNE = false;
-			cornerSW = false;*/
 			inRange = false;
 			//LOG("Not in attack range");
 		}
@@ -447,7 +439,7 @@ void B_Unit::Update()
 		else
 		{
 			move = false;
-			arriveDestination = true;
+			//arriveDestination = true;
 			current_state = IDLE;
 		}
 
@@ -532,7 +524,8 @@ void B_Unit::Update()
 				separationSpd.y = pos.y - otherPos.y;
 				if (it->second->GetState() != DESTROYED)
 				{
-					Event::Push(IMPULSE, it->second->AsBehaviour(), -separationSpd.x, -separationSpd.y);
+					if(!move) Event::Push(IMPULSE, it->second->AsBehaviour(), -separationSpd.x/2 , -separationSpd.y/2);
+					else Event::Push(IMPULSE, it->second->AsBehaviour(), -separationSpd.x, -separationSpd.y);
 				}
 			}
 		}
@@ -559,10 +552,10 @@ void B_Unit::DoAttack()
 	vec localPos = game_object->GetTransform()->GetGlobalPosition();
 	std::pair<int, int> Pos(int(localPos.x),int(localPos.y));
 	vec objPos = attackObjective->GetGameobject()->GetTransform()->GetGlobalPosition();
-	std::pair<int,int> atkPos(int(objPos.x), int(objPos.y)); //= Map::WorldToTileBase(objPos.x, objPos.y);
-
-	LOG("Pos X:%d/Y:%d", Pos.first, Pos.second);
-	LOG("Atkpos X:%d/Y:%d", atkPos.first, atkPos.second);
+	std::pair<int,int> atkPos(int(objPos.x), int(objPos.y));
+	arriveDestination = true;
+	//LOG("Pos X:%d/Y:%d", Pos.first, Pos.second);
+	//LOG("Atkpos X:%d/Y:%d", atkPos.first, atkPos.second);
 
 	audio->Play(attackFX);
 	if (atkPos.first == Pos.first && atkPos.second < Pos.second)//N
@@ -597,48 +590,11 @@ void B_Unit::DoAttack()
 	{
 		current_state = ATTACKING_SE; 
 	}
-	/*if (cornerNW && cornerNE)//arriba
-	{
-		current_state = ATTACKING_NW;
-	}
-	else if (cornerSW && cornerSE)//abajo
-	{
-		current_state = ATTACKING_E;
-	}
-	else if (cornerSW && cornerNW)//izquierda
-	{
-		current_state = ATTACKING_NE;
-	}
-	else if (cornerNE && cornerSE)//derecha
-	{
-		current_state = ATTACKING_W;
-	}
-	else if (cornerNW && !cornerNE && !cornerSE && !cornerSW)//arriba izquierda
-	{
-		current_state = ATTACKING_SW;
-	}
-	else if (cornerNE && !cornerNW && !cornerSE && !cornerSW)//arriba derecha
-	{
-		current_state = ATTACKING_SE;
-	}
-	else if (cornerSW && !cornerSE && !cornerNW && !cornerNE)//abajo izquierda
-	{
-		current_state = ATTACKING_S;
-	}
-	else if (cornerSE && !cornerSW && !cornerNW && !cornerNE)//abajo derecha
-	{
-		current_state = ATTACKING_N; //OK
-	}*/
-	/*cornerNW = false;
-	cornerSE = false;
-	cornerNE = false;
-	cornerSW = false;*/
 }
 
 void B_Unit::OnDestroy()
 {
 	App->pathfinding.DeletePath(GetID());
-	//bar_go->Destroy(1.0f);
 	switch (type) {
 	case UNIT_MELEE:
 		App->scene->current_melee_units -= 1;
@@ -691,28 +647,6 @@ void B_Unit::OnRightClick(vec posClick, vec modPos)
 
 					}
 				}
-				///////Temporal
-				/*else if (GetType() == ENEMY_MELEE)
-				{
-					if (it->second->GetType() == UNIT_MELEE || it->second->GetType() == GATHERER)
-					{
-						if (distance == 0)//Chose closest
-						{
-							attackObjective = it->second;
-							distance = it->first;
-						}
-						else
-						{
-							if (it->first < distance)
-							{
-								distance = it->first;
-								attackObjective = it->second;
-							}
-						}
-
-					}
-				}*/
-				//////
 				else if (it->second->GetType() == ENEMY_MELEE || it->second->GetType() == ENEMY_RANGED)//Temporal
 				{
 					if (distance == 0)//Closest distance
@@ -753,17 +687,9 @@ void B_Unit::OnGetImpulse(float x, float y)
 		game_object->GetTransform()->MoveY(-6 * y * App->time.GetGameDeltaTime());//Move y
 	}
 	else
-	{
-		if (!move)
-		{
-			game_object->GetTransform()->MoveX(4 * x * App->time.GetGameDeltaTime());//Move x
-			game_object->GetTransform()->MoveY(4 * y * App->time.GetGameDeltaTime());//Move y
-		}
-		else
-		{
-			game_object->GetTransform()->MoveX(6 * x * App->time.GetGameDeltaTime());//Move x
-			game_object->GetTransform()->MoveY(6 * y * App->time.GetGameDeltaTime());//Move y
-		}		
+	{		
+		game_object->GetTransform()->MoveX(6 * x * App->time.GetGameDeltaTime());//Move x
+		game_object->GetTransform()->MoveY(6 * y * App->time.GetGameDeltaTime());//Move y				
 	}
 }
 

@@ -16,7 +16,7 @@ public:
 	void IARangeCheck() override;
 
 protected:
-
+	std::pair<int, int> destPos;
 	bool going_base;
 	bool going_enemy;
 	bool base_found;

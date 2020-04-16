@@ -171,10 +171,6 @@ protected:
 	bool positiveY;
 	int dirX;
 	int dirY;
-	bool cornerNW;
-	bool cornerNE;
-	bool cornerSW;
-	bool cornerSE;
 	bool arriveDestination;
 
 	std::pair<float, float> atkObj;
