@@ -22,11 +22,20 @@ Minimap::Minimap(Gameobject* go) :
 	enemy = { 0, 0, 0, 0 };
 	building = { 0, 0, 0, 0 };
 
-	minimap_camera = { 0, 0, 4, 4 };
+	minimap_camera = { 0, 0, 0, 0 };
 	camera_color = { 255, 255, 255, 255 };
 
 	App->win->GetWindowSize(window_width, window_height);
-	tex_id = App->render->GetMinimap();
+
+	target = { 1.f, 0.f, 0.03f, 0.03f };
+	std::pair<int, int> map_size = Map::GetMapSize_I();
+	std::pair<int, int> tile_size = Map::GetTileSize_I();
+	section = { 0, 0, map_size.first * tile_size.first, map_size.second * tile_size.second };
+	offset = { -section.w, 0 };
+
+	tex_id = App->render->GetMinimap(section.w, section.h);
+	Event::Push(UPDATE_MINIMAP_TEXTURE, App->render);
+	
 }
 
 Minimap::~Minimap()
@@ -40,14 +49,11 @@ void Minimap::Update()
 	App->render->DrawQuad(output, { 255, 0, 0, 255 }, false, EDITOR, false);
 
 	//From map to minimap viewport
-	float tile_width, tile_height;
-	map.GetTileSize_F(tile_width, tile_height);
+	std::pair<float, float> tile_size = Map::GetTileSize_F();
+	std::pair<float, float> map_size = Map::GetMapSize_F();
 
-	float map_width, map_height;
-	map.GetMapSize(map_width, map_height);
-
-	float map_pixelwidth = map_width * tile_width;
-	float map_pixelheight = map_height * tile_height;
+	float map_pixelwidth = map_size.first * tile_size.first;
+	float map_pixelheight = map_size.second * tile_size.second;
 
 	float scale_x, scale_y;
 	scale_x = output.w / map_pixelwidth;
@@ -84,6 +90,7 @@ void Minimap::Update()
 	}
 //-------------------------------------------------------------------------------------
 
+	//Units ti minimap (with coloured rect)
 	for (std::list<Gameobject*>::iterator it = object_queue.begin(); it != object_queue.end(); it++)
 	{
 		SDL_Rect representation;
@@ -98,12 +105,12 @@ void Minimap::Update()
 		representation.x += output.x + output.w / 2;
 		representation.y += output.y;
 
-		App->render->DrawQuad(representation, { 255, 255, 255, 255 }, true, EDITOR, false);
-		//App->render->BlitNorm(0, representation, NULL, EDITOR);
+		App->render->DrawQuad(representation, unit_color , true, EDITOR, false);
 	}
 }
 
-void Minimap::AddToMinimap(Gameobject* object)
+void Minimap::AddToMinimap(Gameobject* object, SDL_Color color)
 {
+	unit_color = color;
 	object_queue.push_back(object);
 }

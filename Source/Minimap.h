@@ -23,7 +23,7 @@ public:
 	Minimap(Gameobject* go);
 	~Minimap();
 
-	void AddToMinimap(Gameobject* object);
+	void AddToMinimap(Gameobject* object, SDL_Color color);
 
 private:
 
@@ -35,9 +35,9 @@ private:
 	SDL_Renderer*	renderer;
 	SDL_Texture*	map_texture;
 	SDL_Color		camera_color;
+	SDL_Color		unit_color;
 	SDL_Rect		minimap_camera;
 	Map				map;
-
 
 	SDL_Rect		ally;
 	SDL_Rect		enemy;
@@ -48,6 +48,7 @@ private:
 	int		window_width;
 	int		window_height;
 	bool	mouse_inside;
+	bool	map_charged;
 
 public:
 

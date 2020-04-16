@@ -47,18 +47,24 @@ Here are some links to our GitHib, Wiki, etc.
 * Left Alt + 2: Load Intro.
 * Left Alt + 3: Load Menu.
 * Left Alt + 4: Load Main.
+* Left Alt + 5: Load End.
 
 * F2: Draw walkability.
 * F3: Puse the music.
 * F4: Play the music.
 
 * Space: Swap map type.
-* C,V,X: Pathfinding path.
+* Z,C,V,X: Pathfinding path.
 * Z: Show hide path.
+* Delete: Destroy unit.
 
 * 3: Audio effect.
-* 4: Create game unit.
+* 4: Create melee allied unit.
 * 5: Edge source node.
+* 6: Create melee enemy unit.
+* 7: Create defensive tower building.
+* 8: Create Base Center building.
+* 9: Create gatherer unit.
 
 ### Camera:
 * W: move the camera up
@@ -94,6 +100,14 @@ Here are some links to our GitHib, Wiki, etc.
 * Building behaviour.
 * Some bug fixed.
 * Timer: press start to start the game and stop to stop it.
+
+### Updates from v0.4
+* Minimap with minimal functionality added.
+* Tower building.
+* Units behaviour.
+* Select units qith mouse.
+* Menus added.
+* Spatial audio implemented.
 
 ##
 ![University Logo](https://www.citm.upc.edu/templates/new/img/logoCITM.png?1401879059) 

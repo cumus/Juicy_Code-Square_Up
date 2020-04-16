@@ -134,8 +134,8 @@ void PathfindingManager::DebugShowUnitPath(double ID)
 void PathfindingManager::DebugShowPaths() 
 {
 	int a = storedPaths.size();
-	LOG("Debug paths: %d", a);
-	LOG("ms taken to compute: %f",msCount);
+	//LOG("Debug paths: %d", a);
+	//LOG("ms taken to compute: %f",msCount);
 	if (debugAll) debugAll = false;
 	else debugAll = true;	
 	msCount = 0;
@@ -516,7 +516,7 @@ std::vector<iPoint> * PathfindingManager::CreatePath(iPoint origin, iPoint desti
 		UncompletedPath path(ID,destination,open,closed);
 		path.localStart = origin;
 		UpdatePendingPaths(ID,path);
-		LOG("Path added to queue");
+		//LOG("Path added to queue");
 
 		//finalPath.push_back(origin);
 		UpdateStoredPaths(ID, finalPath);
@@ -734,8 +734,8 @@ int PathfindingManager::ContinuePath(UncompletedPath pathToDo, int working_ms)
 		{			
 			pathPointer->push_back(*it);
 		}
-		LOG("Pending deleted");
-		LOG("Path length:%d", pathPointer->size());
+		//LOG("Pending deleted");
+		//LOG("Path length:%d", pathPointer->size());
 		DeletePendingPath(path.ID);
 	}
 	else

@@ -18,6 +18,7 @@
 #include "Gatherer.h"
 #include "EnemyMeleeUnit.h"
 #include "MeleeUnit.h"
+#include "Spawner.h"
 
 #include "Defs.h"
 #include "Log.h"
@@ -34,6 +35,8 @@
 Scene::Scene() : Module("scene")
 {
 	root.SetName("root");
+	baseCenterPos.first = -1;
+	baseCenterPos.second = -1;
 }
 
 Scene::~Scene()
@@ -83,32 +86,67 @@ bool Scene::Update()
 	}
 	else
 	{
+		if (App->input->GetKey(SDL_SCANCODE_F10) == KEY_DOWN)
+			god_mode = !god_mode;
+
 		if (god_mode)
 			GodMode();
 
-		//Pause Game
-		if ((test || level) && !placing_building)
-		{
-			if (App->input->GetKey(SDL_SCANCODE_ESCAPE) == KEY_DOWN && pause == false)
-			{
-				Event::Push(SCENE_PAUSE, App);
-				PauseMenu();
-				pause = true;
-			}
-			else if (App->input->GetKey(SDL_SCANCODE_ESCAPE) == KEY_DOWN && pause == true)
-			{
-				pause_canvas_go->Destroy();
-				Event::Push(SCENE_PLAY, App);
-				pause = false;
-			}
+		//Current Melee Units Updated Value
+		if (text_current_melee_units) {
+			std::stringstream ss;
+			ss << current_melee_units;
+			std::string temp_str = ss.str();
+			text_current_melee_units->text->SetText(temp_str.c_str());
 		}
+
+		//Melee Units Created Updated Value
+		if (text_melee_units_created) {
+			std::stringstream ss;
+			ss << melee_units_created;
+			std::string temp_str = ss.str();
+			text_melee_units_created->text->SetText(temp_str.c_str());
+		}
+
+		//Current Gatherer Units Updated Value
+		if (text_current_ranged_units) {
+			std::stringstream ss;
+			ss << current_gatherer_units;
+			std::string temp_str = ss.str();
+			text_current_gatherer_units->text->SetText(temp_str.c_str());
+		}
+
+		//Gatherer Units Created Updated Value
+		if (text_ranged_units_created) {
+			std::stringstream ss;
+			ss << gatherer_units_created;
+			std::string temp_str = ss.str();
+			text_gatherer_units_created->text->SetText(temp_str.c_str());
+		}
+
+		/*
+		//Current Ranged Units Updated Value
+		if (text_current_ranged_units) {
+			std::stringstream ss;
+			ss << current_ranged_units;
+			std::string temp_str = ss.str();
+			text_current_ranged_units->text->SetText(temp_str.c_str());
+		}
+
+		//Ranged Units Created Updated Value
+		if (text_ranged_units_created) {
+			std::stringstream ss;
+			ss << ranged_units_created;
+			std::string temp_str = ss.str();
+			text_ranged_units_created->text->SetText(temp_str.c_str());
+		}
+		*/
 		
 		//Mob Drop Print Updated Value
 		if (text_mobdrop_value) {
 			std::stringstream ss;
 			ss << mob_drop;
 			std::string temp_str = ss.str();
-			//const char* t = (char*)temp_str.c_str();
 			text_mobdrop_value->text->SetText(temp_str.c_str());
 		}
 
@@ -117,7 +155,6 @@ bool Scene::Update()
 			std::stringstream ss1;
 			ss1 << edge_value;
 			std::string temp_str1 = ss1.str();
-			//const char* t1 = (char*)temp_str1.c_str();
 			text_edge_value->text->SetText(temp_str1.c_str());
 		}
 
@@ -141,6 +178,23 @@ bool Scene::Update()
 		}
 		else
 		{
+			//Pause Game
+			if ((test || level) && App->input->GetKey(SDL_SCANCODE_ESCAPE) == KEY_DOWN)
+			{
+				if (pause)
+				{
+					pause_canvas_go->SetInactive();
+					Event::Push(SCENE_PLAY, App);
+					pause = false;
+				}
+				else
+				{
+					Event::Push(SCENE_PAUSE, App);
+					PauseMenu();
+					pause = true;
+				}
+			}
+
 			//GROUP SELECTION//
 			switch (App->input->GetMouseButtonDown(0))
 			{
@@ -221,18 +275,47 @@ bool Scene::Update()
 				App->input->GetMousePosition(x, y);
 				RectF cam = App->render->GetCameraRectF();
 				std::pair<float, float> mouseOnMap = Map::F_WorldToMap(float(x) + cam.x, float(y) + cam.y);
+				std::pair<float, float> modPos;
+				modPos.first = mouseOnMap.first;
+				modPos.second = mouseOnMap.second;
 
 				if (groupSelect && !group.empty())//Move group selected
 				{
+					bool incX = false;
 					for (std::vector<Gameobject*>::iterator it = group.begin(); it != group.end(); ++it)
-						Event::Push(ON_RIGHT_CLICK, *it, mouseOnMap.first, mouseOnMap.second);
+					{
+						while (App->pathfinding.ValidTile(int(modPos.first), int(modPos.second)) == false)
+						{
+							if (incX) 
+							{
+								modPos.first++;
+								incX = false;
+							}
+							else
+							{
+								modPos.second++;
+								incX = true;
+							}
+						} 
+						Event::Push(ON_RIGHT_CLICK, *it, vec (mouseOnMap.first, mouseOnMap.second,0.5f),vec(modPos.first, modPos.second,0.5f));
+						if (incX)
+						{
+							modPos.first++;
+							incX = false;
+						}
+						else
+						{
+							modPos.second++;
+							incX = true;
+						}
+					}
 				}
 				else//Move one selected
 				{
 					Gameobject* go = App->editor->selection;
 					if (go)
 					{
-						Event::Push(ON_RIGHT_CLICK, go, mouseOnMap.first, mouseOnMap.second);
+						Event::Push(ON_RIGHT_CLICK, go, vec (mouseOnMap.first, mouseOnMap.second,0.5f),vec(-1,-1,-1));
 						groupSelect = false;
 					}
 					else groupSelect = false;
@@ -276,23 +359,26 @@ void Scene::RecieveEvent(const Event& e)
 		break;
 	case SCENE_CHANGE:
 	{
-		if ((fade_duration = e.data2.AsFloat()) != 0.f)
+		if (fading == NO_FADE)
 		{
-			next_scene = SceneType(e.data1.AsInt());
-			fade_duration = e.data2.AsFloat();
-
-			fade_timer = 0.f;
-			if (fade_duration < 0)
+			if ((fade_duration = e.data2.AsFloat()) != 0.f)
 			{
-				fade_duration *= -1.0f;
-				fading = FADE_IN;
+				next_scene = SceneType(e.data1.AsInt());
+				fade_duration = e.data2.AsFloat();
+
+				fade_timer = 0.f;
+				if (fade_duration < 0)
+				{
+					fade_duration *= -1.0f;
+					fading = FADE_IN;
+				}
+				else
+					fading = FADE_OUT;
 			}
 			else
-				fading = FADE_OUT;
-		}
-		else
-		{
-			ChangeToScene(SceneType(e.data1.AsInt()));
+			{
+				ChangeToScene(SceneType(e.data1.AsInt()));
+			}
 		}
 		break; }
 	case RESOURCE: 
@@ -312,6 +398,9 @@ void Scene::RecieveEvent(const Event& e)
 bool Scene::LoadTestScene()
 {
 	OPTICK_EVENT();
+
+	god_mode = true;
+
 	// Play sample track
 	bool ret = App->audio->PlayMusic("audio/Music/alexander-nakarada-buzzkiller.ogg");
 
@@ -326,8 +415,16 @@ bool Scene::LoadTestScene()
 	
 	test = true;
 
+	int icons_text_id = App->tex.Load("textures/Iconos_square_up.png");
+
 	building_bars_created = 0;
-	unit_bars_created = 0;
+	int current_melee_units = 0;
+	int melee_units_created = 0;
+	int current_ranged_units = 0;
+	int ranged_units_created = 0;
+	int current_gatherer_units = 0;
+	int gatherer_units_created = 0;
+	
 
 	//------------------------- HUD CANVAS --------------------------------------
 
@@ -335,11 +432,11 @@ bool Scene::LoadTestScene()
 	C_Canvas* hud_canv = new C_Canvas(hud_canvas_go);
 	hud_canv->target = { 0.3f, 0.3f, 0.4f, 0.4f };
 
-
 	// HUD
 	Gameobject* canvas_go = AddGameobject("Canvas", &root);
 	C_Canvas* canv = new C_Canvas(canvas_go);
 	canv->target = { 0.6f, 0.6f, 0.4f, 0.4f };
+
 	/*
 	Gameobject* img_go = AddGameobject("Image", canvas_go);
 	C_Image* img = new C_Image(img_go);
@@ -364,13 +461,88 @@ bool Scene::LoadTestScene()
 	button->section = { 359, 114, 101, 101 };
 	button->tex_id = App->tex.Load("textures/icons.png");*/
 
+
+	// Unit icon (Melee Unit)
+	Gameobject* melee_counter_go = AddGameobject("Melee Unit Counter", canvas_go);
+
+	C_Image* melee_counter_box = new C_Image(melee_counter_go);
+	melee_counter_box->target = { 0.153f, 0.64f, 0.55f , 1.f };
+	melee_counter_box->offset = { -345.f, -45.f };
+	melee_counter_box->section = { 17, 509, 345, 45 };
+	melee_counter_box->tex_id = icons_text_id;
+
+	C_Image* melee_counter_icon = new C_Image(melee_counter_go);
+	melee_counter_icon->target = { 0.047f, 0.628f, 0.9f , 0.9f };
+	melee_counter_icon->offset = { -48.f, -35.f };
+	melee_counter_icon->section = { 22, 463, 48, 35 };
+	melee_counter_icon->tex_id = icons_text_id;
+
+	text_current_melee_units = new C_Text(melee_counter_go, "0");
+	text_current_melee_units->target = { 0.049f, 0.587f, 1.6f, 1.6f };
+
+	C_Text* melee_diagonal = new C_Text(melee_counter_go, "/");
+	melee_diagonal->target = { 0.088f, 0.587f, 1.6f, 1.6f };
+
+	text_melee_units_created = new C_Text(melee_counter_go, "0");
+	text_melee_units_created->target = { 0.099f, 0.587f, 1.6f, 1.6f };
+
+	// Unit icon (Gatherer Unit)
+	Gameobject* gatherer_counter_go = AddGameobject("Gatherer Unit Counter", canvas_go);
+
+	C_Image* gatherer_counter_box = new C_Image(gatherer_counter_go);
+	gatherer_counter_box->target = { 0.153f, 0.72f, 0.55f , 1.f };
+	gatherer_counter_box->offset = { -345.f, -45.f };
+	gatherer_counter_box->section = { 17, 509, 345, 45 };
+	gatherer_counter_box->tex_id = icons_text_id;
+
+	C_Image* gatherer_counter_icon = new C_Image(gatherer_counter_go);
+	gatherer_counter_icon->target = { 0.041f, 0.708f, 0.9f , 0.9f };
+	gatherer_counter_icon->offset = { -48.f, -35.f };
+	gatherer_counter_icon->section = { 75, 458, 48, 35 };
+	gatherer_counter_icon->tex_id = icons_text_id;
+
+	text_current_gatherer_units = new C_Text(gatherer_counter_go, "0");
+	text_current_gatherer_units->target = { 0.049f, 0.667f, 1.6f, 1.6f };
+
+	C_Text* gatherer_diagonal = new C_Text(gatherer_counter_go, "/");
+	gatherer_diagonal->target = { 0.088f, 0.667f, 1.6f, 1.6f };
+
+	text_gatherer_units_created = new C_Text(gatherer_counter_go, "0");
+	text_gatherer_units_created->target = { 0.099f, 0.667f, 1.6f, 1.6f };
+
+	/*
+	// Unit icon (Ranged Unit)
+	Gameobject* ranged_counter_go = AddGameobject("Ranged Unit Counter", canvas_go);
+
+	C_Image* ranged_counter_box = new C_Image(ranged_counter_go);
+	ranged_counter_box->target = { 0.153f, 0.80f, 0.55f , 1.f };
+	ranged_counter_box->offset = { -345.f, -45.f };
+	ranged_counter_box->section = { 17, 509, 345, 45 };
+	ranged_counter_box->tex_id = icons_text_id;
+
+	C_Image* ranged_counter_icon = new C_Image(ranged_counter_go);
+	ranged_counter_icon->target = { 0.047f, 0.778f, 0.9f , 0.9f };
+	ranged_counter_icon->offset = { -48.f, -35.f };
+	ranged_counter_icon->section = { 22, 463, 48, 35 };
+	ranged_counter_icon->tex_id = icons_text_id;
+
+	text_current_ranged_units = new C_Text(ranged_counter_go, "0");
+	text_current_ranged_units->target = { 0.049f, 0.747f, 1.6f, 1.6f };
+
+	C_Text* ranged_diagonal = new C_Text(ranged_counter_go, "/");
+	ranged_diagonal->target = { 0.088f, 0.747f, 1.6f, 1.6f };
+
+	text_ranged_units_created = new C_Text(ranged_counter_go, "0");
+	text_ranged_units_created->target = { 0.099f, 0.747f, 1.6f, 1.6f };
+	*/
+
 	//Resources
 	Gameobject* resource_counter_go = AddGameobject("Resources", canvas_go);
 	C_Image* img = new C_Image(resource_counter_go);
 	img->target = { 0.1f, 1.f, 1.f , 1.f };
 	img->offset = { -119.f, -119.f };
 	img->section = { 22, 333, 119, 119 };
-	img->tex_id = App->tex.Load("textures/Iconos_square_up.png");
+	img->tex_id = icons_text_id;
 
 	//Edge
 	resources_go = AddGameobject("Text Edge", resource_counter_go);
@@ -384,18 +556,15 @@ bool Scene::LoadTestScene()
 	//MobDrop
 	resources_2_go = AddGameobject("Text Mob Drop", resource_counter_go);
 	C_Text* text_mobdrop = new C_Text(resources_2_go, "Mob Drop");
-	text_mobdrop->target = { 0.5f, 0.1f, 1.f, 1.f };
+	text_mobdrop->target = { 0.45f, 0.8f, 1.f, 1.f };
 	
 	Gameobject* resources_value_2_go = AddGameobject("Mob Drop Value", resource_counter_go);
 	text_mobdrop_value = new C_Text(resources_2_go, "0");
-	text_mobdrop_value->target = { 0.5f, 0.4f, 1.f, 1.f };
+	text_mobdrop_value->target = { 0.65f, 0.4f, 1.f, 1.f };
 	
 	//Minimap
 	Gameobject* minimap_go = AddGameobject("Minimap", canvas_go);
 	minimap = new Minimap(minimap_go);
-	minimap->target = { 1.f, 0.f, 0.3f, 0.3f };
-	minimap->offset = { -1280, 0 };
-	minimap->section = { 0, 0, 1280, 720 };
 
 	// Build mode
 	Gameobject* builder = AddGameobject("Building Mode", canvas_go);
@@ -418,7 +587,6 @@ bool Scene::LoadMainScene()
 	level = true;
 
 	building_bars_created = 0;
-	unit_bars_created = 0;
 
 	//------------------------- HUD CANVAS --------------------------------------
 
@@ -802,7 +970,10 @@ void Scene::PlaceMode(int type)
 
 	switch (UnitType(type))
 	{
-	case BASE_CENTER: new Base_Center(go = AddGameobject("Base Center")); break;
+	case BASE_CENTER: new Base_Center(go = AddGameobject("Base Center")); 
+		baseCenterPos.first = go->GetTransform()->GetGlobalPosition().x;
+		baseCenterPos.second = go->GetTransform()->GetGlobalPosition().y;
+		break;
 	case TOWER: new Tower(go = AddGameobject("Tower")); break;
 	case WALL: break;
 	case BARRACKS: break;
@@ -812,7 +983,13 @@ void Scene::PlaceMode(int type)
 	}
 
 	if (go)
+	{
 		placing_building = go->GetTransform();
+		for (std::map<double, Behaviour*>::iterator it = Behaviour::b_map.begin(); it != Behaviour::b_map.end(); ++it)//Update paths 
+		{
+			Event::Push(UPDATE_PATH, it->second,baseCenterPos.first - 1,baseCenterPos.second - 1);
+		}		
+	}
 }
 
 
@@ -926,7 +1103,7 @@ void Scene::GodMode()
 		Gameobject* unit_go = AddGameobject("Ally Melee unit");
 		unit_go->GetTransform()->SetLocalPos({ float(position.first), float(position.second), 0.0f });
 
-		minimap->AddToMinimap(unit_go);
+		minimap->AddToMinimap(unit_go, { 0,255,0,255 });
 
 		new MeleeUnit(unit_go);
 	}
@@ -940,6 +1117,10 @@ void Scene::GodMode()
 			edge_go->GetTransform()->SetLocalPos({ float(position.first), float(position.second), 0.0f });
 
 			new Edge(edge_go);
+			for (std::map<double, Behaviour*>::iterator it = Behaviour::b_map.begin(); it != Behaviour::b_map.end(); ++it)//Update paths 
+			{
+				Event::Push(UPDATE_PATH, it->second, baseCenterPos.first - 1, baseCenterPos.second - 1);
+			}
 		}
 		else
 			LOG("Invalid spawn position");
@@ -965,6 +1146,12 @@ void Scene::GodMode()
 
 			App->audio->PlayFx(B_BUILDED);
 			new Base_Center(base_go);
+			baseCenterPos.first = base_go->GetTransform()->GetGlobalPosition().x;
+			baseCenterPos.second = base_go->GetTransform()->GetGlobalPosition().y;
+			for (std::map<double, Behaviour*>::iterator it = Behaviour::b_map.begin(); it != Behaviour::b_map.end(); ++it)//Update paths 
+			{
+				Event::Push(UPDATE_PATH, it->second, baseCenterPos.first - 1, baseCenterPos.second - 1);
+			}
 		}
 		else
 			LOG("Invalid spawn position");
@@ -980,6 +1167,10 @@ void Scene::GodMode()
 
 			App->audio->PlayFx(B_BUILDED);
 			new Tower(tower_go);
+			for (std::map<double, Behaviour*>::iterator it = Behaviour::b_map.begin(); it != Behaviour::b_map.end(); ++it)//Update paths 
+			{
+				Event::Push(UPDATE_PATH, it->second, baseCenterPos.first - 1, baseCenterPos.second - 1);
+			}
 		}
 		else
 			LOG("Invalid spawn position");
@@ -994,6 +1185,7 @@ void Scene::GodMode()
 			{
 				Gameobject* gather_go = AddGameobject("Gatherer unit");
 				gather_go->GetTransform()->SetLocalPos({ float(position.first), float(position.second), 0.0f });
+				minimap->AddToMinimap(gather_go, { 0,0,255,255 });
 
 				new Gatherer(gather_go);
 				edge_value -= 10;
@@ -1003,6 +1195,20 @@ void Scene::GodMode()
 				LOG("Invalid spawn position");
 		}
 		
+	}
+
+	if (App->input->GetKey(SDL_SCANCODE_0) == KEY_DOWN) //Spawner
+	{
+		std::pair<int, int> position = Map::WorldToTileBase(float(x + cam.x), float(y + cam.y));
+		if (App->pathfinding.CheckWalkabilityArea(position, vec(1.0f)))
+		{
+			Gameobject* spawner_go = AddGameobject("Enemy spawner");
+			spawner_go->GetTransform()->SetLocalPos({ float(position.first), float(position.second), 0.0f });
+
+			new Spawner(spawner_go);
+		}
+		else
+			LOG("Invalid spawn position");
 	}
 
 	if (App->input->GetKey(SDL_SCANCODE_Z) == KEY_DOWN)
@@ -1068,4 +1274,6 @@ void Scene::GodMode()
 		sel != nullptr ? sel->GetName() : "none selected");
 
 	App->win->SetTitle(tmp_str);
+
+	App->editor->Draw();
 }

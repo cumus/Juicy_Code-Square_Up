@@ -11,7 +11,7 @@ public:
 	~Base_Center();
 
 	void SpawnUnit(float x, float y);
-	void OnRightClick(float x, float y) override;
+	void OnRightClick(vec pos, vec modPos) override;
 	void Upgrade() override;
 	void AfterDamageAction() override;
 

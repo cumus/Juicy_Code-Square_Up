@@ -309,16 +309,14 @@ const MapLayer& Map::GetMapWalkabilityLayer()
 	return *layers.cbegin();
 }
 
-void Map::GetTileSize_I(int& w, int& h)
+std::pair<int, int> Map::GetTileSize_I()
 {
-	w = size_i.first;
-	h = size_i.second;
+	return size_i;
 }
 
-void Map::GetTileSize_F(float& w, float& h)
+std::pair<float, float> Map::GetTileSize_F()
 {
-	w = size_f.first;
-	h = size_f.second;
+	return size_f;
 }
 
 float Map::GetBaseOffset()
@@ -326,10 +324,14 @@ float Map::GetBaseOffset()
 	return base_offset;
 }
 
-void Map::GetMapSize(float& w, float& h)
+std::pair<int, int> Map::GetMapSize_I()
 {
-	w = width;
-	h = height;
+	return { width, height };
+}
+
+std::pair<float, float> Map::GetMapSize_F()
+{
+	return { float(width), float(height) };
 }
 
 std::pair<int, int> Map::I_MapToWorld(int x, int y, int z)
@@ -434,7 +436,7 @@ SDL_Texture* Map::GetFullMap(std::vector<std::pair<SDL_Rect, SDL_Rect>>& rects) 
 				if (GetRectAndTexId(layers.cbegin()->GetID(x, y), target.first, tex_id))
 				{
 					std::pair<int, int> render_pos = I_MapToWorld(x, y);
-					target.second = { render_pos.first, render_pos.second, target.first.w, target.first.h };
+					target.second = { render_pos.first, render_pos.second, size_i.first, size_i.second };
 					rects.push_back(target);
 				}
 			}

@@ -62,6 +62,7 @@ enum EventType
 	// Renderer
 	SET_VSYNC,
 	CAMERA_MOVED,
+	UPDATE_MINIMAP_TEXTURE,
 
 	//Behaviour
 	DAMAGE,
@@ -77,6 +78,7 @@ enum EventType
 	BUILD_LAB,
 	BUILD_BARRACKS,
 	DO_UPGRADE,
+	UPDATE_PATH,
 
 	MAX_EVENT_TYPES
 };

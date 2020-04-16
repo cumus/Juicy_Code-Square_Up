@@ -176,6 +176,7 @@
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="Log.cpp" />
     <ClCompile Include="Render.cpp" />
+    <ClCompile Include="Spawner.cpp" />
     <ClCompile Include="Sprite.cpp" />
     <ClCompile Include="TextureManager.cpp" />
     <ClCompile Include="TimeManager.cpp" />
@@ -237,6 +238,7 @@
     <ClInclude Include="Render.h" />
     <ClInclude Include="SDL2_ttf-2.0.15\include\SDL_ttf.h" />
     <ClInclude Include="SDL_mixer\include\SDL_mixer.h" />
+    <ClInclude Include="Spawner.h" />
     <ClInclude Include="Sprite.h" />
     <ClInclude Include="TextureManager.h" />
     <ClInclude Include="TimeManager.h" />

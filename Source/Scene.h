@@ -79,10 +79,20 @@ public:
 	// HUD
 	Gameobject* hud_canvas_go;
 	int building_bars_created = 0;
-	int unit_bars_created = 0;
+	int current_melee_units = 0;
+	int melee_units_created = 0;
+	int current_ranged_units = 0;
+	int ranged_units_created = 0;
+	int current_gatherer_units = 0;
+	int gatherer_units_created = 0;
+
+
+	//IA
+	std::pair<int, int> baseCenterPos;
 
 	//Player Resources
 	int mob_drop = 0;
+	int edge_value = 100;
 
 	// END SCREEN
 	bool win = false;
@@ -97,7 +107,7 @@ private:
 	Map map;
 	Minimap* minimap;
 	Gameobject root;
-	bool god_mode = true;
+	bool god_mode = false;
 
 	// Scene Transitions
 	enum Fade : int
@@ -119,9 +129,15 @@ private:
 	// Player stats
 	Gameobject* resources_go;
 	Gameobject* resources_2_go;
-	int edge_value = 100;
+	
 	C_Text* text_mobdrop_value = nullptr;
 	C_Text* text_edge_value = nullptr;
+	C_Text* text_current_melee_units = nullptr;
+	C_Text* text_melee_units_created = nullptr;
+	C_Text* text_current_ranged_units = nullptr;
+	C_Text* text_ranged_units_created = nullptr;
+	C_Text* text_current_gatherer_units = nullptr;
+	C_Text* text_gatherer_units_created = nullptr;
 
 	Transform* placing_building = nullptr;
 	

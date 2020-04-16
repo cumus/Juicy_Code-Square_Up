@@ -26,6 +26,7 @@ enum ComponentType
 	B_EDGE,
 	B_BASE_CENTER,
 	B_TOWER,
+	B_SPAWNER,
 	MAX_BEHAVIOUR,
 
 	MAX_TYPES

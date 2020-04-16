@@ -56,7 +56,7 @@ void Behaviour::RecieveEvent(const Event& e)
 	case ON_SELECT: Selected(); break;
 	case ON_UNSELECT: UnSelected(); break;
 	case ON_DESTROY: OnDestroy(); break;
-	case ON_RIGHT_CLICK: OnRightClick(e.data1.AsFloat(), e.data2.AsFloat()); break;
+	case ON_RIGHT_CLICK: OnRightClick(e.data1.AsVec(), e.data2.AsVec()); break;
 	case DAMAGE: OnDamage(e.data1.AsInt()); break;
 	case IMPULSE: OnGetImpulse(e.data1.AsFloat(),e.data2.AsFloat()); break;
 	case BUILD_GATHERER: BuildGatherer(e.data1.AsFloat(), e.data2.AsFloat()); break;
@@ -64,6 +64,7 @@ void Behaviour::RecieveEvent(const Event& e)
 	case BUILD_MELEE: BuildMelee(e.data1.AsFloat(), e.data2.AsFloat()); break;
 	case BUILD_SUPER: BuildSuper(e.data1.AsFloat(), e.data2.AsFloat()); break;
 	case DO_UPGRADE: Upgrade(); break;
+	case UPDATE_PATH: UpdatePath(e.data1.AsInt(),e.data2.AsInt()); break;
 	}
 }
 
@@ -74,6 +75,20 @@ void Behaviour::Selected()
 	audio->Play(SELECT);
 	if (bar_go != nullptr) bar_go->SetActive();
 	if (selectionPanel != nullptr) selectionPanel->SetActive();
+	if (type == TOWER) {
+		if (App->scene->building_bars_created < 4)
+			App->scene->building_bars_created++;
+
+		pos_y_HUD = 0.17 + 0.1 * App->scene->building_bars_created;
+		bar->target.y = pos_y_HUD;
+		portrait->target.y = pos_y_HUD - 0.014f;
+		text->target.y = pos_y_HUD - 0.073f;
+		red_health->target.y = pos_y_HUD - 0.018f;
+		health->target.y = pos_y_HUD - 0.018f;
+		health_boarder->target.y = pos_y_HUD - 0.018f;
+		upgrades->target.y = pos_y_HUD - 0.018f;
+	}
+	
 }
 
 void Behaviour::UnSelected()
@@ -81,6 +96,11 @@ void Behaviour::UnSelected()
 	selection_highlight->SetInactive();
 	if (bar_go != nullptr) bar_go->SetInactive();
 	if (selectionPanel != nullptr) selectionPanel->SetInactive();
+	if (type == TOWER) {
+		if (App->scene->building_bars_created > 0)
+			App->scene->building_bars_created--;
+	}
+	
 }
 
 void Behaviour::BuildGatherer(float x, float y)
@@ -147,7 +167,7 @@ void Behaviour::BuildBarrack(float x, float y)
 void Behaviour::OnDamage(int d)
 {
 	//LOG("Got damage: %d",d);
-	if (current_state != DESTROYED)
+	if (current_state != DESTROYED && GetType() != SPAWNER)
 	{
 		if (current_life <= 0) {
 			OnKill(type);			
@@ -208,6 +228,8 @@ unsigned int Behaviour::GetBehavioursInRange(vec pos, float dist, std::map<float
 }
 
 
+
+
 ///////////////////////////
 // UNIT BEHAVIOUR
 ///////////////////////////
@@ -240,16 +262,29 @@ B_Unit::B_Unit(Gameobject* go, UnitType t, UnitState s, ComponentType comp_type)
 	inRange = false;
 	attackObjective = nullptr;
 	msCount = 0;
-
-	create_bar();
-	bar_go->SetInactive();
-
+	arriveDestination = false;
+	current_state = IDLE;
 
 	//Info for ranged units constructor
 	/*vec pos = game_object->GetTransform()->GetGlobalPosition();
 	shootPos = Map::F_MapToWorld(pos.x, pos.y, pos.z);
 	shootPos.first += 30.0f;
 	shootPos.second += 20.0f;*/
+
+	switch (t) {
+	case UNIT_MELEE:
+		App->scene->current_melee_units += 1;
+		App->scene->melee_units_created += 1;
+		break;
+	case UNIT_RANGED:
+		App->scene->current_ranged_units += 1;
+		App->scene->ranged_units_created += 1;
+		break;
+	case GATHERER:
+		App->scene->current_gatherer_units += 1;
+		App->scene->gatherer_units_created += 1;
+		break;
+	}
 }
 
 void B_Unit::Update()
@@ -257,6 +292,7 @@ void B_Unit::Update()
 	vec pos = game_object->GetTransform()->GetGlobalPosition();
 	if (current_state != DESTROYED)
 	{
+		IARangeCheck();
 		if (attackObjective != nullptr && attackObjective->GetState() != DESTROYED) //Attack
 		{
 			//LOG("FOUND");
@@ -265,7 +301,7 @@ void B_Unit::Update()
 			//LOG("Distance 1:%f",d);
 			if (d <= attack_range) //Arriba izquierda
 			{
-				cornerNW = true;
+				//cornerNW = true;
 				inRange = true;
 			}
 			attackPos.x += attackObjective->GetGameobject()->GetTransform()->GetLocalScaleX();
@@ -274,7 +310,7 @@ void B_Unit::Update()
 			//LOG("Distance 2:%f", d);
 			if (d <= attack_range)//Abajo derecha
 			{
-				cornerSE = true;
+				//cornerSE = true;
 				inRange = true;
 			}
 
@@ -283,7 +319,7 @@ void B_Unit::Update()
 			//LOG("Distance 3:%f", d);
 			if (d <= attack_range)//Abajo izquierda
 			{
-				cornerSW = true;
+				//cornerSW = true;
 				inRange = true;
 			}
 
@@ -293,18 +329,20 @@ void B_Unit::Update()
 			//LOG("Distance 4:%f", d);
 			if (d <= attack_range)//Arriba derecha
 			{
-				cornerNE = true;
+				//cornerNE = true;
 				inRange = true;
 			}
+			//LOG("%d",inRange);
 		}
 		else
 		{
 			attackObjective = nullptr;
-			cornerNW = false;
+			/*cornerNW = false;
 			cornerSE = false;
 			cornerNE = false;
-			cornerSW = false;
+			cornerSW = false;*/
 			inRange = false;
+			//LOG("Not in attack range");
 		}
 
 		if (msCount < atkDelay)
@@ -314,9 +352,10 @@ void B_Unit::Update()
 
 		if (inRange)
 		{
+			//LOG("Unit in range");
 			if (msCount >= atkDelay)
 			{
-				LOG("Do attack");
+				//LOG("Do attack");
 				DoAttack();
 				UnitAttackType();
 				Event::Push(DAMAGE, attackObjective, damage);
@@ -325,6 +364,7 @@ void B_Unit::Update()
 		}
 		else if (path != nullptr && !path->empty()) //Movement
 		{
+			//LOG("moving");
 			fPoint actualPos = { pos.x, pos.y };
 
 			if (!next)
@@ -407,6 +447,8 @@ void B_Unit::Update()
 		else
 		{
 			move = false;
+			arriveDestination = true;
+			current_state = IDLE;
 		}
 
 		if (move)
@@ -436,42 +478,42 @@ void B_Unit::Update()
 			game_object->GetTransform()->MoveY(dirY * speed * App->time.GetGameDeltaTime());//Move y
 
 			//Change state to change sprite
-			if (dirX == 0 && dirY == 0)
-			{
-				current_state = IDLE;
-			}
-			else if (dirX == 1 && dirY == 1)//NE
-			{
-				current_state = MOVING_NE;
-			}
-			else if (dirX == -1 && dirY == -1)//SO
-			{
-				current_state = MOVING_SW;
-			}
-			else if (dirX == 1 && dirY == -1)//SE
-			{
-				current_state = MOVING_SE;
-			}
-			else if (dirX == -1 && dirY == 1)//NO
-			{
-				current_state = MOVING_NW;
-			}
-			else if (dirX == 0 && dirY == 1)//N
-			{
-				current_state = MOVING_N;
-			}
-			else if (dirX == 1 && dirY == 0)//E
-			{
-				current_state = MOVING_E;
-			}
-			else if (dirX == 0 && dirY == -1)//S
+			if (dirX == 1 && dirY == 1)//S
 			{
 				current_state = MOVING_S;
 			}
-			else if (dirX == -1 && dirY == 0)//O
+			else if (dirX == -1 && dirY == -1)//N
+			{
+				current_state = MOVING_N;
+			}
+			else if (dirX == 1 && dirY == -1)//E
+			{
+				current_state = MOVING_E;
+			}
+			else if (dirX == -1 && dirY == 1)//W
 			{
 				current_state = MOVING_W;
-			}			
+			}
+			else if (dirX == 0 && dirY == 1)//SW
+			{
+				current_state = MOVING_SW;
+			}
+			else if (dirX == 1 && dirY == 0)//SE
+			{
+				current_state = MOVING_SE;
+			}
+			else if (dirX == 0 && dirY == -1)//NE
+			{
+				current_state = MOVING_NE;
+			}
+			else if (dirX == -1 && dirY == 0)//NW
+			{
+				current_state = MOVING_NW;
+			}	
+			/*else if (dirX == 0 && dirY == 0)
+			{
+				current_state = IDLE;
+			}*/
 		}
 
 		//Colision check
@@ -514,53 +556,103 @@ void B_Unit::Update()
 
 void B_Unit::DoAttack()
 {
-	//vec localPos = game_object->GetTransform()->GetGlobalPosition();
+	vec localPos = game_object->GetTransform()->GetGlobalPosition();
+	std::pair<int, int> Pos(int(localPos.x),int(localPos.y));
+	vec objPos = attackObjective->GetGameobject()->GetTransform()->GetGlobalPosition();
+	std::pair<int,int> atkPos(int(objPos.x), int(objPos.y)); //= Map::WorldToTileBase(objPos.x, objPos.y);
+
+	LOG("Pos X:%d/Y:%d", Pos.first, Pos.second);
+	LOG("Atkpos X:%d/Y:%d", atkPos.first, atkPos.second);
+
 	audio->Play(attackFX);
-	if (cornerNW && cornerNE)//arriba
+	if (atkPos.first == Pos.first && atkPos.second < Pos.second)//N
 	{
 		current_state = ATTACKING_N;
 	}
-	else if (cornerSW && cornerSE)//abajo
+	else if (atkPos.first == Pos.first && atkPos.second > Pos.second)//S
 	{
 		current_state = ATTACKING_S;
 	}
-	else if (cornerSW && cornerNW)//izquierda
+	else if (atkPos.first < Pos.first && atkPos.second == Pos.second)//W
 	{
 		current_state = ATTACKING_W;
 	}
-	else if (cornerNE && cornerSE)//derecha
+	else if (atkPos.first > Pos.first && atkPos.second == Pos.second)//E
 	{
 		current_state = ATTACKING_E;
 	}
-	else if (cornerNW && !cornerNE && !cornerSE && !cornerSW)//arriba izquierda
+	else if (atkPos.first < Pos.first && atkPos.second > Pos.second)//SW
 	{
 		current_state = ATTACKING_NW;
 	}
-	else if (cornerNE && !cornerNW && !cornerSE && !cornerSW)//arriba derecha
-	{
-		current_state = ATTACKING_NE;
-	}
-	else if (cornerSW && !cornerSE && !cornerNW && !cornerNE)//abajo izquierda
+	else if (atkPos.first > Pos.first && atkPos.second > Pos.second)//
 	{
 		current_state = ATTACKING_SW;
 	}
-	else if (cornerSE && !cornerSW && !cornerNW && !cornerNE)//abajo derecha
+	else if (atkPos.first < Pos.first && atkPos.second < Pos.second)//
+	{
+		current_state = ATTACKING_NE;
+	}
+	else if (atkPos.first > Pos.first && atkPos.second < Pos.second)//
+	{
+		current_state = ATTACKING_SE; 
+	}
+	/*if (cornerNW && cornerNE)//arriba
+	{
+		current_state = ATTACKING_NW;
+	}
+	else if (cornerSW && cornerSE)//abajo
+	{
+		current_state = ATTACKING_E;
+	}
+	else if (cornerSW && cornerNW)//izquierda
+	{
+		current_state = ATTACKING_NE;
+	}
+	else if (cornerNE && cornerSE)//derecha
+	{
+		current_state = ATTACKING_W;
+	}
+	else if (cornerNW && !cornerNE && !cornerSE && !cornerSW)//arriba izquierda
+	{
+		current_state = ATTACKING_SW;
+	}
+	else if (cornerNE && !cornerNW && !cornerSE && !cornerSW)//arriba derecha
 	{
 		current_state = ATTACKING_SE;
 	}
-	cornerNW = false;
+	else if (cornerSW && !cornerSE && !cornerNW && !cornerNE)//abajo izquierda
+	{
+		current_state = ATTACKING_S;
+	}
+	else if (cornerSE && !cornerSW && !cornerNW && !cornerNE)//abajo derecha
+	{
+		current_state = ATTACKING_N; //OK
+	}*/
+	/*cornerNW = false;
 	cornerSE = false;
 	cornerNE = false;
-	cornerSW = false;
+	cornerSW = false;*/
 }
 
 void B_Unit::OnDestroy()
 {
 	App->pathfinding.DeletePath(GetID());
-	bar_go->Destroy(1.0f);
+	//bar_go->Destroy(1.0f);
+	switch (type) {
+	case UNIT_MELEE:
+		App->scene->current_melee_units -= 1;
+		break;
+	case UNIT_RANGED:
+		App->scene->current_ranged_units -= 1;
+		break;
+	case GATHERER:
+		App->scene->current_gatherer_units -= 1;
+		break;
+	}
 }
 
-void B_Unit::OnRightClick(float x, float y)
+void B_Unit::OnRightClick(vec posClick, vec modPos)
 {
 	Transform* t = game_object->GetTransform();
 	if (t)
@@ -572,7 +664,7 @@ void B_Unit::OnRightClick(float x, float y)
 		audio->Play(HAMMER);
 
 		std::map<float, Behaviour*> out;
-		unsigned int total_found = GetBehavioursInRange(vec(x, y, 0.5f), 1.5f, out);
+		unsigned int total_found = GetBehavioursInRange(vec(posClick.x, posClick.y, 0.5f), 1.5f, out);
 		float distance = 0;
 		if (total_found > 0)
 		{
@@ -600,7 +692,7 @@ void B_Unit::OnRightClick(float x, float y)
 					}
 				}
 				///////Temporal
-				else if (GetType() == ENEMY_MELEE)
+				/*else if (GetType() == ENEMY_MELEE)
 				{
 					if (it->second->GetType() == UNIT_MELEE || it->second->GetType() == GATHERER)
 					{
@@ -619,7 +711,7 @@ void B_Unit::OnRightClick(float x, float y)
 						}
 
 					}
-				}
+				}*/
 				//////
 				else if (it->second->GetType() == ENEMY_MELEE || it->second->GetType() == ENEMY_RANGED)//Temporal
 				{
@@ -639,11 +731,13 @@ void B_Unit::OnRightClick(float x, float y)
 
 				}
 			}
-			path = App->pathfinding.CreatePath({ int(pos.x), int(pos.y) }, { int(x-1), int(y-1) }, GetID());
+			path = App->pathfinding.CreatePath({ int(pos.x), int(pos.y) }, { int(posClick.x-1), int(posClick.y-1) }, GetID());
 		}
 		else
 		{
-			path = App->pathfinding.CreatePath({ int(pos.x), int(pos.y) }, { int(x), int(y) }, GetID());
+			if (modPos.x != -1 && modPos.y != -1) path = App->pathfinding.CreatePath({ int(pos.x), int(pos.y) }, { int(modPos.x), int(modPos.y) }, GetID());
+			else path = App->pathfinding.CreatePath({ int(pos.x), int(pos.y) }, { int(posClick.x), int(posClick.y) }, GetID());
+
 			attackObjective = nullptr;
 		}
 	}
@@ -660,70 +754,16 @@ void B_Unit::OnGetImpulse(float x, float y)
 	}
 	else
 	{
-		game_object->GetTransform()->MoveX(6 * x * App->time.GetGameDeltaTime());//Move x
-		game_object->GetTransform()->MoveY(6 * y * App->time.GetGameDeltaTime());//Move y
+		if (!move)
+		{
+			game_object->GetTransform()->MoveX(4 * x * App->time.GetGameDeltaTime());//Move x
+			game_object->GetTransform()->MoveY(4 * y * App->time.GetGameDeltaTime());//Move y
+		}
+		else
+		{
+			game_object->GetTransform()->MoveX(6 * x * App->time.GetGameDeltaTime());//Move x
+			game_object->GetTransform()->MoveY(6 * y * App->time.GetGameDeltaTime());//Move y
+		}		
 	}
 }
 
-void B_Unit::create_bar()
-{
-
-	App->scene->unit_bars_created++;
-
-	pos_y_HUD = 0.56 + 0.1 * App->scene->unit_bars_created;
-
-	bar_text_id = App->tex.Load("textures/Iconos_square_up.png");
-
-	//------------------------- UNIT BAR --------------------------------------
-
-	bar_go = App->scene->AddGameobject("Unit Bar", App->scene->hud_canvas_go);
-	bar = new C_Image(bar_go);
-	bar->target = { 0.388f, pos_y_HUD, 1.3f, 1.2f };
-	bar->offset = { -345.0f, -45.0f };
-	bar->section = { 17, 509, 345, 45 };
-	bar->tex_id = bar_text_id;
-
-	//------------------------- UNIT PORTRAIT --------------------------------------
-
-	portrait = new C_Image(bar_go);
-	portrait->target = { 0.08f, pos_y_HUD - 0.013f, 1.0f, 1.0f };
-	portrait->offset = { -48.0f, -35.0f };
-	portrait->section = { 22, 463, 48, 35 };
-	portrait->tex_id = bar_text_id;
-
-	//------------------------- UNIT TEXT --------------------------------------
-
-	text = new C_Text(bar_go, "Unit");
-	text->target = { 0.09f, pos_y_HUD - 0.07f, 1.2f, 1.2f };
-
-	//------------------------- UNIT RED HEALTH --------------------------------------
-
-	red_health = new C_Image(bar_go);
-	red_health->target = { 0.37f, pos_y_HUD - 0.02f, 1.63f, 0.6f };
-	red_health->offset = { -220.0f, -20.0f };
-	red_health->section = { 39, 729, 220, 20 };
-	red_health->tex_id = bar_text_id;
-
-	//------------------------- UNIT HEALTH --------------------------------------
-
-	health = new C_Image(bar_go);
-	health->target = { 0.37f, pos_y_HUD - 0.02f, 1.63f, 0.6f };
-	health->offset = { -220.0f, -20.0f };
-	health->section = { 39, 749, 220, 20 };
-	health->tex_id = bar_text_id;
-
-	//------------------------- UNIT HEALTH BOARDER --------------------------------------
-
-	health_boarder = new C_Image(bar_go);
-	health_boarder->target = { 0.37f, pos_y_HUD - 0.02f, 1.63f, 0.6f };
-	health_boarder->offset = { -220.0f, -20.0f };
-	health_boarder->section = { 39, 707, 220, 20 };
-	health_boarder->tex_id = bar_text_id;
-
-
-}
-
-void B_Unit::update_health_ui() {
-
-	health->target = { (0.37f) - ((0.37f - 0.09f) * (1.0f - float(current_life) / float(max_life))), pos_y_HUD - 0.02f, 1.63f * (float(current_life) / float(max_life)), 0.6f };
-}

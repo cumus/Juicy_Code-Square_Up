@@ -34,7 +34,8 @@ void AudioSource::RecieveEvent(const Event& e)
 	{
 	case TRANSFORM_MODIFIED:
 	{
-		Event::Push(TRANSFORM_MODIFIED, App->audio, GetID(), e.data1);
+		std::pair<float, float> pos = Map::F_MapToWorld(e.data1.AsVec());
+		Event::Push(TRANSFORM_MODIFIED, App->audio, GetID(), vec(pos.first, pos.second));
 		break;
 	}
 	default:

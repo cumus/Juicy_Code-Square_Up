@@ -31,7 +31,7 @@ Edge::~Edge()
 	b_map.erase(GetID());
 }
 
-void Edge::OnRightClick(float x, float y)
+void Edge::OnRightClick(vec pos, vec modPos)
 {
 	OnDamage(3);
 }

@@ -10,7 +10,7 @@ public:
 	Tower(Gameobject* go);
 	~Tower();
 
-	void OnRightClick(float x, float y) override;
+	void OnRightClick(vec pos, vec modPos) override;
 	void Upgrade() override;
 	void AfterDamageAction() override;
 	void DoAttack() override;

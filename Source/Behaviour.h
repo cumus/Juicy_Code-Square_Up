@@ -31,6 +31,7 @@ enum UnitType : int
 	BARRACKS,
 	LAB,
 	EDGE,
+	SPAWNER,
 };
 
 enum UnitState : int
@@ -85,8 +86,9 @@ public:
 	void BuildWall(float x, float y);
 	void BuildLab(float x, float y);
 	void BuildBarrack(float x, float y);
+	virtual void UpdatePath(int x,int y) {}
 	virtual void AfterDamageAction() {}
-	virtual void OnRightClick(float x, float y) {}
+	virtual void OnRightClick(vec pos, vec modPos) {}
 	virtual void DoAttack() {}
 	virtual void OnDestroy(){}
 	virtual void OnGetImpulse(float x,float y) {}
@@ -95,6 +97,7 @@ public:
 	virtual void CreatePanel() {}
 	virtual void UpdatePanel() {}
 	virtual void Upgrade() {}
+
 
 	UnitType GetType() const { return type; }
 	UnitState* GetStatePtr() { return &current_state; }
@@ -134,6 +137,7 @@ protected:
 	C_Image* red_health;
 	C_Image* health;
 	C_Image* health_boarder;
+	C_Image* upgrades;
 };
 
 class B_Unit : public Behaviour
@@ -143,13 +147,12 @@ public:
 	B_Unit(Gameobject* go, UnitType type, UnitState starting_state, ComponentType comp_type = B_UNIT);
 
 	void Update() override;
-	void OnRightClick(float x, float y) override;
+	void OnRightClick(vec pos, vec modPos) override;
 	void DoAttack() override;
 	void OnDestroy() override;
 	void OnGetImpulse(float x, float y) override;
-	void create_bar() override;
-	void update_health_ui() override;
 	virtual void UnitAttackType() {}
+	virtual void IARangeCheck() {}
 
 protected:
 	float speed;
@@ -172,6 +175,7 @@ protected:
 	bool cornerNE;
 	bool cornerSW;
 	bool cornerSE;
+	bool arriveDestination;
 
 	std::pair<float, float> atkObj;
 	std::pair<float, float> shootPos;
