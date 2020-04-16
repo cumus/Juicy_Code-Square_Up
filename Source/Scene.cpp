@@ -109,7 +109,7 @@ bool Scene::Update()
 		}
 
 		//Current Gatherer Units Updated Value
-		if (text_current_ranged_units) {
+		if (text_current_gatherer_units) {
 			std::stringstream ss;
 			ss << current_gatherer_units;
 			std::string temp_str = ss.str();
@@ -117,14 +117,14 @@ bool Scene::Update()
 		}
 
 		//Gatherer Units Created Updated Value
-		if (text_ranged_units_created) {
+		if (text_gatherer_units_created) {
 			std::stringstream ss;
 			ss << gatherer_units_created;
 			std::string temp_str = ss.str();
 			text_gatherer_units_created->text->SetText(temp_str.c_str());
 		}
 
-		/*
+		
 		//Current Ranged Units Updated Value
 		if (text_current_ranged_units) {
 			std::stringstream ss;
@@ -140,7 +140,6 @@ bool Scene::Update()
 			std::string temp_str = ss.str();
 			text_ranged_units_created->text->SetText(temp_str.c_str());
 		}
-		*/
 		
 		//Mob Drop Print Updated Value
 		if (text_mobdrop_value) {
@@ -432,11 +431,6 @@ bool Scene::LoadTestScene()
 	C_Canvas* hud_canv = new C_Canvas(hud_canvas_go);
 	hud_canv->target = { 0.3f, 0.3f, 0.4f, 0.4f };
 
-	// HUD
-	Gameobject* canvas_go = AddGameobject("Canvas", &root);
-	C_Canvas* canv = new C_Canvas(canvas_go);
-	canv->target = { 0.6f, 0.6f, 0.4f, 0.4f };
-
 	/*
 	Gameobject* img_go = AddGameobject("Image", canvas_go);
 	C_Image* img = new C_Image(img_go);
@@ -463,7 +457,7 @@ bool Scene::LoadTestScene()
 
 
 	// Unit icon (Melee Unit)
-	Gameobject* melee_counter_go = AddGameobject("Melee Unit Counter", canvas_go);
+	Gameobject* melee_counter_go = AddGameobject("Melee Unit Counter", hud_canvas_go);
 
 	C_Image* melee_counter_box = new C_Image(melee_counter_go);
 	melee_counter_box->target = { 0.153f, 0.64f, 0.55f , 1.f };
@@ -487,7 +481,7 @@ bool Scene::LoadTestScene()
 	text_melee_units_created->target = { 0.099f, 0.587f, 1.6f, 1.6f };
 
 	// Unit icon (Gatherer Unit)
-	Gameobject* gatherer_counter_go = AddGameobject("Gatherer Unit Counter", canvas_go);
+	Gameobject* gatherer_counter_go = AddGameobject("Gatherer Unit Counter", hud_canvas_go);
 
 	C_Image* gatherer_counter_box = new C_Image(gatherer_counter_go);
 	gatherer_counter_box->target = { 0.153f, 0.72f, 0.55f , 1.f };
@@ -510,9 +504,8 @@ bool Scene::LoadTestScene()
 	text_gatherer_units_created = new C_Text(gatherer_counter_go, "0");
 	text_gatherer_units_created->target = { 0.099f, 0.667f, 1.6f, 1.6f };
 
-	/*
 	// Unit icon (Ranged Unit)
-	Gameobject* ranged_counter_go = AddGameobject("Ranged Unit Counter", canvas_go);
+	Gameobject* ranged_counter_go = AddGameobject("Ranged Unit Counter", hud_canvas_go);
 
 	C_Image* ranged_counter_box = new C_Image(ranged_counter_go);
 	ranged_counter_box->target = { 0.153f, 0.80f, 0.55f , 1.f };
@@ -520,11 +513,13 @@ bool Scene::LoadTestScene()
 	ranged_counter_box->section = { 17, 509, 345, 45 };
 	ranged_counter_box->tex_id = icons_text_id;
 
+	/*
 	C_Image* ranged_counter_icon = new C_Image(ranged_counter_go);
-	ranged_counter_icon->target = { 0.047f, 0.778f, 0.9f , 0.9f };
+	ranged_counter_icon->target = { 0.047f, 0.788f, 0.9f , 0.9f };
 	ranged_counter_icon->offset = { -48.f, -35.f };
 	ranged_counter_icon->section = { 22, 463, 48, 35 };
 	ranged_counter_icon->tex_id = icons_text_id;
+	*/
 
 	text_current_ranged_units = new C_Text(ranged_counter_go, "0");
 	text_current_ranged_units->target = { 0.049f, 0.747f, 1.6f, 1.6f };
@@ -534,10 +529,10 @@ bool Scene::LoadTestScene()
 
 	text_ranged_units_created = new C_Text(ranged_counter_go, "0");
 	text_ranged_units_created->target = { 0.099f, 0.747f, 1.6f, 1.6f };
-	*/
+
 
 	//Resources
-	Gameobject* resource_counter_go = AddGameobject("Resources", canvas_go);
+	Gameobject* resource_counter_go = AddGameobject("Resources", hud_canvas_go);
 	C_Image* img = new C_Image(resource_counter_go);
 	img->target = { 0.1f, 1.f, 1.f , 1.f };
 	img->offset = { -119.f, -119.f };
@@ -563,11 +558,11 @@ bool Scene::LoadTestScene()
 	text_mobdrop_value->target = { 0.65f, 0.4f, 1.f, 1.f };
 	
 	//Minimap
-	Gameobject* minimap_go = AddGameobject("Minimap", canvas_go);
+	Gameobject* minimap_go = AddGameobject("Minimap", hud_canvas_go);
 	minimap = new Minimap(minimap_go);
 
 	// Build mode
-	Gameobject* builder = AddGameobject("Building Mode", canvas_go);
+	Gameobject* builder = AddGameobject("Building Mode", hud_canvas_go);
 	C_Button* base = new C_Button(builder, Event(PLACE_BUILDING, this, int(BASE_CENTER)));
 	C_Button* tower = new C_Button(builder, Event(PLACE_BUILDING, this, int(TOWER)));
 	C_Button* edge = new C_Button(builder, Event(PLACE_BUILDING, this, int(EDGE)));
