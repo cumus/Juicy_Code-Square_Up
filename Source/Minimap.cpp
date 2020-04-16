@@ -22,7 +22,7 @@ Minimap::Minimap(Gameobject* go) :
 	enemy = { 0, 0, 0, 0 };
 	building = { 0, 0, 0, 0 };
 
-	minimap_camera = { 0, 0, 4, 4 };
+	minimap_camera = { 0, 0, 0, 0 };
 	camera_color = { 255, 255, 255, 255 };
 
 	App->win->GetWindowSize(window_width, window_height);
@@ -35,6 +35,7 @@ Minimap::Minimap(Gameobject* go) :
 
 	tex_id = App->render->GetMinimap(section.w, section.h);
 	Event::Push(UPDATE_MINIMAP_TEXTURE, App->render);
+	
 }
 
 Minimap::~Minimap()
@@ -89,6 +90,7 @@ void Minimap::Update()
 	}
 //-------------------------------------------------------------------------------------
 
+	//Units ti minimap (with coloured rect)
 	for (std::list<Gameobject*>::iterator it = object_queue.begin(); it != object_queue.end(); it++)
 	{
 		SDL_Rect representation;
@@ -103,12 +105,12 @@ void Minimap::Update()
 		representation.x += output.x + output.w / 2;
 		representation.y += output.y;
 
-		App->render->DrawQuad(representation, { 255, 255, 255, 255 }, true, EDITOR, false);
-		//App->render->BlitNorm(0, representation, NULL, EDITOR);
+		App->render->DrawQuad(representation, unit_color , true, EDITOR, false);
 	}
 }
 
-void Minimap::AddToMinimap(Gameobject* object)
+void Minimap::AddToMinimap(Gameobject* object, SDL_Color color)
 {
+	unit_color = color;
 	object_queue.push_back(object);
 }

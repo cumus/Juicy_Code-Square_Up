@@ -1103,7 +1103,7 @@ void Scene::GodMode()
 		Gameobject* unit_go = AddGameobject("Ally Melee unit");
 		unit_go->GetTransform()->SetLocalPos({ float(position.first), float(position.second), 0.0f });
 
-		minimap->AddToMinimap(unit_go);
+		minimap->AddToMinimap(unit_go, { 0,255,0,255 });
 
 		new MeleeUnit(unit_go);
 	}
@@ -1185,6 +1185,7 @@ void Scene::GodMode()
 			{
 				Gameobject* gather_go = AddGameobject("Gatherer unit");
 				gather_go->GetTransform()->SetLocalPos({ float(position.first), float(position.second), 0.0f });
+				minimap->AddToMinimap(gather_go, { 0,0,255,255 });
 
 				new Gatherer(gather_go);
 				edge_value -= 10;
