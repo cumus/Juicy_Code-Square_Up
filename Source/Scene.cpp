@@ -97,7 +97,6 @@ bool Scene::Update()
 			std::stringstream ss;
 			ss << current_melee_units;
 			std::string temp_str = ss.str();
-			//const char* t = (char*)temp_str.c_str();
 			text_current_melee_units->text->SetText(temp_str.c_str());
 		}
 
@@ -106,26 +105,7 @@ bool Scene::Update()
 			std::stringstream ss;
 			ss << melee_units_created;
 			std::string temp_str = ss.str();
-			//const char* t = (char*)temp_str.c_str();
 			text_melee_units_created->text->SetText(temp_str.c_str());
-		}
-
-		//Current Ranged Units Updated Value
-		if (text_current_ranged_units) {
-			std::stringstream ss;
-			ss << current_ranged_units;
-			std::string temp_str = ss.str();
-			//const char* t = (char*)temp_str.c_str();
-			text_current_ranged_units->text->SetText(temp_str.c_str());
-		}
-
-		//Ranged Units Created Updated Value
-		if (text_ranged_units_created) {
-			std::stringstream ss;
-			ss << ranged_units_created;
-			std::string temp_str = ss.str();
-			//const char* t = (char*)temp_str.c_str();
-			text_ranged_units_created->text->SetText(temp_str.c_str());
 		}
 
 		//Current Gatherer Units Updated Value
@@ -133,7 +113,6 @@ bool Scene::Update()
 			std::stringstream ss;
 			ss << current_gatherer_units;
 			std::string temp_str = ss.str();
-			//const char* t = (char*)temp_str.c_str();
 			text_current_gatherer_units->text->SetText(temp_str.c_str());
 		}
 
@@ -142,16 +121,32 @@ bool Scene::Update()
 			std::stringstream ss;
 			ss << gatherer_units_created;
 			std::string temp_str = ss.str();
-			//const char* t = (char*)temp_str.c_str();
 			text_gatherer_units_created->text->SetText(temp_str.c_str());
 		}
+
+		/*
+		//Current Ranged Units Updated Value
+		if (text_current_ranged_units) {
+			std::stringstream ss;
+			ss << current_ranged_units;
+			std::string temp_str = ss.str();
+			text_current_ranged_units->text->SetText(temp_str.c_str());
+		}
+
+		//Ranged Units Created Updated Value
+		if (text_ranged_units_created) {
+			std::stringstream ss;
+			ss << ranged_units_created;
+			std::string temp_str = ss.str();
+			text_ranged_units_created->text->SetText(temp_str.c_str());
+		}
+		*/
 		
 		//Mob Drop Print Updated Value
 		if (text_mobdrop_value) {
 			std::stringstream ss;
 			ss << mob_drop;
 			std::string temp_str = ss.str();
-			//const char* t = (char*)temp_str.c_str();
 			text_mobdrop_value->text->SetText(temp_str.c_str());
 		}
 
@@ -160,7 +155,6 @@ bool Scene::Update()
 			std::stringstream ss1;
 			ss1 << edge_value;
 			std::string temp_str1 = ss1.str();
-			//const char* t1 = (char*)temp_str1.c_str();
 			text_edge_value->text->SetText(temp_str1.c_str());
 		}
 
@@ -492,54 +486,55 @@ bool Scene::LoadTestScene()
 	text_melee_units_created = new C_Text(melee_counter_go, "0");
 	text_melee_units_created->target = { 0.099f, 0.587f, 1.6f, 1.6f };
 
-	// Unit icon (Ranged Unit)
-	Gameobject* ranged_counter_go = AddGameobject("Ranged Unit Counter", canvas_go);
-
-	C_Image* ranged_counter_box = new C_Image(ranged_counter_go);
-	ranged_counter_box->target = { 0.153f, 0.72f, 0.55f , 1.f };
-	ranged_counter_box->offset = { -345.f, -45.f };
-	ranged_counter_box->section = { 17, 509, 345, 45 };
-	ranged_counter_box->tex_id = icons_text_id;
-
-	C_Image* ranged_counter_icon = new C_Image(ranged_counter_go);
-	ranged_counter_icon->target = { 0.047f, 0.708f, 0.9f , 0.9f };
-	ranged_counter_icon->offset = { -48.f, -35.f };
-	ranged_counter_icon->section = { 22, 463, 48, 35 };
-	ranged_counter_icon->tex_id = icons_text_id;
-
-	text_current_ranged_units = new C_Text(ranged_counter_go, "0");
-	text_current_ranged_units->target = { 0.049f, 0.667f, 1.6f, 1.6f };
-
-	C_Text* ranged_diagonal = new C_Text(ranged_counter_go, "/");
-	ranged_diagonal->target = { 0.088f, 0.667f, 1.6f, 1.6f };
-
-	text_ranged_units_created = new C_Text(ranged_counter_go, "0");
-	text_ranged_units_created->target = { 0.099f, 0.667f, 1.6f, 1.6f };
-
 	// Unit icon (Gatherer Unit)
 	Gameobject* gatherer_counter_go = AddGameobject("Gatherer Unit Counter", canvas_go);
 
 	C_Image* gatherer_counter_box = new C_Image(gatherer_counter_go);
-	gatherer_counter_box->target = { 0.153f, 0.80f, 0.55f , 1.f };
+	gatherer_counter_box->target = { 0.153f, 0.72f, 0.55f , 1.f };
 	gatherer_counter_box->offset = { -345.f, -45.f };
 	gatherer_counter_box->section = { 17, 509, 345, 45 };
 	gatherer_counter_box->tex_id = icons_text_id;
 
 	C_Image* gatherer_counter_icon = new C_Image(gatherer_counter_go);
-	gatherer_counter_icon->target = { 0.047f, 0.788f, 0.9f , 0.9f };
+	gatherer_counter_icon->target = { 0.041f, 0.708f, 0.9f , 0.9f };
 	gatherer_counter_icon->offset = { -48.f, -35.f };
-	gatherer_counter_icon->section = { 22, 463, 48, 35 };
+	gatherer_counter_icon->section = { 75, 458, 48, 35 };
 	gatherer_counter_icon->tex_id = icons_text_id;
 
 	text_current_gatherer_units = new C_Text(gatherer_counter_go, "0");
-	text_current_gatherer_units->target = { 0.049f, 0.747f, 1.6f, 1.6f };
+	text_current_gatherer_units->target = { 0.049f, 0.667f, 1.6f, 1.6f };
 
 	C_Text* gatherer_diagonal = new C_Text(gatherer_counter_go, "/");
-	gatherer_diagonal->target = { 0.088f, 0.747f, 1.6f, 1.6f };
+	gatherer_diagonal->target = { 0.088f, 0.667f, 1.6f, 1.6f };
 
 	text_gatherer_units_created = new C_Text(gatherer_counter_go, "0");
-	text_gatherer_units_created->target = { 0.099f, 0.747f, 1.6f, 1.6f };
+	text_gatherer_units_created->target = { 0.099f, 0.667f, 1.6f, 1.6f };
 
+	/*
+	// Unit icon (Ranged Unit)
+	Gameobject* ranged_counter_go = AddGameobject("Ranged Unit Counter", canvas_go);
+
+	C_Image* ranged_counter_box = new C_Image(ranged_counter_go);
+	ranged_counter_box->target = { 0.153f, 0.80f, 0.55f , 1.f };
+	ranged_counter_box->offset = { -345.f, -45.f };
+	ranged_counter_box->section = { 17, 509, 345, 45 };
+	ranged_counter_box->tex_id = icons_text_id;
+
+	C_Image* ranged_counter_icon = new C_Image(ranged_counter_go);
+	ranged_counter_icon->target = { 0.047f, 0.778f, 0.9f , 0.9f };
+	ranged_counter_icon->offset = { -48.f, -35.f };
+	ranged_counter_icon->section = { 22, 463, 48, 35 };
+	ranged_counter_icon->tex_id = icons_text_id;
+
+	text_current_ranged_units = new C_Text(ranged_counter_go, "0");
+	text_current_ranged_units->target = { 0.049f, 0.747f, 1.6f, 1.6f };
+
+	C_Text* ranged_diagonal = new C_Text(ranged_counter_go, "/");
+	ranged_diagonal->target = { 0.088f, 0.747f, 1.6f, 1.6f };
+
+	text_ranged_units_created = new C_Text(ranged_counter_go, "0");
+	text_ranged_units_created->target = { 0.099f, 0.747f, 1.6f, 1.6f };
+	*/
 
 	//Resources
 	Gameobject* resource_counter_go = AddGameobject("Resources", canvas_go);
@@ -561,11 +556,11 @@ bool Scene::LoadTestScene()
 	//MobDrop
 	resources_2_go = AddGameobject("Text Mob Drop", resource_counter_go);
 	C_Text* text_mobdrop = new C_Text(resources_2_go, "Mob Drop");
-	text_mobdrop->target = { 0.5f, 0.1f, 1.f, 1.f };
+	text_mobdrop->target = { 0.45f, 0.8f, 1.f, 1.f };
 	
 	Gameobject* resources_value_2_go = AddGameobject("Mob Drop Value", resource_counter_go);
 	text_mobdrop_value = new C_Text(resources_2_go, "0");
-	text_mobdrop_value->target = { 0.5f, 0.4f, 1.f, 1.f };
+	text_mobdrop_value->target = { 0.65f, 0.4f, 1.f, 1.f };
 	
 	//Minimap
 	Gameobject* minimap_go = AddGameobject("Minimap", canvas_go);

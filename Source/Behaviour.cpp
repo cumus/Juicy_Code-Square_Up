@@ -81,7 +81,7 @@ void Behaviour::Selected()
 
 		pos_y_HUD = 0.17 + 0.1 * App->scene->building_bars_created;
 		bar->target.y = pos_y_HUD;
-		portrait->target.y = pos_y_HUD - 0.013f;
+		portrait->target.y = pos_y_HUD - 0.014f;
 		text->target.y = pos_y_HUD - 0.073f;
 		red_health->target.y = pos_y_HUD - 0.018f;
 		health->target.y = pos_y_HUD - 0.018f;

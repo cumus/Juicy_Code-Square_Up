@@ -65,6 +65,7 @@ void Base_Center::Upgrade()
 {
 	if (bc_lvl < bc_max_lvl) {
 
+		current_life += 50;
 		max_life += 50;
 		bc_lvl += 1;
 		App->audio->PlayFx(B_BUILDED);
@@ -153,10 +154,10 @@ void Base_Center::create_bar() {
 	//------------------------- BASE PORTRAIT --------------------------------------
 
 	portrait = new C_Image(bar_go);
-	portrait->target = { 0.045f, pos_y_HUD - 0.013f, 0.28f, 0.28f };
-	portrait->offset = { -166.0f, -185.0f };
-	portrait->section = { 0, 0, 166, 185 };
-	portrait->tex_id = App->tex.Load("textures/base_center.png");
+	portrait->target = { 0.045f, pos_y_HUD - 0.015f, 1.0f, 1.0f };
+	portrait->offset = { -34.0f, -47.0f };
+	portrait->section = { 132, 456, 34, 47 };
+	portrait->tex_id = bar_text_id;
 
 	//------------------------- BASE TEXT --------------------------------------
 
@@ -168,7 +169,7 @@ void Base_Center::create_bar() {
 	red_health = new C_Image(bar_go);
 	red_health->target = { 0.385f, pos_y_HUD - 0.02f, 1.92f, 1.0f };
 	red_health->offset = { -220.0f, -20.0f };
-	red_health->section = { 39, 729, 220, 20 };
+	red_health->section = { 39, 696, 220, 20 };
 	red_health->tex_id = bar_text_id;
 
 	//------------------------- BASE HEALTH --------------------------------------
@@ -176,7 +177,7 @@ void Base_Center::create_bar() {
 	health = new C_Image(bar_go);
 	health->target = { 0.385f, pos_y_HUD - 0.02f, 1.92f, 1.0f };
 	health->offset = { -220.0f, -20.0f };
-	health->section = { 39, 749, 220, 20 };
+	health->section = { 39, 719, 220, 20 };
 	health->tex_id = bar_text_id;
 
 	//------------------------- BASE HEALTH BOARDER --------------------------------------
@@ -184,25 +185,27 @@ void Base_Center::create_bar() {
 	health_boarder = new C_Image(bar_go);
 	health_boarder->target = { 0.385f, pos_y_HUD - 0.02f, 1.92f, 1.0f };
 	health_boarder->offset = { -220.0f, -20.0f };
-	health_boarder->section = { 39, 707, 220, 20 };
+	health_boarder->section = { 39, 744, 220, 20 };
 	health_boarder->tex_id = bar_text_id;
+
+	//------------------------- BASE UPGRADES --------------------------------------
 
 	upgrades = new C_Image(bar_go);
 	upgrades->target = { 0.44f, pos_y_HUD - 0.02f, 1.3f, 1.3f };
 	upgrades->offset = { -33.0f, -33.0f };
-	upgrades->section = { 543, 706, 33, 33 };
+	upgrades->section = { 16, 806, 33, 33 };
 	upgrades->tex_id = bar_text_id;
 
 }
 
 void Base_Center::update_health_ui() {
 
-	health->target = { (0.385f) - ((0.385f - 0.094f) * (1.0f - float(current_life) / float(max_life))), pos_y_HUD - 0.02f, 1.92f * (float(current_life) / float(max_life)), 1.0f };
+	health->target = { (0.385f) - ((0.385f - 0.059f) * (1.0f - float(current_life) / float(max_life))), pos_y_HUD - 0.02f, 1.92f * (float(current_life) / float(max_life)), 1.0f };
 
 }
 
 void Base_Center::update_upgrades_ui() {
 
-	upgrades->section = { 543 + 36 * (bc_lvl - 1), 706, 33, 33 };
+	upgrades->section = { 16 + 36 * (bc_lvl - 1), 806, 33, 33 };
 
 }
