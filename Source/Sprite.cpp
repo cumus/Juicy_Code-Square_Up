@@ -4,6 +4,7 @@
 #include "Render.h"
 #include "Gameobject.h"
 #include "Transform.h"
+#include "Log.h"
 
 #include "optick-1.3.0.0/include/optick.h"
 
@@ -113,10 +114,9 @@ AnimatedSprite::AnimatedSprite(Behaviour* unit) : Sprite(unit->GetGameobject(), 
 		break;
 	}
 	case UNIT_MELEE:
-	{
-		
+	{		
 		tex_id = App->tex.Load("textures/guerrero1.png");
-		animations[IDLE].Setup(section = { 2, 2, 418, 294 }, 6, 0.2f);
+		animations[IDLE].Setup(section = { 2, 2, 418, 295 }, 6, 8.0f);
 		animations[MOVING_N].Setup({ 2, 296, 418, 295 }, 7, 8.0f);
 		animations[MOVING_S].Setup({ 2, 592, 418, 295 }, 7, 8.0f);
 		animations[MOVING_E].Setup({ 2, 888, 418, 295 }, 8, 8.0f);
@@ -132,9 +132,9 @@ AnimatedSprite::AnimatedSprite(Behaviour* unit) : Sprite(unit->GetGameobject(), 
 		animations[ATTACKING_NE].Setup(section = { 2, 3848, 418, 295 }, 7, 8.0f);
 		animations[ATTACKING_NW].Setup(section = { 2, 4144, 418, 295 }, 7, 8.0f);
 		animations[ATTACKING_SE].Setup(section = { 2, 4440, 418, 295 }, 7, 8.0f);
-		animations[ATTACKING_SW].Setup(section = { 2, 4736, 418, 296 }, 7, 8.0f);
+		animations[ATTACKING_SW].Setup(section = { 2, 4736, 418, 295 }, 7, 8.0f);
 		//animations[DESTROYED].Setup(section = { 2, 5032, 418, 295 }, 8, 0.2f);
-		offset = { 0.0f, 0.0f, 0.6f, 0.6f };
+		offset = { -168.0f, -230.0f, 0.6f, 0.6f };
 		break; 
 	}
 	case ENEMY_MELEE:
@@ -157,7 +157,7 @@ AnimatedSprite::AnimatedSprite(Behaviour* unit) : Sprite(unit->GetGameobject(), 
 		animations[ATTACKING_SE].Setup(section = { 956, 637, 101, 148 }, 1, 0.2f);
 		animations[ATTACKING_SW].Setup(section = { 956, 637, 101, 148 }, 1, 0.2f);
 		//animations[DESTROYED].Setup();
-		offset = { 5.f, -160.f, 0.6f, 0.6f };
+		offset = { -168.0f, -230.0f, 0.6f, 0.6f };
 		break;
 	case GATHERER:
 		tex_id = App->tex.Load("textures/Char_killia1.png");
@@ -174,7 +174,7 @@ AnimatedSprite::AnimatedSprite(Behaviour* unit) : Sprite(unit->GetGameobject(), 
 		animations[ATTACKING_SE].Setup(section = { 30, 20, 100, 180 }, 6);
 		animations[ATTACKING_SW].Setup(section = { 30, 20, 100, 180 }, 6);
 		//animations[DESTROYED].Setup();
-		offset = { 5.f, -160.f, 0.6f, 0.6f };
+		offset = { -168.0f, -230.0f, 0.6f, 0.6f };
 		break;
 	case UNIT_RANGED:
 		tex_id = App->tex.Load("textures/Char_killia1.png");
@@ -191,7 +191,7 @@ AnimatedSprite::AnimatedSprite(Behaviour* unit) : Sprite(unit->GetGameobject(), 
 		animations[ATTACKING_SE].Setup(section = { 30, 20, 100, 180 }, 6);
 		animations[ATTACKING_SW].Setup(section = { 30, 20, 100, 180 }, 6);
 		//animations[DESTROYED].Setup();
-		offset = { 5.f, -160.f, 0.6f, 0.6f };
+		offset = { -168.0f, -230.0f, 0.6f, 0.6f };
 		break;
 	case UNIT_SUPER:
 		tex_id = App->tex.Load("textures/Char_killia1.png");
@@ -208,7 +208,7 @@ AnimatedSprite::AnimatedSprite(Behaviour* unit) : Sprite(unit->GetGameobject(), 
 		animations[ATTACKING_SE].Setup(section = { 30, 20, 100, 180 }, 6);
 		animations[ATTACKING_SW].Setup(section = { 30, 20, 100, 180 }, 6);
 		//animations[DESTROYED].Setup();
-		offset = { 5.f, -160.f, 0.6f, 0.6f };
+		offset = { -168.0f, -230.0f, 0.6f, 0.6f };
 		break;
 	case UNIT_SPECIAL:
 		tex_id = App->tex.Load("textures/Char_killia1.png");
@@ -225,7 +225,7 @@ AnimatedSprite::AnimatedSprite(Behaviour* unit) : Sprite(unit->GetGameobject(), 
 		animations[ATTACKING_SE].Setup(section = { 30, 20, 100, 180 }, 6);
 		animations[ATTACKING_SW].Setup(section = { 30, 20, 100, 180 }, 6);
 		//animations[DESTROYED].Setup();
-		offset = { 5.f, -160.f, 0.6f, 0.6f };
+		offset = { -168.0f, -230.0f, 0.6f, 0.6f };
 		break;
 
 	default:
@@ -243,14 +243,19 @@ void AnimatedSprite::Update()
 {
 	if (current_state != *unit_state)
 	{
-		animations[current_state = *unit_state].Reset();
+		section = animations[current_state = *unit_state].Reset();
 		frame_timer = 0.f;
 	}
 	else
+	{
 		frame_timer += App->time.GetGameDeltaTime() * speed_mult;
 
-	if (animations[current_state].Update(frame_timer))
-		section.x = animations[current_state].GetSectionOffset();
+		if (animations[current_state].Update(frame_timer))
+			section.x = animations[current_state].GetSectionOffset();
+	}		
+
+	/*RectF abc = { float(section.x)/3814.0f,float(section.y)/5179.0f,float(section.w)/3814.0f,float(section.h)/5179.0f };
+	App->render->DrawQuadNormCoords(abc);*/
 }
 
 Anim::Anim() : 
@@ -275,9 +280,10 @@ void Anim::Setup(SDL_Rect rect, int frames, float f)
 	current_frame = 0;
 }
 
-void Anim::Reset()
+const SDL_Rect Anim::Reset()
 {
 	current_frame = 0;
+	return first_rect;
 }
 
 bool Anim::Update(float& frame_timer)

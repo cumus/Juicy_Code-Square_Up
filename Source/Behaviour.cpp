@@ -263,6 +263,7 @@ B_Unit::B_Unit(Gameobject* go, UnitType t, UnitState s, ComponentType comp_type)
 	attackObjective = nullptr;
 	msCount = 0;
 	arriveDestination = false;
+	current_state = IDLE;
 
 	//Info for ranged units constructor
 	/*vec pos = game_object->GetTransform()->GetGlobalPosition();
@@ -300,7 +301,7 @@ void B_Unit::Update()
 			//LOG("Distance 1:%f",d);
 			if (d <= attack_range) //Arriba izquierda
 			{
-				cornerNW = true;
+				//cornerNW = true;
 				inRange = true;
 			}
 			attackPos.x += attackObjective->GetGameobject()->GetTransform()->GetLocalScaleX();
@@ -309,7 +310,7 @@ void B_Unit::Update()
 			//LOG("Distance 2:%f", d);
 			if (d <= attack_range)//Abajo derecha
 			{
-				cornerSE = true;
+				//cornerSE = true;
 				inRange = true;
 			}
 
@@ -318,7 +319,7 @@ void B_Unit::Update()
 			//LOG("Distance 3:%f", d);
 			if (d <= attack_range)//Abajo izquierda
 			{
-				cornerSW = true;
+				//cornerSW = true;
 				inRange = true;
 			}
 
@@ -328,7 +329,7 @@ void B_Unit::Update()
 			//LOG("Distance 4:%f", d);
 			if (d <= attack_range)//Arriba derecha
 			{
-				cornerNE = true;
+				//cornerNE = true;
 				inRange = true;
 			}
 			//LOG("%d",inRange);
@@ -336,10 +337,10 @@ void B_Unit::Update()
 		else
 		{
 			attackObjective = nullptr;
-			cornerNW = false;
+			/*cornerNW = false;
 			cornerSE = false;
 			cornerNE = false;
-			cornerSW = false;
+			cornerSW = false;*/
 			inRange = false;
 			//LOG("Not in attack range");
 		}
@@ -447,6 +448,7 @@ void B_Unit::Update()
 		{
 			move = false;
 			arriveDestination = true;
+			current_state = IDLE;
 		}
 
 		if (move)
@@ -476,42 +478,42 @@ void B_Unit::Update()
 			game_object->GetTransform()->MoveY(dirY * speed * App->time.GetGameDeltaTime());//Move y
 
 			//Change state to change sprite
-			if (dirX == 0 && dirY == 0)
-			{
-				current_state = IDLE;
-			}
-			else if (dirX == 1 && dirY == 1)//NE
-			{
-				current_state = MOVING_NE;
-			}
-			else if (dirX == -1 && dirY == -1)//SO
-			{
-				current_state = MOVING_SW;
-			}
-			else if (dirX == 1 && dirY == -1)//SE
-			{
-				current_state = MOVING_SE;
-			}
-			else if (dirX == -1 && dirY == 1)//NO
-			{
-				current_state = MOVING_NW;
-			}
-			else if (dirX == 0 && dirY == 1)//N
-			{
-				current_state = MOVING_N;
-			}
-			else if (dirX == 1 && dirY == 0)//E
-			{
-				current_state = MOVING_E;
-			}
-			else if (dirX == 0 && dirY == -1)//S
+			if (dirX == 1 && dirY == 1)//S
 			{
 				current_state = MOVING_S;
 			}
-			else if (dirX == -1 && dirY == 0)//O
+			else if (dirX == -1 && dirY == -1)//N
+			{
+				current_state = MOVING_N;
+			}
+			else if (dirX == 1 && dirY == -1)//E
+			{
+				current_state = MOVING_E;
+			}
+			else if (dirX == -1 && dirY == 1)//W
 			{
 				current_state = MOVING_W;
-			}			
+			}
+			else if (dirX == 0 && dirY == 1)//SW
+			{
+				current_state = MOVING_SW;
+			}
+			else if (dirX == 1 && dirY == 0)//SE
+			{
+				current_state = MOVING_SE;
+			}
+			else if (dirX == 0 && dirY == -1)//NE
+			{
+				current_state = MOVING_NE;
+			}
+			else if (dirX == -1 && dirY == 0)//NW
+			{
+				current_state = MOVING_NW;
+			}	
+			/*else if (dirX == 0 && dirY == 0)
+			{
+				current_state = IDLE;
+			}*/
 		}
 
 		//Colision check
@@ -554,44 +556,83 @@ void B_Unit::Update()
 
 void B_Unit::DoAttack()
 {
-	//vec localPos = game_object->GetTransform()->GetGlobalPosition();
+	vec localPos = game_object->GetTransform()->GetGlobalPosition();
+	std::pair<int, int> Pos(int(localPos.x),int(localPos.y));
+	vec objPos = attackObjective->GetGameobject()->GetTransform()->GetGlobalPosition();
+	std::pair<int,int> atkPos(int(objPos.x), int(objPos.y)); //= Map::WorldToTileBase(objPos.x, objPos.y);
+
+	LOG("Pos X:%d/Y:%d", Pos.first, Pos.second);
+	LOG("Atkpos X:%d/Y:%d", atkPos.first, atkPos.second);
+
 	audio->Play(attackFX);
-	if (cornerNW && cornerNE)//arriba
+	if (atkPos.first == Pos.first && atkPos.second < Pos.second)//N
 	{
 		current_state = ATTACKING_N;
 	}
-	else if (cornerSW && cornerSE)//abajo
+	else if (atkPos.first == Pos.first && atkPos.second > Pos.second)//S
 	{
 		current_state = ATTACKING_S;
 	}
-	else if (cornerSW && cornerNW)//izquierda
+	else if (atkPos.first < Pos.first && atkPos.second == Pos.second)//W
 	{
 		current_state = ATTACKING_W;
 	}
-	else if (cornerNE && cornerSE)//derecha
+	else if (atkPos.first > Pos.first && atkPos.second == Pos.second)//E
 	{
 		current_state = ATTACKING_E;
 	}
-	else if (cornerNW && !cornerNE && !cornerSE && !cornerSW)//arriba izquierda
+	else if (atkPos.first < Pos.first && atkPos.second > Pos.second)//SW
 	{
 		current_state = ATTACKING_NW;
 	}
-	else if (cornerNE && !cornerNW && !cornerSE && !cornerSW)//arriba derecha
-	{
-		current_state = ATTACKING_NE;
-	}
-	else if (cornerSW && !cornerSE && !cornerNW && !cornerNE)//abajo izquierda
+	else if (atkPos.first > Pos.first && atkPos.second > Pos.second)//
 	{
 		current_state = ATTACKING_SW;
 	}
-	else if (cornerSE && !cornerSW && !cornerNW && !cornerNE)//abajo derecha
+	else if (atkPos.first < Pos.first && atkPos.second < Pos.second)//
+	{
+		current_state = ATTACKING_NE;
+	}
+	else if (atkPos.first > Pos.first && atkPos.second < Pos.second)//
+	{
+		current_state = ATTACKING_SE; 
+	}
+	/*if (cornerNW && cornerNE)//arriba
+	{
+		current_state = ATTACKING_NW;
+	}
+	else if (cornerSW && cornerSE)//abajo
+	{
+		current_state = ATTACKING_E;
+	}
+	else if (cornerSW && cornerNW)//izquierda
+	{
+		current_state = ATTACKING_NE;
+	}
+	else if (cornerNE && cornerSE)//derecha
+	{
+		current_state = ATTACKING_W;
+	}
+	else if (cornerNW && !cornerNE && !cornerSE && !cornerSW)//arriba izquierda
+	{
+		current_state = ATTACKING_SW;
+	}
+	else if (cornerNE && !cornerNW && !cornerSE && !cornerSW)//arriba derecha
 	{
 		current_state = ATTACKING_SE;
 	}
-	cornerNW = false;
+	else if (cornerSW && !cornerSE && !cornerNW && !cornerNE)//abajo izquierda
+	{
+		current_state = ATTACKING_S;
+	}
+	else if (cornerSE && !cornerSW && !cornerNW && !cornerNE)//abajo derecha
+	{
+		current_state = ATTACKING_N; //OK
+	}*/
+	/*cornerNW = false;
 	cornerSE = false;
 	cornerNE = false;
-	cornerSW = false;
+	cornerSW = false;*/
 }
 
 void B_Unit::OnDestroy()

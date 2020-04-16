@@ -111,7 +111,7 @@ void Spawner::Update()
 
 			int random = std::rand() % 100 + 1;
 			LOG("Random %d", random);
-			/*if (random < MELEE_RATE) //Spawn melee
+			if (random < MELEE_RATE) //Spawn melee
 			{
 				LOG("melee");
 				SpawnMelee(pos.x,pos.y);
@@ -130,13 +130,15 @@ void Spawner::Update()
 			{
 				LOG("Special");
 				SpawnSpecial(pos.x, pos.y);
-			}*/
+			}
 			currentSpawns++;
 			LOG("Spawned one");
 		}
-		
+
 		ms_counter = 0;
+		LOG("End ");
 		std::srand(time(NULL));
+		LOG("End 2");
 	}
 
 	if (ms_counter < cooldown)
