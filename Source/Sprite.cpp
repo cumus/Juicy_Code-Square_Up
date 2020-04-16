@@ -114,26 +114,27 @@ AnimatedSprite::AnimatedSprite(Behaviour* unit) : Sprite(unit->GetGameobject(), 
 	}
 	case UNIT_MELEE:
 	{
-		tex_id = App->tex.Load("textures/Char_killia1.png");
-		animations[IDLE].Setup(section = { 41, 24, 89, 167 }, 6, 0.2f);
-		//animations[MOVING_E].Setup();
-		//animations[MOVING_W].Setup();
-		//animations[MOVING_N].Setup();
-		//animations[MOVING_S].Setup();
-		animations[MOVING_NE].Setup(section = { 41, 24, 89, 167 }, 6, 0.2f);
-		animations[MOVING_NW].Setup(section = { 41, 24, 89, 167 }, 6, 0.2f);
-		animations[MOVING_SE].Setup(section = { 41, 24, 89, 167 }, 6, 0.2f);
-		animations[MOVING_SW].Setup(section = { 41, 24, 89, 167 }, 6, 0.2f);
-		animations[ATTACKING_E].Setup(section = { 30, 20, 100, 180 }, 6);
-		animations[ATTACKING_W].Setup(section = { 30, 20, 100, 180 }, 6);
-		animations[ATTACKING_N].Setup(section = { 30, 20, 100, 180 }, 6);
-		animations[ATTACKING_S].Setup(section = { 30, 20, 100, 180 }, 6);
-		animations[ATTACKING_NE].Setup(section = { 30, 20, 100, 180 }, 6);
-		animations[ATTACKING_NW].Setup(section = { 30, 20, 100, 180 }, 6);
-		animations[ATTACKING_SE].Setup(section = { 30, 20, 100, 180 }, 6);
-		animations[ATTACKING_SW].Setup(section = { 30, 20, 100, 180 }, 6);
-		//animations[DESTROYED].Setup();
-		offset = { 5.f, -160.f, 0.6f, 0.6f };
+		
+		tex_id = App->tex.Load("textures/guerrero1.png");
+		animations[IDLE].Setup(section = { 2, 2, 418, 294 }, 6, 0.2f);
+		animations[MOVING_N].Setup({ 2, 296, 418, 295 }, 7, 8.0f);
+		animations[MOVING_S].Setup({ 2, 592, 418, 295 }, 7, 8.0f);
+		animations[MOVING_E].Setup({ 2, 888, 418, 295 }, 8, 8.0f);
+		animations[MOVING_W].Setup({ 2, 1184, 418, 295 }, 8, 8.0f);
+		animations[MOVING_NE].Setup({ 2, 1480, 418, 295 }, 8, 8.0f);
+		animations[MOVING_NW].Setup({ 2, 1776, 418, 295 }, 8, 8.0f);
+		animations[MOVING_SE].Setup({ 2, 2072, 418, 295 }, 8, 8.0f);
+		animations[MOVING_SW].Setup(section = { 2, 2368, 418, 295 }, 8, 8.0f);
+		animations[ATTACKING_N].Setup(section = { 2, 2664, 418, 295 }, 7, 8.0f);
+		animations[ATTACKING_S].Setup(section = { 2, 2910, 418, 295 }, 7, 8.0f);
+		animations[ATTACKING_E].Setup(section = { 2, 3256, 418, 295 }, 7, 8.0f);
+		animations[ATTACKING_W].Setup(section = { 2, 3552, 418, 295 }, 7, 8.0f);
+		animations[ATTACKING_NE].Setup(section = { 2, 3848, 418, 295 }, 7, 8.0f);
+		animations[ATTACKING_NW].Setup(section = { 2, 4144, 418, 295 }, 7, 8.0f);
+		animations[ATTACKING_SE].Setup(section = { 2, 4440, 418, 295 }, 7, 8.0f);
+		animations[ATTACKING_SW].Setup(section = { 2, 4736, 418, 296 }, 7, 8.0f);
+		//animations[DESTROYED].Setup(section = { 2, 5032, 418, 295 }, 8, 0.2f);
+		offset = { 0.0f, 0.0f, 0.6f, 0.6f };
 		break; 
 	}
 	case ENEMY_MELEE:
