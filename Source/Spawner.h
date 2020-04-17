@@ -15,13 +15,14 @@ public:
 	~Spawner();
 
 	void Update() override;
-	void SpawnMelee(float x, float y);
-	void SpawnRanged(float x, float y);
-	void SpawnSuper(float x, float y);
-	void SpawnSpecial(float x, float y);
 	void ToggleSpawn(bool toggle) { shoot = toggle; }
 	void ResetSpawner();
 	void ChangeValues(int spawns,float cooldown, int spawnPoints);
+
+	/*void SpawnMeleeIA(float x, float y);
+	void SpawnRangedIA(float x, float y);
+	void SpawnSuperIA(float x, float y);
+	void SpawnSpecialIA(float x, float y);*/
 
 private:
 	float ms_counter,cooldown;

@@ -48,7 +48,7 @@ void Spawner::ChangeValues(int spawns, float cd, int spawnPoints)
 }
 
 
-void Spawner::SpawnMelee(float x,float y)
+/*void Spawner::SpawnMelee(float x,float y)
 {
 	Gameobject* melee_go = App->scene->AddGameobject("Melee enemy");
 	melee_go->GetTransform()->SetLocalPos({ x, y, 0.0f });
@@ -81,7 +81,7 @@ void Spawner::SpawnSpecial(float x, float y)
 	melee_go->GetTransform()->SetLocalPos({ x, y, 0.0f });
 
 	new EnemyMeleeUnit(melee_go);
-}
+}*/
 
 void Spawner::ResetSpawner()
 {
@@ -114,22 +114,22 @@ void Spawner::Update()
 			if (random < MELEE_RATE) //Spawn melee
 			{
 				LOG("melee");
-				SpawnMelee(pos.x,pos.y);
+				App->scene->SpawnMeleeIA(pos.x, pos.y);
 			}
 			else if (random < (MELEE_RATE+RANGED_RATE)) //Spawn ranged
 			{
 				LOG("ranged");
-				SpawnRanged(pos.x, pos.y);
+				App->scene->SpawnRangedIA(pos.x, pos.y);
 			}
 			else if (random < (MELEE_RATE + RANGED_RATE+SUPER_RATE)) //Spawn super
 			{
 				LOG("super");
-				SpawnSuper(pos.x, pos.y);
+				App->scene->SpawnSuperIA(pos.x, pos.y);
 			}
 			else //Spawn special
 			{
 				LOG("Special");
-				SpawnSpecial(pos.x, pos.y);
+				App->scene->SpawnSpecialIA(pos.x,pos.y);
 			}
 			currentSpawns++;
 			LOG("Spawned one");
@@ -137,7 +137,7 @@ void Spawner::Update()
 
 		ms_counter = 0;
 		LOG("End ");
-		std::srand(time(NULL));
+		//std::srand(time(NULL));
 		LOG("End 2");
 	}
 

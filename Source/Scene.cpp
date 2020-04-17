@@ -125,32 +125,20 @@ bool Scene::Update()
 					int random = std::rand() % 100 + 1;
 					if (random < MELEE_RATE) //Spawn melee
 					{
-						Gameobject* unit_go = AddGameobject("Enemy Melee unit");
-						unit_go->GetTransform()->SetLocalPos({ float(pos.x), float(pos.y), 0.0f });
-
-						new EnemyMeleeUnit(unit_go);
+						SpawnMeleeIA(pos.x,pos.y);
 					}
 					else if (random < (MELEE_RATE + RANGED_RATE)) //Spawn ranged
 					{
-						Gameobject* unit_go = AddGameobject("Enemy Melee unit");
-						unit_go->GetTransform()->SetLocalPos({ float(pos.x), float(pos.y), 0.0f });
-
-						new EnemyMeleeUnit(unit_go);
+						SpawnRangedIA(pos.x, pos.y);
 					}
 					else if (random < (MELEE_RATE + RANGED_RATE + SUPER_RATE)) //Spawn super
 					{
 
-						Gameobject* unit_go = AddGameobject("Enemy Melee unit");
-						unit_go->GetTransform()->SetLocalPos({ float(pos.x), float(pos.y), 0.0f });
-
-						new EnemyMeleeUnit(unit_go);
+						SpawnSuperIA(pos.x, pos.y);
 					}
 					else //Spawn special
 					{
-						Gameobject* unit_go = AddGameobject("Enemy Melee unit");
-						unit_go->GetTransform()->SetLocalPos({ float(pos.x), float(pos.y), 0.0f });
-
-						new EnemyMeleeUnit(unit_go);
+						SpawnSpecialIA(pos.x, pos.y);
 					}
 					currentSpawns++;
 					LOG("Spawned one");
@@ -1059,6 +1047,37 @@ void Scene::PlaceMode(int type)
 	}
 }
 
+void Scene::SpawnMeleeIA(float x, float y)
+{
+	Gameobject* unit_go = AddGameobject("Enemy Melee unit");
+	unit_go->GetTransform()->SetLocalPos({ x, y, 0.0f });
+
+	new EnemyMeleeUnit(unit_go);
+}
+
+void Scene::SpawnRangedIA(float x, float y)
+{
+	Gameobject* unit_go = AddGameobject("Enemy Melee unit");
+	unit_go->GetTransform()->SetLocalPos({ x, y, 0.0f });
+
+	new EnemyMeleeUnit(unit_go);
+}
+void Scene::SpawnSuperIA(float x, float y)
+{
+	Gameobject* unit_go = AddGameobject("Enemy Melee unit");
+	unit_go->GetTransform()->SetLocalPos({ x,y, 0.0f });
+
+	new EnemyMeleeUnit(unit_go);
+}
+
+void Scene::SpawnSpecialIA(float x, float y)
+{
+	Gameobject* unit_go = AddGameobject("Enemy Melee unit");
+	unit_go->GetTransform()->SetLocalPos({ x, y, 0.0f });
+
+	new EnemyMeleeUnit(unit_go);
+}
+
 
 Gameobject* Scene::GetRoot()
 {
@@ -1197,10 +1216,11 @@ void Scene::GodMode()
 	{
 		std::pair<int, int> position = Map::WorldToTileBase(float(x + cam.x), float(y + cam.y));
 
-		Gameobject* unit_go = AddGameobject("Enemy Melee unit");
+		/*Gameobject* unit_go = AddGameobject("Enemy Melee unit");
 		unit_go->GetTransform()->SetLocalPos({ float(position.first), float(position.second), 0.0f });
 
-		new EnemyMeleeUnit(unit_go);
+		new EnemyMeleeUnit(unit_go);*/
+		SpawnMeleeIA(float(position.first), float(position.second));
 	}
 
 	if (App->input->GetKey(SDL_SCANCODE_8) == KEY_DOWN) //Base_Center

@@ -73,6 +73,11 @@ public:
 	Gameobject* AddGameobject(const char* name, Gameobject* parent = nullptr);
 	Gameobject* MouseClickSelect(int mouse_x, int mouse_y);
 
+	void SpawnMeleeIA(float x, float y);
+	void SpawnRangedIA(float x, float y);
+	void SpawnSuperIA(float x, float y);
+	void SpawnSpecialIA(float x, float y);
+
 private:
 
 	void GodMode();
