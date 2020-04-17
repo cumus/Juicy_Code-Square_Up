@@ -650,11 +650,23 @@ bool Scene::LoadMainScene()
 
 	building_bars_created = 0;
 
+	Gameobject* lore_go = AddUIGameobject("lore");
+	C_Image* lore = new C_Image(lore_go);
+	C_Button* next = new C_Button(lore_go, Event(SCENE_PLAY, this, MAIN));
+
+	lore->target = { 0.66f, 0.95f, 0.6f, 0.6f };
+	lore->offset = { -640.f, -985.f };
+	lore->section = { 0, 0, 640, 985 };
+	lore->tex_id = App->tex.Load("textures/pause-bg.png");
+
+	next->target = { 0.51f, 0.3f, 0.3f, 0.3f };
+	next->offset = { -525.f, 200.f };
+	next->section = { 0, 0, 1070, 207 };
+	next->tex_id = App->tex.Load("textures/button.png");
+
 	//------------------------- HUD CANVAS --------------------------------------
 
-	hud_canvas_go = AddGameobject("HUD Canvas", &root);
-	C_Canvas* hud_canv = new C_Canvas(hud_canvas_go);
-	hud_canv->target = { 0.3f, 0.3f, 0.4f, 0.4f };
+	
 
 
 	return map.Load("maps/iso.tmx") && App->audio->PlayMusic("audio/Music/alexander-nakarada-buzzkiller.ogg");
@@ -1409,11 +1421,9 @@ void Scene::GodMode()
 
 void Scene::StateMachine(const States state)
 {
-	/*Gameobject* lore_go = AddGameobject("lore", hud_canvas_go);
-	C_Image* lore = new C_Image(lore_go);
-	C_Button* next = new C_Button(lore_go, Event(SCENE_PLAY, this, MAIN));
+	
 
-	Gameobject* cam_mov_go = AddGameobject("cam_mov", hud_canvas_go);
+	/*Gameobject* cam_mov_go = AddGameobject("cam_mov", hud_canvas_go);
 	C_Image* cam_mov = new C_Image(cam_mov_go);
 
 	Gameobject* R_click_mov_go = AddGameobject("R_click_mov", hud_canvas_go);
@@ -1471,16 +1481,6 @@ void Scene::StateMachine(const States state)
 	{
 	case LORE:
 		// LORE POPUP
-
-		lore->target = { 0.66f, 0.95f, 0.6f, 0.6f };
-		lore->offset = { -640.f, -985.f };
-		lore->section = { 0, 0, 640, 985 };
-		lore->tex_id = App->tex.Load("textures/pause-bg.png");
-
-		next->target = { 0.51f, 0.3f, 0.3f, 0.3f };
-		next->offset = { -525.f, 200.f };
-		next->section = { 0, 0, 1070, 207 };
-		next->tex_id = App->tex.Load("textures/button.png");
 
 		break;
 	case CAM_MOVEMENT:
