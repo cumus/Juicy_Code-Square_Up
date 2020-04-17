@@ -22,6 +22,36 @@ enum SceneType : int
 	CREDITS
 };
 
+enum States : int
+{
+	LORE,
+	CAM_MOVEMENT,
+	R_CLICK_MOVEMENT,
+
+	EDGE_STATE,
+	RESOURCES,
+	MOBDROP,
+
+	BUILD,
+	UPGRADE,
+
+	GATHERER_STATE,
+	MELEE,
+	MELEE_ATK,
+	ENEMY,
+	ENEMY_ATK,
+
+	TOWER_STATE,
+	TOWER_ATK,
+	BASE_CENTER_STATE,
+	BARRACKS_STATE,
+
+	WIN,
+	LOSE,
+
+	NONE
+};
+
 struct SDL_Texture;
 
 class Scene : public Module
@@ -53,6 +83,8 @@ private:
 	bool LoadMainScene();
 	bool LoadEndScene();
 
+	void StateMachine(const States state);
+
 	bool PauseMenu();
 	//bool DestroyPauseMenu();
 
@@ -69,7 +101,7 @@ public:
 	bool level = true;
 
 	// PAUSE
-	Gameobject* pause_canvas_go;
+	//Gameobject* pause_canvas_go;
 
 	// Selection
 	iPoint groupStart,mouseExtend;
@@ -78,6 +110,7 @@ public:
 	
 	// HUD
 	Gameobject* hud_canvas_go;
+	Gameobject* pause_background_go;
 	int building_bars_created = 0;
 	int current_melee_units = 0;
 	int melee_units_created = 0;
@@ -128,6 +161,9 @@ private:
 	float fade_duration;
 	SceneType current_scene;
 	SceneType next_scene;
+
+	States current_state;
+	//States next_state;
 
 	/*bool shoot = false;//temp
 	std::pair<int, int> pos;

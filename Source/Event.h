@@ -41,6 +41,9 @@ enum EventType
 	SCENE_CHANGE,
 	PLACE_BUILDING,
 
+	//// Scene states
+	//NEXT_STATE,
+	
 	// Gameobjects
 	ON_PLAY,
 	ON_PAUSE,

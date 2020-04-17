@@ -64,6 +64,8 @@ bool Scene::Update()
 
 	root.Update();
 
+	StateMachine(current_state);
+
 	if (fading != NO_FADE)
 	{
 		float alpha;
@@ -255,7 +257,7 @@ bool Scene::Update()
 			{
 				if (pause)
 				{
-					pause_canvas_go->SetInactive();
+					pause_background_go->SetInactive();
 					Event::Push(SCENE_PLAY, App);
 					pause = false;
 				}
@@ -654,6 +656,8 @@ bool Scene::LoadMainScene()
 
 	level = true;
 
+	current_state = LORE;
+
 	building_bars_created = 0;
 
 	//------------------------- HUD CANVAS --------------------------------------
@@ -887,17 +891,12 @@ bool Scene::LoadEndScene()
 bool Scene::PauseMenu()
 {
 	bool ret = true;
-	//------------------------- CANVAS --------------------------------------
-
-	pause_canvas_go = AddGameobject("Canvas", &root);
-	C_Canvas* canv = new C_Canvas(pause_canvas_go);
-	canv->target = { 0.6f, 0.6f, 0.4f, 0.4f };
 
 	//------------------------- BACKGROUND -----------------------------------
 
-	Gameobject* background_go = AddGameobject("Background", pause_canvas_go);
+	pause_background_go = AddGameobject("Background", hud_canvas_go);
 
-	C_Image* background = new C_Image(background_go);
+	C_Image* background = new C_Image(pause_background_go);
 	background->target = { 0.66f, 0.95f, 0.6f, 0.6f };
 	background->offset = { -640.f, -985.f };
 	background->section = { 0, 0, 640, 985 };
@@ -905,7 +904,7 @@ bool Scene::PauseMenu()
 
 	//------------------------- RESUME -----------------------------------------
 
-	Gameobject* resume_go = AddGameobject("resume Button", pause_canvas_go);
+	Gameobject* resume_go = AddGameobject("resume Button", pause_background_go);
 
 	C_Button* resume = new C_Button(resume_go, Event(SCENE_PLAY, this, App));
 	resume->target = { 0.51f, 0.3f, 0.3f, 0.3f };
@@ -920,7 +919,7 @@ bool Scene::PauseMenu()
 
 	/*//------------------------- SAVE --------------------------------------
 
-	Gameobject* save_go = AddGameobject("save button", pause_canvas_go);
+	Gameobject* save_go = AddGameobject("save button", pause_background_go);
 
 	C_Button* save = new C_Button(save_go, Event(SCENE_CHANGE, this, MAIN));
 	save->target = { 0.51f, 0.3f, 0.3f, 0.3f };
@@ -935,7 +934,7 @@ bool Scene::PauseMenu()
 
 	//------------------------- LOAD --------------------------------------
 
-	Gameobject* load_go = AddGameobject("load Button", pause_canvas_go);
+	Gameobject* load_go = AddGameobject("load Button", pause_background_go);
 
 	C_Button* load = new C_Button(load_go, Event(SCENE_CHANGE, this, MAIN));
 	load->target = { 0.51f, 0.3f, 0.3f, 0.3f };
@@ -950,7 +949,7 @@ bool Scene::PauseMenu()
 
 	//------------------------- OPTIONS --------------------------------------
 
-	Gameobject* options_go = AddGameobject("options Button", pause_canvas_go);
+	Gameobject* options_go = AddGameobject("options Button", pause_background_go);
 
 	C_Button* options = new C_Button(options_go, Event(SCENE_CHANGE, this, MAIN));
 	options->target = { 0.51f, 0.3f, 0.3f, 0.3f };
@@ -965,7 +964,7 @@ bool Scene::PauseMenu()
 
 	//------------------------- MAIN MENU --------------------------------------
 
-	Gameobject* main_menu_go = AddGameobject("main menu Button", pause_canvas_go);
+	Gameobject* main_menu_go = AddGameobject("main menu Button", pause_background_go);
 
 	C_Button* main_menu = new C_Button(main_menu_go, Event(SCENE_CHANGE, this, MENU));
 	main_menu->target = { 0.51f, 0.3f, 0.3f, 0.3f };
@@ -1346,4 +1345,231 @@ void Scene::GodMode()
 	App->win->SetTitle(tmp_str);
 
 	App->editor->Draw();
+}
+
+void Scene::StateMachine(const States state)
+{
+	/*Gameobject* lore_go = AddGameobject("lore", hud_canvas_go);
+	C_Image* lore = new C_Image(lore_go);
+	C_Button* next = new C_Button(lore_go, Event(SCENE_PLAY, this, MAIN));
+
+	Gameobject* cam_mov_go = AddGameobject("cam_mov", hud_canvas_go);
+	C_Image* cam_mov = new C_Image(cam_mov_go);
+
+	Gameobject* R_click_mov_go = AddGameobject("R_click_mov", hud_canvas_go);
+	C_Image* R_click_mov = new C_Image(R_click_mov_go);
+
+	Gameobject* edge_go = AddGameobject("edge", hud_canvas_go);
+	C_Image* edge = new C_Image(edge_go);
+
+	Gameobject* resources_go = AddGameobject("resources", hud_canvas_go);
+	C_Image* resources = new C_Image(resources_go);
+
+	Gameobject* drop_go = AddGameobject("drop", hud_canvas_go);
+	C_Image* drop = new C_Image(drop_go);
+
+	Gameobject* build_go = AddGameobject("build", hud_canvas_go);
+	C_Image* build = new C_Image(build_go);
+
+	Gameobject* upgrade_go = AddGameobject("upgrade", hud_canvas_go);
+	C_Image* upgrade = new C_Image(upgrade_go);
+
+	Gameobject* gatherer_go = AddGameobject("gatherer", hud_canvas_go);
+	C_Image* gatherer = new C_Image(gatherer_go);
+
+	Gameobject* melee_go = AddGameobject("melee", hud_canvas_go);
+	C_Image* melee = new C_Image(melee_go);
+
+	Gameobject* melee_atk_go = AddGameobject("melee_atk", hud_canvas_go);
+	C_Image* melee_atk = new C_Image(melee_atk_go);
+
+	Gameobject* enemy_go = AddGameobject("enemy", hud_canvas_go);
+	C_Image* enemy = new C_Image(enemy_go);
+
+	Gameobject* enemy_atk_go = AddGameobject("enemy_atk", hud_canvas_go);
+	C_Image* enemy_atk = new C_Image(enemy_atk_go);
+
+	Gameobject* tower_go = AddGameobject("tower", hud_canvas_go);
+	C_Image* tower = new C_Image(tower_go);
+
+	Gameobject* tower_atk_go = AddGameobject("tower_atk", hud_canvas_go);
+	C_Image* tower_atk = new C_Image(tower_atk_go);
+
+	Gameobject* base_go = AddGameobject("base", hud_canvas_go);
+	C_Image* base = new C_Image(base_go);
+
+	Gameobject* barracks_go = AddGameobject("barracks", hud_canvas_go);
+	C_Image* barracks = new C_Image(barracks_go);
+
+	Gameobject* win_go = AddGameobject("win", hud_canvas_go);
+	C_Image* win = new C_Image(win_go);
+
+	Gameobject* lose_go = AddGameobject("lose", hud_canvas_go);
+	C_Image* lose = new C_Image(lose_go);
+
+	switch (current_state)
+	{
+	case LORE:
+		// LORE POPUP
+
+		lore->target = { 0.66f, 0.95f, 0.6f, 0.6f };
+		lore->offset = { -640.f, -985.f };
+		lore->section = { 0, 0, 640, 985 };
+		lore->tex_id = App->tex.Load("textures/pause-bg.png");
+
+		next->target = { 0.51f, 0.3f, 0.3f, 0.3f };
+		next->offset = { -525.f, 200.f };
+		next->section = { 0, 0, 1070, 207 };
+		next->tex_id = App->tex.Load("textures/button.png");
+
+		break;
+	case CAM_MOVEMENT:
+		current_state = CAM_MOVEMENT;
+		cam_mov->target = { 0.66f, 0.95f, 0.6f, 0.6f };
+		cam_mov->offset = { -640.f, -985.f };
+		cam_mov->section = { 0, 0, 640, 985 };
+		cam_mov->tex_id = App->tex.Load("textures/pause-bg.png");
+
+		break;
+	case R_CLICK_MOVEMENT:
+		current_state = R_CLICK_MOVEMENT;
+		R_click_mov->target = { 0.66f, 0.95f, 0.6f, 0.6f };
+		R_click_mov->offset = { -640.f, -985.f };
+		R_click_mov->section = { 0, 0, 640, 985 };
+		R_click_mov->tex_id = App->tex.Load("textures/pause-bg.png");
+
+		break;
+	case EDGE_STATE:
+
+		edge->target = { 0.66f, 0.95f, 0.6f, 0.6f };
+		edge->offset = { -640.f, -985.f };
+		edge->section = { 0, 0, 640, 985 };
+		edge->tex_id = App->tex.Load("textures/pause-bg.png");
+
+		break;
+	case RESOURCES:
+
+		resources->target = { 0.66f, 0.95f, 0.6f, 0.6f };
+		resources->offset = { -640.f, -985.f };
+		resources->section = { 0, 0, 640, 985 };
+		resources->tex_id = App->tex.Load("textures/pause-bg.png");
+
+		break;
+	case MOBDROP:
+
+		drop->target = { 0.66f, 0.95f, 0.6f, 0.6f };
+		drop->offset = { -640.f, -985.f };
+		drop->section = { 0, 0, 640, 985 };
+		drop->tex_id = App->tex.Load("textures/pause-bg.png");
+
+		break;
+	case BUILD:
+
+		build->target = { 0.66f, 0.95f, 0.6f, 0.6f };
+		build->offset = { -640.f, -985.f };
+		build->section = { 0, 0, 640, 985 };
+		build->tex_id = App->tex.Load("textures/pause-bg.png");
+
+		break;
+	case UPGRADE:
+
+		upgrade->target = { 0.66f, 0.95f, 0.6f, 0.6f };
+		upgrade->offset = { -640.f, -985.f };
+		upgrade->section = { 0, 0, 640, 985 };
+		upgrade->tex_id = App->tex.Load("textures/pause-bg.png");
+
+		break;
+	case GATHERER_STATE:
+
+		gatherer->target = { 0.66f, 0.95f, 0.6f, 0.6f };
+		gatherer->offset = { -640.f, -985.f };
+		gatherer->section = { 0, 0, 640, 985 };
+		gatherer->tex_id = App->tex.Load("textures/pause-bg.png");
+
+		break;
+	case MELEE:
+
+		melee->target = { 0.66f, 0.95f, 0.6f, 0.6f };
+		melee->offset = { -640.f, -985.f };
+		melee->section = { 0, 0, 640, 985 };
+		melee->tex_id = App->tex.Load("textures/pause-bg.png");
+
+		break;
+	case MELEE_ATK:
+
+		melee_atk->target = { 0.66f, 0.95f, 0.6f, 0.6f };
+		melee_atk->offset = { -640.f, -985.f };
+		melee_atk->section = { 0, 0, 640, 985 };
+		melee_atk->tex_id = App->tex.Load("textures/pause-bg.png");
+
+		break;
+	case ENEMY:
+
+		enemy->target = { 0.66f, 0.95f, 0.6f, 0.6f };
+		enemy->offset = { -640.f, -985.f };
+		enemy->section = { 0, 0, 640, 985 };
+		enemy->tex_id = App->tex.Load("textures/pause-bg.png");
+
+		break;
+	case ENEMY_ATK:
+
+		enemy_atk->target = { 0.66f, 0.95f, 0.6f, 0.6f };
+		enemy_atk->offset = { -640.f, -985.f };
+		enemy_atk->section = { 0, 0, 640, 985 };
+		enemy_atk->tex_id = App->tex.Load("textures/pause-bg.png");
+
+		break;
+	case TOWER_STATE:
+
+		tower->target = { 0.66f, 0.95f, 0.6f, 0.6f };
+		tower->offset = { -640.f, -985.f };
+		tower->section = { 0, 0, 640, 985 };
+		tower->tex_id = App->tex.Load("textures/pause-bg.png");
+
+		break;
+	case TOWER_ATK:
+
+		tower_atk->target = { 0.66f, 0.95f, 0.6f, 0.6f };
+		tower_atk->offset = { -640.f, -985.f };
+		tower_atk->section = { 0, 0, 640, 985 };
+		tower_atk->tex_id = App->tex.Load("textures/pause-bg.png");
+
+		break;
+	case BASE_CENTER_STATE:
+
+		base->target = { 0.66f, 0.95f, 0.6f, 0.6f };
+		base->offset = { -640.f, -985.f };
+		base->section = { 0, 0, 640, 985 };
+		base->tex_id = App->tex.Load("textures/pause-bg.png");
+
+		break;
+	case BARRACKS_STATE:
+
+		barracks->target = { 0.66f, 0.95f, 0.6f, 0.6f };
+		barracks->offset = { -640.f, -985.f };
+		barracks->section = { 0, 0, 640, 985 };
+		barracks->tex_id = App->tex.Load("textures/pause-bg.png");
+
+		break;
+	case WIN:
+
+		win->target = { 0.66f, 0.95f, 0.6f, 0.6f };
+		win->offset = { -640.f, -985.f };
+		win->section = { 0, 0, 640, 985 };
+		win->tex_id = App->tex.Load("textures/pause-bg.png");
+
+		break;
+	case LOSE:
+
+		lose->target = { 0.66f, 0.95f, 0.6f, 0.6f };
+		lose->offset = { -640.f, -985.f };
+		lose->section = { 0, 0, 640, 985 };
+		lose->tex_id = App->tex.Load("textures/pause-bg.png");
+
+		break;
+	case NONE:
+		break;
+	default:
+		break;
+	}*/
 }
