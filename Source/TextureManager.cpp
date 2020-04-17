@@ -258,7 +258,7 @@ SDL_Texture * TextureManager::GetTexture(int id) const
 
 	std::map<int, TextureData>::const_iterator it = textures.find(id);
 
-	if (it != textures.end())
+	if (it != textures.cend())
 		ret = it->second.texture;
 
 	return ret;

@@ -28,8 +28,6 @@ public:
 	bool MouseOnWindow() const;
 	bool Draw();
 
-	void SetSelection(Gameobject* go = nullptr, bool call_unselect = true);
-
 public:
 
 	BarMenu* bar_menu = nullptr;
@@ -38,9 +36,6 @@ public:
 	PropertiesWindow* properties = nullptr;
 	ConsoleWindow* console = nullptr;
 	ConfigWindow* config = nullptr;
-
-	Gameobject* selection = nullptr;
-	//std::vector <Gameobject*> selectedUnits;
 
 private:
 

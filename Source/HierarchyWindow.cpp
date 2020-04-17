@@ -28,7 +28,7 @@ void HierarchyWindow::RecieveEvent(const Event& e)
 	{
 		int id = e.data1.AsInt();
 		if (id >= 0 && id < int(gos.size()))
-			App->editor->SetSelection(gos[id].second);
+			App->scene->SetSelection(gos[id].second);
 	}
 }
 

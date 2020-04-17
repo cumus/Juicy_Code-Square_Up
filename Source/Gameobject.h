@@ -34,9 +34,11 @@ public:
 
 	Transform*			GetTransform() { return transform; }
 	Behaviour*			GetBehaviour() { return behaviour; }
+	UI_Component*		GetUI() { return ui; }
 
 	const Transform*	GetTransform() const { return transform; }
 	const Behaviour*	GetBehaviour() const { return behaviour; }
+	const UI_Component* GetUI() const { return ui; }
 
 	std::vector<Gameobject*>& GetChilds() { return childs; }
 
@@ -72,6 +74,7 @@ private:
 	Gameobject* parent = nullptr;
 	Transform* transform = nullptr;
 	Behaviour* behaviour = nullptr;
+	UI_Component* ui = nullptr;
 };
 
 #endif // __GAMEOBJECT_H__

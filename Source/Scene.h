@@ -71,6 +71,9 @@ public:
 	Gameobject* GetRoot();
 	const Gameobject* GetRoot() const;
 	Gameobject* AddGameobject(const char* name, Gameobject* parent = nullptr);
+	Gameobject* AddUIGameobject(const char* name, Gameobject* parent = nullptr);
+
+	void SetSelection(Gameobject* go = nullptr, bool call_unselect = true);
 	Gameobject* MouseClickSelect(int mouse_x, int mouse_y);
 
 	void SpawnMeleeIA(float x, float y);
@@ -112,7 +115,7 @@ public:
 	iPoint groupStart,mouseExtend;
 	bool groupSelect;
 	std::vector<Gameobject*> group;
-	
+	Gameobject* selection = nullptr;
 	// HUD
 	Gameobject* hud_canvas_go;
 	Gameobject* pause_background_go;

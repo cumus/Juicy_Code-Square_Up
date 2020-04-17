@@ -94,46 +94,6 @@ bool Editor::Update()
 		}
 	}
 
-	// Select Gameobject
-	if (mouse_left_button == KEY_DOWN && mouse_over_windows == 0u && !sizing)
-	{
-		SetSelection(App->scene->MouseClickSelect(x, y));
-
-
-		/*Gameobject* prev = selection;
-
-		if (selection != nullptr)
-		{
-			if (prev != nullptr)
-			{
-				if (prev != selection)
-				{
-					Event::Push(ON_UNSELECT, prev);
-					Event::Push(ON_SELECT, selection);
-				}
-			}
-			else
-				Event::Push(ON_SELECT, selection);
-		}
-		else if (prev != nullptr)
-			Event::Push(ON_UNSELECT, prev);*/
-
-		//selectedUnits.push_back(App->scene->MouseClickSelect(x, y));
-
-		/*if (selectedUnits.empty() == false)
-		{
-			for (std::vector<Gameobject*>::const_iterator it = selectedUnits.begin(); it != selectedUnits.end(); ++it)
-			{
-				if((*it) != nullptr) Event::Push(UNSELECTED, *it);
-			}
-			LOG("Previous units diselected");
-			selectedUnits.clear();
-		}			
-		selectedUnits.push_back(App->scene->MouseClickSelect(x, y));
-		LOG("Saved selection");
-		Event::Push(SELECTED, selectedUnits[0]);*/	
-	}
-
 	return true;
 }
 
@@ -152,7 +112,7 @@ bool Editor::CleanUp()
 
 bool Editor::MouseOnWindow() const
 {
-	return mouse_over_windows > 0u;
+	return !hide_windows && (mouse_over_windows > 0u || sizing);
 }
 
 bool Editor::Draw()
@@ -169,35 +129,4 @@ bool Editor::Draw()
 	}
 
 	return true;
-}
-
-void Editor::SetSelection(Gameobject* go, bool call_unselect)
-{
-	if (App->scene->group.empty() == false)
-	{
-		for (std::vector<Gameobject*>::iterator it = App->scene->group.begin(); it != App->scene->group.end(); ++it)
-		{
-			Event::Push(ON_UNSELECT, *it);
-		}
-	}
-		
-	if (go != nullptr)
-	{
-		if (selection != nullptr)
-		{
-			if (selection != go)
-			{
-				if (call_unselect)
-					Event::Push(ON_UNSELECT, selection);
-
-				Event::Push(ON_SELECT, go);
-			}
-		}
-		else
-			Event::Push(ON_SELECT, go);
-	}
-	else if (selection != nullptr && call_unselect)
-		Event::Push(ON_UNSELECT, selection);
-
-	selection = go;
 }

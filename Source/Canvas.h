@@ -14,12 +14,15 @@ public:
 	virtual ~UI_Component();
 
 	void ComputeOutputRect(float width, float height);
+	bool PointInsideOutputRect(int x, int y) const;
 
-public:
+protected:
 
 	static C_Canvas* canvas;
 	UI_Component* parent;
 	SDL_Rect output;
+
+public:
 
 	std::pair<float, float> offset;
 	RectF target;
@@ -32,14 +35,20 @@ public:
 	C_Canvas(Gameobject* go);
 	~C_Canvas();
 
+	void PreUpdate() override;
 	void PostUpdate() override;
 
 	void RecieveEvent(const Event& e) override;
 
+	static bool MouseOnUI();
+	static bool IsPlaying();
+	static Gameobject* GameObject();
+
 	std::pair<float, float> GetScale() const;
 
-public:
+protected:
 
+	unsigned int hovered_childs;
 	bool playing = false;
 };
 
@@ -82,7 +91,6 @@ public:
 	C_Button(Gameobject* go, const Event& e);
 	~C_Button();
 
-	void PreUpdate() override;
 	void PostUpdate() override;
 
 public:

@@ -25,18 +25,30 @@ UI_Component::~UI_Component()
 
 void UI_Component::ComputeOutputRect(float width, float height)
 {
-	std::pair<float, float> res_ratio = Render::GetResRatio();
-	std::pair<float, float> canvas_scale = canvas->GetScale();
+	if (canvas)
+	{
+		std::pair<float, float> res_ratio = Render::GetResRatio();
+		std::pair<float, float> canvas_scale = canvas->GetScale();
 
-	std::pair<float, float> total_scale = {
-		target.w * res_ratio.first * canvas_scale.first,
-		target.h * res_ratio.second * canvas_scale.second };
+		std::pair<float, float> total_scale = {
+			target.w * res_ratio.first * canvas_scale.first,
+			target.h * res_ratio.second * canvas_scale.second };
 
-	SDL_Rect p_output = parent->output;
-	output.x = p_output.x + int(float(p_output.w) * target.x + (offset.first * total_scale.first));
-	output.y = p_output.y + int(float(p_output.h) * target.y + (offset.second * total_scale.second));
-	output.w = int(width * total_scale.first);
-	output.h = int(height * total_scale.second);
+		SDL_Rect p_output = parent->output;
+		output.x = p_output.x + int(float(p_output.w) * target.x + (offset.first * total_scale.first));
+		output.y = p_output.y + int(float(p_output.h) * target.y + (offset.second * total_scale.second));
+		output.w = int(width * total_scale.first);
+		output.h = int(height * total_scale.second);
+	}
+	else
+	{
+		output = { 0, 0, 1, 1 };
+	}
+}
+
+bool UI_Component::PointInsideOutputRect(int x, int y) const
+{
+	return JMath::PointInsideRect(x, y, output);
 }
 
 C_Canvas::C_Canvas(Gameobject* go) : UI_Component(go, go->GetUIParent(), UI_CANVAS)
@@ -45,7 +57,24 @@ C_Canvas::C_Canvas(Gameobject* go) : UI_Component(go, go->GetUIParent(), UI_CANV
 }
 
 C_Canvas::~C_Canvas()
-{}
+{
+	//canvas = nullptr;
+}
+
+void C_Canvas::PreUpdate()
+{
+	hovered_childs = 0u;
+
+	int x, y;
+	App->input->GetMousePosition(x, y);
+	const std::vector<Gameobject*> childs = game_object->GetChilds();
+	for (std::vector<Gameobject*>::const_iterator it = childs.cbegin(); it != childs.cend(); ++it)
+	{
+		const UI_Component* comp = (*it)->GetUI();
+		if (comp && comp->PointInsideOutputRect(x, y))
+			hovered_childs++;
+	}
+}
 
 void C_Canvas::PostUpdate()
 {
@@ -58,7 +87,6 @@ void C_Canvas::PostUpdate()
 		output.h = int(target.h * float(output.h));
 
 		App->render->DrawQuad(output, { 255, 255, 255, 40 }, true, HUD, false);
-
 	}
 	else
 	{
@@ -88,6 +116,21 @@ void C_Canvas::RecieveEvent(const Event& e)
 	}
 }
 
+bool C_Canvas::MouseOnUI()
+{
+	return canvas && canvas->hovered_childs > 0;
+}
+
+bool C_Canvas::IsPlaying()
+{
+	return canvas && canvas->playing;
+}
+
+Gameobject* C_Canvas::GameObject()
+{
+	return canvas ? canvas->game_object : nullptr;
+}
+
 std::pair<float, float> C_Canvas::GetScale() const
 {
 	std::pair<float, float> ret[2] = { {target.w, target.h}, { 1.0f, 1.0f } };
@@ -103,11 +146,8 @@ C_Image::~C_Image()
 
 void C_Image::PostUpdate()
 {
-	if (parent && canvas)
-	{
-		ComputeOutputRect(float(section.w), float(section.h));
-		App->render->Blit_Scale(tex_id, output.x, output.y, float(output.w) / float(section.w), float(output.h) / float(section.h), &section, HUD, false);
-	}
+	ComputeOutputRect(float(section.w), float(section.h));
+	App->render->Blit_Scale(tex_id, output.x, output.y, float(output.w) / float(section.w), float(output.h) / float(section.h), &section, HUD, false);
 }
 
 C_Text::C_Text(Gameobject* go, const char* t, int font_id) :
@@ -123,7 +163,7 @@ C_Text::~C_Text()
 
 void C_Text::PostUpdate()
 {
-	if (parent && canvas && text)
+	if (text)
 	{
 		int width, height;
 		text->GetSize(width, height);
@@ -145,34 +185,24 @@ C_Button::~C_Button()
 {
 }
 
-void C_Button::PreUpdate()
-{
-	int x, y;
-	App->input->GetMousePosition(x, y);
-
-	if (mouse_inside = JMath::PointInsideRect(x, y, output))
-	{
-		if (event_triggered.listener)
-		{
-			KeyState mouse_click = App->input->GetMouseButtonDown(0);
-			if (mouse_click == KEY_DOWN || (trigger_while_pressed && mouse_click == KEY_REPEAT))
-			{
-				if (canvas && canvas->playing)
-					Event::Push(event_triggered);
-			}
-		}
-	}
-}
-
 void C_Button::PostUpdate()
 {
-	if (parent && canvas)
-	{
-		ComputeOutputRect(float(section.w), float(section.h));
+	ComputeOutputRect(float(section.w), float(section.h));
 
-		if (tex_id >= 0)
-			App->render->Blit_Scale(tex_id, output.x, output.y, float(output.w) / float(section.w), float(output.h) / float(section.h), &section, HUD, false);
-		else
-			App->render->DrawQuad(output, { 0, 0, 0, 255 }, true, HUD, false);
+	int x, y;
+	App->input->GetMousePosition(x, y);
+	if ((mouse_inside = PointInsideOutputRect(x, y)) && event_triggered.listener)
+	{
+		KeyState mouse_click = App->input->GetMouseButtonDown(0);
+		if (mouse_click == KEY_DOWN || (trigger_while_pressed && mouse_click == KEY_REPEAT))
+		{
+			if (C_Canvas::IsPlaying())
+				Event::Push(event_triggered);
+		}
 	}
+
+	if (tex_id >= 0)
+		App->render->Blit_Scale(tex_id, output.x, output.y, float(output.w) / float(section.w), float(output.h) / float(section.h), &section, HUD, false);
+	else
+		App->render->DrawQuad(output, { 0, 0, 0, 255 }, true, HUD, false);
 }

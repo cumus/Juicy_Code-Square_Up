@@ -1,6 +1,6 @@
 #include "Gameobject.h"
 #include "Application.h"
-#include "Editor.h"
+#include "Scene.h"
 #include "Audio.h"
 #include "Defs.h"
 #include "Transform.h"
@@ -85,8 +85,8 @@ void Gameobject::Update()
 		{
 			if (go_id == (*it)->id)
 			{
-				if (App->editor->selection == *it)
-					App->editor->SetSelection(nullptr, false);
+				if (App->scene->selection == *it)
+					App->scene->SetSelection(nullptr, false);
 				
 				DEL(*it);
 				childs.erase(it);
@@ -241,9 +241,11 @@ void Gameobject::AddComponent(Component* comp)
 {
 	if (comp)
 	{
-		ComponentType type = comp->GetType();
+		const ComponentType type = comp->GetType();
 		if (type == TRANSFORM)
 			transform = comp->AsTransform();
+		else if (type >= UI_GENERAL && type < UI_MAX)
+			ui = comp->AsUIComp();
 		else if (type >= BEHAVIOUR && type < MAX_BEHAVIOUR)
 			behaviour = comp->AsBehaviour();
 
