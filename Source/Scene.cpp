@@ -31,12 +31,20 @@
 
 #include <sstream>
 #include <string.h>
+#include <time.h>
 
 Scene::Scene() : Module("scene")
 {
 	root.SetName("root");
 	baseCenterPos.first = -1;
 	baseCenterPos.second = -1;
+	spawnPoints.push_back(vec(20,20,0.5));
+	spawnPoints.push_back(vec(30, 20, 0.5));
+	spawnPoints.push_back(vec(20, 30, 0.5));
+	currentSpawns = 0;
+	maxSpawns = 200;
+	spawnCounter = 0;
+	cooldownSpawn = 5.0f;
 }
 
 Scene::~Scene()
@@ -91,6 +99,71 @@ bool Scene::Update()
 
 		if (god_mode)
 			GodMode();
+
+		//////TEMPORAL/////
+		if (activateSpawn && spawnCounter >= cooldownSpawn)
+		{		
+			for (int a = 0; a < spawnPoints.size(); a++)
+			{
+				vec pos = spawnPoints[a];
+				bool incX = false;
+				for (int i = 0; i < 5; i++)
+				{
+					if (incX)
+					{
+						pos.x++;
+						incX = false;
+					}
+					else
+					{
+						pos.y++;
+						incX = true;
+					}
+
+					int random = std::rand() % 100 + 1;
+					if (random < MELEE_RATE) //Spawn melee
+					{
+						Gameobject* unit_go = AddGameobject("Enemy Melee unit");
+						unit_go->GetTransform()->SetLocalPos({ float(pos.x), float(pos.y), 0.0f });
+
+						new EnemyMeleeUnit(unit_go);
+					}
+					else if (random < (MELEE_RATE + RANGED_RATE)) //Spawn ranged
+					{
+						Gameobject* unit_go = AddGameobject("Enemy Melee unit");
+						unit_go->GetTransform()->SetLocalPos({ float(pos.x), float(pos.y), 0.0f });
+
+						new EnemyMeleeUnit(unit_go);
+					}
+					else if (random < (MELEE_RATE + RANGED_RATE + SUPER_RATE)) //Spawn super
+					{
+
+						Gameobject* unit_go = AddGameobject("Enemy Melee unit");
+						unit_go->GetTransform()->SetLocalPos({ float(pos.x), float(pos.y), 0.0f });
+
+						new EnemyMeleeUnit(unit_go);
+					}
+					else //Spawn special
+					{
+						Gameobject* unit_go = AddGameobject("Enemy Melee unit");
+						unit_go->GetTransform()->SetLocalPos({ float(pos.x), float(pos.y), 0.0f });
+
+						new EnemyMeleeUnit(unit_go);
+					}
+					currentSpawns++;
+					LOG("Spawned one");
+				}
+			}
+			spawnCounter = 0;
+			LOG("End ");
+			//std::srand(time(NULL));
+		}
+		else
+		{
+			spawnCounter += App->time.GetGameDeltaTime();
+		}
+		///////////////////
+
 
 		//Current Melee Units Updated Value
 		if (text_current_melee_units) {
@@ -1194,7 +1267,9 @@ void Scene::GodMode()
 
 	if (App->input->GetKey(SDL_SCANCODE_0) == KEY_DOWN) //Spawner
 	{
-		std::pair<int, int> position = Map::WorldToTileBase(float(x + cam.x), float(y + cam.y));
+		if (activateSpawn) activateSpawn = false;
+		else activateSpawn = true;
+		/*std::pair<int, int> position = Map::WorldToTileBase(float(x + cam.x), float(y + cam.y));
 		if (App->pathfinding.CheckWalkabilityArea(position, vec(1.0f)))
 		{
 			Gameobject* spawner_go = AddGameobject("Enemy spawner");
@@ -1203,7 +1278,7 @@ void Scene::GodMode()
 			new Spawner(spawner_go);
 		}
 		else
-			LOG("Invalid spawn position");
+			LOG("Invalid spawn position");*/
 	}
 
 	if (App->input->GetKey(SDL_SCANCODE_Z) == KEY_DOWN)

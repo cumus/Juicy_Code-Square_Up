@@ -90,6 +90,14 @@ public:
 	//IA
 	std::pair<int, int> baseCenterPos;
 
+	//Temporal/////
+	//Enemy spawn
+	std::vector<vec> spawnPoints;
+	bool activateSpawn = false;
+	int currentSpawns, maxSpawns;
+	float spawnCounter, cooldownSpawn;
+	//////////////
+
 	//Player Resources
 	int mob_drop = 0;
 	int edge_value = 100;
