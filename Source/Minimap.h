@@ -31,18 +31,15 @@ private:
 
 private:
 
-	SDL_Surface*	base_image;
-	SDL_Renderer*	renderer;
-	SDL_Texture*	map_texture;
-	SDL_Color		camera_color;
-	SDL_Color		unit_color;
-	SDL_Rect		minimap_camera;
-	Map				map;
+	Map		map;
 
-	SDL_Rect		ally;
-	SDL_Rect		enemy;
-	SDL_Rect		building;
+	SDL_Color	camera_color;
+	SDL_Color	unit_color;
+	SDL_Rect	minimap_camera;
+	SDL_Rect	background_rect;
+	RectF		background_ouput;
 
+	int		background_tex;
 	int		minimap_width;
 	int		minimap_height;
 	int		window_width;

@@ -18,12 +18,11 @@ Minimap::Minimap(Gameobject* go) :
 {
 	LOG("Starting minimap");
 
-	ally = { 0, 0, 0, 0 };
-	enemy = { 0, 0, 0, 0 };
-	building = { 0, 0, 0, 0 };
-
+	background_rect = { 585, 656, 969, 872 };
 	minimap_camera = { 0, 0, 0, 0 };
 	camera_color = { 255, 255, 255, 255 };
+	background_tex = App->tex.Load("textures/Iconos_square_up.png");
+	background_ouput = { (float)output.x, (float)output.y, (float)output.w, (float)output.h };
 
 	App->win->GetWindowSize(window_width, window_height);
 
@@ -35,7 +34,6 @@ Minimap::Minimap(Gameobject* go) :
 
 	tex_id = App->render->GetMinimap(section.w, section.h);
 	Event::Push(UPDATE_MINIMAP_TEXTURE, App->render);
-	
 }
 
 Minimap::~Minimap()
@@ -46,6 +44,7 @@ void Minimap::Update()
 {
 	SDL_Rect camera_getter = App->render->GetCameraRect();
 
+	App->render->BlitNorm(background_tex, background_ouput, &background_rect, EDITOR);
 	App->render->DrawQuad(output, { 255, 0, 0, 255 }, false, EDITOR, false);
 
 	//From map to minimap viewport
