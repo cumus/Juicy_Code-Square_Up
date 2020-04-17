@@ -22,7 +22,6 @@ Minimap::Minimap(Gameobject* go) :
 	minimap_camera = { 0, 0, 0, 0 };
 	camera_color = { 255, 255, 255, 255 };
 	background_tex = App->tex.Load("textures/Iconos_square_up.png");
-	background_ouput = { (float)output.x, (float)output.y, (float)output.w, (float)output.h };
 
 	App->win->GetWindowSize(window_width, window_height);
 
@@ -43,6 +42,7 @@ Minimap::~Minimap()
 void Minimap::Update()
 {
 	SDL_Rect camera_getter = App->render->GetCameraRect();
+	background_ouput = { (float)output.x, (float)output.y, (float)output.w, (float)output.h };
 
 	App->render->BlitNorm(background_tex, background_ouput, &background_rect, EDITOR);
 	App->render->DrawQuad(output, { 255, 0, 0, 255 }, false, EDITOR, false);

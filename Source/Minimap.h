@@ -40,8 +40,6 @@ private:
 	RectF		background_ouput;
 
 	int		background_tex;
-	int		minimap_width;
-	int		minimap_height;
 	int		window_width;
 	int		window_height;
 	bool	mouse_inside;
