@@ -37,11 +37,13 @@ private:
 	SDL_Color	unit_color;
 	SDL_Rect	minimap_camera;
 	SDL_Rect	background_rect;
-	RectF		background_ouput;
+	RectF		background_output;
 
 	int		background_tex;
 	int		window_width;
 	int		window_height;
+	float	scalex;
+	float	scaley;
 	bool	mouse_inside;
 	bool	map_charged;
 

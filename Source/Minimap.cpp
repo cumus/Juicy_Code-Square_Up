@@ -18,7 +18,7 @@ Minimap::Minimap(Gameobject* go) :
 {
 	LOG("Starting minimap");
 
-	background_rect = { 585, 656, 969, 872 };
+	background_rect = { 585, 656, 384, 216 };
 	minimap_camera = { 0, 0, 0, 0 };
 	camera_color = { 255, 255, 255, 255 };
 	background_tex = App->tex.Load("textures/Iconos_square_up.png");
@@ -42,11 +42,18 @@ Minimap::~Minimap()
 void Minimap::Update()
 {
 	SDL_Rect camera_getter = App->render->GetCameraRect();
-	background_ouput = { (float)output.x, (float)output.y, (float)output.w, (float)output.h };
+	background_output = { (float)output.x, (float)output.y, (float)output.w, (float)output.h };
 
-	App->render->BlitNorm(background_tex, background_ouput, &background_rect, EDITOR);
+	if (output.w != 0 && output.h != 0)
+	{
+		scalex = (background_rect.w / background_output.w) * (background_output.w / background_rect.w) * (background_output.w / background_rect.w);
+		scaley = (background_rect.h / background_output.h) * (background_output.h / background_rect.h) * (background_output.h / background_rect.h);
+	}
+
+	App->render->Blit_Scale(background_tex, output.x, output.y, scalex, scaley, &background_rect, HUD, false);
 	App->render->DrawQuad(output, { 255, 0, 0, 255 }, false, EDITOR, false);
 
+//-------------------------------------------------------------------------------------
 	//From map to minimap viewport
 	std::pair<float, float> tile_size = Map::GetTileSize_F();
 	std::pair<float, float> map_size = Map::GetMapSize_F();
