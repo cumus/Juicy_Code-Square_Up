@@ -156,6 +156,6 @@ void Minimap::Update()
 
 void Minimap::AddToMinimap(Gameobject* object, SDL_Color color)
 {
-	unit_color = color;
+	//unit_color = color;
 	object_queue.push_back(object);
 }
