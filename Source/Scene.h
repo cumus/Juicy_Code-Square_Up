@@ -94,6 +94,7 @@ private:
 	void UpdateBuildingMode();
 	void UpdatePause();
 	void UpdateSelection();
+	void UpdateSpawner();
 
 	void UpdateStateMachine();
 	void OnEventStateMachine(GameplayState state);

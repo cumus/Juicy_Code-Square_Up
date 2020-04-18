@@ -48,6 +48,7 @@ Scene::Scene() : Module("scene")
 	spawnCounter = 0;
 	cooldownSpawn = 5.0f;
 	last_cam_pos = { 0,0 };
+	minimap = nullptr;
 }
 
 Scene::~Scene()
@@ -69,12 +70,21 @@ bool Scene::Update()
 
 	UpdateStateMachine();
 
+	if (App->input->GetKey(SDL_SCANCODE_F10) == KEY_DOWN)
+			god_mode = !god_mode;
+
+	if (god_mode)
+			GodMode();
+
+	UpdateSpawner();
+
 	if (fading != NO_FADE)
 	{
 		UpdateFade();
 	}
 	else
 	{
+		
 		UpdateHUD();
 
 		if (placing_building)
@@ -333,8 +343,11 @@ bool Scene::LoadTestScene()
 	text_mobdrop_value->target = { 0.65f, 0.4f, 1.f, 1.f };
 	
 	//Minimap
-	Gameobject* minimap_go = AddGameobject("Minimap", hud_canvas_go);
-	minimap = new Minimap(minimap_go);
+	if (minimap != nullptr) {
+		Gameobject* minimap_go = AddGameobjectToCanvas("Minimap");
+		minimap = new Minimap(minimap_go);
+
+	}
 
 	// Build mode
 	Gameobject* builder = AddGameobject("Building Mode", hud_canvas_go);
@@ -356,18 +369,10 @@ bool Scene::LoadMainScene()
 
 	level = true;
 
-
 	building_bars_created = 0;
 
-	//------------------------- HUD CANVAS --------------------------------------
 
-	hud_canvas_go = AddGameobject("HUD Canvas", &root);
-	C_Canvas* hud_canv = new C_Canvas(hud_canvas_go);
-	hud_canv->target = { 0.3f, 0.3f, 0.4f, 0.4f };
-
-	//current_state = LORE;
-
-	lore_go = AddGameobject("lore", hud_canvas_go);
+	lore_go = AddGameobjectToCanvas("lore");
 	C_Image* lore = new C_Image(lore_go);
 	C_Button* next = new C_Button(lore_go, Event(GAMEPLAY, this, CAM_MOVEMENT));
 
@@ -380,6 +385,12 @@ bool Scene::LoadMainScene()
 	next->offset = { -525.f, 200.f };
 	next->section = { 0, 0, 1070, 207 };
 	next->tex_id = App->tex.Load("Assets/textures/button.png");
+
+
+
+	//Minimap
+	Gameobject* minimap_go = AddGameobjectToCanvas("Minimap");
+	minimap = new Minimap(minimap_go);
 
 	return map.Load("Assets/maps/iso.tmx") && App->audio->PlayMusic("Assets/audio/Music/alexander-nakarada-buzzkiller.ogg");
 }
@@ -872,12 +883,70 @@ void Scene::UpdateSelection()
 	}
 }
 
+void Scene::UpdateSpawner()
+{
+	//////TEMPORAL/////
+	if (activateSpawn && spawnCounter >= cooldownSpawn)
+	{
+		for (int a = 0; a < spawnPoints.size(); a++)
+		{
+			vec pos = spawnPoints[a];
+			bool incX = false;
+			for (int i = 0; i < 5; i++)
+			{
+				if (incX)
+				{
+					pos.x++;
+					incX = false;
+				}
+				else
+				{
+					pos.y++;
+					incX = true;
+				}
+
+				int random = std::rand() % 100 + 1;
+				if (random < MELEE_RATE) //Spawn melee
+				{
+					SpawnMeleeIA(pos.x, pos.y);
+				}
+				else if (random < (MELEE_RATE + RANGED_RATE)) //Spawn ranged
+				{
+					SpawnRangedIA(pos.x, pos.y);
+				}
+				else if (random < (MELEE_RATE + RANGED_RATE + SUPER_RATE)) //Spawn super
+				{
+
+					SpawnSuperIA(pos.x, pos.y);
+				}
+				else //Spawn special
+				{
+					SpawnSpecialIA(pos.x, pos.y);
+				}
+				currentSpawns++;
+				LOG("Spawned one");
+			}
+		}
+		spawnCounter = 0;
+		LOG("End ");
+		//std::srand(time(NULL));
+	}
+	else
+	{
+		spawnCounter += App->time.GetGameDeltaTime();
+	}
+	///////////////////
+}
+
 void Scene::UpdateStateMachine()
 {
 	switch (current_state)
 	{
 	case LORE:
-	{
+
+		break;
+	case CAM_MOVEMENT:
+
 		current_cam_pos = App->render->GetCameraCenter();
 		distance = JMath::Distance(last_cam_pos, current_cam_pos);
 
@@ -894,76 +963,79 @@ void Scene::UpdateStateMachine()
 		}
 		LOG("camera dist %f ", total_distance);
 
+		break;
+	case R_CLICK_MOVEMENT:
+		
 
-		if (App->input->GetKey(SDL_SCANCODE_F10) == KEY_DOWN)
-			god_mode = !god_mode;
 
-		if (god_mode)
-			GodMode();
 
-		if (units_killed == 200) {
+		break;
+	case EDGE_STATE:
+
+		break;
+	case BASE_CENTER_STATE:
+	
+		break;
+	case BARRACKS_STATE:
+	
+		break;
+	case RESOURCES:
+
+		break;
+	case MELEE:
+
+
+		break;
+	case ENEMY:
+
+
+		break;
+	case MELEE_ATK:
+
+
+		break;
+	case ENEMY_ATK:
+
+
+		break;
+	case MOBDROP:
+
+
+		break;
+	case BUILD:
+	
+
+		break;
+	case UPGRADE:
+
+
+		break;
+	case TOWER_STATE:
+
+
+		break;
+	case TOWER_ATK:
+
+
+		break;
+
+	case WIN:
+
+		if (units_killed >= 200) {
 			Event::Push(GAMEPLAY, this, WIN);
 		}
-		//////TEMPORAL/////
-		if (activateSpawn && spawnCounter >= cooldownSpawn)
-		{
-			for (int a = 0; a < spawnPoints.size(); a++)
-			{
-				vec pos = spawnPoints[a];
-				bool incX = false;
-				for (int i = 0; i < 5; i++)
-				{
-					if (incX)
-					{
-						pos.x++;
-						incX = false;
-					}
-					else
-					{
-						pos.y++;
-						incX = true;
-					}
 
-					int random = std::rand() % 100 + 1;
-					if (random < MELEE_RATE) //Spawn melee
-					{
-						SpawnMeleeIA(pos.x, pos.y);
-					}
-					else if (random < (MELEE_RATE + RANGED_RATE)) //Spawn ranged
-					{
-						SpawnRangedIA(pos.x, pos.y);
-					}
-					else if (random < (MELEE_RATE + RANGED_RATE + SUPER_RATE)) //Spawn super
-					{
-
-						SpawnSuperIA(pos.x, pos.y);
-					}
-					else //Spawn special
-					{
-						SpawnSpecialIA(pos.x, pos.y);
-					}
-					currentSpawns++;
-					LOG("Spawned one");
-				}
-			}
-			spawnCounter = 0;
-			LOG("End ");
-			//std::srand(time(NULL));
-		}
-		else
-		{
-			spawnCounter += App->time.GetGameDeltaTime();
-		}
-		///////////////////
-
-
-
-		if (units_killed >= 200) //Win condition
-		{
-			ChangeToScene(END);
-		}
 		break;
-	}
+	case LOSE:
+
+		
+
+		break;
+
+	default:
+		break;
+
+	
 	}
 }
 
@@ -977,7 +1049,7 @@ void Scene::OnEventStateMachine(GameplayState state)
 
 		cam_mov_go = AddGameobjectToCanvas("cam_mov");
 		cam_mov = new C_Image(cam_mov_go);
-		next = new C_Button(cam_mov_go, Event(SCENE_PLAY, this, MAIN));
+		next = new C_Button(cam_mov_go, Event(GAMEPLAY, this, R_CLICK_MOVEMENT));
 
 		cam_mov->target = { 0.66f, 0.95f, 0.6f, 0.6f };
 		cam_mov->offset = { -640.f, -985.f };
@@ -989,183 +1061,186 @@ void Scene::OnEventStateMachine(GameplayState state)
 		next->section = { 0, 0, 1070, 207 };
 		next->tex_id = App->tex.Load("Assets/textures/button.png");
 
+		current_state = CAM_MOVEMENT;
 		break;
 	case R_CLICK_MOVEMENT:
-		//cam_mov_go->SetInactive();
+	{
+		cam_mov_go->SetInactive();
 		//cam_mov_go->Destroy();
 
-		R_click_mov_go = AddGameobject("R_click_mov", hud_canvas_go);
+		R_click_mov_go = AddGameobjectToCanvas("R_click_mov");
 		R_click_mov = new C_Image(R_click_mov_go);
 		next = new C_Button(R_click_mov_go, Event(SCENE_PLAY, this, MAIN));
 
 		R_click_mov->target = { 0.66f, 0.95f, 0.6f, 0.6f };
 		R_click_mov->offset = { -640.f, -985.f };
 		R_click_mov->section = { 0, 0, 640, 985 };
-		R_click_mov->tex_id = App->tex.Load("textures/pause-bg.png");
+		R_click_mov->tex_id = App->tex.Load("Assets/textures/pause-bg.png");
 
 		next->target = { 0.70f, 0.45f, 0.3f, 0.3f };
 		next->offset = { -525.f, 200.f };
 		next->section = { 0, 0, 1070, 207 };
-		next->tex_id = App->tex.Load("textures/button.png");
+		next->tex_id = App->tex.Load("Assets/textures/button.png");
 
+		std::pair<float, float> current_cam_pos_t = Map::F_WorldToMap(current_cam_pos.first, current_cam_pos.second);
 
 
 		gather_go = AddGameobject("Tutorial Gatherer");
-		gather_go->GetTransform()->SetLocalPos({ float(current_cam_pos.first), float(current_cam_pos.second), 0.0f });
+		gather_go->GetTransform()->SetLocalPos({ current_cam_pos_t.first, current_cam_pos_t.second,0.0f });
 
 		//minimap->AddToMinimap(unit_go, { 0,255,0,255 });
 
 		new Gatherer(gather_go);
 
-
 		break;
+	}
 	case EDGE_STATE:
 		//Gatherer mines an previous spawned edge
-		edge_go = AddGameobject("edge_go", hud_canvas_go);
+		edge_go = AddGameobjectToCanvas("edge_go");
 		edge = new C_Image(edge_go);
 
 		edge->target = { 0.66f, 0.95f, 0.6f, 0.6f };
 		edge->offset = { -640.f, -985.f };
 		edge->section = { 0, 0, 640, 985 };
-		edge->tex_id = App->tex.Load("textures/pause-bg.png");
+		edge->tex_id = App->tex.Load("Assets/textures/pause-bg.png");
 
 		new Edge(edge_go);
 
 		break;
 	case BASE_CENTER_STATE:
-		base_center_go = AddGameobject("base_center_go", hud_canvas_go);
+		base_center_go = AddGameobjectToCanvas("base_center_go");
 		base_center = new C_Image(base_center_go);
 
 		base_center->target = { 0.66f, 0.95f, 0.6f, 0.6f };
 		base_center->offset = { -640.f, -985.f };
 		base_center->section = { 0, 0, 640, 985 };
-		base_center->tex_id = App->tex.Load("textures/pause-bg.png");
+		base_center->tex_id = App->tex.Load("Assets/textures/pause-bg.png");
 
 		new Base_Center(base_center_go);
 
 
 		break;
 	case BARRACKS_STATE:
-		barracks_state_go = AddGameobject("barracks_state_go", hud_canvas_go);
+		barracks_state_go = AddGameobjectToCanvas("barracks_state_go");
 		barracks_state = new C_Image(barracks_state_go);
 
 		barracks_state->target = { 0.66f, 0.95f, 0.6f, 0.6f };
 		barracks_state->offset = { -640.f, -985.f };
 		barracks_state->section = { 0, 0, 640, 985 };
-		barracks_state->tex_id = App->tex.Load("textures/pause-bg.png");
+		barracks_state->tex_id = App->tex.Load("Assets/textures/pause-bg.png");
 
 		// new Barracks(barracks_state_go); "no barracks class"
 
 		break;
 	case RESOURCES:
-		resources_state_go = AddGameobject("resources_state_go", hud_canvas_go);
+		resources_state_go = AddGameobjectToCanvas("resources_state_go");
 		resources = new C_Image(resources_state_go);
 
 		resources->target = { 0.66f, 0.95f, 0.6f, 0.6f };
 		resources->offset = { -640.f, -985.f };
 		resources->section = { 0, 0, 640, 985 };
-		resources->tex_id = App->tex.Load("textures/pause-bg.png");
+		resources->tex_id = App->tex.Load("Assets/textures/pause-bg.png");
 
 
 		break;
 	case MELEE:
-		melee_go = AddGameobject("melee_go", hud_canvas_go);
+		melee_go = AddGameobjectToCanvas("melee_go");
 		melee = new C_Image(melee_go);
 
 		melee->target = { 0.66f, 0.95f, 0.6f, 0.6f };
 		melee->offset = { -640.f, -985.f };
 		melee->section = { 0, 0, 640, 985 };
-		melee->tex_id = App->tex.Load("textures/pause-bg.png");
+		melee->tex_id = App->tex.Load("Assets/textures/pause-bg.png");
 
 		new MeleeUnit(melee_go);
 
 		break;
 	case ENEMY:
-		enemy_go = AddGameobject("enemy_go", hud_canvas_go);
+		enemy_go = AddGameobjectToCanvas("enemy_go");
 		enemy = new C_Image(enemy_go);
 
 		enemy->target = { 0.66f, 0.95f, 0.6f, 0.6f };
 		enemy->offset = { -640.f, -985.f };
 		enemy->section = { 0, 0, 640, 985 };
-		enemy->tex_id = App->tex.Load("textures/pause-bg.png");
+		enemy->tex_id = App->tex.Load("Assets/textures/pause-bg.png");
 
 		new EnemyMeleeUnit(enemy_go);
 
 		break;
 	case MELEE_ATK:
-		melee_atk_go = AddGameobject("melee_atk_go", hud_canvas_go);
+		melee_atk_go = AddGameobjectToCanvas("melee_atk_go");
 		melee_atk = new C_Image(melee_atk_go);
 
 		melee_atk->target = { 0.66f, 0.95f, 0.6f, 0.6f };
 		melee_atk->offset = { -640.f, -985.f };
 		melee_atk->section = { 0, 0, 640, 985 };
-		melee_atk->tex_id = App->tex.Load("textures/pause-bg.png");
+		melee_atk->tex_id = App->tex.Load("Assets/textures/pause-bg.png");
 
 		break;
 	case ENEMY_ATK:
-		enemy_atk_go = AddGameobject("enemy_atk_go", hud_canvas_go);
+		enemy_atk_go = AddGameobjectToCanvas("enemy_atk_go");
 		enemy_atk = new C_Image(enemy_atk_go);
 
 		enemy_atk->target = { 0.66f, 0.95f, 0.6f, 0.6f };
 		enemy_atk->offset = { -640.f, -985.f };
 		enemy_atk->section = { 0, 0, 640, 985 };
-		enemy_atk->tex_id = App->tex.Load("textures/pause-bg.png");
+		enemy_atk->tex_id = App->tex.Load("Assets/textures/pause-bg.png");
 
 		break;
 	case MOBDROP:
-		mobdrop_go = AddGameobject("mobdrop_go", hud_canvas_go);
+		mobdrop_go = AddGameobjectToCanvas("mobdrop_go");
 		mobdrop = new C_Image(mobdrop_go);
 
 		mobdrop->target = { 0.66f, 0.95f, 0.6f, 0.6f };
 		mobdrop->offset = { -640.f, -985.f };
 		mobdrop->section = { 0, 0, 640, 985 };
-		mobdrop->tex_id = App->tex.Load("textures/pause-bg.png");
+		mobdrop->tex_id = App->tex.Load("Assets/textures/pause-bg.png");
 
 
 
 		break;
 	case BUILD:
-		build_go = AddGameobject("build_go", hud_canvas_go);
+		build_go = AddGameobjectToCanvas("build_go");
 		build = new C_Image(build_go);
 
 		build->target = { 0.66f, 0.95f, 0.6f, 0.6f };
 		build->offset = { -640.f, -985.f };
 		build->section = { 0, 0, 640, 985 };
-		build->tex_id = App->tex.Load("textures/pause-bg.png");
+		build->tex_id = App->tex.Load("Assets/textures/pause-bg.png");
 
 		new Tower(build_go);
 
 		break;
 	case UPGRADE:
-		upgrade_go = AddGameobject("upgrade_go", hud_canvas_go);
+		upgrade_go = AddGameobjectToCanvas("upgrade_go");
 		upgrade = new C_Image(upgrade_go);
 
 		upgrade->target = { 0.66f, 0.95f, 0.6f, 0.6f };
 		upgrade->offset = { -640.f, -985.f };
 		upgrade->section = { 0, 0, 640, 985 };
-		upgrade->tex_id = App->tex.Load("textures/pause-bg.png");
+		upgrade->tex_id = App->tex.Load("Assets/textures/pause-bg.png");
 
 
 		break;
 	case TOWER_STATE:
-		tower_state_go = AddGameobject("tower_state_go", hud_canvas_go);
+		tower_state_go = AddGameobjectToCanvas("tower_state_go");
 		tower_state = new C_Image(tower_state_go);
 
 		tower_state->target = { 0.66f, 0.95f, 0.6f, 0.6f };
 		tower_state->offset = { -640.f, -985.f };
 		tower_state->section = { 0, 0, 640, 985 };
-		tower_state->tex_id = App->tex.Load("textures/pause-bg.png");
+		tower_state->tex_id = App->tex.Load("Assets/textures/pause-bg.png");
 
 
 		break;
 	case TOWER_ATK:
-		tower_atk_go = AddGameobject("tower_atk_go", hud_canvas_go);
+		tower_atk_go = AddGameobjectToCanvas("tower_atk_go");
 		tower_atk = new C_Image(tower_atk_go);
 
 		tower_atk->target = { 0.66f, 0.95f, 0.6f, 0.6f };
 		tower_atk->offset = { -640.f, -985.f };
 		tower_atk->section = { 0, 0, 640, 985 };
-		tower_atk->tex_id = App->tex.Load("textures/pause-bg.png");
+		tower_atk->tex_id = App->tex.Load("Assets/textures/pause-bg.png");
 
 
 		break;
@@ -1731,8 +1806,3 @@ void Scene::GodMode()
 
 	App->editor->Draw();
 }
-
-/*void Scene::StateMachine(const States state)
-{
-	
-}*/
