@@ -113,7 +113,7 @@ void EnemyMeleeUnit::IARangeCheck()
 					destPos.second = int(t->GetGlobalPosition().y)-1;
 					Event::Push(UPDATE_PATH, this->AsBehaviour(), int(t->GetGlobalPosition().x - 1), int(t->GetGlobalPosition().y - 1));
 					arriveDestination = false;
-					//LOG("repath");
+					LOG("repath");
 				}
 				else
 				{
@@ -130,7 +130,7 @@ void EnemyMeleeUnit::IARangeCheck()
 		{
 			if (!going_base && App->scene->baseCenterPos.first >= 0 && App->scene->baseCenterPos.second >= 0)//If no valid objective and not going to base, set path to base
 			{
-				//LOG("Path to base");
+				LOG("Path to base");
 				Event::Push(UPDATE_PATH, this->AsBehaviour(), App->scene->baseCenterPos.first - 1, App->scene->baseCenterPos.second - 1);
 				going_base = true;
 				arriveDestination = true;

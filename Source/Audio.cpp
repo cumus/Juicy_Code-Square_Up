@@ -186,7 +186,7 @@ void Audio::RecieveEvent(const Event& e)
 		for (std::map<double, SpatialData>::iterator it = sources.begin(); it != sources.end(); ++it)
 		{
 			it->second.Update(cam, it->second.pos);
-			LOG("Distance: %f cam(%f,%f), source(%f,%f)", it->second.distance, cam.first, cam.second, it->second.pos.first, it->second.pos.second);
+			//LOG("Distance: %f cam(%f,%f), source(%f,%f)", it->second.distance, cam.first, cam.second, it->second.pos.first, it->second.pos.second);
 		}
 		break;
 	}
