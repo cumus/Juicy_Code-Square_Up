@@ -169,7 +169,7 @@ void Tower::CreatePanel()
 
 	//------------------------- TOWER PANEL --------------------------------------
 
-	selectionPanel = App->scene->AddGameobject("Tower Panel", App->scene->hud_canvas_go);
+	selectionPanel = App->scene->AddGameobjectToCanvas("Tower Panel");
 
 
 	upgrade_btn = new C_Button(selectionPanel, Event(DO_UPGRADE, this->AsBehaviour()));//Top left
@@ -192,7 +192,7 @@ void Tower::create_bar() {
 
 	//------------------------- TOWER BAR --------------------------------------
 
-	bar_go = App->scene->AddGameobject("Tower Bar", App->scene->hud_canvas_go);
+	bar_go = App->scene->AddGameobjectToCanvas("Tower Bar");
 
 	bar = new C_Image(bar_go);
 	bar->target = { 0.41f, pos_y_HUD, 1.3f, 1.2f };

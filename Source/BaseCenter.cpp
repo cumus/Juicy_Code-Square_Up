@@ -83,7 +83,7 @@ void Base_Center::CreatePanel()
 
 	//------------------------- BASE PANEL --------------------------------------
 
-	selectionPanel = App->scene->AddGameobject("Main Base Build Panel", App->scene->hud_canvas_go);
+	selectionPanel = App->scene->AddGameobjectToCanvas("Main Base Build Panel");
 
 	panel = new C_Image(selectionPanel);
 	panel->target = { 0.9f, posY_panel, 1.0f, 1.0f };
@@ -130,7 +130,7 @@ void Base_Center::create_bar() {
 
 	//------------------------- BASE BAR --------------------------------------
 
-	bar_go = App->scene->AddGameobject("Main Base Bar", App->scene->hud_canvas_go);
+	bar_go = App->scene->AddGameobjectToCanvas("Main Base Bar");
 
 	bar = new C_Image(bar_go);
 	bar->target = { 0.465f, pos_y_HUD, 1.3f, 1.2f };
