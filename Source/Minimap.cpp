@@ -22,7 +22,7 @@ Minimap::Minimap(Gameobject* go) :
 	background_rect = { 585, 656, 384, 216 };
 	minimap_camera = { 0, 0, 0, 0 };
 	camera_color = { 255, 255, 255, 255 };
-	unit_color = {0,0,255,255};
+	//unit_color = {0,255,0,255};
 	minimapSel = false;
 	background_tex = App->tex.Load("Assets/textures/Iconos_square_up.png");
 
@@ -115,30 +115,30 @@ void Minimap::Update()
 
 	//-------------------------------------------------------------------------------------
 
-		//Units tu minimap (with coloured rect)
-		/*for (std::map<double, Behaviour*>::iterator it = Behaviour::b_map.begin(); it != Behaviour::b_map.end(); it++)
+	//Units tu minimap (with coloured rect)
+	for (std::map<double, Behaviour*>::iterator it = Behaviour::b_map.begin(); it != Behaviour::b_map.end(); it++)
+	{
+		if (it->second->AsBehaviour()->GetType() == UNIT_MELEE || it->second->AsBehaviour()->GetType() == GATHERER)
 		{
-			if (it->second->AsBehaviour()->GetType() == UNIT_MELEE || it->second->AsBehaviour()->GetType() == GATHERER)
-			{
-				LOG("Show unit");
-				SDL_Rect representation;
-				vec unit_pos = it->second->GetGameobject()->GetTransform()->GetGlobalPosition();
-				std::pair<float, float> world_pos = map.F_MapToWorld(unit_pos);
+			LOG("Show unit");
+			SDL_Rect representation;
+			vec unit_pos = it->second->GetGameobject()->GetTransform()->GetGlobalPosition();
+			std::pair<float, float> world_pos = map.F_MapToWorld(unit_pos);
 
-				representation.x = scale_x * world_pos.first - 1;
-				representation.y = scale_y * world_pos.second - 1;
-				representation.w = 2;
-				representation.h = 2;
+			representation.x = scale_x * world_pos.first - 1;
+			representation.y = scale_y * world_pos.second - 1;
+			representation.w = 2;
+			representation.h = 2;
 
-				representation.x += output.x + output.w / 2;
-				representation.y += output.y;
+			representation.x += output.x + output.w / 2;
+			representation.y += output.y;
 
-				App->render->DrawQuad(representation, unit_color, true, EDITOR, false);
+			App->render->DrawQuad(representation,  {0,255,0,255}, true, EDITOR, false);
 
-			}
-		}*/
+		}
+	}
 
-	for (std::list<Gameobject*>::iterator it = object_queue.begin(); it != object_queue.end(); it++)
+	/*for (std::list<Gameobject*>::iterator it = object_queue.begin(); it != object_queue.end(); it++)
 	{
 
 		SDL_Rect representation;
@@ -153,7 +153,7 @@ void Minimap::Update()
 		representation.x += output.x + output.w / 2;
 		representation.y += output.y;
 		App->render->DrawQuad(representation, {0,255,0,255}, true, EDITOR, false);
-	}
+	}*/
 
 }
 

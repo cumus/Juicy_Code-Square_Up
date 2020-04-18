@@ -752,14 +752,13 @@ void Scene::UpdateSelection()
 	{		
 		if (App->input->GetMouseButtonDown(0))
 		{
-			SetSelection(nullptr, true);
-
 			//GROUP SELECTION//
 			switch (App->input->GetMouseButtonDown(0))
 			{
 			case KEY_DOWN:
 			{
 				App->input->GetMousePosition(groupStart.x, groupStart.y);
+				SetSelection(nullptr, true);
 				break;
 			}
 			case KEY_REPEAT:
