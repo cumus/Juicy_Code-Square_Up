@@ -291,14 +291,14 @@ bool Audio::LoadFx(Audio_FX audio_fx)
 
 	switch (audio_fx)
 	{
-	case LOGO: audio_path += "audio/Effects/Intro/soda-open-and-pour-left-right.wav"; break;
-	case HAMMER: audio_path += "audio/Effects/Buildings/Nails/HamerNail13Hits.wav"; break;
-	case TITLE: audio_path += "audio/Effects/UI/Menu/Menu_Select.wav"; break;
-	case SELECT: audio_path += "audio/Effects/UI/Menu/Flashpoint001a.wav"; break;
-	case B_DESTROYED: audio_path += "audio/Effects/Buildings/Destroyed/PowerDown.wav"; break;
-	case B_BUILDED: audio_path += "audio/Effects/Buildings/Nails/HamerNail4Hits.wav"; break;
-	case UNIT_DIES: audio_path += "audio/Effects/Enemies/realistic_death_effect.wav"; break;
-	case EDGE_FX: audio_path += "audio/Effects/Buildings/Destroyed/superDestroy.ogg"; break;
+	case LOGO: audio_path += "Assets/audio/Effects/Intro/soda-open-and-pour-left-right.wav"; break;
+	case HAMMER: audio_path += "Assets/audio/Effects/Buildings/Nails/HamerNail13Hits.wav"; break;
+	case TITLE: audio_path += "Assets/audio/Effects/UI/Menu/Menu_Select.wav"; break;
+	case SELECT: audio_path += "Assets/audio/Effects/UI/Menu/Flashpoint001a.wav"; break;
+	case B_DESTROYED: audio_path += "Assets/audio/Effects/Buildings/Destroyed/PowerDown.wav"; break;
+	case B_BUILDED: audio_path += "Assets/audio/Effects/Buildings/Nails/HamerNail4Hits.wav"; break;
+	case UNIT_DIES: audio_path += "Assets/audio/Effects/Enemies/realistic_death_effect.wav"; break;
+	case EDGE_FX: audio_path += "Assets/audio/Effects/Buildings/Destroyed/superDestroy.ogg"; break;
 	default: break;
 	}
 

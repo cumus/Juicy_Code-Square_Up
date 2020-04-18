@@ -477,20 +477,20 @@ bool Scene::LoadTestScene()
 	god_mode = true;
 
 	// Play sample track
-	bool ret = App->audio->PlayMusic("audio/Music/alexander-nakarada-buzzkiller.ogg");
+	bool ret = App->audio->PlayMusic("Assets/audio/Music/alexander-nakarada-buzzkiller.ogg");
 
 	// Load mouse debug texture for identifying tiles
 	if (ret)
 	{
-		id_mouse_tex = App->tex.Load("textures/meta.png");
+		id_mouse_tex = App->tex.Load("Assets/textures/meta.png");
 		ret = (id_mouse_tex != -1);
 	}
 
-	if (ret) map.Load("maps/iso.tmx");
+	if (ret) map.Load("Assets/maps/iso.tmx");
 	
 	test = true;
 
-	int icons_text_id = App->tex.Load("textures/Iconos_square_up.png");
+	int icons_text_id = App->tex.Load("Assets/textures/Iconos_square_up.png");
 
 	building_bars_created = 0;
 	int current_melee_units = 0;
@@ -668,19 +668,15 @@ bool Scene::LoadMainScene()
 	lore->target = { 0.66f, 0.95f, 0.6f, 0.6f };
 	lore->offset = { -640.f, -985.f };
 	lore->section = { 0, 0, 640, 985 };
-	lore->tex_id = App->tex.Load("textures/pause-bg.png");
+	lore->tex_id = App->tex.Load("Assets/textures/pause-bg.png");
 
 	next->target = { 0.51f, 0.3f, 0.3f, 0.3f };
 	next->offset = { -525.f, 200.f };
 	next->section = { 0, 0, 1070, 207 };
-	next->tex_id = App->tex.Load("textures/button.png");
+	next->tex_id = App->tex.Load("Assets/textures/button.png");
 
 	//------------------------- HUD CANVAS --------------------------------------
-
-	
-
-
-	return map.Load("maps/iso.tmx") && App->audio->PlayMusic("audio/Music/alexander-nakarada-buzzkiller.ogg");
+	return map.Load("Assets/maps/iso.tmx") && App->audio->PlayMusic("Assets/audio/Music/alexander-nakarada-buzzkiller.ogg");
 }
 
 bool Scene::LoadIntroScene()
@@ -703,7 +699,7 @@ bool Scene::LoadIntroScene()
 	background->target = { 1.f, 1.f, 1.f, 1.f };
 	background->offset = { -1920.f, -1080.f };
 	background->section = { 0, 0, 1920, 1080 };
-	background->tex_id = App->tex.Load("textures/white.png");
+	background->tex_id = App->tex.Load("Assets/textures/white.png");
 	
 	Gameobject* logo_go = AddGameobject("Team logo", canvas_go);
 
@@ -711,7 +707,7 @@ bool Scene::LoadIntroScene()
 	logo->target = { 0.5f, 0.5f, 0.5f, 0.5f };
 	logo->offset = { -300.f, -400.f };
 	logo->section = { 0, 0, 499, 590 };
-	logo->tex_id = App->tex.Load("textures/team-logo2.png");
+	logo->tex_id = App->tex.Load("Assets/textures/team-logo2.png");
 
 	return ret;
 	
@@ -721,7 +717,7 @@ bool Scene::LoadMenuScene()
 {
 	OPTICK_EVENT();
 	// Play sample track
-	bool ret = App->audio->PlayMusic("audio/Music/alexander-nakarada-curiosity.ogg") && App->audio->PlayFx(TITLE);
+	bool ret = App->audio->PlayMusic("Assets/audio/Music/alexander-nakarada-curiosity.ogg") && App->audio->PlayFx(TITLE);
 
 	level = false;
 	test = false;
@@ -739,7 +735,7 @@ bool Scene::LoadMenuScene()
 	background->target = { 1.f, 1.f, 1.f, 1.f };
 	background->offset = { -1920.f, -1080.f };
 	background->section = { 0, 0, 1920, 1080 };
-	background->tex_id = App->tex.Load("textures/white.png");
+	background->tex_id = App->tex.Load("Assets/textures/white.png");
 
 	//------------------------- LOGO --------------------------------------
 
@@ -749,7 +745,7 @@ bool Scene::LoadMenuScene()
 	g_logo->target = { 0.5f, 0.5f, 0.5f, 0.5f };
 	g_logo->offset = { -525.f, -500.f };
 	g_logo->section = { 0, 0, 1070, 207 };
-	g_logo->tex_id = App->tex.Load("textures/game-logo.png");
+	g_logo->tex_id = App->tex.Load("Assets/textures/game-logo.png");
 	
 	//------------------------- START --------------------------------------
 
@@ -759,7 +755,7 @@ bool Scene::LoadMenuScene()
 	start->target = { 0.5f, 0.5f, 0.5f, 0.5f };
 	start->offset = { -525.f, -100.f };
 	start->section = { 0, 0, 1070, 207 };
-	start->tex_id = App->tex.Load("textures/play.png");
+	start->tex_id = App->tex.Load("Assets/textures/play.png");
 
 	C_Button* start_fx = new C_Button(start_go, Event(PLAY_FX, App->audio, int(SELECT), 0));
 	start_fx->target = { 0.5f, 0.5f, 0.5f, 0.5f };
@@ -774,7 +770,7 @@ bool Scene::LoadMenuScene()
 	quit->target = { 0.5f, 0.5f, 0.5f, 0.5f };
 	quit->offset = { -525.f, 200.f };
 	quit->section = { 0, 0, 1070, 207 };
-	quit->tex_id = App->tex.Load("textures/quit.png");
+	quit->tex_id = App->tex.Load("Assets/textures/quit.png");
 
 	C_Button* quit_fx = new C_Button(quit_go, Event(PLAY_FX, App->audio, int(SELECT), 0));
 	quit_fx->target = { 0.5f, 0.5f, 0.5f, 0.5f };
@@ -806,7 +802,7 @@ bool Scene::LoadEndScene()
 	background->target = { 1.f, 1.f, 1.f, 1.f };
 	background->offset = { -1920.f, -1080.f };
 	background->section = { 0, 0, 1920, 1080 };
-	background->tex_id = App->tex.Load("textures/white.png");
+	background->tex_id = App->tex.Load("Assets/textures/white.png");
 
 	//------------------------- WIN/LOSE --------------------------------------
 	if (win)
@@ -817,7 +813,7 @@ bool Scene::LoadEndScene()
 		win->target = { 0.58f, 0.2f, 0.5f, 0.5f };
 		win->offset = { -442.f, -117.f };
 		win->section = { 0, 0, 442, 117 };
-		win->tex_id = App->tex.Load("textures/youwin.png");
+		win->tex_id = App->tex.Load("Assets/textures/youwin.png");
 	}
 	else
 	{
@@ -838,7 +834,7 @@ bool Scene::LoadEndScene()
 	back->target = { 0.68f, 0.9f, 0.6f, 0.65f };
 	back->offset = { -783.f, -735.f };
 	back->section = { 0, 0, 783, 735 };
-	back->tex_id = App->tex.Load("textures/back.png");
+	back->tex_id = App->tex.Load("Assets/textures/back.png");
 
 	//------------------------- TIME --------------------------------------
 
@@ -848,8 +844,8 @@ bool Scene::LoadEndScene()
 	time->target = { 0.66f, 0.37f, 0.6f, 0.65f };
 	time->offset = { -693.f, -100.f };
 	time->section = { 0, 0, 693, 100 };
-	if (win) time->tex_id = App->tex.Load("textures/wtime.png");
-	else time->tex_id = App->tex.Load("textures/ltime.png");
+	if (win) time->tex_id = App->tex.Load("Assets/textures/wtime.png");
+	else time->tex_id = App->tex.Load("Assets/textures/ltime.png");
 
 	//------------------------- EDGE --------------------------------------
 
@@ -859,8 +855,8 @@ bool Scene::LoadEndScene()
 	edge->target = { 0.66f, 0.49f, 0.6f, 0.65f };
 	edge->offset = { -693.f, -100.f };
 	edge->section = { 0, 0, 693, 100 };
-	if (win) edge->tex_id = App->tex.Load("textures/wedge.png");
-	else edge->tex_id = App->tex.Load("textures/ledge.png");
+	if (win) edge->tex_id = App->tex.Load("Assets/textures/wedge.png");
+	else edge->tex_id = App->tex.Load("Assets/textures/ledge.png");
 
 	//------------------------- UNITS CREATED --------------------------------------
 
@@ -870,8 +866,8 @@ bool Scene::LoadEndScene()
 	units_c->target = { 0.66f, 0.61f, 0.6f, 0.65f };
 	units_c->offset = { -693.f, -100.f };
 	units_c->section = { 0, 0, 693, 100 };
-	if (win) units_c->tex_id = App->tex.Load("textures/wunits_c.png");
-	else units_c->tex_id = App->tex.Load("textures/lunits_c.png");
+	if (win) units_c->tex_id = App->tex.Load("Assets/textures/wunits_c.png");
+	else units_c->tex_id = App->tex.Load("Assets/textures/lunits_c.png");
 
 	//------------------------- UNITS LOST --------------------------------------
 
@@ -881,8 +877,8 @@ bool Scene::LoadEndScene()
 	units_l->target = { 0.66f, 0.73f, 0.6f, 0.65f };
 	units_l->offset = { -693.f, -100.f };
 	units_l->section = { 0, 0, 693, 100 };
-	if (win) units_l->tex_id = App->tex.Load("textures/wunits_l.png");
-	else units_l->tex_id = App->tex.Load("textures/lunits_l.png");
+	if (win) units_l->tex_id = App->tex.Load("Assets/textures/wunits_l.png");
+	else units_l->tex_id = App->tex.Load("Assets/textures/lunits_l.png");
 
 	//------------------------- UNITS KILLED --------------------------------------
 
@@ -892,11 +888,11 @@ bool Scene::LoadEndScene()
 	units_k->target = { 0.66f, 0.85f, 0.6f, 0.65f };
 	units_k->offset = { -693.f, -100.f };
 	units_k->section = { 0, 0, 693, 100 };
-	if (win) units_k->tex_id = App->tex.Load("textures/wunits_k.png");
-	else units_k->tex_id = App->tex.Load("textures/lunits_k.png");
+	if (win) units_k->tex_id = App->tex.Load("Assets/textures/wunits_k.png");
+	else units_k->tex_id = App->tex.Load("Assets/textures/lunits_k.png");
 
-	if (win) ret = App->audio->PlayMusic("audio/Music/alexander-nakarada-early-probe-eats-the-dust.ogg");
-	else ret = App->audio->PlayMusic("audio/Music/alexander-nakarada-inter7ude.ogg");
+	if (win) ret = App->audio->PlayMusic("Assets/audio/Music/alexander-nakarada-early-probe-eats-the-dust.ogg");
+	else ret = App->audio->PlayMusic("Assets/audio/Music/alexander-nakarada-inter7ude.ogg");
 
 	return ret;
 }
@@ -913,7 +909,7 @@ bool Scene::PauseMenu()
 	background->target = { 0.66f, 0.95f, 0.6f, 0.6f };
 	background->offset = { -640.f, -985.f };
 	background->section = { 0, 0, 640, 985 };
-	background->tex_id = App->tex.Load("textures/pause-bg.png");
+	background->tex_id = App->tex.Load("Assets/textures/pause-bg.png");
 
 	//------------------------- RESUME -----------------------------------------
 
@@ -923,7 +919,7 @@ bool Scene::PauseMenu()
 	resume->target = { 0.51f, 0.3f, 0.3f, 0.3f };
 	resume->offset = { -525.f, -100.f };
 	resume->section = { 0, 0, 1070, 207 };
-	resume->tex_id = App->tex.Load("textures/button.png");
+	resume->tex_id = App->tex.Load("Assets/textures/button.png");
 
 	C_Button* resume_fx = new C_Button(resume_go, Event(PLAY_FX, App->audio, int(SELECT), 0));
 	resume_fx->target = { 0.51f, 0.3f, 0.3f, 0.3f };
@@ -983,7 +979,7 @@ bool Scene::PauseMenu()
 	main_menu->target = { 0.51f, 0.3f, 0.3f, 0.3f };
 	main_menu->offset = { -525.f, 200.f  };
 	main_menu->section = { 0, 0, 1070, 207 };
-	main_menu->tex_id = App->tex.Load("textures/button.png");
+	main_menu->tex_id = App->tex.Load("Assets/textures/button.png");
 
 	C_Button* main_menu_fx = new C_Button(main_menu_go, Event(PLAY_FX, App->audio, int(SELECT), 0));
 	main_menu_fx->target = { 0.51f, 0.3f, 0.3f, 0.3f };

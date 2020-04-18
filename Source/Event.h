@@ -7,7 +7,7 @@
 
 class EventListener;
 
-enum EventType
+enum EventType : char
 {
 	// APP
 	REQUEST_DEFAULT_CONF,

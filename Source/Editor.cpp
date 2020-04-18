@@ -45,8 +45,10 @@ bool Editor::Start()
 {
 	bool ret = true;
 
-	for (std::vector<EditorWindow*>::iterator it = windows.begin(); it != windows.end() && ret; ++it)
-		ret = (*it)->Init();
+	int window_count = 0;
+	for (std::vector<EditorWindow*>::iterator it = windows.begin(); it != windows.end() && ret; ++it, ++window_count)
+		if (!(ret = (*it)->Init()))
+			LOG("Error loading window %d", window_count);
 
 	return ret;
 }
