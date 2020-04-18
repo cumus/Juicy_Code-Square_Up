@@ -191,7 +191,7 @@ void Behaviour::OnKill(const UnitType type)
 	case ENEMY_RANGED: App->scene->mob_drop += 10; App->scene->units_killed += 1; LOG("Player Mob Drop Value: %i", App->scene->mob_drop); break;
 	case ENEMY_SPECIAL: App->scene->mob_drop += 15; App->scene->units_killed += 1; LOG("Player Mob Drop Value: %i", App->scene->mob_drop); break;
 	case ENEMY_SUPER: App->scene->mob_drop += 20; App->scene->units_killed += 1; LOG("Player Mob Drop Value: %i", App->scene->mob_drop); break;
-	case BASE_CENTER: Event::Push(LOSE, this, MAIN); break;
+	case BASE_CENTER: Event::Push(GAMEPLAY, this, LOSE); break;
 	}
 	LOG("Debug Mob Drop Value: %i", App->scene->mob_drop);
 

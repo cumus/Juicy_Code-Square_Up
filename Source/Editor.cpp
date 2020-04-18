@@ -114,7 +114,7 @@ bool Editor::CleanUp()
 
 bool Editor::MouseOnWindow() const
 {
-	return !hide_windows && (mouse_over_windows > 0u || sizing);
+	return hide_windows ? false : (mouse_over_windows > 0u || sizing);
 }
 
 bool Editor::Draw()

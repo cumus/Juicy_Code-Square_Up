@@ -67,352 +67,24 @@ bool Scene::Update()
 
 	root.Update();
 
-	//StateMachine(current_state);
+	UpdateStateMachine();
 
 	if (fading != NO_FADE)
 	{
-		float alpha;
-		fade_timer += App->time.GetDeltaTime();
-
-		if (fading == FADE_OUT)
-		{
-			alpha = fade_timer / fade_duration * 255.f;
-
-			if (fade_timer >= fade_duration)
-			{
-				ChangeToScene(next_scene);
-				Event::Push(SCENE_PLAY, App);
-				fading = FADE_IN;
-				fade_timer = 0.f;
-			}
-		}
-		else if (fading == FADE_IN)
-		{
-			alpha = (fade_duration - fade_timer) / fade_duration * 255.f;
-
-			if (fade_timer >= fade_duration)
-				fading = NO_FADE;
-		}
-
-		if (fading != NO_FADE)
-			App->render->DrawQuadNormCoords({ 0.f, 0.f, 1.f, 1.f }, { 0, 0, 0, unsigned char(alpha) }, true, FADE);
+		UpdateFade();
 	}
 	else
 	{
-		current_cam_pos = App->render->GetCameraCenter();
-		distance = JMath::Distance(last_cam_pos, current_cam_pos);
-
-		if (distance > last_distance) {
-			total_distance += distance - last_distance;
-		}
-		else if (last_distance > distance) {
-			total_distance += last_distance - distance;
-		}
-		last_distance = distance;
-		if (total_distance >= 500.0f && r_c_comprobation) {
-			r_c_comprobation = false;
-			Event::Push(R_CLICK_MOVEMENT, this, MAIN);
-		}
-		LOG("camera dist %f ", total_distance);
-
-		
-		if (App->input->GetKey(SDL_SCANCODE_F10) == KEY_DOWN)
-			god_mode = !god_mode;
-
-		if (god_mode)
-			GodMode();
-
-		if (units_killed == 200) {
-			Event::Push(WIN, this, MAIN);
-		}
-		//////TEMPORAL/////
-		if (activateSpawn && spawnCounter >= cooldownSpawn)
-		{		
-			for (int a = 0; a < spawnPoints.size(); a++)
-			{
-				vec pos = spawnPoints[a];
-				bool incX = false;
-				for (int i = 0; i < 5; i++)
-				{
-					if (incX)
-					{
-						pos.x++;
-						incX = false;
-					}
-					else
-					{
-						pos.y++;
-						incX = true;
-					}
-
-					int random = std::rand() % 100 + 1;
-					if (random < MELEE_RATE) //Spawn melee
-					{
-						SpawnMeleeIA(pos.x,pos.y);
-					}
-					else if (random < (MELEE_RATE + RANGED_RATE)) //Spawn ranged
-					{
-						SpawnRangedIA(pos.x, pos.y);
-					}
-					else if (random < (MELEE_RATE + RANGED_RATE + SUPER_RATE)) //Spawn super
-					{
-
-						SpawnSuperIA(pos.x, pos.y);
-					}
-					else //Spawn special
-					{
-						SpawnSpecialIA(pos.x, pos.y);
-					}
-					currentSpawns++;
-					LOG("Spawned one");
-				}
-			}
-			spawnCounter = 0;
-			LOG("End ");
-			//std::srand(time(NULL));
-		}
-		else
-		{
-			spawnCounter += App->time.GetGameDeltaTime();
-		}
-		///////////////////
-
-
-		//Current Melee Units Updated Value
-		if (text_current_melee_units) {
-			std::stringstream ss;
-			ss << current_melee_units;
-			std::string temp_str = ss.str();
-			text_current_melee_units->text->SetText(temp_str.c_str());
-		}
-
-		//Melee Units Created Updated Value
-		if (text_melee_units_created) {
-			std::stringstream ss;
-			ss << melee_units_created;
-			std::string temp_str = ss.str();
-			text_melee_units_created->text->SetText(temp_str.c_str());
-		}
-
-		//Current Gatherer Units Updated Value
-		if (text_current_gatherer_units) {
-			std::stringstream ss;
-			ss << current_gatherer_units;
-			std::string temp_str = ss.str();
-			text_current_gatherer_units->text->SetText(temp_str.c_str());
-		}
-
-		//Gatherer Units Created Updated Value
-		if (text_gatherer_units_created) {
-			std::stringstream ss;
-			ss << gatherer_units_created;
-			std::string temp_str = ss.str();
-			text_gatherer_units_created->text->SetText(temp_str.c_str());
-		}
-
-		
-		//Current Ranged Units Updated Value
-		if (text_current_ranged_units) {
-			std::stringstream ss;
-			ss << current_ranged_units;
-			std::string temp_str = ss.str();
-			text_current_ranged_units->text->SetText(temp_str.c_str());
-		}
-
-		//Ranged Units Created Updated Value
-		if (text_ranged_units_created) {
-			std::stringstream ss;
-			ss << ranged_units_created;
-			std::string temp_str = ss.str();
-			text_ranged_units_created->text->SetText(temp_str.c_str());
-		}
-		
-		//Mob Drop Print Updated Value
-		if (text_mobdrop_value) {
-			std::stringstream ss;
-			ss << mob_drop;
-			std::string temp_str = ss.str();
-			text_mobdrop_value->text->SetText(temp_str.c_str());
-		}
-
-		//Edge Print Updated Value
-		if (text_edge_value) {
-			std::stringstream ss1;
-			ss1 << edge_value;
-			std::string temp_str1 = ss1.str();
-			text_edge_value->text->SetText(temp_str1.c_str());
-		}
-
-		if (units_killed >= 200) //Win condition
-		{
-			ChangeToScene(END);
-		}
+		UpdateHUD();
 
 		if (placing_building)
 		{
-			int x, y;
-			App->input->GetMousePosition(x, y);
-			RectF cam = App->render->GetCameraRectF();
-			std::pair<int, int> pos = Map::WorldToTileBase(float(x) + cam.x, float(y) + cam.y);
-			placing_building->SetLocalPos(vec(float(pos.first), float(pos.second), 0.f));
-
-			if (App->input->GetKey(SDL_SCANCODE_ESCAPE) == KEY_DOWN)
-			{
-				placing_building->GetGameobject()->Destroy();
-				placing_building = nullptr;
-			}
-			else if (App->input->GetMouseButtonDown(0) == KEY_DOWN)
-			{
-				PlaceMode(placing_building->GetGameobject()->GetBehaviour()->GetType());
-			}
+			UpdateBuildingMode();
 		}
 		else
 		{
-			//Pause Game
-			if ((test || level) && App->input->GetKey(SDL_SCANCODE_ESCAPE) == KEY_DOWN)
-			{
-				if (pause)
-				{
-					pause_background_go->SetInactive();
-					Event::Push(SCENE_PLAY, App);
-					pause = false;
-				}
-				else
-				{
-					Event::Push(SCENE_PAUSE, App);
-					PauseMenu();
-					pause = true;
-				}
-			}
-
-			if (!C_Canvas::MouseOnUI() && !App->editor->MouseOnWindow())
-			{
-				//GROUP SELECTION//
-				switch (App->input->GetMouseButtonDown(0))
-				{
-				case KEY_DOWN:
-				{
-					App->input->GetMousePosition(groupStart.x, groupStart.y);
-					break;
-				}
-				case KEY_REPEAT:
-				{
-					App->input->GetMousePosition(mouseExtend.x, mouseExtend.y);
-					App->render->DrawQuad({ groupStart.x, groupStart.y, mouseExtend.x - groupStart.x, mouseExtend.y - groupStart.y }, { 0, 200, 0, 100 }, false, SCENE, false);
-					App->render->DrawQuad({ groupStart.x, groupStart.y, mouseExtend.x - groupStart.x, mouseExtend.y - groupStart.y }, { 0, 200, 0, 50 }, true, SCENE, false);
-					break;
-				}
-				case KEY_UP:
-				{
-					SDL_Rect cam = App->render->GetCameraRect();
-					for (std::map<double, Behaviour*>::iterator it = Behaviour::b_map.begin(); it != Behaviour::b_map.end(); ++it)
-					{
-						if (it->second->GetType() == UNIT_MELEE || it->second->GetType() == GATHERER || it->second->GetType() == UNIT_RANGED || it->second->GetType() == BASE_CENTER || it->second->GetType() == TOWER)
-						{
-							vec pos = it->second->GetGameobject()->GetTransform()->GetGlobalPosition();
-							std::pair<float, float> posToWorld = Map::F_MapToWorld(pos.x, pos.y, pos.z);
-							posToWorld.first -= cam.x;
-							posToWorld.second -= cam.y;
-
-							if (posToWorld.first > groupStart.x && posToWorld.first < mouseExtend.x) //Right
-							{
-								if (posToWorld.second > groupStart.y && posToWorld.second < mouseExtend.y)//Up
-								{
-									group.push_back(it->second->GetGameobject());
-									Event::Push(ON_SELECT, it->second->GetGameobject());
-								}
-								else if (posToWorld.second < groupStart.y && posToWorld.second > mouseExtend.y)//Down
-								{
-									group.push_back(it->second->GetGameobject());
-									Event::Push(ON_SELECT, it->second->GetGameobject());
-								}
-							}
-							else if (posToWorld.first < groupStart.x && posToWorld.first > mouseExtend.x)//Left
-							{
-								if (posToWorld.second > groupStart.y && posToWorld.second < mouseExtend.y)//Up
-								{
-									group.push_back(it->second->GetGameobject());
-									Event::Push(ON_SELECT, it->second->GetGameobject());
-								}
-								else if (posToWorld.second < groupStart.y && posToWorld.second > mouseExtend.y)//Down
-								{
-									group.push_back(it->second->GetGameobject());
-									Event::Push(ON_SELECT, it->second->GetGameobject());
-								}
-							}
-						}
-					}
-					if (!group.empty()) groupSelect = true;
-					break;
-				}
-				default:
-					break;
-				}
-
-				//GROUP MOVEMENT//
-				if (!groupSelect && group.empty() == false)
-				{
-					std::vector<Gameobject*>::iterator it;
-					for (it = group.begin(); it != group.end(); ++it)
-					{
-						Event::Push(ON_UNSELECT, *it);
-					}
-					group.clear();
-				}
-
-				//SELECTION RIGHT CLICK//
-				if (App->input->GetMouseButtonDown(2) == KEY_DOWN)
-				{
-					int x, y;
-					App->input->GetMousePosition(x, y);
-					RectF cam = App->render->GetCameraRectF();
-					std::pair<float, float> mouseOnMap = Map::F_WorldToMap(float(x) + cam.x, float(y) + cam.y);
-					std::pair<float, float> modPos;
-					modPos.first = mouseOnMap.first;
-					modPos.second = mouseOnMap.second;
-
-					if (groupSelect && !group.empty())//Move group selected
-					{
-						bool incX = false;
-						for (std::vector<Gameobject*>::iterator it = group.begin(); it != group.end(); ++it)
-						{
-							while (App->pathfinding.ValidTile(int(modPos.first), int(modPos.second)) == false)
-							{
-								if (incX)
-								{
-									modPos.first++;
-									incX = false;
-								}
-								else
-								{
-									modPos.second++;
-									incX = true;
-								}
-							}
-							Event::Push(ON_RIGHT_CLICK, *it, vec(mouseOnMap.first, mouseOnMap.second, 0.5f), vec(modPos.first, modPos.second, 0.5f));
-							if (incX)
-							{
-								modPos.first++;
-								incX = false;
-							}
-							else
-							{
-								modPos.second++;
-								incX = true;
-							}
-						}
-					}
-					else//Move one selected
-					{
-						if (selection)
-						{
-							Event::Push(ON_RIGHT_CLICK, selection, vec(mouseOnMap.first, mouseOnMap.second, 0.5f), vec(-1, -1, -1));
-							groupSelect = false;
-						}
-						else groupSelect = false;
-					}
-				}
-			}
+			UpdatePause();
+			UpdateSelection();
 		}
 	}
 
@@ -488,219 +160,10 @@ void Scene::RecieveEvent(const Event& e)
 	case MOB_DROP: 
 		mob_drop += e.data1.AsInt();
 		break;
-		//------------------STATE MACHINE CASES-----------------------
-	case CAM_MOVEMENT:
-		lore_go->SetInactive();
-
-		cam_mov_go = AddGameobject("cam_mov", hud_canvas_go);
-		cam_mov = new C_Image(cam_mov_go);
-		next = new C_Button(cam_mov_go, Event(SCENE_PLAY, this, MAIN));
-
-		cam_mov->target = { 0.66f, 0.95f, 0.6f, 0.6f };
-		cam_mov->offset = { -640.f, -985.f };
-		cam_mov->section = { 0, 0, 640, 985 };
-		cam_mov->tex_id = App->tex.Load("textures/pause-bg.png");
-
-		next->target = { 0.60f, 0.35f, 0.3f, 0.3f };
-		next->offset = { -525.f, 200.f };
-		next->section = { 0, 0, 1070, 207 };
-		next->tex_id = App->tex.Load("textures/button.png");
-
-		break;
-	case R_CLICK_MOVEMENT:
-		//cam_mov_go->SetInactive();
-		//cam_mov_go->Destroy();
-
-		R_click_mov_go = AddGameobject("R_click_mov", hud_canvas_go);
-		R_click_mov = new C_Image(R_click_mov_go);
-		next = new C_Button(R_click_mov_go, Event(SCENE_PLAY, this, MAIN));
-
-		R_click_mov->target = { 0.66f, 0.95f, 0.6f, 0.6f };
-		R_click_mov->offset = { -640.f, -985.f };
-		R_click_mov->section = { 0, 0, 640, 985 };
-		R_click_mov->tex_id = App->tex.Load("textures/pause-bg.png");
-
-		next->target = { 0.70f, 0.45f, 0.3f, 0.3f };
-		next->offset = { -525.f, 200.f };
-		next->section = { 0, 0, 1070, 207 };
-		next->tex_id = App->tex.Load("textures/button.png");
-
-
-
-		gather_go = AddGameobject("Tutorial Gatherer");
-		gather_go->GetTransform()->SetLocalPos({ float(current_cam_pos.first), float(current_cam_pos.second), 0.0f });
-
-		//minimap->AddToMinimap(unit_go, { 0,255,0,255 });
-
-		new Gatherer(gather_go);
-
-
-		break;
-	case EDGE_STATE:
-		//Gatherer mines an previous spawned edge
-		edge_go = AddGameobject("edge_go", hud_canvas_go);
-		edge = new C_Image(edge_go);
-
-		edge->target = { 0.66f, 0.95f, 0.6f, 0.6f };
-		edge->offset = { -640.f, -985.f };
-		edge->section = { 0, 0, 640, 985 };
-		edge->tex_id = App->tex.Load("textures/pause-bg.png");
-
-		new Edge(edge_go);
-
-		break;
-	case BASE_CENTER_STATE:
-		base_center_go = AddGameobject("base_center_go", hud_canvas_go);
-		base_center = new C_Image(base_center_go);
-
-		base_center->target = { 0.66f, 0.95f, 0.6f, 0.6f };
-		base_center->offset = { -640.f, -985.f };
-		base_center->section = { 0, 0, 640, 985 };
-		base_center->tex_id = App->tex.Load("textures/pause-bg.png");
-
-		new Base_Center(base_center_go);
-
-
-		break;
-	case BARRACKS_STATE:
-		barracks_state_go = AddGameobject("barracks_state_go", hud_canvas_go);
-		barracks_state = new C_Image(barracks_state_go);
-
-		barracks_state->target = { 0.66f, 0.95f, 0.6f, 0.6f };
-		barracks_state->offset = { -640.f, -985.f };
-		barracks_state->section = { 0, 0, 640, 985 };
-		barracks_state->tex_id = App->tex.Load("textures/pause-bg.png");
-
-		// new Barracks(barracks_state_go); "no barracks class"
-
-		break;
-	case RESOURCES:
-		resources_state_go = AddGameobject("resources_state_go", hud_canvas_go);
-		resources = new C_Image(resources_state_go);
-
-		resources->target = { 0.66f, 0.95f, 0.6f, 0.6f };
-		resources->offset = { -640.f, -985.f };
-		resources->section = { 0, 0, 640, 985 };
-		resources->tex_id = App->tex.Load("textures/pause-bg.png");
-
-
-		break;
-	case MELEE:
-		melee_go = AddGameobject("melee_go", hud_canvas_go);
-		melee = new C_Image(melee_go);
-
-		melee->target = { 0.66f, 0.95f, 0.6f, 0.6f };
-		melee->offset = { -640.f, -985.f };
-		melee->section = { 0, 0, 640, 985 };
-		melee->tex_id = App->tex.Load("textures/pause-bg.png");
-
-		new MeleeUnit(melee_go);
-
-		break;
-	case ENEMY:
-		enemy_go = AddGameobject("enemy_go", hud_canvas_go);
-		enemy = new C_Image(enemy_go);
-
-		enemy->target = { 0.66f, 0.95f, 0.6f, 0.6f };
-		enemy->offset = { -640.f, -985.f };
-		enemy->section = { 0, 0, 640, 985 };
-		enemy->tex_id = App->tex.Load("textures/pause-bg.png");
-
-		new EnemyMeleeUnit(enemy_go);
-
-		break;
-	case MELEE_ATK:
-		melee_atk_go = AddGameobject("melee_atk_go", hud_canvas_go);
-		melee_atk = new C_Image(melee_atk_go);
-
-		melee_atk->target = { 0.66f, 0.95f, 0.6f, 0.6f };
-		melee_atk->offset = { -640.f, -985.f };
-		melee_atk->section = { 0, 0, 640, 985 };
-		melee_atk->tex_id = App->tex.Load("textures/pause-bg.png");
-
-		break;
-	case ENEMY_ATK:
-		enemy_atk_go = AddGameobject("enemy_atk_go", hud_canvas_go);
-		enemy_atk = new C_Image(enemy_atk_go);
-
-		enemy_atk->target = { 0.66f, 0.95f, 0.6f, 0.6f };
-		enemy_atk->offset = { -640.f, -985.f };
-		enemy_atk->section = { 0, 0, 640, 985 };
-		enemy_atk->tex_id = App->tex.Load("textures/pause-bg.png");
-
-		break;
-	case MOBDROP:
-		mobdrop_go = AddGameobject("mobdrop_go", hud_canvas_go);
-		mobdrop = new C_Image(mobdrop_go);
-
-		mobdrop->target = { 0.66f, 0.95f, 0.6f, 0.6f };
-		mobdrop->offset = { -640.f, -985.f };
-		mobdrop->section = { 0, 0, 640, 985 };
-		mobdrop->tex_id = App->tex.Load("textures/pause-bg.png");
-
-
-
-		break;
-	case BUILD:
-		build_go = AddGameobject("build_go", hud_canvas_go);
-		build = new C_Image(build_go);
-
-		build->target = { 0.66f, 0.95f, 0.6f, 0.6f };
-		build->offset = { -640.f, -985.f };
-		build->section = { 0, 0, 640, 985 };
-		build->tex_id = App->tex.Load("textures/pause-bg.png");
-
-		new Tower(build_go);
-
-		break;
-	case UPGRADE:
-		upgrade_go = AddGameobject("upgrade_go", hud_canvas_go);
-		upgrade = new C_Image(upgrade_go);
-
-		upgrade->target = { 0.66f, 0.95f, 0.6f, 0.6f };
-		upgrade->offset = { -640.f, -985.f };
-		upgrade->section = { 0, 0, 640, 985 };
-		upgrade->tex_id = App->tex.Load("textures/pause-bg.png");
-
-
-		break;
-	case TOWER_STATE:
-		tower_state_go = AddGameobject("tower_state_go", hud_canvas_go);
-		tower_state = new C_Image(tower_state_go);
-
-		tower_state->target = { 0.66f, 0.95f, 0.6f, 0.6f };
-		tower_state->offset = { -640.f, -985.f };
-		tower_state->section = { 0, 0, 640, 985 };
-		tower_state->tex_id = App->tex.Load("textures/pause-bg.png");
-
-
-		break;
-	case TOWER_ATK:
-		tower_atk_go = AddGameobject("tower_atk_go", hud_canvas_go);
-		tower_atk = new C_Image(tower_atk_go);
-
-		tower_atk->target = { 0.66f, 0.95f, 0.6f, 0.6f };
-		tower_atk->offset = { -640.f, -985.f };
-		tower_atk->section = { 0, 0, 640, 985 };
-		tower_atk->tex_id = App->tex.Load("textures/pause-bg.png");
-
-
-		break;
-
-	case WIN:
-		//Kill 200 units
-
-		win = true;
-		LoadEndScene();
-
-		break;
-	case LOSE:
-		//Base center destroyed
-
-		win = false;
-		LoadEndScene();
-
-		break;
+	case GAMEPLAY:
+	{
+		OnEventStateMachine(GameplayState(e.data1.AsInt()));
+	}
 	default:
 		break;
 	}
@@ -906,17 +369,17 @@ bool Scene::LoadMainScene()
 
 	lore_go = AddGameobject("lore", hud_canvas_go);
 	C_Image* lore = new C_Image(lore_go);
-	C_Button* next = new C_Button(lore_go, Event(CAM_MOVEMENT, this, MAIN));
+	C_Button* next = new C_Button(lore_go, Event(GAMEPLAY, this, CAM_MOVEMENT));
 
 	lore->target = { 0.66f, 0.95f, 0.6f, 0.6f };
 	lore->offset = { -640.f, -985.f };
 	lore->section = { 0, 0, 640, 985 };
-	lore->tex_id = App->tex.Load("textures/pause-bg.png");
+	lore->tex_id = App->tex.Load("Assets/textures/pause-bg.png");
 
 	next->target = { 0.51f, 0.3f, 0.3f, 0.3f };
 	next->offset = { -525.f, 200.f };
 	next->section = { 0, 0, 1070, 207 };
-	next->tex_id = App->tex.Load("textures/button.png");
+	next->tex_id = App->tex.Load("Assets/textures/button.png");
 
 	return map.Load("Assets/maps/iso.tmx") && App->audio->PlayMusic("Assets/audio/Music/alexander-nakarada-buzzkiller.ogg");
 }
@@ -1065,7 +528,7 @@ bool Scene::LoadEndScene()
 		lose->target = { 0.59f, 0.2f, 0.5f, 0.5f };
 		lose->offset = { -495.f, -117.f };
 		lose->section = { 0, 0, 495, 117 };
-		lose->tex_id = App->tex.Load("textures/youlose.png");
+		lose->tex_id = App->tex.Load("Assets/textures/youlose.png");
 	}
 
 	//------------------------- BACK --------------------------------------
@@ -1137,6 +600,593 @@ bool Scene::LoadEndScene()
 	else ret = App->audio->PlayMusic("Assets/audio/Music/alexander-nakarada-inter7ude.ogg");
 
 	return ret;
+}
+
+void Scene::UpdateFade()
+{
+	float alpha;
+	fade_timer += App->time.GetDeltaTime();
+
+	if (fading == FADE_OUT)
+	{
+		alpha = fade_timer / fade_duration * 255.f;
+
+		if (fade_timer >= fade_duration)
+		{
+			ChangeToScene(next_scene);
+			Event::Push(SCENE_PLAY, App);
+			fading = FADE_IN;
+			fade_timer = 0.f;
+		}
+	}
+	else if (fading == FADE_IN)
+	{
+		alpha = (fade_duration - fade_timer) / fade_duration * 255.f;
+
+		if (fade_timer >= fade_duration)
+			fading = NO_FADE;
+	}
+
+	if (fading != NO_FADE)
+		App->render->DrawQuadNormCoords({ 0.f, 0.f, 1.f, 1.f }, { 0, 0, 0, unsigned char(alpha) }, true, FADE);
+}
+
+void Scene::UpdateHUD()
+{
+	//Current Melee Units Updated Value
+	if (text_current_melee_units) {
+		std::stringstream ss;
+		ss << current_melee_units;
+		std::string temp_str = ss.str();
+		text_current_melee_units->text->SetText(temp_str.c_str());
+	}
+
+	//Melee Units Created Updated Value
+	if (text_melee_units_created) {
+		std::stringstream ss;
+		ss << melee_units_created;
+		std::string temp_str = ss.str();
+		text_melee_units_created->text->SetText(temp_str.c_str());
+	}
+
+	//Current Gatherer Units Updated Value
+	if (text_current_gatherer_units) {
+		std::stringstream ss;
+		ss << current_gatherer_units;
+		std::string temp_str = ss.str();
+		text_current_gatherer_units->text->SetText(temp_str.c_str());
+	}
+
+	//Gatherer Units Created Updated Value
+	if (text_gatherer_units_created) {
+		std::stringstream ss;
+		ss << gatherer_units_created;
+		std::string temp_str = ss.str();
+		text_gatherer_units_created->text->SetText(temp_str.c_str());
+	}
+
+
+	//Current Ranged Units Updated Value
+	if (text_current_ranged_units) {
+		std::stringstream ss;
+		ss << current_ranged_units;
+		std::string temp_str = ss.str();
+		text_current_ranged_units->text->SetText(temp_str.c_str());
+	}
+
+	//Ranged Units Created Updated Value
+	if (text_ranged_units_created) {
+		std::stringstream ss;
+		ss << ranged_units_created;
+		std::string temp_str = ss.str();
+		text_ranged_units_created->text->SetText(temp_str.c_str());
+	}
+
+	//Mob Drop Print Updated Value
+	if (text_mobdrop_value) {
+		std::stringstream ss;
+		ss << mob_drop;
+		std::string temp_str = ss.str();
+		text_mobdrop_value->text->SetText(temp_str.c_str());
+	}
+
+	//Edge Print Updated Value
+	if (text_edge_value) {
+		std::stringstream ss1;
+		ss1 << edge_value;
+		std::string temp_str1 = ss1.str();
+		text_edge_value->text->SetText(temp_str1.c_str());
+	}
+}
+
+void Scene::UpdateBuildingMode()
+{
+	if (App->input->GetKey(SDL_SCANCODE_ESCAPE) == KEY_DOWN)
+	{
+		placing_building->GetGameobject()->Destroy();
+		placing_building = nullptr;
+	}
+	else if (App->input->GetMouseButtonDown(0) == KEY_DOWN)
+	{
+		PlaceMode(placing_building->GetGameobject()->GetBehaviour()->GetType());
+	}
+	else
+	{
+		int x, y;
+		App->input->GetMousePosition(x, y);
+		RectF cam = App->render->GetCameraRectF();
+		std::pair<int, int> pos = Map::WorldToTileBase(float(x) + cam.x, float(y) + cam.y);
+		placing_building->SetLocalPos(vec(float(pos.first), float(pos.second), 0.f));
+	}
+}
+
+void Scene::UpdatePause()
+{
+	//Pause Game
+	if ((test || level) && App->input->GetKey(SDL_SCANCODE_ESCAPE) == KEY_DOWN)
+	{
+		if (pause)
+		{
+			pause_background_go->SetInactive();
+			Event::Push(SCENE_PLAY, App);
+			pause = false;
+		}
+		else
+		{
+			Event::Push(SCENE_PAUSE, App);
+			PauseMenu();
+			pause = true;
+		}
+	}
+}
+
+void Scene::UpdateSelection()
+{
+	if (!C_Canvas::MouseOnUI() && !App->editor->MouseOnWindow())
+	{
+		//GROUP SELECTION//
+		switch (App->input->GetMouseButtonDown(0))
+		{
+		case KEY_DOWN:
+		{
+			App->input->GetMousePosition(groupStart.x, groupStart.y);
+			break;
+		}
+		case KEY_REPEAT:
+		{
+			App->input->GetMousePosition(mouseExtend.x, mouseExtend.y);
+			App->render->DrawQuad({ groupStart.x, groupStart.y, mouseExtend.x - groupStart.x, mouseExtend.y - groupStart.y }, { 0, 200, 0, 100 }, false, SCENE, false);
+			App->render->DrawQuad({ groupStart.x, groupStart.y, mouseExtend.x - groupStart.x, mouseExtend.y - groupStart.y }, { 0, 200, 0, 50 }, true, SCENE, false);
+			break;
+		}
+		case KEY_UP:
+		{
+			SDL_Rect cam = App->render->GetCameraRect();
+			for (std::map<double, Behaviour*>::iterator it = Behaviour::b_map.begin(); it != Behaviour::b_map.end(); ++it)
+			{
+				if (it->second->GetType() == UNIT_MELEE || it->second->GetType() == GATHERER || it->second->GetType() == UNIT_RANGED || it->second->GetType() == BASE_CENTER || it->second->GetType() == TOWER)
+				{
+					vec pos = it->second->GetGameobject()->GetTransform()->GetGlobalPosition();
+					std::pair<float, float> posToWorld = Map::F_MapToWorld(pos.x, pos.y, pos.z);
+					posToWorld.first -= cam.x;
+					posToWorld.second -= cam.y;
+
+					if (posToWorld.first > groupStart.x && posToWorld.first < mouseExtend.x) //Right
+					{
+						if (posToWorld.second > groupStart.y && posToWorld.second < mouseExtend.y)//Up
+						{
+							group.push_back(it->second->GetGameobject());
+							Event::Push(ON_SELECT, it->second->GetGameobject());
+						}
+						else if (posToWorld.second < groupStart.y && posToWorld.second > mouseExtend.y)//Down
+						{
+							group.push_back(it->second->GetGameobject());
+							Event::Push(ON_SELECT, it->second->GetGameobject());
+						}
+					}
+					else if (posToWorld.first < groupStart.x && posToWorld.first > mouseExtend.x)//Left
+					{
+						if (posToWorld.second > groupStart.y && posToWorld.second < mouseExtend.y)//Up
+						{
+							group.push_back(it->second->GetGameobject());
+							Event::Push(ON_SELECT, it->second->GetGameobject());
+						}
+						else if (posToWorld.second < groupStart.y && posToWorld.second > mouseExtend.y)//Down
+						{
+							group.push_back(it->second->GetGameobject());
+							Event::Push(ON_SELECT, it->second->GetGameobject());
+						}
+					}
+				}
+			}
+			if (!group.empty()) groupSelect = true;
+			break;
+		}
+		default:
+			break;
+		}
+
+		//GROUP MOVEMENT//
+		if (!groupSelect && group.empty() == false)
+		{
+			std::vector<Gameobject*>::iterator it;
+			for (it = group.begin(); it != group.end(); ++it)
+			{
+				Event::Push(ON_UNSELECT, *it);
+			}
+			group.clear();
+		}
+
+		//SELECTION RIGHT CLICK//
+		if (App->input->GetMouseButtonDown(2) == KEY_DOWN)
+		{
+			int x, y;
+			App->input->GetMousePosition(x, y);
+			RectF cam = App->render->GetCameraRectF();
+			std::pair<float, float> mouseOnMap = Map::F_WorldToMap(float(x) + cam.x, float(y) + cam.y);
+			std::pair<float, float> modPos;
+			modPos.first = mouseOnMap.first;
+			modPos.second = mouseOnMap.second;
+
+			if (groupSelect && !group.empty())//Move group selected
+			{
+				bool incX = false;
+				for (std::vector<Gameobject*>::iterator it = group.begin(); it != group.end(); ++it)
+				{
+					while (App->pathfinding.ValidTile(int(modPos.first), int(modPos.second)) == false)
+					{
+						if (incX)
+						{
+							modPos.first++;
+							incX = false;
+						}
+						else
+						{
+							modPos.second++;
+							incX = true;
+						}
+					}
+					Event::Push(ON_RIGHT_CLICK, *it, vec(mouseOnMap.first, mouseOnMap.second, 0.5f), vec(modPos.first, modPos.second, 0.5f));
+					if (incX)
+					{
+						modPos.first++;
+						incX = false;
+					}
+					else
+					{
+						modPos.second++;
+						incX = true;
+					}
+				}
+			}
+			else//Move one selected
+			{
+				if (selection)
+				{
+					Event::Push(ON_RIGHT_CLICK, selection, vec(mouseOnMap.first, mouseOnMap.second, 0.5f), vec(-1, -1, -1));
+					groupSelect = false;
+				}
+				else groupSelect = false;
+			}
+		}
+	}
+}
+
+void Scene::UpdateStateMachine()
+{
+	switch (current_state)
+	{
+	case LORE:
+	{
+		current_cam_pos = App->render->GetCameraCenter();
+		distance = JMath::Distance(last_cam_pos, current_cam_pos);
+
+		if (distance > last_distance) {
+			total_distance += distance - last_distance;
+		}
+		else if (last_distance > distance) {
+			total_distance += last_distance - distance;
+		}
+		last_distance = distance;
+		if (total_distance >= 500.0f && r_c_comprobation) {
+			r_c_comprobation = false;
+			Event::Push(GAMEPLAY, this, R_CLICK_MOVEMENT);
+		}
+		LOG("camera dist %f ", total_distance);
+
+
+		if (App->input->GetKey(SDL_SCANCODE_F10) == KEY_DOWN)
+			god_mode = !god_mode;
+
+		if (god_mode)
+			GodMode();
+
+		if (units_killed == 200) {
+			Event::Push(GAMEPLAY, this, WIN);
+		}
+		//////TEMPORAL/////
+		if (activateSpawn && spawnCounter >= cooldownSpawn)
+		{
+			for (int a = 0; a < spawnPoints.size(); a++)
+			{
+				vec pos = spawnPoints[a];
+				bool incX = false;
+				for (int i = 0; i < 5; i++)
+				{
+					if (incX)
+					{
+						pos.x++;
+						incX = false;
+					}
+					else
+					{
+						pos.y++;
+						incX = true;
+					}
+
+					int random = std::rand() % 100 + 1;
+					if (random < MELEE_RATE) //Spawn melee
+					{
+						SpawnMeleeIA(pos.x, pos.y);
+					}
+					else if (random < (MELEE_RATE + RANGED_RATE)) //Spawn ranged
+					{
+						SpawnRangedIA(pos.x, pos.y);
+					}
+					else if (random < (MELEE_RATE + RANGED_RATE + SUPER_RATE)) //Spawn super
+					{
+
+						SpawnSuperIA(pos.x, pos.y);
+					}
+					else //Spawn special
+					{
+						SpawnSpecialIA(pos.x, pos.y);
+					}
+					currentSpawns++;
+					LOG("Spawned one");
+				}
+			}
+			spawnCounter = 0;
+			LOG("End ");
+			//std::srand(time(NULL));
+		}
+		else
+		{
+			spawnCounter += App->time.GetGameDeltaTime();
+		}
+		///////////////////
+
+
+
+		if (units_killed >= 200) //Win condition
+		{
+			ChangeToScene(END);
+		}
+		break;
+	}
+	}
+}
+
+void Scene::OnEventStateMachine(GameplayState state)
+{
+	switch (state)
+	{
+		//------------------STATE MACHINE CASES-----------------------
+	case CAM_MOVEMENT:
+		lore_go->SetInactive();
+
+		cam_mov_go = AddGameobjectToCanvas("cam_mov");
+		cam_mov = new C_Image(cam_mov_go);
+		next = new C_Button(cam_mov_go, Event(SCENE_PLAY, this, MAIN));
+
+		cam_mov->target = { 0.66f, 0.95f, 0.6f, 0.6f };
+		cam_mov->offset = { -640.f, -985.f };
+		cam_mov->section = { 0, 0, 640, 985 };
+		cam_mov->tex_id = App->tex.Load("Assets/textures/pause-bg.png");
+
+		next->target = { 0.60f, 0.35f, 0.3f, 0.3f };
+		next->offset = { -525.f, 200.f };
+		next->section = { 0, 0, 1070, 207 };
+		next->tex_id = App->tex.Load("Assets/textures/button.png");
+
+		break;
+	case R_CLICK_MOVEMENT:
+		//cam_mov_go->SetInactive();
+		//cam_mov_go->Destroy();
+
+		R_click_mov_go = AddGameobject("R_click_mov", hud_canvas_go);
+		R_click_mov = new C_Image(R_click_mov_go);
+		next = new C_Button(R_click_mov_go, Event(SCENE_PLAY, this, MAIN));
+
+		R_click_mov->target = { 0.66f, 0.95f, 0.6f, 0.6f };
+		R_click_mov->offset = { -640.f, -985.f };
+		R_click_mov->section = { 0, 0, 640, 985 };
+		R_click_mov->tex_id = App->tex.Load("textures/pause-bg.png");
+
+		next->target = { 0.70f, 0.45f, 0.3f, 0.3f };
+		next->offset = { -525.f, 200.f };
+		next->section = { 0, 0, 1070, 207 };
+		next->tex_id = App->tex.Load("textures/button.png");
+
+
+
+		gather_go = AddGameobject("Tutorial Gatherer");
+		gather_go->GetTransform()->SetLocalPos({ float(current_cam_pos.first), float(current_cam_pos.second), 0.0f });
+
+		//minimap->AddToMinimap(unit_go, { 0,255,0,255 });
+
+		new Gatherer(gather_go);
+
+
+		break;
+	case EDGE_STATE:
+		//Gatherer mines an previous spawned edge
+		edge_go = AddGameobject("edge_go", hud_canvas_go);
+		edge = new C_Image(edge_go);
+
+		edge->target = { 0.66f, 0.95f, 0.6f, 0.6f };
+		edge->offset = { -640.f, -985.f };
+		edge->section = { 0, 0, 640, 985 };
+		edge->tex_id = App->tex.Load("textures/pause-bg.png");
+
+		new Edge(edge_go);
+
+		break;
+	case BASE_CENTER_STATE:
+		base_center_go = AddGameobject("base_center_go", hud_canvas_go);
+		base_center = new C_Image(base_center_go);
+
+		base_center->target = { 0.66f, 0.95f, 0.6f, 0.6f };
+		base_center->offset = { -640.f, -985.f };
+		base_center->section = { 0, 0, 640, 985 };
+		base_center->tex_id = App->tex.Load("textures/pause-bg.png");
+
+		new Base_Center(base_center_go);
+
+
+		break;
+	case BARRACKS_STATE:
+		barracks_state_go = AddGameobject("barracks_state_go", hud_canvas_go);
+		barracks_state = new C_Image(barracks_state_go);
+
+		barracks_state->target = { 0.66f, 0.95f, 0.6f, 0.6f };
+		barracks_state->offset = { -640.f, -985.f };
+		barracks_state->section = { 0, 0, 640, 985 };
+		barracks_state->tex_id = App->tex.Load("textures/pause-bg.png");
+
+		// new Barracks(barracks_state_go); "no barracks class"
+
+		break;
+	case RESOURCES:
+		resources_state_go = AddGameobject("resources_state_go", hud_canvas_go);
+		resources = new C_Image(resources_state_go);
+
+		resources->target = { 0.66f, 0.95f, 0.6f, 0.6f };
+		resources->offset = { -640.f, -985.f };
+		resources->section = { 0, 0, 640, 985 };
+		resources->tex_id = App->tex.Load("textures/pause-bg.png");
+
+
+		break;
+	case MELEE:
+		melee_go = AddGameobject("melee_go", hud_canvas_go);
+		melee = new C_Image(melee_go);
+
+		melee->target = { 0.66f, 0.95f, 0.6f, 0.6f };
+		melee->offset = { -640.f, -985.f };
+		melee->section = { 0, 0, 640, 985 };
+		melee->tex_id = App->tex.Load("textures/pause-bg.png");
+
+		new MeleeUnit(melee_go);
+
+		break;
+	case ENEMY:
+		enemy_go = AddGameobject("enemy_go", hud_canvas_go);
+		enemy = new C_Image(enemy_go);
+
+		enemy->target = { 0.66f, 0.95f, 0.6f, 0.6f };
+		enemy->offset = { -640.f, -985.f };
+		enemy->section = { 0, 0, 640, 985 };
+		enemy->tex_id = App->tex.Load("textures/pause-bg.png");
+
+		new EnemyMeleeUnit(enemy_go);
+
+		break;
+	case MELEE_ATK:
+		melee_atk_go = AddGameobject("melee_atk_go", hud_canvas_go);
+		melee_atk = new C_Image(melee_atk_go);
+
+		melee_atk->target = { 0.66f, 0.95f, 0.6f, 0.6f };
+		melee_atk->offset = { -640.f, -985.f };
+		melee_atk->section = { 0, 0, 640, 985 };
+		melee_atk->tex_id = App->tex.Load("textures/pause-bg.png");
+
+		break;
+	case ENEMY_ATK:
+		enemy_atk_go = AddGameobject("enemy_atk_go", hud_canvas_go);
+		enemy_atk = new C_Image(enemy_atk_go);
+
+		enemy_atk->target = { 0.66f, 0.95f, 0.6f, 0.6f };
+		enemy_atk->offset = { -640.f, -985.f };
+		enemy_atk->section = { 0, 0, 640, 985 };
+		enemy_atk->tex_id = App->tex.Load("textures/pause-bg.png");
+
+		break;
+	case MOBDROP:
+		mobdrop_go = AddGameobject("mobdrop_go", hud_canvas_go);
+		mobdrop = new C_Image(mobdrop_go);
+
+		mobdrop->target = { 0.66f, 0.95f, 0.6f, 0.6f };
+		mobdrop->offset = { -640.f, -985.f };
+		mobdrop->section = { 0, 0, 640, 985 };
+		mobdrop->tex_id = App->tex.Load("textures/pause-bg.png");
+
+
+
+		break;
+	case BUILD:
+		build_go = AddGameobject("build_go", hud_canvas_go);
+		build = new C_Image(build_go);
+
+		build->target = { 0.66f, 0.95f, 0.6f, 0.6f };
+		build->offset = { -640.f, -985.f };
+		build->section = { 0, 0, 640, 985 };
+		build->tex_id = App->tex.Load("textures/pause-bg.png");
+
+		new Tower(build_go);
+
+		break;
+	case UPGRADE:
+		upgrade_go = AddGameobject("upgrade_go", hud_canvas_go);
+		upgrade = new C_Image(upgrade_go);
+
+		upgrade->target = { 0.66f, 0.95f, 0.6f, 0.6f };
+		upgrade->offset = { -640.f, -985.f };
+		upgrade->section = { 0, 0, 640, 985 };
+		upgrade->tex_id = App->tex.Load("textures/pause-bg.png");
+
+
+		break;
+	case TOWER_STATE:
+		tower_state_go = AddGameobject("tower_state_go", hud_canvas_go);
+		tower_state = new C_Image(tower_state_go);
+
+		tower_state->target = { 0.66f, 0.95f, 0.6f, 0.6f };
+		tower_state->offset = { -640.f, -985.f };
+		tower_state->section = { 0, 0, 640, 985 };
+		tower_state->tex_id = App->tex.Load("textures/pause-bg.png");
+
+
+		break;
+	case TOWER_ATK:
+		tower_atk_go = AddGameobject("tower_atk_go", hud_canvas_go);
+		tower_atk = new C_Image(tower_atk_go);
+
+		tower_atk->target = { 0.66f, 0.95f, 0.6f, 0.6f };
+		tower_atk->offset = { -640.f, -985.f };
+		tower_atk->section = { 0, 0, 640, 985 };
+		tower_atk->tex_id = App->tex.Load("textures/pause-bg.png");
+
+
+		break;
+
+	case WIN:
+		//Kill 200 units
+
+		win = true;
+		LoadEndScene();
+
+		break;
+	case LOSE:
+		//Base center destroyed
+
+		win = false;
+		LoadEndScene();
+
+		break;
+	default:
+		break;
+	}
 }
 
 bool Scene::PauseMenu()

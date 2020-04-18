@@ -42,6 +42,7 @@ enum EventType : char
 	PLACE_BUILDING,
 	BASE_DESTROYED,
 	MOB_DROP,
+	GAMEPLAY,
 
 	//// Scene states
 	//NEXT_STATE,
@@ -63,32 +64,6 @@ enum EventType : char
 	MOUSE_DOWN,
 	MOUSE_REPEAT,
 	MOUSE_UP,
-
-	//// Scene states
-	LORE,
-	CAM_MOVEMENT,
-	R_CLICK_MOVEMENT,
-
-	EDGE_STATE,
-	RESOURCES,
-	MOBDROP,
-
-	BUILD,
-	UPGRADE,
-
-	GATHERER_STATE,
-	MELEE,
-	MELEE_ATK,
-	ENEMY,
-	ENEMY_ATK,
-
-	TOWER_STATE,
-	TOWER_ATK,
-	BASE_CENTER_STATE,
-	BARRACKS_STATE,
-
-	WIN,
-	LOSE,
 
 	// Renderer
 	SET_VSYNC,

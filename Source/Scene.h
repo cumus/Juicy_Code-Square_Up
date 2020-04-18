@@ -22,7 +22,7 @@ enum SceneType : int
 	CREDITS
 };
 
-/*enum States : int
+enum GameplayState : int
 {
 	LORE,
 	CAM_MOVEMENT,
@@ -47,11 +47,8 @@ enum SceneType : int
 	BARRACKS_STATE,
 
 	WIN,
-	LOSE,
-
-	NONE
+	LOSE
 };
-*/
 
 struct SDL_Texture;
 
@@ -92,7 +89,14 @@ private:
 	bool LoadMainScene();
 	bool LoadEndScene();
 
-	//void StateMachine(const States state);
+	void UpdateFade();
+	void UpdateHUD();
+	void UpdateBuildingMode();
+	void UpdatePause();
+	void UpdateSelection();
+
+	void UpdateStateMachine();
+	void OnEventStateMachine(GameplayState state);
 
 	bool PauseMenu();
 	//bool DestroyPauseMenu();
@@ -117,6 +121,7 @@ public:
 	bool groupSelect;
 	std::vector<Gameobject*> group;
 	Gameobject* selection = nullptr;
+
 	// HUD
 	Gameobject* hud_canvas_go;
 	Gameobject* pause_background_go;
@@ -170,7 +175,7 @@ private:
 	float fade_duration;
 	SceneType current_scene;
 	SceneType next_scene;
-	//States current_state;
+	GameplayState current_state;
 
 
 
