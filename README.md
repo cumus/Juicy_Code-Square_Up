@@ -65,6 +65,7 @@ Here are some links to our GitHib, Wiki, etc.
 * 7: Create defensive tower building.
 * 8: Create Base Center building.
 * 9: Create gatherer unit.
+* 0: Create spawn.
 
 ### Camera:
 * W: move the camera up
@@ -108,6 +109,12 @@ Here are some links to our GitHib, Wiki, etc.
 * Select units qith mouse.
 * Menus added.
 * Spatial audio implemented.
+
+### Updates from v0.5
+* Audio FX updated with more spatial precision.
+* Our ally unit created into the game.
+* HUD sprites added.
+* HUD vs Selection updated.
 
 ##
 ![University Logo](https://www.citm.upc.edu/templates/new/img/logoCITM.png?1401879059) 
