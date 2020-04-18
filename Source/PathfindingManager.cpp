@@ -28,7 +28,7 @@ bool PathfindingManager::Init()
 	bool ret = true;
 	if (ret)
 	{
-		debugTextureID = App->tex.Load("textures/meta.png");
+		debugTextureID = App->tex.Load("Assets/textures/meta.png");
 		LOG("Pathfinding manager initialized!");
 	}
 	else

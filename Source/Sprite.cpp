@@ -62,7 +62,7 @@ AnimatedSprite::AnimatedSprite(Behaviour* unit) : Sprite(unit->GetGameobject(), 
 	{
 	case BASE_CENTER:
 	{
-		tex_id = App->tex.Load("textures/Base_Center.png");
+		tex_id = App->tex.Load("Assets/textures/Base_Center.png");
 		animations[FULL_LIFE].Setup(section = { 2810, 0, 562, 800 }, 5, 8.0f);
 		animations[HALF_LIFE].Setup({ 0, 0, 562, 800 }, 5, 8.0f);
 		animations[FIRST_UPGRADE].Setup({ 2810, 0, 563, 800 }, 5, 8.0f);
@@ -73,7 +73,7 @@ AnimatedSprite::AnimatedSprite(Behaviour* unit) : Sprite(unit->GetGameobject(), 
 	}
 	case TOWER:
 	{
-		tex_id = App->tex.Load("textures/Tower.png");
+		tex_id = App->tex.Load("Assets/textures/Tower.png");
 		animations[FULL_LIFE].Setup(section = { 0, 0, 62, 115 }, 1);
 		animations[HALF_LIFE].Setup({ 0, 0, 62, 115 }, 1);
 		animations[DESTROYED].Setup({ 0, 0, 62, 115 }, 1);
@@ -81,7 +81,7 @@ AnimatedSprite::AnimatedSprite(Behaviour* unit) : Sprite(unit->GetGameobject(), 
 	}
 	case EDGE:
 	{
-		tex_id = App->tex.Load("textures/Base_Center.png");
+		tex_id = App->tex.Load("Assets/textures/Base_Center.png");
 		animations[FULL_LIFE].Setup(section = { 0, 0, 166, 534 }, 1);
 		animations[HALF_LIFE].Setup({ 0, 0, 166, 534 }, 1);
 		animations[DESTROYED].Setup({ 0, 0, 166, 534 }, 1);
@@ -90,7 +90,7 @@ AnimatedSprite::AnimatedSprite(Behaviour* unit) : Sprite(unit->GetGameobject(), 
 	}
 	case WALL:
 	{
-		tex_id = App->tex.Load("textures/Base_Center.png");
+		tex_id = App->tex.Load("Assets/textures/Base_Center.png");
 		animations[FULL_LIFE].Setup(section = { 0, 0, 166, 534 }, 1);
 		animations[HALF_LIFE].Setup({ 0, 0, 166, 534 }, 1);
 		animations[DESTROYED].Setup({ 0, 0, 166, 534 }, 1);
@@ -99,7 +99,7 @@ AnimatedSprite::AnimatedSprite(Behaviour* unit) : Sprite(unit->GetGameobject(), 
 	}
 	case BARRACKS:
 	{
-		tex_id = App->tex.Load("textures/Barraks.png");
+		tex_id = App->tex.Load("Assets/textures/Barraks.png");
 		animations[FULL_LIFE].Setup(section = { 0, 0, 626, 485 }, 5, 8.0f);
 		animations[HALF_LIFE].Setup({ 3130, 0, 626, 485 }, 5, 8.0f);
 		animations[FIRST_UPGRADE].Setup({ 3130, 0, 626, 485 }, 5, 8.0f);
@@ -110,7 +110,7 @@ AnimatedSprite::AnimatedSprite(Behaviour* unit) : Sprite(unit->GetGameobject(), 
 	}
 	case SPAWNER:
 	{
-		tex_id = App->tex.Load("textures/Base_Center.png");
+		tex_id = App->tex.Load("Assets/textures/Base_Center.png");
 		animations[FULL_LIFE].Setup(section = { 0, 0, 166, 534 }, 1);
 		animations[HALF_LIFE].Setup({ 0, 0, 166, 534 }, 1);
 		animations[DESTROYED].Setup({ 0, 0, 166, 534 }, 1);
@@ -119,7 +119,7 @@ AnimatedSprite::AnimatedSprite(Behaviour* unit) : Sprite(unit->GetGameobject(), 
 	}
 	case UNIT_MELEE:
 	{		
-		tex_id = App->tex.Load("textures/Unit_Melee.png");
+		tex_id = App->tex.Load("Assets/textures/Unit_Melee.png");
 		animations[IDLE].Setup(section = { 2, 2, 418, 295 }, 6, 8.0f);
 		animations[MOVING_N].Setup({ 2, 296, 418, 295 }, 7, 8.0f);
 		animations[MOVING_S].Setup({ 2, 592, 418, 295 }, 7, 8.0f);
@@ -142,7 +142,7 @@ AnimatedSprite::AnimatedSprite(Behaviour* unit) : Sprite(unit->GetGameobject(), 
 		break; 
 	}
 	case ENEMY_MELEE:
-		tex_id = App->tex.Load("textures/Enemy_hobbit1.png");
+		tex_id = App->tex.Load("Assets/textures/Enemy_hobbit1.png");
 		animations[IDLE].Setup(section = { 956, 637, 101, 148 }, 1, 0.2f);
 		//animations[MOVING_E].Setup();
 		//animations[MOVING_W].Setup();
@@ -164,7 +164,7 @@ AnimatedSprite::AnimatedSprite(Behaviour* unit) : Sprite(unit->GetGameobject(), 
 		offset = { -168.0f, -230.0f, 0.6f, 0.6f };
 		break;
 	case GATHERER:
-		tex_id = App->tex.Load("textures/Unit_Gatherer.png");
+		tex_id = App->tex.Load("Assets/textures/Unit_Gatherer.png");
 		animations[IDLE].Setup(section = { 2, 2, 418, 295 }, 5, 8.0f);
 		animations[MOVING_N].Setup({ 2, 296, 418, 295 }, 7, 8.0f);
 		animations[MOVING_S].Setup({ 2, 592, 418, 295 }, 7, 8.0f);
@@ -186,7 +186,7 @@ AnimatedSprite::AnimatedSprite(Behaviour* unit) : Sprite(unit->GetGameobject(), 
 		offset = { -168.0f, -230.0f, 0.6f, 0.6f };
 		break;
 	case UNIT_RANGED:
-		tex_id = App->tex.Load("textures/Unit_Melee.png");
+		tex_id = App->tex.Load("Assets/textures/Unit_Melee.png");
 		animations[IDLE].Setup(section = { 2, 2, 418, 295 }, 6, 8.0f);
 		animations[MOVING_N].Setup({ 2, 296, 418, 295 }, 7, 8.0f);
 		animations[MOVING_S].Setup({ 2, 592, 418, 295 }, 7, 8.0f);
@@ -208,7 +208,7 @@ AnimatedSprite::AnimatedSprite(Behaviour* unit) : Sprite(unit->GetGameobject(), 
 		offset = { -168.0f, -230.0f, 0.6f, 0.6f };
 		break;
 	case UNIT_SUPER:
-		tex_id = App->tex.Load("textures/Char_killia1.png");
+		tex_id = App->tex.Load("Assets/textures/Char_killia1.png");
 		animations[MOVING_NE].Setup(section = { 41, 24, 89, 167 }, 6, 0.2f);
 		animations[MOVING_NW].Setup({ 41, 24, 89, 167 }, 6, 0.2f);
 		animations[MOVING_SE].Setup({ 41, 24, 89, 167 }, 6, 0.2f);
@@ -225,7 +225,7 @@ AnimatedSprite::AnimatedSprite(Behaviour* unit) : Sprite(unit->GetGameobject(), 
 		offset = { -168.0f, -230.0f, 0.6f, 0.6f };
 		break;
 	case UNIT_SPECIAL:
-		tex_id = App->tex.Load("textures/Char_killia1.png");
+		tex_id = App->tex.Load("Assets/textures/Char_killia1.png");
 		animations[MOVING_NE].Setup(section = { 41, 24, 89, 167 }, 6, 0.2f);
 		animations[MOVING_NW].Setup({ 41, 24, 89, 167 }, 6, 0.2f);
 		animations[MOVING_SE].Setup({ 41, 24, 89, 167 }, 6, 0.2f);

@@ -29,7 +29,7 @@ Gatherer::~Gatherer(){}
 void Gatherer::CreatePanel()
 {
 	posY_panel = 0.8f;
-	panel_tex_ID = App->tex.Load("textures/buildPanelSample.png");
+	panel_tex_ID = App->tex.Load("Assets/textures/buildPanelSample.png");
 
 	//------------------------- BASE PANEL --------------------------------------
 

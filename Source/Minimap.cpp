@@ -21,7 +21,7 @@ Minimap::Minimap(Gameobject* go) :
 	background_rect = { 585, 656, 384, 216 };
 	minimap_camera = { 0, 0, 0, 0 };
 	camera_color = { 255, 255, 255, 255 };
-	background_tex = App->tex.Load("textures/Iconos_square_up.png");
+	background_tex = App->tex.Load("Assets/textures/Iconos_square_up.png");
 
 	App->win->GetWindowSize(window_width, window_height);
 

@@ -79,7 +79,7 @@ void Barracks::Upgrade()
 void Barracks::CreatePanel()
 {
 	posY_panel = 0.8f;
-	panel_tex_ID = App->tex.Load("textures/buildPanelSample.png");
+	panel_tex_ID = App->tex.Load("Assets/textures/buildPanelSample.png");
 
 	//------------------------- BASE PANEL --------------------------------------
 
@@ -120,7 +120,7 @@ void Barracks::create_bar() {
 
 	pos_y_HUD = 0.17;
 
-	bar_text_id = App->tex.Load("textures/Iconos_square_up.png");
+	bar_text_id = App->tex.Load("Assets/textures/Iconos_square_up.png");
 
 	//------------------------- BASE BAR --------------------------------------
 

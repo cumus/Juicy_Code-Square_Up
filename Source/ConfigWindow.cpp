@@ -39,7 +39,7 @@ bool ConfigWindow::Init()
 
 	// Test UI_Slider
 
-	int SliderBar_tex_id = App->tex.Load("textures/slider_bar.png");
+	int SliderBar_tex_id = App->tex.Load("Assets/textures/slider_bar.png");
 
 	SliderBar_Rect = { 0.2f, 0.1f, 0.4f, 0.1f };
 
