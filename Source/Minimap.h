@@ -16,7 +16,7 @@ enum class Corner
 	BOTTOM_RIGHT
 };
 
-class Minimap :public C_Image
+class Minimap : public C_Image
 {
 public:
 
@@ -46,6 +46,7 @@ private:
 	float	scaley;
 	bool	mouse_inside;
 	bool	map_charged;
+	bool	minimapSel;
 
 public:
 
