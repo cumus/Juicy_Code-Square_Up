@@ -7,6 +7,7 @@
 #include "Gameobject.h"
 #include "Transform.h"
 #include "JuicyMath.h"
+#include "Log.h"
 
 C_Canvas* UI_Component::canvas = nullptr;
 
@@ -70,6 +71,7 @@ void C_Canvas::PreUpdate()
 
 	if (!selectedUI && App->input->GetMouseButtonDown(0) == KeyState::KEY_DOWN)
 	{
+		LOG("UI click");
 		for (std::vector<Gameobject*>::const_iterator it = childs.cbegin(); it != childs.cend(); ++it)
 		{
 			const UI_Component* comp = (*it)->GetUI();
@@ -137,8 +139,8 @@ void C_Canvas::RecieveEvent(const Event& e)
 
 bool C_Canvas::MouseOnUI()
 {
-	if (canvas)return canvas->selectedUI;	
-	else return false;
+	/*if (canvas)*/return canvas->selectedUI;	
+	//else return false;
 }
 
 bool C_Canvas::IsPlaying()

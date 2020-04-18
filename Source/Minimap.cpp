@@ -33,7 +33,6 @@ Minimap::Minimap(Gameobject* go) :
 	std::pair<int, int> tile_size = Map::GetTileSize_I();
 	section = { 0, 0, map_size.first * tile_size.first, map_size.second * tile_size.second };
 	offset = { -section.w, 0 };
-
 	tex_id = App->render->GetMinimap(section.w, section.h);
 	Event::Push(UPDATE_MINIMAP_TEXTURE, App->render);
 }
@@ -53,8 +52,11 @@ void Minimap::Update()
 		scaley = (background_rect.h / background_output.h) * (background_output.h / background_rect.h) * (background_output.h / background_rect.h);
 	}
 
+
 	App->render->Blit_Scale(background_tex, output.x, output.y, scalex, scaley, &background_rect, HUD, false);
+
 	App->render->DrawQuad(output, { 255, 0, 0, 255 }, false, EDITOR, false);
+
 
 	//-------------------------------------------------------------------------------------
 		//From map to minimap viewport
@@ -80,6 +82,7 @@ void Minimap::Update()
 	minimap_camera.y += output.y;
 
 	App->render->DrawQuad(minimap_camera, camera_color, false, EDITOR, false);
+
 	//-------------------------------------------------------------------------------------
 
 		//From minimap to map drag viewport

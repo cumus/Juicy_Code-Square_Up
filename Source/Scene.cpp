@@ -214,8 +214,6 @@ bool Scene::LoadTestScene()
 	//------------------------- HUD CANVAS --------------------------------------
 
 	hud_canvas_go = AddGameobject("HUD Canvas", &root);
-	C_Canvas* hud_canv = new C_Canvas(hud_canvas_go);
-	hud_canv->target = { 0.3f, 0.3f, 0.4f, 0.4f };
 
 	/*
 	Gameobject* img_go = AddGameobject("Image", canvas_go);
@@ -243,7 +241,7 @@ bool Scene::LoadTestScene()
 
 
 	// Unit icon (Melee Unit)
-	Gameobject* melee_counter_go = AddGameobject("Melee Unit Counter", hud_canvas_go);
+	Gameobject* melee_counter_go = AddGameobjectToCanvas("Melee Unit Counter");
 
 	C_Image* melee_counter_box = new C_Image(melee_counter_go);
 	melee_counter_box->target = { 0.153f, 0.64f, 0.55f , 1.f };
@@ -267,7 +265,7 @@ bool Scene::LoadTestScene()
 	text_melee_units_created->target = { 0.099f, 0.587f, 1.6f, 1.6f };
 
 	// Unit icon (Gatherer Unit)
-	Gameobject* gatherer_counter_go = AddGameobject("Gatherer Unit Counter", hud_canvas_go);
+	Gameobject* gatherer_counter_go = AddGameobjectToCanvas("Gatherer Unit Counter");
 
 	C_Image* gatherer_counter_box = new C_Image(gatherer_counter_go);
 	gatherer_counter_box->target = { 0.153f, 0.72f, 0.55f , 1.f };
@@ -291,7 +289,7 @@ bool Scene::LoadTestScene()
 	text_gatherer_units_created->target = { 0.099f, 0.667f, 1.6f, 1.6f };
 
 	// Unit icon (Ranged Unit)
-	Gameobject* ranged_counter_go = AddGameobject("Ranged Unit Counter", hud_canvas_go);
+	Gameobject* ranged_counter_go = AddGameobjectToCanvas("Ranged Unit Counter");
 
 	C_Image* ranged_counter_box = new C_Image(ranged_counter_go);
 	ranged_counter_box->target = { 0.153f, 0.80f, 0.55f , 1.f };
@@ -318,7 +316,7 @@ bool Scene::LoadTestScene()
 
 
 	//Resources
-	Gameobject* resource_counter_go = AddGameobject("Resources", hud_canvas_go);
+	Gameobject* resource_counter_go = AddGameobjectToCanvas("Resources");
 	C_Image* img = new C_Image(resource_counter_go);
 	img->target = { 0.1f, 1.f, 1.f , 1.f };
 	img->offset = { -119.f, -119.f };
@@ -344,14 +342,14 @@ bool Scene::LoadTestScene()
 	text_mobdrop_value->target = { 0.65f, 0.4f, 1.f, 1.f };
 	
 	//Minimap
-	if (minimap != nullptr) {
+	if (minimap != nullptr)
+	{
 		Gameobject* minimap_go = AddGameobjectToCanvas("Minimap");
 		minimap = new Minimap(minimap_go);
-
 	}
 
 	// Build mode
-	Gameobject* builder = AddGameobject("Building Mode", hud_canvas_go);
+	Gameobject* builder = AddGameobjectToCanvas("Building Mode");
 	C_Button* base = new C_Button(builder, Event(PLACE_BUILDING, this, int(BASE_CENTER)));
 	C_Button* tower = new C_Button(builder, Event(PLACE_BUILDING, this, int(TOWER)));
 	C_Button* edge = new C_Button(builder, Event(PLACE_BUILDING, this, int(EDGE)));
@@ -387,13 +385,13 @@ bool Scene::LoadMainScene()
 	next->section = { 0, 0, 1070, 207 };
 	next->tex_id = App->tex.Load("Assets/textures/button.png");
 
-
+	map.Load("Assets/maps/iso.tmx");
 
 	//Minimap
 	Gameobject* minimap_go = AddGameobjectToCanvas("Minimap");
 	minimap = new Minimap(minimap_go);
 
-	return map.Load("Assets/maps/iso.tmx") && App->audio->PlayMusic("Assets/audio/Music/alexander-nakarada-buzzkiller.ogg");
+	return  App->audio->PlayMusic("Assets/audio/Music/alexander-nakarada-buzzkiller.ogg");
 }
 
 bool Scene::LoadIntroScene()
@@ -406,11 +404,8 @@ bool Scene::LoadIntroScene()
 	test = false;
 
 	// Add a canvas
-	Gameobject* canvas_go = AddGameobject("Canvas", &root);
-	C_Canvas* canv = new C_Canvas(canvas_go);
-	canv->target = { 0.6f, 0.6f, 0.4f, 0.4f };
 
-	Gameobject* background_go = AddGameobject("Background", canvas_go);
+	Gameobject* background_go = AddGameobjectToCanvas("Background");
 
 	C_Button* background = new C_Button(background_go, Event(SCENE_CHANGE, this, MENU, 2.f));
 	background->target = { 1.f, 1.f, 1.f, 1.f };
@@ -418,7 +413,7 @@ bool Scene::LoadIntroScene()
 	background->section = { 0, 0, 1920, 1080 };
 	background->tex_id = App->tex.Load("Assets/textures/white.png");
 	
-	Gameobject* logo_go = AddGameobject("Team logo", canvas_go);
+	Gameobject* logo_go = AddGameobjectToCanvas("Team logo");
 
 	C_Image* logo = new C_Image(logo_go);
 	logo->target = { 0.5f, 0.5f, 0.5f, 0.5f };
@@ -440,13 +435,13 @@ bool Scene::LoadMenuScene()
 	test = false;
 
 	//------------------------- CANVAS --------------------------------------
-	Gameobject* canvas_go = AddGameobject("Canvas", &root);
+	/*Gameobject* canvas_go = AddGameobject("Canvas", &root);
 	C_Canvas* canv = new C_Canvas(canvas_go);
-	canv->target = { 0.6f, 0.6f, 0.4f, 0.4f };
+	canv->target = { 0.6f, 0.6f, 0.4f, 0.4f };*/
 
 	//------------------------- BACKGROUND --------------------------------------
 
-	Gameobject* background_go = AddGameobject("Background", canvas_go);
+	Gameobject* background_go = AddGameobjectToCanvas("Background");
 
 	C_Image* background = new C_Image(background_go);
 	background->target = { 1.f, 1.f, 1.f, 1.f };
@@ -456,7 +451,7 @@ bool Scene::LoadMenuScene()
 
 	//------------------------- LOGO --------------------------------------
 
-	Gameobject* g_logo_go = AddGameobject("Game logo", canvas_go);
+	Gameobject* g_logo_go = AddGameobjectToCanvas("Game logo");
 
 	C_Image* g_logo = new C_Image(g_logo_go);
 	g_logo->target = { 0.5f, 0.5f, 0.5f, 0.5f };
@@ -466,7 +461,7 @@ bool Scene::LoadMenuScene()
 	
 	//------------------------- START --------------------------------------
 
-	Gameobject* start_go = AddGameobject("Start Button", canvas_go);
+	Gameobject* start_go = AddGameobjectToCanvas("Start Button");
 	
 	C_Button* start = new C_Button(start_go, Event(SCENE_CHANGE, this, MAIN, 2.f));
 	start->target = { 0.5f, 0.5f, 0.5f, 0.5f };
@@ -481,7 +476,7 @@ bool Scene::LoadMenuScene()
 
 	//------------------------- QUIT --------------------------------------
 
-	Gameobject* quit_go = AddGameobject("Quit Button", canvas_go);
+	Gameobject* quit_go = AddGameobjectToCanvas("Quit Button");
 
 	C_Button* quit = new C_Button(quit_go, Event(REQUEST_QUIT, App));
 	quit->target = { 0.5f, 0.5f, 0.5f, 0.5f };
@@ -507,13 +502,10 @@ bool Scene::LoadEndScene()
 	test = false;
 
 	//------------------------- CANVAS --------------------------------------
-	Gameobject* canvas_go = AddGameobject("Canvas", &root);
-	C_Canvas* canv = new C_Canvas(canvas_go);
-	canv->target = { 0.6f, 0.6f, 0.4f, 0.4f };
 
 	//------------------------- BACKGROUND --------------------------------------
 
-	Gameobject* background_go = AddGameobject("Background", canvas_go);
+	Gameobject* background_go = AddGameobjectToCanvas("Background");
 
 	C_Image* background = new C_Image(background_go);
 	background->target = { 1.f, 1.f, 1.f, 1.f };
@@ -524,7 +516,7 @@ bool Scene::LoadEndScene()
 	//------------------------- WIN/LOSE --------------------------------------
 	if (win)
 	{
-		Gameobject* win_go = AddGameobject("Background", canvas_go);
+		Gameobject* win_go = AddGameobjectToCanvas("Background");
 
 		C_Image* win = new C_Image(win_go);
 		win->target = { 0.58f, 0.2f, 0.5f, 0.5f };
@@ -534,7 +526,7 @@ bool Scene::LoadEndScene()
 	}
 	else
 	{
-		Gameobject* lose_go = AddGameobject("Background", canvas_go);
+		Gameobject* lose_go = AddGameobjectToCanvas("Background");
 
 		C_Image* lose = new C_Image(lose_go);
 		lose->target = { 0.59f, 0.2f, 0.5f, 0.5f };
@@ -545,7 +537,7 @@ bool Scene::LoadEndScene()
 
 	//------------------------- BACK --------------------------------------
 
-	Gameobject* back_go = AddGameobject("Background", canvas_go);
+	Gameobject* back_go = AddGameobjectToCanvas("Background");
 
 	C_Image* back = new C_Image(back_go);
 	back->target = { 0.68f, 0.9f, 0.6f, 0.65f };
@@ -555,7 +547,7 @@ bool Scene::LoadEndScene()
 
 	//------------------------- TIME --------------------------------------
 
-	Gameobject* time_go = AddGameobject("Time", canvas_go);
+	Gameobject* time_go = AddGameobjectToCanvas("Time");
 
 	C_Image* time = new C_Image(time_go);
 	time->target = { 0.66f, 0.37f, 0.6f, 0.65f };
@@ -566,7 +558,7 @@ bool Scene::LoadEndScene()
 
 	//------------------------- EDGE --------------------------------------
 
-	Gameobject* edge_go = AddGameobject("edge", canvas_go);
+	Gameobject* edge_go = AddGameobjectToCanvas("edge");
 
 	C_Image* edge = new C_Image(edge_go);
 	edge->target = { 0.66f, 0.49f, 0.6f, 0.65f };
@@ -577,7 +569,7 @@ bool Scene::LoadEndScene()
 
 	//------------------------- UNITS CREATED --------------------------------------
 
-	Gameobject* units_c_go = AddGameobject("created", canvas_go);
+	Gameobject* units_c_go = AddGameobjectToCanvas("created");
 
 	C_Image* units_c = new C_Image(units_c_go);
 	units_c->target = { 0.66f, 0.61f, 0.6f, 0.65f };
@@ -588,7 +580,7 @@ bool Scene::LoadEndScene()
 
 	//------------------------- UNITS LOST --------------------------------------
 
-	Gameobject* units_l_go = AddGameobject("lost", canvas_go);
+	Gameobject* units_l_go = AddGameobjectToCanvas("lost");
 
 	C_Image* units_l = new C_Image(units_l_go);
 	units_l->target = { 0.66f, 0.73f, 0.6f, 0.65f };
@@ -599,7 +591,7 @@ bool Scene::LoadEndScene()
 
 	//------------------------- UNITS KILLED --------------------------------------
 
-	Gameobject* units_k_go = AddGameobject("killed", canvas_go);
+	Gameobject* units_k_go = AddGameobjectToCanvas("killed");
 
 	C_Image* units_k = new C_Image(units_k_go);
 	units_k->target = { 0.66f, 0.85f, 0.6f, 0.65f };
@@ -754,8 +746,10 @@ void Scene::UpdatePause()
 
 void Scene::UpdateSelection()
 {
+	//LOG("Canvas: %d", C_Canvas::MouseOnUI());
+	//LOG("Editor: %d", App->editor->MouseOnWindow());
 	if (!C_Canvas::MouseOnUI() && !App->editor->MouseOnWindow())
-	{
+	{		
 		if (App->input->GetMouseButtonDown(0))
 		{
 			SetSelection(nullptr, true);
@@ -1313,7 +1307,7 @@ bool Scene::PauseMenu()
 
 	//------------------------- BACKGROUND -----------------------------------
 
-	pause_background_go = AddGameobject("Background", hud_canvas_go);
+	pause_background_go = AddGameobjectToCanvas("Background");
 
 	C_Image* background = new C_Image(pause_background_go);
 	background->target = { 0.66f, 0.95f, 0.6f, 0.6f };
