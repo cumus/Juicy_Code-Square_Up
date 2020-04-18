@@ -74,7 +74,7 @@ pugi::xml_node& FileManager::ConfigNode()
 
 bool FileManager::SaveConfig() const
 {
-	bool ret = config.save_file((base_path + "config.xml").c_str(), "\t", 1u, pugi::encoding_utf8);
+	bool ret = config.save_file((base_path + "Assets/config.xml").c_str(), "\t", 1u, pugi::encoding_utf8);
 
 	if (!ret)
 		LOG("Error saving new config.xml file.");
@@ -86,7 +86,7 @@ bool FileManager::LoadConfig()
 {
 	config.reset();
 
-	bool ret = LoadXML("config.xml", config);
+	bool ret = LoadXML("Assets/config.xml", config);
 
 	if(!ret)
 		config.append_child("config");
