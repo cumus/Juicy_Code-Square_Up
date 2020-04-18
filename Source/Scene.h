@@ -22,7 +22,7 @@ enum SceneType : int
 	CREDITS
 };
 
-enum States : int
+/*enum States : int
 {
 	LORE,
 	CAM_MOVEMENT,
@@ -51,6 +51,7 @@ enum States : int
 
 	NONE
 };
+*/
 
 struct SDL_Texture;
 
@@ -91,7 +92,7 @@ private:
 	bool LoadMainScene();
 	bool LoadEndScene();
 
-	void StateMachine(const States state);
+	//void StateMachine(const States state);
 
 	bool PauseMenu();
 	//bool DestroyPauseMenu();
@@ -169,8 +170,59 @@ private:
 	float fade_duration;
 	SceneType current_scene;
 	SceneType next_scene;
+	//States current_state;
 
-	States current_state;
+
+
+	//--------STATE MACHINE VARIABLES--------
+
+	float distance;
+	float last_distance;
+	float total_distance;
+	bool r_c_comprobation = true;
+
+	std::pair<float, float> last_cam_pos;
+	std::pair<float, float> current_cam_pos;
+
+	//-------Gameobjects--------
+
+	Gameobject* lore_go;
+	Gameobject* cam_mov_go;
+	Gameobject* R_click_mov_go;
+	Gameobject* gather_go;
+	Gameobject* edge_go;
+	Gameobject* base_center_go;
+	Gameobject* barracks_state_go;
+	Gameobject* resources_state_go;
+	Gameobject* melee_go;
+	Gameobject* enemy_go;
+	Gameobject* melee_atk_go;
+	Gameobject* enemy_atk_go;
+	Gameobject* mobdrop_go;
+	Gameobject* build_go;
+	Gameobject* upgrade_go;
+	Gameobject* tower_state_go;
+	Gameobject* tower_atk_go;
+
+	//------Images/Buttons------
+
+	C_Image* cam_mov;
+	C_Image* R_click_mov;
+	C_Image* edge;
+	C_Image* base_center;
+	C_Image* barracks_state;
+	C_Image* resources;
+	C_Image* melee;
+	C_Image* enemy;
+	C_Image* melee_atk;
+	C_Image* enemy_atk;
+	C_Image* mobdrop;
+	C_Image* build;
+	C_Image* upgrade;
+	C_Image* tower_state;
+	C_Image* tower_atk;
+	C_Button* next;
+
 	//States next_state;
 
 	/*bool shoot = false;//temp
