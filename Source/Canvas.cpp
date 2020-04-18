@@ -58,7 +58,7 @@ C_Canvas::C_Canvas(Gameobject* go) : UI_Component(go, go->GetUIParent(), UI_CANV
 
 C_Canvas::~C_Canvas()
 {
-	//canvas = nullptr;
+	canvas = nullptr;
 }
 
 void C_Canvas::PreUpdate()
@@ -128,7 +128,7 @@ bool C_Canvas::IsPlaying()
 
 Gameobject* C_Canvas::GameObject()
 {
-	return canvas ? canvas->game_object : nullptr;
+	return (canvas && canvas->game_object) ? canvas->game_object : nullptr;
 }
 
 std::pair<float, float> C_Canvas::GetScale() const

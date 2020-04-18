@@ -60,42 +60,7 @@ void Gameobject::Update()
 			Destroy();
 	}
 
-	while (!comp_to_remove.empty())
-	{
-		double comp_id = comp_to_remove.front();
-
-		for (std::vector<Component*>::iterator it = components.begin(); it != components.end(); ++it)
-		{
-			if (comp_id == (*it)->GetID())
-			{
-				DEL(*it);
-				components.erase(it);
-				break;
-			}
-		}
-
-		comp_to_remove.pop();
-	}
-
-	while (!go_to_remove.empty())
-	{
-		double go_id = go_to_remove.front();
-
-		for (std::vector<Gameobject*>::iterator it = childs.begin(); it != childs.end(); ++it)
-		{
-			if (go_id == (*it)->id)
-			{
-				if (App->scene->selection == *it)
-					App->scene->SetSelection(nullptr, false);
-				
-				DEL(*it);
-				childs.erase(it);
-				break;
-			}
-		}
-
-		go_to_remove.pop();
-	}
+	UpdateRemoveQueue();
 
 	for (std::vector<Component*>::iterator component = components.begin(); component != components.end(); ++component)
 		if ((*component)->IsActive())
@@ -316,11 +281,53 @@ bool Gameobject::Destroy(float ms)
 	return ret;
 }
 
+void Gameobject::UpdateRemoveQueue()
+{
+	while (!comp_to_remove.empty())
+	{
+		double comp_id = comp_to_remove.front();
+
+		for (std::vector<Component*>::iterator it = components.begin(); it != components.end(); ++it)
+		{
+			if (comp_id == (*it)->GetID())
+			{
+				DEL(*it);
+				components.erase(it);
+				break;
+			}
+		}
+
+		comp_to_remove.pop();
+	}
+
+	while (!go_to_remove.empty())
+	{
+		double go_id = go_to_remove.front();
+
+		for (std::vector<Gameobject*>::iterator it = childs.begin(); it != childs.end(); ++it)
+		{
+			if (go_id == (*it)->id)
+			{
+				if (App->scene->selection == *it)
+					App->scene->SetSelection(nullptr, false);
+
+				DEL(*it);
+				childs.erase(it);
+				break;
+			}
+		}
+
+		go_to_remove.pop();
+	}
+}
+
 void Gameobject::AddNewChild(Gameobject * child)
 {
 	if (child != nullptr)
 	{
 		childs.push_back(child);
-		child->transform->SetParent(transform);
+
+		if (child->transform)
+			child->transform->SetParent(transform);
 	}
 }

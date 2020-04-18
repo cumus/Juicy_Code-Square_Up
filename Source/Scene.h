@@ -71,7 +71,7 @@ public:
 	Gameobject* GetRoot();
 	const Gameobject* GetRoot() const;
 	Gameobject* AddGameobject(const char* name, Gameobject* parent = nullptr);
-	Gameobject* AddUIGameobject(const char* name, Gameobject* parent = nullptr);
+	Gameobject* AddGameobjectToCanvas(const char* name);
 
 	void SetSelection(Gameobject* go = nullptr, bool call_unselect = true);
 	Gameobject* MouseClickSelect(int mouse_x, int mouse_y);

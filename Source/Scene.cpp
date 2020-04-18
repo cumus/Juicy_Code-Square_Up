@@ -661,7 +661,7 @@ bool Scene::LoadMainScene()
 
 	building_bars_created = 0;
 
-	Gameobject* lore_go = AddUIGameobject("lore");
+	Gameobject* lore_go = AddGameobjectToCanvas("lore");
 	C_Image* lore = new C_Image(lore_go);
 	C_Button* next = new C_Button(lore_go, Event(SCENE_PLAY, this, MAIN));
 
@@ -1013,6 +1013,7 @@ bool Scene::ChangeToScene(SceneType scene)
 	SetSelection(nullptr, false);
 	root.RemoveChilds();
 	Event::PumpAll();
+	root.UpdateRemoveQueue();
 
 	bool ret = false;
 	switch (current_scene = scene)
@@ -1119,14 +1120,17 @@ Gameobject * Scene::AddGameobject(const char * name, Gameobject * parent)
 	return new Gameobject(name, parent != nullptr ? parent : &root);
 }
 
-Gameobject* Scene::AddUIGameobject(const char* name, Gameobject* parent)
+Gameobject* Scene::AddGameobjectToCanvas(const char* name)
 {
 	Gameobject* canvas_go = C_Canvas::GameObject();
 
 	if (!canvas_go)
+	{
 		canvas_go = new Gameobject("Canvas", &root);
+		new C_Canvas(canvas_go);
+	}
 
-	return new Gameobject(name, parent ? parent : canvas_go);
+	return new Gameobject(name, canvas_go);
 }
 
 void Scene::SetSelection(Gameobject* go, bool call_unselect)

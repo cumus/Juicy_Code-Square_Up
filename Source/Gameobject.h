@@ -50,7 +50,7 @@ public:
 	bool RemoveChild(Gameobject* child);
 	bool RemoveComponent(Component* comp);
 	bool Destroy(float ms = 0.f);
-
+	void UpdateRemoveQueue();
 
 private:
 
