@@ -63,10 +63,12 @@ AnimatedSprite::AnimatedSprite(Behaviour* unit) : Sprite(unit->GetGameobject(), 
 	case BASE_CENTER:
 	{
 		tex_id = App->tex.Load("textures/Base_Center.png");
-		animations[FULL_LIFE].Setup(section = { 0, 0, 166, 534 }, 1);
-		animations[HALF_LIFE].Setup({ 0, 0, 166, 534 }, 1);
-		animations[DESTROYED].Setup({ 0, 0, 166, 534 }, 1);
-		offset = { 20.f, -434.f + Map::GetBaseOffset(), 0.3f, 0.3f };
+		animations[FULL_LIFE].Setup(section = { 2810, 0, 562, 800 }, 5, 8.0f);
+		animations[HALF_LIFE].Setup({ 0, 0, 562, 800 }, 5, 8.0f);
+		animations[FIRST_UPGRADE].Setup({ 2810, 0, 563, 800 }, 5, 8.0f);
+		animations[SECOND_UPGRADE].Setup({ 5620, 0, 563, 800 }, 5, 8.0f);
+		animations[DESTROYED].Setup({ 8430, 0, 563, 800 }, 5, 8.0f);
+		offset = { 0.f, 0.f + Map::GetBaseOffset(), 1.0f, 1.0f };
 		break;
 	}
 	case TOWER:

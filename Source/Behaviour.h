@@ -59,6 +59,8 @@ enum UnitState : int
 	FULL_LIFE,
 	HALF_LIFE,
 	DESTROYED,
+	FIRST_UPGRADE,
+	SECOND_UPGRADE,
 };
 
 
