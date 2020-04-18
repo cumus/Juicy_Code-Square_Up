@@ -38,6 +38,8 @@ Behaviour::Behaviour(Gameobject* go, UnitType t, UnitState starting_state, Compo
 	selection_highlight = new Sprite(go, App->tex.Load("Assets/textures/selectionMark.png"), { 0, 0, 64, 64 }, BACK_SCENE, { 0, -32, 1.f, 1.f });
 	selection_highlight->SetInactive();
 
+	mini_life_bar.Create(go);
+
 	b_map.insert({ GetID(), this });
 }
 
@@ -70,9 +72,16 @@ void Behaviour::RecieveEvent(const Event& e)
 
 void Behaviour::Selected()
 {
+	// Selection mark
 	selection_highlight->SetActive();
-	//App->audio->PlayFx(SELECT);
+
+	// Audio Fx
 	audio->Play(SELECT);
+
+	// Lifebar
+	mini_life_bar.Show();
+	mini_life_bar.Update(float(current_life) / float(max_life));
+
 	if (bar_go != nullptr) bar_go->SetActive();
 	if (selectionPanel != nullptr) selectionPanel->SetActive();
 	if (type == TOWER) {
@@ -93,7 +102,12 @@ void Behaviour::Selected()
 
 void Behaviour::UnSelected()
 {
+	// Selection mark
 	selection_highlight->SetInactive();
+
+	// Lifebar
+	mini_life_bar.Hide();
+
 	if (bar_go != nullptr) bar_go->SetInactive();
 	if (selectionPanel != nullptr) selectionPanel->SetInactive();
 	if (type == TOWER) {
@@ -169,14 +183,23 @@ void Behaviour::OnDamage(int d)
 	//LOG("Got damage: %d",d);
 	if (current_state != DESTROYED && GetType() != SPAWNER)
 	{
-		if (current_life <= 0) {
-			OnKill(type);			
-		}
-		else current_life -= d;
+		if (current_life > 0)
+		{
+			current_life -= d;
 
-		LOG("Life: %d", current_life);
-		update_health_ui();
-		AfterDamageAction();
+			if (current_life <= 0)
+			{
+				OnKill(type);
+			}
+			else
+			{
+				mini_life_bar.Update(float(current_life) / float(max_life));
+
+				LOG("Life: %d", current_life);
+				update_health_ui();
+				AfterDamageAction();
+			}
+		}
 	}
 }
 
@@ -694,3 +717,25 @@ void B_Unit::OnGetImpulse(float x, float y)
 	}
 }
 
+void Behaviour::Lifebar::Create(Gameobject* parent)
+{
+	int hud_id = App->tex.Load("Assets/textures/Iconos_square_up.png");
+	go = new Gameobject("life_bar", parent);
+	new Sprite(go, hud_id, { 275, 698, 30, 4 }, FRONT_SCENE, { 3.f, -35.f, 2.f, 2.f }, { 255, 0, 0, 255});
+	green_bar = new Sprite(new Gameobject("GreenBar", go), hud_id, starting_section = { 276, 703, 28, 2 }, FRONT_SCENE, { 4.f, -34.f, 2.f, 2.f }, { 0, 255, 0, 255 });
+	Update(1.0f);
+}
+void Behaviour::Lifebar::Show()
+{
+	go->SetActive();
+}
+
+void Behaviour::Lifebar::Hide()
+{
+	go->SetInactive();
+}
+
+void Behaviour::Lifebar::Update(float life)
+{
+	green_bar->SetSection({ starting_section.x, starting_section.y, int(float(starting_section.w) * life), starting_section.h });
+}

@@ -113,6 +113,7 @@ public:
 	static std::map<double, Behaviour*> b_map;
 	UnitState current_state;
 	int max_life, current_life, damage;
+
 protected:	
 
 	UnitType type;
@@ -127,6 +128,19 @@ protected:
 	// Complementary components
 	AudioSource* audio;
 	Sprite* selection_highlight;
+
+	struct Lifebar
+	{
+		void Create(Gameobject* parent);
+		void Show();
+		void Hide();
+		void Update(float life);
+
+		Gameobject* go;
+		Sprite* green_bar;
+		vec offset;
+		SDL_Rect starting_section;
+	} mini_life_bar;
 
 	float pos_y_HUD;
 	int bar_text_id;

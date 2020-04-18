@@ -37,15 +37,23 @@ void Sprite::PostUpdate()
 		vec scale = t->GetGlobalScale();
 		std::pair<float, float> map_pos = Map::F_MapToWorld(pos.x, pos.y, pos.z);
 
+		map_pos.first += offset.x * offset.w * scale.x;
+		map_pos.second += ((offset.y * offset.h) + Map::GetBaseOffset()) * scale.y;
+
 		if (tex_id >= 0)
 			App->render->Blit_Scale(tex_id,
-				int(map_pos.first + (offset.x * offset.w * scale.x)),
-				int(map_pos.second + (((offset.y * offset.h) + Map::GetBaseOffset()) * scale.y)),
+				int(map_pos.first),
+				int(map_pos.second),
 				scale.x * offset.w,
 				scale.y * offset.h,
 				&section, layer);
 		else
-			App->render->DrawQuad({ int(map_pos.first), int(map_pos.second), section.w, section.h }, color, layer);
+			App->render->DrawQuad({
+			int(map_pos.first),
+			int(map_pos.second),
+			int(float(section.w) * scale.x * offset.w),
+			int(float(section.h) * scale.y * offset.h) },
+			color, layer);
 	}
 }
 
