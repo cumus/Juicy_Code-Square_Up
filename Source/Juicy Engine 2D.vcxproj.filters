@@ -157,6 +157,9 @@
     <ClCompile Include="Spawner.cpp">
       <Filter>Source\Gameobjects</Filter>
     </ClCompile>
+    <ClCompile Include="Barracks.cpp">
+      <Filter>Source\Gameobjects</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="PugiXml\src\pugiconfig.hpp">
@@ -343,6 +346,9 @@
       <Filter>Source\Gameobjects</Filter>
     </ClInclude>
     <ClInclude Include="Spawner.h">
+      <Filter>Source\Gameobjects</Filter>
+    </ClInclude>
+    <ClInclude Include="Barracks.h">
       <Filter>Source\Gameobjects</Filter>
     </ClInclude>
   </ItemGroup>

@@ -1,4 +1,4 @@
-#include "BaseCenter.h"
+#include "Barracks.h"
 #include "Application.h"
 #include "Gameobject.h"
 #include "Render.h"
@@ -13,7 +13,7 @@
 
 
 
-Base_Center::Base_Center(Gameobject* go) : Behaviour(go, BASE_CENTER, FULL_LIFE, B_BASE_CENTER)
+Barracks::Barracks(Gameobject* go) : Behaviour(go, BARRACKS, FULL_LIFE, B_BARRACKS)
 {
 	Transform* t = game_object->GetTransform();
 
@@ -37,7 +37,7 @@ Base_Center::Base_Center(Gameobject* go) : Behaviour(go, BASE_CENTER, FULL_LIFE,
 	}
 }
 
-Base_Center::~Base_Center()
+Barracks::~Barracks()
 {
 	Transform* t = game_object->GetTransform();
 	if (t)
@@ -50,7 +50,7 @@ Base_Center::~Base_Center()
 
 
 
-void Base_Center::AfterDamageAction()
+void Barracks::AfterDamageAction()
 {
 	if (current_life <= 0)
 		OnKill(type);
@@ -61,7 +61,7 @@ void Base_Center::AfterDamageAction()
 }
 
 
-void Base_Center::Upgrade()
+void Barracks::Upgrade()
 {
 	if (bc_lvl < bc_max_lvl) {
 
@@ -76,14 +76,14 @@ void Base_Center::Upgrade()
 	}
 }
 
-void Base_Center::CreatePanel()
+void Barracks::CreatePanel()
 {
 	posY_panel = 0.8f;
 	panel_tex_ID = App->tex.Load("textures/buildPanelSample.png");
 
 	//------------------------- BASE PANEL --------------------------------------
 
-	selectionPanel = App->scene->AddGameobject("Main Base Build Panel", App->scene->hud_canvas_go);
+	selectionPanel = App->scene->AddGameobject("Barracks Build Panel", App->scene->hud_canvas_go);
 
 	panel = new C_Image(selectionPanel);
 	panel->target = { 0.9f, posY_panel, 1.0f, 1.0f };
@@ -91,38 +91,32 @@ void Base_Center::CreatePanel()
 	panel->section = { 0, 0, 119, 119 };
 	panel->tex_id = panel_tex_ID;
 
-	gatherer_btn = new C_Button(selectionPanel, Event(BUILD_GATHERER, this->AsBehaviour(), spawnPointX, spawnPointY));//Top left
-	gatherer_btn->target = { 0.912f, posY_panel+0.02f, 1.0f, 1.0f };
-	gatherer_btn->offset = { 0.0f, 0.0f };
-	gatherer_btn->section = { 121, 38, 38, 38 };
-	gatherer_btn->tex_id = panel_tex_ID;
-
 	meleeUnit_btn = new C_Button(selectionPanel, Event(BUILD_MELEE, this->AsBehaviour(), spawnPointX, spawnPointY));//Top right
-	meleeUnit_btn->target = { 0.95f, posY_panel+0.02f, 1.0f, 1.0f };
+	meleeUnit_btn->target = { 0.95f, posY_panel + 0.02f, 1.0f, 1.0f };
 	meleeUnit_btn->offset = { 0.0f,0.0f };
 	meleeUnit_btn->section = { 121, 0, 38, 38 };
 	meleeUnit_btn->tex_id = panel_tex_ID;
 
 	rangedUnit_btn = new C_Button(selectionPanel, Event(BUILD_RANGED, this->AsBehaviour(), spawnPointX, spawnPointY));//Bottom left
-	rangedUnit_btn->target = { 0.912f, posY_panel+0.085f, 1.0f, 1.0f };
+	rangedUnit_btn->target = { 0.912f, posY_panel + 0.085f, 1.0f, 1.0f };
 	rangedUnit_btn->offset = { 0.0f, 0.0f };
 	rangedUnit_btn->section = { 161, 0, 38, 38 };
 	rangedUnit_btn->tex_id = panel_tex_ID;
 
 	superUnit_btn = new C_Button(selectionPanel, Event(BUILD_SUPER, this->AsBehaviour(), spawnPointX, spawnPointY));//Bottom right
-	superUnit_btn->target = { 0.95f, posY_panel+0.085f, 1.0f, 1.0f };
+	superUnit_btn->target = { 0.95f, posY_panel + 0.085f, 1.0f, 1.0f };
 	superUnit_btn->offset = { 0.0f, 0.0f };
 	superUnit_btn->section = { 162, 38, 38, 38 };
 	superUnit_btn->tex_id = panel_tex_ID;
 }
 
-void Base_Center::UpdatePanel()
+void Barracks::UpdatePanel()
 {
 
 }
 
 
-void Base_Center::create_bar() {
+void Barracks::create_bar() {
 
 	pos_y_HUD = 0.17;
 
@@ -185,13 +179,13 @@ void Base_Center::create_bar() {
 
 }
 
-void Base_Center::update_health_ui() {
+void Barracks::update_health_ui() {
 
 	health->target = { (0.385f) - ((0.385f - 0.059f) * (1.0f - float(current_life) / float(max_life))), pos_y_HUD - 0.02f, 1.92f * (float(current_life) / float(max_life)), 1.0f };
 
 }
 
-void Base_Center::update_upgrades_ui() {
+void Barracks::update_upgrades_ui() {
 
 	upgrades->section = { 16 + 36 * (bc_lvl - 1), 806, 33, 33 };
 

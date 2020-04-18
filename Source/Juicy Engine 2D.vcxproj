@@ -142,6 +142,7 @@
   <ItemGroup>
     <ClCompile Include="AudioSource.cpp" />
     <ClCompile Include="BarMenu.cpp" />
+    <ClCompile Include="Barracks.cpp" />
     <ClCompile Include="BaseCenter.cpp" />
     <ClCompile Include="Behaviour.cpp" />
     <ClCompile Include="Canvas.cpp" />
@@ -196,6 +197,7 @@
   <ItemGroup>
     <ClInclude Include="AudioSource.h" />
     <ClInclude Include="BarMenu.h" />
+    <ClInclude Include="Barracks.h" />
     <ClInclude Include="BaseCenter.h" />
     <ClInclude Include="Behaviour.h" />
     <ClInclude Include="Canvas.h" />
