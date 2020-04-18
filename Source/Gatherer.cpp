@@ -33,7 +33,7 @@ void Gatherer::CreatePanel()
 
 	//------------------------- BASE PANEL --------------------------------------
 
-	selectionPanel = App->scene->AddGameobject("Gatherer Build Panel", App->scene->hud_canvas_go);
+	selectionPanel = App->scene->AddGameobjectToCanvas("Gatherer Build Panel");
 
 	panel = new C_Image(selectionPanel);
 	panel->target = { 0.9f, posY_panel, 1.0f, 1.0f };
