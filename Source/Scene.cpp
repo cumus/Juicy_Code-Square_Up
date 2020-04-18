@@ -50,6 +50,7 @@ Scene::Scene() : Module("scene")
 	last_cam_pos = { 0,0 };
 	minimap = nullptr;
 	groupSelect = false;
+	pause_background_go = nullptr;
 }
 
 Scene::~Scene()
@@ -847,17 +848,31 @@ void Scene::UpdateSelection()
 			App->input->GetMousePosition(x, y);
 			RectF cam = App->render->GetCameraRectF();
 			std::pair<float, float> mouseOnMap = Map::F_WorldToMap(float(x) + cam.x, float(y) + cam.y);
-			std::pair<float, float> modPos;
-			modPos.first = mouseOnMap.first;
-			modPos.second = mouseOnMap.second;
-
-			if (groupSelect && !group.empty())//Move group selected
+			if (App->pathfinding.ValidTile(int(mouseOnMap.first),int(mouseOnMap.second)))
 			{
-				bool incX = false;
-				for (std::vector<Gameobject*>::iterator it = group.begin(); it != group.end(); ++it)
+				std::pair<float, float> modPos;
+				modPos.first = mouseOnMap.first;
+				modPos.second = mouseOnMap.second;
+
+				if (groupSelect && !group.empty())//Move group selected
 				{
-					while (App->pathfinding.ValidTile(int(modPos.first), int(modPos.second)) == false)
+					bool incX = false;
+					for (std::vector<Gameobject*>::iterator it = group.begin(); it != group.end(); ++it)
 					{
+						while (App->pathfinding.ValidTile(int(modPos.first), int(modPos.second)) == false)
+						{
+							if (incX)
+							{
+								modPos.first++;
+								incX = false;
+							}
+							else
+							{
+								modPos.second++;
+								incX = true;
+							}
+						}
+						Event::Push(ON_RIGHT_CLICK, *it, vec(mouseOnMap.first, mouseOnMap.second, 0.5f), vec(modPos.first, modPos.second, 0.5f));
 						if (incX)
 						{
 							modPos.first++;
@@ -869,27 +884,16 @@ void Scene::UpdateSelection()
 							incX = true;
 						}
 					}
-					Event::Push(ON_RIGHT_CLICK, *it, vec(mouseOnMap.first, mouseOnMap.second, 0.5f), vec(modPos.first, modPos.second, 0.5f));
-					if (incX)
-					{
-						modPos.first++;
-						incX = false;
-					}
-					else
-					{
-						modPos.second++;
-						incX = true;
-					}
 				}
-			}
-			else//Move one selected
-			{
-				if (selection)
+				else//Move one selected
 				{
-					Event::Push(ON_RIGHT_CLICK, selection, vec(mouseOnMap.first, mouseOnMap.second, 0.5f), vec(-1, -1, -1));
-					groupSelect = false;
+					if (selection)
+					{
+						Event::Push(ON_RIGHT_CLICK, selection, vec(mouseOnMap.first, mouseOnMap.second, 0.5f), vec(-1, -1, -1));
+						groupSelect = false;
+					}
+					else groupSelect = false;
 				}
-				else groupSelect = false;
 			}
 		}
 	}
@@ -1300,96 +1304,99 @@ void Scene::OnEventStateMachine(GameplayState state)
 	}
 }
 
-bool Scene::PauseMenu()
+void Scene::PauseMenu()
 {
-	bool ret = true;
+	if (pause_background_go == nullptr)
+	{
+		//------------------------- BACKGROUND -----------------------------------
 
-	//------------------------- BACKGROUND -----------------------------------
+		pause_background_go = AddGameobjectToCanvas("Background");
 
-	pause_background_go = AddGameobjectToCanvas("Background");
+		C_Image* background = new C_Image(pause_background_go);
+		background->target = { 0.66f, 0.95f, 0.6f, 0.6f };
+		background->offset = { -640.f, -985.f };
+		background->section = { 0, 0, 640, 985 };
+		background->tex_id = App->tex.Load("Assets/textures/pause-bg.png");
 
-	C_Image* background = new C_Image(pause_background_go);
-	background->target = { 0.66f, 0.95f, 0.6f, 0.6f };
-	background->offset = { -640.f, -985.f };
-	background->section = { 0, 0, 640, 985 };
-	background->tex_id = App->tex.Load("Assets/textures/pause-bg.png");
+		//------------------------- RESUME -----------------------------------------
 
-	//------------------------- RESUME -----------------------------------------
+		Gameobject* resume_go = AddGameobject("resume Button", pause_background_go);
 
-	Gameobject* resume_go = AddGameobject("resume Button", pause_background_go);
+		C_Button* resume = new C_Button(resume_go, Event(SCENE_PLAY, this, App));
+		resume->target = { 0.51f, 0.3f, 0.3f, 0.3f };
+		resume->offset = { -525.f, -100.f };
+		resume->section = { 0, 0, 1070, 207 };
+		resume->tex_id = App->tex.Load("Assets/textures/button.png");
 
-	C_Button* resume = new C_Button(resume_go, Event(SCENE_PLAY, this, App));
-	resume->target = { 0.51f, 0.3f, 0.3f, 0.3f };
-	resume->offset = { -525.f, -100.f };
-	resume->section = { 0, 0, 1070, 207 };
-	resume->tex_id = App->tex.Load("Assets/textures/button.png");
+		C_Button* resume_fx = new C_Button(resume_go, Event(PLAY_FX, App->audio, int(SELECT), 0));
+		resume_fx->target = { 0.51f, 0.3f, 0.3f, 0.3f };
+		resume_fx->offset = { -525.f, -100.f };
+		resume_fx->section = { 0, 0, 1070, 207 };
 
-	C_Button* resume_fx = new C_Button(resume_go, Event(PLAY_FX, App->audio, int(SELECT), 0));
-	resume_fx->target = { 0.51f, 0.3f, 0.3f, 0.3f };
-	resume_fx->offset = { -525.f, -100.f };
-	resume_fx->section = { 0, 0, 1070, 207 };
+		/*//------------------------- SAVE --------------------------------------
 
-	/*//------------------------- SAVE --------------------------------------
+		Gameobject* save_go = AddGameobject("save button", pause_background_go);
 
-	Gameobject* save_go = AddGameobject("save button", pause_background_go);
+		C_Button* save = new C_Button(save_go, Event(SCENE_CHANGE, this, MAIN));
+		save->target = { 0.51f, 0.3f, 0.3f, 0.3f };
+		save->offset = { -525.f, 200.f };
+		save->section = { 0, 0, 1070, 207 };
+		save->tex_id = App->tex.Load("textures/button.png");
 
-	C_Button* save = new C_Button(save_go, Event(SCENE_CHANGE, this, MAIN));
-	save->target = { 0.51f, 0.3f, 0.3f, 0.3f };
-	save->offset = { -525.f, 200.f };
-	save->section = { 0, 0, 1070, 207 };
-	save->tex_id = App->tex.Load("textures/button.png");
+		C_Button* save_fx = new C_Button(save_go, Event(PLAY_FX, App->audio, int(SELECT), 0));
+		save_fx->target = { 0.51f, 0.3f, 0.3f, 0.3f };
+		save_fx->offset = { -525.f, 200.f };
+		save_fx->section = { 0, 0, 1070, 207 };
 
-	C_Button* save_fx = new C_Button(save_go, Event(PLAY_FX, App->audio, int(SELECT), 0));
-	save_fx->target = { 0.51f, 0.3f, 0.3f, 0.3f };
-	save_fx->offset = { -525.f, 200.f };
-	save_fx->section = { 0, 0, 1070, 207 };
+		//------------------------- LOAD --------------------------------------
 
-	//------------------------- LOAD --------------------------------------
+		Gameobject* load_go = AddGameobject("load Button", pause_background_go);
 
-	Gameobject* load_go = AddGameobject("load Button", pause_background_go);
+		C_Button* load = new C_Button(load_go, Event(SCENE_CHANGE, this, MAIN));
+		load->target = { 0.51f, 0.3f, 0.3f, 0.3f };
+		load->offset = { -525.f, 500.f };
+		load->section = { 0, 0, 1070, 207 };
+		load->tex_id = App->tex.Load("textures/button.png");
 
-	C_Button* load = new C_Button(load_go, Event(SCENE_CHANGE, this, MAIN));
-	load->target = { 0.51f, 0.3f, 0.3f, 0.3f };
-	load->offset = { -525.f, 500.f };
-	load->section = { 0, 0, 1070, 207 };
-	load->tex_id = App->tex.Load("textures/button.png");
+		C_Button* load_fx = new C_Button(load_go, Event(PLAY_FX, App->audio, int(SELECT), 0));
+		load_fx->target = { 0.51f, 0.3f, 0.3f, 0.3f };
+		load_fx->offset = { -525.f, 500.f };
+		load_fx->section = { 0, 0, 1070, 207 };
 
-	C_Button* load_fx = new C_Button(load_go, Event(PLAY_FX, App->audio, int(SELECT), 0));
-	load_fx->target = { 0.51f, 0.3f, 0.3f, 0.3f };
-	load_fx->offset = { -525.f, 500.f };
-	load_fx->section = { 0, 0, 1070, 207 };
+		//------------------------- OPTIONS --------------------------------------
 
-	//------------------------- OPTIONS --------------------------------------
+		Gameobject* options_go = AddGameobject("options Button", pause_background_go);
 
-	Gameobject* options_go = AddGameobject("options Button", pause_background_go);
+		C_Button* options = new C_Button(options_go, Event(SCENE_CHANGE, this, MAIN));
+		options->target = { 0.51f, 0.3f, 0.3f, 0.3f };
+		options->offset = { -525.f, 800.f };
+		options->section = { 0, 0, 1070, 207 };
+		options->tex_id = App->tex.Load("textures/button.png");
 
-	C_Button* options = new C_Button(options_go, Event(SCENE_CHANGE, this, MAIN));
-	options->target = { 0.51f, 0.3f, 0.3f, 0.3f };
-	options->offset = { -525.f, 800.f };
-	options->section = { 0, 0, 1070, 207 };
-	options->tex_id = App->tex.Load("textures/button.png");
+		C_Button* options_fx = new C_Button(options_go, Event(PLAY_FX, App->audio, int(SELECT), 0));
+		options_fx->target = { 0.51f, 0.3f, 0.3f, 0.3f };
+		options_fx->offset = { -525.f, 800.f };
+		options_fx->section = { 0, 0, 1070, 207 };*/
 
-	C_Button* options_fx = new C_Button(options_go, Event(PLAY_FX, App->audio, int(SELECT), 0));
-	options_fx->target = { 0.51f, 0.3f, 0.3f, 0.3f };
-	options_fx->offset = { -525.f, 800.f };
-	options_fx->section = { 0, 0, 1070, 207 };*/
+		//------------------------- MAIN MENU --------------------------------------
 
-	//------------------------- MAIN MENU --------------------------------------
+		Gameobject* main_menu_go = AddGameobject("main menu Button", pause_background_go);
 
-	Gameobject* main_menu_go = AddGameobject("main menu Button", pause_background_go);
+		C_Button* main_menu = new C_Button(main_menu_go, Event(SCENE_CHANGE, this, MENU));
+		main_menu->target = { 0.51f, 0.3f, 0.3f, 0.3f };
+		main_menu->offset = { -525.f, 200.f };
+		main_menu->section = { 0, 0, 1070, 207 };
+		main_menu->tex_id = App->tex.Load("Assets/textures/button.png");
 
-	C_Button* main_menu = new C_Button(main_menu_go, Event(SCENE_CHANGE, this, MENU));
-	main_menu->target = { 0.51f, 0.3f, 0.3f, 0.3f };
-	main_menu->offset = { -525.f, 200.f  };
-	main_menu->section = { 0, 0, 1070, 207 };
-	main_menu->tex_id = App->tex.Load("Assets/textures/button.png");
+		C_Button* main_menu_fx = new C_Button(main_menu_go, Event(PLAY_FX, App->audio, int(SELECT), 0));
+		main_menu_fx->target = { 0.51f, 0.3f, 0.3f, 0.3f };
+		main_menu_fx->offset = { -525.f, 200.f };
+		main_menu_fx->section = { 0, 0, 1070, 207 };
 
-	C_Button* main_menu_fx = new C_Button(main_menu_go, Event(PLAY_FX, App->audio, int(SELECT), 0));
-	main_menu_fx->target = { 0.51f, 0.3f, 0.3f, 0.3f };
-	main_menu_fx->offset = { -525.f, 200.f };
-	main_menu_fx->section = { 0, 0, 1070, 207 };
-
-	return ret;
+		pause_background_go->SetInactive();
+	}
+	if (pause_background_go->IsActive()) pause_background_go->SetInactive();
+	else pause_background_go->SetActive();
 }
 
 /*bool Scene::DestroyPauseMenu()
@@ -1670,7 +1677,7 @@ void Scene::GodMode()
 		Gameobject* unit_go = AddGameobject("Ally Melee unit");
 		unit_go->GetTransform()->SetLocalPos({ float(position.first), float(position.second), 0.0f });
 
-		minimap->AddToMinimap(unit_go, { 0,255,0,255 });
+		//minimap->AddToMinimap(unit_go, { 0,255,0,255 });
 
 		new MeleeUnit(unit_go);
 	}
@@ -1753,7 +1760,7 @@ void Scene::GodMode()
 			{
 				Gameobject* gather_go = AddGameobject("Gatherer unit");
 				gather_go->GetTransform()->SetLocalPos({ float(position.first), float(position.second), 0.0f });
-				minimap->AddToMinimap(gather_go, { 0,0,255,255 });
+				//minimap->AddToMinimap(gather_go, { 0,0,255,255 });
 
 				new Gatherer(gather_go);
 				edge_value -= 10;

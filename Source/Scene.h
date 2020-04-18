@@ -99,7 +99,7 @@ private:
 	void UpdateStateMachine();
 	void OnEventStateMachine(GameplayState state);
 
-	bool PauseMenu();
+	void PauseMenu();
 	//bool DestroyPauseMenu();
 
 	bool ChangeToScene(SceneType scene);

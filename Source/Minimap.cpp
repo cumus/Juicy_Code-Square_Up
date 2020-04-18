@@ -22,7 +22,6 @@ Minimap::Minimap(Gameobject* go) :
 	background_rect = { 585, 656, 384, 216 };
 	minimap_camera = { 0, 0, 0, 0 };
 	camera_color = { 255, 255, 255, 255 };
-	//unit_color = {0,255,0,255};
 	minimapSel = false;
 	background_tex = App->tex.Load("Assets/textures/Iconos_square_up.png");
 
@@ -133,7 +132,16 @@ void Minimap::Update()
 			representation.x += output.x + output.w / 2;
 			representation.y += output.y;
 
-			App->render->DrawQuad(representation,  {0,255,0,255}, true, EDITOR, false);
+			switch (it->second->AsBehaviour()->GetType())
+			{
+			case UNIT_MELEE:
+				App->render->DrawQuad(representation, { 0,255,0,255 }, true, EDITOR, false);
+				break;
+			case GATHERER:
+				App->render->DrawQuad(representation, { 29,197,255,255 }, true, EDITOR, false);
+				break;
+			}
+			
 
 		}
 	}
