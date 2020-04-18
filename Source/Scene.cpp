@@ -965,13 +965,24 @@ void Scene::UpdateStateMachine()
 
 		break;
 	case R_CLICK_MOVEMENT:
+		if(App->input->GetMouseButtonDown(2) == KEY_DOWN /*&& App->scene->selection == gather_go*/){
+			
+			tutorial_clicks++;
+			if(tutorial_clicks == 10) Event::Push(GAMEPLAY, this, EDGE_STATE);
+			
+			LOG("Clicks %d", tutorial_clicks);
+
+		}
 		
-
-
-
 		break;
 	case EDGE_STATE:
 
+		if (edge_t_go != nullptr && edge_t_go->GetBehaviour()->GetState() == DESTROYED) {
+
+			edge_t_go = nullptr;
+			Event::Push(GAMEPLAY, this, BASE_CENTER_STATE);
+		}
+		
 		break;
 	case BASE_CENTER_STATE:
 	
@@ -1026,11 +1037,6 @@ void Scene::UpdateStateMachine()
 		}
 
 		break;
-	case LOSE:
-
-		
-
-		break;
 
 	default:
 		break;
@@ -1049,7 +1055,7 @@ void Scene::OnEventStateMachine(GameplayState state)
 
 		cam_mov_go = AddGameobjectToCanvas("cam_mov");
 		cam_mov = new C_Image(cam_mov_go);
-		next = new C_Button(cam_mov_go, Event(GAMEPLAY, this, R_CLICK_MOVEMENT));
+		next = new C_Button(cam_mov_go, Event(SCENE_PLAY, this, R_CLICK_MOVEMENT));
 
 		cam_mov->target = { 0.66f, 0.95f, 0.6f, 0.6f };
 		cam_mov->offset = { -640.f, -985.f };
@@ -1092,33 +1098,51 @@ void Scene::OnEventStateMachine(GameplayState state)
 
 		new Gatherer(gather_go);
 
+		current_state = R_CLICK_MOVEMENT;
 		break;
 	}
 	case EDGE_STATE:
-		//Gatherer mines an previous spawned edge
+	{
+		R_click_mov_go->SetInactive();
+
 		edge_go = AddGameobjectToCanvas("edge_go");
 		edge = new C_Image(edge_go);
 
 		edge->target = { 0.66f, 0.95f, 0.6f, 0.6f };
 		edge->offset = { -640.f, -985.f };
-		edge->section = { 0, 0, 640, 985 };
-		edge->tex_id = App->tex.Load("Assets/textures/pause-bg.png");
+		edge->section = { 0, 0, 1070, 207 };
+		edge->tex_id = App->tex.Load("Assets/textures/button.png");
 
-		new Edge(edge_go);
 
+		std::pair<float, float> current_cam_pos_t = Map::F_WorldToMap(current_cam_pos.first, current_cam_pos.second);
+
+		
+		edge_t_go = AddGameobject("Tutorial Gatherer");
+		edge_t_go->GetTransform()->SetLocalPos({ current_cam_pos_t.first, current_cam_pos_t.second,0.0f });
+
+		new Edge(edge_t_go);
+
+
+		current_state = EDGE_STATE;
+	}
 		break;
 	case BASE_CENTER_STATE:
+	{
+		edge_go->SetInactive();
+	
+
 		base_center_go = AddGameobjectToCanvas("base_center_go");
 		base_center = new C_Image(base_center_go);
 
-		base_center->target = { 0.66f, 0.95f, 0.6f, 0.6f };
+		base_center->target = { 0.50f, 0.85f, 0.6f, 0.6f };
 		base_center->offset = { -640.f, -985.f };
-		base_center->section = { 0, 0, 640, 985 };
-		base_center->tex_id = App->tex.Load("Assets/textures/pause-bg.png");
+		base_center->section = { 0, 0, 1070, 207 };
+		base_center->tex_id = App->tex.Load("Assets/textures/button.png");
 
-		new Base_Center(base_center_go);
+	
 
-
+	current_state = EDGE_STATE;
+	}
 		break;
 	case BARRACKS_STATE:
 		barracks_state_go = AddGameobjectToCanvas("barracks_state_go");

@@ -186,6 +186,7 @@ private:
 	float last_distance;
 	float total_distance;
 	bool r_c_comprobation = true;
+	int tutorial_clicks = 0;
 
 	std::pair<float, float> last_cam_pos;
 	std::pair<float, float> current_cam_pos;
@@ -197,6 +198,7 @@ private:
 	Gameobject* R_click_mov_go;
 	Gameobject* gather_go;
 	Gameobject* edge_go;
+	Gameobject* edge_t_go;
 	Gameobject* base_center_go;
 	Gameobject* barracks_state_go;
 	Gameobject* resources_state_go;

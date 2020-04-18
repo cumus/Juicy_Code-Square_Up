@@ -112,13 +112,13 @@ public:
 	
 	static std::map<double, Behaviour*> b_map;
 	UnitState current_state;
-
+	int max_life, current_life, damage;
 protected:	
 
 	UnitType type;
 	
 	// Stats
-	int max_life, current_life, damage;
+	
 	float attack_range, vision_range,dieDelay;
 	float rayCastTimer;
 	bool shoot;

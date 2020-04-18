@@ -12,7 +12,7 @@ Gatherer::Gatherer(Gameobject* go) : B_Unit(go, GATHERER, IDLE, B_UNIT)
 {
 	atkDelay = 2.0;
 	speed = 3;
-	damage = 5;
+	damage = 10;
 	current_life = max_life = 20;
 	attack_range = 2.0f;
 	vision_range = 10.0f;
