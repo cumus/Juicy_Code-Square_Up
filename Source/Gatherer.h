@@ -22,7 +22,7 @@ public:
 	float posY_panel;
 	int panel_tex_ID;
 	C_Image* panel;
-	//C_Button* barracks_btn;
+	C_Button* barracks_btn;
 	C_Button* tower_btn;
 	//C_Button* wall_btn;
 	C_Button* baseBtn;

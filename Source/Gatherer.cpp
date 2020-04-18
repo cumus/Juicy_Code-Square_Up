@@ -41,11 +41,11 @@ void Gatherer::CreatePanel()
 	panel->section = { 0, 0, 119, 119 };
 	panel->tex_id = panel_tex_ID;
 
-	/*barracks_btn = new C_Button(selectionPanel, Event(PLACE_BUILDING, App->scene, int(BARRACKS)));//Top left
+	barracks_btn = new C_Button(selectionPanel, Event(PLACE_BUILDING, App->scene, int(BARRACKS)));//Top left
 	barracks_btn->target = { 0.912f, posY_panel + 0.02f, 1.0f, 1.0f };
 	barracks_btn->offset = { 0.0f, 0.0f };
 	barracks_btn->section = { 121, 38, 38, 38 };
-	barracks_btn->tex_id = panel_tex_ID;*/
+	barracks_btn->tex_id = panel_tex_ID;
 
 	tower_btn = new C_Button(selectionPanel, Event(PLACE_BUILDING, App->scene, int(TOWER)));//Top right
 	tower_btn->target = { 0.95f, posY_panel + 0.02f, 1.0f, 1.0f };
