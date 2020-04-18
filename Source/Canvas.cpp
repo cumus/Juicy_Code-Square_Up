@@ -25,7 +25,7 @@ UI_Component::~UI_Component()
 
 void UI_Component::ComputeOutputRect(float width, float height)
 {
-	if (canvas)
+	if (canvas && parent)
 	{
 		std::pair<float, float> res_ratio = Render::GetResRatio();
 		std::pair<float, float> canvas_scale = canvas->GetScale();
