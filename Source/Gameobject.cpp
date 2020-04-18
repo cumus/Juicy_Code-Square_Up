@@ -82,6 +82,11 @@ void Gameobject::PostUpdate()
 			(*child)->PostUpdate();
 }
 
+bool Gameobject::IsActive() const
+{
+	return active && (parent ? parent->IsActive() : true);
+}
+
 void Gameobject::RecieveEvent(const Event & e)
 {
 	switch (e.type)

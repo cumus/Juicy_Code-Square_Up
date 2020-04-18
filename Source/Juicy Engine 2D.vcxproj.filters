@@ -37,9 +37,6 @@
     <ClCompile Include="Cvar.cpp">
       <Filter>Source\Independent Managers\Events</Filter>
     </ClCompile>
-    <ClCompile Include="Gameobject.cpp">
-      <Filter>Source\Gameobjects</Filter>
-    </ClCompile>
     <ClCompile Include="Transform.cpp">
       <Filter>Source\Gameobjects\Components</Filter>
     </ClCompile>
@@ -72,9 +69,6 @@
     </ClCompile>
     <ClCompile Include="PathfindingManager.cpp">
       <Filter>Source\Independent Managers</Filter>
-    </ClCompile>
-    <ClCompile Include="Behaviour.cpp">
-      <Filter>Source\Gameobjects\Components</Filter>
     </ClCompile>
     <ClCompile Include="Component.cpp">
       <Filter>Source\Gameobjects\Components</Filter>
@@ -130,34 +124,40 @@
     <ClCompile Include="Canvas.cpp">
       <Filter>Source\Gameobjects\Components\UI</Filter>
     </ClCompile>
-    <ClCompile Include="Edge.cpp">
-      <Filter>Source\Gameobjects</Filter>
-    </ClCompile>
     <ClCompile Include="Minimap.cpp">
       <Filter>Source\Modules</Filter>
     </ClCompile>
-    <ClCompile Include="Tower.cpp">
-      <Filter>Source\Gameobjects</Filter>
+    <ClCompile Include="Barracks.cpp">
+      <Filter>Source\Gameobjects\Components\Behaviours</Filter>
     </ClCompile>
     <ClCompile Include="BaseCenter.cpp">
-      <Filter>Source\Gameobjects</Filter>
+      <Filter>Source\Gameobjects\Components\Behaviours</Filter>
+    </ClCompile>
+    <ClCompile Include="Edge.cpp">
+      <Filter>Source\Gameobjects\Components\Behaviours</Filter>
     </ClCompile>
     <ClCompile Include="EnemyMeleeUnit.cpp">
-      <Filter>Source\Gameobjects</Filter>
-    </ClCompile>
-    <ClCompile Include="MeleeUnit.cpp">
-      <Filter>Source\Gameobjects</Filter>
+      <Filter>Source\Gameobjects\Components\Behaviours</Filter>
     </ClCompile>
     <ClCompile Include="Gatherer.cpp">
-      <Filter>Source\Gameobjects</Filter>
+      <Filter>Source\Gameobjects\Components\Behaviours</Filter>
+    </ClCompile>
+    <ClCompile Include="MeleeUnit.cpp">
+      <Filter>Source\Gameobjects\Components\Behaviours</Filter>
     </ClCompile>
     <ClCompile Include="RangedUnit.cpp">
-      <Filter>Source\Gameobjects</Filter>
+      <Filter>Source\Gameobjects\Components\Behaviours</Filter>
     </ClCompile>
     <ClCompile Include="Spawner.cpp">
-      <Filter>Source\Gameobjects</Filter>
+      <Filter>Source\Gameobjects\Components\Behaviours</Filter>
     </ClCompile>
-    <ClCompile Include="Barracks.cpp">
+    <ClCompile Include="Tower.cpp">
+      <Filter>Source\Gameobjects\Components\Behaviours</Filter>
+    </ClCompile>
+    <ClCompile Include="Behaviour.cpp">
+      <Filter>Source\Gameobjects\Components\Behaviours</Filter>
+    </ClCompile>
+    <ClCompile Include="Gameobject.cpp">
       <Filter>Source\Gameobjects</Filter>
     </ClCompile>
   </ItemGroup>
@@ -213,9 +213,6 @@
     <ClInclude Include="Cvar.h">
       <Filter>Source\Independent Managers\Events</Filter>
     </ClInclude>
-    <ClInclude Include="Gameobject.h">
-      <Filter>Source\Gameobjects</Filter>
-    </ClInclude>
     <ClInclude Include="Transform.h">
       <Filter>Source\Gameobjects\Components</Filter>
     </ClInclude>
@@ -266,9 +263,6 @@
     </ClInclude>
     <ClInclude Include="PathfindingManager.h">
       <Filter>Source\Independent Managers</Filter>
-    </ClInclude>
-    <ClInclude Include="Behaviour.h">
-      <Filter>Source\Gameobjects\Components</Filter>
     </ClInclude>
     <ClInclude Include="UI_Button.h">
       <Filter>Source\Modules\Editor\UI Elements</Filter>
@@ -321,34 +315,40 @@
     <ClInclude Include="Canvas.h">
       <Filter>Source\Gameobjects\Components\UI</Filter>
     </ClInclude>
-    <ClInclude Include="Edge.h">
-      <Filter>Source\Gameobjects</Filter>
-    </ClInclude>
     <ClInclude Include="Minimap.h">
       <Filter>Source\Modules</Filter>
     </ClInclude>
-    <ClInclude Include="Tower.h">
-      <Filter>Source\Gameobjects</Filter>
+    <ClInclude Include="Barracks.h">
+      <Filter>Source\Gameobjects\Components\Behaviours</Filter>
     </ClInclude>
     <ClInclude Include="BaseCenter.h">
-      <Filter>Source\Gameobjects</Filter>
+      <Filter>Source\Gameobjects\Components\Behaviours</Filter>
+    </ClInclude>
+    <ClInclude Include="Edge.h">
+      <Filter>Source\Gameobjects\Components\Behaviours</Filter>
     </ClInclude>
     <ClInclude Include="EnemyMeleeUnit.h">
-      <Filter>Source\Gameobjects</Filter>
-    </ClInclude>
-    <ClInclude Include="MeleeUnit.h">
-      <Filter>Source\Gameobjects</Filter>
+      <Filter>Source\Gameobjects\Components\Behaviours</Filter>
     </ClInclude>
     <ClInclude Include="Gatherer.h">
-      <Filter>Source\Gameobjects</Filter>
+      <Filter>Source\Gameobjects\Components\Behaviours</Filter>
+    </ClInclude>
+    <ClInclude Include="MeleeUnit.h">
+      <Filter>Source\Gameobjects\Components\Behaviours</Filter>
     </ClInclude>
     <ClInclude Include="RangedUnit.h">
-      <Filter>Source\Gameobjects</Filter>
+      <Filter>Source\Gameobjects\Components\Behaviours</Filter>
     </ClInclude>
     <ClInclude Include="Spawner.h">
-      <Filter>Source\Gameobjects</Filter>
+      <Filter>Source\Gameobjects\Components\Behaviours</Filter>
     </ClInclude>
-    <ClInclude Include="Barracks.h">
+    <ClInclude Include="Tower.h">
+      <Filter>Source\Gameobjects\Components\Behaviours</Filter>
+    </ClInclude>
+    <ClInclude Include="Behaviour.h">
+      <Filter>Source\Gameobjects\Components\Behaviours</Filter>
+    </ClInclude>
+    <ClInclude Include="Gameobject.h">
       <Filter>Source\Gameobjects</Filter>
     </ClInclude>
   </ItemGroup>
@@ -418,6 +418,9 @@
     </Filter>
     <Filter Include="Source\Gameobjects\Components\UI">
       <UniqueIdentifier>{adf43043-9169-4b89-9631-f699c430486a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Gameobjects\Components\Behaviours">
+      <UniqueIdentifier>{85e08f8f-02fe-4398-92e9-eaa38022daaf}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

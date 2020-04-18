@@ -9,6 +9,11 @@ Component::Component(ComponentType type, Gameobject* go) : id(++component_count)
 		go->AddComponent(this);
 }
 
+bool Component::IsActive() const
+{
+	return active && game_object->IsActive();
+}
+
 bool Component::operator==(Component * comp)
 {
 	return comp != nullptr && id == comp->id;

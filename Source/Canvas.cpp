@@ -71,7 +71,7 @@ void C_Canvas::PreUpdate()
 	for (std::vector<Gameobject*>::const_iterator it = childs.cbegin(); it != childs.cend(); ++it)
 	{
 		const UI_Component* comp = (*it)->GetUI();
-		if (comp && comp->PointInsideOutputRect(x, y))
+		if (comp && comp->IsActive() && comp->PointInsideOutputRect(x, y))
 			hovered_childs++;
 	}
 }

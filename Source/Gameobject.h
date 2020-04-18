@@ -20,7 +20,7 @@ public:
 	void Update();
 	void PostUpdate();
 
-	bool IsActive() const { return active; }
+	bool IsActive() const;
 	void SetActive() { active = true; }
 	void SetInactive() { active = false; }
 
