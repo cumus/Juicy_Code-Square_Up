@@ -19,6 +19,7 @@
 #include "EnemyMeleeUnit.h"
 #include "MeleeUnit.h"
 #include "Spawner.h"
+#include "Barracks.h"
 
 #include "Defs.h"
 #include "Log.h"
@@ -1053,9 +1054,9 @@ void Scene::PlaceMode(int type)
 		break;
 	case TOWER: new Tower(go = AddGameobject("Tower")); break;
 	case WALL: break;
-	case BARRACKS: break;
+	case BARRACKS: new Barracks(go = AddGameobject("Barracks")); break; 
 	case LAB: break;
-	case EDGE: new Edge(go = AddGameobject("Tower")); break;
+	case EDGE: new Edge(go = AddGameobject("Edge")); break;
 	default: break;
 	}
 
@@ -1236,6 +1237,16 @@ void Scene::GodMode()
 
 	// Swap map orientation
 	if (App->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN) Map::SwapMapType();
+
+	if (App->input->GetKey(SDL_SCANCODE_2) == KEY_DOWN)//Barracks
+	{
+		std::pair<int, int> position = Map::WorldToTileBase(float(x + cam.x), float(y + cam.y));
+
+		Gameobject* barrack_go = AddGameobject("Barracks building");
+		barrack_go->GetTransform()->SetLocalPos({ float(position.first), float(position.second), 0.0f });
+
+		new Barracks(barrack_go);
+	}
 
 	if (App->input->GetKey(SDL_SCANCODE_3) == KEY_DOWN)
 	{
