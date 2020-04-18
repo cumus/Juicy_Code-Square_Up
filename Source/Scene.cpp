@@ -49,6 +49,7 @@ Scene::Scene() : Module("scene")
 	cooldownSpawn = 5.0f;
 	last_cam_pos = { 0,0 };
 	minimap = nullptr;
+	groupSelect = false;
 }
 
 Scene::~Scene()
@@ -755,79 +756,97 @@ void Scene::UpdateSelection()
 {
 	if (!C_Canvas::MouseOnUI() && !App->editor->MouseOnWindow())
 	{
-		//GROUP SELECTION//
-		switch (App->input->GetMouseButtonDown(0))
+		if (App->input->GetMouseButtonDown(0))
 		{
-		case KEY_DOWN:
-		{
-			App->input->GetMousePosition(groupStart.x, groupStart.y);
-			break;
-		}
-		case KEY_REPEAT:
-		{
-			App->input->GetMousePosition(mouseExtend.x, mouseExtend.y);
-			App->render->DrawQuad({ groupStart.x, groupStart.y, mouseExtend.x - groupStart.x, mouseExtend.y - groupStart.y }, { 0, 200, 0, 100 }, false, SCENE, false);
-			App->render->DrawQuad({ groupStart.x, groupStart.y, mouseExtend.x - groupStart.x, mouseExtend.y - groupStart.y }, { 0, 200, 0, 50 }, true, SCENE, false);
-			break;
-		}
-		case KEY_UP:
-		{
-			SDL_Rect cam = App->render->GetCameraRect();
-			for (std::map<double, Behaviour*>::iterator it = Behaviour::b_map.begin(); it != Behaviour::b_map.end(); ++it)
-			{
-				if (it->second->GetType() == UNIT_MELEE || it->second->GetType() == GATHERER || it->second->GetType() == UNIT_RANGED || it->second->GetType() == BASE_CENTER || it->second->GetType() == TOWER)
-				{
-					vec pos = it->second->GetGameobject()->GetTransform()->GetGlobalPosition();
-					std::pair<float, float> posToWorld = Map::F_MapToWorld(pos.x, pos.y, pos.z);
-					posToWorld.first -= cam.x;
-					posToWorld.second -= cam.y;
+			SetSelection(nullptr, true);
 
-					if (posToWorld.first > groupStart.x && posToWorld.first < mouseExtend.x) //Right
+			//GROUP SELECTION//
+			switch (App->input->GetMouseButtonDown(0))
+			{
+			case KEY_DOWN:
+			{
+				App->input->GetMousePosition(groupStart.x, groupStart.y);
+				break;
+			}
+			case KEY_REPEAT:
+			{
+				App->input->GetMousePosition(mouseExtend.x, mouseExtend.y);
+				App->render->DrawQuad({ groupStart.x, groupStart.y, mouseExtend.x - groupStart.x, mouseExtend.y - groupStart.y }, { 0, 200, 0, 100 }, false, SCENE, false);
+				App->render->DrawQuad({ groupStart.x, groupStart.y, mouseExtend.x - groupStart.x, mouseExtend.y - groupStart.y }, { 0, 200, 0, 50 }, true, SCENE, false);
+				break;
+			}
+			case KEY_UP:
+			{
+				SDL_Rect cam = App->render->GetCameraRect();
+				for (std::map<double, Behaviour*>::iterator it = Behaviour::b_map.begin(); it != Behaviour::b_map.end(); ++it)
+				{
+					if (it->second->GetType() == UNIT_MELEE || it->second->GetType() == GATHERER || it->second->GetType() == UNIT_RANGED || it->second->GetType() == BASE_CENTER || it->second->GetType() == TOWER)
 					{
-						if (posToWorld.second > groupStart.y && posToWorld.second < mouseExtend.y)//Up
+						vec pos = it->second->GetGameobject()->GetTransform()->GetGlobalPosition();
+						std::pair<float, float> posToWorld = Map::F_MapToWorld(pos.x, pos.y, pos.z);
+						posToWorld.first -= cam.x;
+						posToWorld.second -= cam.y;
+
+						if (posToWorld.first > groupStart.x&& posToWorld.first < mouseExtend.x) //Right
 						{
-							group.push_back(it->second->GetGameobject());
-							Event::Push(ON_SELECT, it->second->GetGameobject());
+							if (posToWorld.second > groupStart.y&& posToWorld.second < mouseExtend.y)//Up
+							{
+								group.push_back(it->second->GetGameobject());
+								Event::Push(ON_SELECT, it->second->GetGameobject());
+							}
+							else if (posToWorld.second < groupStart.y && posToWorld.second > mouseExtend.y)//Down
+							{
+								group.push_back(it->second->GetGameobject());
+								Event::Push(ON_SELECT, it->second->GetGameobject());
+							}
 						}
-						else if (posToWorld.second < groupStart.y && posToWorld.second > mouseExtend.y)//Down
+						else if (posToWorld.first < groupStart.x && posToWorld.first > mouseExtend.x)//Left
 						{
-							group.push_back(it->second->GetGameobject());
-							Event::Push(ON_SELECT, it->second->GetGameobject());
+							if (posToWorld.second > groupStart.y&& posToWorld.second < mouseExtend.y)//Up
+							{
+								group.push_back(it->second->GetGameobject());
+								Event::Push(ON_SELECT, it->second->GetGameobject());
+							}
+							else if (posToWorld.second < groupStart.y && posToWorld.second > mouseExtend.y)//Down
+							{
+								group.push_back(it->second->GetGameobject());
+								Event::Push(ON_SELECT, it->second->GetGameobject());
+							}
 						}
 					}
-					else if (posToWorld.first < groupStart.x && posToWorld.first > mouseExtend.x)//Left
+				}
+				if (!group.empty()) groupSelect = true;
+				break;
+			}
+			default:
+				break;
+			}
+
+			//UNIT SELECTION//
+			if (!groupSelect)
+			{
+				int x, y;
+				App->input->GetMousePosition(x, y);
+				SDL_Rect cam = App->render->GetCameraRect();
+				for (std::map<double, Behaviour*>::iterator it = Behaviour::b_map.begin(); it != Behaviour::b_map.end(); ++it)
+				{
+					if (it->second->GetType() == UNIT_MELEE || it->second->GetType() == GATHERER || it->second->GetType() == UNIT_RANGED
+						|| it->second->GetType() == BASE_CENTER || it->second->GetType() == TOWER || it->second->GetType() == BARRACKS || it->second->GetType() == UNIT_SPECIAL
+						|| it->second->GetType() == UNIT_SUPER)
 					{
-						if (posToWorld.second > groupStart.y && posToWorld.second < mouseExtend.y)//Up
+						std::pair<int, int> position = Map::WorldToTileBase(float(x + cam.x), float(y + cam.y));
+						vec pos = it->second->GetGameobject()->GetTransform()->GetGlobalPosition();
+
+						if (int(pos.x) == position.first && int(pos.y) == position.second) //Right
 						{
-							group.push_back(it->second->GetGameobject());
-							Event::Push(ON_SELECT, it->second->GetGameobject());
-						}
-						else if (posToWorld.second < groupStart.y && posToWorld.second > mouseExtend.y)//Down
-						{
-							group.push_back(it->second->GetGameobject());
-							Event::Push(ON_SELECT, it->second->GetGameobject());
+							SetSelection(it->second->GetGameobject(), true);
+							//Event::Push(ON_SELECT, it->second->GetGameobject());
+							break;
 						}
 					}
 				}
 			}
-			if (!group.empty()) groupSelect = true;
-			break;
 		}
-		default:
-			break;
-		}
-
-		//GROUP MOVEMENT//
-		if (!groupSelect && group.empty() == false)
-		{
-			std::vector<Gameobject*>::iterator it;
-			for (it = group.begin(); it != group.end(); ++it)
-			{
-				Event::Push(ON_UNSELECT, *it);
-			}
-			group.clear();
-		}
-
 		//SELECTION RIGHT CLICK//
 		if (App->input->GetMouseButtonDown(2) == KEY_DOWN)
 		{
@@ -1528,6 +1547,8 @@ void Scene::SetSelection(Gameobject* go, bool call_unselect)
 		{
 			Event::Push(ON_UNSELECT, *it);
 		}
+		group.clear();
+		groupSelect = false;
 	}
 
 	if (go != nullptr)

@@ -89,10 +89,27 @@ bool Editor::Update()
 		else
 		{
 			editing_window = -1;
+			if (!selectedEditor && App->input->GetMouseButtonDown(0) == KeyState::KEY_DOWN)
+			{
+				for (std::vector<EditorWindow*>::const_iterator it = windows.begin(); it != windows.end(); ++it)
+				{
+					if ((*it)->Update(mouse_x, mouse_y, mouse_left_button, sizing).mouse_inside)
+					{
+						selectedEditor = true;
+						break;
+					}
+				}
+			}
 
-			for (std::vector<EditorWindow*>::const_iterator it = windows.begin(); it != windows.end(); ++it)
-				if ((*it)->Update(mouse_x, mouse_y, mouse_left_button, sizing).mouse_inside)
-					mouse_over_windows++;
+			if (selectedEditor)
+			{
+				for (std::vector<EditorWindow*>::const_iterator it = windows.begin(); it != windows.end(); ++it)
+					if ((*it)->Update(mouse_x, mouse_y, mouse_left_button, sizing).mouse_inside)
+						mouse_over_windows++;
+			}
+
+			if (selectedEditor && App->input->GetMouseButtonDown(0) == KeyState::KEY_UP) selectedEditor = false;
+			
 		}
 	}
 
@@ -114,7 +131,7 @@ bool Editor::CleanUp()
 
 bool Editor::MouseOnWindow() const
 {
-	return hide_windows ? false : (mouse_over_windows > 0u || sizing);
+	return selectedEditor;
 }
 
 bool Editor::Draw()

@@ -43,7 +43,7 @@ private:
 	bool sizing = false;
 	int editing_window = -1;
 	unsigned int mouse_over_windows = 0u;
-
+	bool selectedEditor = false;
 	std::vector<EditorWindow*> windows;
 };
 
