@@ -40,6 +40,8 @@ enum EventType
 	SCENE_STOP,
 	SCENE_CHANGE,
 	PLACE_BUILDING,
+	BASE_DESTROYED,
+	MOB_DROP,
 
 	//// Scene states
 	//NEXT_STATE,

@@ -220,6 +220,11 @@ bool Scene::Update()
 			text_edge_value->text->SetText(temp_str1.c_str());
 		}
 
+		if (units_killed >= 200) //Win condition
+		{
+			ChangeToScene(END);
+		}
+
 		if (placing_building)
 		{
 			int x, y;
@@ -454,6 +459,12 @@ void Scene::RecieveEvent(const Event& e)
 		PlaceMode(e.data1.AsInt());
 		break;
 	}
+	case BASE_DESTROYED: //Lose condition
+		ChangeToScene(END);
+		break;
+	case MOB_DROP: 
+		mob_drop += e.data1.AsInt();
+		break;
 	default:
 		break;
 	}

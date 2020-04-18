@@ -187,10 +187,11 @@ void Behaviour::OnKill(const UnitType type)
 	
 	switch (type)
 	{
-	case ENEMY_MELEE: App->scene->mob_drop += 5; LOG("Player Mob Drop Value: %i", App->scene->mob_drop); break;
-	case ENEMY_RANGED: App->scene->mob_drop += 10; LOG("Player Mob Drop Value: %i", App->scene->mob_drop); break;
-	case ENEMY_SPECIAL: App->scene->mob_drop += 15; LOG("Player Mob Drop Value: %i", App->scene->mob_drop); break;
-	case ENEMY_SUPER: App->scene->mob_drop += 20; LOG("Player Mob Drop Value: %i", App->scene->mob_drop); break;
+	case ENEMY_MELEE: Event::Push(MOB_DROP, App->scene, 5); /*LOG("Player Mob Drop Value: %i", App->scene->mob_drop);*/ break;
+	case ENEMY_RANGED: Event::Push(MOB_DROP, App->scene, 10); /*LOG("Player Mob Drop Value: %i", App->scene->mob_drop); */break;
+	case ENEMY_SPECIAL: Event::Push(MOB_DROP, App->scene, 15); /*LOG("Player Mob Drop Value: %i", App->scene->mob_drop); */break;
+	case ENEMY_SUPER: Event::Push(MOB_DROP, App->scene, 20); /*LOG("Player Mob Drop Value: %i", App->scene->mob_drop); */break;
+	case BASE_CENTER: Event::Push(BASE_DESTROYED,App->scene); LOG("Base destroyed!!"); break;
 	}
 	LOG("Debug Mob Drop Value: %i", App->scene->mob_drop);
 
