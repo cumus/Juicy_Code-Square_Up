@@ -58,13 +58,12 @@ void EnemyMeleeUnit::IARangeCheck()
 		std::map<float, Behaviour*> out;
 		unsigned int total_found = GetBehavioursInRange(vec(pos.x, pos.y, 0.5f), vision_range, out);//Get units in vision range
 		float distance = 0;
-		if (total_found > 0 && scanTimer > scanTime)//Check if found behaviours in range
+		if (total_found > 0 /*&& scanTimer > scanTime*/)//Check if found behaviours in range
 		{
 			for (std::map<float, Behaviour*>::iterator it = out.begin(); it != out.end(); ++it)
 			{
 				if (it->second->GetType() != ENEMY_MELEE && it->second->GetType() != ENEMY_RANGED && it->second->GetType() != EDGE &&
-					it->second->GetType() != ENEMY_SUPER && it->second->GetType() != ENEMY_SPECIAL && it->second->GetType() != SPAWNER && 
-					it->second->GetType() != BASE_CENTER) //Check if not enemy unit
+					it->second->GetType() != ENEMY_SUPER && it->second->GetType() != ENEMY_SPECIAL && it->second->GetType() != SPAWNER) //Check if not enemy unit
 				{
 					if (distance == 0)//Not set closest unit yet
 					{

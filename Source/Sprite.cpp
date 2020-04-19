@@ -107,7 +107,7 @@ AnimatedSprite::AnimatedSprite(Behaviour* unit) : Sprite(unit->GetGameobject(), 
 	}
 	case BARRACKS:
 	{
-		tex_id = App->tex.Load("Assets/textures/Barraks.png");
+		tex_id = App->tex.Load("Assets/textures/Barracks2.png");
 		animations[FULL_LIFE].Setup(section = { 0, 0, 626, 485 }, 5, 8.0f);
 		animations[HALF_LIFE].Setup({ 3130, 0, 626, 485 }, 5, 8.0f);
 		animations[FIRST_UPGRADE].Setup({ 3130, 0, 626, 485 }, 5, 8.0f);
@@ -150,25 +150,25 @@ AnimatedSprite::AnimatedSprite(Behaviour* unit) : Sprite(unit->GetGameobject(), 
 		break; 
 	}
 	case ENEMY_MELEE:
-		tex_id = App->tex.Load("Assets/textures/Enemy_hobbit1.png");
-		animations[IDLE].Setup(section = { 956, 637, 101, 148 }, 1, 0.2f);
-		//animations[MOVING_E].Setup();
-		//animations[MOVING_W].Setup();
-		//animations[MOVING_N].Setup();
-		//animations[MOVING_S].Setup();
-		animations[MOVING_NE].Setup({ 956, 637, 101, 148 }, 1, 0.2f);
-		animations[MOVING_NW].Setup({ 956, 637, 101, 148 }, 1, 0.2f);
-		animations[MOVING_SE].Setup({ 956, 637, 101, 148 }, 1, 0.2f);
-		animations[MOVING_SW].Setup({ 956, 637, 101, 148 }, 1, 0.2f);
-		animations[ATTACKING_E].Setup({ 956, 637, 101, 148 }, 1, 0.2f);
-		animations[ATTACKING_W].Setup({ 956, 637, 101, 148 }, 1, 0.2f);
-		animations[ATTACKING_N].Setup({ 956, 637, 101, 148 }, 1, 0.2f);
-		animations[ATTACKING_S].Setup({ 956, 637, 101, 148 }, 1, 0.2f);
-		animations[ATTACKING_NE].Setup({ 956, 637, 101, 148 }, 1, 0.2f);
-		animations[ATTACKING_NW].Setup({ 956, 637, 101, 148 }, 1, 0.2f);
-		animations[ATTACKING_SE].Setup({ 956, 637, 101, 148 }, 1, 0.2f);
-		animations[ATTACKING_SW].Setup({ 956, 637, 101, 148 }, 1, 0.2f);
-		//animations[DESTROYED].Setup();
+		tex_id = App->tex.Load("Assets/textures/Enemy_Melee_Temp.png");
+		animations[IDLE].Setup(section = { 2, 2, 418, 295 }, 6, 8.0f);
+		animations[MOVING_N].Setup({ 2, 296, 418, 295 }, 7, 8.0f);
+		animations[MOVING_S].Setup({ 2, 592, 418, 295 }, 7, 8.0f);
+		animations[MOVING_E].Setup({ 2, 888, 418, 295 }, 8, 8.0f);
+		animations[MOVING_W].Setup({ 2, 1184, 418, 295 }, 8, 8.0f);
+		animations[MOVING_NE].Setup({ 2, 1480, 418, 295 }, 8, 8.0f);
+		animations[MOVING_NW].Setup({ 2, 1776, 418, 295 }, 8, 8.0f);
+		animations[MOVING_SE].Setup({ 2, 2072, 418, 295 }, 8, 8.0f);
+		animations[MOVING_SW].Setup({ 2, 2368, 418, 295 }, 8, 8.0f);
+		animations[ATTACKING_N].Setup({ 2, 2664, 418, 295 }, 7, 8.0f);
+		animations[ATTACKING_S].Setup({ 2, 2910, 418, 295 }, 7, 8.0f);
+		animations[ATTACKING_E].Setup({ 2, 3256, 418, 295 }, 7, 8.0f);
+		animations[ATTACKING_W].Setup({ 2, 3552, 418, 295 }, 7, 8.0f);
+		animations[ATTACKING_NE].Setup({ 2, 3848, 418, 295 }, 7, 8.0f);
+		animations[ATTACKING_NW].Setup({ 2, 4144, 418, 295 }, 7, 8.0f);
+		animations[ATTACKING_SE].Setup({ 2, 4440, 418, 295 }, 7, 8.0f);
+		animations[ATTACKING_SW].Setup({ 2, 4736, 418, 295 }, 7, 8.0f);
+		animations[DESTROYED].Setup({ 2, 5032, 418, 295 }, 8, 4.0f);
 		offset = { -168.0f, -230.0f, 0.6f, 0.6f };
 		break;
 	case GATHERER:
