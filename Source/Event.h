@@ -85,6 +85,9 @@ enum EventType : char
 	DO_UPGRADE,
 	UPDATE_PATH,
 
+	NEW_BEHAVIOUR,
+	INACTIVE,
+
 	MAX_EVENT_TYPES
 };
 
