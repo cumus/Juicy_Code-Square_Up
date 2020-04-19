@@ -155,7 +155,7 @@ void Tower::DoAttack()
 	pos = game_object->GetTransform()->GetGlobalPosition();
 	localPos = Map::F_MapToWorld(pos.x, pos.y, pos.z);
 	localPos.first += 30.0f;
-	localPos.second += 20.0f;
+	localPos.second += -60.0f;
 
 	Event::Push(DAMAGE, atkObj, damage);
 
