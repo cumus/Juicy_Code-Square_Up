@@ -79,6 +79,8 @@ public:
 	void SpawnSuperIA(float x, float y);
 	void SpawnSpecialIA(float x, float y);
 
+	static bool DamageAllowed();
+
 private:
 
 	void GodMode();
@@ -167,7 +169,9 @@ private:
 	Map map;
 	Minimap* minimap;
 	Gameobject root;
-	bool god_mode = false;
+
+	static bool god_mode;
+	static bool no_damage;
 
 	// Scene Transitions
 	enum Fade : int

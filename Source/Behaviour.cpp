@@ -181,7 +181,7 @@ void Behaviour::BuildBarrack(float x, float y)
 void Behaviour::OnDamage(int d)
 {
 	//LOG("Got damage: %d",d);
-	if (current_state != DESTROYED && GetType() != SPAWNER)
+	if (current_state != DESTROYED && Scene::DamageAllowed())
 	{
 		if (current_life > 0)
 		{

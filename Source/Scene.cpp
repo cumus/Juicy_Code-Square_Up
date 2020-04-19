@@ -35,6 +35,10 @@
 #include <string.h>
 #include <time.h>
 
+
+bool Scene::god_mode = false;
+bool Scene::no_damage = false;
+
 Scene::Scene() : Module("scene")
 {
 	root.SetName("root");
@@ -1609,6 +1613,10 @@ void Scene::SpawnSpecialIA(float x, float y)
 	new EnemyMeleeUnit(unit_go);
 }
 
+bool Scene::DamageAllowed()
+{
+	return god_mode && no_damage;
+}
 
 Gameobject* Scene::GetRoot()
 {
@@ -1736,6 +1744,10 @@ void Scene::GodMode()
 			Event::Push(SCENE_CHANGE, this, END, 2.f);
 	}
 
+
+	if (App->input->GetKey(SDL_SCANCODE_F1) == KEY_DOWN)
+		App->editor->ToggleEditorVisibility();
+
 	if (App->input->GetKey(SDL_SCANCODE_F2) == KEY_DOWN)
 		map.draw_walkability = !map.draw_walkability;
 
@@ -1744,6 +1756,9 @@ void Scene::GodMode()
 
 	if (App->input->GetKey(SDL_SCANCODE_F4) == KEY_DOWN)
 		App->audio->PlayMusic("audio/Music/alexander-nakarada-buzzkiller.ogg");
+
+	if (App->input->GetKey(SDL_SCANCODE_F5) == KEY_DOWN)
+		no_damage = !no_damage;
 
 	// Swap map orientation
 	if (App->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN) Map::SwapMapType();
@@ -1947,7 +1962,4 @@ void Scene::GodMode()
 		selection != nullptr ? selection->GetName() : "none selected");
 
 	App->win->SetTitle(tmp_str);
-
-	if (App->input->GetKey(SDL_SCANCODE_F1) == KEY_DOWN)
-		App->editor->ToggleEditorVisibility();
 }
