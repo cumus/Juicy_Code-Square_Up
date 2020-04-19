@@ -43,6 +43,7 @@ enum EventType : char
 	BASE_DESTROYED,
 	MOB_DROP,
 	GAMEPLAY,
+	SPAWN_UNIT,
 
 	//// Scene states
 	//NEXT_STATE,

@@ -240,16 +240,11 @@ bool Audio::PlayMusic(const char* path, float fade_time)
 {
 	OPTICK_EVENT();
 
-	bool ret = false;
+	music_is_playing = false;
 
 	if(music)
 	{
-		if(fade_time > 0.0f)
-			Mix_FadeOutMusic(int(fade_time * 1000.0f));
-		else
-			Mix_HaltMusic();
-
-		// this call blocks until fade out is done
+		StopMusic(fade_time);
 		Mix_FreeMusic(music);
 	}
 ;
@@ -257,7 +252,7 @@ bool Audio::PlayMusic(const char* path, float fade_time)
 	{
 		if (fade_time > 0.0f)
 		{
-			if (ret = (Mix_FadeInMusic(music, -1, (int)(fade_time * 1000.0f)) >= 0))
+			if (music_is_playing = (Mix_FadeInMusic(music, -1, (int)(fade_time * 1000.0f)) >= 0))
 				LOG("Successfully playing %s", path);
 			else
 				LOG("Cannot fade in music %s. Mix_GetError(): %s", path, Mix_GetError());
@@ -268,10 +263,10 @@ bool Audio::PlayMusic(const char* path, float fade_time)
 	else
 		LOG("Cannot load music %s. Mix_GetError(): %s\n", path, Mix_GetError());
 
-	return ret;
+	return music_is_playing;
 }
 
-void Audio::PauseMusic(float fade_time) const
+void Audio::StopMusic(float fade_time)
 {
 	if (music)
 	{
@@ -280,6 +275,13 @@ void Audio::PauseMusic(float fade_time) const
 		else
 			Mix_HaltMusic();
 	}
+
+	music_is_playing = false;
+}
+
+bool Audio::MusicIsPlaying()
+{
+	return music_is_playing;
 }
 
 bool Audio::LoadFx(Audio_FX audio_fx)

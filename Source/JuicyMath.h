@@ -30,6 +30,8 @@ namespace JMath
 	// distance between origin to point p
 	float	Distance(const std::pair<float, float> origin, const std::pair<float, float> p);
 	float	DistanceSquared(const std::pair<float, float> origin, const std::pair<float, float> p);
+
+	float Cap(const float base, const float lower_bound, const float upper_bound);
 };
 
 

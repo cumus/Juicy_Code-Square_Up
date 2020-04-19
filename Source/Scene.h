@@ -51,6 +51,7 @@ enum GameplayState : int
 };
 
 struct SDL_Texture;
+class Transform;
 
 class Scene : public Module
 {
@@ -74,16 +75,14 @@ public:
 	void SetSelection(Gameobject* go = nullptr, bool call_unselect = true);
 	Gameobject* MouseClickSelect(int mouse_x, int mouse_y);
 
-	void SpawnMeleeIA(float x, float y);
-	void SpawnRangedIA(float x, float y);
-	void SpawnSuperIA(float x, float y);
-	void SpawnSpecialIA(float x, float y);
+	Transform* SpawnBehaviour(int type, vec pos = { 0.f, 0.f, 0.f });
 
 	static bool DamageAllowed();
 
 private:
 
 	void GodMode();
+	void ToggleGodMode();
 
 	bool LoadTestScene();
 	bool LoadIntroScene();
@@ -105,8 +104,6 @@ private:
 	//bool DestroyPauseMenu();
 
 	bool ChangeToScene(SceneType scene);
-
-	void PlaceMode(int building_type);
 
 public:
 
@@ -170,6 +167,7 @@ private:
 	Minimap* minimap;
 	Gameobject root;
 
+	// GodMode
 	static bool god_mode;
 	static bool no_damage;
 
@@ -182,11 +180,10 @@ private:
 	} fading = NO_FADE;
 	float fade_timer;
 	float fade_duration;
+	bool just_triggered_change = false;
 	SceneType current_scene;
 	SceneType next_scene;
 	GameplayState current_state;
-
-
 
 	//--------STATE MACHINE VARIABLES--------
 

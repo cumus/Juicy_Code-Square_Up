@@ -68,3 +68,13 @@ float JMath::DistanceSquared(const std::pair<float, float> origin, const std::pa
 	std::pair<float, float> dist = { origin.second - p.second, origin.first - p.first };
 	return (dist.first * dist.first) + (dist.second * dist.second);
 }
+
+float JMath::Cap(const float base, const float lower_bound, const float upper_bound)
+{
+	if (base <= lower_bound)
+		return lower_bound;
+	else if (base >= upper_bound)
+		return upper_bound;
+	else
+		return base;
+}

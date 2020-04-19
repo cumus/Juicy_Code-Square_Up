@@ -100,7 +100,9 @@ bool Scene::Update()
 		else
 		{
 			UpdatePause();
-			UpdateSelection();
+
+			if (!C_Canvas::MouseOnUI() && !App->editor->MouseOnEditor())
+				UpdateSelection();
 		}
 	}
 
@@ -167,7 +169,7 @@ void Scene::RecieveEvent(const Event& e)
 		break;
 	case PLACE_BUILDING:
 	{
-		PlaceMode(e.data1.AsInt());
+		placing_building = SpawnBehaviour(e.data1.AsInt());
 		break;
 	}
 	case BASE_DESTROYED: //Lose condition
@@ -179,6 +181,12 @@ void Scene::RecieveEvent(const Event& e)
 	case GAMEPLAY:
 	{
 		OnEventStateMachine(GameplayState(e.data1.AsInt()));
+		break;
+	}
+	case SPAWN_UNIT:
+	{
+		SpawnBehaviour(e.data1.AsInt(), e.data2.AsVec());
+		break;
 	}
 	default:
 		break;
@@ -635,7 +643,11 @@ bool Scene::LoadEndScene()
 void Scene::UpdateFade()
 {
 	float alpha;
-	fade_timer += App->time.GetDeltaTime();
+
+	if (just_triggered_change)
+		just_triggered_change = false;
+	else
+		fade_timer += App->time.GetDeltaTime();
 
 	if (fading == FADE_OUT)
 	{
@@ -646,12 +658,13 @@ void Scene::UpdateFade()
 			ChangeToScene(next_scene);
 			Event::Push(SCENE_PLAY, App);
 			fading = FADE_IN;
-			fade_timer = 0.f;
+			just_triggered_change = true;
+			fade_timer = 0.0f;
 		}
 	}
 	else if (fading == FADE_IN)
 	{
-		alpha = (fade_duration - fade_timer) / fade_duration * 255.f;
+		alpha = JMath::Cap((fade_duration - fade_timer) / fade_duration * 255.f, 1.f, 254.f);
 
 		if (fade_timer >= fade_duration)
 			fading = NO_FADE;
@@ -738,7 +751,8 @@ void Scene::UpdateBuildingMode()
 	}
 	else if (App->input->GetMouseButtonDown(0) == KEY_DOWN)
 	{
-		PlaceMode(placing_building->GetGameobject()->GetBehaviour()->GetType());
+		int type = placing_building->GetGameobject()->GetBehaviour()->GetType();
+		placing_building = SpawnBehaviour(type)->GetGameobject()->GetTransform();
 	}
 	else
 	{
@@ -772,132 +786,114 @@ void Scene::UpdatePause()
 
 void Scene::UpdateSelection()
 {
-	//LOG("Canvas: %d", C_Canvas::MouseOnUI());
-	//LOG("Editor: %d", App->editor->MouseOnWindow());
-	if (!C_Canvas::MouseOnUI() && !App->editor->MouseOnEditor())
-	{		
-		if (App->input->GetMouseButtonDown(0))
+	//GROUP SELECTION//
+	switch (App->input->GetMouseButtonDown(0))
+	{
+	case KEY_DOWN:
+	{
+		App->input->GetMousePosition(groupStart.x, groupStart.y);
+		SetSelection(nullptr, true);
+		break;
+	}
+	case KEY_REPEAT:
+	{
+		App->input->GetMousePosition(mouseExtend.x, mouseExtend.y);
+		App->render->DrawQuad({ groupStart.x, groupStart.y, mouseExtend.x - groupStart.x, mouseExtend.y - groupStart.y }, { 0, 200, 0, 100 }, false, SCENE, false);
+		App->render->DrawQuad({ groupStart.x, groupStart.y, mouseExtend.x - groupStart.x, mouseExtend.y - groupStart.y }, { 0, 200, 0, 50 }, true, SCENE, false);
+		break;
+	}
+	case KEY_UP:
+	{
+		SDL_Rect cam = App->render->GetCameraRect();
+		for (std::map<double, Behaviour*>::iterator it = Behaviour::b_map.begin(); it != Behaviour::b_map.end(); ++it)
 		{
-			//GROUP SELECTION//
-			switch (App->input->GetMouseButtonDown(0))
+			if (it->second->GetType() == UNIT_MELEE || it->second->GetType() == GATHERER || it->second->GetType() == UNIT_RANGED || it->second->GetType() == BASE_CENTER || it->second->GetType() == TOWER)
 			{
-			case KEY_DOWN:
-			{
-				App->input->GetMousePosition(groupStart.x, groupStart.y);
-				SetSelection(nullptr, true);
-				break;
-			}
-			case KEY_REPEAT:
-			{
-				App->input->GetMousePosition(mouseExtend.x, mouseExtend.y);
-				App->render->DrawQuad({ groupStart.x, groupStart.y, mouseExtend.x - groupStart.x, mouseExtend.y - groupStart.y }, { 0, 200, 0, 100 }, false, SCENE, false);
-				App->render->DrawQuad({ groupStart.x, groupStart.y, mouseExtend.x - groupStart.x, mouseExtend.y - groupStart.y }, { 0, 200, 0, 50 }, true, SCENE, false);
-				break;
-			}
-			case KEY_UP:
-			{
-				SDL_Rect cam = App->render->GetCameraRect();
-				for (std::map<double, Behaviour*>::iterator it = Behaviour::b_map.begin(); it != Behaviour::b_map.end(); ++it)
-				{
-					if (it->second->GetType() == UNIT_MELEE || it->second->GetType() == GATHERER || it->second->GetType() == UNIT_RANGED || it->second->GetType() == BASE_CENTER || it->second->GetType() == TOWER)
-					{
-						vec pos = it->second->GetGameobject()->GetTransform()->GetGlobalPosition();
-						std::pair<float, float> posToWorld = Map::F_MapToWorld(pos.x, pos.y, pos.z);
-						posToWorld.first -= cam.x;
-						posToWorld.second -= cam.y;
+				vec pos = it->second->GetGameobject()->GetTransform()->GetGlobalPosition();
+				std::pair<float, float> posToWorld = Map::F_MapToWorld(pos.x, pos.y, pos.z);
+				posToWorld.first -= cam.x;
+				posToWorld.second -= cam.y;
 
-						if (posToWorld.first > groupStart.x&& posToWorld.first < mouseExtend.x) //Right
-						{
-							if (posToWorld.second > groupStart.y&& posToWorld.second < mouseExtend.y)//Up
-							{
-								group.push_back(it->second->GetGameobject());
-								Event::Push(ON_SELECT, it->second->GetGameobject());
-							}
-							else if (posToWorld.second < groupStart.y && posToWorld.second > mouseExtend.y)//Down
-							{
-								group.push_back(it->second->GetGameobject());
-								Event::Push(ON_SELECT, it->second->GetGameobject());
-							}
-						}
-						else if (posToWorld.first < groupStart.x && posToWorld.first > mouseExtend.x)//Left
-						{
-							if (posToWorld.second > groupStart.y&& posToWorld.second < mouseExtend.y)//Up
-							{
-								group.push_back(it->second->GetGameobject());
-								Event::Push(ON_SELECT, it->second->GetGameobject());
-							}
-							else if (posToWorld.second < groupStart.y && posToWorld.second > mouseExtend.y)//Down
-							{
-								group.push_back(it->second->GetGameobject());
-								Event::Push(ON_SELECT, it->second->GetGameobject());
-							}
-						}
+				if (posToWorld.first > groupStart.x && posToWorld.first < mouseExtend.x) //Right
+				{
+					if (posToWorld.second > groupStart.y && posToWorld.second < mouseExtend.y)//Up
+					{
+						group.push_back(it->second->GetGameobject());
+						Event::Push(ON_SELECT, it->second->GetGameobject());
+					}
+					else if (posToWorld.second < groupStart.y && posToWorld.second > mouseExtend.y)//Down
+					{
+						group.push_back(it->second->GetGameobject());
+						Event::Push(ON_SELECT, it->second->GetGameobject());
 					}
 				}
-				if (!group.empty()) groupSelect = true;
-				break;
-			}
-			default:
-				break;
-			}
-
-			//UNIT SELECTION//
-			if (!groupSelect)
-			{
-				int x, y;
-				App->input->GetMousePosition(x, y);
-				SDL_Rect cam = App->render->GetCameraRect();
-				for (std::map<double, Behaviour*>::iterator it = Behaviour::b_map.begin(); it != Behaviour::b_map.end(); ++it)
+				else if (posToWorld.first < groupStart.x && posToWorld.first > mouseExtend.x)//Left
 				{
-					if (it->second->GetType() == UNIT_MELEE || it->second->GetType() == GATHERER || it->second->GetType() == UNIT_RANGED
-						|| it->second->GetType() == BASE_CENTER || it->second->GetType() == TOWER || it->second->GetType() == BARRACKS || it->second->GetType() == UNIT_SPECIAL
-						|| it->second->GetType() == UNIT_SUPER)
+					if (posToWorld.second > groupStart.y && posToWorld.second < mouseExtend.y)//Up
 					{
-						std::pair<int, int> position = Map::WorldToTileBase(float(x + cam.x), float(y + cam.y));
-						vec pos = it->second->GetGameobject()->GetTransform()->GetGlobalPosition();
-
-						if (int(pos.x) == position.first && int(pos.y) == position.second) //Right
-						{
-							SetSelection(it->second->GetGameobject(), true);
-							//Event::Push(ON_SELECT, it->second->GetGameobject());
-							break;
-						}
+						group.push_back(it->second->GetGameobject());
+						Event::Push(ON_SELECT, it->second->GetGameobject());
+					}
+					else if (posToWorld.second < groupStart.y && posToWorld.second > mouseExtend.y)//Down
+					{
+						group.push_back(it->second->GetGameobject());
+						Event::Push(ON_SELECT, it->second->GetGameobject());
 					}
 				}
 			}
 		}
-		//SELECTION RIGHT CLICK//
-		if (App->input->GetMouseButtonDown(2) == KEY_DOWN)
-		{
-			int x, y;
-			App->input->GetMousePosition(x, y);
-			RectF cam = App->render->GetCameraRectF();
-			std::pair<float, float> mouseOnMap = Map::F_WorldToMap(float(x) + cam.x, float(y) + cam.y);
-			if (App->pathfinding.ValidTile(int(mouseOnMap.first),int(mouseOnMap.second)))
-			{
-				std::pair<float, float> modPos;
-				modPos.first = mouseOnMap.first;
-				modPos.second = mouseOnMap.second;
+		if (!group.empty()) groupSelect = true;
+		break;
+	}
+	default:
+		break;
+	}
 
-				if (groupSelect && !group.empty())//Move group selected
+	//UNIT SELECTION//
+	if (!groupSelect)
+	{
+		int x, y;
+		App->input->GetMousePosition(x, y);
+		SDL_Rect cam = App->render->GetCameraRect();
+		for (std::map<double, Behaviour*>::iterator it = Behaviour::b_map.begin(); it != Behaviour::b_map.end(); ++it)
+		{
+			if (it->second->GetType() == UNIT_MELEE || it->second->GetType() == GATHERER || it->second->GetType() == UNIT_RANGED
+				|| it->second->GetType() == BASE_CENTER || it->second->GetType() == TOWER || it->second->GetType() == BARRACKS || it->second->GetType() == UNIT_SPECIAL
+				|| it->second->GetType() == UNIT_SUPER)
+			{
+				std::pair<int, int> position = Map::WorldToTileBase(float(x + cam.x), float(y + cam.y));
+				vec pos = it->second->GetGameobject()->GetTransform()->GetGlobalPosition();
+
+				if (int(pos.x) == position.first && int(pos.y) == position.second) //Right
 				{
-					bool incX = false;
-					for (std::vector<Gameobject*>::iterator it = group.begin(); it != group.end(); ++it)
+					SetSelection(it->second->GetGameobject(), true);
+					//Event::Push(ON_SELECT, it->second->GetGameobject());
+					break;
+				}
+			}
+		}
+	}
+	
+	//SELECTION RIGHT CLICK//
+	if (App->input->GetMouseButtonDown(2) == KEY_DOWN)
+	{
+		int x, y;
+		App->input->GetMousePosition(x, y);
+		RectF cam = App->render->GetCameraRectF();
+		std::pair<float, float> mouseOnMap = Map::F_WorldToMap(float(x) + cam.x, float(y) + cam.y);
+		if (App->pathfinding.ValidTile(int(mouseOnMap.first), int(mouseOnMap.second)))
+		{
+			std::pair<float, float> modPos;
+			modPos.first = mouseOnMap.first;
+			modPos.second = mouseOnMap.second;
+
+			if (groupSelect && !group.empty())//Move group selected
+			{
+				bool incX = false;
+				for (std::vector<Gameobject*>::iterator it = group.begin(); it != group.end(); ++it)
+				{
+					while (App->pathfinding.ValidTile(int(modPos.first), int(modPos.second)) == false)
 					{
-						while (App->pathfinding.ValidTile(int(modPos.first), int(modPos.second)) == false)
-						{
-							if (incX)
-							{
-								modPos.first++;
-								incX = false;
-							}
-							else
-							{
-								modPos.second++;
-								incX = true;
-							}
-						}
-						Event::Push(ON_RIGHT_CLICK, *it, vec(mouseOnMap.first, mouseOnMap.second, 0.5f), vec(modPos.first, modPos.second, 0.5f));
 						if (incX)
 						{
 							modPos.first++;
@@ -909,16 +905,27 @@ void Scene::UpdateSelection()
 							incX = true;
 						}
 					}
-				}
-				else//Move one selected
-				{
-					if (selection)
+					Event::Push(ON_RIGHT_CLICK, *it, vec(mouseOnMap.first, mouseOnMap.second, 0.5f), vec(modPos.first, modPos.second, 0.5f));
+					if (incX)
 					{
-						Event::Push(ON_RIGHT_CLICK, selection, vec(mouseOnMap.first, mouseOnMap.second, 0.5f), vec(-1, -1, -1));
-						groupSelect = false;
+						modPos.first++;
+						incX = false;
 					}
-					else groupSelect = false;
+					else
+					{
+						modPos.second++;
+						incX = true;
+					}
 				}
+			}
+			else//Move one selected
+			{
+				if (selection)
+				{
+					Event::Push(ON_RIGHT_CLICK, selection, vec(mouseOnMap.first, mouseOnMap.second, 0.5f), vec(-1, -1, -1));
+					groupSelect = false;
+				}
+				else groupSelect = false;
 			}
 		}
 	}
@@ -947,23 +954,10 @@ void Scene::UpdateSpawner()
 				}
 
 				int random = std::rand() % 100 + 1;
-				if (random < MELEE_RATE) //Spawn melee
-				{
-					SpawnMeleeIA(pos.x, pos.y);
-				}
-				else if (random < (MELEE_RATE + RANGED_RATE)) //Spawn ranged
-				{
-					SpawnRangedIA(pos.x, pos.y);
-				}
-				else if (random < (MELEE_RATE + RANGED_RATE + SUPER_RATE)) //Spawn super
-				{
-
-					SpawnSuperIA(pos.x, pos.y);
-				}
-				else //Spawn special
-				{
-					SpawnSpecialIA(pos.x, pos.y);
-				}
+				if (random < MELEE_RATE) Event::Push(SPAWN_UNIT, this, ENEMY_MELEE, pos);
+				else if (random < (MELEE_RATE + RANGED_RATE)) Event::Push(SPAWN_UNIT, this, ENEMY_RANGED, pos);
+				else if (random < (MELEE_RATE + RANGED_RATE + SUPER_RATE)) Event::Push(SPAWN_UNIT, this, ENEMY_SUPER, pos);
+				else  Event::Push(SPAWN_UNIT, this, ENEMY_SPECIAL, pos);
 				currentSpawns++;
 				LOG("Spawned one");
 			}
@@ -1518,7 +1512,7 @@ bool Scene::ChangeToScene(SceneType scene)
 
 	map.CleanUp();
 	App->audio->UnloadFx();
-	App->audio->PauseMusic(1.f);
+	App->audio->StopMusic(1.f);
 	SetSelection(nullptr, false);
 	root.RemoveChilds();
 	Event::PumpAll();
@@ -1553,64 +1547,74 @@ bool Scene::ChangeToScene(SceneType scene)
 	return ret;
 }
 
-void Scene::PlaceMode(int type)
+Transform* Scene::SpawnBehaviour(int type, vec pos)
 {
-	placing_building = nullptr;
-	Gameobject* go = nullptr;
+	Transform* ret = nullptr;
+	Behaviour* behaviour = nullptr;
 
 	switch (UnitType(type))
 	{
-	case BASE_CENTER: new Base_Center(go = AddGameobject("Base Center")); 
-		baseCenterPos.first = go->GetTransform()->GetGlobalPosition().x;
-		baseCenterPos.second = go->GetTransform()->GetGlobalPosition().y;
+	case GATHERER:
+	{
+		behaviour = new Gatherer(AddGameobject("Gatherer"));
 		break;
-	case TOWER: new Tower(go = AddGameobject("Tower")); break;
+	}
+	case UNIT_MELEE:
+	{
+		behaviour = new MeleeUnit(AddGameobject("Ally Melee"));
+		break;
+	}
+	case UNIT_RANGED: break;
+	case UNIT_SUPER: break;
+	case UNIT_SPECIAL: break;
+	case ENEMY_MELEE:
+	{
+		behaviour = new EnemyMeleeUnit(AddGameobject("Enemy Melee"));
+		break;
+	}
+	case ENEMY_RANGED: break;
+	case ENEMY_SUPER: break;
+	case ENEMY_SPECIAL: break;
+	case BASE_CENTER:
+	{
+		behaviour = new Base_Center(AddGameobject("Base Center"));
+
+		//Update paths
+		for (std::map<double, Behaviour*>::iterator it = Behaviour::b_map.begin(); it != Behaviour::b_map.end(); ++it)
+			Event::Push(UPDATE_PATH, it->second, pos.x - 1, pos.y - 1);
+
+		baseCenterPos.first = pos.x;
+		baseCenterPos.second = pos.y;
+
+		break;
+	}
+	case TOWER:
+	{
+		behaviour = new Tower(AddGameobject("Tower"));
+		break;
+	}
 	case WALL: break;
-	case BARRACKS: new Barracks(go = AddGameobject("Barracks")); break; 
+	case BARRACKS:
+	{
+		behaviour = new Barracks(AddGameobject("Barracks"));
+		break;
+	}
 	case LAB: break;
-	case EDGE: new Edge(go = AddGameobject("Edge")); break;
+	case EDGE:
+	{
+		behaviour = new Edge(AddGameobject("Edge"));
+		break;
+	}
 	default: break;
 	}
 
-	if (go)
+	if (behaviour)
 	{
-		placing_building = go->GetTransform();
-		for (std::map<double, Behaviour*>::iterator it = Behaviour::b_map.begin(); it != Behaviour::b_map.end(); ++it)//Update paths 
-		{
-			Event::Push(UPDATE_PATH, it->second,baseCenterPos.first - 1,baseCenterPos.second - 1);
-		}		
+		ret = behaviour->GetGameobject()->GetTransform();
+		ret->SetLocalPos(pos);
 	}
-}
 
-void Scene::SpawnMeleeIA(float x, float y)
-{
-	Gameobject* unit_go = AddGameobject("Enemy Melee unit");
-	unit_go->GetTransform()->SetLocalPos({ x, y, 0.0f });
-
-	new EnemyMeleeUnit(unit_go);
-}
-
-void Scene::SpawnRangedIA(float x, float y)
-{
-	Gameobject* unit_go = AddGameobject("Enemy Melee unit");
-	unit_go->GetTransform()->SetLocalPos({ x, y, 0.0f });
-
-	new EnemyMeleeUnit(unit_go);
-}
-void Scene::SpawnSuperIA(float x, float y)
-{
-	Gameobject* unit_go = AddGameobject("Enemy Melee unit");
-	unit_go->GetTransform()->SetLocalPos({ x,y, 0.0f });
-
-	new EnemyMeleeUnit(unit_go);
-}
-
-void Scene::SpawnSpecialIA(float x, float y)
-{
-	Gameobject* unit_go = AddGameobject("Enemy Melee unit");
-	unit_go->GetTransform()->SetLocalPos({ x, y, 0.0f });
-
-	new EnemyMeleeUnit(unit_go);
+	return ret;
 }
 
 bool Scene::DamageAllowed()
@@ -1726,11 +1730,22 @@ Gameobject* Scene::MouseClickSelect(int mouse_x, int mouse_y)
 
 void Scene::GodMode()
 {
+	//		   #: Spawn Units
+	// LCTRL + #: Spawn Structures
+	bool pressing_lctrl = (App->input->GetKey(SDL_SCANCODE_LCTRL) == KEY_REPEAT);
 	int x, y;
 	App->input->GetMousePosition(x, y);
 	SDL_Rect cam = App->render->GetCameraRect();
+	std::pair<int, int> position = Map::WorldToTileBase(float(x + cam.x), float(y + cam.y));
+	int max = pressing_lctrl ? MAX_UNIT_TYPES - BASE_CENTER : BASE_CENTER;
+	for (int i = 0; i < max; ++i)
+	{
+		if (App->input->GetKey(SDL_SCANCODE_1 + i) == KEY_DOWN)
+			Event::Push(SPAWN_UNIT, this, (pressing_lctrl ? BASE_CENTER : 0) + i, vec(float(position.first), float(position.second)));
+	}
 
-	if (App->input->GetKey(SDL_SCANCODE_LCTRL) == KEY_REPEAT)
+	// LALT + #: Change Scene
+	if (App->input->GetKey(SDL_SCANCODE_LALT) == KEY_REPEAT)
 	{
 		if (App->input->GetKey(SDL_SCANCODE_1) == KEY_DOWN)
 			Event::Push(SCENE_CHANGE, this, TEST, 0.f);
@@ -1744,222 +1759,63 @@ void Scene::GodMode()
 			Event::Push(SCENE_CHANGE, this, END, 2.f);
 	}
 
-
+	// F1: Show/Hide Editor Windows
 	if (App->input->GetKey(SDL_SCANCODE_F1) == KEY_DOWN)
 		App->editor->ToggleEditorVisibility();
 
+	// F2: Show/Hide Map Walkability
 	if (App->input->GetKey(SDL_SCANCODE_F2) == KEY_DOWN)
 		map.draw_walkability = !map.draw_walkability;
 
+	// F3: Toggle Music Playing
 	if (App->input->GetKey(SDL_SCANCODE_F3) == KEY_DOWN)
-		App->audio->PauseMusic(1.f);
+	{
+		App->audio->MusicIsPlaying() ?
+			App->audio->StopMusic(1.f) :
+			App->audio->PlayMusic("audio/Music/alexander-nakarada-buzzkiller.ogg");
+	}
 
+	// F4: Toggle Allowed Damage
 	if (App->input->GetKey(SDL_SCANCODE_F4) == KEY_DOWN)
-		App->audio->PlayMusic("audio/Music/alexander-nakarada-buzzkiller.ogg");
-
-	if (App->input->GetKey(SDL_SCANCODE_F5) == KEY_DOWN)
 		no_damage = !no_damage;
 
-	// Swap map orientation
+	// F5: Toggle Show Paths
+	if (App->input->GetKey(SDL_SCANCODE_F5) == KEY_DOWN)
+		App->pathfinding.DebugShowPaths();
+
+	// SPACE: Swap map orientation
 	if (App->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN) Map::SwapMapType();
 
-	if (App->input->GetKey(SDL_SCANCODE_2) == KEY_DOWN)//Barracks
-	{
-		std::pair<int, int> position = Map::WorldToTileBase(float(x + cam.x), float(y + cam.y));
-
-		Gameobject* barrack_go = AddGameobject("Barracks building");
-		barrack_go->GetTransform()->SetLocalPos({ float(position.first), float(position.second), 0.0f });
-
-		new Barracks(barrack_go);
-	}
-
-	if (App->input->GetKey(SDL_SCANCODE_3) == KEY_DOWN)
-	{
-		std::pair<int, int> position = Map::WorldToTileBase(float(x + cam.x), float(y + cam.y));
-
-		Gameobject* audio_go = AddGameobject("AudioSource - Hammer Loop");
-		audio_go->GetTransform()->SetLocalPos({ float(position.first), float(position.second), 0.0f });
-
-		(new AudioSource(audio_go))->Play(HAMMER, -1);
-		new Sprite(audio_go, id_mouse_tex, { 128, 0, 64, 64 });
-	}
-
-	if (App->input->GetKey(SDL_SCANCODE_4) == KEY_DOWN)//Melee unit
-	{
-		std::pair<int, int> position = Map::WorldToTileBase(float(x + cam.x), float(y + cam.y));
-
-		Gameobject* unit_go = AddGameobject("Ally Melee unit");
-		unit_go->GetTransform()->SetLocalPos({ float(position.first), float(position.second), 0.0f });
-
-		//minimap->AddToMinimap(unit_go, { 0,255,0,255 });
-
-		new MeleeUnit(unit_go);
-	}
-
-	if (App->input->GetKey(SDL_SCANCODE_5) == KEY_DOWN) //Edge
-	{
-		std::pair<int, int> position = Map::WorldToTileBase(float(x + cam.x), float(y + cam.y));
-		if (App->pathfinding.CheckWalkabilityArea(position, vec(1.0f)))
-		{
-			Gameobject* edge_go = AddGameobject("Edge resource node");
-			edge_go->GetTransform()->SetLocalPos({ float(position.first), float(position.second), 0.0f });
-
-			new Edge(edge_go);
-			for (std::map<double, Behaviour*>::iterator it = Behaviour::b_map.begin(); it != Behaviour::b_map.end(); ++it)//Update paths 
-			{
-				Event::Push(UPDATE_PATH, it->second, baseCenterPos.first - 1, baseCenterPos.second - 1);
-			}
-		}
-		else
-			LOG("Invalid spawn position");
-	}
-
-	if (App->input->GetKey(SDL_SCANCODE_6) == KEY_DOWN)// Enemy melee
-	{
-		std::pair<int, int> position = Map::WorldToTileBase(float(x + cam.x), float(y + cam.y));
-
-		/*Gameobject* unit_go = AddGameobject("Enemy Melee unit");
-		unit_go->GetTransform()->SetLocalPos({ float(position.first), float(position.second), 0.0f });
-
-		new EnemyMeleeUnit(unit_go);*/
-		SpawnMeleeIA(float(position.first), float(position.second));
-	}
-
-	if (App->input->GetKey(SDL_SCANCODE_8) == KEY_DOWN) //Base_Center
-	{
-		std::pair<int, int> position = Map::WorldToTileBase(float(x + cam.x), float(y + cam.y));
-		if (App->pathfinding.CheckWalkabilityArea(position, vec(1.0f)))
-		{
-			Gameobject* base_go = AddGameobject("Base Center");
-			base_go->GetTransform()->SetLocalPos({ float(position.first), float(position.second), 0.0f });
-
-			App->audio->PlayFx(B_BUILDED);
-			new Base_Center(base_go);
-			baseCenterPos.first = base_go->GetTransform()->GetGlobalPosition().x;
-			baseCenterPos.second = base_go->GetTransform()->GetGlobalPosition().y;
-			for (std::map<double, Behaviour*>::iterator it = Behaviour::b_map.begin(); it != Behaviour::b_map.end(); ++it)//Update paths 
-			{
-				Event::Push(UPDATE_PATH, it->second, baseCenterPos.first - 1, baseCenterPos.second - 1);
-			}
-		}
-		else
-			LOG("Invalid spawn position");
-	}
-
-	if (App->input->GetKey(SDL_SCANCODE_7) == KEY_DOWN) //Defensive tower
-	{
-		std::pair<int, int> position = Map::WorldToTileBase(float(x + cam.x), float(y + cam.y));
-		if (App->pathfinding.CheckWalkabilityArea(position, vec(1.0f)))
-		{
-			Gameobject* tower_go = AddGameobject("Tower");
-			tower_go->GetTransform()->SetLocalPos({ float(position.first), float(position.second), 0.0f });
-
-			App->audio->PlayFx(B_BUILDED);
-			new Tower(tower_go);
-			for (std::map<double, Behaviour*>::iterator it = Behaviour::b_map.begin(); it != Behaviour::b_map.end(); ++it)//Update paths 
-			{
-				Event::Push(UPDATE_PATH, it->second, baseCenterPos.first - 1, baseCenterPos.second - 1);
-			}
-		}
-		else
-			LOG("Invalid spawn position");
-	}
-
-	if (App->input->GetKey(SDL_SCANCODE_9) == KEY_DOWN) //Gatherer
-	{
-		if (edge_value > 10)
-		{
-			std::pair<int, int> position = Map::WorldToTileBase(float(x + cam.x), float(y + cam.y));
-			if (App->pathfinding.CheckWalkabilityArea(position, vec(1.0f)))
-			{
-				Gameobject* gather_go = AddGameobject("Gatherer unit");
-				gather_go->GetTransform()->SetLocalPos({ float(position.first), float(position.second), 0.0f });
-				//minimap->AddToMinimap(gather_go, { 0,0,255,255 });
-
-				new Gatherer(gather_go);
-				edge_value -= 10;
-				LOG("Current resources: %d", edge_value);
-			}
-			else
-				LOG("Invalid spawn position");
-		}
-		
-	}
-
-	if (App->input->GetKey(SDL_SCANCODE_0) == KEY_DOWN) //Spawner
-	{
-		if (activateSpawn) activateSpawn = false;
-		else activateSpawn = true;
-		/*std::pair<int, int> position = Map::WorldToTileBase(float(x + cam.x), float(y + cam.y));
-		if (App->pathfinding.CheckWalkabilityArea(position, vec(1.0f)))
-		{
-			Gameobject* spawner_go = AddGameobject("Enemy spawner");
-			spawner_go->GetTransform()->SetLocalPos({ float(position.first), float(position.second), 0.0f });
-
-			new Spawner(spawner_go);
-		}
-		else
-			LOG("Invalid spawn position");*/
-	}
-
-	if (App->input->GetKey(SDL_SCANCODE_Z) == KEY_DOWN)
-	{
-		App->pathfinding.DebugShowPaths();
-	}
-
+	// DEL: Remove Selected Gameobject/s
 	if (App->input->GetKey(SDL_SCANCODE_DELETE) == KEY_DOWN)
 	{
-
-		if (!group.empty()) {
-			std::vector<Gameobject*>::iterator it;
-			for (it = group.begin(); it != group.end(); ++it)
-			{
+		if (!group.empty())
+		{
+			for (std::vector<Gameobject*>::iterator it = group.begin(); it != group.end(); ++it)
 				(*it)->Destroy();
 
-			}
 			groupSelect = false;
 		}
-
-		if (selection)
+		else if (selection)
 			selection->Destroy();
 	}
 
-
-	/////Temp
-	/*if (App->input->GetKey(SDL_SCANCODE_H) == KEY_DOWN)
-	{
-		App->input->GetMousePosition(atkPos.first, atkPos.second);
-		pos.first = 10;
-		pos.second = 10;
-		shoot = true;
-	}
-
-	if (shoot)
-	{
-		rayCastTimer += App->time.GetDeltaTime();
-		if (rayCastTimer < RAYCAST_TIME)
-		{
-			App->render->DrawLine(pos, atkPos, { 0,0,255,255 }, SCENE,false);
-		}
-		else
-		{
-			shoot = false;
-			rayCastTimer = 0;
-		}
-	}*/
-	/////
-
 	// Update window title
 	std::pair<int, int> map_coordinates = Map::WorldToTileBase(cam.x + x, cam.y + y);
-
-	// Log onto window title
 	static char tmp_str[220];
 	sprintf_s(tmp_str, 220, "FPS: %d, Zoom: %0.2f, Mouse: %dx%d, Tile: %dx%d, Selection: %s",
 		App->time.GetLastFPS(),
 		App->render->GetZoom(),
 		x, y,
 		map_coordinates.first, map_coordinates.second,
-		selection != nullptr ? selection->GetName() : "none selected");
-
+		selection != nullptr ? selection->GetName() : (groupSelect ? "Group selection" : "None selected"));
 	App->win->SetTitle(tmp_str);
+}
+
+void Scene::ToggleGodMode()
+{
+	if (god_mode)
+		App->win->SetTitle("Square Up");
+
+	god_mode = !god_mode;
 }

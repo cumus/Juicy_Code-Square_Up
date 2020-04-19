@@ -32,6 +32,8 @@ enum UnitType : int
 	LAB,
 	EDGE,
 	SPAWNER,
+
+	MAX_UNIT_TYPES
 };
 
 enum UnitState : int

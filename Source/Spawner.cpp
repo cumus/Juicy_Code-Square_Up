@@ -114,22 +114,22 @@ void Spawner::Update()
 			if (random < MELEE_RATE) //Spawn melee
 			{
 				LOG("melee");
-				App->scene->SpawnMeleeIA(pos.x, pos.y);
+				Event::Push(SPAWN_UNIT, App->scene, ENEMY_MELEE, pos);
 			}
 			else if (random < (MELEE_RATE+RANGED_RATE)) //Spawn ranged
 			{
 				LOG("ranged");
-				App->scene->SpawnRangedIA(pos.x, pos.y);
+				Event::Push(SPAWN_UNIT, App->scene, ENEMY_RANGED, pos);
 			}
 			else if (random < (MELEE_RATE + RANGED_RATE+SUPER_RATE)) //Spawn super
 			{
 				LOG("super");
-				App->scene->SpawnSuperIA(pos.x, pos.y);
+				Event::Push(SPAWN_UNIT, App->scene, ENEMY_SUPER, pos);
 			}
 			else //Spawn special
 			{
 				LOG("Special");
-				App->scene->SpawnSpecialIA(pos.x,pos.y);
+				Event::Push(SPAWN_UNIT, App->scene, ENEMY_SPECIAL, pos);
 			}
 			currentSpawns++;
 			LOG("Spawned one");

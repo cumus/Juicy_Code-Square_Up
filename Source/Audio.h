@@ -65,7 +65,8 @@ public:
 
 	// Music
 	bool PlayMusic(const char* path, float fade_time = 2.0f);
-	void PauseMusic(float fade_time) const;
+	void StopMusic(float fade_time);
+	bool MusicIsPlaying();
 	// void ClearMusic(float fade_time);
 
 	// FX
@@ -78,6 +79,7 @@ public:
 private:
 
 	_Mix_Music*	music = nullptr;
+	bool music_is_playing = false;
 
 	struct SpatialData
 	{
