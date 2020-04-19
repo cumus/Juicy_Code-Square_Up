@@ -209,7 +209,7 @@ void Behaviour::OnDamage(int d)
 {	
 	if (current_state != DESTROYED && Scene::DamageAllowed())
 	{
-		LOG("Got damage: %d", d);
+		//LOG("Got damage: %d", d);
 		if (current_life > 0)
 		{
 			current_life -= d;
@@ -223,7 +223,7 @@ void Behaviour::OnDamage(int d)
 			{
 				mini_life_bar.Update(float(current_life) / float(max_life));
 
-				LOG("Life: %d", current_life);
+				//LOG("Life: %d", current_life);
 				update_health_ui();
 				AfterDamageAction();
 			}
@@ -341,9 +341,10 @@ B_Unit::B_Unit(Gameobject* go, UnitType t, UnitState s, ComponentType comp_type)
 
 	//Needed
 	path = nullptr;
-	nextTile;
 	next = false;
 	move = false;
+	nextTile.x = 0;
+	nextTile.y = 0;
 	positiveX = false;
 	positiveY = false;
 	dirX = 0;
@@ -353,7 +354,6 @@ B_Unit::B_Unit(Gameobject* go, UnitType t, UnitState s, ComponentType comp_type)
 	msCount = 0;
 	arriveDestination = false;
 	current_state = IDLE;
-	gotTile = false;
 
 	//Info for ranged units constructor
 	/*vec pos = game_object->GetTransform()->GetGlobalPosition();
@@ -440,106 +440,19 @@ void B_Unit::Update()
 		else if (path != nullptr && !path->empty()) //Movement
 		{
 			//LOG("moving");
-			fPoint actualPos = { pos.x, pos.y };
-
+			
 			if (!next)
 			{				
-				nextTile = path->front();			
+				if (nextTile.x == 0 && nextTile.y == 0)PathfindingManager::unitWalkability[nextTile.x][nextTile.y] == 0;
+				nextTile = path->front();	
+				tilesVisited.push_back(nextTile);
 				next = true;
-				move = true;		
-				//PathfindingManager::unitWalkability[nextTile.x][nextTile.y] == true;
+				move = true;
 			}
 
-			if (dirX == 1 && dirY == 1)
+			if (PathfindingManager::unitWalkability[nextTile.x][nextTile.y] == 0 && next)
 			{
-				if (actualPos.x >= nextTile.x && actualPos.y >= nextTile.y)
-				{
-					path->erase(path->begin());
-					next = false;
-					gotTile = false;
-					PathfindingManager::unitWalkability[nextTile.x][nextTile.y] = false;
-				}
-			}
-			else if (dirX == -1 && dirY == -1)
-			{
-				if (actualPos.x <= nextTile.x && actualPos.y <= nextTile.y)
-				{
-					path->erase(path->begin());
-					next = false;
-					gotTile = false;
-					PathfindingManager::unitWalkability[nextTile.x][nextTile.y] = false;
-				}
-			}
-			else if (dirX == -1 && dirY == 1)
-			{
-				if (actualPos.x <= nextTile.x && actualPos.y >= nextTile.y)
-				{
-					path->erase(path->begin());
-					next = false;
-					gotTile = false;
-					PathfindingManager::unitWalkability[nextTile.x][nextTile.y] = false;
-				}
-			}
-			else if (dirX == 1 && dirY == -1)
-			{
-				if (actualPos.x >= nextTile.x && actualPos.y <= nextTile.y)
-				{
-					path->erase(path->begin());
-					next = false;
-					gotTile = false;
-					PathfindingManager::unitWalkability[nextTile.x][nextTile.y] = false;
-				}
-			}
-			else if (dirX == 0 && dirY == -1)
-			{
-				if (actualPos.y <= nextTile.y)
-				{
-					path->erase(path->begin());
-					next = false;
-					gotTile = false;
-					PathfindingManager::unitWalkability[nextTile.x][nextTile.y] = false;
-				}
-			}
-			else if (dirX == 0 && dirY == 1)
-			{
-				if (actualPos.y >= nextTile.y)
-				{
-					path->erase(path->begin());
-					next = false;
-					gotTile = false;
-					PathfindingManager::unitWalkability[nextTile.x][nextTile.y] = false;
-				}
-			}
-			else if (dirX == 1 && dirY == 0)
-			{
-				if (actualPos.x >= nextTile.x)
-				{
-					path->erase(path->begin());
-					next = false;
-					gotTile = false;
-					PathfindingManager::unitWalkability[nextTile.x][nextTile.y] = false;
-				}
-			}
-			else if (dirX == -1 && dirY == 0)
-			{
-				if (actualPos.x <= nextTile.x)
-				{
-					path->erase(path->begin());
-					next = false;
-					gotTile = false;
-					PathfindingManager::unitWalkability[nextTile.x][nextTile.y] = false;
-				}
-			}
-			else if (dirX == 0 && dirY == 0)
-			{
-				path->erase(path->begin());
-				next = false;
-				gotTile = false;
-				PathfindingManager::unitWalkability[nextTile.x][nextTile.y] = false;
-			}
-
-			if (PathfindingManager::unitWalkability[nextTile.x][nextTile.y] != game_object->GetID())
-			{
+				PathfindingManager::unitWalkability[nextTile.x][nextTile.y] = GetID();
 			}
 		}
 		else
@@ -549,8 +462,10 @@ void B_Unit::Update()
 			current_state = IDLE;
 		}
 
-		if (move && PathfindingManager::unitWalkability[nextTile.x][nextTile.y] == game_object->GetID())
+		if (move && PathfindingManager::unitWalkability[nextTile.x][nextTile.y] == GetID())
 		{		
+			fPoint actualPos = { pos.x, pos.y };
+
 			iPoint tilePos = { int(pos.x), int(pos.y) };
 			if (nextTile.x > tilePos.x)
 			{
@@ -612,6 +527,85 @@ void B_Unit::Update()
 			{
 				current_state = IDLE;
 			}*/
+
+			if (dirX == 1 && dirY == 1)
+			{
+				if (actualPos.x >= nextTile.x && actualPos.y >= nextTile.y)
+				{
+					path->erase(path->begin());
+					next = false;
+					PathfindingManager::unitWalkability[nextTile.x][nextTile.y] = 0;
+				}
+			}
+			else if (dirX == -1 && dirY == -1)
+			{
+				if (actualPos.x <= nextTile.x && actualPos.y <= nextTile.y)
+				{
+					path->erase(path->begin());
+					next = false;
+					PathfindingManager::unitWalkability[nextTile.x][nextTile.y] = 0;
+				}
+			}
+			else if (dirX == -1 && dirY == 1)
+			{
+				if (actualPos.x <= nextTile.x && actualPos.y >= nextTile.y)
+				{
+					path->erase(path->begin());
+					next = false;
+					PathfindingManager::unitWalkability[nextTile.x][nextTile.y] = 0;
+				}
+			}
+			else if (dirX == 1 && dirY == -1)
+			{
+				if (actualPos.x >= nextTile.x && actualPos.y <= nextTile.y)
+				{
+					path->erase(path->begin());
+					next = false;
+					PathfindingManager::unitWalkability[nextTile.x][nextTile.y] = 0;
+				}
+			}
+			else if (dirX == 0 && dirY == -1)
+			{
+				if (actualPos.y <= nextTile.y)
+				{
+					path->erase(path->begin());
+					next = false;
+					PathfindingManager::unitWalkability[nextTile.x][nextTile.y] = 0;
+				}
+			}
+			else if (dirX == 0 && dirY == 1)
+			{
+				if (actualPos.y >= nextTile.y)
+				{
+					path->erase(path->begin());
+					next = false;
+					PathfindingManager::unitWalkability[nextTile.x][nextTile.y] = 0;
+				}
+			}
+			else if (dirX == 1 && dirY == 0)
+			{
+				if (actualPos.x >= nextTile.x)
+				{
+					path->erase(path->begin());
+					next = false;
+					PathfindingManager::unitWalkability[nextTile.x][nextTile.y] = 0;
+				}
+			}
+			else if (dirX == -1 && dirY == 0)
+			{
+				if (actualPos.x <= nextTile.x)
+				{
+					path->erase(path->begin());
+					next = false;
+					PathfindingManager::unitWalkability[nextTile.x][nextTile.y] = 0;
+				}
+			}
+			else if (dirX == 0 && dirY == 0)
+			{
+				path->erase(path->begin());
+				next = false;
+				PathfindingManager::unitWalkability[nextTile.x][nextTile.y] = 0;
+			}
 		}
 
 		//Colision check
@@ -761,11 +755,26 @@ void B_Unit::OnRightClick(vec posClick, vec modPos)
 				}
 			}
 			path = App->pathfinding.CreatePath({ int(pos.x), int(pos.y) }, { int(posClick.x-1), int(posClick.y-1) }, GetID());
+			for (std::vector<iPoint>::const_iterator it = tilesVisited.cbegin(); it != tilesVisited.cend(); ++it)
+			{
+				if (PathfindingManager::unitWalkability[nextTile.x][nextTile.y] != 0)
+				{
+					PathfindingManager::unitWalkability[nextTile.x][nextTile.y] = 0;
+				}
+			}
 		}
 		else
 		{
 			if (modPos.x != -1 && modPos.y != -1) path = App->pathfinding.CreatePath({ int(pos.x), int(pos.y) }, { int(modPos.x), int(modPos.y) }, GetID());
 			else path = App->pathfinding.CreatePath({ int(pos.x), int(pos.y) }, { int(posClick.x), int(posClick.y) }, GetID());
+
+			for (std::vector<iPoint>::const_iterator it = tilesVisited.cbegin(); it != tilesVisited.cend(); ++it)
+			{
+				if (PathfindingManager::unitWalkability[nextTile.x][nextTile.y] != 0)
+				{
+					PathfindingManager::unitWalkability[nextTile.x][nextTile.y] = 0;
+				}
+			}
 
 			attackObjective = nullptr;
 		}

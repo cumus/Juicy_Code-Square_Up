@@ -120,7 +120,7 @@ void Minimap::Update()
 	{
 		if (it->second->AsBehaviour()->GetType() == UNIT_MELEE || it->second->AsBehaviour()->GetType() == GATHERER)
 		{
-			LOG("Show unit");
+			//LOG("Show unit");
 			SDL_Rect representation;
 			vec unit_pos = it->second->GetGameobject()->GetTransform()->GetGlobalPosition();
 			std::pair<float, float> world_pos = map.F_MapToWorld(unit_pos);

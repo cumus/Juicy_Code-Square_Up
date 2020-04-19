@@ -8,6 +8,7 @@
 #include "Log.h"
 #include "BaseCenter.h"
 
+#include <vector>
 
 EnemyMeleeUnit::EnemyMeleeUnit(Gameobject* go) : B_Unit(go, ENEMY_MELEE, IDLE, B_UNIT)
 {
@@ -42,6 +43,14 @@ void EnemyMeleeUnit::UpdatePath(int x, int y)
 		Transform* t = game_object->GetTransform();
 		vec pos = t->GetGlobalPosition();
 		path = App->pathfinding.CreatePath({ int(pos.x), int(pos.y) }, { x, y }, GetID());
+
+		for (std::vector<iPoint>::const_iterator it = tilesVisited.cbegin(); it != tilesVisited.cend(); ++it)
+		{
+			if (PathfindingManager::unitWalkability[nextTile.x][nextTile.y] != 0)
+			{
+				PathfindingManager::unitWalkability[nextTile.x][nextTile.y] = 0;
+			}
+		}
 	}
 }
 
@@ -120,7 +129,7 @@ void EnemyMeleeUnit::IARangeCheck()
 		{
 			if (!going_base && Base_Center::baseCenter != nullptr)//If no valid objective and not going to base, set path to base
 			{
-				LOG("Path to base");
+				//LOG("Path to base");
 				vec centerPos = Base_Center::baseCenter->GetTransform()->GetGlobalPosition();
 				Event::Push(UPDATE_PATH, this->AsBehaviour(), int(centerPos.x) - 1, int(centerPos.y) - 1);
 				going_base = true;
