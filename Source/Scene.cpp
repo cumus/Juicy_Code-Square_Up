@@ -38,6 +38,7 @@
 
 bool Scene::god_mode = false;
 bool Scene::no_damage = false;
+bool Scene::draw_collisions = false;
 int Scene::player_stats[MAX_PLAYER_STATS];
 
 Scene::Scene() : Module("scene")
@@ -1434,6 +1435,11 @@ bool Scene::DamageAllowed()
 	return god_mode && no_damage;
 }
 
+bool Scene::DrawCollisions()
+{
+	return god_mode && draw_collisions;
+}
+
 int Scene::GetStat(int stat)
 {
 	return player_stats[stat];
@@ -1594,9 +1600,16 @@ void Scene::GodMode()
 	if (App->input->GetKey(SDL_SCANCODE_F4) == KEY_DOWN)
 		no_damage = !no_damage;
 
-	// F5: Toggle Show Paths
+	// F5: Toggle Collision & Path Drawing
 	if (App->input->GetKey(SDL_SCANCODE_F5) == KEY_DOWN)
+	{
 		App->pathfinding.DebugShowPaths();
+		draw_collisions = !draw_collisions;
+	}
+
+	// F6: Toggle Zoom Locked
+	if (App->input->GetKey(SDL_SCANCODE_F6) == KEY_DOWN)
+		App->render->ToggleZoomLocked();
 
 	// SPACE: Swap map orientation
 	if (App->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN) Map::SwapMapType();

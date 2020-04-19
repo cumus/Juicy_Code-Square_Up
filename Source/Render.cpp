@@ -104,37 +104,40 @@ bool Render::Update()
 	OPTICK_EVENT();
 
 	// Zoom
-	int wheel_motion = App->input->GetMouseWheelMotion();
-	if (wheel_motion != 0)
+	if (zoom_allowed)
 	{
-		float target_zoom = zoom + float(wheel_motion) * 0.05f;
-
-		if (target_zoom > 2.0f)
+		int wheel_motion = App->input->GetMouseWheelMotion();
+		if (wheel_motion != 0)
 		{
-			zoom = 2.0f;
-			Map::SetMapScale(zoom);
-		}
-		else if (target_zoom < 0.3f)
-		{
-			zoom = 0.3f;
-			Map::SetMapScale(zoom);
-		}
-		else if (wheel_motion != 0)
-		{
-			// Get Tile at mouse
-			int x, y;
-			App->input->GetMousePosition(x, y);
-			std::pair<int, int> mouse_tile = Map::WorldToTileBase(cam.x + float(x), cam.y + float(y));
-			std::pair<float, float> mouse_tile_f = { float(mouse_tile.first), float(mouse_tile.second) };
+			float target_zoom = zoom + float(wheel_motion) * 0.05f;
 
-			// Get Tile at mouse pos - before and after zoom
-			std::pair<float, float> tile_pos = Map::F_MapToWorld(mouse_tile_f.first, mouse_tile_f.second);
-			Map::SetMapScale(zoom = target_zoom);
-			std::pair<float, float> tile_pos_next = Map::F_MapToWorld(mouse_tile_f.first, mouse_tile_f.second);
+			if (target_zoom > 2.0f)
+			{
+				zoom = 2.0f;
+				Map::SetMapScale(zoom);
+			}
+			else if (target_zoom < 0.3f)
+			{
+				zoom = 0.3f;
+				Map::SetMapScale(zoom);
+			}
+			else if (wheel_motion != 0)
+			{
+				// Get Tile at mouse
+				int x, y;
+				App->input->GetMousePosition(x, y);
+				std::pair<int, int> mouse_tile = Map::WorldToTileBase(cam.x + float(x), cam.y + float(y));
+				std::pair<float, float> mouse_tile_f = { float(mouse_tile.first), float(mouse_tile.second) };
 
-			// Displace camera - keep mouse at same tile
-			cam.x += (tile_pos_next.first - tile_pos.first);
-			cam.y += (tile_pos_next.second - tile_pos.second);
+				// Get Tile at mouse pos - before and after zoom
+				std::pair<float, float> tile_pos = Map::F_MapToWorld(mouse_tile_f.first, mouse_tile_f.second);
+				Map::SetMapScale(zoom = target_zoom);
+				std::pair<float, float> tile_pos_next = Map::F_MapToWorld(mouse_tile_f.first, mouse_tile_f.second);
+
+				// Displace camera - keep mouse at same tile
+				cam.x += (tile_pos_next.first - tile_pos.first);
+				cam.y += (tile_pos_next.second - tile_pos.second);
+			}
 		}
 	}
 
@@ -286,6 +289,11 @@ RectF Render::GetCameraRectF() const
 float Render::GetZoom() const
 {
 	return zoom;
+}
+
+void Render::ToggleZoomLocked()
+{
+	zoom_allowed = !zoom_allowed;
 }
 
 std::pair<float, float> Render::GetCameraCenter() const

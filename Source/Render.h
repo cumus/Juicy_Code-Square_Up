@@ -52,6 +52,7 @@ public:
 	SDL_Rect GetCameraRect() const;
 	RectF GetCameraRectF() const;
 	float GetZoom() const;
+	void ToggleZoomLocked();
 	std::pair<float, float> GetCameraCenter() const;
 	bool InsideCam(float x, float y) const;
 
@@ -92,6 +93,13 @@ private:
 	SDL_Color		background;
 	SDL_Color		draw_color;
 
+	// Camera
+	RectF cam;
+	bool zoom_allowed = false;
+	float zoom = 1.0f;
+	static std::pair<float, float> target_res;
+	static std::pair<float, float> res_ratio;
+
 	// Layer mapping
 	struct RenderData
 	{
@@ -128,14 +136,6 @@ private:
 	bool accelerated = true;
 	bool vsync = false;
 	bool target_texture = false;
-
-public:
-
-	// Camera
-	RectF cam;
-	float zoom = 1.0f;
-	static std::pair<float, float> target_res;
-	static std::pair<float, float> res_ratio;
 };
 
 #endif // __RENDER_H__

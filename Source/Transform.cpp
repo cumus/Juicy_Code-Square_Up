@@ -1,5 +1,6 @@
 #include "Transform.h"
 #include "Application.h"
+#include "Scene.h"
 #include "Map.h"
 #include "Render.h"
 #include "JuicyMath.h"
@@ -40,23 +41,26 @@ void Transform::Update()
 
 void Transform::PostUpdate()
 {
-	// Draw AABB
-	// Base bottom
-	App->render->DrawLine({ points[0].first, points[0].second }, { points[1].first, points[1].second }, { 0, 0, 0, 255 }, DEBUG_SCENE);
-	App->render->DrawLine({ points[1].first, points[1].second }, { points[2].first, points[2].second }, { 0, 0, 0, 255 }, DEBUG_SCENE);
-	//App->render->DrawLine({ points[2].first, points[2].second }, { points[3].first, points[3].second });
-	//App->render->DrawLine({ points[3].first, points[3].second }, { points[0].first, points[0].second });
+	if (Scene::DrawCollisions())
+	{
+		// Draw Isometric AABB
+		SDL_Color color = { 255, 255, 0, 255 };
 
-	// Base top
-	App->render->DrawLine({ points[4].first, points[4].second }, { points[5].first, points[5].second }, { 0, 0, 0, 255 }, DEBUG_SCENE);
-	App->render->DrawLine({ points[5].first, points[5].second }, { points[6].first, points[6].second }, { 0, 0, 0, 255 }, DEBUG_SCENE);
-	App->render->DrawLine({ points[6].first, points[6].second }, { points[7].first, points[7].second }, { 0, 0, 0, 255 }, DEBUG_SCENE);
-	App->render->DrawLine({ points[7].first, points[7].second }, { points[4].first, points[4].second }, { 0, 0, 0, 255 }, DEBUG_SCENE);
+		// Base bottom
+		App->render->DrawLine({ points[0].first, points[0].second }, { points[1].first, points[1].second }, color, DEBUG_SCENE);
+		App->render->DrawLine({ points[1].first, points[1].second }, { points[2].first, points[2].second }, color, DEBUG_SCENE);
 
-	// Vertical
-	App->render->DrawLine({ points[0].first, points[0].second }, { points[4].first, points[4].second }, { 0, 0, 0, 255 }, DEBUG_SCENE);
-	App->render->DrawLine({ points[1].first, points[1].second }, { points[5].first, points[5].second }, { 0, 0, 0, 255 }, DEBUG_SCENE);
-	App->render->DrawLine({ points[2].first, points[2].second }, { points[6].first, points[6].second }, { 0, 0, 0, 255 }, DEBUG_SCENE);
+		// Base top
+		App->render->DrawLine({ points[4].first, points[4].second }, { points[5].first, points[5].second }, color, DEBUG_SCENE);
+		App->render->DrawLine({ points[5].first, points[5].second }, { points[6].first, points[6].second }, color, DEBUG_SCENE);
+		App->render->DrawLine({ points[6].first, points[6].second }, { points[7].first, points[7].second }, color, DEBUG_SCENE);
+		App->render->DrawLine({ points[7].first, points[7].second }, { points[4].first, points[4].second }, color, DEBUG_SCENE);
+
+		// Vertical
+		App->render->DrawLine({ points[0].first, points[0].second }, { points[4].first, points[4].second }, color, DEBUG_SCENE);
+		App->render->DrawLine({ points[1].first, points[1].second }, { points[5].first, points[5].second }, color, DEBUG_SCENE);
+		App->render->DrawLine({ points[2].first, points[2].second }, { points[6].first, points[6].second }, color, DEBUG_SCENE);
+	}
 }
 
 void Transform::RecieveEvent(const Event & e)

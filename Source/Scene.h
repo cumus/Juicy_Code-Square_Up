@@ -104,8 +104,9 @@ public:
 	Gameobject* MouseClickSelect(int mouse_x, int mouse_y);
 
 	Transform* SpawnBehaviour(int type, vec pos = { 0.f, 0.f, 0.f });
-
+	
 	static bool DamageAllowed();
+	static bool DrawCollisions();
 	static int GetStat(int stat);
 
 private:
@@ -166,6 +167,7 @@ private:
 	// GodMode
 	static bool god_mode;
 	static bool no_damage;
+	static bool draw_collisions;
 
 	// Scene Transitions
 	enum Fade : int
