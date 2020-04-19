@@ -538,7 +538,9 @@ void B_Unit::Update()
 				PathfindingManager::unitWalkability[nextTile.x][nextTile.y] = false;
 			}
 
-			if(PathfindingManager::unitWalkability[nextTile.x][nextTile.y] != game_object->GetID())
+			if (PathfindingManager::unitWalkability[nextTile.x][nextTile.y] != game_object->GetID())
+			{
+			}
 		}
 		else
 		{
