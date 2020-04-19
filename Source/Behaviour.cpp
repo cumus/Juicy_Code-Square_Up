@@ -261,24 +261,28 @@ void Behaviour::OnKill(const UnitType type)
 	case ENEMY_MELEE:
 	{
 		Event::Push(UPDATE_STAT, App->scene, CURRENT_MOB_DROP, 5);
+		Event::Push(UPDATE_STAT, App->scene, MOB_DROP_COLLECTED, 5);
 		Event::Push(UPDATE_STAT, App->scene, UNITS_KILLED, 1);
 		break;
 	}
 	case ENEMY_RANGED:
 	{
 		Event::Push(UPDATE_STAT, App->scene, CURRENT_MOB_DROP, 10);
+		Event::Push(UPDATE_STAT, App->scene, MOB_DROP_COLLECTED, 10);
 		Event::Push(UPDATE_STAT, App->scene, UNITS_KILLED, 1);
 		break;
 	}
 	case ENEMY_SPECIAL:
 	{
 		Event::Push(UPDATE_STAT, App->scene, CURRENT_MOB_DROP, 15);
+		Event::Push(UPDATE_STAT, App->scene, MOB_DROP_COLLECTED, 15);
 		Event::Push(UPDATE_STAT, App->scene, UNITS_KILLED, 1);
 		break;
 	}
 	case ENEMY_SUPER:
 	{
 		Event::Push(UPDATE_STAT, App->scene, CURRENT_MOB_DROP, 20);
+		Event::Push(UPDATE_STAT, App->scene, MOB_DROP_COLLECTED, 20);
 		Event::Push(UPDATE_STAT, App->scene, UNITS_KILLED, 1);
 		break;
 	}

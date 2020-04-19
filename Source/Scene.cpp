@@ -552,7 +552,7 @@ void Scene::UpdateStat(int stat, int count)
 {
 	player_stats[stat] += count;
 
-	if (stat < EDGE_COLLECTED)
+	if (stat < EDGE_COLLECTED && hud_texts[stat])
 	{
 		std::stringstream ss;
 		ss << player_stats[stat];
@@ -1432,7 +1432,7 @@ Transform* Scene::SpawnBehaviour(int type, vec pos)
 
 bool Scene::DamageAllowed()
 {
-	return god_mode && no_damage;
+	return god_mode && !no_damage;
 }
 
 bool Scene::DrawCollisions()
@@ -1642,6 +1642,30 @@ void Scene::GodMode()
 		map_coordinates.first, map_coordinates.second,
 		selection != nullptr ? selection->GetName() : (groupSelect ? "Group selection" : "None selected"));
 	App->win->SetTitle(tmp_str);
+
+	// Arrow Keys: Increase/Decrease Resources
+	if (App->input->GetKey(SDL_SCANCODE_UP) == KEY_DOWN)
+	{
+		UpdateStat(CURRENT_EDGE, 50);
+		UpdateStat(EDGE_COLLECTED, 50);
+	}
+	if (App->input->GetKey(SDL_SCANCODE_DOWN) == KEY_DOWN)
+	{
+		int quantity = -(player_stats[CURRENT_EDGE] < 50 ? player_stats[CURRENT_EDGE] : 50);
+		UpdateStat(CURRENT_EDGE, quantity);
+		UpdateStat(EDGE_COLLECTED, quantity);
+	}
+	if (App->input->GetKey(SDL_SCANCODE_RIGHT) == KEY_DOWN)
+	{
+		UpdateStat(CURRENT_MOB_DROP, 20);
+		UpdateStat(MOB_DROP_COLLECTED, 20);
+	}
+	if (App->input->GetKey(SDL_SCANCODE_LEFT) == KEY_DOWN)
+	{
+		int quantity = -(player_stats[CURRENT_MOB_DROP] < 20 ? player_stats[CURRENT_MOB_DROP] : 20);
+		UpdateStat(CURRENT_MOB_DROP, quantity);
+		UpdateStat(MOB_DROP_COLLECTED, quantity);
+	}
 }
 
 void Scene::ToggleGodMode()

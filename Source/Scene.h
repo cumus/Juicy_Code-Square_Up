@@ -53,8 +53,8 @@ enum GameplayState : int
 enum PlayerStats : int
 {
 	// Stats w/ text
-	CURRENT_MOB_DROP,
 	CURRENT_EDGE,
+	CURRENT_MOB_DROP,
 
 	CURRENT_MELEE_UNITS,
 	CURRENT_RANGED_UNITS,
@@ -70,6 +70,7 @@ enum PlayerStats : int
 
 	// Stats w/out text
 	EDGE_COLLECTED,
+	MOB_DROP_COLLECTED,
 	UNITS_CREATED,
 	UNITS_LOST,
 	UNITS_KILLED,
@@ -164,7 +165,7 @@ private:
 	Gameobject root;
 	Map map;
 
-	// GodMode
+	// God Mode
 	static bool god_mode;
 	static bool no_damage;
 	static bool draw_collisions;
