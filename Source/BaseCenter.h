@@ -19,6 +19,8 @@ public:
 	void CreatePanel() override;
 	void UpdatePanel() override;
 
+public:
+	static Base_Center* baseCenter;
 protected:
 
 	int bc_lvl;

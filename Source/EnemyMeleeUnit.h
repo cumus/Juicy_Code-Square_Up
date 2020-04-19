@@ -20,6 +20,8 @@ protected:
 	bool going_base;
 	bool going_enemy;
 	bool base_found;
+	Gameobject* baseCenter;
+	float scanTimer, scanTime;
 };
 
 #endif

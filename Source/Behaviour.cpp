@@ -189,6 +189,7 @@ void Behaviour::OnDamage(int d)
 
 			if (current_life <= 0)
 			{
+				update_health_ui();
 				OnKill(type);
 			}
 			else

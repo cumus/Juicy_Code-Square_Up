@@ -6,6 +6,7 @@
 #include "Gameobject.h"
 #include "Component.h"
 #include "Log.h"
+#include "BaseCenter.h"
 
 
 EnemyMeleeUnit::EnemyMeleeUnit(Gameobject* go) : B_Unit(go, ENEMY_MELEE, IDLE, B_UNIT)
@@ -22,11 +23,14 @@ EnemyMeleeUnit::EnemyMeleeUnit(Gameobject* go) : B_Unit(go, ENEMY_MELEE, IDLE, B
 	going_enemy = false;
 	base_found = false;
 	arriveDestination = true;
+	scanTimer = 0.0f;
+	scanTime = 3.0f;
 
-	if (App->scene->baseCenterPos.first != -1)
+	if (Base_Center::baseCenter != nullptr)
 	{
-		UpdatePath(App->scene->baseCenterPos.first - 1, App->scene->baseCenterPos.second - 1);
-		going_base = true;
+		baseCenter = App->scene->baseCenterPtr;
+		//UpdatePath(App->scene->baseCenterPos.first - 1, App->scene->baseCenterPos.second - 1);
+		//going_base = true;
 	}
 
 	//SFX
@@ -36,19 +40,11 @@ EnemyMeleeUnit::EnemyMeleeUnit(Gameobject* go) : B_Unit(go, ENEMY_MELEE, IDLE, B
 
 EnemyMeleeUnit::~EnemyMeleeUnit()
 {
-	/*Transform* t = game_object->GetTransform();
-	if (t)
-	{
-		vec pos = t->GetGlobalPosition();
-		App->pathfinding.SetWalkabilityTile(int(pos.x), int(pos.y), true);
-	}
-
-	b_map.erase(GetID());*/
 }
 
 void EnemyMeleeUnit::UpdatePath(int x, int y)
 {
-	if (x >=0 && y >= -1)
+	if (x >=0 && y >= 0)
 	{
 		Transform* t = game_object->GetTransform();
 		vec pos = t->GetGlobalPosition();
@@ -60,7 +56,7 @@ void EnemyMeleeUnit::UpdatePath(int x, int y)
 void EnemyMeleeUnit::IARangeCheck()
 {
 	Transform* t = game_object->GetTransform();
-	if (t)
+	if (t && scanTimer > scanTime)
 	{
 		vec pos = t->GetGlobalPosition();
 		next = false;
@@ -69,12 +65,13 @@ void EnemyMeleeUnit::IARangeCheck()
 		std::map<float, Behaviour*> out;
 		unsigned int total_found = GetBehavioursInRange(vec(pos.x, pos.y, 0.5f), vision_range, out);//Get units in vision range
 		float distance = 0;
-		if (total_found > 0)
+		if (total_found > 0)//Check if found behaviours in range
 		{
 			for (std::map<float, Behaviour*>::iterator it = out.begin(); it != out.end(); ++it)
 			{
-				if (it->second->GetType() != ENEMY_MELEE && it->second->GetType() != ENEMY_RANGED &&
-					it->second->GetType() != ENEMY_SUPER && it->second->GetType() != ENEMY_SPECIAL && it->second->GetType() != SPAWNER)//Check if not enemy unit
+				if (it->second->GetType() != ENEMY_MELEE && it->second->GetType() != ENEMY_RANGED && it->second->GetType() != EDGE &&
+					it->second->GetType() != ENEMY_SUPER && it->second->GetType() != ENEMY_SPECIAL && it->second->GetType() != SPAWNER && 
+					it->second->GetType() != BASE_CENTER) //Check if not enemy unit
 				{
 					if (distance == 0)//Not set closest unit yet
 					{
@@ -92,7 +89,7 @@ void EnemyMeleeUnit::IARangeCheck()
 				}
 			}
 		}
-		else
+		else //Not found
 		{
 			attackObjective = nullptr;
 		}
@@ -113,7 +110,7 @@ void EnemyMeleeUnit::IARangeCheck()
 					destPos.second = int(t->GetGlobalPosition().y)-1;
 					Event::Push(UPDATE_PATH, this->AsBehaviour(), int(t->GetGlobalPosition().x - 1), int(t->GetGlobalPosition().y - 1));
 					arriveDestination = false;
-					LOG("repath");
+					//LOG("repath");
 				}
 				else
 				{
@@ -137,5 +134,9 @@ void EnemyMeleeUnit::IARangeCheck()
 				//LOG("Move to base");
 			}
 		}
+	}
+	else
+	{
+		scanTimer += App->time.GetGameDeltaTime();
 	}
 }
