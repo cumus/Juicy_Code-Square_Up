@@ -830,12 +830,9 @@ void Scene::UpdateSelection()
 			}
 			else//Move one selected
 			{
-				if (selection)
-				{
-					Event::Push(ON_RIGHT_CLICK, selection, vec(mouseOnMap.first, mouseOnMap.second, 0.5f), vec(-1, -1, -1));
-					groupSelect = false;
-				}
-				else groupSelect = false;
+				if (selection) Event::Push(ON_RIGHT_CLICK, selection, vec(mouseOnMap.first, mouseOnMap.second, 0.5f), vec(-1, -1, -1));					
+				groupSelect = false;
+				group.clear();
 			}
 		}
 	}
@@ -1617,14 +1614,15 @@ void Scene::GodMode()
 	// DEL: Remove Selected Gameobject/s
 	if (App->input->GetKey(SDL_SCANCODE_DELETE) == KEY_DOWN)
 	{
-		/*if (!group.empty())
+		if (!group.empty())
 		{
 			for (std::vector<Gameobject*>::iterator it = group.begin(); it != group.end(); ++it)
 				(*it)->Destroy();
-
+							
 			groupSelect = false;
+			group.clear();
 			App->audio->PlayFx(UNIT_DIES);
-		}*/
+		}
 		
 		if (selection)
 		{
