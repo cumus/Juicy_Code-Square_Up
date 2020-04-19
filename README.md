@@ -43,29 +43,35 @@ Here are some links to our GitHib, Wiki, etc.
 
 
 ## Controls
+
+### God Mode
+* F10: Toggle God mode. 
+* F1: Show/Hide Editor Windows.
+* F2: Show/Hide Map Walkability.
+* F3: Toggle Music Playing.
+* F4: Toggle Allowed Damage.
+* F5: Toggle Collision & Path Drawing.
+* F6: Toggle Zoom Locked.
+
+* Space: Swap map orientation.
+* DEL: Remove Selected Gameobject.
+* Mouse Weel: Zoom in/out
+* Arrow Keys: Increase/Decrease Resources.
+
 * Left Alt + 1: Load Map.
 * Left Alt + 2: Load Intro.
 * Left Alt + 3: Load Menu.
 * Left Alt + 4: Load Main.
 * Left Alt + 5: Load End.
 
-* F2: Draw walkability.
-* F3: Puse the music.
-* F4: Play the music.
-
-* Space: Swap map type.
-* Z,C,V,X: Pathfinding path.
-* Z: Show hide path.
-* Delete: Destroy unit.
-
-* 3: Audio effect.
-* 4: Create melee allied unit.
-* 5: Edge source node.
+* 1: Create gatherer unit.
+* 2: Create melee allied unit.
 * 6: Create melee enemy unit.
-* 7: Create defensive tower building.
-* 8: Create Base Center building.
-* 9: Create gatherer unit.
-* 0: Create spawn.
+
+* Left Ctrl + 1: Create Base Center building.
+* Left Ctrl + 2: Create defensive tower building.
+* Left Ctrl + 4: Create Barracks.
+* Left Ctrl + 6: Create Edge source.
 
 ### Camera:
 * W: move the camera up
@@ -73,7 +79,6 @@ Here are some links to our GitHib, Wiki, etc.
 * S: move the camera down
 * D: move the camera right
 * Shift: Move the camera faster
-* Mouse Weel: Zoom in/out
 
 ### Map:
 * 1: Open Base map 1
@@ -115,6 +120,16 @@ Here are some links to our GitHib, Wiki, etc.
 * Our ally unit created into the game.
 * HUD sprites added.
 * HUD vs Selection updated.
+
+### Updates from v0.6
+* Added Scene states and notifications.
+* Win/Lose Scene.
+* Unit sprites.
+* Unit life bars.
+* God mode.
+* Barracks.
+* AI: Enemies target Base Center.
+
 
 ##
 ![University Logo](https://www.citm.upc.edu/templates/new/img/logoCITM.png?1401879059) 
