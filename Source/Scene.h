@@ -133,7 +133,7 @@ public:
 	int ranged_units_created = 0;
 	int current_gatherer_units = 0;
 	int gatherer_units_created = 0;
-
+	
 
 	//IA
 	std::pair<int, int> baseCenterPos;
@@ -157,6 +157,9 @@ public:
 	int units_created = 0;
 	int	units_lost = 0;
 	int	units_killed = 0;
+
+	//State Machine
+	int tutorial_barrack = 0;
 
 private:
 
@@ -187,6 +190,7 @@ private:
 	float total_distance;
 	bool r_c_comprobation = true;
 	int tutorial_clicks = 0;
+
 
 	std::pair<float, float> last_cam_pos;
 	std::pair<float, float> current_cam_pos;

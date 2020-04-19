@@ -304,6 +304,9 @@ B_Unit::B_Unit(Gameobject* go, UnitType t, UnitState s, ComponentType comp_type)
 		App->scene->current_gatherer_units += 1;
 		App->scene->gatherer_units_created += 1;
 		break;
+	case BARRACKS:
+		App->scene->tutorial_barrack += 1;
+		break;
 	}
 }
 

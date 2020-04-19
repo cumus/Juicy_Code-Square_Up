@@ -371,7 +371,8 @@ bool Scene::LoadMainScene()
 
 	building_bars_created = 0;
 
-
+	tutorial_barrack = 0;
+	
 	lore_go = AddGameobjectToCanvas("lore");
 	C_Image* lore = new C_Image(lore_go);
 	C_Button* next = new C_Button(lore_go, Event(GAMEPLAY, this, CAM_MOVEMENT));
@@ -391,6 +392,22 @@ bool Scene::LoadMainScene()
 	//Minimap
 	Gameobject* minimap_go = AddGameobjectToCanvas("Minimap");
 	minimap = new Minimap(minimap_go);
+
+	std::pair<int, int> position = Map::WorldToTileBase(float(450.0f), float(450.0f));
+	if (App->pathfinding.CheckWalkabilityArea(position, vec(1.0f)))
+	{
+		Gameobject* base_go = AddGameobjectToCanvas("Base Center");
+		base_go->GetTransform()->SetLocalPos({ float(position.first), float(position.second), 0.0f });
+
+		//App->audio->PlayFx(B_BUILDED);
+		new Base_Center(base_go);
+		baseCenterPos.first = base_go->GetTransform()->GetGlobalPosition().x;
+		baseCenterPos.second = base_go->GetTransform()->GetGlobalPosition().y;
+		for (std::map<double, Behaviour*>::iterator it = Behaviour::b_map.begin(); it != Behaviour::b_map.end(); ++it)//Update paths 
+		{
+			Event::Push(UPDATE_PATH, it->second, baseCenterPos.first - 1, baseCenterPos.second - 1);
+		}
+	}
 
 	return  App->audio->PlayMusic("Assets/audio/Music/alexander-nakarada-buzzkiller.ogg");
 }
@@ -1001,16 +1018,29 @@ void Scene::UpdateStateMachine()
 		
 		break;
 	case BASE_CENTER_STATE:
-	
-		break;
-	case BARRACKS_STATE:
-	
+		
+
+
 		break;
 	case RESOURCES:
 
 		break;
+
+	case BARRACKS_STATE:
+		LOG("babb %d", tutorial_barrack);
+		if (tutorial_barrack == 1) {
+			
+			Event::Push(GAMEPLAY, this, MELEE);
+		}
+
+		break;
+	
 	case MELEE:
 
+		if (current_melee_units == 1) {
+
+			Event::Push(GAMEPLAY, this, ENEMY);
+		}
 
 		break;
 	case ENEMY:
@@ -1123,7 +1153,7 @@ void Scene::OnEventStateMachine(GameplayState state)
 
 		edge_go = AddGameobjectToCanvas("edge_go");
 		edge = new C_Image(edge_go);
-
+		
 		edge->target = { 0.66f, 0.95f, 0.6f, 0.6f };
 		edge->offset = { -640.f, -985.f };
 		edge->section = { 0, 0, 1070, 207 };
@@ -1149,50 +1179,85 @@ void Scene::OnEventStateMachine(GameplayState state)
 
 		base_center_go = AddGameobjectToCanvas("base_center_go");
 		base_center = new C_Image(base_center_go);
+		next = new C_Button(base_center_go, Event(GAMEPLAY, this, RESOURCES));
 
 		base_center->target = { 0.50f, 0.85f, 0.6f, 0.6f };
 		base_center->offset = { -640.f, -985.f };
 		base_center->section = { 0, 0, 1070, 207 };
 		base_center->tex_id = App->tex.Load("Assets/textures/button.png");
+				
+		next->target = { 0.70f, 0.45f, 0.3f, 0.3f };
+		next->offset = { -525.f, 200.f };
+		next->section = { 0, 0, 1070, 207 };
+		next->tex_id = App->tex.Load("Assets/textures/button.png");
 
-	
 
-	current_state = EDGE_STATE;
+		current_state = BASE_CENTER_STATE;
 	}
 		break;
-	case BARRACKS_STATE:
-		barracks_state_go = AddGameobjectToCanvas("barracks_state_go");
-		barracks_state = new C_Image(barracks_state_go);
-
-		barracks_state->target = { 0.66f, 0.95f, 0.6f, 0.6f };
-		barracks_state->offset = { -640.f, -985.f };
-		barracks_state->section = { 0, 0, 640, 985 };
-		barracks_state->tex_id = App->tex.Load("Assets/textures/pause-bg.png");
-
-		// new Barracks(barracks_state_go); "no barracks class"
-
-		break;
 	case RESOURCES:
+		base_center_go->SetInactive();
+
 		resources_state_go = AddGameobjectToCanvas("resources_state_go");
 		resources = new C_Image(resources_state_go);
+		next = new C_Button(resources_state_go, Event(GAMEPLAY, this, BARRACKS_STATE));
 
 		resources->target = { 0.66f, 0.95f, 0.6f, 0.6f };
 		resources->offset = { -640.f, -985.f };
-		resources->section = { 0, 0, 640, 985 };
-		resources->tex_id = App->tex.Load("Assets/textures/pause-bg.png");
+		resources->section = { 0, 0, 640, 200 };
+		resources->tex_id = App->tex.Load("Assets/textures/button.png");
 
+		next->target = { 0.75f, 0.45f, 0.3f, 0.3f };
+		next->offset = { -525.f, 200.f };
+		next->section = { 0, 0, 1070, 207 };
+		next->tex_id = App->tex.Load("Assets/textures/button.png");
+
+		//Explain Edge and what it is used for
+		current_state = RESOURCES;
 
 		break;
+	case BARRACKS_STATE:
+		resources_state_go->SetInactive();
+
+		barracks_state_go = AddGameobjectToCanvas("barracks_state_go");
+		barracks_state = new C_Image(barracks_state_go);
+		next = new C_Button(barracks_state_go, Event(SCENE_PLAY, this, MAIN));
+
+		barracks_state->target = { 0.66f, 0.95f, 0.6f, 0.6f };
+		barracks_state->offset = { -640.f, -985.f };
+		barracks_state->section = { 0, 0, 640, 300 };
+		barracks_state->tex_id = App->tex.Load("Assets/textures/button.png");
+	
+		next->target = { 0.60f, 0.45f, 0.3f, 0.3f };
+		next->offset = { -525.f, 200.f };
+		next->section = { 0, 0, 1070, 207 };
+		next->tex_id = App->tex.Load("Assets/textures/button.png");
+
+		//BUILD BARRACKS -> NEXT STATE
+		current_state = BARRACKS_STATE;
+
+		break;
+	
 	case MELEE:
+		barracks_state_go->SetInactive();
+
 		melee_go = AddGameobjectToCanvas("melee_go");
 		melee = new C_Image(melee_go);
+		next = new C_Button(melee_go, Event(GAMEPLAY, this, MELEE));
 
 		melee->target = { 0.66f, 0.95f, 0.6f, 0.6f };
 		melee->offset = { -640.f, -985.f };
 		melee->section = { 0, 0, 640, 985 };
-		melee->tex_id = App->tex.Load("Assets/textures/pause-bg.png");
+		melee->tex_id = App->tex.Load("Assets/textures/button.png");
+
+		next->target = { 0.80f, 0.35f, 0.3f, 0.3f };
+		next->offset = { -525.f, 200.f };
+		next->section = { 0, 0, 1070, 207 };
+		next->tex_id = App->tex.Load("Assets/textures/button.png");
 
 		new MeleeUnit(melee_go);
+		current_state = MELEE;
+		//BUILD MELEE -> NEXT STATE
 
 		break;
 	case ENEMY:
