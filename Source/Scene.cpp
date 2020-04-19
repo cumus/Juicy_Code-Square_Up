@@ -37,7 +37,7 @@
 
 
 bool Scene::god_mode = false;
-bool Scene::no_damage = false;
+bool Scene::dmgAllow = true;
 
 Scene::Scene() : Module("scene")
 {
@@ -1619,7 +1619,8 @@ Transform* Scene::SpawnBehaviour(int type, vec pos)
 
 bool Scene::DamageAllowed()
 {
-	return god_mode && no_damage;
+	LOG("Damage allowed: %d", dmgAllow);
+	return dmgAllow;
 }
 
 Gameobject* Scene::GetRoot()
@@ -1759,6 +1760,15 @@ void Scene::GodMode()
 			Event::Push(SCENE_CHANGE, this, END, 2.f);
 	}
 
+
+	///Spawn Codes
+	//1-Gatherer
+	//2-Ally melee
+	//3-
+	//Ctrl+1- Base center
+	//Ctrl+2- Tower
+	//Ctrl+3- 
+
 	// F1: Show/Hide Editor Windows
 	if (App->input->GetKey(SDL_SCANCODE_F1) == KEY_DOWN)
 		App->editor->ToggleEditorVisibility();
@@ -1776,8 +1786,8 @@ void Scene::GodMode()
 	}
 
 	// F4: Toggle Allowed Damage
-	if (App->input->GetKey(SDL_SCANCODE_F4) == KEY_DOWN)
-		no_damage = !no_damage;
+	if (App->input->GetKey(SDL_SCANCODE_F4) == KEY_DOWN && god_mode)
+		dmgAllow = !dmgAllow;
 
 	// F5: Toggle Show Paths
 	if (App->input->GetKey(SDL_SCANCODE_F5) == KEY_DOWN)

@@ -168,16 +168,16 @@ bool Render::PostUpdate()
 				case RenderData::TEXTURE_FULL:
 				{
 					if (data->texture != nullptr)
-						if (!(ret = SDL_RenderCopy(renderer, data->texture, nullptr, &data->rect) == 0))
-							LOG("Cannot blit to screen. SDL_RenderCopy error: %s", SDL_GetError());
+						if (!(ret = SDL_RenderCopy(renderer, data->texture, nullptr, &data->rect) == 0)) {}
+							//LOG("Cannot blit texture to screen. SDL_RenderCopy error: %s", SDL_GetError());
 
 					break;
 				}
 				case RenderData::TEXTURE_SECTION:
 				{
 					if (data->texture != nullptr)
-						if (!(ret = SDL_RenderCopy(renderer, data->texture, &data->extra.section, &data->rect) == 0))
-							LOG("Cannot blit to screen. SDL_RenderCopy error: %s", SDL_GetError());
+						if (!(ret = SDL_RenderCopy(renderer, data->texture, &data->extra.section, &data->rect) == 0)) {}
+							//LOG("Cannot blit texture section to screen. SDL_RenderCopy error: %s", SDL_GetError());
 
 					break;
 				}
@@ -449,8 +449,8 @@ bool Render::Blit(int texture_id, int x, int y, const SDL_Rect* section, Layer l
 
 		layers[layer][layer < Layer::HUD ? data.rect.y : 0].push_back(data);
 	}
-	else
-		LOG("Cannot blit to screen. Invalid id %d", texture_id);
+	//else
+		//LOG("Cannot blit to screen. Invalid id %d", texture_id);
 
 	return ret;
 }
@@ -495,8 +495,8 @@ bool Render::Blit_Scale(int texture_id, int x, int y, float scale_x, float scale
 
 		layers[layer][layer < Layer::HUD ? data.rect.y : 0].push_back(data);
 	}
-	else
-		LOG("Cannot blit to screen. Invalid id %d", texture_id);
+	//else
+		//LOG("Cannot blit to screen. Invalid id %d", texture_id);
 
 	return ret;
 }
@@ -519,8 +519,8 @@ bool Render::BlitNorm(int texture_id, RectF rect, const SDL_Rect* section, Layer
 
 		layers[layer][layer < Layer::HUD ? data.rect.y : 0].push_back(data);
 	}
-	else
-		LOG("Cannot blit to screen. Invalid id %d", texture_id);
+	//else
+		//LOG("Cannot blit to screen. Invalid id %d", texture_id);
 
 	return ret;
 }

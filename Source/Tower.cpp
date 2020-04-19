@@ -21,10 +21,6 @@ Tower::Tower(Gameobject* go) : Behaviour(go, TOWER, FULL_LIFE, B_TOWER)
 	atkDelay = 1.5;
 	shoot = false;
 	current_state = FULL_LIFE;
-	vec pos = game_object->GetTransform()->GetGlobalPosition();
-	localPos = Map::F_MapToWorld(pos.x, pos.y, pos.z);
-	localPos.first += 30.0f;
-	localPos.second += 20.0f;
 	atkObj = nullptr;
 
 	create_bar();
@@ -155,6 +151,12 @@ void Tower::DoAttack()
 	atkPos = Map::F_MapToWorld(pos.x, pos.y, pos.z);
 	atkPos.first += 30.0f;
 	atkPos.second += 20.0f;
+
+	pos = game_object->GetTransform()->GetGlobalPosition();
+	localPos = Map::F_MapToWorld(pos.x, pos.y, pos.z);
+	localPos.first += 30.0f;
+	localPos.second += 20.0f;
+
 	Event::Push(DAMAGE, atkObj, damage);
 
 	shoot = true;

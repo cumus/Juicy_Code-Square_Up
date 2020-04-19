@@ -169,7 +169,7 @@ private:
 
 	// GodMode
 	static bool god_mode;
-	static bool no_damage;
+	static bool dmgAllow;
 
 	// Scene Transitions
 	enum Fade : int
