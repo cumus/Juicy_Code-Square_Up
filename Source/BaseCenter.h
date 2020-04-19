@@ -20,7 +20,7 @@ public:
 	void UpdatePanel() override;
 
 public:
-	static Base_Center* baseCenter;
+	static Gameobject* baseCenter;
 protected:
 
 	int bc_lvl;

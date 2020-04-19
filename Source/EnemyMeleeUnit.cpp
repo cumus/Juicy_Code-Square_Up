@@ -26,13 +26,6 @@ EnemyMeleeUnit::EnemyMeleeUnit(Gameobject* go) : B_Unit(go, ENEMY_MELEE, IDLE, B
 	scanTimer = 0.0f;
 	scanTime = 3.0f;
 
-	if (Base_Center::baseCenter != nullptr)
-	{
-		baseCenter = App->scene->baseCenterPtr;
-		//UpdatePath(App->scene->baseCenterPos.first - 1, App->scene->baseCenterPos.second - 1);
-		//going_base = true;
-	}
-
 	//SFX
 	//deathFX = IA_MELEE_DIE_FX;
 	//attackFX = IA_MELEE_ATK_FX;
@@ -56,7 +49,7 @@ void EnemyMeleeUnit::UpdatePath(int x, int y)
 void EnemyMeleeUnit::IARangeCheck()
 {
 	Transform* t = game_object->GetTransform();
-	if (t && scanTimer > scanTime)
+	if (t)
 	{
 		vec pos = t->GetGlobalPosition();
 		next = false;
@@ -65,7 +58,7 @@ void EnemyMeleeUnit::IARangeCheck()
 		std::map<float, Behaviour*> out;
 		unsigned int total_found = GetBehavioursInRange(vec(pos.x, pos.y, 0.5f), vision_range, out);//Get units in vision range
 		float distance = 0;
-		if (total_found > 0)//Check if found behaviours in range
+		if (total_found > 0 && scanTimer > scanTime)//Check if found behaviours in range
 		{
 			for (std::map<float, Behaviour*>::iterator it = out.begin(); it != out.end(); ++it)
 			{
@@ -92,6 +85,7 @@ void EnemyMeleeUnit::IARangeCheck()
 		else //Not found
 		{
 			attackObjective = nullptr;
+			scanTimer += App->time.GetGameDeltaTime();
 		}
 
 		if (attackObjective != nullptr)//Check if there is a valid objective
@@ -125,18 +119,15 @@ void EnemyMeleeUnit::IARangeCheck()
 		}
 		else
 		{
-			if (!going_base && App->scene->baseCenterPos.first >= 0 && App->scene->baseCenterPos.second >= 0)//If no valid objective and not going to base, set path to base
+			if (!going_base && Base_Center::baseCenter != nullptr)//If no valid objective and not going to base, set path to base
 			{
 				LOG("Path to base");
-				Event::Push(UPDATE_PATH, this->AsBehaviour(), App->scene->baseCenterPos.first - 1, App->scene->baseCenterPos.second - 1);
+				vec centerPos = Base_Center::baseCenter->GetTransform()->GetGlobalPosition();
+				Event::Push(UPDATE_PATH, this->AsBehaviour(), int(centerPos.x) - 1, int(centerPos.y) - 1);
 				going_base = true;
 				arriveDestination = true;
 				//LOG("Move to base");
 			}
 		}
-	}
-	else
-	{
-		scanTimer += App->time.GetGameDeltaTime();
 	}
 }

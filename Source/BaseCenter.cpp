@@ -11,7 +11,7 @@
 #include "Scene.h"
 #include "Canvas.h"
 
-Base_Center* Base_Center::baseCenter = nullptr;
+Gameobject* Base_Center::baseCenter = nullptr;
 
 Base_Center::Base_Center(Gameobject* go) : Behaviour(go, BASE_CENTER, FULL_LIFE, B_BASE_CENTER)
 {
@@ -35,7 +35,7 @@ Base_Center::Base_Center(Gameobject* go) : Behaviour(go, BASE_CENTER, FULL_LIFE,
 		vec pos = t->GetGlobalPosition();
 		App->pathfinding.SetWalkabilityTile(int(pos.x), int(pos.y), false);
 	}
-	baseCenter = this;
+	baseCenter = this->GetGameobject();
 }
 
 Base_Center::~Base_Center()
@@ -47,7 +47,7 @@ Base_Center::~Base_Center()
 		App->pathfinding.SetWalkabilityTile(int(pos.x), int(pos.y), true);
 	}
 	b_map.erase(GetID());
-	if (baseCenter == this)
+	if (baseCenter == this->GetGameobject())
 	{
 		baseCenter = nullptr;
 	}	
