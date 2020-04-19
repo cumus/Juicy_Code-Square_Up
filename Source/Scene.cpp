@@ -37,28 +37,22 @@
 
 
 bool Scene::god_mode = false;
-bool Scene::dmgAllow = true;
+bool Scene::no_damage = false;
+int Scene::player_stats[MAX_PLAYER_STATS];
 
 Scene::Scene() : Module("scene")
 {
 	root.SetName("root");
-	baseCenterPos.first = -1;
-	baseCenterPos.second = -1;
-	spawnPoints.push_back(vec(20,20,0.5));
-	spawnPoints.push_back(vec(30, 20, 0.5));
-	spawnPoints.push_back(vec(20, 30, 0.5));
-	currentSpawns = 0;
-	maxSpawns = 200;
-	spawnCounter = 0;
-	cooldownSpawn = 5.0f;
-	last_cam_pos = { 0,0 };
-	minimap = nullptr;
-	groupSelect = false;
-	pause_background_go = nullptr;
 }
 
 Scene::~Scene()
 {}
+
+bool Scene::Start()
+{
+	ResetScene();
+	return true;
+}
 
 bool Scene::PreUpdate()
 {
@@ -88,22 +82,16 @@ bool Scene::Update()
 	{
 		UpdateFade();
 	}
+	else if (placing_building)
+	{
+		UpdateBuildingMode();
+	}
 	else
 	{
-		
-		UpdateHUD();
+		UpdatePause();
 
-		if (placing_building)
-		{
-			UpdateBuildingMode();
-		}
-		else
-		{
-			UpdatePause();
-
-			if (!C_Canvas::MouseOnUI() && !App->editor->MouseOnEditor())
-				UpdateSelection();
-		}
+		if (!paused_scene && !C_Canvas::MouseOnUI() && !App->editor->MouseOnEditor())
+			UpdateSelection();
 	}
 
 	return true;
@@ -163,21 +151,16 @@ void Scene::RecieveEvent(const Event& e)
 			}
 		}
 		break; }
-	case RESOURCE: 
-		edge_value += e.data1.AsInt();
-		LOG("Current resources: %d",edge_value);
-		break;
 	case PLACE_BUILDING:
 	{
 		placing_building = SpawnBehaviour(e.data1.AsInt());
 		break;
 	}
-	case BASE_DESTROYED: //Lose condition
-		ChangeToScene(END);
+	case UPDATE_STAT:
+	{
+		UpdateStat(e.data1.AsInt(), e.data2.AsInt());
 		break;
-	case MOB_DROP: 
-		mob_drop += e.data1.AsInt();
-		break;
+	}
 	case GAMEPLAY:
 	{
 		OnEventStateMachine(GameplayState(e.data1.AsInt()));
@@ -193,173 +176,17 @@ void Scene::RecieveEvent(const Event& e)
 	}
 }
 
-bool Scene::LoadTestScene()
+void Scene::LoadTestScene()
 {
 	OPTICK_EVENT();
 
+	map.Load("Assets/maps/iso.tmx");
+
+	LoadMainHUD();
+
 	god_mode = true;
-
-	// Play sample track
-	bool ret = App->audio->PlayMusic("Assets/audio/Music/alexander-nakarada-buzzkiller.ogg");
-
-	// Load mouse debug texture for identifying tiles
-	if (ret)
-	{
-		id_mouse_tex = App->tex.Load("Assets/textures/meta.png");
-		ret = (id_mouse_tex != -1);
-	}
-
-	if (ret) map.Load("Assets/maps/iso.tmx");
-	
-	test = true;
-
-	int icons_text_id = App->tex.Load("Assets/textures/Iconos_square_up.png");
-
-	building_bars_created = 0;
-	int current_melee_units = 0;
-	int melee_units_created = 0;
-	int current_ranged_units = 0;
-	int ranged_units_created = 0;
-	int current_gatherer_units = 0;
-	int gatherer_units_created = 0;
-	
-
-	//------------------------- HUD CANVAS --------------------------------------
-
-	hud_canvas_go = AddGameobject("HUD Canvas", &root);
-
-	/*
-	Gameobject* img_go = AddGameobject("Image", canvas_go);
-	C_Image* img = new C_Image(img_go);
-	img->target = { 1.f, 1.f, 0.5f, 0.5f };
-	img->offset = { -1199.f, -674.f };
-	img->section = { 0, 0, 1199, 674 };
-	img->tex_id = App->tex.Load("textures/goku.png");
-
-	Gameobject* text1_go = AddGameobject("Text 1", canvas_go);
-	C_Text* text1 = new C_Text(text1_go, "Componente texto sin ajustar");
-	text1->target = { 0.4f, 0.2f, 1.f, 1.f };
-
-	Gameobject* text2_go = AddGameobject("Text 2", canvas_go);
-	C_Text* text2 = new C_Text(text2_go, "Componente texto ajustado");
-	text2->target = { 0.4f, 0.4f, 1.f, 1.f };
-	text2->scale_to_fit = true;
-
-	Gameobject* button_go = AddGameobject("Quit Button", canvas_go);
-	C_Button* button = new C_Button(button_go, Event(REQUEST_QUIT, App));
-	button->target = { 1.f, 0.4f, 1.f, 1.f };
-	button->offset = { -101.f, 0.f };
-	button->section = { 359, 114, 101, 101 };
-	button->tex_id = App->tex.Load("textures/icons.png");*/
-
-
-	// Unit icon (Melee Unit)
-	Gameobject* melee_counter_go = AddGameobjectToCanvas("Melee Unit Counter");
-
-	C_Image* melee_counter_box = new C_Image(melee_counter_go);
-	melee_counter_box->target = { 0.153f, 0.64f, 0.55f , 1.f };
-	melee_counter_box->offset = { -345.f, -45.f };
-	melee_counter_box->section = { 17, 509, 345, 45 };
-	melee_counter_box->tex_id = icons_text_id;
-
-	C_Image* melee_counter_icon = new C_Image(melee_counter_go);
-	melee_counter_icon->target = { 0.047f, 0.628f, 0.9f , 0.9f };
-	melee_counter_icon->offset = { -48.f, -35.f };
-	melee_counter_icon->section = { 22, 463, 48, 35 };
-	melee_counter_icon->tex_id = icons_text_id;
-
-	text_current_melee_units = new C_Text(melee_counter_go, "0");
-	text_current_melee_units->target = { 0.049f, 0.587f, 1.6f, 1.6f };
-
-	C_Text* melee_diagonal = new C_Text(melee_counter_go, "/");
-	melee_diagonal->target = { 0.088f, 0.587f, 1.6f, 1.6f };
-
-	text_melee_units_created = new C_Text(melee_counter_go, "0");
-	text_melee_units_created->target = { 0.099f, 0.587f, 1.6f, 1.6f };
-
-	// Unit icon (Gatherer Unit)
-	Gameobject* gatherer_counter_go = AddGameobjectToCanvas("Gatherer Unit Counter");
-
-	C_Image* gatherer_counter_box = new C_Image(gatherer_counter_go);
-	gatherer_counter_box->target = { 0.153f, 0.72f, 0.55f , 1.f };
-	gatherer_counter_box->offset = { -345.f, -45.f };
-	gatherer_counter_box->section = { 17, 509, 345, 45 };
-	gatherer_counter_box->tex_id = icons_text_id;
-
-	C_Image* gatherer_counter_icon = new C_Image(gatherer_counter_go);
-	gatherer_counter_icon->target = { 0.041f, 0.708f, 0.9f , 0.9f };
-	gatherer_counter_icon->offset = { -48.f, -35.f };
-	gatherer_counter_icon->section = { 75, 458, 48, 35 };
-	gatherer_counter_icon->tex_id = icons_text_id;
-
-	text_current_gatherer_units = new C_Text(gatherer_counter_go, "0");
-	text_current_gatherer_units->target = { 0.049f, 0.667f, 1.6f, 1.6f };
-
-	C_Text* gatherer_diagonal = new C_Text(gatherer_counter_go, "/");
-	gatherer_diagonal->target = { 0.088f, 0.667f, 1.6f, 1.6f };
-
-	text_gatherer_units_created = new C_Text(gatherer_counter_go, "0");
-	text_gatherer_units_created->target = { 0.099f, 0.667f, 1.6f, 1.6f };
-
-	// Unit icon (Ranged Unit)
-	Gameobject* ranged_counter_go = AddGameobjectToCanvas("Ranged Unit Counter");
-
-	C_Image* ranged_counter_box = new C_Image(ranged_counter_go);
-	ranged_counter_box->target = { 0.153f, 0.80f, 0.55f , 1.f };
-	ranged_counter_box->offset = { -345.f, -45.f };
-	ranged_counter_box->section = { 17, 509, 345, 45 };
-	ranged_counter_box->tex_id = icons_text_id;
-
-	/*
-	C_Image* ranged_counter_icon = new C_Image(ranged_counter_go);
-	ranged_counter_icon->target = { 0.047f, 0.788f, 0.9f , 0.9f };
-	ranged_counter_icon->offset = { -48.f, -35.f };
-	ranged_counter_icon->section = { 22, 463, 48, 35 };
-	ranged_counter_icon->tex_id = icons_text_id;
-	*/
-
-	text_current_ranged_units = new C_Text(ranged_counter_go, "0");
-	text_current_ranged_units->target = { 0.049f, 0.747f, 1.6f, 1.6f };
-
-	C_Text* ranged_diagonal = new C_Text(ranged_counter_go, "/");
-	ranged_diagonal->target = { 0.088f, 0.747f, 1.6f, 1.6f };
-
-	text_ranged_units_created = new C_Text(ranged_counter_go, "0");
-	text_ranged_units_created->target = { 0.099f, 0.747f, 1.6f, 1.6f };
-
-
-	//Resources
-	Gameobject* resource_counter_go = AddGameobjectToCanvas("Resources");
-	C_Image* img = new C_Image(resource_counter_go);
-	img->target = { 0.1f, 1.f, 1.f , 1.f };
-	img->offset = { -119.f, -119.f };
-	img->section = { 22, 333, 119, 119 };
-	img->tex_id = icons_text_id;
-
-	//Edge
-	resources_go = AddGameobject("Text Edge", resource_counter_go);
-	C_Text* text_edge = new C_Text(resources_go, "Edge");
-	text_edge->target = { 0.1f, 0.1f, 1.f, 1.f };
-	
-	Gameobject* resources_value_go = AddGameobject("Mob Drop Value", resource_counter_go);
-	text_edge_value = new C_Text(resources_go, "100");
-	text_edge_value->target = { 0.1f, 0.4f, 1.f, 1.f };
-
-	//MobDrop
-	resources_2_go = AddGameobject("Text Mob Drop", resource_counter_go);
-	C_Text* text_mobdrop = new C_Text(resources_2_go, "Mob Drop");
-	text_mobdrop->target = { 0.45f, 0.8f, 1.f, 1.f };
-	
-	Gameobject* resources_value_2_go = AddGameobject("Mob Drop Value", resource_counter_go);
-	text_mobdrop_value = new C_Text(resources_2_go, "0");
-	text_mobdrop_value->target = { 0.65f, 0.4f, 1.f, 1.f };
-	
-	//Minimap
-	if (minimap != nullptr)
-	{
-		Gameobject* minimap_go = AddGameobjectToCanvas("Minimap");
-		minimap = new Minimap(minimap_go);
-	}
+	App->audio->PlayMusic("Assets/audio/Music/alexander-nakarada-buzzkiller.ogg");
+	id_mouse_tex = App->tex.Load("Assets/textures/meta.png");
 
 	// Build mode
 	Gameobject* builder = AddGameobjectToCanvas("Building Mode");
@@ -371,20 +198,16 @@ bool Scene::LoadTestScene()
 	edge->target = { 0.7f, 1.f, 1.f , 1.f };
 	base->offset = tower->offset = edge->offset ={ -40.f, -80.f };
 	base->section = tower->section = edge->section = { 0, 0, 80, 80 };
-
-	return ret;
 }
 
-bool Scene::LoadMainScene()
+void Scene::LoadMainScene()
 {
 	OPTICK_EVENT();
 
-	level = true;
+	map.Load("Assets/maps/iso.tmx");
 
-	building_bars_created = 0;
+	LoadMainHUD();
 
-	tutorial_barrack = 0;
-	
 	lore_go = AddGameobjectToCanvas("lore");
 	C_Image* lore = new C_Image(lore_go);
 	C_Button* next = new C_Button(lore_go, Event(GAMEPLAY, this, CAM_MOVEMENT));
@@ -399,11 +222,8 @@ bool Scene::LoadMainScene()
 	next->section = { 0, 0, 1070, 207 };
 	next->tex_id = App->tex.Load("Assets/textures/button.png");
 
-	map.Load("Assets/maps/iso.tmx");
-
 	//Minimap
-	Gameobject* minimap_go = AddGameobjectToCanvas("Minimap");
-	minimap = new Minimap(minimap_go);
+	new Minimap(AddGameobjectToCanvas("Minimap"));
 
 	std::pair<int, int> position = Map::WorldToTileBase(float(450.0f), float(450.0f));
 	if (App->pathfinding.CheckWalkabilityArea(position, vec(1.0f)))
@@ -413,67 +233,44 @@ bool Scene::LoadMainScene()
 
 		//App->audio->PlayFx(B_BUILDED);
 		new Base_Center(base_go);
-		baseCenterPos.first = base_go->GetTransform()->GetGlobalPosition().x;
-		baseCenterPos.second = base_go->GetTransform()->GetGlobalPosition().y;
+		std::pair<int, int> baseCenterPos = {
+			base_go->GetTransform()->GetGlobalPosition().x,
+			baseCenterPos.second = base_go->GetTransform()->GetGlobalPosition().y };
 		for (std::map<double, Behaviour*>::iterator it = Behaviour::b_map.begin(); it != Behaviour::b_map.end(); ++it)//Update paths 
 		{
 			Event::Push(UPDATE_PATH, it->second, baseCenterPos.first - 1, baseCenterPos.second - 1);
 		}
 	}
-
-	return  App->audio->PlayMusic("Assets/audio/Music/alexander-nakarada-buzzkiller.ogg");
 }
 
-bool Scene::LoadIntroScene()
+void Scene::LoadIntroScene()
 {
 	OPTICK_EVENT();
-	// Play sample track
-	bool ret = App->audio->PlayFx(LOGO);
+	
+	App->audio->PlayFx(LOGO);
 
-	level = false;
-	test = false;
-
-	// Add a canvas
-
-	Gameobject* background_go = AddGameobjectToCanvas("Background");
-
-	C_Button* background = new C_Button(background_go, Event(SCENE_CHANGE, this, MENU, 2.f));
+	C_Button* background = new C_Button(AddGameobjectToCanvas("Background"), Event(SCENE_CHANGE, this, MENU, 2.f));
 	background->target = { 1.f, 1.f, 1.f, 1.f };
 	background->offset = { -1920.f, -1080.f };
 	background->section = { 0, 0, 1920, 1080 };
 	background->tex_id = App->tex.Load("Assets/textures/white.png");
-	
-	Gameobject* logo_go = AddGameobjectToCanvas("Team logo");
 
-	C_Image* logo = new C_Image(logo_go);
+	C_Image* logo = new C_Image(AddGameobjectToCanvas("Team logo"));
 	logo->target = { 0.5f, 0.5f, 0.5f, 0.5f };
 	logo->offset = { -300.f, -400.f };
 	logo->section = { 0, 0, 499, 590 };
 	logo->tex_id = App->tex.Load("Assets/textures/team-logo2.png");
-
-	return ret;
-	
 }
 
-bool Scene::LoadMenuScene()
+void Scene::LoadMenuScene()
 {
 	OPTICK_EVENT();
-	// Play sample track
-	bool ret = App->audio->PlayMusic("Assets/audio/Music/alexander-nakarada-curiosity.ogg") && App->audio->PlayFx(TITLE);
 
-	level = false;
-	test = false;
-
-	//------------------------- CANVAS --------------------------------------
-	/*Gameobject* canvas_go = AddGameobject("Canvas", &root);
-	C_Canvas* canv = new C_Canvas(canvas_go);
-	canv->target = { 0.6f, 0.6f, 0.4f, 0.4f };*/
+	App->audio->PlayMusic("Assets/audio/Music/alexander-nakarada-curiosity.ogg") && App->audio->PlayFx(TITLE);
 
 	//------------------------- BACKGROUND --------------------------------------
 
-	Gameobject* background_go = AddGameobjectToCanvas("Background");
-
-	C_Image* background = new C_Image(background_go);
+	C_Image* background = new C_Image(AddGameobjectToCanvas("Background"));
 	background->target = { 1.f, 1.f, 1.f, 1.f };
 	background->offset = { -1920.f, -1080.f };
 	background->section = { 0, 0, 1920, 1080 };
@@ -481,9 +278,7 @@ bool Scene::LoadMenuScene()
 
 	//------------------------- LOGO --------------------------------------
 
-	Gameobject* g_logo_go = AddGameobjectToCanvas("Game logo");
-
-	C_Image* g_logo = new C_Image(g_logo_go);
+	C_Image* g_logo = new C_Image(AddGameobjectToCanvas("Game logo"));
 	g_logo->target = { 0.5f, 0.5f, 0.5f, 0.5f };
 	g_logo->offset = { -525.f, -500.f };
 	g_logo->section = { 0, 0, 1070, 207 };
@@ -518,20 +313,15 @@ bool Scene::LoadMenuScene()
 	quit_fx->target = { 0.5f, 0.5f, 0.5f, 0.5f };
 	quit_fx->offset = { -525.f, 200.f };
 	quit_fx->section = { 0, 0, 1070, 207 };
-
-	return ret;
 }
 
-bool Scene::LoadEndScene()
+void Scene::LoadEndScene()
 {
 	OPTICK_EVENT();
 
-	bool ret;
-
-	level = false;
-	test = false;
-
-	//------------------------- CANVAS --------------------------------------
+	App->audio->PlayMusic(win ?
+		"Assets/audio/Music/alexander-nakarada-early-probe-eats-the-dust.ogg" :
+		"Assets/audio/Music/alexander-nakarada-inter7ude.ogg");
 
 	//------------------------- BACKGROUND --------------------------------------
 
@@ -542,6 +332,7 @@ bool Scene::LoadEndScene()
 	background->offset = { -1920.f, -1080.f };
 	background->section = { 0, 0, 1920, 1080 };
 	background->tex_id = App->tex.Load("Assets/textures/white.png");
+
 	C_Button* background_btn = new C_Button(background_go, Event(SCENE_CHANGE, this, MENU));
 	background_btn->target = { 1.f, 1.f, 1.f, 1.f };
 	background_btn->offset = { -1920.f, -1080.f };
@@ -550,9 +341,7 @@ bool Scene::LoadEndScene()
 	//------------------------- WIN/LOSE --------------------------------------
 	if (win)
 	{
-		Gameobject* win_go = AddGameobjectToCanvas("Background");
-
-		C_Image* win = new C_Image(win_go);
+		C_Image* win = new C_Image(AddGameobjectToCanvas("Background"));
 		win->target = { 0.58f, 0.2f, 0.5f, 0.5f };
 		win->offset = { -442.f, -117.f };
 		win->section = { 0, 0, 442, 117 };
@@ -560,9 +349,7 @@ bool Scene::LoadEndScene()
 	}
 	else
 	{
-		Gameobject* lose_go = AddGameobjectToCanvas("Background");
-
-		C_Image* lose = new C_Image(lose_go);
+		C_Image* lose = new C_Image(AddGameobjectToCanvas("Background"));
 		lose->target = { 0.59f, 0.2f, 0.5f, 0.5f };
 		lose->offset = { -495.f, -117.f };
 		lose->section = { 0, 0, 495, 117 };
@@ -571,9 +358,7 @@ bool Scene::LoadEndScene()
 
 	//------------------------- BACK --------------------------------------
 
-	Gameobject* back_go = AddGameobjectToCanvas("Background");
-
-	C_Image* back = new C_Image(back_go);
+	C_Image* back = new C_Image(AddGameobjectToCanvas("Background"));
 	back->target = { 0.68f, 0.9f, 0.6f, 0.65f };
 	back->offset = { -783.f, -735.f };
 	back->section = { 0, 0, 783, 735 };
@@ -581,63 +366,151 @@ bool Scene::LoadEndScene()
 
 	//------------------------- TIME --------------------------------------
 
-	Gameobject* time_go = AddGameobjectToCanvas("Time");
-
-	C_Image* time = new C_Image(time_go);
+	C_Image* time = new C_Image(AddGameobjectToCanvas("Time"));
 	time->target = { 0.66f, 0.37f, 0.6f, 0.65f };
 	time->offset = { -693.f, -100.f };
 	time->section = { 0, 0, 693, 100 };
-	if (win) time->tex_id = App->tex.Load("Assets/textures/wtime.png");
-	else time->tex_id = App->tex.Load("Assets/textures/ltime.png");
+	time->tex_id = App->tex.Load(win ? "Assets/textures/wtime.png" : "Assets/textures/ltime.png");
 
 	//------------------------- EDGE --------------------------------------
 
-	Gameobject* edge_go = AddGameobjectToCanvas("edge");
-
-	C_Image* edge = new C_Image(edge_go);
+	C_Image* edge = new C_Image(AddGameobjectToCanvas("edge"));
 	edge->target = { 0.66f, 0.49f, 0.6f, 0.65f };
 	edge->offset = { -693.f, -100.f };
 	edge->section = { 0, 0, 693, 100 };
-	if (win) edge->tex_id = App->tex.Load("Assets/textures/wedge.png");
-	else edge->tex_id = App->tex.Load("Assets/textures/ledge.png");
+	edge->tex_id = App->tex.Load(win ? "Assets/textures/wedge.png" : "Assets/textures/ledge.png");
 
 	//------------------------- UNITS CREATED --------------------------------------
 
-	Gameobject* units_c_go = AddGameobjectToCanvas("created");
-
-	C_Image* units_c = new C_Image(units_c_go);
+	C_Image* units_c = new C_Image(AddGameobjectToCanvas("created"));
 	units_c->target = { 0.66f, 0.61f, 0.6f, 0.65f };
 	units_c->offset = { -693.f, -100.f };
 	units_c->section = { 0, 0, 693, 100 };
-	if (win) units_c->tex_id = App->tex.Load("Assets/textures/wunits_c.png");
-	else units_c->tex_id = App->tex.Load("Assets/textures/lunits_c.png");
+	units_c->tex_id = App->tex.Load(win ? "Assets/textures/wunits_c.png" : "Assets/textures/lunits_c.png");
 
 	//------------------------- UNITS LOST --------------------------------------
 
-	Gameobject* units_l_go = AddGameobjectToCanvas("lost");
-
-	C_Image* units_l = new C_Image(units_l_go);
+	C_Image* units_l = new C_Image(AddGameobjectToCanvas("lost"));
 	units_l->target = { 0.66f, 0.73f, 0.6f, 0.65f };
 	units_l->offset = { -693.f, -100.f };
 	units_l->section = { 0, 0, 693, 100 };
-	if (win) units_l->tex_id = App->tex.Load("Assets/textures/wunits_l.png");
-	else units_l->tex_id = App->tex.Load("Assets/textures/lunits_l.png");
+	units_l->tex_id = App->tex.Load(win ? "Assets/textures/wunits_l.png" : "Assets/textures/lunits_l.png");
 
 	//------------------------- UNITS KILLED --------------------------------------
 
-	Gameobject* units_k_go = AddGameobjectToCanvas("killed");
-
-	C_Image* units_k = new C_Image(units_k_go);
+	C_Image* units_k = new C_Image(AddGameobjectToCanvas("killed"));
 	units_k->target = { 0.66f, 0.85f, 0.6f, 0.65f };
 	units_k->offset = { -693.f, -100.f };
 	units_k->section = { 0, 0, 693, 100 };
-	if (win) units_k->tex_id = App->tex.Load("Assets/textures/wunits_k.png");
-	else units_k->tex_id = App->tex.Load("Assets/textures/lunits_k.png");
+	units_k->tex_id = App->tex.Load(win ? "Assets/textures/wunits_k.png" : "Assets/textures/lunits_k.png");
+}
 
-	if (win) ret = App->audio->PlayMusic("Assets/audio/Music/alexander-nakarada-early-probe-eats-the-dust.ogg");
-	else ret = App->audio->PlayMusic("Assets/audio/Music/alexander-nakarada-inter7ude.ogg");
+void Scene::LoadMainHUD()
+{
+	int icons_text_id = App->tex.Load("Assets/textures/Iconos_square_up.png");
 
-	return ret;
+	// Unit icon (Melee Unit)
+	Gameobject* melee_counter_go = AddGameobjectToCanvas("Melee Unit Counter");
+
+	C_Image* melee_counter_box = new C_Image(melee_counter_go);
+	melee_counter_box->target = { 0.153f, 0.64f, 0.55f , 1.f };
+	melee_counter_box->offset = { -345.f, -45.f };
+	melee_counter_box->section = { 17, 509, 345, 45 };
+	melee_counter_box->tex_id = icons_text_id;
+
+	C_Image* melee_counter_icon = new C_Image(melee_counter_go);
+	melee_counter_icon->target = { 0.047f, 0.628f, 0.9f , 0.9f };
+	melee_counter_icon->offset = { -48.f, -35.f };
+	melee_counter_icon->section = { 22, 463, 48, 35 };
+	melee_counter_icon->tex_id = icons_text_id;
+
+	hud_texts[CURRENT_MELEE_UNITS] = new C_Text(melee_counter_go, "0");
+	hud_texts[CURRENT_MELEE_UNITS]->target = { 0.049f, 0.587f, 1.6f, 1.6f };
+
+	C_Text* melee_diagonal = new C_Text(melee_counter_go, "/");
+	melee_diagonal->target = { 0.088f, 0.587f, 1.6f, 1.6f };
+
+	hud_texts[TOTAL_MELEE_UNITS] = new C_Text(melee_counter_go, "0");
+	hud_texts[TOTAL_MELEE_UNITS]->target = { 0.099f, 0.587f, 1.6f, 1.6f };
+
+	// Unit icon (Gatherer Unit)
+	Gameobject* gatherer_counter_go = AddGameobjectToCanvas("Gatherer Unit Counter");
+
+	C_Image* gatherer_counter_box = new C_Image(gatherer_counter_go);
+	gatherer_counter_box->target = { 0.153f, 0.72f, 0.55f , 1.f };
+	gatherer_counter_box->offset = { -345.f, -45.f };
+	gatherer_counter_box->section = { 17, 509, 345, 45 };
+	gatherer_counter_box->tex_id = icons_text_id;
+
+	C_Image* gatherer_counter_icon = new C_Image(gatherer_counter_go);
+	gatherer_counter_icon->target = { 0.041f, 0.708f, 0.9f , 0.9f };
+	gatherer_counter_icon->offset = { -48.f, -35.f };
+	gatherer_counter_icon->section = { 75, 458, 48, 35 };
+	gatherer_counter_icon->tex_id = icons_text_id;
+
+	hud_texts[CURRENT_GATHERER_UNITS] = new C_Text(gatherer_counter_go, "0");
+	hud_texts[CURRENT_GATHERER_UNITS]->target = { 0.049f, 0.667f, 1.6f, 1.6f };
+
+	C_Text* gatherer_diagonal = new C_Text(gatherer_counter_go, "/");
+	gatherer_diagonal->target = { 0.088f, 0.667f, 1.6f, 1.6f };
+
+	hud_texts[TOTAL_GATHERER_UNITS] = new C_Text(gatherer_counter_go, "0");
+	hud_texts[TOTAL_GATHERER_UNITS]->target = { 0.099f, 0.667f, 1.6f, 1.6f };
+
+	// Unit icon (Ranged Unit)
+	Gameobject* ranged_counter_go = AddGameobjectToCanvas("Ranged Unit Counter");
+
+	C_Image* ranged_counter_box = new C_Image(ranged_counter_go);
+	ranged_counter_box->target = { 0.153f, 0.80f, 0.55f , 1.f };
+	ranged_counter_box->offset = { -345.f, -45.f };
+	ranged_counter_box->section = { 17, 509, 345, 45 };
+	ranged_counter_box->tex_id = icons_text_id;
+
+	/*
+	C_Image* ranged_counter_icon = new C_Image(ranged_counter_go);
+	ranged_counter_icon->target = { 0.047f, 0.788f, 0.9f , 0.9f };
+	ranged_counter_icon->offset = { -48.f, -35.f };
+	ranged_counter_icon->section = { 22, 463, 48, 35 };
+	ranged_counter_icon->tex_id = icons_text_id;
+	*/
+
+	hud_texts[CURRENT_RANGED_UNITS] = new C_Text(ranged_counter_go, "0");
+	hud_texts[CURRENT_RANGED_UNITS]->target = { 0.049f, 0.747f, 1.6f, 1.6f };
+
+	C_Text* ranged_diagonal = new C_Text(ranged_counter_go, "/");
+	ranged_diagonal->target = { 0.088f, 0.747f, 1.6f, 1.6f };
+
+	hud_texts[TOTAL_RANGED_UNITS] = new C_Text(ranged_counter_go, "0");
+	hud_texts[TOTAL_RANGED_UNITS]->target = { 0.099f, 0.747f, 1.6f, 1.6f };
+
+	//Resources
+	Gameobject* resource_counter_go = AddGameobjectToCanvas("Resources");
+	C_Image* img = new C_Image(resource_counter_go);
+	img->target = { 0.1f, 1.f, 1.f , 1.f };
+	img->offset = { -119.f, -119.f };
+	img->section = { 22, 333, 119, 119 };
+	img->tex_id = icons_text_id;
+
+	//Edge
+	Gameobject* resources_go = AddGameobject("Text Edge", resource_counter_go);
+	C_Text* text_edge = new C_Text(resources_go, "Edge");
+	text_edge->target = { 0.1f, 0.1f, 1.f, 1.f };
+
+	Gameobject* resources_value_go = AddGameobject("Mob Drop Value", resource_counter_go);
+	hud_texts[CURRENT_EDGE] = new C_Text(resources_go, "100");
+	hud_texts[CURRENT_EDGE]->target = { 0.1f, 0.4f, 1.f, 1.f };
+
+	//MobDrop
+	Gameobject* resources_2_go = AddGameobject("Text Mob Drop", resource_counter_go);
+	C_Text* text_mobdrop = new C_Text(resources_2_go, "Mob Drop");
+	text_mobdrop->target = { 0.45f, 0.8f, 1.f, 1.f };
+
+	Gameobject* resources_value_2_go = AddGameobject("Mob Drop Value", resource_counter_go);
+	hud_texts[CURRENT_MOB_DROP] = new C_Text(resources_2_go, "0");
+	hud_texts[CURRENT_MOB_DROP]->target = { 0.65f, 0.4f, 1.f, 1.f };
+
+	//Minimap
+	new Minimap(AddGameobjectToCanvas("Minimap"));
 }
 
 void Scene::UpdateFade()
@@ -674,71 +547,15 @@ void Scene::UpdateFade()
 		App->render->DrawQuadNormCoords({ 0.f, 0.f, 1.f, 1.f }, { 0, 0, 0, unsigned char(alpha) }, true, FADE);
 }
 
-void Scene::UpdateHUD()
+void Scene::UpdateStat(int stat, int count)
 {
-	//Current Melee Units Updated Value
-	if (text_current_melee_units) {
+	player_stats[stat] += count;
+
+	if (stat < EDGE_COLLECTED)
+	{
 		std::stringstream ss;
-		ss << current_melee_units;
-		std::string temp_str = ss.str();
-		text_current_melee_units->text->SetText(temp_str.c_str());
-	}
-
-	//Melee Units Created Updated Value
-	if (text_melee_units_created) {
-		std::stringstream ss;
-		ss << melee_units_created;
-		std::string temp_str = ss.str();
-		text_melee_units_created->text->SetText(temp_str.c_str());
-	}
-
-	//Current Gatherer Units Updated Value
-	if (text_current_gatherer_units) {
-		std::stringstream ss;
-		ss << current_gatherer_units;
-		std::string temp_str = ss.str();
-		text_current_gatherer_units->text->SetText(temp_str.c_str());
-	}
-
-	//Gatherer Units Created Updated Value
-	if (text_gatherer_units_created) {
-		std::stringstream ss;
-		ss << gatherer_units_created;
-		std::string temp_str = ss.str();
-		text_gatherer_units_created->text->SetText(temp_str.c_str());
-	}
-
-
-	//Current Ranged Units Updated Value
-	if (text_current_ranged_units) {
-		std::stringstream ss;
-		ss << current_ranged_units;
-		std::string temp_str = ss.str();
-		text_current_ranged_units->text->SetText(temp_str.c_str());
-	}
-
-	//Ranged Units Created Updated Value
-	if (text_ranged_units_created) {
-		std::stringstream ss;
-		ss << ranged_units_created;
-		std::string temp_str = ss.str();
-		text_ranged_units_created->text->SetText(temp_str.c_str());
-	}
-
-	//Mob Drop Print Updated Value
-	if (text_mobdrop_value) {
-		std::stringstream ss;
-		ss << mob_drop;
-		std::string temp_str = ss.str();
-		text_mobdrop_value->text->SetText(temp_str.c_str());
-	}
-
-	//Edge Print Updated Value
-	if (text_edge_value) {
-		std::stringstream ss1;
-		ss1 << edge_value;
-		std::string temp_str1 = ss1.str();
-		text_edge_value->text->SetText(temp_str1.c_str());
+		ss << player_stats[stat];
+		hud_texts[stat]->text->SetText(ss.str().c_str());
 	}
 }
 
@@ -767,20 +584,112 @@ void Scene::UpdateBuildingMode()
 void Scene::UpdatePause()
 {
 	//Pause Game
-	if ((test || level) && App->input->GetKey(SDL_SCANCODE_ESCAPE) == KEY_DOWN)
+	if (OnMainScene() && App->input->GetKey(SDL_SCANCODE_ESCAPE) == KEY_DOWN)
 	{
-		if (pause)
+		if (!pause_background_go)
 		{
+			//------------------------- BACKGROUND -----------------------------------
+
+			pause_background_go = AddGameobjectToCanvas("Background");
+
+			C_Image* background = new C_Image(pause_background_go);
+			background->target = { 0.66f, 0.95f, 0.6f, 0.6f };
+			background->offset = { -640.f, -985.f };
+			background->section = { 0, 0, 640, 985 };
+			background->tex_id = App->tex.Load("Assets/textures/pause-bg.png");
+
+			//------------------------- RESUME -----------------------------------------
+
+			Gameobject* resume_go = AddGameobject("resume Button", pause_background_go);
+
+			C_Button* resume = new C_Button(resume_go, Event(SCENE_PLAY, this, App));
+			resume->target = { 0.51f, 0.3f, 0.3f, 0.3f };
+			resume->offset = { -525.f, -100.f };
+			resume->section = { 0, 0, 1070, 207 };
+			resume->tex_id = App->tex.Load("Assets/textures/button.png");
+
+			C_Button* resume_fx = new C_Button(resume_go, Event(PLAY_FX, App->audio, int(SELECT), 0));
+			resume_fx->target = { 0.51f, 0.3f, 0.3f, 0.3f };
+			resume_fx->offset = { -525.f, -100.f };
+			resume_fx->section = { 0, 0, 1070, 207 };
+
+			/*//------------------------- SAVE --------------------------------------
+
+			Gameobject* save_go = AddGameobject("save button", pause_background_go);
+
+			C_Button* save = new C_Button(save_go, Event(SCENE_CHANGE, this, MAIN));
+			save->target = { 0.51f, 0.3f, 0.3f, 0.3f };
+			save->offset = { -525.f, 200.f };
+			save->section = { 0, 0, 1070, 207 };
+			save->tex_id = App->tex.Load("textures/button.png");
+
+			C_Button* save_fx = new C_Button(save_go, Event(PLAY_FX, App->audio, int(SELECT), 0));
+			save_fx->target = { 0.51f, 0.3f, 0.3f, 0.3f };
+			save_fx->offset = { -525.f, 200.f };
+			save_fx->section = { 0, 0, 1070, 207 };
+
+			//------------------------- LOAD --------------------------------------
+
+			Gameobject* load_go = AddGameobject("load Button", pause_background_go);
+
+			C_Button* load = new C_Button(load_go, Event(SCENE_CHANGE, this, MAIN));
+			load->target = { 0.51f, 0.3f, 0.3f, 0.3f };
+			load->offset = { -525.f, 500.f };
+			load->section = { 0, 0, 1070, 207 };
+			load->tex_id = App->tex.Load("textures/button.png");
+
+			C_Button* load_fx = new C_Button(load_go, Event(PLAY_FX, App->audio, int(SELECT), 0));
+			load_fx->target = { 0.51f, 0.3f, 0.3f, 0.3f };
+			load_fx->offset = { -525.f, 500.f };
+			load_fx->section = { 0, 0, 1070, 207 };
+
+			//------------------------- OPTIONS --------------------------------------
+
+			Gameobject* options_go = AddGameobject("options Button", pause_background_go);
+
+			C_Button* options = new C_Button(options_go, Event(SCENE_CHANGE, this, MAIN));
+			options->target = { 0.51f, 0.3f, 0.3f, 0.3f };
+			options->offset = { -525.f, 800.f };
+			options->section = { 0, 0, 1070, 207 };
+			options->tex_id = App->tex.Load("textures/button.png");
+
+			C_Button* options_fx = new C_Button(options_go, Event(PLAY_FX, App->audio, int(SELECT), 0));
+			options_fx->target = { 0.51f, 0.3f, 0.3f, 0.3f };
+			options_fx->offset = { -525.f, 800.f };
+			options_fx->section = { 0, 0, 1070, 207 };*/
+
+			//------------------------- MAIN MENU --------------------------------------
+
+			Gameobject* main_menu_go = AddGameobject("main menu Button", pause_background_go);
+
+			C_Button* main_menu = new C_Button(main_menu_go, Event(SCENE_CHANGE, this, MENU));
+			main_menu->target = { 0.51f, 0.3f, 0.3f, 0.3f };
+			main_menu->offset = { -525.f, 200.f };
+			main_menu->section = { 0, 0, 1070, 207 };
+			main_menu->tex_id = App->tex.Load("Assets/textures/button.png");
+
+			C_Button* main_menu_fx = new C_Button(main_menu_go, Event(PLAY_FX, App->audio, int(SELECT), 0));
+			main_menu_fx->target = { 0.51f, 0.3f, 0.3f, 0.3f };
+			main_menu_fx->offset = { -525.f, 200.f };
+			main_menu_fx->section = { 0, 0, 1070, 207 };
+		}
+
+		if (paused_scene)
+		{
+			App->time.StartGameTimer();
+			Event::Push(SCENE_PLAY, App->audio);
+			Event::Push(ON_PLAY, &root);
 			pause_background_go->SetInactive();
-			Event::Push(SCENE_PLAY, App);
-			pause = false;
 		}
 		else
 		{
-			Event::Push(SCENE_PAUSE, App);
-			PauseMenu();
-			pause = true;
+			App->time.StopGameTimer();
+			Event::Push(SCENE_PAUSE, App->audio);
+			Event::Push(ON_PAUSE, &root);
+			pause_background_go->SetActive();
 		}
+
+		paused_scene = !paused_scene;
 	}
 }
 
@@ -1039,7 +948,7 @@ void Scene::UpdateStateMachine()
 	
 	case MELEE:
 
-		if (current_melee_units == 1) {
+		if (player_stats[CURRENT_MELEE_UNITS] == 1) {
 
 			Event::Push(GAMEPLAY, this, ENEMY);
 		}
@@ -1082,7 +991,7 @@ void Scene::UpdateStateMachine()
 
 	case WIN:
 
-		if (units_killed >= 200) {
+		if (player_stats[UNITS_KILLED] >= 200) {
 			Event::Push(GAMEPLAY, this, WIN);
 		}
 
@@ -1095,8 +1004,6 @@ void Scene::UpdateStateMachine()
 
 	default:
 		break;
-
-	
 	}
 }
 
@@ -1401,114 +1308,28 @@ void Scene::OnEventStateMachine(GameplayState state)
 	}
 }
 
-void Scene::PauseMenu()
+void Scene::ResetScene()
 {
-	if (pause_background_go == nullptr)
-	{
-		//------------------------- BACKGROUND -----------------------------------
+	for (int i = 0; i < EDGE_COLLECTED; ++i)
+		hud_texts[i] = nullptr;
 
-		pause_background_go = AddGameobjectToCanvas("Background");
+	for (int i = 0; i < MAX_PLAYER_STATS; ++i)
+		player_stats[i] = 0;
 
-		C_Image* background = new C_Image(pause_background_go);
-		background->target = { 0.66f, 0.95f, 0.6f, 0.6f };
-		background->offset = { -640.f, -985.f };
-		background->section = { 0, 0, 640, 985 };
-		background->tex_id = App->tex.Load("Assets/textures/pause-bg.png");
+	pause_background_go = nullptr;
+	groupSelect = false;
+	group.clear();
 
-		//------------------------- RESUME -----------------------------------------
+	spawnPoints.clear();
+	spawnPoints.push_back(vec(20, 20, 0.5));
+	spawnPoints.push_back(vec(30, 20, 0.5));
+	spawnPoints.push_back(vec(20, 30, 0.5));
 
-		Gameobject* resume_go = AddGameobject("resume Button", pause_background_go);
-
-		C_Button* resume = new C_Button(resume_go, Event(SCENE_PLAY, this, App));
-		resume->target = { 0.51f, 0.3f, 0.3f, 0.3f };
-		resume->offset = { -525.f, -100.f };
-		resume->section = { 0, 0, 1070, 207 };
-		resume->tex_id = App->tex.Load("Assets/textures/button.png");
-
-		C_Button* resume_fx = new C_Button(resume_go, Event(PLAY_FX, App->audio, int(SELECT), 0));
-		resume_fx->target = { 0.51f, 0.3f, 0.3f, 0.3f };
-		resume_fx->offset = { -525.f, -100.f };
-		resume_fx->section = { 0, 0, 1070, 207 };
-
-		/*//------------------------- SAVE --------------------------------------
-
-		Gameobject* save_go = AddGameobject("save button", pause_background_go);
-
-		C_Button* save = new C_Button(save_go, Event(SCENE_CHANGE, this, MAIN));
-		save->target = { 0.51f, 0.3f, 0.3f, 0.3f };
-		save->offset = { -525.f, 200.f };
-		save->section = { 0, 0, 1070, 207 };
-		save->tex_id = App->tex.Load("textures/button.png");
-
-		C_Button* save_fx = new C_Button(save_go, Event(PLAY_FX, App->audio, int(SELECT), 0));
-		save_fx->target = { 0.51f, 0.3f, 0.3f, 0.3f };
-		save_fx->offset = { -525.f, 200.f };
-		save_fx->section = { 0, 0, 1070, 207 };
-
-		//------------------------- LOAD --------------------------------------
-
-		Gameobject* load_go = AddGameobject("load Button", pause_background_go);
-
-		C_Button* load = new C_Button(load_go, Event(SCENE_CHANGE, this, MAIN));
-		load->target = { 0.51f, 0.3f, 0.3f, 0.3f };
-		load->offset = { -525.f, 500.f };
-		load->section = { 0, 0, 1070, 207 };
-		load->tex_id = App->tex.Load("textures/button.png");
-
-		C_Button* load_fx = new C_Button(load_go, Event(PLAY_FX, App->audio, int(SELECT), 0));
-		load_fx->target = { 0.51f, 0.3f, 0.3f, 0.3f };
-		load_fx->offset = { -525.f, 500.f };
-		load_fx->section = { 0, 0, 1070, 207 };
-
-		//------------------------- OPTIONS --------------------------------------
-
-		Gameobject* options_go = AddGameobject("options Button", pause_background_go);
-
-		C_Button* options = new C_Button(options_go, Event(SCENE_CHANGE, this, MAIN));
-		options->target = { 0.51f, 0.3f, 0.3f, 0.3f };
-		options->offset = { -525.f, 800.f };
-		options->section = { 0, 0, 1070, 207 };
-		options->tex_id = App->tex.Load("textures/button.png");
-
-		C_Button* options_fx = new C_Button(options_go, Event(PLAY_FX, App->audio, int(SELECT), 0));
-		options_fx->target = { 0.51f, 0.3f, 0.3f, 0.3f };
-		options_fx->offset = { -525.f, 800.f };
-		options_fx->section = { 0, 0, 1070, 207 };*/
-
-		//------------------------- MAIN MENU --------------------------------------
-
-		Gameobject* main_menu_go = AddGameobject("main menu Button", pause_background_go);
-
-		C_Button* main_menu = new C_Button(main_menu_go, Event(SCENE_CHANGE, this, MENU));
-		main_menu->target = { 0.51f, 0.3f, 0.3f, 0.3f };
-		main_menu->offset = { -525.f, 200.f };
-		main_menu->section = { 0, 0, 1070, 207 };
-		main_menu->tex_id = App->tex.Load("Assets/textures/button.png");
-
-		C_Button* main_menu_fx = new C_Button(main_menu_go, Event(PLAY_FX, App->audio, int(SELECT), 0));
-		main_menu_fx->target = { 0.51f, 0.3f, 0.3f, 0.3f };
-		main_menu_fx->offset = { -525.f, 200.f };
-		main_menu_fx->section = { 0, 0, 1070, 207 };
-
-		pause_background_go->SetInactive();
-	}
-	if (pause_background_go->IsActive()) pause_background_go->SetInactive();
-	else pause_background_go->SetActive();
-}
-
-/*bool Scene::DestroyPauseMenu()
-{
-	bool ret = true;
-
-	pause_canvas_go->Destroy();
-
-	return true;
-}*/
-
-bool Scene::ChangeToScene(SceneType scene)
-{
-	text_mobdrop_value = nullptr;
-	text_edge_value = nullptr;
+	currentSpawns = 0;
+	maxSpawns = 200;
+	spawnCounter = 0;
+	cooldownSpawn = 5.0f;
+	last_cam_pos = { 0,0 };
 
 	map.CleanUp();
 	App->audio->UnloadFx();
@@ -1517,34 +1338,28 @@ bool Scene::ChangeToScene(SceneType scene)
 	root.RemoveChilds();
 	Event::PumpAll();
 	root.UpdateRemoveQueue();
+}
 
-	bool ret = false;
+void Scene::ChangeToScene(SceneType scene)
+{
+	ResetScene();
+
 	switch (current_scene = scene)
 	{
-	case TEST:
-		ret = LoadTestScene();
-		break;
-	case INTRO:
-		ret = LoadIntroScene();
-		break;
-	case MENU:
-		ret = LoadMenuScene();
-		break;
-	case MAIN:
-		ret = LoadMainScene();
-		break;
-	case MAIN_FROM_SAFE:
-		break;
-	case END:
-		ret = LoadEndScene();
-		break;
-	case CREDITS:
-		break;
-	default:
-		break;
+	case TEST: LoadTestScene(); break;
+	case INTRO: LoadIntroScene(); break;
+	case MENU: LoadMenuScene(); break;
+	case MAIN: LoadMainScene(); break;
+	case MAIN_FROM_SAFE: break;
+	case END: LoadEndScene(); break;
+	case CREDITS: break;
+	default: break;
 	}
+}
 
-	return ret;
+bool Scene::OnMainScene() const
+{
+	return current_scene == MAIN;
 }
 
 Transform* Scene::SpawnBehaviour(int type, vec pos)
@@ -1583,9 +1398,6 @@ Transform* Scene::SpawnBehaviour(int type, vec pos)
 		for (std::map<double, Behaviour*>::iterator it = Behaviour::b_map.begin(); it != Behaviour::b_map.end(); ++it)
 			Event::Push(UPDATE_PATH, it->second, pos.x - 1, pos.y - 1);
 
-		baseCenterPos.first = pos.x;
-		baseCenterPos.second = pos.y;
-
 		break;
 	}
 	case TOWER:
@@ -1619,8 +1431,12 @@ Transform* Scene::SpawnBehaviour(int type, vec pos)
 
 bool Scene::DamageAllowed()
 {
-	LOG("Damage allowed: %d", dmgAllow);
-	return dmgAllow;
+	return god_mode && no_damage;
+}
+
+int Scene::GetStat(int stat)
+{
+	return player_stats[stat];
 }
 
 Gameobject* Scene::GetRoot()
@@ -1740,10 +1556,8 @@ void Scene::GodMode()
 	std::pair<int, int> position = Map::WorldToTileBase(float(x + cam.x), float(y + cam.y));
 	int max = pressing_lctrl ? MAX_UNIT_TYPES - BASE_CENTER : BASE_CENTER;
 	for (int i = 0; i < max; ++i)
-	{
 		if (App->input->GetKey(SDL_SCANCODE_1 + i) == KEY_DOWN)
 			Event::Push(SPAWN_UNIT, this, (pressing_lctrl ? BASE_CENTER : 0) + i, vec(float(position.first), float(position.second)));
-	}
 
 	// LALT + #: Change Scene
 	if (App->input->GetKey(SDL_SCANCODE_LALT) == KEY_REPEAT)
@@ -1759,15 +1573,6 @@ void Scene::GodMode()
 		else if (App->input->GetKey(SDL_SCANCODE_5) == KEY_DOWN)
 			Event::Push(SCENE_CHANGE, this, END, 2.f);
 	}
-
-
-	///Spawn Codes
-	//1-Gatherer
-	//2-Ally melee
-	//3-
-	//Ctrl+1- Base center
-	//Ctrl+2- Tower
-	//Ctrl+3- 
 
 	// F1: Show/Hide Editor Windows
 	if (App->input->GetKey(SDL_SCANCODE_F1) == KEY_DOWN)
@@ -1786,8 +1591,8 @@ void Scene::GodMode()
 	}
 
 	// F4: Toggle Allowed Damage
-	if (App->input->GetKey(SDL_SCANCODE_F4) == KEY_DOWN && god_mode)
-		dmgAllow = !dmgAllow;
+	if (App->input->GetKey(SDL_SCANCODE_F4) == KEY_DOWN)
+		no_damage = !no_damage;
 
 	// F5: Toggle Show Paths
 	if (App->input->GetKey(SDL_SCANCODE_F5) == KEY_DOWN)
@@ -1805,9 +1610,13 @@ void Scene::GodMode()
 				(*it)->Destroy();
 
 			groupSelect = false;
+			App->audio->PlayFx(UNIT_DIES);
 		}
 		else if (selection)
+		{
 			selection->Destroy();
+			App->audio->PlayFx(UNIT_DIES);
+		}
 	}
 
 	// Update window title
@@ -1825,7 +1634,10 @@ void Scene::GodMode()
 void Scene::ToggleGodMode()
 {
 	if (god_mode)
+	{
 		App->win->SetTitle("Square Up");
+		App->audio->PlayFx(UNIT_DIES);
+	}
 
 	god_mode = !god_mode;
 }

@@ -41,6 +41,29 @@ Behaviour::Behaviour(Gameobject* go, UnitType t, UnitState starting_state, Compo
 	mini_life_bar.Create(go);
 
 	b_map.insert({ GetID(), this });
+
+	switch (t) {
+	case UNIT_MELEE:
+		Event::Push(UPDATE_STAT, App->scene, CURRENT_MELEE_UNITS, 1);
+		Event::Push(UPDATE_STAT, App->scene, TOTAL_MELEE_UNITS, 1);
+		break;
+	case UNIT_RANGED:
+		Event::Push(UPDATE_STAT, App->scene, CURRENT_RANGED_UNITS, 1);
+		Event::Push(UPDATE_STAT, App->scene, TOTAL_RANGED_UNITS, 1);
+		break;
+	case GATHERER:
+		Event::Push(UPDATE_STAT, App->scene, CURRENT_GATHERER_UNITS, 1);
+		Event::Push(UPDATE_STAT, App->scene, TOTAL_GATHERER_UNITS, 1);
+		break;
+	case BARRACKS:
+		Event::Push(UPDATE_STAT, App->scene, CURRENT_BARRACKS, 1);
+		Event::Push(UPDATE_STAT, App->scene, TOTAL_BARRACKS, 1);
+		break;
+	case TOWER:
+		Event::Push(UPDATE_STAT, App->scene, CURRENT_TOWERS, 1);
+		Event::Push(UPDATE_STAT, App->scene, TOTAL_TOWERS, 1);
+		break;
+	}
 }
 
 Behaviour::~Behaviour()
@@ -84,7 +107,8 @@ void Behaviour::Selected()
 
 	if (bar_go != nullptr) bar_go->SetActive();
 	if (selectionPanel != nullptr) selectionPanel->SetActive();
-	if (type == TOWER) {
+
+	/*if (type == TOWER) {
 		if (App->scene->building_bars_created < 4)
 			App->scene->building_bars_created++;
 
@@ -96,7 +120,7 @@ void Behaviour::Selected()
 		health->target.y = pos_y_HUD - 0.018f;
 		health_boarder->target.y = pos_y_HUD - 0.018f;
 		upgrades->target.y = pos_y_HUD - 0.018f;
-	}
+	}*/
 	
 }
 
@@ -110,10 +134,11 @@ void Behaviour::UnSelected()
 
 	if (bar_go != nullptr) bar_go->SetInactive();
 	if (selectionPanel != nullptr) selectionPanel->SetInactive();
-	if (type == TOWER) {
+
+	/*if (type == TOWER) {
 		if (App->scene->building_bars_created > 0)
 			App->scene->building_bars_created--;
-	}
+	}*/
 	
 }
 
@@ -207,24 +232,61 @@ void Behaviour::OnDamage(int d)
 void Behaviour::OnKill(const UnitType type)
 {
 	current_life = 0;
-	LOG("Unit killed");
-	
-	switch (type)
-	{
-	case ENEMY_MELEE: App->scene->mob_drop += 5; App->scene->units_killed += 1; LOG("Player Mob Drop Value: %i", App->scene->mob_drop); break;
-	case ENEMY_RANGED: App->scene->mob_drop += 10; App->scene->units_killed += 1; LOG("Player Mob Drop Value: %i", App->scene->mob_drop); break;
-	case ENEMY_SPECIAL: App->scene->mob_drop += 15; App->scene->units_killed += 1; LOG("Player Mob Drop Value: %i", App->scene->mob_drop); break;
-	case ENEMY_SUPER: App->scene->mob_drop += 20; App->scene->units_killed += 1; LOG("Player Mob Drop Value: %i", App->scene->mob_drop); break;
-	case BASE_CENTER: Event::Push(GAMEPLAY, this, LOSE); break;
-	}
-	LOG("Debug Mob Drop Value: %i", App->scene->mob_drop);
-
 	current_state = DESTROYED;
-	//App->audio->PlayFx(deathFX);
+
 	audio->Play(deathFX);
 	game_object->Destroy(dieDelay);
-	if (bar_go) {
+	if (bar_go)
 		bar_go->Destroy(dieDelay);
+
+	switch (type) {
+	case UNIT_MELEE:
+	{
+		Event::Push(UPDATE_STAT, App->scene, CURRENT_MELEE_UNITS, -1);
+		Event::Push(UPDATE_STAT, App->scene, UNITS_LOST, 1);
+		break;
+	}
+	case UNIT_RANGED:
+	{
+		Event::Push(UPDATE_STAT, App->scene, CURRENT_RANGED_UNITS, -1);
+		Event::Push(UPDATE_STAT, App->scene, UNITS_LOST, 1);
+		break;
+	}
+	case GATHERER:
+	{
+		Event::Push(UPDATE_STAT, App->scene, CURRENT_GATHERER_UNITS, -1);
+		Event::Push(UPDATE_STAT, App->scene, UNITS_LOST, 1);
+		break;
+	}
+	case ENEMY_MELEE:
+	{
+		Event::Push(UPDATE_STAT, App->scene, CURRENT_MOB_DROP, 5);
+		Event::Push(UPDATE_STAT, App->scene, UNITS_KILLED, 1);
+		break;
+	}
+	case ENEMY_RANGED:
+	{
+		Event::Push(UPDATE_STAT, App->scene, CURRENT_MOB_DROP, 10);
+		Event::Push(UPDATE_STAT, App->scene, UNITS_KILLED, 1);
+		break;
+	}
+	case ENEMY_SPECIAL:
+	{
+		Event::Push(UPDATE_STAT, App->scene, CURRENT_MOB_DROP, 15);
+		Event::Push(UPDATE_STAT, App->scene, UNITS_KILLED, 1);
+		break;
+	}
+	case ENEMY_SUPER:
+	{
+		Event::Push(UPDATE_STAT, App->scene, CURRENT_MOB_DROP, 20);
+		Event::Push(UPDATE_STAT, App->scene, UNITS_KILLED, 1);
+		break;
+	}
+	case BASE_CENTER:
+	{
+		Event::Push(GAMEPLAY, App->scene, LOSE);
+		break;
+	}
 	}
 }
 
@@ -291,27 +353,6 @@ B_Unit::B_Unit(Gameobject* go, UnitType t, UnitState s, ComponentType comp_type)
 	shootPos = Map::F_MapToWorld(pos.x, pos.y, pos.z);
 	shootPos.first += 30.0f;
 	shootPos.second += 20.0f;*/
-
-	switch (t) {
-	case UNIT_MELEE:
-		App->scene->current_melee_units += 1;
-		App->scene->melee_units_created += 1;
-		break;
-	case UNIT_RANGED:
-		App->scene->current_ranged_units += 1;
-		App->scene->ranged_units_created += 1;
-		break;
-	case GATHERER:
-		App->scene->current_gatherer_units += 1;
-		App->scene->gatherer_units_created += 1;
-		break;
-	case BARRACKS:
-		App->scene->tutorial_barrack += 1;
-		break;
-	case TOWER:
-		App->scene->tutorial_tower += 1;
-		break;
-	}
 }
 
 void B_Unit::Update()
@@ -378,10 +419,14 @@ void B_Unit::Update()
 			//LOG("Unit in range");
 			if (msCount >= atkDelay)
 			{
-				//LOG("Do attack");
-				DoAttack();
-				UnitAttackType();
-				Event::Push(DAMAGE, attackObjective, damage);
+				if (attackObjective->GetType() != DESTROYED)
+				{
+					//LOG("Do attack");
+					DoAttack();
+					UnitAttackType();
+					Event::Push(DAMAGE, attackObjective, damage);
+				}
+
 				msCount = 0;
 			}
 		}
@@ -626,17 +671,6 @@ void B_Unit::DoAttack()
 void B_Unit::OnDestroy()
 {
 	App->pathfinding.DeletePath(GetID());
-	switch (type) {
-	case UNIT_MELEE:
-		App->scene->current_melee_units -= 1;
-		break;
-	case UNIT_RANGED:
-		App->scene->current_ranged_units -= 1;
-		break;
-	case GATHERER:
-		App->scene->current_gatherer_units -= 1;
-		break;
-	}
 }
 
 void B_Unit::OnRightClick(vec posClick, vec modPos)

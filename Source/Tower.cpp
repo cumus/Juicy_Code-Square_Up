@@ -188,7 +188,7 @@ void Tower::UpdatePanel()
 
 void Tower::create_bar() {
 
-	pos_y_HUD = 0.17 + 0.1 * App->scene->building_bars_created;
+	pos_y_HUD = 0.17 + 0.1 * 4;// App->scene->building_bars_created;
 
 	bar_text_id = App->tex.Load("Assets/textures/Iconos_square_up.png");
 

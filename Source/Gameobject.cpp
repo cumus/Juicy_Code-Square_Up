@@ -238,8 +238,6 @@ bool Gameobject::RemoveChild(Gameobject* child)
 
 	if (child != nullptr)
 	{
-		App->audio->PlayFx(UNIT_DIES);
-
 		for (std::vector<Gameobject*>::const_iterator it = childs.begin(); it != childs.end(); ++it)
 		{
 			if (child == *it)

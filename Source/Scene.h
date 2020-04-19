@@ -50,6 +50,33 @@ enum GameplayState : int
 	LOSE
 };
 
+enum PlayerStats : int
+{
+	// Stats w/ text
+	CURRENT_MOB_DROP,
+	CURRENT_EDGE,
+
+	CURRENT_MELEE_UNITS,
+	CURRENT_RANGED_UNITS,
+	CURRENT_GATHERER_UNITS,
+	CURRENT_BARRACKS,
+	CURRENT_TOWERS,
+
+	TOTAL_MELEE_UNITS,
+	TOTAL_RANGED_UNITS,
+	TOTAL_GATHERER_UNITS,
+	TOTAL_BARRACKS,
+	TOTAL_TOWERS,
+
+	// Stats w/out text
+	EDGE_COLLECTED,
+	UNITS_CREATED,
+	UNITS_LOST,
+	UNITS_KILLED,
+
+	MAX_PLAYER_STATS
+};
+
 struct SDL_Texture;
 class Transform;
 
@@ -60,6 +87,7 @@ public:
 	Scene();
 	~Scene();
 
+	bool Start() override;
 	bool PreUpdate() override;
 	bool Update() override;
 	bool PostUpdate() override;
@@ -78,20 +106,23 @@ public:
 	Transform* SpawnBehaviour(int type, vec pos = { 0.f, 0.f, 0.f });
 
 	static bool DamageAllowed();
+	static int GetStat(int stat);
 
 private:
 
 	void GodMode();
 	void ToggleGodMode();
 
-	bool LoadTestScene();
-	bool LoadIntroScene();
-	bool LoadMenuScene();
-	bool LoadMainScene();
-	bool LoadEndScene();
+	void LoadTestScene();
+	void LoadIntroScene();
+	void LoadMenuScene();
+	void LoadMainScene();
+	void LoadEndScene();
+
+	void LoadMainHUD();
 
 	void UpdateFade();
-	void UpdateHUD();
+	void UpdateStat(int stat, int count);
 	void UpdateBuildingMode();
 	void UpdatePause();
 	void UpdateSelection();
@@ -100,42 +131,20 @@ private:
 	void UpdateStateMachine();
 	void OnEventStateMachine(GameplayState state);
 
-	void PauseMenu();
-	//bool DestroyPauseMenu();
+	void ResetScene();
+	void ChangeToScene(SceneType scene);
 
-	bool ChangeToScene(SceneType scene);
+	bool OnMainScene() const;
 
 public:
 
 	int id_mouse_tex;
-
-	bool pause = false;
-	bool test = true;
-	bool level = true;
-
-	// PAUSE
-	//Gameobject* pause_canvas_go;
 
 	// Selection
 	iPoint groupStart,mouseExtend;
 	bool groupSelect;
 	std::vector<Gameobject*> group;
 	Gameobject* selection = nullptr;
-
-	// HUD
-	Gameobject* hud_canvas_go;
-	Gameobject* pause_background_go;
-	int building_bars_created = 0;
-	int current_melee_units = 0;
-	int melee_units_created = 0;
-	int current_ranged_units = 0;
-	int ranged_units_created = 0;
-	int current_gatherer_units = 0;
-	int gatherer_units_created = 0;
-	
-
-	//IA
-	std::pair<int, int> baseCenterPos;
 
 	//Temporal/////
 	//Enemy spawn
@@ -145,31 +154,18 @@ public:
 	float spawnCounter, cooldownSpawn;
 	//////////////
 
-	//Player Resources
-	int mob_drop = 0;
-	int edge_value = 100;
-
-	// END SCREEN
-	bool win = false;
-	int time = 0;
-	int edge_collected = 0;
-	int units_created = 0;
-	int	units_lost = 0;
-	int	units_killed = 0;
-
 	//State Machine
 	int tutorial_barrack = 0;
 	int tutorial_tower = 0;
 
 private:
 
-	Map map;
-	Minimap* minimap;
 	Gameobject root;
+	Map map;
 
 	// GodMode
 	static bool god_mode;
-	static bool dmgAllow;
+	static bool no_damage;
 
 	// Scene Transitions
 	enum Fade : int
@@ -185,6 +181,19 @@ private:
 	SceneType next_scene;
 	GameplayState current_state;
 
+	// Place Mode
+	Transform* placing_building = nullptr;
+
+	// Pause
+	bool paused_scene = false;
+	Gameobject* pause_background_go = nullptr;
+
+	// Player
+	C_Text* hud_texts[EDGE_COLLECTED];
+	static int player_stats[MAX_PLAYER_STATS];
+	bool win = false;
+	int time = 0;
+
 	//--------STATE MACHINE VARIABLES--------
 
 	float distance;
@@ -192,7 +201,6 @@ private:
 	float total_distance;
 	bool r_c_comprobation = true;
 	int tutorial_clicks = 0;
-
 
 	std::pair<float, float> last_cam_pos;
 	std::pair<float, float> current_cam_pos;
@@ -236,29 +244,6 @@ private:
 	C_Image* tower_state;
 	C_Image* tower_atk;
 	C_Button* next;
-
-	//States next_state;
-
-	/*bool shoot = false;//temp
-	std::pair<int, int> pos;
-	std::pair<int, int> atkPos;
-	float rayCastTimer = 0;*/
-
-	// Player stats
-	Gameobject* resources_go;
-	Gameobject* resources_2_go;
-	
-	C_Text* text_mobdrop_value = nullptr;
-	C_Text* text_edge_value = nullptr;
-	C_Text* text_current_melee_units = nullptr;
-	C_Text* text_melee_units_created = nullptr;
-	C_Text* text_current_ranged_units = nullptr;
-	C_Text* text_ranged_units_created = nullptr;
-	C_Text* text_current_gatherer_units = nullptr;
-	C_Text* text_gatherer_units_created = nullptr;
-
-	Transform* placing_building = nullptr;
-	
 };
 
 #endif // __SCENE_H__

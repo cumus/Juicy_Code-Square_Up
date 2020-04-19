@@ -29,11 +29,10 @@ void UI_Component::ComputeOutputRect(float width, float height)
 	if (canvas && parent)
 	{
 		std::pair<float, float> res_ratio = Render::GetResRatio();
-		std::pair<float, float> canvas_scale = canvas->GetScale();
 
 		std::pair<float, float> total_scale = {
-			target.w * res_ratio.first * canvas_scale.first,
-			target.h * res_ratio.second * canvas_scale.second };
+			target.w * res_ratio.first,
+			target.h * res_ratio.second };
 
 		SDL_Rect p_output = parent->output;
 		output.x = p_output.x + int(float(p_output.w) * target.x + (offset.first * total_scale.first));
@@ -85,62 +84,25 @@ void C_Canvas::PreUpdate()
 void C_Canvas::PostUpdate()
 {
 	output = App->render->GetCameraRect();
-	if (!playing)
-	{
-		output.x = int(target.x * float(output.w));
-		output.y = int(target.y * float(output.h));
-		output.w = int(target.w * float(output.w));
-		output.h = int(target.h * float(output.h));
+	output.x = int(target.x * float(output.w));
+	output.y = int(target.y * float(output.h));
+	output.w = int(target.w * float(output.w));
+	output.h = int(target.h * float(output.h));
 
-		App->render->DrawQuad(output, { 255, 255, 255, 40 }, true, HUD, false);
-	}
-	else
-	{
-		output.x = output.y = 0;
-	}
+	App->render->DrawQuad(output, { 255, 255, 255, 40 }, true, HUD, false);
 }
 
 void C_Canvas::RecieveEvent(const Event& e)
 {
-	switch (e.type)
-	{
-	case ON_PLAY:
-	{
-		playing = true;
-		break;
-	}
-	case ON_PAUSE:
-	{
-		playing = false;
-		break;
-	}
-	case ON_STOP:
-	{
-		playing = false;
-		break;
-	}
-	}
 }
 
 bool C_Canvas::MouseOnUI()
 {
 	return canvas && canvas->has_mouse_focus;
 }
-
-bool C_Canvas::IsPlaying()
-{
-	return canvas && canvas->playing;
-}
-
 Gameobject* C_Canvas::GameObject()
 {
 	return (canvas && canvas->game_object) ? canvas->game_object : nullptr;
-}
-
-std::pair<float, float> C_Canvas::GetScale() const
-{
-	std::pair<float, float> ret[2] = { {target.w, target.h}, { 1.0f, 1.0f } };
-	return ret[playing];
 }
 
 C_Image::C_Image(Gameobject* go) :
@@ -201,10 +163,7 @@ void C_Button::PostUpdate()
 	{
 		KeyState mouse_click = App->input->GetMouseButtonDown(0);
 		if (mouse_click == KEY_DOWN || (trigger_while_pressed && mouse_click == KEY_REPEAT))
-		{
-			if (C_Canvas::IsPlaying())
-				Event::Push(event_triggered);
-		}
+			Event::Push(event_triggered);
 	}
 
 	if (tex_id >= 0)

@@ -41,15 +41,11 @@ public:
 	void RecieveEvent(const Event& e) override;
 
 	static bool MouseOnUI();
-	static bool IsPlaying();
 	static Gameobject* GameObject();
-
-	std::pair<float, float> GetScale() const;
 
 protected:
 
 	unsigned int hovered_childs;
-	bool playing = false;
 	bool has_mouse_focus = false;
 };
 
