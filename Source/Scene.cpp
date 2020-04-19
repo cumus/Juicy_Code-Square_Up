@@ -1617,17 +1617,19 @@ void Scene::GodMode()
 	// DEL: Remove Selected Gameobject/s
 	if (App->input->GetKey(SDL_SCANCODE_DELETE) == KEY_DOWN)
 	{
-		if (!group.empty())
+		/*if (!group.empty())
 		{
 			for (std::vector<Gameobject*>::iterator it = group.begin(); it != group.end(); ++it)
 				(*it)->Destroy();
 
 			groupSelect = false;
 			App->audio->PlayFx(UNIT_DIES);
-		}
-		else if (selection)
+		}*/
+		
+		if (selection)
 		{
 			selection->Destroy();
+			SetSelection();
 			App->audio->PlayFx(UNIT_DIES);
 		}
 	}
