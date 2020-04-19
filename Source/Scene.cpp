@@ -1447,6 +1447,11 @@ Transform* Scene::SpawnBehaviour(int type, vec pos)
 		behaviour = new Edge(AddGameobject("Edge"));
 		break;
 	}
+	case SPAWNER:
+	{
+		behaviour = new Spawner(AddGameobject("Spawner"));
+		break;
+	}
 	default: break;
 	}
 

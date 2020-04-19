@@ -190,7 +190,7 @@ protected:
 	int dirX;
 	int dirY;
 	bool arriveDestination;
-
+	bool gotTile;
 	std::pair<float, float> atkObj;
 	std::pair<float, float> shootPos;
 };

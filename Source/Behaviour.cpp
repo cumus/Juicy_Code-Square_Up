@@ -17,6 +17,8 @@
 #include "BaseCenter.h"
 #include "RangedUnit.h"
 
+#include <vector>
+
 std::map<double, Behaviour*> Behaviour::b_map;
 
 Behaviour::Behaviour(Gameobject* go, UnitType t, UnitState starting_state, ComponentType comp_type) :
@@ -351,6 +353,7 @@ B_Unit::B_Unit(Gameobject* go, UnitType t, UnitState s, ComponentType comp_type)
 	msCount = 0;
 	arriveDestination = false;
 	current_state = IDLE;
+	gotTile = false;
 
 	//Info for ranged units constructor
 	/*vec pos = game_object->GetTransform()->GetGlobalPosition();
@@ -440,10 +443,11 @@ void B_Unit::Update()
 			fPoint actualPos = { pos.x, pos.y };
 
 			if (!next)
-			{
-				nextTile = path->front();
+			{				
+				nextTile = path->front();			
 				next = true;
-				move = true;
+				move = true;		
+				//PathfindingManager::unitWalkability[nextTile.x][nextTile.y] == true;
 			}
 
 			if (dirX == 1 && dirY == 1)
@@ -452,6 +456,8 @@ void B_Unit::Update()
 				{
 					path->erase(path->begin());
 					next = false;
+					gotTile = false;
+					PathfindingManager::unitWalkability[nextTile.x][nextTile.y] = false;
 				}
 			}
 			else if (dirX == -1 && dirY == -1)
@@ -460,6 +466,8 @@ void B_Unit::Update()
 				{
 					path->erase(path->begin());
 					next = false;
+					gotTile = false;
+					PathfindingManager::unitWalkability[nextTile.x][nextTile.y] = false;
 				}
 			}
 			else if (dirX == -1 && dirY == 1)
@@ -468,6 +476,8 @@ void B_Unit::Update()
 				{
 					path->erase(path->begin());
 					next = false;
+					gotTile = false;
+					PathfindingManager::unitWalkability[nextTile.x][nextTile.y] = false;
 				}
 			}
 			else if (dirX == 1 && dirY == -1)
@@ -476,6 +486,8 @@ void B_Unit::Update()
 				{
 					path->erase(path->begin());
 					next = false;
+					gotTile = false;
+					PathfindingManager::unitWalkability[nextTile.x][nextTile.y] = false;
 				}
 			}
 			else if (dirX == 0 && dirY == -1)
@@ -484,6 +496,8 @@ void B_Unit::Update()
 				{
 					path->erase(path->begin());
 					next = false;
+					gotTile = false;
+					PathfindingManager::unitWalkability[nextTile.x][nextTile.y] = false;
 				}
 			}
 			else if (dirX == 0 && dirY == 1)
@@ -492,6 +506,8 @@ void B_Unit::Update()
 				{
 					path->erase(path->begin());
 					next = false;
+					gotTile = false;
+					PathfindingManager::unitWalkability[nextTile.x][nextTile.y] = false;
 				}
 			}
 			else if (dirX == 1 && dirY == 0)
@@ -500,6 +516,8 @@ void B_Unit::Update()
 				{
 					path->erase(path->begin());
 					next = false;
+					gotTile = false;
+					PathfindingManager::unitWalkability[nextTile.x][nextTile.y] = false;
 				}
 			}
 			else if (dirX == -1 && dirY == 0)
@@ -508,13 +526,19 @@ void B_Unit::Update()
 				{
 					path->erase(path->begin());
 					next = false;
+					gotTile = false;
+					PathfindingManager::unitWalkability[nextTile.x][nextTile.y] = false;
 				}
 			}
 			else if (dirX == 0 && dirY == 0)
 			{
 				path->erase(path->begin());
 				next = false;
+				gotTile = false;
+				PathfindingManager::unitWalkability[nextTile.x][nextTile.y] = false;
 			}
+
+			if(PathfindingManager::unitWalkability[nextTile.x][nextTile.y] != game_object->GetID())
 		}
 		else
 		{
@@ -523,8 +547,8 @@ void B_Unit::Update()
 			current_state = IDLE;
 		}
 
-		if (move)
-		{
+		if (move && PathfindingManager::unitWalkability[nextTile.x][nextTile.y] == game_object->GetID())
+		{		
 			iPoint tilePos = { int(pos.x), int(pos.y) };
 			if (nextTile.x > tilePos.x)
 			{

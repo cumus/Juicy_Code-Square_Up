@@ -136,6 +136,7 @@ public:
 
 public:
 	int debugTextureID;
+	static std::vector<std::vector<double> > unitWalkability;
 
 private:
 	bool debugAll = false;

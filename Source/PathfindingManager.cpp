@@ -13,6 +13,7 @@
 #include <algorithm>
 #include <map>
 
+std::vector<std::vector<bool> >PathfindingManager::unitWalkability;
 
 PathfindingManager::PathfindingManager()
 {
@@ -211,13 +212,19 @@ void PathfindingManager::SetWalkabilityLayer(const MapLayer& layer)
 	map = layer;
 	std::vector<bool> vec(map.height);
 	walkabilityMap.resize(map.width);
+
+	std::vector<double> vec2(map.height);
+	unitWalkability.resize(map.width);
+
 	for (int x = 0; x < map.width; x++)
 	{
 		walkabilityMap[x] = vec;
+		unitWalkability[x] = vec2;
 		for (int y = 0; y< map.height; y++)
 		{
 			iPoint point(x,y);
 			walkabilityMap[x][y] = IsWalkable(point);
+			unitWalkability[x][y] = 0;
 		}
 	}
 }
@@ -259,9 +266,13 @@ bool PathfindingManager::ValidTile(int x, int y)
 }
 
 //Utility: Sets tile walkability
-void PathfindingManager::SetWalkabilityTile(int x, int y, bool estate)
+void PathfindingManager::SetWalkabilityTile(int x, int y, bool state)
 {
-	if( x >= 0 && y >= 0) walkabilityMap[x][y] = estate;
+	if (x >= 0 && y >= 0)
+	{
+		walkabilityMap[x][y] = state;
+		//unitWalkability[x][y] = state;
+	}
 	else LOG("Not valid coordinates!");
 }
 
