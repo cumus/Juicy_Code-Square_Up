@@ -88,8 +88,6 @@ void C_Canvas::PostUpdate()
 	output.y = int(target.y * float(output.h));
 	output.w = int(target.w * float(output.w));
 	output.h = int(target.h * float(output.h));
-
-	App->render->DrawQuad(output, { 255, 255, 255, 40 }, true, HUD, false);
 }
 
 void C_Canvas::RecieveEvent(const Event& e)
