@@ -530,6 +530,10 @@ bool Scene::LoadEndScene()
 	background->offset = { -1920.f, -1080.f };
 	background->section = { 0, 0, 1920, 1080 };
 	background->tex_id = App->tex.Load("Assets/textures/white.png");
+	C_Button* background_btn = new C_Button(background_go, Event(SCENE_CHANGE, this, MENU));
+	background_btn->target = { 1.f, 1.f, 1.f, 1.f };
+	background_btn->offset = { -1920.f, -1080.f };
+	background_btn->section = { 0, 0, 1920, 1080 };
 
 	//------------------------- WIN/LOSE --------------------------------------
 	if (win)
@@ -1045,14 +1049,12 @@ void Scene::UpdateStateMachine()
 		break;
 	case ENEMY:
 
+		
 
 		break;
 	case MELEE_ATK:
 
-
-		break;
-	case ENEMY_ATK:
-
+		if (mobdrop != 0) Event::Push(GAMEPLAY, this, MOBDROP);
 
 		break;
 	case MOBDROP:
@@ -1061,6 +1063,10 @@ void Scene::UpdateStateMachine()
 		break;
 	case BUILD:
 	
+		if (tutorial_tower == 1) {
+
+			Event::Push(GAMEPLAY, this, UPGRADE);
+		}
 
 		break;
 	case UPGRADE:
@@ -1083,6 +1089,11 @@ void Scene::UpdateStateMachine()
 		}
 
 		break;
+	case LOSE:
+
+		Event::Push(GAMEPLAY, this, LOSE);
+
+		break;
 
 	default:
 		break;
@@ -1098,7 +1109,7 @@ void Scene::OnEventStateMachine(GameplayState state)
 		//------------------STATE MACHINE CASES-----------------------
 	case CAM_MOVEMENT:
 		lore_go->SetInactive();
-
+		LOG("CAM MOVEMENT STATE");
 		cam_mov_go = AddGameobjectToCanvas("cam_mov");
 		cam_mov = new C_Image(cam_mov_go);
 		next = new C_Button(cam_mov_go, Event(SCENE_PLAY, this, R_CLICK_MOVEMENT));
@@ -1119,7 +1130,7 @@ void Scene::OnEventStateMachine(GameplayState state)
 	{
 		cam_mov_go->SetInactive();
 		//cam_mov_go->Destroy();
-
+		LOG("R CLICK MOVEMENT STATE");
 		R_click_mov_go = AddGameobjectToCanvas("R_click_mov");
 		R_click_mov = new C_Image(R_click_mov_go);
 		next = new C_Button(R_click_mov_go, Event(SCENE_PLAY, this, MAIN));
@@ -1150,7 +1161,7 @@ void Scene::OnEventStateMachine(GameplayState state)
 	case EDGE_STATE:
 	{
 		R_click_mov_go->SetInactive();
-
+		LOG("EDGE STATE");
 		edge_go = AddGameobjectToCanvas("edge_go");
 		edge = new C_Image(edge_go);
 		
@@ -1175,7 +1186,7 @@ void Scene::OnEventStateMachine(GameplayState state)
 	case BASE_CENTER_STATE:
 	{
 		edge_go->SetInactive();
-	
+		LOG("BASE CENTER STATE");
 
 		base_center_go = AddGameobjectToCanvas("base_center_go");
 		base_center = new C_Image(base_center_go);
@@ -1197,7 +1208,7 @@ void Scene::OnEventStateMachine(GameplayState state)
 		break;
 	case RESOURCES:
 		base_center_go->SetInactive();
-
+		LOG("RESOURCES STATE");
 		resources_state_go = AddGameobjectToCanvas("resources_state_go");
 		resources = new C_Image(resources_state_go);
 		next = new C_Button(resources_state_go, Event(GAMEPLAY, this, BARRACKS_STATE));
@@ -1218,7 +1229,7 @@ void Scene::OnEventStateMachine(GameplayState state)
 		break;
 	case BARRACKS_STATE:
 		resources_state_go->SetInactive();
-
+		LOG("BARRACKS STATE");
 		barracks_state_go = AddGameobjectToCanvas("barracks_state_go");
 		barracks_state = new C_Image(barracks_state_go);
 		next = new C_Button(barracks_state_go, Event(SCENE_PLAY, this, MAIN));
@@ -1240,10 +1251,10 @@ void Scene::OnEventStateMachine(GameplayState state)
 	
 	case MELEE:
 		barracks_state_go->SetInactive();
-
+		LOG("MELEE STATE");
 		melee_go = AddGameobjectToCanvas("melee_go");
 		melee = new C_Image(melee_go);
-		next = new C_Button(melee_go, Event(GAMEPLAY, this, MELEE));
+		next = new C_Button(melee_go, Event(SCENE_PLAY, this, MAIN));
 
 		melee->target = { 0.66f, 0.95f, 0.6f, 0.6f };
 		melee->offset = { -640.f, -985.f };
@@ -1255,34 +1266,36 @@ void Scene::OnEventStateMachine(GameplayState state)
 		next->section = { 0, 0, 1070, 207 };
 		next->tex_id = App->tex.Load("Assets/textures/button.png");
 
-		new MeleeUnit(melee_go);
+		//new MeleeUnit(melee_go);
 		current_state = MELEE;
 		//BUILD MELEE -> NEXT STATE
 
 		break;
 	case ENEMY:
+		melee_go->SetInactive();
+		LOG("ENEMY STATE");
 		enemy_go = AddGameobjectToCanvas("enemy_go");
 		enemy = new C_Image(enemy_go);
+		new EnemyMeleeUnit(enemy_go);
 
-		enemy->target = { 0.66f, 0.95f, 0.6f, 0.6f };
-		enemy->offset = { -640.f, -985.f };
+		enemy->target = { 0.30f, 0.45f, 0.3f, 0.3f };
+		enemy->offset = { -525.f, 200.f };
 		enemy->section = { 0, 0, 640, 985 };
 		enemy->tex_id = App->tex.Load("Assets/textures/pause-bg.png");
 
-		new EnemyMeleeUnit(enemy_go);
+		next = new C_Button(melee_go, Event(GAMEPLAY, this, MELEE_ATK));
+		next->target = { 0.30f, 0.45f, 0.3f, 0.3f };
+		next->offset = { -525.f, 200.f };
+		next->section = { 0, 0, 1070, 207 };
+		next->tex_id = App->tex.Load("Assets/textures/button.png");
 
 		break;
 	case MELEE_ATK:
-		melee_atk_go = AddGameobjectToCanvas("melee_atk_go");
-		melee_atk = new C_Image(melee_atk_go);
-
-		melee_atk->target = { 0.66f, 0.95f, 0.6f, 0.6f };
-		melee_atk->offset = { -640.f, -985.f };
-		melee_atk->section = { 0, 0, 640, 985 };
-		melee_atk->tex_id = App->tex.Load("Assets/textures/pause-bg.png");
+		enemy_go->SetInactive();
+		LOG("MELEE ATK STATE");
 
 		break;
-	case ENEMY_ATK:
+	/*case ENEMY_ATK:
 		enemy_atk_go = AddGameobjectToCanvas("enemy_atk_go");
 		enemy_atk = new C_Image(enemy_atk_go);
 
@@ -1291,20 +1304,28 @@ void Scene::OnEventStateMachine(GameplayState state)
 		enemy_atk->section = { 0, 0, 640, 985 };
 		enemy_atk->tex_id = App->tex.Load("Assets/textures/pause-bg.png");
 
-		break;
+		break;*/
 	case MOBDROP:
+		melee_atk_go->SetInactive();
+		LOG("MOBDROP STATE");
 		mobdrop_go = AddGameobjectToCanvas("mobdrop_go");
 		mobdrop = new C_Image(mobdrop_go);
 
 		mobdrop->target = { 0.66f, 0.95f, 0.6f, 0.6f };
-		mobdrop->offset = { -640.f, -985.f };
+		mobdrop->offset = { -740.f, -285.f };
 		mobdrop->section = { 0, 0, 640, 985 };
 		mobdrop->tex_id = App->tex.Load("Assets/textures/pause-bg.png");
 
-
+		next = new C_Button(melee_go, Event(SCENE_PLAY, this, MAIN));
+		next->target = { 0.66f, 0.95f, 0.6f, 0.6f };
+		next->offset = { -740.f, -285.f };
+		next->section = { 0, 0, 1070, 207 };
+		next->tex_id = App->tex.Load("Assets/textures/button.png");
 
 		break;
 	case BUILD:
+		mobdrop_go->SetInactive();
+		LOG("BUILD STATE");
 		build_go = AddGameobjectToCanvas("build_go");
 		build = new C_Image(build_go);
 
@@ -1313,10 +1334,19 @@ void Scene::OnEventStateMachine(GameplayState state)
 		build->section = { 0, 0, 640, 985 };
 		build->tex_id = App->tex.Load("Assets/textures/pause-bg.png");
 
+		next = new C_Button(barracks_state_go, Event(SCENE_PLAY, this, MAIN));
+
+		next->target = { 0.60f, 0.45f, 0.3f, 0.3f };
+		next->offset = { -525.f, 200.f };
+		next->section = { 0, 0, 1070, 207 };
+		next->tex_id = App->tex.Load("Assets/textures/button.png");
+
 		new Tower(build_go);
 
 		break;
 	case UPGRADE:
+
+		LOG("UPGRADE STATE");
 		upgrade_go = AddGameobjectToCanvas("upgrade_go");
 		upgrade = new C_Image(upgrade_go);
 
@@ -1328,6 +1358,8 @@ void Scene::OnEventStateMachine(GameplayState state)
 
 		break;
 	case TOWER_STATE:
+
+		LOG("TOWER STATE");
 		tower_state_go = AddGameobjectToCanvas("tower_state_go");
 		tower_state = new C_Image(tower_state_go);
 
@@ -1338,7 +1370,9 @@ void Scene::OnEventStateMachine(GameplayState state)
 
 
 		break;
-	case TOWER_ATK:
+	/*case TOWER_ATK:
+
+		LOG("TOWER ATK STATE");
 		tower_atk_go = AddGameobjectToCanvas("tower_atk_go");
 		tower_atk = new C_Image(tower_atk_go);
 
@@ -1348,7 +1382,7 @@ void Scene::OnEventStateMachine(GameplayState state)
 		tower_atk->tex_id = App->tex.Load("Assets/textures/pause-bg.png");
 
 
-		break;
+		break;*/
 
 	case WIN:
 		//Kill 200 units

@@ -307,6 +307,9 @@ B_Unit::B_Unit(Gameobject* go, UnitType t, UnitState s, ComponentType comp_type)
 	case BARRACKS:
 		App->scene->tutorial_barrack += 1;
 		break;
+	case TOWER:
+		App->scene->tutorial_tower += 1;
+		break;
 	}
 }
 
