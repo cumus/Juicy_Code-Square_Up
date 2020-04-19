@@ -23,10 +23,11 @@ public:
 	bool Init() override;
 	bool Start() override;
 	bool Update() override;
+	bool PostUpdate() override;
 	bool CleanUp() override;
 
-	bool MouseOnWindow() const;
-	bool Draw();
+	bool MouseOnEditor() const;
+	void ToggleEditorVisibility();
 
 public:
 
@@ -39,11 +40,12 @@ public:
 
 private:
 
-	bool hide_windows = false;
+	bool hide_windows = true;
 	bool sizing = false;
 	int editing_window = -1;
 	unsigned int mouse_over_windows = 0u;
-	bool selectedEditor = false;
+	bool has_mouse_focus = false;
+
 	std::vector<EditorWindow*> windows;
 };
 

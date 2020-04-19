@@ -50,7 +50,7 @@ protected:
 
 	unsigned int hovered_childs;
 	bool playing = false;
-	bool selectedUI = false;
+	bool has_mouse_focus = false;
 };
 
 class C_Image : public UI_Component

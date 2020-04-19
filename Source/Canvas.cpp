@@ -66,35 +66,20 @@ void C_Canvas::PreUpdate()
 {
 	int x, y;
 	App->input->GetMousePosition(x, y);
+
 	hovered_childs = 0u;
+
 	const std::vector<Gameobject*> childs = game_object->GetChilds();
-
-	if (!selectedUI && App->input->GetMouseButtonDown(0) == KeyState::KEY_DOWN)
+	for (std::vector<Gameobject*>::const_iterator it = childs.cbegin(); it != childs.cend(); ++it)
 	{
-		LOG("UI click");
-		for (std::vector<Gameobject*>::const_iterator it = childs.cbegin(); it != childs.cend(); ++it)
-		{
-			const UI_Component* comp = (*it)->GetUI();
-			if (comp && comp->IsActive() && comp->PointInsideOutputRect(x, y))
-			{
-				selectedUI = true;
-				break;
-			}
-		}		
-	}
-		
-	if (selectedUI)
-	{
-		for (std::vector<Gameobject*>::const_iterator it = childs.cbegin(); it != childs.cend(); ++it)
-		{
-			const UI_Component* comp = (*it)->GetUI();
-			if (comp && comp->IsActive() && comp->PointInsideOutputRect(x, y))
-				hovered_childs++;
-		}
+		const UI_Component* comp = (*it)->GetUI();
+		if (comp && comp->IsActive() && comp->PointInsideOutputRect(x, y))
+			hovered_childs++;
 	}
 
-	if (selectedUI && App->input->GetMouseButtonDown(0) == KeyState::KEY_UP) selectedUI = false;
-
+	has_mouse_focus = has_mouse_focus ?
+		App->input->GetMouseButtonDown(0) != KeyState::KEY_UP :
+		(hovered_childs > 0u && App->input->GetMouseButtonDown(0) == KeyState::KEY_DOWN);
 }
 
 void C_Canvas::PostUpdate()
@@ -139,8 +124,7 @@ void C_Canvas::RecieveEvent(const Event& e)
 
 bool C_Canvas::MouseOnUI()
 {
-	/*if (canvas)*/return canvas->selectedUI;	
-	//else return false;
+	return canvas && canvas->has_mouse_focus;
 }
 
 bool C_Canvas::IsPlaying()

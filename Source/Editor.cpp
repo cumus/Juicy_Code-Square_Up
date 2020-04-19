@@ -56,18 +56,18 @@ bool Editor::Start()
 bool Editor::Update()
 {
 	mouse_over_windows = 0u;
-	int x, y;
-	App->input->GetMousePosition(x, y);
-	KeyState mouse_left_button = App->input->GetMouseButtonDown(0);
-	sizing = App->input->GetKey(SDL_SCANCODE_LCTRL) == KEY_REPEAT;
 
 	if (!hide_windows)
 	{
+		int x, y;
+		App->input->GetMousePosition(x, y);
 		RectF cam = App->render->GetCameraRectF();
 		float mouse_x = float(x) / cam.w;
 		float mouse_y = float(y) / cam.h;
 
-		if (sizing)
+		KeyState mouse_left_button = App->input->GetMouseButtonDown(0);
+
+		if (sizing = (App->input->GetKey(SDL_SCANCODE_LCTRL) == KEY_REPEAT))
 		{
 			if (editing_window < 0)
 			{
@@ -89,28 +89,28 @@ bool Editor::Update()
 		else
 		{
 			editing_window = -1;
-			if (!selectedEditor && App->input->GetMouseButtonDown(0) == KeyState::KEY_DOWN)
-			{
-				for (std::vector<EditorWindow*>::const_iterator it = windows.begin(); it != windows.end(); ++it)
-				{
-					if ((*it)->Update(mouse_x, mouse_y, mouse_left_button, sizing).mouse_inside)
-					{
-						selectedEditor = true;
-						break;
-					}
-				}
-			}
 
-			if (selectedEditor)
-			{
-				for (std::vector<EditorWindow*>::const_iterator it = windows.begin(); it != windows.end(); ++it)
-					if ((*it)->Update(mouse_x, mouse_y, mouse_left_button, sizing).mouse_inside)
-						mouse_over_windows++;
-			}
+			for (std::vector<EditorWindow*>::const_iterator it = windows.begin(); it != windows.end(); ++it)
+				if ((*it)->Update(mouse_x, mouse_y, mouse_left_button, sizing).mouse_inside)
+					mouse_over_windows++;
 
-			if (selectedEditor && App->input->GetMouseButtonDown(0) == KeyState::KEY_UP) selectedEditor = false;
-			
+			has_mouse_focus = has_mouse_focus ?
+				mouse_left_button != KeyState::KEY_UP :
+				(mouse_over_windows > 0u && mouse_left_button == KeyState::KEY_DOWN);
 		}
+	}
+
+	return true;
+}
+
+bool Editor::PostUpdate()
+{
+	if (!hide_windows)
+	{
+		bool draw_border = (App->input->GetKey(SDL_SCANCODE_LCTRL) == KEY_REPEAT);
+
+		for (std::vector<EditorWindow*>::const_reverse_iterator it = windows.rbegin(); it != windows.rend(); ++it)
+			(*it)->Draw(draw_border);
 	}
 
 	return true;
@@ -129,23 +129,12 @@ bool Editor::CleanUp()
 	return true;
 }
 
-bool Editor::MouseOnWindow() const
+bool Editor::MouseOnEditor() const
 {
-	return selectedEditor;
+	return !hide_windows && has_mouse_focus;
 }
 
-bool Editor::Draw()
+void Editor::ToggleEditorVisibility()
 {
-	if (App->input->GetKey(SDL_SCANCODE_F1) == KEY_DOWN)
-		hide_windows = !hide_windows;
-
-	if (!hide_windows)
-	{
-		bool draw_border = (App->input->GetKey(SDL_SCANCODE_LCTRL) == KEY_REPEAT);
-
-		for (std::vector<EditorWindow*>::const_reverse_iterator it = windows.rbegin(); it != windows.rend(); ++it)
-			(*it)->Draw(draw_border);
-	}
-
-	return true;
+	hide_windows = !hide_windows;
 }

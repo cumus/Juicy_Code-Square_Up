@@ -770,7 +770,7 @@ void Scene::UpdateSelection()
 {
 	//LOG("Canvas: %d", C_Canvas::MouseOnUI());
 	//LOG("Editor: %d", App->editor->MouseOnWindow());
-	if (!C_Canvas::MouseOnUI() && !App->editor->MouseOnWindow())
+	if (!C_Canvas::MouseOnUI() && !App->editor->MouseOnEditor())
 	{		
 		if (App->input->GetMouseButtonDown(0))
 		{
@@ -1948,5 +1948,6 @@ void Scene::GodMode()
 
 	App->win->SetTitle(tmp_str);
 
-	App->editor->Draw();
+	if (App->input->GetKey(SDL_SCANCODE_F1) == KEY_DOWN)
+		App->editor->ToggleEditorVisibility();
 }
