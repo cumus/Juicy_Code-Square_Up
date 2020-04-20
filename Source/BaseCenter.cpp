@@ -34,14 +34,14 @@ Base_Center::Base_Center(Gameobject* go) : Behaviour(go, BASE_CENTER, FULL_LIFE,
 
 	if (t)
 	{
-		for (int i = t->GetLocalScaleY(); i > 0; i--)
+		vec pos = t->GetGlobalPosition();
+		for (int i = 0; i < t->GetLocalScaleX(); i++)
 		{
 			for (int a = 0; a < t->GetLocalScaleY(); a++)
 			{
-				vec pos = t->GetGlobalPosition();
-				App->pathfinding.SetWalkabilityTile(int(pos.x)+i, int(pos.y)+a, false);
+				App->pathfinding.SetWalkabilityTile(int(pos.x) + i + 2, int(pos.y) + a - 1, false);
 			}
-		}		
+		}
 	}
 	baseCenter = this->GetGameobject();
 }

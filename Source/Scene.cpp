@@ -37,7 +37,7 @@
 
 
 bool Scene::god_mode = false;
-bool Scene::no_damage = false;
+bool Scene::no_damage = true;
 bool Scene::draw_collisions = false;
 int Scene::player_stats[MAX_PLAYER_STATS];
 
@@ -255,10 +255,10 @@ void Scene::LoadMainScene()
 	std::pair<int, int> position = Map::WorldToTileBase(float(1400.0f), float(3250.0f));
 	if (App->pathfinding.CheckWalkabilityArea(position, vec(1.0f)))
 	{
-		Gameobject* base_go = AddGameobjectToCanvas("Base Center");
+		Gameobject* base_go = AddGameobject("Base Center");
 		base_go->GetTransform()->SetLocalPos({ float(position.first), float(position.second), 0.0f });
-		base_go->GetTransform()->ScaleX(2);
-		base_go->GetTransform()->ScaleY(2);
+		base_go->GetTransform()->ScaleX(4.0f);
+		base_go->GetTransform()->ScaleY(4.0f);
 		//App->audio->PlayFx(B_BUILDED);
 		new Base_Center(base_go);
 		std::pair<int, int> baseCenterPos = {
@@ -1409,18 +1409,20 @@ bool Scene::OnMainScene() const
 Transform* Scene::SpawnBehaviour(int type, vec pos)
 {
 	Transform* ret = nullptr;
-	Behaviour* behaviour = nullptr;
+	Gameobject* behaviour = nullptr;
 
 	switch (UnitType(type))
 	{
 	case GATHERER:
 	{
-		behaviour = new Gatherer(AddGameobject("Gatherer"));
+		behaviour = AddGameobject("Gatherer");
+		new Gatherer(behaviour);
 		break;
 	}
 	case UNIT_MELEE:
 	{
-		behaviour = new MeleeUnit(AddGameobject("Ally Melee"));
+		behaviour = AddGameobject("Unit melee");
+		new MeleeUnit(behaviour);
 		break;
 	}
 	case UNIT_RANGED: break;
@@ -1428,24 +1430,29 @@ Transform* Scene::SpawnBehaviour(int type, vec pos)
 	case UNIT_SPECIAL: break;
 	case ENEMY_MELEE:
 	{
-		behaviour = new EnemyMeleeUnit(AddGameobject("Enemy Melee"));
+		behaviour = AddGameobject("Enemy Melee");
+		new EnemyMeleeUnit(behaviour);
 		break;
 	}
 	case ENEMY_RANGED: 
-		behaviour = new EnemyMeleeUnit(AddGameobject("Enemy Melee")); ///Temporal
+		behaviour = AddGameobject("Enemy Melee");
+		new EnemyMeleeUnit(behaviour); ///Temporal
 		break;
 	case ENEMY_SUPER: 
-		behaviour = new EnemyMeleeUnit(AddGameobject("Enemy Melee")); ///Temporal
+		behaviour = AddGameobject("Enemy Melee");
+		new EnemyMeleeUnit(behaviour); ///Temporal
 		break;
 	case ENEMY_SPECIAL: 
-		behaviour = new EnemyMeleeUnit(AddGameobject("Enemy Melee")); ///Temporal
+		behaviour = AddGameobject("Enemy Melee");
+		new EnemyMeleeUnit(behaviour); ///Temporal
 		break;
 	case BASE_CENTER:
-	{
-		behaviour->GetGameobject()->GetTransform()->ScaleX(2.0f);
-		behaviour->GetGameobject()->GetTransform()->ScaleY(2.0f);
-		behaviour = new Base_Center(AddGameobject("Base Center"));
-
+	{		
+		behaviour = AddGameobject("Base Center");
+		behaviour->GetTransform()->SetLocalPos(pos);
+		behaviour->GetTransform()->ScaleX(4.0f);
+		behaviour->GetTransform()->ScaleY(4.0f);
+		new Base_Center(behaviour);
 		//Update paths
 		for (std::map<double, Behaviour*>::iterator it = Behaviour::b_map.begin(); it != Behaviour::b_map.end(); ++it)
 			Event::Push(UPDATE_PATH, it->second, pos.x - 1, pos.y - 1);
@@ -1454,7 +1461,8 @@ Transform* Scene::SpawnBehaviour(int type, vec pos)
 	}
 	case TOWER:
 	{
-		behaviour = new Tower(AddGameobject("Tower"));
+		behaviour = AddGameobject("Tower");
+		new Tower(behaviour);
 		//Update paths
 		for (std::map<double, Behaviour*>::iterator it = Behaviour::b_map.begin(); it != Behaviour::b_map.end(); ++it)
 			Event::Push(UPDATE_PATH, it->second, pos.x - 1, pos.y - 1);
@@ -1462,10 +1470,12 @@ Transform* Scene::SpawnBehaviour(int type, vec pos)
 	}
 	case WALL: break;
 	case BARRACKS:
-	{
-		behaviour = new Barracks(AddGameobject("Barracks"));
-		behaviour->GetGameobject()->GetTransform()->ScaleX(2.0f);
-		behaviour->GetGameobject()->GetTransform()->ScaleY(2.0f);
+	{				
+		behaviour = AddGameobject("Barracks");
+		behaviour->GetTransform()->SetLocalPos(pos);
+		behaviour->GetTransform()->ScaleX(6.0f);
+		behaviour->GetTransform()->ScaleY(6.0f);
+		new Barracks(behaviour);
 		//Update paths
 		for (std::map<double, Behaviour*>::iterator it = Behaviour::b_map.begin(); it != Behaviour::b_map.end(); ++it)
 			Event::Push(UPDATE_PATH, it->second, pos.x - 1, pos.y - 1);
@@ -1474,12 +1484,14 @@ Transform* Scene::SpawnBehaviour(int type, vec pos)
 	case LAB: break;
 	case EDGE:
 	{
-		behaviour = new Edge(AddGameobject("Edge"));
+		behaviour = AddGameobject("Edge");
+		new Edge(behaviour);
 		break;
 	}
 	case SPAWNER:
 	{
-		behaviour = new Spawner(AddGameobject("Spawner"));
+		behaviour = AddGameobject("Spawner");
+		new Spawner(behaviour);
 		break;
 	}
 	default: break;
@@ -1487,7 +1499,7 @@ Transform* Scene::SpawnBehaviour(int type, vec pos)
 
 	if (behaviour)
 	{
-		ret = behaviour->GetGameobject()->GetTransform();
+		ret = behaviour->GetTransform();
 		ret->SetLocalPos(pos);
 	}
 
@@ -1496,7 +1508,7 @@ Transform* Scene::SpawnBehaviour(int type, vec pos)
 
 bool Scene::DamageAllowed()
 {
-	return god_mode && !no_damage;
+	return no_damage;
 }
 
 bool Scene::DrawCollisions()

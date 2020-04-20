@@ -878,7 +878,7 @@ void Behaviour::Lifebar::Create(Gameobject* parent)
 	int hud_id = App->tex.Load("Assets/textures/Iconos_square_up.png");
 	go = new Gameobject("life_bar", parent);
 	new Sprite(go, hud_id, { 275, 698, 30, 4 }, FRONT_SCENE, { 3.f, -35.f, 2.f, 2.f }, { 255, 0, 0, 255});
-	green_bar = new Sprite(new Gameobject("GreenBar", go), hud_id, starting_section = { 276, 703, 28, 2 }, FRONT_SCENE, { 4.f, -34.f, 2.f, 2.f }, { 0, 255, 0, 255 });
+	green_bar = new Sprite(new Gameobject("GreenBar", go), hud_id, starting_section = { 276, 703, 28, 5 }, FRONT_SCENE, { 4.f, -34.f, 2.f, 2.f }, { 0, 255, 0, 255 });
 	Update(1.0f);
 }
 void Behaviour::Lifebar::Show()

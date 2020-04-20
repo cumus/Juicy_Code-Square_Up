@@ -76,7 +76,7 @@ AnimatedSprite::AnimatedSprite(Behaviour* unit) : Sprite(unit->GetGameobject(), 
 		animations[FIRST_UPGRADE].Setup({ 2810, 0, 563, 800 }, 5, 8.0f);
 		animations[SECOND_UPGRADE].Setup({ 5620, 0, 563, 800 }, 5, 8.0f);
 		animations[DESTROYED].Setup({ 8430, 0, 563, 800 }, 5, 8.0f);
-		offset = { -100.2f, -720.0f + Map::GetBaseOffset(), 0.15f, 0.15f };
+		offset = { -90.0f, -720.0f + Map::GetBaseOffset(), 0.15f, 0.15f };
 		break;
 	}
 	case TOWER:

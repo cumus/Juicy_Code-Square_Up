@@ -66,7 +66,7 @@ int PathfindingManager::IteratePaths(int extra_ms)
 					for (std::vector<iPoint>::const_iterator it = currentPath.cbegin(); it != currentPath.cend(); ++it)
 					{
 						std::pair<int, int> render_pos = Map::I_MapToWorld(it->x, it->y);
-						App->render->Blit(debugTextureID, render_pos.first, render_pos.second, &rect);
+						App->render->Blit(debugTextureID, render_pos.first, render_pos.second, &rect, FRONT_SCENE);
 					}
 			}
 		}
@@ -84,7 +84,7 @@ int PathfindingManager::IteratePaths(int extra_ms)
 			for (std::vector<iPoint>::const_iterator it = path.cbegin(); it != path.cend(); ++it)
 			{
 				std::pair<int, int> render_pos = Map::I_MapToWorld(it->x, it->y);
-				App->render->Blit(debugTextureID, render_pos.first, render_pos.second, &rect);
+				App->render->Blit(debugTextureID, render_pos.first, render_pos.second, &rect,FRONT_SCENE);
 			}
 		}
 	}
@@ -105,7 +105,7 @@ int PathfindingManager::IteratePaths(int extra_ms)
 					if (walkabilityMap[x][y] == false)
 					{				
 						std::pair<int, int> render_pos = Map::I_MapToWorld(x,y);
-						App->render->Blit(debugTextureID, render_pos.first, render_pos.second, &rect);
+						App->render->Blit(debugTextureID, render_pos.first, render_pos.second, &rect, FRONT_SCENE);
 					}
 					y++;
 				}		

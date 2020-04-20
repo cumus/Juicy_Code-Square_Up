@@ -5,11 +5,12 @@
 #include "Audio.h"
 #include "AudioSource.h"
 #include "Transform.h"
-#include "Log.h"
 #include "Input.h"
 #include "SDL/include/SDL_scancode.h"
 #include "Scene.h"
 #include "Canvas.h"
+#include "Barracks.h"
+#include "Log.h"
 
 
 
@@ -32,12 +33,12 @@ Barracks::Barracks(Gameobject* go) : Behaviour(go, BARRACKS, FULL_LIFE, B_BARRAC
 
 	if (t)
 	{
-		for (int i = t->GetLocalScaleY(); i > 0; i--)
+		vec pos = t->GetGlobalPosition();
+		for (int i = 0; i < t->GetLocalScaleX(); i++)
 		{
 			for (int a = 0; a < t->GetLocalScaleY(); a++)
-			{
-				vec pos = t->GetGlobalPosition();
-				App->pathfinding.SetWalkabilityTile(int(pos.x) + i, int(pos.y) + a, false);
+			{				
+				App->pathfinding.SetWalkabilityTile(int(pos.x) + i + 3, int(pos.y) + a - 2, false);
 			}
 		}
 	}
