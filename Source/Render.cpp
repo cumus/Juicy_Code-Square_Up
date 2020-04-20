@@ -511,8 +511,8 @@ bool Render::Blit_Scale(int texture_id, int x, int y, float scale_x, float scale
 
 		layers[layer][layer < Layer::HUD ? data.rect.y : 0].push_back(data);
 	}
-	//else
-		//LOG("Cannot blit to screen. Invalid id %d", texture_id);
+	else
+		LOG("Cannot blit to screen. Invalid id %d", texture_id);
 
 	return ret;
 }
