@@ -24,9 +24,9 @@ Minimap::Minimap(Gameobject* go) : UI_Component(go, go->GetUIParent(), UI_MINIMA
 
 	// Load Icons
 	hud_texture = App->tex.Load("Assets/textures/Iconos_square_up.png");
-	sections[BACKGROUND]		= { 585, 655, 385, 215 };
+	sections[BACKGROUND]		= { 585, 656, 384, 214 };
 	sections[MINIMAP]			= { 0, 0, total_size.first, total_size.second };
-	sections[ICON_ALLIED_UNIT]	= { 0, 0, 0, 0 };
+	sections[ICON_ALLIED_UNIT]	= { 494, 866, 5, 5 };
 	sections[ICON_ENEMY_UNIT]	= { 0, 0, 0, 0 };
 	sections[ICON_BASE_CENTER]	= { 0, 0, 0, 0 };
 	sections[ICON_TOWER]		= { 0, 0, 0, 0 };
@@ -49,6 +49,10 @@ void Minimap::PostUpdate()
 {
 	ComputeOutputRect(float(sections[MINIMAP].w), float(sections[MINIMAP].h));
 
+	// Minimap
+	std::pair<float, float> scale = { float(output.w) / float(sections[MINIMAP].w), float(output.h) / float(sections[MINIMAP].h) };
+	App->render->Blit_Scale(minimap_texture, output.x, output.y, scale.first, scale.second, nullptr, HUD, false);
+
 	// Border
 	App->render->Blit_Scale(
 		hud_texture,
@@ -56,10 +60,6 @@ void Minimap::PostUpdate()
 		float(output.w) / float(sections[BACKGROUND].w),
 		float(output.h) / float(sections[BACKGROUND].h),
 		&sections[BACKGROUND], HUD, false);
-
-	// Minimap
-	std::pair<float, float> scale = { float(output.w) / float(sections[MINIMAP].w), float(output.h) / float(sections[MINIMAP].h) };
-	App->render->Blit_Scale(minimap_texture, output.x, output.y, scale.first, scale.second, nullptr, HUD, false);
 
 	// Draw Camera Rect
 	RectF cam = App->render->GetCameraRectF();
