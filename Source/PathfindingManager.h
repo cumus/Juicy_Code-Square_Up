@@ -113,6 +113,9 @@ public:
 	//Utility: Prints unit path
 	void DebugShowUnitPath(double ID);
 
+	//Utility: Prints non walkable tiles
+	void DebugWalkability();
+
 	//Utility: Updates already stored path or add it
 	void UpdateStoredPaths(double ID, std::vector<iPoint> path);
 
@@ -141,13 +144,13 @@ public:
 private:
 	bool debugAll = false;
 	bool debugOne = false;
+	bool debugWalk = false;
 	int unitDebugID;
 	MapLayer map;
 	iPoint nullPoint = iPoint({ -1,-1 });
 	std::vector<std::vector<bool> > walkabilityMap;
 	std::map<double, std::vector<iPoint>> storedPaths; //Stores all generated paths by units
 	std::map<double, UncompletedPath> toDoPaths; //Stores pending path for each id
-	float msCount = 0;
 };
 
 #endif 

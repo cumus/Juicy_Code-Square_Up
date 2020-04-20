@@ -76,7 +76,7 @@ AnimatedSprite::AnimatedSprite(Behaviour* unit) : Sprite(unit->GetGameobject(), 
 		animations[FIRST_UPGRADE].Setup({ 2810, 0, 563, 800 }, 5, 8.0f);
 		animations[SECOND_UPGRADE].Setup({ 5620, 0, 563, 800 }, 5, 8.0f);
 		animations[DESTROYED].Setup({ 8430, 0, 563, 800 }, 5, 8.0f);
-		offset = { 0.0f, -700.0f + Map::GetBaseOffset(), 0.4f, 0.4f };
+		offset = { -100.2f, -720.0f + Map::GetBaseOffset(), 0.15f, 0.15f };
 		break;
 	}
 	case TOWER:
@@ -94,7 +94,7 @@ AnimatedSprite::AnimatedSprite(Behaviour* unit) : Sprite(unit->GetGameobject(), 
 		animations[FULL_LIFE].Setup(section = { 0, 0, 166, 534 }, 1);
 		animations[HALF_LIFE].Setup({ 0, 0, 166, 534 }, 1);
 		animations[DESTROYED].Setup({ 0, 0, 166, 534 }, 1);
-		offset = { 20.f, -460.f, 0.3f, 0.3f };
+		offset = { 30.f, -480.f, 0.3f, 0.3f };
 		break; 
 	}
 	case WALL:
@@ -114,7 +114,7 @@ AnimatedSprite::AnimatedSprite(Behaviour* unit) : Sprite(unit->GetGameobject(), 
 		animations[FIRST_UPGRADE].Setup({ 3130, 0, 626, 485 }, 5, 8.0f);
 		animations[SECOND_UPGRADE].Setup({ 6260, 0, 626, 485 }, 5, 8.0f);
 		animations[DESTROYED].Setup({ 9390, 0, 626, 485 }, 5, 8.0f);
-		offset = { -70.0f, -350.0f + Map::GetBaseOffset(), 0.3f, 0.3f };
+		offset = { 0.0f, -450.0f + Map::GetBaseOffset(), 0.1f, 0.1f };
 		break;
 	}
 	case SPAWNER:

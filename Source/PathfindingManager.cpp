@@ -89,6 +89,31 @@ int PathfindingManager::IteratePaths(int extra_ms)
 		}
 	}
 
+	if (debugWalk)
+	{
+		std::vector<iPoint> currentPath;
+		SDL_Rect rect = { 64, 0, 64, 64 };
+
+		if (!walkabilityMap.empty())
+		{
+			int x = 0;
+			do
+			{
+				int y = 0;
+				while (y < map.height)
+				{
+					if (walkabilityMap[x][y] == false)
+					{				
+						std::pair<int, int> render_pos = Map::I_MapToWorld(x,y);
+						App->render->Blit(debugTextureID, render_pos.first, render_pos.second, &rect);
+					}
+					y++;
+				}		
+				x++;
+			} while (x<map.width);					
+		}
+	}
+
 	return extra_ms;
 }
 
@@ -134,12 +159,14 @@ void PathfindingManager::DebugShowUnitPath(double ID)
 //Utility: Prints all paths
 void PathfindingManager::DebugShowPaths() 
 {
-	int a = storedPaths.size();
-	//LOG("Debug paths: %d", a);
-	//LOG("ms taken to compute: %f",msCount);
 	if (debugAll) debugAll = false;
 	else debugAll = true;	
-	msCount = 0;
+}
+
+
+void PathfindingManager::DebugWalkability()
+{
+	debugWalk = !debugWalk;	
 }
 
 //Utility: Updates already stored path or add it
@@ -252,8 +279,6 @@ bool PathfindingManager::IsWalkable(iPoint& pos)
 bool PathfindingManager::GetTileAt(iPoint& pos)
 {
 	bool ret = false;
-	//LOG("Tile ID--%d", map.GetID(pos.x, pos.y));
-	//if (map.GetID(pos.x,pos.y) == 22 || map.GetID(pos.x, pos.y) == 23) ret = false;
 	if (map.GetID(pos.x, pos.y) == 0) ret = true;
 	return ret;
 }
@@ -753,7 +778,5 @@ int PathfindingManager::ContinuePath(UncompletedPath pathToDo, int working_ms)
 	{
 		UpdatePendingPaths(path.ID, path);
 	}
-
-	msCount += App->time.GetDeltaTime();
 	return working_ms - timer.ReadI();
 }

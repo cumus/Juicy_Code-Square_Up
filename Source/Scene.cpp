@@ -257,7 +257,8 @@ void Scene::LoadMainScene()
 	{
 		Gameobject* base_go = AddGameobjectToCanvas("Base Center");
 		base_go->GetTransform()->SetLocalPos({ float(position.first), float(position.second), 0.0f });
-
+		base_go->GetTransform()->ScaleX(2);
+		base_go->GetTransform()->ScaleY(2);
 		//App->audio->PlayFx(B_BUILDED);
 		new Base_Center(base_go);
 		std::pair<int, int> baseCenterPos = {
@@ -1441,6 +1442,8 @@ Transform* Scene::SpawnBehaviour(int type, vec pos)
 		break;
 	case BASE_CENTER:
 	{
+		behaviour->GetGameobject()->GetTransform()->ScaleX(2.0f);
+		behaviour->GetGameobject()->GetTransform()->ScaleY(2.0f);
 		behaviour = new Base_Center(AddGameobject("Base Center"));
 
 		//Update paths
@@ -1452,12 +1455,20 @@ Transform* Scene::SpawnBehaviour(int type, vec pos)
 	case TOWER:
 	{
 		behaviour = new Tower(AddGameobject("Tower"));
+		//Update paths
+		for (std::map<double, Behaviour*>::iterator it = Behaviour::b_map.begin(); it != Behaviour::b_map.end(); ++it)
+			Event::Push(UPDATE_PATH, it->second, pos.x - 1, pos.y - 1);
 		break;
 	}
 	case WALL: break;
 	case BARRACKS:
 	{
 		behaviour = new Barracks(AddGameobject("Barracks"));
+		behaviour->GetGameobject()->GetTransform()->ScaleX(2.0f);
+		behaviour->GetGameobject()->GetTransform()->ScaleY(2.0f);
+		//Update paths
+		for (std::map<double, Behaviour*>::iterator it = Behaviour::b_map.begin(); it != Behaviour::b_map.end(); ++it)
+			Event::Push(UPDATE_PATH, it->second, pos.x - 1, pos.y - 1);
 		break;
 	}
 	case LAB: break;
@@ -1639,7 +1650,11 @@ void Scene::GodMode()
 
 	// F2: Show/Hide Map Walkability
 	if (App->input->GetKey(SDL_SCANCODE_F2) == KEY_DOWN)
-		map.draw_walkability = !map.draw_walkability;
+	{
+		//map.draw_walkability = !map.draw_walkability;
+		App->pathfinding.DebugWalkability();
+	}
+		
 
 	// F3: Toggle Music Playing
 	if (App->input->GetKey(SDL_SCANCODE_F3) == KEY_DOWN)
@@ -1663,6 +1678,10 @@ void Scene::GodMode()
 	// F6: Toggle Zoom Locked
 	if (App->input->GetKey(SDL_SCANCODE_F6) == KEY_DOWN)
 		App->render->ToggleZoomLocked();
+
+	// F7: Toggle Collision & Path Drawing
+	if (App->input->GetKey(SDL_SCANCODE_F7) == KEY_DOWN)
+		Event::Push(TOGGLE_FULLSCREEN, App->win);
 
 	// SPACE: Swap map orientation
 	if (App->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN) Map::SwapMapType();

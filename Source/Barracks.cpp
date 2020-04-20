@@ -32,8 +32,14 @@ Barracks::Barracks(Gameobject* go) : Behaviour(go, BARRACKS, FULL_LIFE, B_BARRAC
 
 	if (t)
 	{
-		vec pos = t->GetGlobalPosition();
-		App->pathfinding.SetWalkabilityTile(int(pos.x), int(pos.y), false);
+		for (int i = t->GetLocalScaleY(); i > 0; i--)
+		{
+			for (int a = 0; a < t->GetLocalScaleY(); a++)
+			{
+				vec pos = t->GetGlobalPosition();
+				App->pathfinding.SetWalkabilityTile(int(pos.x) + i, int(pos.y) + a, false);
+			}
+		}
 	}
 }
 
