@@ -2,174 +2,134 @@
 #include "Application.h"
 #include "TextureManager.h"
 #include "Render.h"
-#include "Scene.h"
-#include "Window.h"
-#include "Editor.h"
-#include "Map.h"
 #include "Input.h"
-#include "Log.h"
-#include "JuicyMath.h"
 #include "Transform.h"
 #include "Behaviour.h"
+#include "Log.h"
+#include "JuicyMath.h"
 
 #include <string>
 
-Minimap::Minimap(Gameobject* go) :
-	C_Image(go)
+Minimap* Minimap::minimap = nullptr;
+
+Minimap::Minimap(Gameobject* go) : UI_Component(go, go->GetUIParent(), UI_MINIMAP)
 {
-	LOG("Starting minimap");
+	minimap = this;
 
-	background_rect = { 585, 656, 384, 216 };
-	minimap_camera = { 0, 0, 0, 0 };
-	camera_color = { 255, 255, 255, 255 };
-	minimapSel = false;
-	background_tex = App->tex.Load("Assets/textures/Iconos_square_up.png");
-
-	App->win->GetWindowSize(window_width, window_height);
-
-	target = { 1.f, 0.f, 0.03f, 0.03f };
+	// Setup Minimap
 	std::pair<int, int> map_size = Map::GetMapSize_I();
 	std::pair<int, int> tile_size = Map::GetTileSize_I();
-	section = { 0, 0, map_size.first * tile_size.first, map_size.second * tile_size.second };
-	offset = { -section.w, 0 };
-	tex_id = App->render->GetMinimap(section.w, section.h);
-	Event::Push(UPDATE_MINIMAP_TEXTURE, App->render);
+	std::pair<int, int> total_size = { map_size.first * tile_size.first, map_size.second * tile_size.second };
+	minimap_texture = App->render->GetMinimap(total_size.first, total_size.second);
+
+	// Load Icons
+	hud_texture = App->tex.Load("Assets/textures/Iconos_square_up.png");
+	sections[BACKGROUND]		= { 585, 655, 385, 215 };
+	sections[MINIMAP]			= { 0, 0, total_size.first, total_size.second };
+	sections[ICON_ALLIED_UNIT]	= { 0, 0, 0, 0 };
+	sections[ICON_ENEMY_UNIT]	= { 0, 0, 0, 0 };
+	sections[ICON_BASE_CENTER]	= { 0, 0, 0, 0 };
+	sections[ICON_TOWER]		= { 0, 0, 0, 0 };
+	sections[ICON_BARRACKS]		= { 0, 0, 0, 0 };
+	sections[ICON_EDGE]			= { 0, 0, 0, 0 };
+	sections[ICON_SPAWNER]		= { 0, 0, 0, 0 };
+
+	// Set UI_Component values
+	target = { 1.f, 0.f, 0.03f, 0.03f };
+	offset = { -total_size.first, 0 };
 }
 
 Minimap::~Minimap()
 {
+	if (minimap == this)
+		minimap = nullptr;
 }
 
-void Minimap::Update()
+void Minimap::PostUpdate()
 {
-	SDL_Rect camera_getter = App->render->GetCameraRect();
-	background_output = { (float)output.x, (float)output.y, (float)output.w, (float)output.h };
+	ComputeOutputRect(float(sections[MINIMAP].w), float(sections[MINIMAP].h));
 
-	if (output.w != 0 && output.h != 0)
-	{
-		scalex = (background_rect.w / background_output.w) * (background_output.w / background_rect.w) * (background_output.w / background_rect.w);
-		scaley = (background_rect.h / background_output.h) * (background_output.h / background_rect.h) * (background_output.h / background_rect.h);
-	}
+	// Border
+	App->render->Blit_Scale(
+		hud_texture,
+		output.x, output.y,
+		float(output.w) / float(sections[BACKGROUND].w),
+		float(output.h) / float(sections[BACKGROUND].h),
+		&sections[BACKGROUND], HUD, false);
 
+	// Minimap
+	std::pair<float, float> scale = { float(output.w) / float(sections[MINIMAP].w), float(output.h) / float(sections[MINIMAP].h) };
+	App->render->Blit_Scale(minimap_texture, output.x, output.y, scale.first, scale.second, nullptr, HUD, false);
 
-	App->render->Blit_Scale(background_tex, output.x, output.y, scalex, scaley, &background_rect, HUD, false);
+	// Draw Camera Rect
+	RectF cam = App->render->GetCameraRectF();
+	SDL_Rect cam_rect = {
+		int(float(output.x) + (float(output.w) * 0.5f) + (cam.x * scale.first)),
+		int(float(output.y) + (cam.y * scale.second)),
+		int(cam.w * scale.first),
+		int(cam.h * scale.second) };
+	App->render->DrawQuad(cam_rect, { 255, 255, 255, 255 }, false, HUD, false);
 
-	App->render->DrawQuad(output, { 255, 0, 0, 255 }, false, SCENE, false);
-
-
-	//-------------------------------------------------------------------------------------
-		//From map to minimap viewport
-	std::pair<float, float> tile_size = Map::GetTileSize_F();
-	std::pair<float, float> map_size = Map::GetMapSize_F();
-
-	float map_pixelwidth = map_size.first * tile_size.first;
-	float map_pixelheight = map_size.second * tile_size.second;
-
-	float scale_x, scale_y;
-	scale_x = output.w / map_pixelwidth;
-	scale_y = output.h / map_pixelheight;
-
-	minimap_camera.x = camera_getter.x;
-	minimap_camera.y = camera_getter.y;
-	minimap_camera.w = camera_getter.w * scale_x;
-	minimap_camera.h = camera_getter.h * scale_y;
-
-	minimap_camera.x = minimap_camera.x * scale_x;
-	minimap_camera.y = minimap_camera.y * scale_y;
-
-	minimap_camera.x += output.x + output.w / 2;
-	minimap_camera.y += output.y;
-
-	App->render->DrawQuad(minimap_camera, camera_color, false, EDITOR, false);
-
-	//-------------------------------------------------------------------------------------
-
-		//From minimap to map drag viewport
-	if (App->input->GetMouseButtonDown(0) == KeyState::KEY_DOWN)
+	// Move camera
+	KeyState mouse = App->input->GetMouseButtonDown(0);
+	if (C_Canvas::MouseOnUI() && mouse)
 	{
 		int x, y;
 		App->input->GetMousePosition(x, y);
-		if (mouse_inside = JMath::PointInsideRect(x, y, output))
+		if (JMath::PointInsideRect(x, y, output))
 		{
-			minimapSel = true;
-			//LOG("Minimap selected");
+			mouse_moving = (mouse == KEY_DOWN || (mouse == KEY_REPEAT && mouse_moving));
+
+			if (mouse_moving)
+				Event::Push(MINIMAP_MOVE_CAMERA, App->render,
+					((float(x - output.x) - (float(output.w) * 0.5f)) / scale.first) - (cam.w / 2.0f),
+					(float(y - output.y) / scale.second) - (cam.h / 2.0f));
 		}
 	}
 
-	if (App->input->GetMouseButtonDown(0) == KeyState::KEY_REPEAT && minimapSel)
+	// Draw Units
+	for (std::map<double, std::pair<MinimapTexture, Transform*>>::const_iterator it = units.cbegin(); it != units.cend(); ++it)
 	{
-		int x, y;
-		App->input->GetMousePosition(x, y);
+		SDL_Rect icon_section = sections[it->second.first];
+		std::pair<float, float> world_pos = Map::F_MapToWorld(it->second.second->GetGlobalPosition());
 
-		if (mouse_inside = JMath::PointInsideRect(x, y, output))
-		{
-			//LOG("Move minimap");
-			x -= output.x;
-			y -= output.y;
-
-			RectF cam = App->render->GetCameraRectF();
-			cam.x = (float(x) / scale_x) - (map_pixelwidth / 2.0f) - (cam.w / 2.0f);
-			cam.y = (float(y) / scale_y) - (cam.h / 2.0f);
-		}
+		App->render->Blit(
+			hud_texture,
+			output.x + int((float(output.w * 0.5f) + (scale.first * world_pos.first) - (float(icon_section.w) * 0.5f))),
+			output.y + int((scale.second * world_pos.second) - (float(icon_section.h) * 0.5f)),
+			&icon_section, HUD, false);
 	}
+}
 
-	if (App->input->GetMouseButtonDown(0) == KeyState::KEY_UP && minimapSel) minimapSel = false;
-
-	//-------------------------------------------------------------------------------------
-
-	//Units tu minimap (with coloured rect)
-	for (std::map<double, Behaviour*>::iterator it = Behaviour::b_map.begin(); it != Behaviour::b_map.end(); it++)
+bool Minimap::AddUnit(double id, int type, Transform* unit)
+{
+	bool ret = false;
+	if (minimap)
 	{
-		if (it->second->AsBehaviour()->GetType() == UNIT_MELEE || it->second->AsBehaviour()->GetType() == GATHERER)
+		MinimapTexture icon;
+		if (type <= UNIT_SPECIAL) icon = ICON_ALLIED_UNIT;
+		else if (type <= ENEMY_SPECIAL) icon = ICON_ENEMY_UNIT;
+		else
 		{
-			//LOG("Show unit");
-			SDL_Rect representation;
-			vec unit_pos = it->second->GetGameobject()->GetTransform()->GetGlobalPosition();
-			std::pair<float, float> world_pos = map.F_MapToWorld(unit_pos);
-
-			representation.x = scale_x * world_pos.first - 1;
-			representation.y = scale_y * world_pos.second - 1;
-			representation.w = 2;
-			representation.h = 2;
-
-			representation.x += output.x + output.w / 2;
-			representation.y += output.y;
-
-			switch (it->second->AsBehaviour()->GetType())
+			switch (UnitType(type))
 			{
-			case UNIT_MELEE:
-				App->render->DrawQuad(representation, { 0,255,0,255 }, true, EDITOR, false);
-				break;
-			case GATHERER:
-				App->render->DrawQuad(representation, { 29,197,255,255 }, true, EDITOR, false);
-				break;
+			case BASE_CENTER: { icon = ICON_BASE_CENTER; break; }
+			case TOWER: { icon = ICON_TOWER; break; }
+			case BARRACKS: { icon = ICON_BARRACKS; break; }
+			case EDGE: { icon = ICON_EDGE; break; }
+			case SPAWNER: { icon = ICON_SPAWNER; break; }
 			}
-			
-
 		}
+
+		minimap->units.insert({ id, { icon, unit } });
+		ret = true;
 	}
 
-	/*for (std::list<Gameobject*>::iterator it = object_queue.begin(); it != object_queue.end(); it++)
-	{
-
-		SDL_Rect representation;
-		vec unit_pos = (*it)->GetTransform()->GetGlobalPosition();
-		std::pair<float, float> world_pos = map.F_MapToWorld(unit_pos);
-
-		representation.x = scale_x * world_pos.first - 1;
-		representation.y = scale_y * world_pos.second - 1;
-		representation.w = 2;
-		representation.h = 2;
-
-		representation.x += output.x + output.w / 2;
-		representation.y += output.y;
-		App->render->DrawQuad(representation, {0,255,0,255}, true, EDITOR, false);
-	}*/
-
+	return ret;
 }
 
-void Minimap::AddToMinimap(Gameobject* object, SDL_Color color)
+void Minimap::RemoveUnit(double id)
 {
-	//unit_color = color;
-	//object_queue.push_back(object);
+	if (minimap)
+		minimap->units.erase(id);
 }

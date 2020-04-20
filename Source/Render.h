@@ -57,7 +57,7 @@ public:
 	bool InsideCam(float x, float y) const;
 
 	// Minimap
-	int GetMinimap(int width, int height);
+	int GetMinimap(int width, int height, bool trigger_event = true);
 
 	// Viewport
 	void SetupViewPort(float aspect_ratio);

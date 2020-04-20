@@ -66,11 +66,14 @@ Behaviour::Behaviour(Gameobject* go, UnitType t, UnitState starting_state, Compo
 		Event::Push(UPDATE_STAT, App->scene, TOTAL_TOWERS, 1);
 		break;
 	}
+
+	Minimap::AddUnit(GetID(), t, game_object->GetTransform());
 }
 
 Behaviour::~Behaviour()
 {
 	b_map.erase(GetID());
+	Minimap::RemoveUnit(GetID());
 }
 
 void Behaviour::RecieveEvent(const Event& e)

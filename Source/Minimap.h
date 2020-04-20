@@ -2,56 +2,48 @@
 #define __MINIMAP_H__
 
 #include "Canvas.h"
-#include "Point.h"
-#include "Map.h"
-#include "SDL/include/SDL.h"
-#include "TimeManager.h"
-#include "Map.h"
+#include "SDL/include/SDL_rect.h"
+#include <map>
 
-enum class Corner
-{
-	TOP_LEFT,
-	TOP_RIGHT,
-	BOTTOM_LEFT,
-	BOTTOM_RIGHT
-};
+class Transform;
 
-class Minimap : public C_Image
+class Minimap : public UI_Component
 {
 public:
 
 	Minimap(Gameobject* go);
 	~Minimap();
 
-	void AddToMinimap(Gameobject* object, SDL_Color color);
+	void PostUpdate() override;
+
+	static bool AddUnit(double id, int type, Transform* unit);
+	static void RemoveUnit(double id);
 
 private:
 
-	void Update() override;
+	static Minimap* minimap;
 
-private:
+	int minimap_texture;
+	int hud_texture;
 
-	Map		map;
+	bool mouse_moving = false;
 
-	SDL_Color	camera_color;
-	SDL_Color	unit_color;
-	SDL_Rect	minimap_camera;
-	SDL_Rect	background_rect;
-	RectF		background_output;
+	enum MinimapTexture : int
+	{
+		MINIMAP,
+		BACKGROUND,
+		ICON_ALLIED_UNIT,
+		ICON_ENEMY_UNIT,
+		ICON_BASE_CENTER,
+		ICON_TOWER,
+		ICON_BARRACKS,
+		ICON_EDGE,
+		ICON_SPAWNER,
+		MAX_MINIMAP_TEXTURES
+	};
+	SDL_Rect sections[MAX_MINIMAP_TEXTURES];
 
-	int		background_tex;
-	int		window_width;
-	int		window_height;
-	float	scalex;
-	float	scaley;
-	bool	mouse_inside;
-	bool	map_charged;
-	bool	minimapSel;
-
-public:
-
-	std::list<Gameobject*> object_queue;
+	std::map<double, std::pair<MinimapTexture,Transform*>> units;
 };
-
 
 #endif // !__MINIMAP_H__

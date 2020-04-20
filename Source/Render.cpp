@@ -262,9 +262,15 @@ void Render::RecieveEvent(const Event& e)
 		SetupViewPort(16.0f / 9.0f);
 		break;
 	}
-	case UPDATE_MINIMAP_TEXTURE:
+	case MINIMAP_UPDATE_TEXTURE:
 	{
 		RenderMinimap();
+	}
+	case MINIMAP_MOVE_CAMERA:
+	{
+		cam.x = e.data1.AsFloat();
+		cam.y = e.data2.AsFloat();
+		Event::Push(CAMERA_MOVED, App->audio);
 	}
 	default:
 		break;
@@ -365,7 +371,7 @@ bool Render::RenderMinimap()
 	return ret;
 }
 
-int Render::GetMinimap(int width, int height)
+int Render::GetMinimap(int width, int height, bool trigger_event)
 {
 	if (minimap_texture < 0)
 	{
@@ -373,6 +379,8 @@ int Render::GetMinimap(int width, int height)
 		minimap_texture = App->tex.CreateEmptyTexture(renderer, width, height);
 		minimap_half_width = width / 2;
 	}
+
+	trigger_event ? Event::Push(MINIMAP_UPDATE_TEXTURE, this) : RenderMinimap();
 
 	return minimap_texture;
 }
