@@ -89,7 +89,7 @@ enum EventType : char
 	UPDATE_PATH,
 
 	NEW_BEHAVIOUR,
-	INACTIVE,
+	SET_INACTIVE,
 
 	MAX_EVENT_TYPES
 };

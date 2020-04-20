@@ -210,43 +210,46 @@ private:
 
 	//-------Gameobjects--------
 
-	Gameobject* lore_go;
-	Gameobject* cam_mov_go;
-	Gameobject* R_click_mov_go;
+	//Gameobject* lore_go;
+	//Gameobject* cam_mov_go;
+	//Gameobject* R_click_mov_go;
 	Gameobject* gather_go;
-	Gameobject* edge_go;
+	//Gameobject* edge_go;
 	Gameobject* edge_t_go;
-	Gameobject* base_center_go;
-	Gameobject* barracks_state_go;
-	Gameobject* resources_state_go;
-	Gameobject* melee_go;
+	//Gameobject* base_center_go;
+	//Gameobject* barracks_state_go;
+	//Gameobject* resources_state_go;
+	//Gameobject* melee_go;
 	Gameobject* enemy_go;
-	Gameobject* melee_atk_go;
-	Gameobject* enemy_atk_go;
-	Gameobject* mobdrop_go;
+	//Gameobject* melee_atk_go;
+	//Gameobject* enemy_atk_go;
+	//Gameobject* mobdrop_go;
 	Gameobject* build_go;
-	Gameobject* upgrade_go;
-	Gameobject* tower_state_go;
-	Gameobject* tower_atk_go;
+	//Gameobject* upgrade_go;
+	//Gameobject* tower_state_go;
+	//Gameobject* tower_atk_go;
+	Gameobject* not_go;
 
 	//------Images/Buttons------
 
 	C_Image* cam_mov;
-	C_Image* R_click_mov;
-	C_Image* edge;
-	C_Image* base_center;
-	C_Image* barracks_state;
-	C_Image* resources;
-	C_Image* melee;
-	C_Image* enemy;
-	C_Image* melee_atk;
-	C_Image* enemy_atk;
+	//C_Image* R_click_mov;
+	//C_Image* edge;
+	//C_Image* base_center;
+	//C_Image* barracks_state;
+	//C_Image* resources;
+	//C_Image* melee;
+	//C_Image* enemy;
+	//C_Image* melee_atk;
+	//C_Image* enemy_atk;
 	C_Image* mobdrop;
-	C_Image* build;
-	C_Image* upgrade;
-	C_Image* tower_state;
-	C_Image* tower_atk;
+	//C_Image* build;
+	//C_Image* upgrade;
+	//C_Image* tower_state;
+	//C_Image* tower_atk;
 	C_Button* next;
+	C_Button* not_inactive;
+	C_Image * not;
 };
 
 #endif // __SCENE_H__
