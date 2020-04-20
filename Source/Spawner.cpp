@@ -136,9 +136,7 @@ void Spawner::Update()
 		}
 
 		ms_counter = 0;
-		LOG("End ");
-		//std::srand(time(NULL));
-		LOG("End 2");
+		std::srand(time(NULL));
 	}
 
 	if (ms_counter < cooldown)

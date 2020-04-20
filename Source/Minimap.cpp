@@ -54,7 +54,7 @@ void Minimap::Update()
 
 	App->render->Blit_Scale(background_tex, output.x, output.y, scalex, scaley, &background_rect, HUD, false);
 
-	App->render->DrawQuad(output, { 255, 0, 0, 255 }, false, EDITOR, false);
+	App->render->DrawQuad(output, { 255, 0, 0, 255 }, false, SCENE, false);
 
 
 	//-------------------------------------------------------------------------------------
@@ -92,6 +92,7 @@ void Minimap::Update()
 		if (mouse_inside = JMath::PointInsideRect(x, y, output))
 		{
 			minimapSel = true;
+			//LOG("Minimap selected");
 		}
 	}
 
@@ -102,6 +103,7 @@ void Minimap::Update()
 
 		if (mouse_inside = JMath::PointInsideRect(x, y, output))
 		{
+			//LOG("Move minimap");
 			x -= output.x;
 			y -= output.y;
 
@@ -169,5 +171,5 @@ void Minimap::Update()
 void Minimap::AddToMinimap(Gameobject* object, SDL_Color color)
 {
 	//unit_color = color;
-	object_queue.push_back(object);
+	//object_queue.push_back(object);
 }

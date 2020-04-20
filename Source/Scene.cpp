@@ -1417,9 +1417,15 @@ Transform* Scene::SpawnBehaviour(int type, vec pos)
 		behaviour = new EnemyMeleeUnit(AddGameobject("Enemy Melee"));
 		break;
 	}
-	case ENEMY_RANGED: break;
-	case ENEMY_SUPER: break;
-	case ENEMY_SPECIAL: break;
+	case ENEMY_RANGED: 
+		behaviour = new EnemyMeleeUnit(AddGameobject("Enemy Melee")); ///Temporal
+		break;
+	case ENEMY_SUPER: 
+		behaviour = new EnemyMeleeUnit(AddGameobject("Enemy Melee")); ///Temporal
+		break;
+	case ENEMY_SPECIAL: 
+		behaviour = new EnemyMeleeUnit(AddGameobject("Enemy Melee")); ///Temporal
+		break;
 	case BASE_CENTER:
 	{
 		behaviour = new Base_Center(AddGameobject("Base Center"));
