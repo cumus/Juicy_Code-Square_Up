@@ -27,12 +27,12 @@ Minimap::Minimap(Gameobject* go) : UI_Component(go, go->GetUIParent(), UI_MINIMA
 	sections[BACKGROUND]		= { 585, 656, 384, 214 };
 	sections[MINIMAP]			= { 0, 0, total_size.first, total_size.second };
 	sections[ICON_ALLIED_UNIT]	= { 494, 866, 5, 5 };
-	sections[ICON_ENEMY_UNIT]	= { 0, 0, 0, 0 };
-	sections[ICON_BASE_CENTER]	= { 0, 0, 0, 0 };
-	sections[ICON_TOWER]		= { 0, 0, 0, 0 };
-	sections[ICON_BARRACKS]		= { 0, 0, 0, 0 };
+	sections[ICON_ENEMY_UNIT]	= { 502, 866, 5, 5 };
+	sections[ICON_BASE_CENTER]	= { 519, 858, 8, 13 };
+	sections[ICON_TOWER]		= { 510, 862, 6, 9 };
+	sections[ICON_BARRACKS]		= { 530, 862, 9, 9 };
 	sections[ICON_EDGE]			= { 0, 0, 0, 0 };
-	sections[ICON_SPAWNER]		= { 0, 0, 0, 0 };
+	sections[ICON_SPAWNER]		= { 542, 862, 11, 9 };
 
 	// Set UI_Component values
 	target = { 1.f, 0.f, 0.03f, 0.03f };

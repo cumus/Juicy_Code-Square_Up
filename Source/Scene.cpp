@@ -233,6 +233,8 @@ void Scene::LoadMainScene()
 
 	LoadMainHUD();
 
+	Event::Push(MINIMAP_MOVE_CAMERA, App->render, float(800), float(2900));
+
 	lore_go = AddGameobjectToCanvas("lore");
 	C_Image* lore = new C_Image(lore_go);
 	C_Button* next = new C_Button(lore_go, Event(GAMEPLAY, this, CAM_MOVEMENT));
@@ -246,11 +248,11 @@ void Scene::LoadMainScene()
 	next->offset = { -309.f, 37.f };
 	next->section = { 0, 0, 309, 37 };
 	next->tex_id = App->tex.Load("Assets/textures/tuto/not-button.png");
-
+	
 	//Minimap
 	new Minimap(AddGameobjectToCanvas("Minimap"));
 
-	std::pair<int, int> position = Map::WorldToTileBase(float(450.0f), float(450.0f));
+	std::pair<int, int> position = Map::WorldToTileBase(float(1400.0f), float(3250.0f));
 	if (App->pathfinding.CheckWalkabilityArea(position, vec(1.0f)))
 	{
 		Gameobject* base_go = AddGameobjectToCanvas("Base Center");
@@ -260,7 +262,7 @@ void Scene::LoadMainScene()
 		new Base_Center(base_go);
 		std::pair<int, int> baseCenterPos = {
 			base_go->GetTransform()->GetGlobalPosition().x,
-			baseCenterPos.second = base_go->GetTransform()->GetGlobalPosition().y };
+			baseCenterPos.second = base_go->GetTransform()->GetGlobalPosition().y};
 		for (std::map<double, Behaviour*>::iterator it = Behaviour::b_map.begin(); it != Behaviour::b_map.end(); ++it)//Update paths 
 		{
 			Event::Push(UPDATE_PATH, it->second, baseCenterPos.first - 1, baseCenterPos.second - 1);
@@ -912,6 +914,8 @@ void Scene::UpdateStateMachine()
 
 		break;
 	case CAM_MOVEMENT:
+		Event::Push(SCENE_PLAY, this, R_CLICK_MOVEMENT);
+		next->SetInactive();
 
 		current_cam_pos = App->render->GetCameraCenter();
 		distance = JMath::Distance(last_cam_pos, current_cam_pos);
@@ -960,8 +964,8 @@ void Scene::UpdateStateMachine()
 		break;
 
 	case BARRACKS_STATE:
-		LOG("babb %d", tutorial_barrack);
-		if (tutorial_barrack == 1) {
+		LOG("barrack number %d", player_stats[CURRENT_BARRACKS]);
+		if (player_stats[CURRENT_BARRACKS] >= 1) {
 			
 			Event::Push(GAMEPLAY, this, MELEE);
 		}
@@ -1081,8 +1085,6 @@ void Scene::OnEventStateMachine(GameplayState state)
 		gather_go = AddGameobject("Tutorial Gatherer");
 		gather_go->GetTransform()->SetLocalPos({ current_cam_pos_t.first, current_cam_pos_t.second,0.0f });
 
-		//minimap->AddToMinimap(unit_go, { 0,255,0,255 });
-
 		new Gatherer(gather_go);
 
 		current_state = R_CLICK_MOVEMENT;
@@ -1167,7 +1169,7 @@ void Scene::OnEventStateMachine(GameplayState state)
 		resources_state_go->SetInactive();
 		LOG("BARRACKS STATE");
 		barracks_state_go = AddGameobjectToCanvas("barracks_state_go");
-		/*barracks_state = new C_Image(barracks_state_go);
+		barracks_state = new C_Image(barracks_state_go);
 		next = new C_Button(barracks_state_go, Event(SCENE_PLAY, this, MAIN));
 
 		barracks_state->target = { 0.66f, 0.95f, 0.6f, 0.6f };
@@ -1178,7 +1180,7 @@ void Scene::OnEventStateMachine(GameplayState state)
 		next->target = { 0.60f, 0.45f, 0.3f, 0.3f };
 		next->offset = { -525.f, 200.f };
 		next->section = { 0, 0, 1070, 207 };
-		next->tex_id = App->tex.Load("Assets/textures/button.png");*/
+		next->tex_id = App->tex.Load("Assets/textures/button.png");
 
 		//BUILD BARRACKS -> NEXT STATE
 		current_state = BARRACKS_STATE;
@@ -1208,11 +1210,12 @@ void Scene::OnEventStateMachine(GameplayState state)
 
 		break;
 	case ENEMY:
+	{
 		melee_go->SetInactive();
 		LOG("ENEMY STATE");
 		enemy_go = AddGameobjectToCanvas("enemy_go");
 		enemy = new C_Image(enemy_go);
-		new EnemyMeleeUnit(enemy_go);
+		next = new C_Button(melee_go, Event(SCENE_PLAY, this, MAIN));
 
 		enemy->target = { 0.75f, 0.8f, 0.6f, 0.6f };
 		enemy->offset = { -983.f, -644.f };
@@ -1224,7 +1227,16 @@ void Scene::OnEventStateMachine(GameplayState state)
 		next->section = { 0, 0, 309, 37 };
 		next->tex_id = App->tex.Load("Assets/textures/tuto/not-button.png");
 
+		std::pair<float, float> current_cam_pos_t = Map::F_WorldToMap(current_cam_pos.first, current_cam_pos.second);
+
+
+		enemy_go = AddGameobject("Tutorial Enemy");
+		enemy_go->GetTransform()->SetLocalPos({ current_cam_pos_t.first, current_cam_pos_t.second,0.0f });
+
+		new EnemyMeleeUnit(enemy_go);
+		current_state = ENEMY;
 		break;
+	}
 	case MELEE_ATK:
 		enemy_go->SetInactive();
 		LOG("MELEE ATK STATE");
@@ -1360,6 +1372,7 @@ void Scene::ResetScene()
 	spawnCounter = 0;
 	cooldownSpawn = 5.0f;
 	last_cam_pos = { 0,0 };
+	total_distance = 0;
 
 	map.CleanUp();
 	App->audio->UnloadFx();
