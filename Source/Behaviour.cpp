@@ -34,6 +34,10 @@ Behaviour::Behaviour(Gameobject* go, UnitType t, UnitState starting_state, Compo
 	shoot = false;
 	selectionPanel = nullptr;
 
+	building_gatherer = false;
+	building_melee = false;
+	building_ranged = false;
+
 	current_state = IDLE;
 	audio = new AudioSource(game_object);
 	new AnimatedSprite(this);
@@ -89,13 +93,80 @@ void Behaviour::RecieveEvent(const Event& e)
 	case ON_RIGHT_CLICK: OnRightClick(e.data1.AsVec(), e.data2.AsVec()); break;
 	case DAMAGE: OnDamage(e.data1.AsInt()); break;
 	case IMPULSE: OnGetImpulse(e.data1.AsFloat(),e.data2.AsFloat()); break;
-	case BUILD_GATHERER: BuildGatherer(e.data1.AsFloat(), e.data2.AsFloat()); break;
-	case BUILD_RANGED: BuildRanged(e.data1.AsFloat(), e.data2.AsFloat()); break;
-	case BUILD_MELEE: BuildMelee(e.data1.AsFloat(), e.data2.AsFloat()); break;
+	case BUILD_GATHERER:
+	{
+		building_gatherer = true;
+		gatherer_spawn_vector.x = e.data1.AsFloat();
+		gatherer_spawn_vector.y = e.data2.AsFloat();
+		break;
+	}
+	case BUILD_MELEE:
+	{
+		building_melee = true;
+		melee_spawn_vector.x = e.data1.AsFloat();
+		melee_spawn_vector.y = e.data2.AsFloat();
+		break;
+	}
+	case BUILD_RANGED:
+	{
+		building_ranged = true;
+		ranged_spawn_vector.x = e.data1.AsFloat();
+		ranged_spawn_vector.y = e.data2.AsFloat();
+		break;
+	}
 	case BUILD_SUPER: BuildSuper(e.data1.AsFloat(), e.data2.AsFloat()); break;
 	case DO_UPGRADE: Upgrade(); break;
 	case UPDATE_PATH: UpdatePath(e.data1.AsInt(),e.data2.AsInt()); break;
 	}
+}
+
+void Behaviour::Update() {
+
+	if (building_gatherer)
+	{
+		gatherer_timer += 0.001f;
+		if (gatherer_timer < CREATION_TIME)
+		{
+
+		}
+		else
+		{
+			Event::Push(SPAWN_UNIT, App->scene, GATHERER, gatherer_spawn_vector);
+			building_gatherer = false;
+			gatherer_timer = 0.f;
+
+		}
+	}
+	if (building_melee)
+	{
+		melee_timer += 0.001f;
+		if (melee_timer < CREATION_TIME)
+		{
+
+		}
+		else
+		{
+			Event::Push(SPAWN_UNIT, App->scene, UNIT_MELEE, melee_spawn_vector);
+			building_melee = false;
+			melee_timer = 0.f;
+		}
+	}
+	if (building_ranged)
+	{
+		ranged_timer += 0.001f;
+		if (ranged_timer < CREATION_TIME)
+		{
+		}
+		else
+		{
+			Event::Push(SPAWN_UNIT, App->scene, UNIT_RANGED, ranged_spawn_vector);
+			building_ranged = false;
+			ranged_timer = 0.f;
+		}
+	}
+
+	if (creation_bar_go != nullptr)
+		update_creation_bar();
 }
 
 void Behaviour::Selected()
@@ -111,6 +182,7 @@ void Behaviour::Selected()
 	mini_life_bar.Update(float(current_life) / float(max_life));
 
 	if (bar_go != nullptr) bar_go->SetActive();
+	if (creation_bar_go != nullptr) creation_bar_go->SetActive();
 	if (selectionPanel != nullptr) selectionPanel->SetActive();
 
 	/*if (type == TOWER) {
@@ -138,6 +210,7 @@ void Behaviour::UnSelected()
 	mini_life_bar.Hide();
 
 	if (bar_go != nullptr) bar_go->SetInactive();
+	if (creation_bar_go != nullptr) creation_bar_go->SetInactive();
 	if (selectionPanel != nullptr) selectionPanel->SetInactive();
 
 	/*if (type == TOWER) {

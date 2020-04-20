@@ -11,6 +11,7 @@
 #include <map>
 
 #define RAYCAST_TIME 0.1
+#define CREATION_TIME 1.0
 
 enum UnitType : int
 {
@@ -78,6 +79,7 @@ public:
 
 	void RecieveEvent(const Event& e) override;
 
+	void Update() override;
 	void Selected();
 	void UnSelected();
 	void OnDamage(int damage);
@@ -101,6 +103,8 @@ public:
 	virtual void update_health_ui() {}
 	virtual void CreatePanel() {}
 	virtual void UpdatePanel() {}
+	virtual void create_creation_bar() {}
+	virtual void update_creation_bar() {}
 	virtual void Upgrade() {}
 
 
@@ -128,6 +132,20 @@ protected:
 	bool shoot;
 	Audio_FX deathFX;
 
+	//Bulding Units Components
+
+	float gatherer_timer = 0.0f;
+	vec gatherer_spawn_vector;
+	bool building_gatherer;
+
+	float melee_timer = 0.0f;
+	vec melee_spawn_vector;
+	bool building_melee;
+
+	float ranged_timer = 0.0f;
+	vec ranged_spawn_vector;
+	bool building_ranged;
+
 	// Complementary components
 	AudioSource* audio;
 	Sprite* selection_highlight;
@@ -149,6 +167,7 @@ protected:
 	int bar_text_id;
 	Gameobject* selectionPanel = nullptr;
 	Gameobject* bar_go = nullptr;
+	Gameobject* creation_bar_go = nullptr;
 	C_Image* bar;
 	C_Image* portrait;
 	C_Text* text;

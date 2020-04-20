@@ -14,10 +14,12 @@ public:
 	void AfterDamageAction() override;
 
 	void create_bar() override;
-	void update_health_ui();
+	void update_health_ui() override;
 	void update_upgrades_ui();
 	void CreatePanel() override;
 	void UpdatePanel() override;
+	void create_creation_bar() override;
+	void update_creation_bar() override;
 
 public:
 	static Gameobject* baseCenter;
@@ -40,6 +42,23 @@ protected:
 	//C_Text* melee_buildNum;
 	//C_Text* ranged_buildNum;
 	//C_Text* super_buildNum;
+
+	// Creation Bars
+
+	C_Image* creation_bar;
+	C_Image* gatherer_icon;
+	C_Image* melee_icon;
+	C_Image* ranged_icon;
+	C_Image* gahterer_creation_bar;
+	C_Image* gatherer_creation_bar_completed;
+	C_Image* gatherer_creation_bar_boarder;
+	C_Image* melee_creation_bar;
+	C_Image* melee_creation_bar_completed;
+	C_Image* melee_creation_bar_boarder;
+	C_Image* ranged_creation_bar;
+	C_Image* ranged_creation_bar_completed;
+	C_Image* ranged_creation_bar_boarder;
+
 	
 };
 

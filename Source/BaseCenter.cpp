@@ -29,6 +29,8 @@ Base_Center::Base_Center(Gameobject* go) : Behaviour(go, BASE_CENTER, FULL_LIFE,
 	bar_go->SetInactive();
 	CreatePanel();
 	selectionPanel->SetInactive();
+	create_creation_bar();
+	creation_bar_go->SetInactive();
 
 	if (t)
 	{
@@ -205,5 +207,98 @@ void Base_Center::update_health_ui() {
 void Base_Center::update_upgrades_ui() {
 
 	upgrades->section = { 16 + 36 * (bc_lvl - 1), 806, 33, 33 };
+
+}
+
+void Base_Center::create_creation_bar() {
+
+	bar_text_id = App->tex.Load("Assets/textures/Iconos_square_up.png");
+
+	creation_bar_go = App->scene->AddGameobjectToCanvas("Creation Bar");
+
+	creation_bar = new C_Image(creation_bar_go);
+	creation_bar->target = { 0.99f, 0.55f, 0.6f, 0.2f };
+	creation_bar->offset = { -499.0f, -599.0f };
+	creation_bar->section = { 527, 35, 499, 599 };
+	creation_bar->tex_id = bar_text_id;
+
+	gatherer_icon = new C_Image(creation_bar_go);
+	gatherer_icon->target = { 0.8f, 0.44f, 1.f, 1.f };
+	gatherer_icon->offset = { -48.f, -35.f };
+	gatherer_icon->section = { 75, 458, 48, 35 };
+	gatherer_icon->tex_id = bar_text_id;
+
+	melee_icon = new C_Image(creation_bar_go);
+	melee_icon->target = { 0.804f, 0.49f, 0.8f, 0.8f };
+	melee_icon->offset = { -48.f, -35.f };
+	melee_icon->section = { 22, 463, 48, 35 };
+	melee_icon->tex_id = bar_text_id;
+
+	/*
+	ranged_icon = new C_Image(creation_bar_go);
+	ranged_icon->target = { 0.804f, 0.54f, 0.8f, 0.8f };
+	ranged_icon->offset = { -48.f, -35.f };
+	ranged_icon->section = { 22, 463, 48, 35 };
+	ranged_icon->tex_id = bar_text_id;
+	*/
+
+	gahterer_creation_bar = new C_Image(creation_bar_go);
+	gahterer_creation_bar->target = { 0.97f, 0.42f,  0.9f, 0.4f };
+	gahterer_creation_bar->offset = { -220.0f, -20.0f };
+	gahterer_creation_bar->section = { 39, 696, 220, 20 };
+	gahterer_creation_bar->tex_id = bar_text_id;
+
+	gatherer_creation_bar_completed = new C_Image(creation_bar_go);
+	gatherer_creation_bar_completed->offset = { -220.0f, -20.0f };
+	gatherer_creation_bar_completed->section = { 39, 719, 220, 20 };
+	gatherer_creation_bar_completed->tex_id = bar_text_id;
+
+	gatherer_creation_bar_boarder = new C_Image(creation_bar_go);
+	gatherer_creation_bar_boarder->target = { 0.97f, 0.42f, 0.9f, 0.4f };
+	gatherer_creation_bar_boarder->offset = { -220.0f, -20.0f };
+	gatherer_creation_bar_boarder->section = { 39, 744, 220, 20 };
+	gatherer_creation_bar_boarder->tex_id = bar_text_id;
+
+	melee_creation_bar = new C_Image(creation_bar_go);
+	melee_creation_bar->target = { 0.97f, 0.47f, 0.9f, 0.4f };
+	melee_creation_bar->offset = { -220.0f, -20.0f };
+	melee_creation_bar->section = { 39, 696, 220, 20 };
+	melee_creation_bar->tex_id = bar_text_id;
+
+	melee_creation_bar_completed = new C_Image(creation_bar_go);
+	melee_creation_bar_completed->offset = { -220.0f, -20.0f };
+	melee_creation_bar_completed->section = { 39, 719, 220, 20 };
+	melee_creation_bar_completed->tex_id = bar_text_id;
+
+	melee_creation_bar_boarder = new C_Image(creation_bar_go);
+	melee_creation_bar_boarder->target = { 0.97f, 0.47f, 0.9f, 0.4f };
+	melee_creation_bar_boarder->offset = { -220.0f, -20.0f };
+	melee_creation_bar_boarder->section = { 39, 744, 220, 20 };
+	melee_creation_bar_boarder->tex_id = bar_text_id;
+
+	ranged_creation_bar = new C_Image(creation_bar_go);
+	ranged_creation_bar->target = { 0.97f, 0.52f, 0.9f, 0.4f };
+	ranged_creation_bar->offset = { -220.0f, -20.0f };
+	ranged_creation_bar->section = { 39, 696, 220, 20 };
+	ranged_creation_bar->tex_id = bar_text_id;
+
+	ranged_creation_bar_completed = new C_Image(creation_bar_go);
+	ranged_creation_bar_completed->offset = { -220.0f, -20.0f };
+	ranged_creation_bar_completed->section = { 39, 719, 220, 20 };
+	ranged_creation_bar_completed->tex_id = bar_text_id;
+
+	ranged_creation_bar_boarder = new C_Image(creation_bar_go);
+	ranged_creation_bar_boarder->target = { 0.97f, 0.52f, 0.9f, 0.4f };
+	ranged_creation_bar_boarder->offset = { -220.0f, -20.0f };
+	ranged_creation_bar_boarder->section = { 39, 744, 220, 20 };
+	ranged_creation_bar_boarder->tex_id = bar_text_id;
+	
+}
+
+void Base_Center::update_creation_bar() {
+
+	gatherer_creation_bar_completed->target = { (0.97f) - (0.155f) * (1.0f - float(gatherer_timer) / float(CREATION_TIME)), 0.42f, 0.9f * (float(gatherer_timer) / float(CREATION_TIME)), 0.4f };
+	melee_creation_bar_completed->target = { (0.97f) - (0.155f) * (1.0f - float(melee_timer) / float(CREATION_TIME)), 0.47f, 0.9f * (float(melee_timer) / float(CREATION_TIME)), 0.4f };
+	ranged_creation_bar_completed->target = { 0.97f - (0.155f) * (1.0f - float(ranged_timer / CREATION_TIME)), 0.54f, 0.9f * (float(ranged_timer) / float(CREATION_TIME)), 0.4f };
 
 }
