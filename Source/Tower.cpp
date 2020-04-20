@@ -89,6 +89,7 @@ void Tower::Update()
 
 		if (ms_count < atkDelay) ms_count += App->time.GetGameDeltaTime();
 		
+		//Cast ray
 		if (shoot)
 		{
 			rayCastTimer += App->time.GetGameDeltaTime();
@@ -101,6 +102,19 @@ void Tower::Update()
 				shoot = false;
 				rayCastTimer = 0;
 			}
+		}
+
+		//Draw vision and attack range
+		if (drawRanges)
+		{	
+			vec pos = game_object->GetTransform()->GetGlobalPosition();
+			std::pair<float, float> drawPos = Map::F_MapToWorld(pos.x, pos.y, pos.z);
+			drawPos.first += 30.0f;
+			drawPos.second += 30.0f;
+			visionRange = { vision_range*23, vision_range*23 };
+			atkRange = { attack_range*23, attack_range*23 };
+			App->render->DrawCircle(drawPos, visionRange, { 10, 156, 18, 255 }, FRONT_SCENE, true);//Vision
+			App->render->DrawCircle(drawPos, atkRange, { 255, 0, 0, 255 }, FRONT_SCENE, true);//Attack
 		}
 	}
 }

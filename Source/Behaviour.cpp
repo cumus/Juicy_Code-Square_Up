@@ -33,6 +33,7 @@ Behaviour::Behaviour(Gameobject* go, UnitType t, UnitState starting_state, Compo
 	rayCastTimer = 0;
 	shoot = false;
 	selectionPanel = nullptr;
+	drawRanges = false;
 
 	building_gatherer = false;
 	building_melee = false;
@@ -117,6 +118,7 @@ void Behaviour::RecieveEvent(const Event& e)
 	case BUILD_SUPER: BuildSuper(e.data1.AsFloat(), e.data2.AsFloat()); break;
 	case DO_UPGRADE: Upgrade(); break;
 	case UPDATE_PATH: UpdatePath(e.data1.AsInt(),e.data2.AsInt()); break;
+	case DRAW_RANGE: drawRanges = !drawRanges; break;
 	}
 }
 
@@ -430,6 +432,7 @@ B_Unit::B_Unit(Gameobject* go, UnitType t, UnitState s, ComponentType comp_type)
 	msCount = 0;
 	arriveDestination = false;
 	current_state = IDLE;
+	drawRanges = false;
 
 	//Info for ranged units constructor
 	/*vec pos = game_object->GetTransform()->GetGlobalPosition();
@@ -719,6 +722,19 @@ void B_Unit::Update()
 				shoot = false;
 				rayCastTimer = 0;
 			}
+		}
+
+		//Draw vision and attack range
+		if (drawRanges)
+		{
+			vec pos = game_object->GetTransform()->GetGlobalPosition();
+			std::pair<float, float> localPos = Map::F_MapToWorld(pos.x, pos.y, pos.z);
+			localPos.first += 30.0f;
+			localPos.second += 30.0f;
+			visionRange = { vision_range*23, vision_range*23 };
+			atkRange ={ attack_range*23, attack_range*23 };
+			App->render->DrawCircle(localPos,visionRange, { 10, 156, 18, 255 }, FRONT_SCENE, true);//Vision
+			App->render->DrawCircle(localPos,atkRange, { 255, 0, 0, 255 }, FRONT_SCENE, true);//Attack
 		}
 	}
 }

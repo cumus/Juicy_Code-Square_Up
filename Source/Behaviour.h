@@ -129,8 +129,10 @@ protected:
 	
 	float attack_range, vision_range,dieDelay;
 	float rayCastTimer;
-	bool shoot;
+	bool shoot,drawRanges;
 	Audio_FX deathFX;
+	std::pair<float, float> visionRange;
+	std::pair<float, float> atkRange;
 
 	//Bulding Units Components
 

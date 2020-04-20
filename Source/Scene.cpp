@@ -1815,6 +1815,13 @@ void Scene::GodMode()
 	if (App->input->GetKey(SDL_SCANCODE_F7) == KEY_DOWN)
 		Event::Push(TOGGLE_FULLSCREEN, App->win);
 
+	// F8: Toggle draw unit vision and attack range
+	if (App->input->GetKey(SDL_SCANCODE_F9) == KEY_DOWN)
+	{
+		for (std::map<double, Behaviour*>::iterator it = Behaviour::b_map.begin(); it != Behaviour::b_map.end(); ++it)
+			Event::Push(DRAW_RANGE, it->second);
+	}
+
 	// SPACE: Swap map orientation
 	if (App->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN) Map::SwapMapType();
 

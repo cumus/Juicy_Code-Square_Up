@@ -634,11 +634,11 @@ void Render::DrawLine(const std::pair<int, int> a, const std::pair<int, int> b, 
 	layers[layer][layer < Layer::HUD ? data.rect.y + data.rect.h : 0].push_back(data);
 }
 
-void Render::DrawCircle(const SDL_Rect rect, const SDL_Color color, Layer layer, bool use_camera)
+void Render::DrawCircle(const std::pair<int, int> a, const std::pair<int, int> b, const SDL_Color color, Layer layer, bool use_camera)
 {
 	RenderData data(RenderData::CIRCLE);
 	data.texture = nullptr;
-	data.rect = rect;
+	data.rect = { a.first, a.second, b.first, b.second };
 	data.extra.color = color;
 
 	if (use_camera)

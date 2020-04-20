@@ -76,7 +76,7 @@ public:
 	void DrawQuad(const SDL_Rect rect, const SDL_Color color = { 0, 0, 0, 255 }, bool filled = true, Layer layer = SCENE, bool use_camera = true);
 	void DrawQuadNormCoords(const RectF rect, const SDL_Color color = { 0, 0, 0, 255 }, bool filled = true, Layer layer = SCENE);
 	void DrawLine(const std::pair<int,int> a, const std::pair<int, int> b, const SDL_Color color = { 0, 0, 0, 255 }, Layer layer = SCENE, bool use_camera = true);
-	void DrawCircle(const SDL_Rect rect, const SDL_Color color = { 0, 0, 0, 255 }, Layer layer = SCENE, bool use_camera = true);
+	void DrawCircle(const std::pair<int, int> a, const std::pair<int, int> b, const SDL_Color color = { 0, 0, 0, 255 }, Layer layer = SCENE, bool use_camera = true);
 
 	// Set background color
 	void SetBackgroundColor(SDL_Color color);
