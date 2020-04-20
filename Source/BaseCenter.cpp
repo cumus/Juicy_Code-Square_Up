@@ -299,6 +299,6 @@ void Base_Center::update_creation_bar() {
 
 	gatherer_creation_bar_completed->target = { (0.97f) - (0.155f) * (1.0f - float(gatherer_timer) / float(CREATION_TIME)), 0.42f, 0.9f * (float(gatherer_timer) / float(CREATION_TIME)), 0.4f };
 	melee_creation_bar_completed->target = { (0.97f) - (0.155f) * (1.0f - float(melee_timer) / float(CREATION_TIME)), 0.47f, 0.9f * (float(melee_timer) / float(CREATION_TIME)), 0.4f };
-	ranged_creation_bar_completed->target = { 0.97f - (0.155f) * (1.0f - float(ranged_timer / CREATION_TIME)), 0.54f, 0.9f * (float(ranged_timer) / float(CREATION_TIME)), 0.4f };
+	ranged_creation_bar_completed->target = { 0.97f - (0.155f) * (1.0f - float(ranged_timer / CREATION_TIME)), 0.52f, 0.9f * (float(ranged_timer) / float(CREATION_TIME)), 0.4f };
 
 }
