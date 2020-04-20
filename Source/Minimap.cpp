@@ -50,6 +50,7 @@ void Minimap::PostUpdate()
 	ComputeOutputRect(float(sections[MINIMAP].w), float(sections[MINIMAP].h));
 
 	// Minimap
+	App->render->DrawQuad(output, { 0, 0, 0, 255 }, true, HUD, false);
 	std::pair<float, float> scale = { float(output.w) / float(sections[MINIMAP].w), float(output.h) / float(sections[MINIMAP].h) };
 	App->render->Blit_Scale(minimap_texture, output.x, output.y, scale.first, scale.second, nullptr, HUD, false);
 
