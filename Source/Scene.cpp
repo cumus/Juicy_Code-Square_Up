@@ -175,6 +175,10 @@ void Scene::RecieveEvent(const Event& e)
 	case SET_INACTIVE:
 		not_go->SetInactive();
 		break;
+	case RESUME:
+		pause_background_go->SetInactive();
+		paused_scene = false;
+		break;
 	/*case NEW_BEHAVIOUR:
 
 		switch (e.type)
@@ -644,6 +648,11 @@ void Scene::UpdatePause()
 			resume_fx->offset = { -525.f, -100.f };
 			resume_fx->section = { 0, 0, 1070, 207 };
 
+			C_Button* resume_inactive = new C_Button(resume_go, Event(RESUME, this, MAIN));
+			resume_inactive->target = { 0.51f, 0.3f, 0.3f, 0.3f };
+			resume_inactive->offset = { -525.f, -100.f };
+			resume_inactive->section = { 0, 0, 1070, 207 };
+
 			//------------------------- FULLSCREEN -----------------------------------------
 
 			Gameobject* fullscreen_go = AddGameobject("resume Button", pause_background_go);
@@ -1035,6 +1044,14 @@ void Scene::UpdateStateMachine()
 		}
 	case TOWER_ATK:
 
+
+		break;
+
+	case SPAWNER_STATE:
+
+		if (player_stats[UNITS_KILLED] >= 200) {
+			Event::Push(GAMEPLAY, this, WIN);
+		}
 
 		break;
 
@@ -1450,6 +1467,16 @@ void Scene::OnEventStateMachine(GameplayState state)
 		not_inactive->offset = { -309.f, 37.f };
 		not_inactive->section = { 0, 0, 309, 37 };
 
+		break;
+	case SPAWNER_STATE:
+		not_go->SetInactive();
+		LOG("SPAWNER STATE");
+
+		SpawnBehaviour(SPAWNER, spawner_pos1);
+		SpawnBehaviour(SPAWNER, spawner_pos2);
+		SpawnBehaviour(SPAWNER, spawner_pos3);
+
+		current_state = SPAWNER_STATE;
 		break;
 
 	case WIN:

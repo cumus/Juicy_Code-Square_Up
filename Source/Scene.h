@@ -46,6 +46,8 @@ enum GameplayState : int
 	BASE_CENTER_STATE,
 	BARRACKS_STATE,
 
+	SPAWNER_STATE,
+
 	WIN,
 	LOSE
 };
@@ -208,6 +210,10 @@ private:
 	std::pair<float, float> last_cam_pos;
 	std::pair<float, float> current_cam_pos;
 
+	vec spawner_pos1 = { 300.f, 200.f };
+	vec spawner_pos2 = { 3000.f, 2000.f };
+	vec spawner_pos3 = { -3500.f, 4500.f };
+
 	//-------Gameobjects--------
 
 	//Gameobject* lore_go;
@@ -229,6 +235,7 @@ private:
 	//Gameobject* tower_state_go;
 	//Gameobject* tower_atk_go;
 	Gameobject* not_go;
+	Gameobject* spawner_go;
 
 	//------Images/Buttons------
 
