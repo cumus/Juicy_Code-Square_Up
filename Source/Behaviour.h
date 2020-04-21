@@ -120,6 +120,7 @@ public:
 	static std::map<double, Behaviour*> b_map;
 	UnitState current_state;
 	int max_life, current_life, damage;
+	std::vector<iPoint> tilesVisited;
 
 protected:	
 
@@ -214,7 +215,6 @@ protected:
 	bool arriveDestination;
 	std::pair<float, float> atkObj;
 	std::pair<float, float> shootPos;
-	std::vector<iPoint> tilesVisited;
 };
 
 #endif // __BEHAVIOUR_H_

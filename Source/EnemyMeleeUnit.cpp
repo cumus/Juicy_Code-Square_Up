@@ -43,13 +43,17 @@ void EnemyMeleeUnit::UpdatePath(int x, int y)
 		Transform* t = game_object->GetTransform();
 		vec pos = t->GetGlobalPosition();
 		path = App->pathfinding.CreatePath({ int(pos.x), int(pos.y) }, { x, y }, GetID());
-
-		for (std::vector<iPoint>::const_iterator it = tilesVisited.cbegin(); it != tilesVisited.cend(); ++it)
+		
+		if (!tilesVisited.empty())
 		{
-			if (PathfindingManager::unitWalkability[nextTile.x][nextTile.y] != 0)
+			for (std::vector<iPoint>::const_iterator it = tilesVisited.cbegin(); it != tilesVisited.cend(); ++it)
 			{
-				PathfindingManager::unitWalkability[nextTile.x][nextTile.y] = 0;
+				if (PathfindingManager::unitWalkability[it->x][it->y] != 0)
+				{
+					PathfindingManager::unitWalkability[it->x][it->y] = 0;
+				}
 			}
+			tilesVisited.clear();
 		}
 	}
 }

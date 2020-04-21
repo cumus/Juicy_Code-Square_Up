@@ -319,58 +319,69 @@ void Behaviour::OnKill(const UnitType type)
 	if (bar_go)
 		bar_go->Destroy(dieDelay);
 
-	switch (type) {
-	case UNIT_MELEE:
+	switch (type) 
 	{
-		Event::Push(UPDATE_STAT, App->scene, CURRENT_MELEE_UNITS, -1);
-		Event::Push(UPDATE_STAT, App->scene, UNITS_LOST, 1);
-		break;
+		case UNIT_MELEE:
+		{
+			Event::Push(UPDATE_STAT, App->scene, CURRENT_MELEE_UNITS, -1);
+			Event::Push(UPDATE_STAT, App->scene, UNITS_LOST, 1);
+			break;
+		}
+		case UNIT_RANGED:
+		{
+			Event::Push(UPDATE_STAT, App->scene, CURRENT_RANGED_UNITS, -1);
+			Event::Push(UPDATE_STAT, App->scene, UNITS_LOST, 1);
+			break;
+		}
+		case GATHERER:
+		{
+			Event::Push(UPDATE_STAT, App->scene, CURRENT_GATHERER_UNITS, -1);
+			Event::Push(UPDATE_STAT, App->scene, UNITS_LOST, 1);
+			break;
+		}
+		case ENEMY_MELEE:
+		{
+			Event::Push(UPDATE_STAT, App->scene, CURRENT_MOB_DROP, 5);
+			Event::Push(UPDATE_STAT, App->scene, MOB_DROP_COLLECTED, 5);
+			Event::Push(UPDATE_STAT, App->scene, UNITS_KILLED, 1);
+			break;
+		}
+		case ENEMY_RANGED:
+		{
+			Event::Push(UPDATE_STAT, App->scene, CURRENT_MOB_DROP, 10);
+			Event::Push(UPDATE_STAT, App->scene, MOB_DROP_COLLECTED, 10);
+			Event::Push(UPDATE_STAT, App->scene, UNITS_KILLED, 1);
+			break;
+		}
+		case ENEMY_SPECIAL:
+		{
+			Event::Push(UPDATE_STAT, App->scene, CURRENT_MOB_DROP, 15);
+			Event::Push(UPDATE_STAT, App->scene, MOB_DROP_COLLECTED, 15);
+			Event::Push(UPDATE_STAT, App->scene, UNITS_KILLED, 1);
+			break;
+		}
+		case ENEMY_SUPER:
+		{
+			Event::Push(UPDATE_STAT, App->scene, CURRENT_MOB_DROP, 20);
+			Event::Push(UPDATE_STAT, App->scene, MOB_DROP_COLLECTED, 20);
+			Event::Push(UPDATE_STAT, App->scene, UNITS_KILLED, 1);
+			break;
+		}
+		case BASE_CENTER:
+		{
+			Event::Push(GAMEPLAY, App->scene, LOSE);
+			break;
+		}
 	}
-	case UNIT_RANGED:
+	if(!tilesVisited.empty())
 	{
-		Event::Push(UPDATE_STAT, App->scene, CURRENT_RANGED_UNITS, -1);
-		Event::Push(UPDATE_STAT, App->scene, UNITS_LOST, 1);
-		break;
-	}
-	case GATHERER:
-	{
-		Event::Push(UPDATE_STAT, App->scene, CURRENT_GATHERER_UNITS, -1);
-		Event::Push(UPDATE_STAT, App->scene, UNITS_LOST, 1);
-		break;
-	}
-	case ENEMY_MELEE:
-	{
-		Event::Push(UPDATE_STAT, App->scene, CURRENT_MOB_DROP, 5);
-		Event::Push(UPDATE_STAT, App->scene, MOB_DROP_COLLECTED, 5);
-		Event::Push(UPDATE_STAT, App->scene, UNITS_KILLED, 1);
-		break;
-	}
-	case ENEMY_RANGED:
-	{
-		Event::Push(UPDATE_STAT, App->scene, CURRENT_MOB_DROP, 10);
-		Event::Push(UPDATE_STAT, App->scene, MOB_DROP_COLLECTED, 10);
-		Event::Push(UPDATE_STAT, App->scene, UNITS_KILLED, 1);
-		break;
-	}
-	case ENEMY_SPECIAL:
-	{
-		Event::Push(UPDATE_STAT, App->scene, CURRENT_MOB_DROP, 15);
-		Event::Push(UPDATE_STAT, App->scene, MOB_DROP_COLLECTED, 15);
-		Event::Push(UPDATE_STAT, App->scene, UNITS_KILLED, 1);
-		break;
-	}
-	case ENEMY_SUPER:
-	{
-		Event::Push(UPDATE_STAT, App->scene, CURRENT_MOB_DROP, 20);
-		Event::Push(UPDATE_STAT, App->scene, MOB_DROP_COLLECTED, 20);
-		Event::Push(UPDATE_STAT, App->scene, UNITS_KILLED, 1);
-		break;
-	}
-	case BASE_CENTER:
-	{
-		Event::Push(GAMEPLAY, App->scene, LOSE);
-		break;
-	}
+		for (std::vector<iPoint>::const_iterator it = tilesVisited.cbegin(); it != tilesVisited.cend(); ++it)
+		{
+			if (PathfindingManager::unitWalkability[it->x][it->y] != 0)
+			{
+				PathfindingManager::unitWalkability[it->x][it->y] = 0;
+			}
+		}
 	}
 }
 
@@ -847,12 +858,16 @@ void B_Unit::OnRightClick(vec posClick, vec modPos)
 				}
 			}
 			path = App->pathfinding.CreatePath({ int(pos.x), int(pos.y) }, { int(posClick.x-1), int(posClick.y-1) }, GetID());
-			for (std::vector<iPoint>::const_iterator it = tilesVisited.cbegin(); it != tilesVisited.cend(); ++it)
+			if (!tilesVisited.empty())
 			{
-				if (PathfindingManager::unitWalkability[nextTile.x][nextTile.y] != 0)
+				for (std::vector<iPoint>::const_iterator it = tilesVisited.cbegin(); it != tilesVisited.cend(); ++it)
 				{
-					PathfindingManager::unitWalkability[nextTile.x][nextTile.y] = 0;
+					if (PathfindingManager::unitWalkability[it->x][it->y] != 0)
+					{
+						PathfindingManager::unitWalkability[it->x][it->y] = 0;
+					}
 				}
+				tilesVisited.clear();
 			}
 		}
 		else
@@ -860,14 +875,17 @@ void B_Unit::OnRightClick(vec posClick, vec modPos)
 			if (modPos.x != -1 && modPos.y != -1) path = App->pathfinding.CreatePath({ int(pos.x), int(pos.y) }, { int(modPos.x), int(modPos.y) }, GetID());
 			else path = App->pathfinding.CreatePath({ int(pos.x), int(pos.y) }, { int(posClick.x), int(posClick.y) }, GetID());
 
-			for (std::vector<iPoint>::const_iterator it = tilesVisited.cbegin(); it != tilesVisited.cend(); ++it)
+			if (!tilesVisited.empty())
 			{
-				if (PathfindingManager::unitWalkability[nextTile.x][nextTile.y] != 0)
+				for (std::vector<iPoint>::const_iterator it = tilesVisited.cbegin(); it != tilesVisited.cend(); ++it)
 				{
-					PathfindingManager::unitWalkability[nextTile.x][nextTile.y] = 0;
+					if (PathfindingManager::unitWalkability[it->x][it->y] != 0)
+					{
+						PathfindingManager::unitWalkability[it->x][it->y] = 0;
+					}
 				}
+				tilesVisited.clear();
 			}
-
 			attackObjective = nullptr;
 		}
 	}
