@@ -326,14 +326,29 @@ void Scene::LoadMenuScene()
 	
 	C_Button* start = new C_Button(start_go, Event(SCENE_CHANGE, this, MAIN, 2.f));
 	start->target = { 0.5f, 0.5f, 0.5f, 0.5f };
-	start->offset = { -525.f, -100.f };
+	start->offset = { -525.f, -200.f };
 	start->section = { 0, 0, 1070, 207 };
 	start->tex_id = App->tex.Load("Assets/textures/play.png");
 
 	C_Button* start_fx = new C_Button(start_go, Event(PLAY_FX, App->audio, int(SELECT), 0));
 	start_fx->target = { 0.5f, 0.5f, 0.5f, 0.5f };
-	start_fx->offset = { -525.f, -100.f };
+	start_fx->offset = { -525.f, -200.f };
 	start_fx->section = { 0, 0, 1070, 207 };
+
+	//------------------------- FULLSCREEN --------------------------------------
+
+	Gameobject* fullscreen_go = AddGameobjectToCanvas("Fullscreen Button");
+
+	C_Button* fullscreen = new C_Button(fullscreen_go, Event(TOGGLE_FULLSCREEN, this, App->win));
+	fullscreen->target = { 0.5f, 0.5f, 0.5f, 0.5f };
+	fullscreen->offset = { -525.f, 100.f };
+	fullscreen->section = { 0, 0, 1070, 207 };
+	fullscreen->tex_id = App->tex.Load("Assets/textures/fullscreen-menu.png");
+
+	C_Button* fullscreen_fx = new C_Button(start_go, Event(PLAY_FX, App->audio, int(SELECT), 0));
+	fullscreen_fx->target = { 0.5f, 0.5f, 0.5f, 0.5f };
+	fullscreen_fx->offset = { -525.f, 100.f };
+	fullscreen_fx->section = { 0, 0, 1070, 207 };
 
 	//------------------------- QUIT --------------------------------------
 
@@ -341,13 +356,13 @@ void Scene::LoadMenuScene()
 
 	C_Button* quit = new C_Button(quit_go, Event(REQUEST_QUIT, App));
 	quit->target = { 0.5f, 0.5f, 0.5f, 0.5f };
-	quit->offset = { -525.f, 200.f };
+	quit->offset = { -525.f, 400.f };
 	quit->section = { 0, 0, 1070, 207 };
 	quit->tex_id = App->tex.Load("Assets/textures/quit.png");
 
 	C_Button* quit_fx = new C_Button(quit_go, Event(PLAY_FX, App->audio, int(SELECT), 0));
 	quit_fx->target = { 0.5f, 0.5f, 0.5f, 0.5f };
-	quit_fx->offset = { -525.f, 200.f };
+	quit_fx->offset = { -525.f, 400.f };
 	quit_fx->section = { 0, 0, 1070, 207 };
 }
 
