@@ -533,7 +533,7 @@ void Scene::LoadMainHUD()
 	text_edge->target = { 0.1f, 0.1f, 1.f, 1.f };
 
 	Gameobject* resources_value_go = AddGameobject("Mob Drop Value", resource_counter_go);
-	hud_texts[CURRENT_EDGE] = new C_Text(resources_go, "100");
+	hud_texts[CURRENT_EDGE] = new C_Text(resources_go, "0");
 	hud_texts[CURRENT_EDGE]->target = { 0.1f, 0.4f, 1.f, 1.f };
 
 	//MobDrop
@@ -658,7 +658,7 @@ void Scene::UpdatePause()
 
 			Gameobject* fullscreen_go = AddGameobject("resume Button", pause_background_go);
 
-			C_Button* fullscreen = new C_Button(fullscreen_go, Event(TOGGLE_FULLSCREEN, this, App));
+			C_Button* fullscreen = new C_Button(fullscreen_go, Event(TOGGLE_FULLSCREEN, this, App->win));
 			fullscreen->target = { 0.51f, 0.3f, 0.3f, 0.3f };
 			fullscreen->offset = { -525.f, 200.f };
 			fullscreen->section = { 0, 0, 1070, 207 };
@@ -823,7 +823,7 @@ void Scene::UpdateSelection()
 		for (std::map<double, Behaviour*>::iterator it = Behaviour::b_map.begin(); it != Behaviour::b_map.end(); ++it)
 		{
 			if (it->second->GetType() == UNIT_MELEE || it->second->GetType() == GATHERER || it->second->GetType() == UNIT_RANGED
-				|| it->second->GetType() == BASE_CENTER || it->second->GetType() == TOWER || it->second->GetType() == BARRACKS || it->second->GetType() == UNIT_SPECIAL
+				|| it->second->GetType() == BASE_CENTER || it->second->GetType() == TOWER || it->second->GetType() == BARRACKS 
 				|| it->second->GetType() == UNIT_SUPER)
 			{
 				std::pair<int, int> position = Map::WorldToTileBase(float(x + cam.x), float(y + cam.y));
@@ -1563,28 +1563,65 @@ Transform* Scene::SpawnBehaviour(int type, vec pos)
 	{
 	case GATHERER:
 	{
-		behaviour = AddGameobject("Gatherer");
-		new Gatherer(behaviour);
-		UpdateStat(CURRENT_GATHERER_UNITS, 1);
-		UpdateStat(TOTAL_GATHERER_UNITS, 1);
+		//LOG("Edge %d", player_stats[CURRENT_EDGE]);
+		if ((player_stats[CURRENT_EDGE] - GATHERER_COST) >= 0)
+		{
+			behaviour = AddGameobject("Gatherer");
+			new Gatherer(behaviour);
+			UpdateStat(CURRENT_GATHERER_UNITS, 1);
+			UpdateStat(TOTAL_GATHERER_UNITS, 1);
+			UpdateStat(CURRENT_EDGE,-GATHERER_COST);
+		}
+		else
+		{
+			LOG("Not enough resources! :(");
+		}
 		break;
 	}
 	case UNIT_MELEE:
 	{
-		behaviour = AddGameobject("Unit melee");
-		new MeleeUnit(behaviour);
-		UpdateStat(CURRENT_MELEE_UNITS, 1);
-		UpdateStat(TOTAL_MELEE_UNITS, 1);
+		if ((player_stats[CURRENT_EDGE] - MELEE_COST) >= 0)
+		{
+			behaviour = AddGameobject("Unit melee");
+			new MeleeUnit(behaviour);
+			UpdateStat(CURRENT_MELEE_UNITS, 1);
+			UpdateStat(TOTAL_MELEE_UNITS, 1);
+			UpdateStat(CURRENT_EDGE, -MELEE_COST);
+		}
+		else
+		{
+			LOG("Not enough resources! :(");
+		}
 		break;
 	}
 	case UNIT_RANGED: 
-		behaviour = AddGameobject("Ranged melee");
-		new RangedUnit(behaviour);
-		UpdateStat(CURRENT_RANGED_UNITS, 1);
-		UpdateStat(TOTAL_RANGED_UNITS, 1);
+		if ((player_stats[CURRENT_EDGE] - RANGED_COST) >= 0)
+		{
+			behaviour = AddGameobject("Ranged unit");
+			new RangedUnit(behaviour);
+			UpdateStat(CURRENT_RANGED_UNITS, 1);
+			UpdateStat(TOTAL_RANGED_UNITS, 1);
+			UpdateStat(CURRENT_EDGE, -RANGED_COST);
+		}
+		else
+		{
+			LOG("Not enough resources! :(");
+		}
 		break;		
-	case UNIT_SUPER: break;
-	case UNIT_SPECIAL: break;
+	case UNIT_SUPER: 
+		if ((player_stats[CURRENT_EDGE] - SUPER_COST) >= 0)
+		{
+			behaviour = AddGameobject("Super unit");
+			new RangedUnit(behaviour);
+			UpdateStat(CURRENT_RANGED_UNITS, 1);
+			UpdateStat(TOTAL_RANGED_UNITS, 1);
+			UpdateStat(CURRENT_EDGE, - SUPER_COST);
+		}
+		else
+		{
+			LOG("Not enough resources! :(");
+		}
+		break;
 	case ENEMY_MELEE:
 	{
 		behaviour = AddGameobject("Enemy Melee");
@@ -1617,28 +1654,45 @@ Transform* Scene::SpawnBehaviour(int type, vec pos)
 	}
 	case TOWER:
 	{
-		behaviour = AddGameobject("Tower");
-		new Tower(behaviour);
-		UpdateStat(CURRENT_TOWERS, 1);
-		UpdateStat(TOTAL_TOWERS, 1);
-		//Update paths
-		for (std::map<double, Behaviour*>::iterator it = Behaviour::b_map.begin(); it != Behaviour::b_map.end(); ++it)
-			Event::Push(UPDATE_PATH, it->second, pos.x - 1, pos.y - 1);
+		if ((player_stats[CURRENT_EDGE] - TOWER_COST) >= 0)
+		{
+			behaviour = AddGameobject("Tower");
+			new Tower(behaviour);
+			UpdateStat(CURRENT_TOWERS, 1);
+			UpdateStat(TOTAL_TOWERS, 1);
+			UpdateStat(CURRENT_EDGE, -TOWER_COST);
+			//Update paths
+			for (std::map<double, Behaviour*>::iterator it = Behaviour::b_map.begin(); it != Behaviour::b_map.end(); ++it)
+				Event::Push(UPDATE_PATH, it->second, pos.x - 1, pos.y - 1);
+		}
+		else
+		{
+			LOG("Not enough resources! :(");
+		}
 		break;
 	}
 	case WALL: break;
 	case BARRACKS:
-	{				
-		behaviour = AddGameobject("Barracks");
-		behaviour->GetTransform()->SetLocalPos(pos);
-		behaviour->GetTransform()->ScaleX(6.0f);
-		behaviour->GetTransform()->ScaleY(6.0f);
-		new Barracks(behaviour);
-		UpdateStat(CURRENT_BARRACKS, 1);
-		UpdateStat(TOTAL_BARRACKS, 1);
-		//Update paths
-		for (std::map<double, Behaviour*>::iterator it = Behaviour::b_map.begin(); it != Behaviour::b_map.end(); ++it)
-			Event::Push(UPDATE_PATH, it->second, pos.x - 1, pos.y - 1);
+	{			
+		if ((player_stats[CURRENT_EDGE] - BARRACKS_COST) >= 0)
+		{
+			behaviour = AddGameobject("Barracks");
+			behaviour->GetTransform()->SetLocalPos(pos);
+			behaviour->GetTransform()->ScaleX(6.0f);
+			behaviour->GetTransform()->ScaleY(6.0f);
+			new Barracks(behaviour);
+
+			UpdateStat(CURRENT_BARRACKS, 1);
+			UpdateStat(TOTAL_BARRACKS, 1);
+			UpdateStat(CURRENT_EDGE, - BARRACKS_COST);
+			//Update paths
+			for (std::map<double, Behaviour*>::iterator it = Behaviour::b_map.begin(); it != Behaviour::b_map.end(); ++it)
+				Event::Push(UPDATE_PATH, it->second, pos.x - 1, pos.y - 1);
+		}
+		else
+		{
+			LOG("Not enough resources! :(");
+		}
 		break;
 	}
 	case LAB: break;
@@ -1668,7 +1722,7 @@ Transform* Scene::SpawnBehaviour(int type, vec pos)
 
 bool Scene::DamageAllowed()
 {
-	return no_damage;
+	return !god_mode || (god_mode && no_damage);
 }
 
 bool Scene::DrawCollisions()

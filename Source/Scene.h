@@ -10,6 +10,13 @@
 
 #include <vector>
 
+#define GATHERER_COST 10
+#define MELEE_COST 15
+#define RANGED_COST 20
+#define SUPER_COST 50
+#define TOWER_COST 40
+#define BARRACKS_COST 60
+
 enum SceneType : int
 {
 	EMPTY,
@@ -75,7 +82,7 @@ enum PlayerStats : int
 	MOB_DROP_COLLECTED,
 	UNITS_CREATED,
 	UNITS_LOST,
-	UNITS_KILLED,
+	UNITS_KILLED,	
 
 	MAX_PLAYER_STATS
 };
@@ -195,7 +202,7 @@ private:
 
 	// Player
 	C_Text* hud_texts[EDGE_COLLECTED];
-	static int player_stats[MAX_PLAYER_STATS];
+	static int player_stats[MAX_PLAYER_STATS]; //Esta perf
 	bool win = false;
 	int time = 0;
 

@@ -108,7 +108,7 @@ bool Minimap::AddUnit(double id, int type, Transform* unit)
 	if (minimap)
 	{
 		MinimapTexture icon;
-		if (type <= UNIT_SPECIAL) icon = ICON_ALLIED_UNIT;
+		if (type <= UNIT_SUPER) icon = ICON_ALLIED_UNIT;
 		else if (type <= ENEMY_SPECIAL) icon = ICON_ENEMY_UNIT;
 		else
 		{
