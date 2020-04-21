@@ -45,6 +45,7 @@ enum EventType : char
 	UPDATE_STAT,
 	GAMEPLAY,
 	SPAWN_UNIT,
+	RESUME,
 
 	//// Scene states
 	//NEXT_STATE,
