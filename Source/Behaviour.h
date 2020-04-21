@@ -84,15 +84,6 @@ public:
 	void UnSelected();
 	void OnDamage(int damage);
 	void OnKill(const UnitType type);
-	void BuildGatherer(float x, float y);
-	void BuildMelee(float x, float y);
-	void BuildRanged(float x, float y);
-	void BuildSuper(float x, float y);
-	void BuildTower(float x, float y);
-	void BuildCenter(float x, float y);
-	void BuildWall(float x, float y);
-	void BuildLab(float x, float y);
-	void BuildBarrack(float x, float y);
 	virtual void UpdatePath(int x,int y) {}
 	virtual void AfterDamageAction() {}
 	virtual void OnRightClick(vec pos, vec modPos) {}

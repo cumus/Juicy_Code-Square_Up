@@ -49,29 +49,6 @@ Behaviour::Behaviour(Gameobject* go, UnitType t, UnitState starting_state, Compo
 
 	b_map.insert({ GetID(), this });
 
-	switch (t) {
-	case UNIT_MELEE:
-		Event::Push(UPDATE_STAT, App->scene, CURRENT_MELEE_UNITS, 1);
-		Event::Push(UPDATE_STAT, App->scene, TOTAL_MELEE_UNITS, 1);
-		break;
-	case UNIT_RANGED:
-		Event::Push(UPDATE_STAT, App->scene, CURRENT_RANGED_UNITS, 1);
-		Event::Push(UPDATE_STAT, App->scene, TOTAL_RANGED_UNITS, 1);
-		break;
-	case GATHERER:
-		Event::Push(UPDATE_STAT, App->scene, CURRENT_GATHERER_UNITS, 1);
-		Event::Push(UPDATE_STAT, App->scene, TOTAL_GATHERER_UNITS, 1);
-		break;
-	case BARRACKS:
-		Event::Push(UPDATE_STAT, App->scene, CURRENT_BARRACKS, 1);
-		Event::Push(UPDATE_STAT, App->scene, TOTAL_BARRACKS, 1);
-		break;
-	case TOWER:
-		Event::Push(UPDATE_STAT, App->scene, CURRENT_TOWERS, 1);
-		Event::Push(UPDATE_STAT, App->scene, TOTAL_TOWERS, 1);
-		break;
-	}
-
 	Minimap::AddUnit(GetID(), t, game_object->GetTransform());
 }
 
@@ -115,7 +92,11 @@ void Behaviour::RecieveEvent(const Event& e)
 		ranged_spawn_vector.y = e.data2.AsFloat();
 		break;
 	}
-	case BUILD_SUPER: BuildSuper(e.data1.AsFloat(), e.data2.AsFloat()); break;
+	case BUILD_SUPER: 
+		/*building_super = true;
+		super_spawn_vector.x = e.data1.AsFloat();
+		super_spawn_vector.y = e.data2.AsFloat();*/
+		break;
 	case DO_UPGRADE: Upgrade(); break;
 	case UPDATE_PATH: UpdatePath(e.data1.AsInt(),e.data2.AsInt()); break;
 	case DRAW_RANGE: drawRanges = !drawRanges; break;
@@ -222,66 +203,6 @@ void Behaviour::UnSelected()
 	
 }
 
-void Behaviour::BuildGatherer(float x, float y)
-{
-	Gameobject* gather_go = App->scene->AddGameobject("Gatherer");
-	gather_go->GetTransform()->SetLocalPos({ x, y, 0.0f });
-
-	new Gatherer(gather_go);
-	//resources -= 10;
-}
-
-void Behaviour::BuildMelee(float x, float y)
-{
-	Gameobject* melee_go = App->scene->AddGameobject("Melee unit");
-	melee_go->GetTransform()->SetLocalPos({ x, y, 0.0f });
-
-	new MeleeUnit(melee_go);
-}
-
-void Behaviour::BuildRanged(float x, float y)
-{
-	Gameobject* ranged_go = App->scene->AddGameobject("Ranged unit");
-	ranged_go->GetTransform()->SetLocalPos({ x, y, 0.0f });
-
-	new RangedUnit(ranged_go);
-}
-
-void Behaviour::BuildSuper(float x, float y)
-{
-
-}
-
-void Behaviour::BuildTower(float x, float y)
-{
-	Gameobject* tower_go = App->scene->AddGameobject("Defense tower");
-	tower_go->GetTransform()->SetLocalPos({ x, y, 0.0f });
-
-	new Tower(tower_go);
-}
-
-void Behaviour::BuildCenter(float x, float y)
-{
-	Gameobject* center_go = App->scene->AddGameobject("Base center");
-	center_go->GetTransform()->SetLocalPos({ x, y, 0.0f });
-
-	new Base_Center(center_go);
-}
-
-void Behaviour::BuildWall(float x, float y) 
-{
-
-}
-
-void Behaviour::BuildLab(float x, float y) 
-{
-
-}
-
-void Behaviour::BuildBarrack(float x, float y) 
-{
-
-}
 
 void Behaviour::OnDamage(int d)
 {	

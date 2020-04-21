@@ -18,6 +18,7 @@
 #include "Gatherer.h"
 #include "EnemyMeleeUnit.h"
 #include "MeleeUnit.h"
+#include "RangedUnit.h"
 #include "Spawner.h"
 #include "Barracks.h"
 #include "JuicyMath.h"
@@ -1564,15 +1565,24 @@ Transform* Scene::SpawnBehaviour(int type, vec pos)
 	{
 		behaviour = AddGameobject("Gatherer");
 		new Gatherer(behaviour);
+		UpdateStat(CURRENT_GATHERER_UNITS, 1);
+		UpdateStat(TOTAL_GATHERER_UNITS, 1);
 		break;
 	}
 	case UNIT_MELEE:
 	{
 		behaviour = AddGameobject("Unit melee");
 		new MeleeUnit(behaviour);
+		UpdateStat(CURRENT_MELEE_UNITS, 1);
+		UpdateStat(TOTAL_MELEE_UNITS, 1);
 		break;
 	}
-	case UNIT_RANGED: break;
+	case UNIT_RANGED: 
+		behaviour = AddGameobject("Ranged melee");
+		new RangedUnit(behaviour);
+		UpdateStat(CURRENT_RANGED_UNITS, 1);
+		UpdateStat(TOTAL_RANGED_UNITS, 1);
+		break;		
 	case UNIT_SUPER: break;
 	case UNIT_SPECIAL: break;
 	case ENEMY_MELEE:
@@ -1603,13 +1613,14 @@ Transform* Scene::SpawnBehaviour(int type, vec pos)
 		//Update paths
 		for (std::map<double, Behaviour*>::iterator it = Behaviour::b_map.begin(); it != Behaviour::b_map.end(); ++it)
 			Event::Push(UPDATE_PATH, it->second, pos.x - 1, pos.y - 1);
-
 		break;
 	}
 	case TOWER:
 	{
 		behaviour = AddGameobject("Tower");
 		new Tower(behaviour);
+		UpdateStat(CURRENT_TOWERS, 1);
+		UpdateStat(TOTAL_TOWERS, 1);
 		//Update paths
 		for (std::map<double, Behaviour*>::iterator it = Behaviour::b_map.begin(); it != Behaviour::b_map.end(); ++it)
 			Event::Push(UPDATE_PATH, it->second, pos.x - 1, pos.y - 1);
@@ -1623,6 +1634,8 @@ Transform* Scene::SpawnBehaviour(int type, vec pos)
 		behaviour->GetTransform()->ScaleX(6.0f);
 		behaviour->GetTransform()->ScaleY(6.0f);
 		new Barracks(behaviour);
+		UpdateStat(CURRENT_BARRACKS, 1);
+		UpdateStat(TOTAL_BARRACKS, 1);
 		//Update paths
 		for (std::map<double, Behaviour*>::iterator it = Behaviour::b_map.begin(); it != Behaviour::b_map.end(); ++it)
 			Event::Push(UPDATE_PATH, it->second, pos.x - 1, pos.y - 1);
