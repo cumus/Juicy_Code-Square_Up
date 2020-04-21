@@ -339,7 +339,7 @@ void Scene::LoadMenuScene()
 
 	Gameobject* fullscreen_go = AddGameobjectToCanvas("Fullscreen Button");
 
-	C_Button* fullscreen = new C_Button(fullscreen_go, Event(TOGGLE_FULLSCREEN, this, App->win));
+	C_Button* fullscreen = new C_Button(fullscreen_go, Event(TOGGLE_FULLSCREEN, App->win));
 	fullscreen->target = { 0.5f, 0.5f, 0.5f, 0.5f };
 	fullscreen->offset = { -525.f, 100.f };
 	fullscreen->section = { 0, 0, 1070, 207 };
@@ -673,7 +673,7 @@ void Scene::UpdatePause()
 
 			Gameobject* fullscreen_go = AddGameobject("resume Button", pause_background_go);
 
-			C_Button* fullscreen = new C_Button(fullscreen_go, Event(TOGGLE_FULLSCREEN, this, App->win));
+			C_Button* fullscreen = new C_Button(fullscreen_go, Event(TOGGLE_FULLSCREEN, App->win));
 			fullscreen->target = { 0.51f, 0.3f, 0.3f, 0.3f };
 			fullscreen->offset = { -525.f, 200.f };
 			fullscreen->section = { 0, 0, 1070, 207 };
@@ -958,9 +958,10 @@ void Scene::UpdateStateMachine()
 
 		break;
 	case CAM_MOVEMENT:
-
+		
 		current_cam_pos = App->render->GetCameraCenter();
-		distance = JMath::Distance(last_cam_pos, current_cam_pos);
+		
+		distance = JMath::Distance(last_cam_pos,current_cam_pos);
 
 		if (distance > last_distance) {
 			total_distance += distance - last_distance;
@@ -969,12 +970,12 @@ void Scene::UpdateStateMachine()
 			total_distance += last_distance - distance;
 		}
 		last_distance = distance;
-		if (total_distance >= 500.0f && r_c_comprobation) {
+		if (total_distance >= 500 && r_c_comprobation) {
 			r_c_comprobation = false;
-			LOG("camera dist %f ", total_distance);
+			//LOG("camera dist %f ", total_distance);
 			Event::Push(GAMEPLAY, this, R_CLICK_MOVEMENT);
 		}
-
+		LOG("camera dist %f ", total_distance);
 
 		break;
 	case R_CLICK_MOVEMENT:
@@ -1095,6 +1096,14 @@ void Scene::OnEventStateMachine(GameplayState state)
 	{
 		//------------------STATE MACHINE CASES-----------------------
 	case CAM_MOVEMENT:
+
+
+		distance = 0.0f;
+		last_distance = 0.0f;
+		total_distance = 0.0f;
+
+		last_cam_pos = App->render->GetCameraCenter();
+
 		not_go->SetInactive();
 		LOG("CAM MOVEMENT STATE");
 		not_go = AddGameobjectToCanvas("cam_mov");
@@ -1535,7 +1544,7 @@ void Scene::ResetScene()
 	maxSpawns = 200;
 	spawnCounter = 0;
 	cooldownSpawn = 5.0f;
-	last_cam_pos = { 0,0 };
+	last_cam_pos = { 0.0f,0.0f };
 	total_distance = 0;
 
 	map.CleanUp();
