@@ -191,7 +191,7 @@ void Tower::CreatePanel()
 	upgrade_btn = new C_Button(selectionPanel, Event(DO_UPGRADE, this->AsBehaviour()));//Top left
 	upgrade_btn->target = { 0.912f, posY_panel + 0.02f, 1.0f, 1.0f };
 	upgrade_btn->offset = { 0.0f, 0.0f };
-	upgrade_btn->section = { 121, 38, 38, 38 };
+	for (int i = 0; i < 4; i++)upgrade_btn->section[i] = { 121, 38, 38, 38 };
 	upgrade_btn->tex_id = panel_tex_ID;
 }
 

@@ -193,10 +193,10 @@ void C_Button::PreUpdate()
 
 void C_Button::PostUpdate()
 {
-	ComputeOutputRect(float(section[state].w), float(section[state].h));
+	ComputeOutputRect(float(section[0].w), float(section[0].h));
 
 	if (tex_id >= 0)
-		App->render->Blit_Scale(tex_id, output.x, output.y, float(output.w) / float(section[state].w), float(output.h) / float(section[state].h), &section[state], HUD, false);
+		App->render->Blit_Scale(tex_id, output.x, output.y, float(output.w) / float(section[0].w), float(output.h) / float(section[0].h), &section[0], HUD, false);
 	else
 		App->render->DrawQuad(output, color, true, HUD, false);
 }

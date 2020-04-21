@@ -39,8 +39,16 @@ void Edge::OnRightClick(vec pos, vec modPos)
 
 void Edge::AfterDamageAction()
 {
-	Event::Push(UPDATE_STAT, App->scene, CURRENT_EDGE, 5);
-	Event::Push(UPDATE_STAT, App->scene, EDGE_COLLECTED, 1);
+	if (App->scene->tutorial_edge == true)
+	{
+		Event::Push(UPDATE_STAT, App->scene, CURRENT_EDGE, 15);
+		Event::Push(UPDATE_STAT, App->scene, EDGE_COLLECTED, 1);
+	}
+	else
+	{
+		Event::Push(UPDATE_STAT, App->scene, CURRENT_EDGE, 5);
+		Event::Push(UPDATE_STAT, App->scene, EDGE_COLLECTED, 1);
+	}
 
 	if (current_life <= 0)
 		OnKill(type);

@@ -100,19 +100,19 @@ void Barracks::CreatePanel()
 	meleeUnit_btn = new C_Button(selectionPanel, Event(BUILD_MELEE, this, spawnPoint, 5.0f));//Top right
 	meleeUnit_btn->target = { 0.95f, posY_panel + 0.02f, 1.0f, 1.0f };
 	meleeUnit_btn->offset = { 0.0f,0.0f };
-	meleeUnit_btn->section = { 121, 0, 38, 38 };
+	meleeUnit_btn->section[0] = { 121, 0, 38, 38 };
 	meleeUnit_btn->tex_id = panel_tex_ID;
 
 	rangedUnit_btn = new C_Button(selectionPanel, Event(BUILD_RANGED, this, spawnPoint, 5.0f));//Bottom left
 	rangedUnit_btn->target = { 0.912f, posY_panel + 0.085f, 1.0f, 1.0f };
 	rangedUnit_btn->offset = { 0.0f, 0.0f };
-	rangedUnit_btn->section = { 161, 0, 38, 38 };
+	rangedUnit_btn->section[0] = { 161, 0, 38, 38 };
 	rangedUnit_btn->tex_id = panel_tex_ID;
 
 	superUnit_btn = new C_Button(selectionPanel, Event(BUILD_SUPER, this, spawnPoint, 5.0f));//Bottom right
 	superUnit_btn->target = { 0.95f, posY_panel + 0.085f, 1.0f, 1.0f };
 	superUnit_btn->offset = { 0.0f, 0.0f };
-	superUnit_btn->section = { 162, 38, 38, 38 };
+	superUnit_btn->section[0] = { 162, 38, 38, 38 };
 	superUnit_btn->tex_id = panel_tex_ID;
 }
 
