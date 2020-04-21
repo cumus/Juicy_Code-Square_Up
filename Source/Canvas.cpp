@@ -113,7 +113,10 @@ C_Image::~C_Image()
 void C_Image::PostUpdate()
 {
 	ComputeOutputRect(float(section.w), float(section.h));
-	App->render->Blit_Scale(tex_id, output.x, output.y, float(output.w) / float(section.w), float(output.h) / float(section.h), &section, HUD, false);
+	if (tex_id >= 0)
+		App->render->Blit_Scale(tex_id, output.x, output.y, float(output.w) / float(section.w), float(output.h) / float(section.h), &section, HUD, false);
+	else
+		App->render->DrawQuad(output, color, true, HUD, false);
 }
 
 C_Text::C_Text(Gameobject* go, const char* t, int font_id) :
@@ -151,21 +154,49 @@ C_Button::~C_Button()
 {
 }
 
-void C_Button::PostUpdate()
+void C_Button::PreUpdate()
 {
-	ComputeOutputRect(float(section.w), float(section.h));
-
 	int x, y;
 	App->input->GetMousePosition(x, y);
-	if ((mouse_inside = PointInsideOutputRect(x, y)) && event_triggered.listener)
+	if ((mouse_inside = PointInsideOutputRect(x, y)))
 	{
 		KeyState mouse_click = App->input->GetMouseButtonDown(0);
-		if (mouse_click == KEY_DOWN || (trigger_while_pressed && mouse_click == KEY_REPEAT))
+
+		switch (mouse_click)
+		{
+		case KEY_IDLE:
+		{
+			state = BUTTON_HOVERED;
+			break;
+		}
+		case KEY_DOWN:
+		{
+			state = BUTTON_PRESSED;
+			break;
+		}
+		case KEY_REPEAT:
+		{
+			state = BUTTON_PRESSING;
+			break;
+		}
+		case KEY_UP:
+		{
+			state = BUTTON_HOVERED;
 			Event::Push(event_triggered);
+			break;
+		}
+		}
 	}
+	else
+		state = BUTTON_IDLE;
+}
+
+void C_Button::PostUpdate()
+{
+	ComputeOutputRect(float(section[state].w), float(section[state].h));
 
 	if (tex_id >= 0)
-		App->render->Blit_Scale(tex_id, output.x, output.y, float(output.w) / float(section.w), float(output.h) / float(section.h), &section, HUD, false);
+		App->render->Blit_Scale(tex_id, output.x, output.y, float(output.w) / float(section[state].w), float(output.h) / float(section[state].h), &section[state], HUD, false);
 	else
-		App->render->DrawQuad(output, { 0, 0, 0, 255 }, true, HUD, false);
+		App->render->DrawQuad(output, color, true, HUD, false);
 }

@@ -62,6 +62,7 @@ public:
 
 	int tex_id = -1;
 	SDL_Rect section;
+	SDL_Color color;
 };
 
 class RenderedText;
@@ -88,6 +89,7 @@ public:
 	C_Button(Gameobject* go, const Event& e);
 	~C_Button();
 
+	void PreUpdate() override;
 	void PostUpdate() override;
 
 public:
@@ -96,7 +98,19 @@ public:
 	bool trigger_while_pressed = false;
 
 	int tex_id = -1;
-	SDL_Rect section;
+
+	enum ButtonStates : int
+	{
+		BUTTON_IDLE,
+		BUTTON_HOVERED,
+		BUTTON_PRESSED,
+		BUTTON_PRESSING,
+
+		MAX_BUTTON_STATES
+	} state;
+
+	SDL_Rect section[MAX_BUTTON_STATES];
+	SDL_Color color;
 
 private:
 
