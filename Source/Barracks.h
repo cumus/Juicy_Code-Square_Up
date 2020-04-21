@@ -4,7 +4,7 @@
 #include "Behaviour.h"
 #include "Canvas.h"
 
-class Barracks : public Behaviour
+class Barracks : public BuildingWithQueue
 {
 public:
 	Barracks(Gameobject* go);

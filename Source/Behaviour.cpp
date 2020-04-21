@@ -35,13 +35,9 @@ Behaviour::Behaviour(Gameobject* go, UnitType t, UnitState starting_state, Compo
 	selectionPanel = nullptr;
 	drawRanges = false;
 
-	building_gatherer = false;
-	building_melee = false;
-	building_ranged = false;
-
-	current_state = IDLE;
 	audio = new AudioSource(game_object);
 	new AnimatedSprite(this);
+
 	selection_highlight = new Sprite(go, App->tex.Load("Assets/textures/selectionMark.png"), { 0, 0, 64, 64 }, BACK_SCENE, { 0, -32, 1.f, 1.f });
 	selection_highlight->SetInactive();
 
@@ -73,83 +69,28 @@ void Behaviour::RecieveEvent(const Event& e)
 	case IMPULSE: OnGetImpulse(e.data1.AsFloat(),e.data2.AsFloat()); break;
 	case BUILD_GATHERER:
 	{
-		building_gatherer = true;
-		gatherer_spawn_vector.x = e.data1.AsFloat();
-		gatherer_spawn_vector.y = e.data2.AsFloat();
+		AddUnitToQueue(GATHERER, e.data1.AsVec(), e.data2.AsFloat());
 		break;
 	}
 	case BUILD_MELEE:
 	{
-		building_melee = true;
-		melee_spawn_vector.x = e.data1.AsFloat();
-		melee_spawn_vector.y = e.data2.AsFloat();
+		AddUnitToQueue(UNIT_MELEE, e.data1.AsVec(), e.data2.AsFloat());
 		break;
 	}
 	case BUILD_RANGED:
 	{
-		building_ranged = true;
-		ranged_spawn_vector.x = e.data1.AsFloat();
-		ranged_spawn_vector.y = e.data2.AsFloat();
+		AddUnitToQueue(UNIT_RANGED, e.data1.AsVec(), e.data2.AsFloat());
 		break;
 	}
-	case BUILD_SUPER: 
-		/*building_super = true;
-		super_spawn_vector.x = e.data1.AsFloat();
-		super_spawn_vector.y = e.data2.AsFloat();*/
+	case BUILD_SUPER:
+	{
+		AddUnitToQueue(UNIT_SUPER, e.data1.AsVec(), e.data2.AsFloat());
 		break;
+	}
 	case DO_UPGRADE: Upgrade(); break;
 	case UPDATE_PATH: UpdatePath(e.data1.AsInt(),e.data2.AsInt()); break;
 	case DRAW_RANGE: drawRanges = !drawRanges; break;
 	}
-}
-
-void Behaviour::Update() {
-
-	if (building_gatherer)
-	{
-		gatherer_timer += 0.001f;
-		if (gatherer_timer < CREATION_TIME)
-		{
-
-		}
-		else
-		{
-			Event::Push(SPAWN_UNIT, App->scene, GATHERER, gatherer_spawn_vector);
-			building_gatherer = false;
-			gatherer_timer = 0.f;
-
-		}
-	}
-	if (building_melee)
-	{
-		melee_timer += 0.001f;
-		if (melee_timer < CREATION_TIME)
-		{
-
-		}
-		else
-		{
-			Event::Push(SPAWN_UNIT, App->scene, UNIT_MELEE, melee_spawn_vector);
-			building_melee = false;
-			melee_timer = 0.f;
-		}
-	}
-	if (building_ranged)
-	{
-		ranged_timer += 0.001f;
-		if (ranged_timer < CREATION_TIME)
-		{
-		}
-		else
-		{
-			Event::Push(SPAWN_UNIT, App->scene, UNIT_RANGED, ranged_spawn_vector);
-			building_ranged = false;
-			ranged_timer = 0.f;
-		}
-	}
-
-	if (creation_bar_go != nullptr)
-		update_creation_bar();
 }
 
 void Behaviour::Selected()
@@ -329,9 +270,6 @@ unsigned int Behaviour::GetBehavioursInRange(vec pos, float dist, std::map<float
 
 	return ret;
 }
-
-
-
 
 ///////////////////////////
 // UNIT BEHAVIOUR
@@ -868,4 +806,77 @@ void Behaviour::Lifebar::Hide()
 void Behaviour::Lifebar::Update(float life)
 {
 	green_bar->SetSection({ starting_section.x, starting_section.y, int(float(starting_section.w) * life), starting_section.h });
+}
+
+// Queued Unit
+
+SDL_Rect BuildingWithQueue::bar_section;
+
+BuildingWithQueue::QueuedUnit::QueuedUnit(UnitType type, Gameobject* go, vec pos, float time) :
+	type(type), pos(pos), time(time), current_time(time)
+{
+	if (go)
+	{
+
+		Gameobject* icon = App->scene->AddGameobject("Queued Unit", go);
+		transform = icon->GetTransform();
+		new Sprite(icon, App->tex.Load("Assets/textures/Iconos_square_up.png"), { 0, 0, 100, 100 }, FRONT_SCENE);
+	}
+	else
+		transform = nullptr;
+}
+
+BuildingWithQueue::QueuedUnit::QueuedUnit(const QueuedUnit& copy) :
+	type(copy.type), pos(copy.pos), time(copy.time), current_time(copy.current_time), transform(copy.transform)
+{}
+
+float BuildingWithQueue::QueuedUnit::Update()
+{
+	return (time - (current_time -= App->time.GetGameDeltaTime())) / time;
+}
+
+BuildingWithQueue::BuildingWithQueue(Gameobject* go, UnitType type, UnitState starting_state, ComponentType comp_type) : Behaviour(go, type, starting_state, comp_type)
+{
+	spawnPoint = game_object->GetTransform()->GetLocalPos();
+	int texture_id = App->tex.Load("Assets/textures/Iconos_square_up.png");
+	Gameobject* back_bar = App->scene->AddGameobject("Creation Bar", game_object);
+	new Sprite(back_bar, texture_id, { 100, 100, 10, 10 }, FRONT_SCENE, { 0.f, 0.f, 1.f, 1.f });
+	progress_bar = new Sprite(back_bar, texture_id, bar_section = { 100, 100, 10, 11 }, FRONT_SCENE, { 0.f, 0.f, 1.f, 1.f });
+	back_bar->SetInactive();
+}
+
+void BuildingWithQueue::Update()
+{
+	if (!build_queue.empty())
+	{
+		if (!progress_bar->GetGameobject()->IsActive())
+			progress_bar->GetGameobject()->SetActive();
+
+		float percent = build_queue.front().Update();
+		if (percent >= 1.0f)
+		{
+			Event::Push(SPAWN_UNIT, App->scene, build_queue.front().type, build_queue.front().pos);
+			build_queue.front().transform->GetGameobject()->Destroy();
+			build_queue.pop_front();
+
+			if (build_queue.empty())
+				progress_bar->GetGameobject()->SetInactive();
+		}
+		else
+		{
+			SDL_Rect section = bar_section;
+			section.w = int(float(section.w) * percent);
+			progress_bar->SetSection(section);
+		}
+	}
+}
+
+void BuildingWithQueue::AddUnitToQueue(UnitType type, vec pos, float time)
+{
+	if (true /* TODO: has enough resources*/)
+	{
+		QueuedUnit unit(type, game_object, pos, time);
+		unit.transform->SetY(build_queue.size());
+		build_queue.push_back(unit);
+	}
 }

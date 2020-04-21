@@ -8,6 +8,7 @@
 #include "Audio.h"
 
 #include <vector>
+#include <list>
 #include <map>
 
 #define RAYCAST_TIME 0.1
@@ -78,7 +79,6 @@ public:
 
 	void RecieveEvent(const Event& e) override;
 
-	void Update() override;
 	void Selected();
 	void UnSelected();
 	void OnDamage(int damage);
@@ -105,6 +105,10 @@ public:
 	//void QuickSort();
 	unsigned int GetBehavioursInRange(vec pos, float dist, std::map<float, Behaviour*>& res) const;
 
+protected:
+
+	virtual void AddUnitToQueue(UnitType type, vec pos = vec(), float time = -1) {}
+
 public: 
 	
 	static std::map<double, Behaviour*> b_map;
@@ -114,10 +118,8 @@ public:
 
 protected:	
 
-	UnitType type;
-	
 	// Stats
-	
+	UnitType type;
 	float attack_range, vision_range,dieDelay;
 	float rayCastTimer;
 	bool shoot,drawRanges;
@@ -125,24 +127,11 @@ protected:
 	std::pair<float, float> visionRange;
 	std::pair<float, float> atkRange;
 
-	//Bulding Units Components
-
-	float gatherer_timer = 0.0f;
-	vec gatherer_spawn_vector;
-	bool building_gatherer;
-
-	float melee_timer = 0.0f;
-	vec melee_spawn_vector;
-	bool building_melee;
-
-	float ranged_timer = 0.0f;
-	vec ranged_spawn_vector;
-	bool building_ranged;
-
 	// Complementary components
 	AudioSource* audio;
 	Sprite* selection_highlight;
 
+	// Mini Life Bars
 	struct Lifebar
 	{
 		void Create(Gameobject* parent);
@@ -156,6 +145,7 @@ protected:
 		SDL_Rect starting_section;
 	} mini_life_bar;
 
+	//Bulding Units Components
 	float pos_y_HUD;
 	int bar_text_id;
 	Gameobject* selectionPanel = nullptr;
@@ -169,6 +159,36 @@ protected:
 	C_Image* health;
 	C_Image* health_boarder;
 	C_Image* upgrades;
+};
+
+class BuildingWithQueue : public Behaviour
+{
+public:
+
+	BuildingWithQueue(Gameobject* go, UnitType type, UnitState starting_state, ComponentType comp_type = BEHAVIOUR);
+
+	void Update() override;
+	void AddUnitToQueue(UnitType type, vec pos = vec(), float time = -1) override;
+
+protected:
+
+	struct QueuedUnit
+	{
+		QueuedUnit(UnitType type = MAX_UNIT_TYPES, Gameobject* go = nullptr, vec pos = vec(), float time = -1);
+		QueuedUnit(const QueuedUnit& copy);
+		float Update();
+
+		UnitType type;
+		vec pos;
+		float time;
+		float current_time;
+		Transform* transform;
+	};
+
+	vec spawnPoint;
+	Sprite* progress_bar;
+	static SDL_Rect bar_section;
+	std::list<QueuedUnit> build_queue;
 };
 
 class B_Unit : public Behaviour

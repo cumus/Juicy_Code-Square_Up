@@ -13,17 +13,14 @@
 
 Gameobject* Base_Center::baseCenter = nullptr;
 
-Base_Center::Base_Center(Gameobject* go) : Behaviour(go, BASE_CENTER, FULL_LIFE, B_BASE_CENTER)
+Base_Center::Base_Center(Gameobject* go) : BuildingWithQueue(go, BASE_CENTER, FULL_LIFE, B_BASE_CENTER)
 {
 	Transform* t = game_object->GetTransform();
 
 	max_life = 100;
 	current_life = max_life;
-	buildQueue = 0;
 	bc_lvl = 1;
 	bc_max_lvl = 5;
-	spawnPointX = t->GetLocalPos().x;
-	spawnPointY = t->GetLocalPos().y + 1;
 
 	create_bar();
 	bar_go->SetInactive();
@@ -54,14 +51,12 @@ Base_Center::~Base_Center()
 		vec pos = t->GetGlobalPosition();
 		App->pathfinding.SetWalkabilityTile(int(pos.x), int(pos.y), true);
 	}
+
 	b_map.erase(GetID());
-	if (baseCenter == this->GetGameobject())
-	{
+
+	if (baseCenter == game_object)
 		baseCenter = nullptr;
-	}	
 }
-
-
 
 void Base_Center::AfterDamageAction()
 {
@@ -104,25 +99,25 @@ void Base_Center::CreatePanel()
 	panel->section = { 0, 0, 119, 119 };
 	panel->tex_id = panel_tex_ID;
 
-	gatherer_btn = new C_Button(selectionPanel, Event(BUILD_GATHERER, this->AsBehaviour(), spawnPointX, spawnPointY));//Top left
+	gatherer_btn = new C_Button(selectionPanel, Event(BUILD_GATHERER, this, spawnPoint, 5.0f));//Top left
 	gatherer_btn->target = { 0.912f, posY_panel+0.02f, 1.0f, 1.0f };
 	gatherer_btn->offset = { 0.0f, 0.0f };
 	gatherer_btn->section = { 121, 38, 38, 38 };
 	gatherer_btn->tex_id = panel_tex_ID;
 
-	meleeUnit_btn = new C_Button(selectionPanel, Event(BUILD_MELEE, this->AsBehaviour(), spawnPointX, spawnPointY));//Top right
+	meleeUnit_btn = new C_Button(selectionPanel, Event(BUILD_MELEE, this, spawnPoint, 5.0f));//Top right
 	meleeUnit_btn->target = { 0.95f, posY_panel+0.02f, 1.0f, 1.0f };
 	meleeUnit_btn->offset = { 0.0f,0.0f };
 	meleeUnit_btn->section = { 121, 0, 38, 38 };
 	meleeUnit_btn->tex_id = panel_tex_ID;
 
-	rangedUnit_btn = new C_Button(selectionPanel, Event(BUILD_RANGED, this->AsBehaviour(), spawnPointX, spawnPointY));//Bottom left
+	rangedUnit_btn = new C_Button(selectionPanel, Event(BUILD_RANGED, this, spawnPoint, 5.0f));//Bottom left
 	rangedUnit_btn->target = { 0.912f, posY_panel+0.085f, 1.0f, 1.0f };
 	rangedUnit_btn->offset = { 0.0f, 0.0f };
 	rangedUnit_btn->section = { 161, 0, 38, 38 };
 	rangedUnit_btn->tex_id = panel_tex_ID;
 
-	superUnit_btn = new C_Button(selectionPanel, Event(BUILD_SUPER, this->AsBehaviour(), spawnPointX, spawnPointY));//Bottom right
+	superUnit_btn = new C_Button(selectionPanel, Event(BUILD_SUPER, this, spawnPoint, 5.0f));//Bottom right
 	superUnit_btn->target = { 0.95f, posY_panel+0.085f, 1.0f, 1.0f };
 	superUnit_btn->offset = { 0.0f, 0.0f };
 	superUnit_btn->section = { 162, 38, 38, 38 };
@@ -297,8 +292,9 @@ void Base_Center::create_creation_bar() {
 
 void Base_Center::update_creation_bar() {
 
-	gatherer_creation_bar_completed->target = { (0.97f) - (0.155f) * (1.0f - float(gatherer_timer) / float(CREATION_TIME)), 0.42f, 0.9f * (float(gatherer_timer) / float(CREATION_TIME)), 0.4f };
-	melee_creation_bar_completed->target = { (0.97f) - (0.155f) * (1.0f - float(melee_timer) / float(CREATION_TIME)), 0.47f, 0.9f * (float(melee_timer) / float(CREATION_TIME)), 0.4f };
-	ranged_creation_bar_completed->target = { 0.97f - (0.155f) * (1.0f - float(ranged_timer / CREATION_TIME)), 0.52f, 0.9f * (float(ranged_timer) / float(CREATION_TIME)), 0.4f };
+
+	//gatherer_creation_bar_completed->target = { (0.97f) - (0.155f) * (1.0f - float(gatherer_timer) / float(CREATION_TIME)), 0.42f, 0.9f * (float(gatherer_timer) / float(CREATION_TIME)), 0.4f };
+	//melee_creation_bar_completed->target = { (0.97f) - (0.155f) * (1.0f - float(melee_timer) / float(CREATION_TIME)), 0.47f, 0.9f * (float(melee_timer) / float(CREATION_TIME)), 0.4f };
+	//ranged_creation_bar_completed->target = { 0.97f - (0.155f) * (1.0f - float(ranged_timer / CREATION_TIME)), 0.52f, 0.9f * (float(ranged_timer) / float(CREATION_TIME)), 0.4f };
 
 }

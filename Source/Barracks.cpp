@@ -14,7 +14,7 @@
 
 
 
-Barracks::Barracks(Gameobject* go) : Behaviour(go, BARRACKS, FULL_LIFE, B_BARRACKS)
+Barracks::Barracks(Gameobject* go) : BuildingWithQueue(go, BARRACKS, FULL_LIFE, B_BARRACKS)
 {
 	Transform* t = game_object->GetTransform();
 
@@ -23,8 +23,6 @@ Barracks::Barracks(Gameobject* go) : Behaviour(go, BARRACKS, FULL_LIFE, B_BARRAC
 	buildQueue = 0;
 	bc_lvl = 1;
 	bc_max_lvl = 5;
-	spawnPointX = t->GetLocalPos().x;
-	spawnPointY = t->GetLocalPos().y + 1;
 
 	create_bar();
 	bar_go->SetInactive();
@@ -34,9 +32,10 @@ Barracks::Barracks(Gameobject* go) : Behaviour(go, BARRACKS, FULL_LIFE, B_BARRAC
 	if (t)
 	{
 		vec pos = t->GetGlobalPosition();
-		for (int i = 0; i < t->GetLocalScaleX(); i++)
+		vec scale = t->GetGlobalScale();
+		for (int i = 0; i < scale.x; i++)
 		{
-			for (int a = 0; a < t->GetLocalScaleY(); a++)
+			for (int a = 0; a < scale.y; a++)
 			{				
 				App->pathfinding.SetWalkabilityTile(int(pos.x) + i + 3, int(pos.y) + a - 2, false);
 			}
@@ -98,19 +97,19 @@ void Barracks::CreatePanel()
 	panel->section = { 0, 0, 119, 119 };
 	panel->tex_id = panel_tex_ID;
 
-	meleeUnit_btn = new C_Button(selectionPanel, Event(BUILD_MELEE, this->AsBehaviour(), spawnPointX, spawnPointY));//Top right
+	meleeUnit_btn = new C_Button(selectionPanel, Event(BUILD_MELEE, this, spawnPoint, 5.0f));//Top right
 	meleeUnit_btn->target = { 0.95f, posY_panel + 0.02f, 1.0f, 1.0f };
 	meleeUnit_btn->offset = { 0.0f,0.0f };
 	meleeUnit_btn->section = { 121, 0, 38, 38 };
 	meleeUnit_btn->tex_id = panel_tex_ID;
 
-	rangedUnit_btn = new C_Button(selectionPanel, Event(BUILD_RANGED, this->AsBehaviour(), spawnPointX, spawnPointY));//Bottom left
+	rangedUnit_btn = new C_Button(selectionPanel, Event(BUILD_RANGED, this, spawnPoint, 5.0f));//Bottom left
 	rangedUnit_btn->target = { 0.912f, posY_panel + 0.085f, 1.0f, 1.0f };
 	rangedUnit_btn->offset = { 0.0f, 0.0f };
 	rangedUnit_btn->section = { 161, 0, 38, 38 };
 	rangedUnit_btn->tex_id = panel_tex_ID;
 
-	superUnit_btn = new C_Button(selectionPanel, Event(BUILD_SUPER, this->AsBehaviour(), spawnPointX, spawnPointY));//Bottom right
+	superUnit_btn = new C_Button(selectionPanel, Event(BUILD_SUPER, this, spawnPoint, 5.0f));//Bottom right
 	superUnit_btn->target = { 0.95f, posY_panel + 0.085f, 1.0f, 1.0f };
 	superUnit_btn->offset = { 0.0f, 0.0f };
 	superUnit_btn->section = { 162, 38, 38, 38 };

@@ -4,7 +4,7 @@
 #include "Behaviour.h"
 #include "Canvas.h"
 
-class Base_Center : public Behaviour
+class Base_Center : public BuildingWithQueue
 {
 public:
 	Base_Center(Gameobject* go);
@@ -22,14 +22,13 @@ public:
 	void update_creation_bar() override;
 
 public:
+
 	static Gameobject* baseCenter;
+
 protected:
 
 	int bc_lvl;
 	int bc_max_lvl;
-	int buildQueue;
-	float spawnPointX;
-	float spawnPointY;
 
 	float posY_panel;
 	int panel_tex_ID;
@@ -58,8 +57,6 @@ protected:
 	C_Image* ranged_creation_bar;
 	C_Image* ranged_creation_bar_completed;
 	C_Image* ranged_creation_bar_boarder;
-
-	
 };
 
 #endif // __BASECENTER_H__
