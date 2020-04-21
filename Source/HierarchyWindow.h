@@ -9,7 +9,7 @@ class HierarchyWindow : public EditorWindow
 {
 public:
 
-	HierarchyWindow(const RectF rect, int total_elements = 60);
+	HierarchyWindow(const RectF rect, int total_elements = 100);
 	~HierarchyWindow();
 
 	bool Init() override;

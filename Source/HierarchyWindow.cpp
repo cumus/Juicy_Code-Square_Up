@@ -15,7 +15,7 @@ HierarchyWindow::~HierarchyWindow()
 bool HierarchyWindow::Init()
 {
 	for (float i = 0.0f; i < total_elements; ++i)
-		elements.push_back(new UI_TextButton(this, {0.0f, 0.05f * i, 0.5f, 0.05f}, " "));
+		elements.push_back(new UI_TextButton(this, {0.0f, 0.02f * i, 0.3f, 0.02f}, " "));
 
 	root = App->scene->GetRoot();
 
@@ -61,12 +61,12 @@ void HierarchyWindow::_Update()
 	{
 		if (i < gos.size())
 		{
-			elements[i]->rect = { gos[i].first * 0.05f, 0.05f * float(i), 0.5f, 0.05f };
+			elements[i]->rect = { gos[i].first * 0.05f, 0.02f * float(i), 0.3f, 0.02f };
 			elements[i]->ToUiTextButton()->text->SetText(gos[i].second->GetName());
 		}
 		else
 		{
-			elements[i]->rect = { 0.0f, 0.05f, 0.5f, 0.05f };
+			elements[i]->rect = { 0.0f, 0.02f, 0.3f, 0.02f };
 			elements[i]->ToUiTextButton()->text->SetText(" ");
 		}
 	}
