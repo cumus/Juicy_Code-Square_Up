@@ -13,7 +13,7 @@
 #include <algorithm>
 #include <map>
 
-std::vector<std::vector<double> >PathfindingManager::unitWalkability;
+std::vector<std::vector<float> >PathfindingManager::unitWalkability;
 
 PathfindingManager::PathfindingManager()
 {
@@ -344,7 +344,7 @@ void PathfindingManager::SetWalkabilityLayer(const MapLayer& layer)
 	std::vector<bool> vec(map.height);
 	walkabilityMap.resize(map.width);
 
-	std::vector<double> vec2(map.height);
+	std::vector<float> vec2(map.height);
 	unitWalkability.resize(map.width);
 
 	for (int x = 0; x < map.width; x++)
@@ -355,7 +355,7 @@ void PathfindingManager::SetWalkabilityLayer(const MapLayer& layer)
 		{
 			iPoint point(x,y);
 			walkabilityMap[x][y] = IsWalkable(point);
-			unitWalkability[x][y] = 0;
+			unitWalkability[x][y] = 0.0f;
 		}
 	}
 }

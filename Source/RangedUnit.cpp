@@ -7,7 +7,7 @@
 #include "Component.h"
 #include "Log.h"
 
-RangedUnit::RangedUnit(Gameobject* go) : B_Unit(go, UNIT_RANGED, IDLE, B_UNIT)
+RangedUnit::RangedUnit(Gameobject* go) : B_Unit(go, UNIT_RANGED, IDLE, B_RANGED)
 {
 	//Stats
 	max_life = 100;

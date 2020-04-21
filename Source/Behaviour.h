@@ -195,7 +195,7 @@ class B_Unit : public Behaviour
 {
 public:
 
-	B_Unit(Gameobject* go, UnitType type, UnitState starting_state, ComponentType comp_type = B_UNIT);
+	B_Unit(Gameobject* go, UnitType type, UnitState starting_state, ComponentType comp_type = B_MELEE_UNIT);
 
 	void Update() override;
 	void OnRightClick(vec pos, vec modPos) override;

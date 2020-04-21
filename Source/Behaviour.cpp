@@ -393,20 +393,23 @@ void B_Unit::Update()
 			
 			if (!next)
 			{				
-				//if (nextTile.x == 0 && nextTile.y == 0)PathfindingManager::unitWalkability[nextTile.x][nextTile.y] == 0;
+				if (PathfindingManager::unitWalkability[nextTile.x][nextTile.y] != 0.0f) PathfindingManager::unitWalkability[nextTile.x][nextTile.y] == 0;
 				nextTile = path->front();				
 				next = true;
 				move = true;
 				gotTile = false;
+				//LOG("Next tile");
 			}
 
 			if (next)
 			{
-				if (PathfindingManager::unitWalkability[nextTile.x][nextTile.y] == 0)
+				if (PathfindingManager::unitWalkability[nextTile.x][nextTile.y] == 0.0f)
 				{
 					PathfindingManager::unitWalkability[nextTile.x][nextTile.y] = GetID();
+					//LOG("ID: %f",GetID());
 					tilesVisited.push_back(nextTile);
 					gotTile = true;
+					//LOG("Tile found");
 				}
 				else if(!gotTile)
 				{
@@ -430,8 +433,10 @@ void B_Unit::Update()
 			current_state = IDLE;
 		}
 
+		//LOG("Tile ID: %f", PathfindingManager::unitWalkability[nextTile.x][nextTile.y]);
 		if (move && PathfindingManager::unitWalkability[nextTile.x][nextTile.y] == GetID())
 		{		
+			//LOG("move");
 			fPoint actualPos = { pos.x, pos.y };
 
 			iPoint tilePos = { int(pos.x), int(pos.y) };
@@ -502,7 +507,8 @@ void B_Unit::Update()
 				{
 					path->erase(path->begin());
 					next = false;
-					PathfindingManager::unitWalkability[nextTile.x][nextTile.y] = 0;
+					PathfindingManager::unitWalkability[nextTile.x][nextTile.y] = 0.0f;
+					//LOG("Arrive");
 				}
 			}
 			else if (dirX == -1 && dirY == -1)
@@ -511,7 +517,8 @@ void B_Unit::Update()
 				{
 					path->erase(path->begin());
 					next = false;
-					PathfindingManager::unitWalkability[nextTile.x][nextTile.y] = 0;
+					PathfindingManager::unitWalkability[nextTile.x][nextTile.y] = 0.0f;
+					//LOG("Arrive");
 				}
 			}
 			else if (dirX == -1 && dirY == 1)
@@ -520,7 +527,8 @@ void B_Unit::Update()
 				{
 					path->erase(path->begin());
 					next = false;
-					PathfindingManager::unitWalkability[nextTile.x][nextTile.y] = 0;
+					PathfindingManager::unitWalkability[nextTile.x][nextTile.y] = 0.0f;
+					//LOG("Arrive");
 				}
 			}
 			else if (dirX == 1 && dirY == -1)
@@ -529,7 +537,8 @@ void B_Unit::Update()
 				{
 					path->erase(path->begin());
 					next = false;
-					PathfindingManager::unitWalkability[nextTile.x][nextTile.y] = 0;
+					PathfindingManager::unitWalkability[nextTile.x][nextTile.y] = 0.0f;
+					//LOG("Arrive");
 				}
 			}
 			else if (dirX == 0 && dirY == -1)
@@ -538,7 +547,8 @@ void B_Unit::Update()
 				{
 					path->erase(path->begin());
 					next = false;
-					PathfindingManager::unitWalkability[nextTile.x][nextTile.y] = 0;
+					PathfindingManager::unitWalkability[nextTile.x][nextTile.y] = 0.0f;
+					//LOG("Arrive");
 				}
 			}
 			else if (dirX == 0 && dirY == 1)
@@ -547,7 +557,8 @@ void B_Unit::Update()
 				{
 					path->erase(path->begin());
 					next = false;
-					PathfindingManager::unitWalkability[nextTile.x][nextTile.y] = 0;
+					PathfindingManager::unitWalkability[nextTile.x][nextTile.y] = 0.0f;
+					//LOG("Arrive");
 				}
 			}
 			else if (dirX == 1 && dirY == 0)
@@ -556,7 +567,8 @@ void B_Unit::Update()
 				{
 					path->erase(path->begin());
 					next = false;
-					PathfindingManager::unitWalkability[nextTile.x][nextTile.y] = 0;
+					PathfindingManager::unitWalkability[nextTile.x][nextTile.y] = 0.0f;
+					//LOG("Arrive");
 				}
 			}
 			else if (dirX == -1 && dirY == 0)
@@ -565,14 +577,16 @@ void B_Unit::Update()
 				{
 					path->erase(path->begin());
 					next = false;
-					PathfindingManager::unitWalkability[nextTile.x][nextTile.y] = 0;
+					PathfindingManager::unitWalkability[nextTile.x][nextTile.y] = 0.0f;
+					//LOG("Arrive");
 				}
 			}
 			else if (dirX == 0 && dirY == 0)
 			{
 				path->erase(path->begin());
 				next = false;
-				PathfindingManager::unitWalkability[nextTile.x][nextTile.y] = 0;
+				PathfindingManager::unitWalkability[nextTile.x][nextTile.y] = 0.0f;
+				//LOG("Arrive");
 			}
 		}
 

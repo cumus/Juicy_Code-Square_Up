@@ -22,8 +22,10 @@ enum ComponentType
 
 	// Behaviours
 	BEHAVIOUR,
-	B_UNIT,
+	B_MELEE_UNIT,
 	B_GATHERER,
+	B_RANGED,
+	B_ENEMY_MELEE,
 	B_EDGE,
 	B_BASE_CENTER,
 	B_TOWER,

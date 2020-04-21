@@ -8,7 +8,7 @@
 #include "Log.h"
 
 
-Gatherer::Gatherer(Gameobject* go) : B_Unit(go, GATHERER, IDLE, B_UNIT)
+Gatherer::Gatherer(Gameobject* go) : B_Unit(go, GATHERER, IDLE, B_GATHERER)
 {
 	atkDelay = 2.0;
 	speed = 3;

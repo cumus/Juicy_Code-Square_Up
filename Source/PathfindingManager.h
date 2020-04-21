@@ -142,7 +142,7 @@ public:
 
 public:
 	int debugTextureID;
-	static std::vector<std::vector<double> > unitWalkability;
+	static std::vector<std::vector<float> > unitWalkability;
 
 private:
 	bool debugAll = false;

@@ -7,7 +7,7 @@
 #include "Component.h"
 #include "Log.h"
 
-MeleeUnit::MeleeUnit(Gameobject* go) : B_Unit(go, UNIT_MELEE, IDLE, B_UNIT)
+MeleeUnit::MeleeUnit(Gameobject* go) : B_Unit(go, UNIT_MELEE, IDLE, B_MELEE_UNIT)
 {
 	//Stats	
 	max_life = 100;

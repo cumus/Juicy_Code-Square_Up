@@ -10,7 +10,7 @@
 
 #include <vector>
 
-EnemyMeleeUnit::EnemyMeleeUnit(Gameobject* go) : B_Unit(go, ENEMY_MELEE, IDLE, B_UNIT)
+EnemyMeleeUnit::EnemyMeleeUnit(Gameobject* go) : B_Unit(go, ENEMY_MELEE, IDLE, B_ENEMY_MELEE)
 {
 	//Stats
 	current_life = 75;
@@ -26,6 +26,7 @@ EnemyMeleeUnit::EnemyMeleeUnit(Gameobject* go) : B_Unit(go, ENEMY_MELEE, IDLE, B
 	arriveDestination = true;
 	scanTimer = 0.0f;
 	scanTime = 3.0f;
+	//LOG("ID: %f", GetID());
 
 	//SFX
 	//deathFX = IA_MELEE_DIE_FX;
@@ -44,13 +45,17 @@ void EnemyMeleeUnit::UpdatePath(int x, int y)
 		vec pos = t->GetGlobalPosition();
 		path = App->pathfinding.CreatePath({ int(pos.x), int(pos.y) }, { x, y }, GetID());
 		
+		next = false;
+		move = false;
+
 		if (!tilesVisited.empty())
 		{
 			for (std::vector<iPoint>::const_iterator it = tilesVisited.cbegin(); it != tilesVisited.cend(); ++it)
 			{
-				if (PathfindingManager::unitWalkability[it->x][it->y] != 0)
+				if (PathfindingManager::unitWalkability[it->x][it->y] != 0.0f)
 				{
-					PathfindingManager::unitWalkability[it->x][it->y] = 0;
+					PathfindingManager::unitWalkability[it->x][it->y] = 0.0f;	
+					//LOG("Clear tiles");
 				}
 			}
 			tilesVisited.clear();
@@ -64,9 +69,7 @@ void EnemyMeleeUnit::IARangeCheck()
 	Transform* t = game_object->GetTransform();
 	if (t)
 	{
-		vec pos = t->GetGlobalPosition();
-		next = false;
-		move = false;
+		vec pos = t->GetGlobalPosition();		
 
 		std::map<float, Behaviour*> out;
 		unsigned int total_found = GetBehavioursInRange(vec(pos.x, pos.y, 0.5f), vision_range, out);//Get units in vision range
@@ -97,10 +100,10 @@ void EnemyMeleeUnit::IARangeCheck()
 		else //Not found
 		{
 			attackObjective = nullptr;
-			scanTimer += App->time.GetGameDeltaTime();
+			//scanTimer += App->time.GetGameDeltaTime();
 		}
 
-		if (attackObjective != nullptr)//Check if there is a valid objective
+		if (attackObjective != nullptr && attackObjective->GetType() != BASE_CENTER)//Check if there is a valid objective
 		{
 			//LOG("Valid objective");
 			going_base = false;
@@ -125,6 +128,7 @@ void EnemyMeleeUnit::IARangeCheck()
 					//LOG("Pos X:%d/Y:%d", Pos.first, Pos.second);
 					//LOG("DestPos X:%d/Y:%d", destPos.first, destPos.second);
 					if (Pos.first <= destPos.first+1 && Pos.first >= destPos.first -1 && Pos.second >= destPos.second-1 && Pos.second <= destPos.second+1) arriveDestination = true;
+					//LOG("on destination");
 				}
 				attackObjective = nullptr;				
 			}			
@@ -137,7 +141,7 @@ void EnemyMeleeUnit::IARangeCheck()
 				vec centerPos = Base_Center::baseCenter->GetTransform()->GetGlobalPosition();
 				Event::Push(UPDATE_PATH, this->AsBehaviour(), int(centerPos.x) - 1, int(centerPos.y) - 1);
 				going_base = true;
-				arriveDestination = true;
+				//arriveDestination = true;
 				//LOG("Move to base");
 			}
 		}
