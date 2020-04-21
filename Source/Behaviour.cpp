@@ -444,6 +444,7 @@ B_Unit::B_Unit(Gameobject* go, UnitType t, UnitState s, ComponentType comp_type)
 	arriveDestination = false;
 	current_state = IDLE;
 	drawRanges = false;
+	gotTile = false;
 
 	//Info for ranged units constructor
 	/*vec pos = game_object->GetTransform()->GetGlobalPosition();
@@ -533,16 +534,34 @@ void B_Unit::Update()
 			
 			if (!next)
 			{				
-				if (nextTile.x == 0 && nextTile.y == 0)PathfindingManager::unitWalkability[nextTile.x][nextTile.y] == 0;
-				nextTile = path->front();	
-				tilesVisited.push_back(nextTile);
+				//if (nextTile.x == 0 && nextTile.y == 0)PathfindingManager::unitWalkability[nextTile.x][nextTile.y] == 0;
+				nextTile = path->front();				
 				next = true;
 				move = true;
+				gotTile = false;
 			}
 
-			if (PathfindingManager::unitWalkability[nextTile.x][nextTile.y] == 0 && next)
+			if (next)
 			{
-				PathfindingManager::unitWalkability[nextTile.x][nextTile.y] = GetID();
+				if (PathfindingManager::unitWalkability[nextTile.x][nextTile.y] == 0)
+				{
+					PathfindingManager::unitWalkability[nextTile.x][nextTile.y] = GetID();
+					tilesVisited.push_back(nextTile);
+					gotTile = true;
+				}
+				else if(!gotTile)
+				{
+					
+					//LOG("Pos X:%d/Y:%d", int(pos.x), int(pos.y));
+					//LOG("Tile X:%d/Y:%d", nextTile.x, nextTile.y);
+					iPoint cell = App->pathfinding.CheckEqualNeighbours(iPoint(int(pos.x), int(pos.y)), nextTile);
+					//LOG("Cell X:%d/Y:%d", cell.x, cell.y);
+					if (cell.x != -1 && cell.y != -1)
+					{
+						//LOG("Tile ok");
+						nextTile = cell;
+					}
+				}
 			}
 		}
 		else

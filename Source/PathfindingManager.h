@@ -137,6 +137,9 @@ public:
 	//Utility: Check tile area
 	bool CheckWalkabilityArea(std::pair<int,int> pos, vec scale);
 
+	//Utility: Check equal neighbours tiles and return valid
+	iPoint CheckEqualNeighbours(iPoint posA, iPoint posB);
+
 public:
 	int debugTextureID;
 	static std::vector<std::vector<double> > unitWalkability;

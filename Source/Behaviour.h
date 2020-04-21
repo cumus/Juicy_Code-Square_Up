@@ -208,6 +208,7 @@ protected:
 	iPoint nextTile;
 	bool next;
 	bool move;
+	bool gotTile;
 	bool positiveX;
 	bool positiveY;
 	int dirX;

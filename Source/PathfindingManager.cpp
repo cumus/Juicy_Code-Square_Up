@@ -230,6 +230,110 @@ UncompletedPath* PathfindingManager::GetToDoPath(double ID)
 	return vec;
 }
 
+//Utility: Check equal neighbours tiles and return valid
+iPoint PathfindingManager::CheckEqualNeighbours(iPoint posA, iPoint posB)
+{
+	iPoint ret(-1,-1);
+	std::vector<iPoint> tilesA, tilesB;
+
+	std::vector<PathNode> adjacentCells;
+	iPoint cell;
+	////POINT A/////
+
+	// north
+	cell = { posA.x, posA.y + 1};
+	if (App->pathfinding.ValidTile(cell.x, cell.y)) tilesA.push_back(cell);	
+
+	// south
+	cell = { posA.x, posA.y - 1 };
+	if (App->pathfinding.ValidTile(cell.x, cell.y)) tilesA.push_back(cell);;	
+
+	// east
+	cell = { posA.x+1, posA.y };
+	if (App->pathfinding.ValidTile(cell.x, cell.y)) tilesA.push_back(cell);	
+
+	// west
+	cell = { posA.x-1, posA.y };
+	if (App->pathfinding.ValidTile(cell.x, cell.y)) tilesA.push_back(cell);	
+
+	// north-east
+	cell = { posA.x+1, posA.y + 1 };
+	if (App->pathfinding.ValidTile(cell.x, cell.y)) tilesA.push_back(cell);
+	
+	// north-west
+	cell = { posA.x-1, posA.y + 1 };
+	if (App->pathfinding.ValidTile(cell.x, cell.y)) tilesA.push_back(cell);
+	
+	// sud-east
+	cell = { posA.x+1, posA.y - 1 };
+	if (App->pathfinding.ValidTile(cell.x, cell.y)) tilesA.push_back(cell);	
+
+	// sud-west
+	cell = { posA.x-1, posA.y - 1 };
+	if (App->pathfinding.ValidTile(cell.x, cell.y)) tilesA.push_back(cell);
+
+	////POINT B////
+
+	// north
+	cell = { posB.x, posB.y + 1 };
+	if (App->pathfinding.ValidTile(cell.x, cell.y)) tilesB.push_back(cell);
+
+	// south
+	cell = { posB.x, posB.y - 1 };
+	if (App->pathfinding.ValidTile(cell.x, cell.y)) tilesB.push_back(cell);;
+
+	// east
+	cell = { posB.x + 1, posB.y };
+	if (App->pathfinding.ValidTile(cell.x, cell.y)) tilesB.push_back(cell);
+
+	// west
+	cell = { posB.x - 1, posB.y };
+	if (App->pathfinding.ValidTile(cell.x, cell.y)) tilesB.push_back(cell);
+
+	// north-east
+	cell = { posB.x + 1, posB.y + 1 };
+	if (App->pathfinding.ValidTile(cell.x, cell.y)) tilesB.push_back(cell);
+
+	// north-west
+	cell = { posB.x - 1, posB.y + 1 };
+	if (App->pathfinding.ValidTile(cell.x, cell.y)) tilesB.push_back(cell);
+
+	// sud-east
+	cell = { posB.x + 1, posB.y - 1 };
+	if (App->pathfinding.ValidTile(cell.x, cell.y)) tilesB.push_back(cell);
+
+	// sud-west
+	cell = { posB.x - 1, posB.y - 1 };
+	if (App->pathfinding.ValidTile(cell.x, cell.y)) tilesB.push_back(cell);
+	
+	bool exit = false;
+
+	for (std::vector<iPoint>::const_iterator itA = tilesA.cbegin(); itA != tilesA.end(); ++itA)
+	{
+		if (*itA != posB)
+		{
+			for (std::vector<iPoint>::const_iterator itB = tilesB.cbegin(); itB != tilesB.cend(); ++itB)
+			{
+				if (*itB != posA)
+				{
+					//LOG("Tile different");
+					if (*itA == *itB)
+					{
+						//LOG("Equal found");
+						exit = true;
+						ret = *itA;
+						//LOG("Ret X:%d/Y:%d", itA->x, itA->y);
+						break;
+					}
+				}
+			}
+		}
+		if (exit) break;
+	}
+
+	return ret;
+}
+
 #pragma endregion
 
 #pragma region Path creation utils
