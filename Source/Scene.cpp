@@ -381,9 +381,9 @@ void Scene::LoadEndScene()
 
 	C_Image* background = new C_Image(background_go);
 	background->target = { 1.f, 1.f, 1.f, 1.f };
-	background->offset = { -1280.f, -720.f };
-	background->section = { 0, 0, 1280, 720 };
-	background->tex_id = App->tex.Load(win ? "Assets/textures/back-win.png" : "Assets/textures/back-lose.png");
+	background->offset = { -1920.f, -1080.f };
+	background->section = { 0, 0, 1920, 1080 };
+	background->tex_id = App->tex.Load("Assets/textures/white.png");
 
 	C_Button* background_btn = new C_Button(background_go, Event(SCENE_CHANGE, this, MENU));
 	background_btn->target = { 1.f, 1.f, 1.f, 1.f };
@@ -394,27 +394,27 @@ void Scene::LoadEndScene()
 	if (win)
 	{
 		C_Image* win = new C_Image(AddGameobjectToCanvas("Background"));
-		win->target = { 0.66f, 0.25f, 0.8f, 0.8f };
-		win->offset = { -605.f, -100.f };
-		win->section = { 0, 0, 693, 100 };
+		win->target = { 0.58f, 0.2f, 0.5f, 0.5f };
+		win->offset = { -442.f, -117.f };
+		win->section = { 0, 0, 442, 117 };
 		win->tex_id = App->tex.Load("Assets/textures/youwin.png");
 	}
 	else
 	{
 		C_Image* lose = new C_Image(AddGameobjectToCanvas("Background"));
-		lose->target = { 0.66f, 0.25f, 0.8f, 0.8f };
-		lose->offset = { -605.f, -100.f };
-		lose->section = { 0, 0, 693, 100 };
+		lose->target = { 0.59f, 0.2f, 0.5f, 0.5f };
+		lose->offset = { -495.f, -117.f };
+		lose->section = { 0, 0, 495, 117 };
 		lose->tex_id = App->tex.Load("Assets/textures/youlose.png");
 	}
 
-	/*//------------------------- BACK --------------------------------------
+	//------------------------- BACK --------------------------------------
 
 	C_Image* back = new C_Image(AddGameobjectToCanvas("Background"));
 	back->target = { 0.68f, 0.9f, 0.6f, 0.65f };
 	back->offset = { -783.f, -735.f };
 	back->section = { 0, 0, 783, 735 };
-	back->tex_id = App->tex.Load("Assets/textures/back.png");*/
+	back->tex_id = App->tex.Load("Assets/textures/back.png");
 
 	//------------------------- TIME --------------------------------------
 
