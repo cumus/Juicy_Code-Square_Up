@@ -124,9 +124,6 @@
     <ClCompile Include="Canvas.cpp">
       <Filter>Source\Gameobjects\Components\UI</Filter>
     </ClCompile>
-    <ClCompile Include="Minimap.cpp">
-      <Filter>Source\Modules</Filter>
-    </ClCompile>
     <ClCompile Include="Barracks.cpp">
       <Filter>Source\Gameobjects\Components\Behaviours</Filter>
     </ClCompile>
@@ -159,6 +156,9 @@
     </ClCompile>
     <ClCompile Include="Gameobject.cpp">
       <Filter>Source\Gameobjects</Filter>
+    </ClCompile>
+    <ClCompile Include="Minimap.cpp">
+      <Filter>Source\Gameobjects\Components\UI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -315,9 +315,6 @@
     <ClInclude Include="Canvas.h">
       <Filter>Source\Gameobjects\Components\UI</Filter>
     </ClInclude>
-    <ClInclude Include="Minimap.h">
-      <Filter>Source\Modules</Filter>
-    </ClInclude>
     <ClInclude Include="Barracks.h">
       <Filter>Source\Gameobjects\Components\Behaviours</Filter>
     </ClInclude>
@@ -350,6 +347,9 @@
     </ClInclude>
     <ClInclude Include="Gameobject.h">
       <Filter>Source\Gameobjects</Filter>
+    </ClInclude>
+    <ClInclude Include="Minimap.h">
+      <Filter>Source\Gameobjects\Components\UI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

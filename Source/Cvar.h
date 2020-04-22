@@ -2,6 +2,7 @@
 #define __CVAR__
 
 #include "Vector3.h"
+#include <vector>
 
 class Cvar // Global Value Container
 {
@@ -18,6 +19,8 @@ public:
 	Cvar(float float_v);
 	Cvar(const char* char_p_v);
 	Cvar(vec vec_v);
+	Cvar(std::vector<int>& vector_i_v);
+	Cvar(std::vector<float>& vector_f_v);
 
 public:
 
@@ -32,7 +35,9 @@ public:
 		DOUBLE,
 		FLOAT,
 		CHAR_P,
-		VEC
+		VEC,
+		VECTOR_INT,
+		VECTOR_FLOAT
 	};
 
 protected:
@@ -50,6 +55,10 @@ protected:
 		float float_v;
 		const char* char_p_v;
 		vec vec_v;
+
+		std::vector<int> vector_i_v;
+		std::vector<float> vector_f_v;
+
 		VAR_data() { }
 		~VAR_data() { }
 	} value;
@@ -65,17 +74,21 @@ public:
 	bool SetValue(float float_v, bool force_type = false);
 	bool SetValue(const char* char_p_v, bool force_type = false);
 	bool SetValue(vec vec_v, bool force_type = false);
+	bool SetValue(std::vector<int>& vector_i_v, bool force_type = false);
+	bool SetValue(std::vector<float>& vector_f_v, bool force_type = false);
 
-	VAR_TYPE				GetType() const;
-	bool					AsBool() const;
-	int						AsInt() const;
-	unsigned int			AsUInt() const;
-	long long int			AsInt64() const;
-	unsigned long long int	AsUInt64() const;
-	double					AsDouble() const;
-	float					AsFloat() const;
-	const char*				AsCharP() const;
-	vec						AsVec() const;
+	VAR_TYPE				 GetType() const;
+	bool					 AsBool() const;
+	int						 AsInt() const;
+	unsigned int			 AsUInt() const;
+	long long int			 AsInt64() const;
+	unsigned long long int	 AsUInt64() const;
+	double					 AsDouble() const;
+	float					 AsFloat() const;
+	const char*				 AsCharP() const;
+	vec						 AsVec() const;
+	const std::vector<int>	 AsIntVector() const;
+	const std::vector<float> AsFloatVector() const;
 };
 
 #endif // !__CVAR__

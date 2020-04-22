@@ -36,6 +36,10 @@ Cvar::Cvar(const char * char_p_v) : type(CHAR_P) { value.char_p_v = char_p_v; }
 
 Cvar::Cvar(vec vec_v) : type(VEC) { value.vec_v = vec_v; }
 
+Cvar::Cvar(std::vector<int>& vector_i_v) : type(VECTOR_INT) { (value.vector_i_v = vector_i_v).shrink_to_fit(); }
+
+Cvar::Cvar(std::vector<float>& vector_f_v) : type(VECTOR_FLOAT) { (value.vector_f_v = vector_f_v).shrink_to_fit(); }
+
 bool Cvar::SetValue(bool bool_v, bool force_type)
 {
 	bool ret = false;
@@ -153,6 +157,32 @@ bool Cvar::SetValue(vec vec_v, bool force_type)
 	return ret;
 }
 
+bool Cvar::SetValue(std::vector<int>& vector_i_v, bool force_type)
+{
+	bool ret = false;
+
+	if (force_type)
+		type = VECTOR_INT;
+
+	if (ret = (type == VECTOR_INT))
+		value.vector_i_v = vector_i_v;
+
+	return ret;
+}
+
+bool Cvar::SetValue(std::vector<float>& vector_f_v, bool force_type)
+{
+	bool ret = false;
+
+	if (force_type)
+		type = VECTOR_FLOAT;
+
+	if (ret = (type == VECTOR_FLOAT))
+		value.vector_f_v = vector_f_v;
+
+	return ret;
+}
+
 Cvar::VAR_TYPE Cvar::GetType() const { return type; }
 
 bool Cvar::AsBool() const { return value.bool_v; }
@@ -172,3 +202,6 @@ float Cvar::AsFloat() const { return value.float_v; }
 const char * Cvar::AsCharP() const { return value.char_p_v; }
 
 vec Cvar::AsVec() const { return value.vec_v; }
+
+const std::vector<int> Cvar::AsIntVector() const { return value.vector_i_v; }
+const std::vector<float> Cvar::AsFloatVector() const { return value.vector_f_v; }
