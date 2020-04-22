@@ -71,7 +71,7 @@ AnimatedSprite::AnimatedSprite(Behaviour* unit) : Sprite(unit->GetGameobject(), 
 	case BASE_CENTER:
 	{
 		tex_id = App->tex.Load("Assets/textures/Base_Center.png");
-		animations[FULL_LIFE].Setup(section = { 0, 4, 562, 813 }, 5, 8.0f);
+		animations[FULL_LIFE].Setup(section = { 0, 0, 562, 813 }, 5, 4.0f);
 		animations[HALF_LIFE].Setup({ 0, 4, 562, 813 }, 5, 8.0f);
 		animations[FIRST_UPGRADE].Setup({ 2812, 4, 562, 813 }, 5, 8.0f);
 		animations[SECOND_UPGRADE].Setup({ 5625, 4, 562, 813 }, 5, 8.0f);
@@ -82,10 +82,10 @@ AnimatedSprite::AnimatedSprite(Behaviour* unit) : Sprite(unit->GetGameobject(), 
 	case TOWER:
 	{
 		tex_id = App->tex.Load("Assets/textures/Tower.png");
-		animations[FULL_LIFE].Setup(section = { 0, 0, 62, 115 }, 1);
-		animations[HALF_LIFE].Setup({ 0, 0, 62, 115 }, 1);
-		animations[DESTROYED].Setup({ 0, 0, 62, 115 }, 1);
-		offset = { 0.f, -100.0f, 1.0f, 1.0f };
+		animations[FULL_LIFE].Setup(section = { 1, 0, 499, 746 }, 5, 4.0f);
+		animations[HALF_LIFE].Setup({ 0, 0, 502, 747 }, 5, 4.0f);
+		animations[DESTROYED].Setup({ 0, 0, 502, 747 }, 5, 4.0f);
+		offset = { 15.0f, -715.0f + Map::GetBaseOffset(), 0.3f, 0.3f };
 		break;
 	}
 	case EDGE:
@@ -109,7 +109,7 @@ AnimatedSprite::AnimatedSprite(Behaviour* unit) : Sprite(unit->GetGameobject(), 
 	case BARRACKS:
 	{
 		tex_id = App->tex.Load("Assets/textures/Barracks.png");
-		animations[FULL_LIFE].Setup(section = { 0, 0, 626, 485 }, 5, 8.0f);
+		animations[FULL_LIFE].Setup(section = { 0, 0, 625, 485 }, 5, 5.0f);
 		animations[HALF_LIFE].Setup({ 3130, 0, 626, 485 }, 5, 8.0f);
 		animations[FIRST_UPGRADE].Setup({ 3130, 0, 626, 485 }, 5, 8.0f);
 		animations[SECOND_UPGRADE].Setup({ 6260, 0, 626, 485 }, 5, 8.0f);
@@ -129,7 +129,7 @@ AnimatedSprite::AnimatedSprite(Behaviour* unit) : Sprite(unit->GetGameobject(), 
 	case UNIT_MELEE:
 	{		
 		tex_id = App->tex.Load("Assets/textures/Unit_Melee.png");
-		animations[IDLE].Setup(section = { 2, 2, 418, 295 }, 6, 8.0f);
+		animations[IDLE].Setup(section = { 2, 2, 418, 295 }, 6, 6.0f);
 		animations[MOVING_N].Setup({ 2, 296, 418, 295 }, 7, 8.0f);
 		animations[MOVING_S].Setup({ 2, 592, 418, 295 }, 7, 8.0f);
 		animations[MOVING_E].Setup({ 2, 888, 418, 295 }, 8, 8.0f);
@@ -174,7 +174,7 @@ AnimatedSprite::AnimatedSprite(Behaviour* unit) : Sprite(unit->GetGameobject(), 
 		break;
 	case GATHERER:
 		tex_id = App->tex.Load("Assets/textures/Unit_Gatherer.png");
-		animations[IDLE].Setup(section = { 2, 2, 418, 295 }, 5, 8.0f);
+		animations[IDLE].Setup(section = { 2, 2, 418, 295 }, 5, 6.0f);
 		animations[MOVING_N].Setup({ 2, 296, 418, 295 }, 7, 8.0f);
 		animations[MOVING_S].Setup({ 2, 592, 418, 295 }, 7, 8.0f);
 		animations[MOVING_E].Setup({ 2, 888, 418, 295 }, 8, 8.0f);
