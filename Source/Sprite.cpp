@@ -95,7 +95,7 @@ AnimatedSprite::AnimatedSprite(Behaviour* unit) : Sprite(unit->GetGameobject(), 
 		animations[HALF_LIFE].Setup({ 0, 0, 64, 128 }, 1);
 		animations[DESTROYED].Setup({ 0, 0, 0, 0 }, 1);
 		offset = { -28.0f, -128.0f + Map::GetBaseOffset(), 1.0f, 1.0f };
-		break; 
+		break;
 	}
 	case WALL:
 	{
@@ -127,7 +127,7 @@ AnimatedSprite::AnimatedSprite(Behaviour* unit) : Sprite(unit->GetGameobject(), 
 		break;
 	}
 	case UNIT_MELEE:
-	{		
+	{
 		tex_id = App->tex.Load("Assets/textures/Unit_Melee.png");
 		animations[IDLE].Setup(section = { 2, 2, 418, 295 }, 6, 6.0f);
 		animations[MOVING_N].Setup({ 2, 296, 418, 295 }, 7, 8.0f);
@@ -148,7 +148,7 @@ AnimatedSprite::AnimatedSprite(Behaviour* unit) : Sprite(unit->GetGameobject(), 
 		animations[ATTACKING_SW].Setup({ 2, 4736, 418, 295 }, 7, 8.0f);
 		animations[DESTROYED].Setup({ 2, 5032, 418, 295 }, 8, 5.0f);
 		offset = { -168.0f, -230.0f, 0.6f, 0.6f };
-		break; 
+		break;
 	}
 	case ENEMY_MELEE:
 		tex_id = App->tex.Load("Assets/textures/Enemy_Melee_Temp.png");
