@@ -67,7 +67,7 @@ void Window::LoadConfig(bool empty_config)
 		rect.h = res.attribute("height").as_int(rect.h);
 
 		// Window flags
-		fullscreen = window_node.child("fullscreen").first_attribute().as_bool(fullscreen);
+		fullscreen = false; // window_node.child("fullscreen").first_attribute().as_bool(fullscreen);
 		fullscreen_desktop = window_node.child("fullscreen_window").first_attribute().as_bool(fullscreen_desktop);
 
 		borderless = window_node.child("borderless").first_attribute().as_bool(borderless);
@@ -188,11 +188,11 @@ bool Window::Init()
 
 bool Window::Update()
 {
-	int w, h;
+	/*int w, h;
 	SDL_GetWindowSize(window, &w, &h);
 
 	if (w != rect.w || h != rect.h)
-		Event::Push(WINDOW_SIZE_CHANGED, this, w, h);
+		Event::Push(WINDOW_SIZE_CHANGED, this, w, h);*/
 
 	return true;
 }
@@ -240,16 +240,12 @@ void Window::RecieveEvent(const Event& e)
 	{
 		rect.x = e.data1.AsInt();
 		rect.y = e.data2.AsInt();
-
-		LOG("Window moves to pos: %d, %d", rect.x, rect.y);
 		break;
 	}
 	case WINDOW_SIZE_CHANGED:
 	{
 		rect.w = e.data1.AsInt();
 		rect.h = e.data2.AsInt();
-
-		LOG("Window size changes to: %d, %d", rect.w, rect.h);
 		Event::Push(WINDOW_SIZE_CHANGED, App->render, rect.w, rect.h);
 
 		break;
@@ -323,9 +319,14 @@ void Window::RecieveEvent(const Event& e)
 	}
 	case WINDOW_SET_SIZE:
 	{
-		SDL_SetWindowSize(window, e.data1.AsInt(), e.data2.AsInt());
+		SDL_SetWindowSize(window, rect.w = e.data1.AsInt(), rect.h = e.data2.AsInt());
+		Event::Push(WINDOW_SIZE_CHANGED, App->render, rect.w, rect.h);
 
 		break;
+	}
+	case WINDOW_SET_POSITION:
+	{
+		SDL_SetWindowSize(window, rect.x = e.data1.AsInt(), rect.y = e.data2.AsInt());
 	}
 	case TOGGLE_FULLSCREEN:
 	{
@@ -339,23 +340,17 @@ void Window::RecieveEvent(const Event& e)
 			{
 				SDL_DisplayMode mode;
 				SDL_GetCurrentDisplayMode(SDL_GetWindowDisplayIndex(window), &mode);
-				w = mode.w;
-				h = mode.h;
+				SDL_SetWindowMaximumSize(window, w = mode.w, h = mode.h);
 			}
 
 			SDL_SetWindowFullscreen(window, SDL_WINDOW_FULLSCREEN);
 			Event::Push(WINDOW_SET_SIZE, this, w, h);
-
-			LOG("Window to fullscreen: %d, %d", prev_rect.w, prev_rect.h);
 		}
 		else
 		{
 			SDL_SetWindowFullscreen(window, 0);
 			Event::Push(WINDOW_SET_SIZE, this, prev_rect.w, prev_rect.h);
-
-			LOG("Window from fullscreen: %d, %d", rect.w, rect.h);
 		}
-
 
 		break;
 	}
