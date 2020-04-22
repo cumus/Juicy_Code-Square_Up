@@ -71,12 +71,12 @@ AnimatedSprite::AnimatedSprite(Behaviour* unit) : Sprite(unit->GetGameobject(), 
 	case BASE_CENTER:
 	{
 		tex_id = App->tex.Load("Assets/textures/Base_Center.png");
-		animations[FULL_LIFE].Setup(section = { 2810, 0, 562, 800 }, 5, 8.0f);
-		animations[HALF_LIFE].Setup({ 0, 0, 562, 800 }, 5, 8.0f);
-		animations[FIRST_UPGRADE].Setup({ 2810, 0, 563, 800 }, 5, 8.0f);
-		animations[SECOND_UPGRADE].Setup({ 5620, 0, 563, 800 }, 5, 8.0f);
-		animations[DESTROYED].Setup({ 8430, 0, 563, 800 }, 5, 8.0f);
-		offset = { -90.0f, -720.0f + Map::GetBaseOffset(), 0.15f, 0.15f };
+		animations[FULL_LIFE].Setup(section = { 0, 4, 562, 813 }, 5, 8.0f);
+		animations[HALF_LIFE].Setup({ 0, 4, 562, 813 }, 5, 8.0f);
+		animations[FIRST_UPGRADE].Setup({ 2812, 4, 562, 813 }, 5, 8.0f);
+		animations[SECOND_UPGRADE].Setup({ 5625, 4, 562, 813 }, 5, 8.0f);
+		animations[DESTROYED].Setup({ 8956, 4, 562, 813 }, 5, 8.0f);
+		offset = { -60.0f, -780.0f + Map::GetBaseOffset(), 0.15f, 0.15f };
 		break;
 	}
 	case TOWER:
@@ -192,7 +192,7 @@ AnimatedSprite::AnimatedSprite(Behaviour* unit) : Sprite(unit->GetGameobject(), 
 		animations[ATTACKING_SE].Setup({ 2, 4440, 418, 295 }, 7, 8.0f);
 		animations[ATTACKING_SW].Setup({ 2, 4736, 418, 295 }, 7, 8.0f);
 		animations[DESTROYED].Setup({ 2, 5032, 418, 295 }, 8, 4.0f);
-		offset = { -168.0f, -230.0f, 0.6f, 0.6f };
+		offset = { -168.0f, -250.0f, 0.6f, 0.6f };
 		break;
 	case UNIT_RANGED:
 		tex_id = App->tex.Load("Assets/textures/Unit_Melee.png");
