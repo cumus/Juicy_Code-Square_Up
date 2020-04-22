@@ -309,15 +309,15 @@ void Scene::LoadMenuScene()
 
 	C_Image* background = new C_Image(AddGameobjectToCanvas("Background"));
 	background->target = { 1.f, 1.f, 1.f, 1.f };
-	background->offset = { -1920.f, -1080.f };
-	background->section = { 0, 0, 1920, 1080 };
-	background->tex_id = App->tex.Load("Assets/textures/white.png");
+	background->offset = { -1280.f, -720.f };
+	background->section = { 0, 0, 1280, 720 };
+	background->tex_id = App->tex.Load("Assets/textures/background2.png");
 
 	//------------------------- LOGO --------------------------------------
 
 	C_Image* g_logo = new C_Image(AddGameobjectToCanvas("Game logo"));
-	g_logo->target = { 0.5f, 0.5f, 0.5f, 0.5f };
-	g_logo->offset = { -525.f, -500.f };
+	g_logo->target = { 0.6f, 0.6f, 0.6f, 0.6f };
+	g_logo->offset = { -1255.f, -500.f };
 	g_logo->section = { 0, 0, 1070, 207 };
 	g_logo->tex_id = App->tex.Load("Assets/textures/game-logo.png");
 	
@@ -326,45 +326,45 @@ void Scene::LoadMenuScene()
 	Gameobject* start_go = AddGameobjectToCanvas("Start Button");
 	
 	C_Button* start = new C_Button(start_go, Event(SCENE_CHANGE, this, MAIN, 2.f));
-	start->target = { 0.5f, 0.5f, 0.5f, 0.5f };
-	start->offset = { -525.f, -200.f };
-	for (int i = 0; i < 4; i++)start->section[i] = { 0, 0, 1070, 207 };
-	start->tex_id = App->tex.Load("Assets/textures/play.png");
+	start->target = { 0.f, 0.67f, .67f, .67f };
+	start->offset = { 25.f, -253.f };
+	for (int i = 0; i < 4; i++)start->section[i] = { 0, 0, 470, 90 };
+	start->tex_id = App->tex.Load("Assets/textures/new-game.png");
 
 	C_Button* start_fx = new C_Button(start_go, Event(PLAY_FX, App->audio, int(SELECT), 0));
-	start_fx->target = { 0.5f, 0.5f, 0.5f, 0.5f };
-	start_fx->offset = { -525.f, -200.f };
-	for (int i = 0; i < 4; i++)start_fx->section[i] = { 0, 0, 1070, 207 };
+	start_fx->target = { 0.f, 0.67f, .67f, .67f };
+	start_fx->offset = { 25.f, -253.f };
+	for (int i = 0; i < 4; i++)start_fx->section[i] = { 0, 0, 470, 90 };
 
 	//------------------------- FULLSCREEN --------------------------------------
 
 	Gameobject* fullscreen_go = AddGameobjectToCanvas("Fullscreen Button");
 
 	C_Button* fullscreen = new C_Button(fullscreen_go, Event(TOGGLE_FULLSCREEN, App->win));
-	fullscreen->target = { 0.5f, 0.5f, 0.5f, 0.5f };
-	fullscreen->offset = { -525.f, 100.f };
-	for (int i = 0; i < 4; i++)fullscreen->section[i] = { 0, 0, 1070, 207 };
-	fullscreen->tex_id = App->tex.Load("Assets/textures/fullscreen-menu.png");
+	fullscreen->target = { 0.f, 0.65f, .55f, .55f };
+	fullscreen->offset = { 30.f, -157.f };
+	for (int i = 0; i < 4; i++)fullscreen->section[i] = { 0, 0, 470, 90 };
+	fullscreen->tex_id = App->tex.Load("Assets/textures/fullscreen.png");
 
 	C_Button* fullscreen_fx = new C_Button(start_go, Event(PLAY_FX, App->audio, int(SELECT), 0));
-	fullscreen_fx->target = { 0.5f, 0.5f, 0.5f, 0.5f };
-	fullscreen_fx->offset = { -525.f, 100.f };
-	for (int i = 0; i < 4; i++)fullscreen_fx->section[i] = { 0, 0, 1070, 207 };
+	fullscreen_fx->target = { 0.f, 0.65f, .55f, .55f };
+	fullscreen_fx->offset = { 30.f, -157.f };
+	for (int i = 0; i < 4; i++)fullscreen_fx->section[i] = { 0, 0, 470, 90 };
 
 	//------------------------- QUIT --------------------------------------
 
 	Gameobject* quit_go = AddGameobjectToCanvas("Quit Button");
 
 	C_Button* quit = new C_Button(quit_go, Event(REQUEST_QUIT, App));
-	quit->target = { 0.5f, 0.5f, 0.5f, 0.5f };
-	quit->offset = { -525.f, 400.f };
-	for (int i = 0; i < 4; i++)quit->section[i] = { 0, 0, 1070, 207 };
+	quit->target = { 0.f, 0.65f, .55f, .55f };
+	quit->offset = { 30.f, -55.f };
+	for (int i = 0; i < 4; i++)quit->section[i] = { 0, 0, 470, 90 };
 	quit->tex_id = App->tex.Load("Assets/textures/quit.png");
 
 	C_Button* quit_fx = new C_Button(quit_go, Event(PLAY_FX, App->audio, int(SELECT), 0));
-	quit_fx->target = { 0.5f, 0.5f, 0.5f, 0.5f };
-	quit_fx->offset = { -525.f, 400.f };
-	for (int i = 0; i < 4; i++)quit_fx->section[i] = { 0, 0, 1070, 207 };
+	quit_fx->target = { 0.f, 0.65f, .55f, .55f };
+	quit_fx->offset = { 30.f, -55.f };
+	for (int i = 0; i < 4; i++)quit_fx->section[i] = { 0, 0, 470, 90 };
 }
 
 void Scene::LoadEndScene()
@@ -1044,7 +1044,7 @@ void Scene::UpdateStateMachine()
 		break;
 	case BUILD:
 
-		if (tutorial_tower == 1) {
+		if (player_stats[CURRENT_TOWERS] == 1) {
 
 			Event::Push(GAMEPLAY, this, UPGRADE);
 		}
@@ -1052,14 +1052,15 @@ void Scene::UpdateStateMachine()
 		break;
 	case UPGRADE:
 
+		//if()
 
 		break;
 	case TOWER_STATE:
 
-		if (player_stats[CURRENT_TOWERS] == 1) {
+		/*if (player_stats[CURRENT_TOWERS] == 1) {
 
 			Event::Push(GAMEPLAY, this, TOWER_ATK);
-		}
+		}*/
 	case TOWER_ATK:
 
 
