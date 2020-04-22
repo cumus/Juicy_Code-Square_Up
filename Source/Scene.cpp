@@ -245,7 +245,7 @@ void Scene::LoadMainScene()
 
 	//Minimap
 	new Minimap(AddGameobjectToCanvas("Minimap"));
-
+	//Event::Push(ON_PAUSE, &root);
 	not_go = AddGameobjectToCanvas("lore");
 	not = new C_Image(not_go);
 	next = new C_Button(not_go, Event(GAMEPLAY, this, CAM_MOVEMENT));
@@ -654,9 +654,9 @@ void Scene::UpdatePause()
 
 			Gameobject* resume_go = AddGameobject("resume Button", pause_background_go);
 
-			C_Button* resume = new C_Button(resume_go, Event(SCENE_PLAY, this, App));
+			C_Button* resume = new C_Button(resume_go, Event(SCENE_PLAY, App));
 			resume->target = { 0.51f, 0.3f, 0.3f, 0.3f };
-			resume->offset = { -525.f, -100.f };
+			resume->offset = { -550.f, -100.f };
 			for (int i = 0; i < 4; i++)resume->section[i] = { 0, 0, 1070, 207 };
 			resume->tex_id = App->tex.Load("Assets/textures/resume.png");
 
@@ -956,7 +956,7 @@ void Scene::UpdateStateMachine()
 	switch (current_state)
 	{
 	case LORE:
-
+		
 		break;
 	case CAM_MOVEMENT:
 		
@@ -1110,7 +1110,7 @@ void Scene::OnEventStateMachine(GameplayState state)
 		LOG("CAM MOVEMENT STATE");
 		not_go = AddGameobjectToCanvas("cam_mov");
 		not = new C_Image(not_go);
-		next = new C_Button(not_go, Event(SCENE_PLAY, this, MAIN));
+		next = new C_Button(not_go, Event(SCENE_PLAY, this, App));
 		not_inactive = new C_Button(not_go, Event(SET_INACTIVE, this, MAIN));
 
 		not->target = { 0.75f, 0.8f, 0.6f, 0.6f };
@@ -1138,7 +1138,7 @@ void Scene::OnEventStateMachine(GameplayState state)
 		LOG("R CLICK MOVEMENT STATE");
 		not_go = AddGameobjectToCanvas("R_click_mov");
 		not = new C_Image(not_go);
-		next = new C_Button(not_go, Event(SCENE_PLAY, this, MAIN));
+		next = new C_Button(not_go, Event(SCENE_PLAY, App));
 
 		not->target = { 0.75f, 0.8f, 0.6f, 0.6f };
 		not->offset = { -983.f, -644.f };
@@ -1176,7 +1176,7 @@ void Scene::OnEventStateMachine(GameplayState state)
 		LOG("EDGE STATE");
 		not_go = AddGameobjectToCanvas("edge_go");
 		not = new C_Image(not_go);
-		next = new C_Button(not_go, Event(SCENE_PLAY, this, MAIN));
+		next = new C_Button(not_go, Event(SCENE_PLAY, App));
 
 		not->target = { 0.75f, 0.8f, 0.6f, 0.6f };
 		not->offset = { -983.f, -644.f };
@@ -1294,7 +1294,7 @@ void Scene::OnEventStateMachine(GameplayState state)
 		LOG("MELEE STATE");
 		not_go = AddGameobjectToCanvas("melee_go");
 		not = new C_Image(not_go);
-		next = new C_Button(not_go, Event(SCENE_PLAY, this, MAIN));
+		next = new C_Button(not_go, Event(SCENE_PLAY, App));
 
 		not->target = { 0.75f, 0.8f, 0.6f, 0.6f };
 		not->offset = { -983.f, -644.f };
@@ -1377,7 +1377,7 @@ void Scene::OnEventStateMachine(GameplayState state)
 		not->section = { 0, 0, 640, 985 };
 		not->tex_id = App->tex.Load("Assets/textures/mobdrop-not.png");
 
-		next = new C_Button(not_go, Event(SCENE_PLAY, this, MAIN));
+		next = new C_Button(not_go, Event(SCENE_PLAY, App));
 		next->target = { 0.66f, 0.95f, 0.6f, 0.6f };
 		next->offset = { -740.f, -285.f };
 		for (int i = 0; i < 4; i++)next->section[i] = { 0, 0, 1070, 207 };
@@ -1403,7 +1403,7 @@ void Scene::OnEventStateMachine(GameplayState state)
 		not->section = { 0, 0, 640, 985 };
 		not->tex_id = App->tex.Load("Assets/textures/build-not.png");
 
-		next = new C_Button(not_go, Event(SCENE_PLAY, this, MAIN));
+		next = new C_Button(not_go, Event(SCENE_PLAY, App));
 
 		next->target = { 0.60f, 0.45f, 0.3f, 0.3f };
 		next->offset = { -525.f, 200.f };
@@ -1431,7 +1431,7 @@ void Scene::OnEventStateMachine(GameplayState state)
 		not->section = { 0, 0, 640, 985 };
 		not->tex_id = App->tex.Load("Assets/textures/upgrade-not.png");
 
-		next = new C_Button(not_go, Event(SCENE_PLAY, this, MAIN));
+		next = new C_Button(not_go, Event(SCENE_PLAY, App));
 
 		next->target = { 0.74f, 0.726f, 0.6f, 0.6f };
 		next->offset = { -309.f, 37.f };
@@ -1487,7 +1487,7 @@ void Scene::OnEventStateMachine(GameplayState state)
 		not->section = { 0, 0, 640, 985 };
 		not->tex_id = App->tex.Load("Assets/textures/toweratk-not.png");
 
-		next = new C_Button(not_go, Event(SCENE_PLAY, this, MAIN));
+		next = new C_Button(not_go, Event(SCENE_PLAY, App));
 
 		next->target = { 0.74f, 0.726f, 0.6f, 0.6f };
 		next->offset = { -309.f, 37.f };
