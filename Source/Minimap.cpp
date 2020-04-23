@@ -24,10 +24,16 @@ Minimap::Minimap(Gameobject* go) : UI_Component(go, go->GetUIParent(), UI_MINIMA
 	std::pair<int, int> total_size = { int(float(map_size.first * tile_size.first) * map_scale), int(float(map_size.second * tile_size.second) * map_scale) };
 	minimap_texture = App->render->GetMinimap(total_size.first, total_size.second, map_scale, false);
 
-	// Load Icons
+	// Set UI_Component values
+	target = { 1.f, 1.f, 1.5f * map_scale, 1.5f * map_scale };
+	offset = { -total_size.first, -total_size.second };
+
+	// Set Border & Sections
+	sections[MINIMAP] = { 0, 0, total_size.first, total_size.second };
+	sections[BACKGROUND] = { 585, 656, 384, 214 };
 	hud_texture = App->tex.Load("Assets/textures/Iconos_square_up.png");
-	sections[BACKGROUND]		= { 585, 656, 384, 214 };
-	sections[MINIMAP]			= { 0, 0, total_size.first, total_size.second };
+
+	// Load Icons
 	sections[ICON_ALLIED_UNIT]	= { 494, 866, 5, 5 };
 	sections[ICON_ENEMY_UNIT]	= { 502, 866, 5, 5 };
 	sections[ICON_BASE_CENTER]	= { 519, 858, 8, 13 };
@@ -36,9 +42,6 @@ Minimap::Minimap(Gameobject* go) : UI_Component(go, go->GetUIParent(), UI_MINIMA
 	sections[ICON_EDGE]			= { 0, 0, 0, 0 };
 	sections[ICON_SPAWNER]		= { 542, 862, 11, 9 };
 
-	// Set UI_Component values
-	target = { 1.f, 1.f, 0.2f, 0.2f };
-	offset = { -total_size.first, -total_size.second };
 }
 
 Minimap::~Minimap()

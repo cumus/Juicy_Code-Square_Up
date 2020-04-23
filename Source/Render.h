@@ -138,6 +138,10 @@ private:
 	bool accelerated = true;
 	bool vsync = false;
 	bool target_texture = false;
+
+private:
+
+	inline void AddToLayer(Layer layer, const RenderData& data);
 };
 
 #endif // __RENDER_H__

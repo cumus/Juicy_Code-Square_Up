@@ -428,16 +428,22 @@ SDL_Texture* Map::GetFullMap(std::vector<std::pair<SDL_Rect, SDL_Rect>>& rects) 
 	{
 		int tex_id;
 
-		for (int y = 0; y < width; ++y)
+		for (std::vector<MapLayer>::const_iterator it = layers.cbegin(); it != layers.cend(); ++it)
 		{
-			for (int x = 0; x < height; ++x)
+			if (it->drawable)
 			{
-				std::pair<SDL_Rect, SDL_Rect> target;
-				if (GetRectAndTexId(layers[1].GetID(x, y), target.first, tex_id))
+				for (int y = 0; y < width; ++y)
 				{
-					std::pair<int, int> render_pos = I_MapToWorld(x, y);
-					target.second = { render_pos.first, render_pos.second, size_i.first, size_i.second };
-					rects.push_back(target);
+					for (int x = 0; x < height; ++x)
+					{
+						std::pair<SDL_Rect, SDL_Rect> target;
+						if (GetRectAndTexId(it->GetID(x, y), target.first, tex_id))
+						{
+							std::pair<float, float> render_pos = F_MapToWorld(float(x), float(y));
+							target.second = { int(render_pos.first), int(render_pos.second), size_i.first, size_i.second };
+							rects.push_back(target);
+						}
+					}
 				}
 			}
 		}

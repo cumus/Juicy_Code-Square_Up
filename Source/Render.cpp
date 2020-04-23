@@ -260,11 +260,13 @@ void Render::RecieveEvent(const Event& e)
 		cam.w = float(e.data1.AsInt());
 		cam.h = float(e.data2.AsInt());
 		SetupViewPort(16.0f / 9.0f);
+		Event::Push(MINIMAP_UPDATE_TEXTURE, this);
 		break;
 	}
 	case MINIMAP_UPDATE_TEXTURE:
 	{
 		RenderMinimap();
+		break;
 	}
 	case MINIMAP_MOVE_CAMERA:
 	{
@@ -340,7 +342,7 @@ bool Render::RenderMinimap()
 
 	if (App->tex.GetTextureData(minimap_texture, data))
 	{
-		int minimap_half_width = data.width / 2;
+		int minimap_half_width = int(float(data.width) * 0.5f);
 		if (SDL_SetRenderTarget(renderer, data.texture) == 0)
 		{
 			std::vector<std::pair<SDL_Rect, SDL_Rect>> rects;
@@ -370,6 +372,16 @@ bool Render::RenderMinimap()
 		LOG("Error retrieving minimap texture (id = %d)", minimap_texture);
 
 	return ret;
+}
+
+inline void Render::AddToLayer(Layer layer, const RenderData& data)
+{
+	int pos = 0;
+
+	if (layer < Layer::HUD && layer > Layer::DEBUG_MAP)
+		pos = data.rect.y + data.rect.h;
+
+	layers[layer][pos].push_back(data);
 }
 
 int Render::GetMinimap(int width, int height, float scale, bool trigger_event)
@@ -464,7 +476,7 @@ bool Render::Blit(int texture_id, int x, int y, const SDL_Rect* section, Layer l
 			data.rect.y = y;
 		}
 
-		layers[layer][layer < Layer::HUD ? data.rect.y + data.rect.h : 0].push_back(data);
+		AddToLayer(layer, data);
 	}
 	//else
 		//LOG("Cannot blit to screen. Invalid id %d", texture_id);
@@ -510,7 +522,7 @@ bool Render::Blit_Scale(int texture_id, int x, int y, float scale_x, float scale
 			data.rect.h = int(float(data.rect.h) * scale_y);
 		}
 
-		layers[layer][layer < Layer::HUD ? data.rect.y + data.rect.h : 0].push_back(data);
+		AddToLayer(layer, data);
 	}
 	else
 		//LOG("Cannot blit to screen. Invalid id %d", texture_id);
@@ -534,7 +546,7 @@ bool Render::BlitNorm(int texture_id, RectF rect, const SDL_Rect* section, Layer
 			data.type = RenderData::TEXTURE_SECTION;
 		}
 
-		layers[layer][layer < Layer::HUD ? data.rect.y + data.rect.h : 0].push_back(data);
+		AddToLayer(layer, data);
 	}
 	//else
 		//LOG("Cannot blit to screen. Invalid id %d", texture_id);
@@ -558,7 +570,7 @@ bool Render::Blit_Text(RenderedText* rendered_text, int x, int y, Layer layer, b
 			else
 				data.rect = { x, y, width, height };
 
-			layers[layer][layer < Layer::HUD ? data.rect.y + data.rect.h : 0].push_back(data);
+			AddToLayer(layer, data);
 		}
 		else
 			LOG("Cannot blit text. Invalid text size");
@@ -583,7 +595,7 @@ bool Render::Blit_TextSized(RenderedText* rendered_text, SDL_Rect size, Layer la
 		else
 			data.rect = size;
 
-		layers[layer][layer < Layer::HUD ? data.rect.y + data.rect.h : 0].push_back(data);
+		AddToLayer(layer, data);
 	}
 	else
 		LOG("Cannot blit text. Invalid RenderedText");
@@ -604,7 +616,7 @@ void Render::DrawQuad(const SDL_Rect rect, const SDL_Color color, bool filled, L
 		data.rect.y -= int(cam.y);
 	}
 
-	layers[layer][layer < Layer::HUD ? data.rect.y + data.rect.h : 0].push_back(data);
+	AddToLayer(layer, data);
 }
 
 void Render::DrawQuadNormCoords(RectF rect, const SDL_Color color, bool filled, Layer layer)
@@ -614,7 +626,7 @@ void Render::DrawQuadNormCoords(RectF rect, const SDL_Color color, bool filled, 
 	data.rect = { int(rect.x * cam.w), int(rect.y * cam.h), int(rect.w * cam.w), int(rect.h * cam.h) };
 	data.extra.color = color;
 
-	layers[layer][layer < Layer::HUD ? data.rect.y + data.rect.h : 0].push_back(data);
+	AddToLayer(layer, data);
 }
 
 void Render::DrawLine(const std::pair<int, int> a, const std::pair<int, int> b, const SDL_Color color, Layer layer, bool use_camera)
@@ -632,7 +644,7 @@ void Render::DrawLine(const std::pair<int, int> a, const std::pair<int, int> b, 
 		data.rect.h -= int(cam.y);
 	}
 
-	layers[layer][layer < Layer::HUD ? data.rect.y + data.rect.h : 0].push_back(data);
+	AddToLayer(layer, data);
 }
 
 void Render::DrawCircle(const std::pair<int, int> a, const std::pair<int, int> b, const SDL_Color color, Layer layer, bool use_camera)
@@ -648,7 +660,7 @@ void Render::DrawCircle(const std::pair<int, int> a, const std::pair<int, int> b
 		data.rect.y -= int(cam.y);
 	}
 
-	layers[layer][layer < Layer::HUD ? data.rect.y + data.rect.h : 0].push_back(data);
+	AddToLayer(layer, data);
 }
 
 Render::RenderData::RenderData(Type t) :
