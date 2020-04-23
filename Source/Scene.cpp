@@ -363,7 +363,7 @@ void Scene::LoadMainScene()
 
 	next->tex_id = App->tex.Load("Assets/textures/tuto/not-button.png");
 
-	skip = new C_Button(not_go, Event(GAMEPLAY, this, SPAWNER));
+	skip = new C_Button(not_go, Event(GAMEPLAY, this, SPAWNER_STATE));
 
 	skip->target = { 0.74f, 0.726f, 0.4f, 0.4f };
 	skip->offset = { 100.f, -317.f };
@@ -1613,7 +1613,7 @@ void Scene::OnEventStateMachine(GameplayState state)
 
 		break;
 	case TOWER_ATK:
-
+		not_go->SetInactive();
 		LOG("TOWER ATK STATE");
 		not_go = AddGameobjectToCanvas("tower_atk_go");
 		not = new C_Image(not_go);

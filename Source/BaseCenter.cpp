@@ -156,6 +156,7 @@ void Base_Center::CreatePanel()
 
 	meleeUnit_btn->tex_id = panel_tex_ID;
 
+	/*
 	rangedUnit_btn = new C_Button(selectionPanel, Event(BUILD_RANGED, this, spawnPoint, 5.0f));//Bottom left
 	rangedUnit_btn->target = { 0.912f, posY_panel+0.085f, 0.7f, 0.7f };
 	rangedUnit_btn->offset = { 0.0f, 0.0f };
@@ -177,6 +178,7 @@ void Base_Center::CreatePanel()
 	superUnit_btn->section[3] = { 207, 325, 62, 62 };
 
 	superUnit_btn->tex_id = panel_tex_ID;
+	sa*/
 }
 
 void Base_Center::UpdatePanel()
