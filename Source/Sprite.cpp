@@ -71,8 +71,7 @@ AnimatedSprite::AnimatedSprite(Behaviour* unit) : Sprite(unit->GetGameobject(), 
 	case BASE_CENTER:
 	{
 		tex_id = App->tex.Load("Assets/textures/Base_Center.png");
-		animations[FULL_LIFE].Setup(section = { 0, 0, 562, 813 }, 5, 4.0f);
-		animations[HALF_LIFE].Setup({ 0, 0, 562, 813 }, 5, 4.0f);
+		animations[NO_UPGRADE].Setup(section = { 0, 0, 562, 813 }, 5, 4.0f);
 		animations[FIRST_UPGRADE].Setup({ 2812, 0, 562, 813 }, 5, 4.0f);
 		animations[SECOND_UPGRADE].Setup({ 5625, 0, 562, 813 }, 5, 4.0f);
 		animations[DESTROYED].Setup({ 8956, 0, 562, 813 }, 5, 8.0f);
@@ -82,8 +81,7 @@ AnimatedSprite::AnimatedSprite(Behaviour* unit) : Sprite(unit->GetGameobject(), 
 	case TOWER:
 	{
 		tex_id = App->tex.Load("Assets/textures/Tower.png");
-		animations[FULL_LIFE].Setup(section = { 1, 0, 499, 746 }, 5, 4.0f);
-		animations[HALF_LIFE].Setup({ 0, 0, 502, 747 }, 5, 4.0f);
+		animations[NO_UPGRADE].Setup(section = { 1, 0, 499, 746 }, 5, 4.0f);
 		animations[DESTROYED].Setup({ 0, 0, 502, 747 }, 5, 4.0f);
 		offset = { 15.0f, -715.0f + Map::GetBaseOffset(), 0.3f, 0.3f };
 		break;
@@ -91,8 +89,7 @@ AnimatedSprite::AnimatedSprite(Behaviour* unit) : Sprite(unit->GetGameobject(), 
 	case EDGE:
 	{
 		tex_id = App->tex.Load("Assets/textures/Edge1.png");
-		animations[FULL_LIFE].Setup(section = { 0, 0, 128, 128 }, 1);
-		animations[HALF_LIFE].Setup({ 0, 0, 64, 128 }, 1);
+		animations[NO_UPGRADE].Setup(section = { 0, 0, 128, 128 }, 1);
 		animations[DESTROYED].Setup({ 0, 0, 0, 0 }, 1);
 		offset = { -28.0f, -128.0f + Map::GetBaseOffset(), 1.0f, 1.0f };
 		break;
@@ -100,8 +97,7 @@ AnimatedSprite::AnimatedSprite(Behaviour* unit) : Sprite(unit->GetGameobject(), 
 	case WALL:
 	{
 		tex_id = App->tex.Load("Assets/textures/Base_Center.png");
-		animations[FULL_LIFE].Setup(section = { 0, 0, 166, 534 }, 1);
-		animations[HALF_LIFE].Setup({ 0, 0, 166, 534 }, 1);
+		animations[NO_UPGRADE].Setup(section = { 0, 0, 166, 534 }, 1);
 		animations[DESTROYED].Setup({ 0, 0, 166, 534 }, 1);
 		offset = { 20.f, -460.f, 0.3f, 0.3f };
 		break;
@@ -109,8 +105,7 @@ AnimatedSprite::AnimatedSprite(Behaviour* unit) : Sprite(unit->GetGameobject(), 
 	case BARRACKS:
 	{
 		tex_id = App->tex.Load("Assets/textures/Barracks.png");
-		animations[FULL_LIFE].Setup(section = { 0, 0, 625, 485 }, 5, 5.0f);
-		animations[HALF_LIFE].Setup({ 3130, 0, 625, 485 }, 5, 5.0f);
+		animations[NO_UPGRADE].Setup(section = { 0, 0, 625, 485 }, 5, 5.0f);
 		animations[FIRST_UPGRADE].Setup({ 3130, 0, 625, 485 }, 5, 5.0f);
 		animations[SECOND_UPGRADE].Setup({ 6260, 0, 625, 485 }, 5, 5.0f);
 		animations[DESTROYED].Setup({ 9390, 0, 625, 485 }, 5, 8.0f);
@@ -120,8 +115,7 @@ AnimatedSprite::AnimatedSprite(Behaviour* unit) : Sprite(unit->GetGameobject(), 
 	case SPAWNER:
 	{
 		tex_id = App->tex.Load("Assets/textures/SpawnEnemy.png");
-		animations[FULL_LIFE].Setup(section = { 0, 0, 560, 397 }, 4, 5.0f);
-		animations[HALF_LIFE].Setup({ 0, 0, 560, 397 }, 4, 5.0f);
+		animations[NO_UPGRADE].Setup(section = { 0, 0, 560, 397 }, 4, 5.0f);
 		animations[DESTROYED].Setup({ 0, 0, 560, 397 }, 4, 5.0f);
 		offset = { -205.f, -100.f, 0.5f, 0.5f };
 		break;

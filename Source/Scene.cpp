@@ -59,7 +59,7 @@ bool Scene::Start()
 bool Scene::PreUpdate()
 {
 	root.PreUpdate();
-
+	//Deactivate non in-sight enemies
 	return true;
 }
 
@@ -103,7 +103,7 @@ bool Scene::PostUpdate()
 {
 	root.PostUpdate();
 	map.Draw();
-
+	//Reactivate all enemies
 	return true;
 }
 

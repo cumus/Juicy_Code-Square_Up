@@ -60,8 +60,7 @@ enum UnitState : int
 
 	// Building
 	BUILDING,
-	FULL_LIFE,
-	HALF_LIFE,
+	NO_UPGRADE,
 	DESTROYED,
 	FIRST_UPGRADE,
 	SECOND_UPGRADE,
@@ -112,6 +111,7 @@ protected:
 public: 
 	
 	static std::map<double, Behaviour*> b_map;
+	static std::vector<double> enemiesInSight;
 	UnitState current_state;
 	int max_life, current_life, damage;
 	std::vector<iPoint> tilesVisited;
@@ -126,6 +126,7 @@ protected:
 	Audio_FX deathFX;
 	std::pair<float, float> visionRange;
 	std::pair<float, float> atkRange;
+	Behaviour* attackObjective;
 
 	// Complementary components
 	AudioSource* audio;
@@ -212,7 +213,6 @@ protected:
 	Audio_FX attackFX;
 	float msCount;
 	bool inRange;
-	Behaviour* attackObjective;
 	vec attackPos;
 	std::vector<iPoint>* path;
 	iPoint nextTile;

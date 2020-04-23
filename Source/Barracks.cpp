@@ -14,7 +14,7 @@
 
 
 
-Barracks::Barracks(Gameobject* go) : BuildingWithQueue(go, BARRACKS, FULL_LIFE, B_BARRACKS)
+Barracks::Barracks(Gameobject* go) : BuildingWithQueue(go, BARRACKS, NO_UPGRADE, B_BARRACKS)
 {
 	Transform* t = game_object->GetTransform();
 
@@ -60,10 +60,6 @@ void Barracks::AfterDamageAction()
 {
 	if (current_life <= 0)
 		OnKill(type);
-	else if (current_life >= max_life * 0.5f)
-		current_state = FULL_LIFE;
-	else
-		current_state = HALF_LIFE;
 }
 
 

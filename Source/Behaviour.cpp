@@ -20,6 +20,7 @@
 #include <vector>
 
 std::map<double, Behaviour*> Behaviour::b_map;
+std::vector<double> Behaviour::enemiesInSight;
 
 Behaviour::Behaviour(Gameobject* go, UnitType t, UnitState starting_state, ComponentType comp_type) :
 	Component(comp_type, go),
@@ -34,6 +35,7 @@ Behaviour::Behaviour(Gameobject* go, UnitType t, UnitState starting_state, Compo
 	shoot = false;
 	selectionPanel = nullptr;
 	drawRanges = false;
+	attackObjective = nullptr;
 
 	audio = new AudioSource(game_object);
 	new AnimatedSprite(this);
@@ -298,7 +300,6 @@ B_Unit::B_Unit(Gameobject* go, UnitType t, UnitState s, ComponentType comp_type)
 	dirX = 0;
 	dirY = 0;
 	inRange = false;
-	attackObjective = nullptr;
 	msCount = 0;
 	arriveDestination = false;
 	current_state = IDLE;

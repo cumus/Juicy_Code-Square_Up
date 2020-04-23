@@ -34,7 +34,6 @@ protected:
 	int attack_speed = 1;
 	std::pair<float, float> localPos;
 	std::pair<float, float> atkPos;
-	Behaviour* atkObj;
 	float atkDelay;
 	Audio_FX attackFX;
 	float ms_count;

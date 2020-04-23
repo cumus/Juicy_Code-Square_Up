@@ -4,7 +4,7 @@
 #include "Transform.h"
 #include "Log.h"
 
-Edge::Edge(Gameobject* go) : Behaviour(go, EDGE, FULL_LIFE, B_EDGE)
+Edge::Edge(Gameobject* go) : Behaviour(go, EDGE, NO_UPGRADE, B_EDGE)
 {
 	max_life = 100;
 	current_life = max_life;
@@ -52,9 +52,5 @@ void Edge::AfterDamageAction()
 
 	if (current_life <= 0)
 		OnKill(type);
-	else if (current_life >= max_life * 0.5f)
-		current_state = FULL_LIFE;
-	else
-		current_state = HALF_LIFE;
 }
 

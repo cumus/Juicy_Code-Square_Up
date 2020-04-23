@@ -9,7 +9,7 @@
 
 #include <time.h>
 
-Spawner::Spawner(Gameobject* go) : Behaviour(go, SPAWNER, FULL_LIFE, B_SPAWNER)
+Spawner::Spawner(Gameobject* go) : Behaviour(go, SPAWNER, NO_UPGRADE, B_SPAWNER)
 {
 	Transform* t = game_object->GetTransform();
 

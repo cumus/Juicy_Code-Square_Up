@@ -13,7 +13,7 @@
 
 Gameobject* Base_Center::baseCenter = nullptr;
 
-Base_Center::Base_Center(Gameobject* go) : BuildingWithQueue(go, BASE_CENTER, FULL_LIFE, B_BASE_CENTER)
+Base_Center::Base_Center(Gameobject* go) : BuildingWithQueue(go, BASE_CENTER, NO_UPGRADE, B_BASE_CENTER)
 {
 	Transform* t = game_object->GetTransform();
 
@@ -62,10 +62,6 @@ void Base_Center::AfterDamageAction()
 {
 	if (current_life <= 0)
 		OnKill(type);
-	else if (current_life >= max_life * 0.5f)
-		current_state = FULL_LIFE;
-	else
-		current_state = HALF_LIFE;
 }
 
 

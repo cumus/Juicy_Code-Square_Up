@@ -10,7 +10,7 @@
 #include "Scene.h"
 #include "Canvas.h"
 
-Tower::Tower(Gameobject* go) : Behaviour(go, TOWER, FULL_LIFE, B_TOWER)
+Tower::Tower(Gameobject* go) : Behaviour(go, TOWER, NO_UPGRADE, B_TOWER)
 {
 	max_life = 50;
 	current_life = max_life;
@@ -20,8 +20,7 @@ Tower::Tower(Gameobject* go) : Behaviour(go, TOWER, FULL_LIFE, B_TOWER)
 	ms_count = 0;
 	atkDelay = 1.5;
 	shoot = false;
-	current_state = FULL_LIFE;
-	atkObj = nullptr;
+	current_state = NO_UPGRADE;
 
 	create_bar();
 	bar_go->SetInactive();
@@ -57,7 +56,7 @@ void Tower::Update()
 			std::map<float, Behaviour*> inRange;
 			int found = GetBehavioursInRange(game_object->GetTransform()->GetGlobalPosition(), attack_range, inRange);
 			float d = 0;
-			atkObj = nullptr;
+			attackObjective = nullptr;
 			if (found > 0)
 			{
 				for (std::map<float, Behaviour*>::iterator it = inRange.begin(); it != inRange.end(); ++it)
@@ -66,14 +65,14 @@ void Tower::Update()
 					{
 						if (d == 0)
 						{
-							atkObj = it->second;
+							attackObjective = it->second;
 							d = it->first;
 						}
 						else
 						{
 							if (it->first < d)
 							{
-								atkObj = it->second;
+								attackObjective = it->second;
 								d = it->first;
 							}
 						}
@@ -82,8 +81,8 @@ void Tower::Update()
 			}
 		}
 
-		if (atkObj != nullptr) 
-			if(atkObj->GetState() != DESTROYED) 
+		if (attackObjective != nullptr)
+			if(attackObjective->GetState() != DESTROYED)
 				if (ms_count >= atkDelay) DoAttack();
 		
 
@@ -126,10 +125,6 @@ void Tower::AfterDamageAction()
 		update_health_ui();
 		if (current_life <= 0)
 			OnKill(type);
-		else if (current_life >= max_life * 0.5f)
-			current_state = FULL_LIFE;
-		else
-			current_state = HALF_LIFE;
 	}
 }
 
@@ -161,7 +156,7 @@ void Tower::DoAttack()
 {
 	atkPos.first = 0;
 	atkPos.second = 0;
-	vec pos = atkObj->GetGameobject()->GetTransform()->GetGlobalPosition();
+	vec pos = attackObjective->GetGameobject()->GetTransform()->GetGlobalPosition();
 	atkPos = Map::F_MapToWorld(pos.x, pos.y, pos.z);
 	atkPos.first += 30.0f;
 	atkPos.second += 20.0f;
@@ -171,11 +166,11 @@ void Tower::DoAttack()
 	localPos.first += 30.0f;
 	localPos.second += -60.0f;
 
-	Event::Push(DAMAGE, atkObj, damage);
+	Event::Push(DAMAGE, attackObjective, damage);
 
 	shoot = true;
 	ms_count = 0;
-	atkObj = nullptr;
+	attackObjective = nullptr;
 }
 
 void Tower::CreatePanel()
