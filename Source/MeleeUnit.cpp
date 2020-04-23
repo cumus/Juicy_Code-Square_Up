@@ -19,11 +19,35 @@ MeleeUnit::MeleeUnit(Gameobject* go) : B_Unit(go, UNIT_MELEE, IDLE, B_MELEE_UNIT
 	vision_range = 10.0f;
 
 	//SFX
-	//deathFX = MELEE_DIE_FX;
-	//attackFX = MELEE_ATK_FX;
+	deathFX = MELEE_DIE_FX;
+	attackFX = MELEE_ATK_FX;
 }
 
 MeleeUnit::~MeleeUnit()
 {
 	
+}
+
+
+void MeleeUnit::IARangeCheck()
+{
+	if (GetState() != DESTROYED)
+	{
+		vec pos = game_object->GetTransform()->GetGlobalPosition();
+		std::map<float, Behaviour*> out;
+		unsigned int total_found = GetBehavioursInRange(vec(pos.x, pos.y, 0.5f), vision_range, out);//Get units in vision range
+		float distance = 0;
+		if (total_found > 0)//Check if found behaviours in range
+		{
+			for (std::map<float, Behaviour*>::iterator it = out.begin(); it != out.end(); ++it)
+			{
+				if (it->second->GetType() == ENEMY_MELEE || it->second->GetType() == ENEMY_RANGED ||
+					it->second->GetType() == ENEMY_SUPER || it->second->GetType() == ENEMY_SPECIAL) //Check if it is an emey
+				{
+					Behaviour::enemiesInSight.push_back(it->second->GetID());
+					//LOG("Added to in sight");
+				}
+			}
+		}
+	}
 }

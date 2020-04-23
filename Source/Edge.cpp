@@ -31,12 +31,6 @@ Edge::~Edge()
 	b_map.erase(GetID());
 }
 
-void Edge::OnRightClick(vec pos, vec modPos)
-{
-	OnDamage(3);
-}
-
-
 void Edge::AfterDamageAction()
 {
 	if (App->scene->tutorial_edge == true)

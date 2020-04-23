@@ -71,6 +71,7 @@ void Tower::Update()
 				{
 					if ((it->second->GetType() == ENEMY_MELEE || it->second->GetType() == ENEMY_RANGED) && it->second->GetState() != DESTROYED)
 					{
+						Behaviour::enemiesInSight.push_back(it->second->GetID());
 						if (d == 0)
 						{
 							attackObjective = it->second;

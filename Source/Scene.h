@@ -215,6 +215,9 @@ private:
 	bool win = false;
 	int time = 0;
 
+	//Fog of war
+	std::vector<double> cacheEnemies;
+
 	//--------STATE MACHINE VARIABLES--------
 
 	float distance;

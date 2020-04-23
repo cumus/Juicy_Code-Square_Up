@@ -9,7 +9,6 @@ public:
 	Edge(Gameobject* go);
 	~Edge();
 
-	void OnRightClick(vec pos, vec modPos) override;
 	void AfterDamageAction() override;
 };
 

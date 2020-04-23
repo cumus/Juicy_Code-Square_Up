@@ -21,7 +21,7 @@ Base_Center::Base_Center(Gameobject* go) : BuildingWithQueue(go, BASE_CENTER, NO
 	current_life = max_life;
 	bc_lvl = 1;
 	bc_max_lvl = 5;
-
+	vision_range = 30.0f;
 	create_bar();
 	bar_go->SetInactive();
 	CreatePanel();
@@ -76,6 +76,7 @@ void Base_Center::Update()
 					it->second->GetType() == ENEMY_SUPER || it->second->GetType() == ENEMY_SPECIAL) //Check if it is an emey
 				{
 					Behaviour::enemiesInSight.push_back(it->second->GetID());
+					//LOG("Added to in sight");
 				}
 			}
 		}

@@ -68,7 +68,9 @@ enum UnitState : int
 
 
 class Sprite;
+class AnimatedSprite;
 class AudioSource;
+
 
 class Behaviour : public Component
 {
@@ -118,6 +120,7 @@ public:
 	UnitState current_state;
 	int max_life, current_life, damage;
 	std::vector<iPoint> tilesVisited;
+	AnimatedSprite* characteR = nullptr;
 
 protected:	
 

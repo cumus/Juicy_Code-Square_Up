@@ -62,11 +62,14 @@ bool Scene::PreUpdate()
 	//Fog of war
 	if (Behaviour::enemiesInSight.empty() != false)
 	{
-		for (std::vector<double>::const_iterator it = Behaviour::enemiesInSight.cbegin(); it != Behaviour::enemiesInSight.cend(); ++it)
+		cacheEnemies = Behaviour::enemiesInSight;
+		Behaviour::enemiesInSight.clear();
+		//LOG("Not empty");
+		/*for (std::vector<double>::const_iterator it = cacheEnemies.cbegin(); it != cacheEnemies.cend(); ++it)
 		{
 			Behaviour* go = Behaviour::b_map[*it]->GetGameobject()->GetBehaviour();
-			if (go->GetState() != DESTROYED) Event::Push(SHOW_SPRITE, go);		
-		}
+			if (go->GetState() != DESTROYED) { Event::Push(SHOW_SPRITE, go); LOG("Sent event"); }
+		}*/
 	}
 	return true;
 }
@@ -122,12 +125,12 @@ bool Scene::PostUpdate()
 		}
 	}
 	//Fog of war
-	for (std::vector<double>::const_iterator it = Behaviour::enemiesInSight.cbegin(); it != Behaviour::enemiesInSight.cend(); ++it)
-	{	
-		Behaviour* go = Behaviour::b_map[*it]->GetGameobject()->GetBehaviour();
-		if(go->GetState() != DESTROYED) Event::Push(HIDE_SPRITE, go);		
+	for (std::vector<double>::const_iterator it = cacheEnemies.cbegin(); it != cacheEnemies.cend(); ++it)
+	{
+		//Behaviour* go = Behaviour::b_map[*it]->GetGameobject()->GetBehaviour();
+		//if (go->GetState() != DESTROYED) Event::Push(HIDE_SPRITE, go);
+		cacheEnemies.clear();
 	}
-	Behaviour::enemiesInSight.clear();
 	return true;
 }
 
@@ -399,10 +402,10 @@ void Scene::LoadMainScene()
 	SpawnBehaviour(EDGE, edge_pos3);
 	SpawnBehaviour(EDGE, edge_pos4);
 	SpawnBehaviour(EDGE, edge_pos5);
-	SpawnBehaviour(EDGE, edge_pos3);
-	SpawnBehaviour(EDGE, edge_pos4);
-	SpawnBehaviour(EDGE, edge_pos5);
 	SpawnBehaviour(EDGE, edge_pos6);
+	SpawnBehaviour(EDGE, edge_pos7);
+	SpawnBehaviour(EDGE, edge_pos8);
+	SpawnBehaviour(EDGE, edge_pos9);
 }
 
 void Scene::LoadIntroScene()

@@ -12,9 +12,7 @@ class MeleeUnit : public B_Unit
 public:
 	MeleeUnit(Gameobject* go);
 	~MeleeUnit();
-	// void OnDamage(int d);
-	// void CheckSprite();
-	// void OnKill();
+	void IARangeCheck() override;
 
 };
 
