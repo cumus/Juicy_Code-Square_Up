@@ -340,10 +340,11 @@ bool Render::RenderMinimap()
 
 	if (App->tex.GetTextureData(minimap_texture, data))
 	{
+		int minimap_half_width = data.width / 2;
 		if (SDL_SetRenderTarget(renderer, data.texture) == 0)
 		{
 			std::vector<std::pair<SDL_Rect, SDL_Rect>> rects;
-			Map::SetMapScale(1.0f);
+			Map::SetMapScale(minimap_scale);
 			SDL_Texture* tex = Map::GetMapC()->GetFullMap(rects);
 			if (ret = (tex && !rects.empty()))
 			{
@@ -371,13 +372,13 @@ bool Render::RenderMinimap()
 	return ret;
 }
 
-int Render::GetMinimap(int width, int height, bool trigger_event)
+int Render::GetMinimap(int width, int height, float scale, bool trigger_event)
 {
 	if (minimap_texture < 0)
 	{
 		// Setup Minimap
+		minimap_scale = scale;
 		minimap_texture = App->tex.CreateEmptyTexture(renderer, width, height);
-		minimap_half_width = width / 2;
 	}
 
 	trigger_event ? Event::Push(MINIMAP_UPDATE_TEXTURE, this) : RenderMinimap();

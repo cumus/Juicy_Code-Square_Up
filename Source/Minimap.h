@@ -25,8 +25,8 @@ private:
 
 	int minimap_texture;
 	int hud_texture;
-
-	bool mouse_moving = false;
+	float scale;
+	bool mouse_moving;
 
 	enum MinimapTexture : int
 	{

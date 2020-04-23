@@ -15,12 +15,14 @@ Minimap* Minimap::minimap = nullptr;
 Minimap::Minimap(Gameobject* go) : UI_Component(go, go->GetUIParent(), UI_MINIMAP)
 {
 	minimap = this;
+	mouse_moving = false;
 
 	// Setup Minimap
+	float scale = 0.125f;
 	std::pair<int, int> map_size = Map::GetMapSize_I();
 	std::pair<int, int> tile_size = Map::GetTileSize_I();
-	std::pair<int, int> total_size = { map_size.first * tile_size.first, map_size.second * tile_size.second };
-	minimap_texture = App->render->GetMinimap(total_size.first, total_size.second);
+	std::pair<int, int> total_size = { int(float(map_size.first * tile_size.first) * scale), int(float(map_size.second * tile_size.second) * scale) };
+	minimap_texture = App->render->GetMinimap(total_size.first, total_size.second, scale, false);
 
 	// Load Icons
 	hud_texture = App->tex.Load("Assets/textures/Iconos_square_up.png");
@@ -35,8 +37,8 @@ Minimap::Minimap(Gameobject* go) : UI_Component(go, go->GetUIParent(), UI_MINIMA
 	sections[ICON_SPAWNER]		= { 542, 862, 11, 9 };
 
 	// Set UI_Component values
-	target = { 1.f, 0.f, 0.03f, 0.03f };
-	offset = { -total_size.first, 0 };
+	target = { 1.f, 1.f, 0.3f, 0.3f };
+	offset = { -total_size.first, -total_size.second };
 }
 
 Minimap::~Minimap()
@@ -50,7 +52,7 @@ void Minimap::PostUpdate()
 	ComputeOutputRect(float(sections[MINIMAP].w), float(sections[MINIMAP].h));
 
 	// Minimap
-	App->render->DrawQuad(output, { 0, 0, 0, 255 }, true, HUD, false);
+	//App->render->DrawQuad(output, { 0, 0, 0, 255 }, true, HUD, false);
 	std::pair<float, float> scale = { float(output.w) / float(sections[MINIMAP].w), float(output.h) / float(sections[MINIMAP].h) };
 	App->render->Blit_Scale(minimap_texture, output.x, output.y, scale.first, scale.second, nullptr, HUD, false);
 

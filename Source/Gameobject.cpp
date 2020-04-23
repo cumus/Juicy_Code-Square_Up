@@ -185,16 +185,7 @@ UI_Component* Gameobject::GetUIParent() const
 	UI_Component* ret = nullptr;
 
 	if (parent)
-	{
-		for (std::vector<Component*>::iterator it = parent->components.begin(); it != parent->components.end(); ++it)
-		{
-			if ((*it)->GetType() > UI_GENERAL && (*it)->GetType() < UI_MAX)
-			{
-				ret = (*it)->AsUIComp();
-				break;
-			}
-		}
-	}
+		ret = parent->GetUI();
 
 	return ret;
 }

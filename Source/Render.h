@@ -57,7 +57,7 @@ public:
 	bool InsideCam(float x, float y) const;
 
 	// Minimap
-	int GetMinimap(int width, int height, bool trigger_event = true);
+	int GetMinimap(int width, int height, float scale, bool trigger_event = true);
 
 	// Viewport
 	void SetupViewPort(float aspect_ratio);
@@ -69,6 +69,8 @@ public:
 	bool Blit(int texture_id, int x, int y, const SDL_Rect* section = nullptr, Layer layer = SCENE, bool use_cam = true);
 	bool Blit_Scale(int texture_id, int x, int y, float scale_x, float scale_y, const SDL_Rect* section = nullptr, Layer layer = SCENE, bool use_cam = true);
 	bool BlitNorm(int texture_id, const RectF rect, const SDL_Rect* section = nullptr, Layer layer = SCENE);
+
+	bool BlitMapTile(int texture_id, int x, int y, const SDL_Rect* section = nullptr, Layer layer = SCENE, bool use_cam = true);
 
 	bool Blit_Text(RenderedText* rendered_text, int x, int y, Layer layer = SCENE, bool use_cam = true);
 	bool Blit_TextSized(RenderedText* rendered_text, const SDL_Rect size, Layer layer = SCENE, bool use_cam = true);
@@ -130,7 +132,7 @@ private:
 
 	// Minimap
 	int minimap_texture = -1;
-	int minimap_half_width = 0;
+	float minimap_scale = 1.0f;
 
 	// Config
 	bool accelerated = true;

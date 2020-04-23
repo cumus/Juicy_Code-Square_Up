@@ -190,7 +190,6 @@ void C_Button::PreUpdate()
 	else
 	{
 		state = BUTTON_IDLE;
-		color.a = 0;
 	}
 
 }

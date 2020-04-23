@@ -433,7 +433,7 @@ SDL_Texture* Map::GetFullMap(std::vector<std::pair<SDL_Rect, SDL_Rect>>& rects) 
 			for (int x = 0; x < height; ++x)
 			{
 				std::pair<SDL_Rect, SDL_Rect> target;
-				if (GetRectAndTexId(layers.cbegin()->GetID(x, y), target.first, tex_id))
+				if (GetRectAndTexId(layers[1].GetID(x, y), target.first, tex_id))
 				{
 					std::pair<int, int> render_pos = I_MapToWorld(x, y);
 					target.second = { render_pos.first, render_pos.second, size_i.first, size_i.second };
