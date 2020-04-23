@@ -910,23 +910,26 @@ void Scene::UpdateSelection()
 	//UNIT SELECTION//
 	if (!groupSelect)
 	{
-		int x, y;
-		App->input->GetMousePosition(x, y);
-		SDL_Rect cam = App->render->GetCameraRect();
-		for (std::map<double, Behaviour*>::iterator it = Behaviour::b_map.begin(); it != Behaviour::b_map.end(); ++it)
+		if (App->input->GetMouseButtonDown(0))
 		{
-			if (it->second->GetType() == UNIT_MELEE || it->second->GetType() == GATHERER || it->second->GetType() == UNIT_RANGED
-				|| it->second->GetType() == BASE_CENTER || it->second->GetType() == TOWER || it->second->GetType() == BARRACKS 
-				|| it->second->GetType() == UNIT_SUPER)
+			int x, y;
+			App->input->GetMousePosition(x, y);
+			SDL_Rect cam = App->render->GetCameraRect();
+			for (std::map<double, Behaviour*>::iterator it = Behaviour::b_map.begin(); it != Behaviour::b_map.end(); ++it)
 			{
-				std::pair<int, int> position = Map::WorldToTileBase(float(x + cam.x), float(y + cam.y));
-				vec pos = it->second->GetGameobject()->GetTransform()->GetGlobalPosition();
-
-				if (int(pos.x) == position.first && int(pos.y) == position.second) //Right
+				if (it->second->GetType() == UNIT_MELEE || it->second->GetType() == GATHERER || it->second->GetType() == UNIT_RANGED
+					|| it->second->GetType() == BASE_CENTER || it->second->GetType() == TOWER || it->second->GetType() == BARRACKS
+					|| it->second->GetType() == UNIT_SUPER)
 				{
-					SetSelection(it->second->GetGameobject(), true);
-					//Event::Push(ON_SELECT, it->second->GetGameobject());
-					break;
+					std::pair<int, int> position = Map::WorldToTileBase(float(x + cam.x), float(y + cam.y));
+					vec pos = it->second->GetGameobject()->GetTransform()->GetGlobalPosition();
+
+					if (int(pos.x) == position.first && int(pos.y) == position.second) //Right
+					{
+						SetSelection(it->second->GetGameobject(), true);
+						//Event::Push(ON_SELECT, it->second->GetGameobject());
+						break;
+					}
 				}
 			}
 		}
@@ -1678,7 +1681,7 @@ bool Scene::OnMainScene() const
 
 Transform* Scene::SpawnBehaviour(int type, vec pos)
 {
-	LOG("Spawn");
+	//LOG("Spawn");
 	Transform* ret = nullptr;
 	Gameobject* behaviour = nullptr;
 
