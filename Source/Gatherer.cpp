@@ -28,7 +28,6 @@ Gatherer::~Gatherer(){}
 
 void Gatherer::CreatePanel()
 {
-	posY_panel = 0.8f;
 	panel_tex_ID = App->tex.Load("Assets/textures/buildPanelSample.png");
 
 	//------------------------- BASE PANEL --------------------------------------
@@ -39,13 +38,13 @@ void Gatherer::CreatePanel()
 	//btnBaseCenter = App->scene->AddGameobjectToCanvas("Btn Base build");
 
 	panel = new C_Image(selectionPanel);
-	panel->target = { 0.9f, posY_panel, 1.0f, 1.0f };
+	panel->target = { 0.9f, 0.8f, 1.0f, 1.0f };
 	panel->offset = { 0.0f, 0.0f };
 	panel->section = { 0, 0, 119, 119 };
 	panel->tex_id = panel_tex_ID;
 
 	barracks_btn = new C_Button(selectionPanel, Event(PLACE_BUILDING, App->scene, int(BARRACKS)));//Top left
-	barracks_btn->target = { 0.912f, posY_panel + 0.02f, 1.0f, 1.0f };
+	barracks_btn->target = { 0.912f, 0.82f, 0.7f, 0.7f };
 	barracks_btn->offset = { 0.0f, 0.0f };
 
 	barracks_btn->section[0] = { 337, 0, 62, 62 };
@@ -56,8 +55,8 @@ void Gatherer::CreatePanel()
 	barracks_btn->tex_id = panel_tex_ID;
 
 	tower_btn = new C_Button(btnTower, Event(PLACE_BUILDING, App->scene, int(TOWER)));//Top right
-	tower_btn->target = { 0.95f, posY_panel + 0.02f, 1.0f, 1.0f };
-	tower_btn->offset = { 0.0f,0.0f };
+	tower_btn->target = { 1.2f, 0.0f, 0.7f, 0.7f };
+	tower_btn->offset = { 0.0f, 0.0f };
 
 	tower_btn->section[0] = { 272, 65, 62, 62 };
 	tower_btn->section[1] = { 272, 195, 62, 62 };
@@ -67,7 +66,7 @@ void Gatherer::CreatePanel()
 	tower_btn->tex_id = panel_tex_ID;
 
 	baseBtn = new C_Button(btnTower, Event(PLACE_BUILDING, App->scene, int(BASE_CENTER)));//Bottom right
-	baseBtn->target = { 0.95f, posY_panel + 0.085f, 1.0f, 1.0f };
+	baseBtn->target = { 1.2f, 1.2f, 0.7f, 0.7f };
 	baseBtn->offset = { 0.0f, 0.0f };
 
 	baseBtn->section[0] = { 272, 0, 62, 62 };
