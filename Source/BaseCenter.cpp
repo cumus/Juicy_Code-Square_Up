@@ -112,27 +112,47 @@ void Base_Center::CreatePanel()
 	panel->tex_id = panel_tex_ID;
 
 	gatherer_btn = new C_Button(selectionPanel, Event(BUILD_GATHERER, this, spawnPoint, 5.0f));//Top left
-	gatherer_btn->target = { 0.912f, posY_panel+0.02f, 1.0f, 1.0f };
+	gatherer_btn->target = { 0.912f, posY_panel+0.02f, 0.7f, 0.7f };
 	gatherer_btn->offset = { 0.0f, 0.0f };
-	for (int i = 0; i < 4; i++)gatherer_btn->section[i] = { 121, 38, 38, 38 };
+
+	gatherer_btn->section[0] = { 142, 0, 62, 62 };
+	gatherer_btn->section[1] = { 142, 130, 62, 62 };
+	gatherer_btn->section[3] = { 142, 260, 62, 62 };
+	gatherer_btn->section[2] = { 142, 260, 62, 62 };
+
 	gatherer_btn->tex_id = panel_tex_ID;
 
 	meleeUnit_btn = new C_Button(selectionPanel, Event(BUILD_MELEE, this, spawnPoint, 5.0f));//Top right
-	meleeUnit_btn->target = { 0.95f, posY_panel+0.02f, 1.0f, 1.0f };
+	meleeUnit_btn->target = { 0.95f, posY_panel+0.02f, 0.7f, 0.7f };
 	meleeUnit_btn->offset = { 0.0f,0.0f };
-	for (int i = 0; i < 4; i++)meleeUnit_btn->section[i] = { 121, 0, 38, 38 };
+
+	meleeUnit_btn->section[0] = { 207, 0, 62, 62 };
+	meleeUnit_btn->section[1] = { 207, 130, 62, 62 };
+	meleeUnit_btn->section[2] = { 207, 260, 62, 62 };
+	meleeUnit_btn->section[3] = { 207, 260, 62, 62 };
+
 	meleeUnit_btn->tex_id = panel_tex_ID;
 
 	rangedUnit_btn = new C_Button(selectionPanel, Event(BUILD_RANGED, this, spawnPoint, 5.0f));//Bottom left
-	rangedUnit_btn->target = { 0.912f, posY_panel+0.085f, 1.0f, 1.0f };
+	rangedUnit_btn->target = { 0.912f, posY_panel+0.085f, 0.7f, 0.7f };
 	rangedUnit_btn->offset = { 0.0f, 0.0f };
-	for (int i = 0; i < 4; i++)rangedUnit_btn->section[i] = { 161, 0, 38, 38 };
+
+	rangedUnit_btn->section[0] = { 142, 65, 62, 62 };
+	rangedUnit_btn->section[1] = { 142, 195, 62, 62 };
+	rangedUnit_btn->section[2] = { 142, 325, 62, 62 };
+	rangedUnit_btn->section[3] = { 142, 325, 62, 62 };
+
 	rangedUnit_btn->tex_id = panel_tex_ID;
 
 	superUnit_btn = new C_Button(selectionPanel, Event(BUILD_SUPER, this, spawnPoint, 5.0f));//Bottom right
-	superUnit_btn->target = { 0.95f, posY_panel+0.085f, 1.0f, 1.0f };
+	superUnit_btn->target = { 0.95f, posY_panel+0.085f, 0.7f, 0.7f };
 	superUnit_btn->offset = { 0.0f, 0.0f };
-	for (int i = 0; i < 4; i++)superUnit_btn->section[i] = { 162, 38, 38, 38 };
+
+	superUnit_btn->section[0] = { 207, 65, 62, 62 };
+	superUnit_btn->section[1] = { 207, 195, 62, 62 };
+	superUnit_btn->section[2] = { 207, 325, 62, 62 };
+	superUnit_btn->section[3] = { 207, 325, 62, 62 };
+
 	superUnit_btn->tex_id = panel_tex_ID;
 }
 
