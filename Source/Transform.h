@@ -34,6 +34,7 @@ public:
 	void ScaleX(float val);
 	void ScaleY(float val);
 	void ScaleZ(float val);
+	void SetScale(vec scale);
 
 	// Local Scale
 	vec		GetLocalScale() const { return scale; }

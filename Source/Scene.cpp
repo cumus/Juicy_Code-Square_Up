@@ -65,10 +65,7 @@ bool Scene::PreUpdate()
 		for (std::vector<double>::const_iterator it = Behaviour::enemiesInSight.cbegin(); it != Behaviour::enemiesInSight.cend(); ++it)
 		{
 			Behaviour* go = Behaviour::b_map[*it]->GetGameobject()->GetBehaviour();
-			if (go->GetState() != DESTROYED)
-			{
-				Event::Push(SHOW_SPRITE, go);
-			}
+			if (go->GetState() != DESTROYED) Event::Push(SHOW_SPRITE, go);		
 		}
 	}
 	return true;
@@ -128,10 +125,7 @@ bool Scene::PostUpdate()
 	for (std::vector<double>::const_iterator it = Behaviour::enemiesInSight.cbegin(); it != Behaviour::enemiesInSight.cend(); ++it)
 	{	
 		Behaviour* go = Behaviour::b_map[*it]->GetGameobject()->GetBehaviour();
-		if(go->GetState() != DESTROYED)
-		{
-			Event::Push(HIDE_SPRITE, go);
-		}
+		if(go->GetState() != DESTROYED) Event::Push(HIDE_SPRITE, go);		
 	}
 	Behaviour::enemiesInSight.clear();
 	return true;
@@ -192,26 +186,23 @@ void Scene::RecieveEvent(const Event& e)
 		{
 		case TOWER:
 			buildingImage->SetSection({ 0, 3, 217, 177 });
-			imgPreview->GetTransform()->ScaleX(1.0f);
-			imgPreview->GetTransform()->ScaleY(1.0f);
+			imgPreview->GetTransform()->SetScale({ 0.9f,0.9f,0.9f });
 			//LOG("Tower");
 			break;
 		case BARRACKS:
 			buildingImage->SetSection({ 217, 3, 217, 177 });
-			imgPreview->GetTransform()->ScaleX(1.4f);
-			imgPreview->GetTransform()->ScaleY(1.4f);
+			imgPreview->GetTransform()->SetScale({ 1.75f,1.75f,1.75f });
 			//LOG("Barracks");
 			break;
 		case BASE_CENTER: 
 			buildingImage->SetSection({ 434, 3, 217, 177 });
-			imgPreview->GetTransform()->ScaleX(1.7f);
-			imgPreview->GetTransform()->ScaleY(1.7f);
+			imgPreview->GetTransform()->SetScale({ 1.9f,1.9f,1.9f });
 			//LOG("Base center");
 			break;
 		default:
 			buildingImage->SetSection({ 0, 3, 217, 177 });
-			imgPreview->GetTransform()->ScaleX(1.0f);
-			imgPreview->GetTransform()->ScaleY(1.0f);
+			imgPreview->GetTransform()->SetScale({ 0.9f,0.9f,0.9f });
+
 			//LOG("Default");
 			break;
 		}
@@ -389,7 +380,7 @@ void Scene::LoadMainScene()
 	}
 
 	imgPreview = AddGameobject("Builder image");
-	buildingImage = new Sprite(imgPreview, App->tex.Load("Assets/textures/buildPreview.png"), { 0, 3, 217, 177 }, FRONT_SCENE, {-30.0f,-30.0f,1.0f,1.0f});
+	buildingImage = new Sprite(imgPreview, App->tex.Load("Assets/textures/buildPreview.png"), { 0, 3, 217, 177 }, FRONT_SCENE, {-40.0f,-40.0f,1.0f,1.0f});
 	imgPreview->SetInactive();
 }
 

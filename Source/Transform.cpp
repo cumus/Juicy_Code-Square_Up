@@ -103,6 +103,12 @@ void Transform::SetLocalPos(const vec& p)
 	}
 }
 
+void Transform::SetScale(vec s)
+{
+	scale = s;
+	modified = true;
+}
+
 void Transform::SetX(float val)
 {
 	if (pos.x != val)
