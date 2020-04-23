@@ -197,8 +197,10 @@ private:
 	float scene_change_timer;
 
 	// Place Mode
-	Transform* placing_building = nullptr;
-	bool costs = true;
+	Gameobject* imgPreview = nullptr;
+	C_Image* buildingImage = nullptr;
+	bool placing_building = false;
+	int buildType = -1;
 
 	// Pause
 	bool paused_scene = false;

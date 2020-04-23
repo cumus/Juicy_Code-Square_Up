@@ -119,7 +119,7 @@ bool Scene::PostUpdate()
 
 bool Scene::CleanUp()
 {
-	map.CleanUp();
+	ResetScene();
 	
 	return true;
 }
@@ -165,9 +165,28 @@ void Scene::RecieveEvent(const Event& e)
 		break; }
 	case PLACE_BUILDING:
 	{
-		costs = false;
-		placing_building = SpawnBehaviour(e.data1.AsInt());
-		costs = true;
+		placing_building = true;
+		buildType = e.data1.AsInt();
+		switch (buildType)
+		{
+		case TOWER:
+			buildingImage->section = { 0, 3, 217, 177 };
+			LOG("Tower");
+			break;
+		case BARRACKS:
+			buildingImage->section = { 217, 3, 217, 177 };
+			LOG("Barracks");
+			break;
+		case BASE_CENTER: 
+			buildingImage->section = { 434, 3, 217, 177 };
+			LOG("Base center");
+			break;
+		default:
+			buildingImage->section = { 0, 3, 217, 177 };
+			LOG("Default");
+			break;
+		}
+		
 		break;
 	}
 	case UPDATE_STAT:
@@ -339,6 +358,13 @@ void Scene::LoadMainScene()
 			Event::Push(UPDATE_PATH, it->second, baseCenterPos.first - 1, baseCenterPos.second - 1);
 		}
 	}
+
+	imgPreview = AddGameobject("Builder image");
+	buildingImage = new C_Image(imgPreview);
+	buildingImage->offset = { 0.0f, 0.0f };
+	not->target = { 1.0f, 1.0f, 1.0f, 1.0f };
+	buildingImage->section = { 0, 3, 217, 177 };
+	buildingImage->tex_id = App->tex.Load("Assets/textures/buildPreview.png");
 }
 
 void Scene::LoadIntroScene()
@@ -679,33 +705,19 @@ void Scene::UpdateBuildingMode()
 {
 	if (App->input->GetKey(SDL_SCANCODE_ESCAPE) == KEY_DOWN)
 	{
-		placing_building->GetGameobject()->Destroy();
-		placing_building = nullptr;
-		//costs = true;
+		placing_building = false;
+		buildType = -1;
 	}
 	else if (App->input->GetMouseButtonDown(0) == KEY_DOWN)
 	{
-		//costs = true;
-		int x, y;
-		App->input->GetMousePosition(x, y);
-		RectF cam = App->render->GetCameraRectF();
-		std::pair<int, int> pos = Map::WorldToTileBase(float(x) + cam.x, float(y) + cam.y);
-
-		if (App->pathfinding.CheckWalkabilityArea(pos, placing_building->GetGameobject()->GetTransform()->GetGlobalScale()))
-		{			
-			int type = placing_building->GetGameobject()->GetBehaviour()->GetType();
-			placing_building = SpawnBehaviour(type,vec(pos.first,pos.second));
-			if (placing_building != nullptr)
-			{
-				placing_building = placing_building->GetGameobject()->GetTransform();
-			}
-			placing_building = nullptr;
-		}
-		else
+		if (buildType != -1)
 		{
-			LOG("Can't place building");
+			int x, y;
+			App->input->GetMousePosition(x, y);
+			RectF cam = App->render->GetCameraRectF();
+			std::pair<int, int> pos = Map::WorldToTileBase(float(x) + cam.x, float(y) + cam.y);
+			Transform* t = SpawnBehaviour(buildType, vec(pos.first, pos.second));
 		}
-		
 	}
 	else
 	{
@@ -713,7 +725,7 @@ void Scene::UpdateBuildingMode()
 		App->input->GetMousePosition(x, y);
 		RectF cam = App->render->GetCameraRectF();
 		std::pair<int, int> pos = Map::WorldToTileBase(float(x) + cam.x, float(y) + cam.y);
-		placing_building->SetLocalPos(vec(float(pos.first), float(pos.second), 0.f));
+		imgPreview->GetTransform()->SetLocalPos(vec(float(pos.first), float(pos.second), 0.f));
 	}
 }
 
@@ -1771,45 +1783,46 @@ Transform* Scene::SpawnBehaviour(int type, vec pos)
 	{		
 		if ((player_stats[CURRENT_EDGE] - 20) >= 0)
 		{
-			behaviour = AddGameobject("Base Center");
-			behaviour->GetTransform()->SetLocalPos(pos);
-			behaviour->GetTransform()->ScaleX(4.0f);
-			behaviour->GetTransform()->ScaleY(4.0f);
-			new Base_Center(behaviour);
-			if(costs) UpdateStat(CURRENT_EDGE, -20);
-			//Update paths
-			for (std::map<double, Behaviour*>::iterator it = Behaviour::b_map.begin(); it != Behaviour::b_map.end(); ++it)
-				Event::Push(UPDATE_PATH, it->second, pos.x - 1, pos.y - 1);
+			std::pair<int, int> thisPos(pos.x,pos.y);
+			if(App->pathfinding.CheckWalkabilityArea(thisPos, vec(4.0f, 4.0f, 1.0f)))
+			{
+				behaviour = AddGameobject("Base Center");
+				behaviour->GetTransform()->SetLocalPos(pos);
+				behaviour->GetTransform()->ScaleX(4.0f);
+				behaviour->GetTransform()->ScaleY(4.0f);
+				new Base_Center(behaviour);
+				UpdateStat(CURRENT_EDGE, -20);
+				//Update paths
+				for (std::map<double, Behaviour*>::iterator it = Behaviour::b_map.begin(); it != Behaviour::b_map.end(); ++it)
+					Event::Push(UPDATE_PATH, it->second, pos.x - 1, pos.y - 1);
+			}	
+			else LOG("Can't place building");			
 		}
-		else
-		{
-			LOG("Not enough resources! :(");
-		}
+		else LOG("Not enough resources! :(");		
 		break;
 	}
 	case TOWER:
 	{
 		if ((player_stats[CURRENT_EDGE] - TOWER_COST) >= 0)
 		{
-			behaviour = AddGameobject("Tower");
-			behaviour->GetTransform()->SetLocalPos(pos);
-			behaviour->GetTransform()->ScaleX(1.0f);
-			behaviour->GetTransform()->ScaleY(1.0f);
-			new Tower(behaviour);
-			if (costs)
+			std::pair<int, int> thisPos(pos.x, pos.y);
+			if (App->pathfinding.CheckWalkabilityArea(thisPos, vec(1.0f,1.0f,1.0f)))
 			{
+				behaviour = AddGameobject("Tower");
+				behaviour->GetTransform()->SetLocalPos(pos);
+				behaviour->GetTransform()->ScaleX(1.0f);
+				behaviour->GetTransform()->ScaleY(1.0f);
+				new Tower(behaviour);
 				UpdateStat(CURRENT_TOWERS, 1);
 				UpdateStat(TOTAL_TOWERS, 1);
 				UpdateStat(CURRENT_EDGE, -TOWER_COST);
+				//Update paths
+				for (std::map<double, Behaviour*>::iterator it = Behaviour::b_map.begin(); it != Behaviour::b_map.end(); ++it)
+					Event::Push(UPDATE_PATH, it->second, pos.x - 1, pos.y - 1);
 			}
-			//Update paths
-			for (std::map<double, Behaviour*>::iterator it = Behaviour::b_map.begin(); it != Behaviour::b_map.end(); ++it)
-				Event::Push(UPDATE_PATH, it->second, pos.x - 1, pos.y - 1);
+			else LOG("Can't place building");			
 		}
-		else
-		{
-			LOG("Not enough resources! :(");
-		}
+		else LOG("Not enough resources! :(");		
 		break;
 	}
 	case WALL: break;
@@ -1817,26 +1830,25 @@ Transform* Scene::SpawnBehaviour(int type, vec pos)
 	{			
 		if ((player_stats[CURRENT_EDGE] - BARRACKS_COST) >= 0)
 		{
-			behaviour = AddGameobject("Barracks");
-			behaviour->GetTransform()->SetLocalPos(pos);
-			behaviour->GetTransform()->ScaleX(6.0f);
-			behaviour->GetTransform()->ScaleY(6.0f);
-			new Barracks(behaviour);
-
-			if (costs)
+			std::pair<int, int> thisPos(pos.x, pos.y);
+			if (App->pathfinding.CheckWalkabilityArea(thisPos,vec(6.0f, 6.0f, 1.0f)))
 			{
+				behaviour = AddGameobject("Barracks");
+				behaviour->GetTransform()->SetLocalPos(pos);
+				behaviour->GetTransform()->ScaleX(6.0f);
+				behaviour->GetTransform()->ScaleY(6.0f);
+				new Barracks(behaviour);
 				UpdateStat(CURRENT_BARRACKS, 1);
 				UpdateStat(TOTAL_BARRACKS, 1);
 				UpdateStat(CURRENT_EDGE, -BARRACKS_COST);
+
+				//Update paths
+				for (std::map<double, Behaviour*>::iterator it = Behaviour::b_map.begin(); it != Behaviour::b_map.end(); ++it)
+					Event::Push(UPDATE_PATH, it->second, pos.x - 1, pos.y - 1);
 			}
-			//Update paths
-			for (std::map<double, Behaviour*>::iterator it = Behaviour::b_map.begin(); it != Behaviour::b_map.end(); ++it)
-				Event::Push(UPDATE_PATH, it->second, pos.x - 1, pos.y - 1);
+			else LOG("Can't place building");			
 		}
-		else
-		{
-			LOG("Not enough resources! :(");
-		}
+		else LOG("Not enough resources! :(");
 		break;
 	}
 	case LAB: break;
