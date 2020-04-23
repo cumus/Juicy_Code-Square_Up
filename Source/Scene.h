@@ -226,9 +226,9 @@ private:
 	std::pair<float, float> last_cam_pos;
 	std::pair<float, float> current_cam_pos;
 
-	vec spawner_pos1 = { 300.f, 200.f };
-	vec spawner_pos2 = { 3000.f, 2000.f };
-	vec spawner_pos3 = { -3500.f, 4500.f };
+	vec spawner_pos1 = { 230.f, 160.f };
+	vec spawner_pos2 = { 55.f, 200.f };
+	vec spawner_pos3 = { 155.f, 300.f };
 
 	//-------Gameobjects--------
 
@@ -271,6 +271,7 @@ private:
 	//C_Image* tower_state;
 	//C_Image* tower_atk;
 	C_Button* next;
+	C_Button* skip;
 	C_Button* not_inactive;
 	C_Image * not;
 };

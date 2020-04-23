@@ -360,6 +360,17 @@ void Scene::LoadMainScene()
 
 	next->tex_id = App->tex.Load("Assets/textures/tuto/not-button.png");
 
+	skip = new C_Button(not_go, Event(GAMEPLAY, this, SPAWNER));
+
+	skip->target = { 0.74f, 0.726f, 0.4f, 0.4f };
+	skip->offset = { 100.f, -317.f };
+
+	skip->section[0] = { 0, 0, 309, 37 };
+	skip->section[1] = { 0, 44, 309, 37 };
+	skip->section[2] = { 0, 88, 309, 37 };
+	skip->section[3] = { 0, 88, 309, 37 };
+
+	skip->tex_id = App->tex.Load("Assets/textures/tuto/not-button.png");
 
 	std::pair<int, int> position = Map::WorldToTileBase(float(1400.0f), float(3250.0f));
 	if (App->pathfinding.CheckWalkabilityArea(position, vec(1.0f)))
@@ -1873,6 +1884,7 @@ Transform* Scene::SpawnBehaviour(int type, vec pos)
 	{
 		behaviour = AddGameobject("Spawner");
 		new Spawner(behaviour);
+		UpdateStat(CURRENT_SPAWNERS, 1);
 		break;
 	}
 	default: break;
