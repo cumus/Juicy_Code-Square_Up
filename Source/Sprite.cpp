@@ -90,11 +90,11 @@ AnimatedSprite::AnimatedSprite(Behaviour* unit) : Sprite(unit->GetGameobject(), 
 	}
 	case EDGE:
 	{
-		tex_id = App->tex.Load("Assets/textures/Edge1.png");
-		animations[FULL_LIFE].Setup(section = { 0, 0, 128, 128 }, 1);
-		animations[HALF_LIFE].Setup({ 0, 0, 64, 128 }, 1);
+		tex_id = App->tex.Load("Assets/textures/Edge.png");
+		animations[FULL_LIFE].Setup(section = { 0, 0, 217, 134 }, 1);
+		animations[HALF_LIFE].Setup({ 217, 0, 217, 134 }, 1);
 		animations[DESTROYED].Setup({ 0, 0, 0, 0 }, 1);
-		offset = { -28.0f, -128.0f + Map::GetBaseOffset(), 1.0f, 1.0f };
+		offset = { -70.0f, -134.0f + Map::GetBaseOffset(), 1.0f, 1.0f };
 		break;
 	}
 	case WALL:
