@@ -19,6 +19,7 @@ public:
 	void CreatePanel() override;
 	void UpdatePanel() override;
 	void UpdateWalkabilityTiles() override;
+	
 
 protected:
 
