@@ -370,7 +370,12 @@ void Scene::LoadMenuScene()
 	C_Button* start = new C_Button(start_go, Event(BUTTON_EVENT, this, SCENE_CHANGE, MAIN));
 	start->target = { 0.f, 0.67f, .67f, .67f };
 	start->offset = { 25.f, -253.f };
-	for (int i = 0; i < 4; i++)start->section[i] = { 0, 0, 470, 90 };
+
+	start->section[0] = { 0, 0, 470, 90 };
+	start->section[1] = { 0, 101, 470, 90 };
+	start->section[2] = { 0, 202, 470, 90 };
+	start->section[3] = { 0, 202, 470, 90 };
+
 	start->tex_id = App->tex.Load("Assets/textures/new-game.png");
 
 	//------------------------- FULLSCREEN --------------------------------------
@@ -380,7 +385,12 @@ void Scene::LoadMenuScene()
 	C_Button* fullscreen = new C_Button(fullscreen_go, Event(BUTTON_EVENT, this, TOGGLE_FULLSCREEN));
 	fullscreen->target = { 0.f, 0.65f, .55f, .55f };
 	fullscreen->offset = { 30.f, -157.f };
-	for (int i = 0; i < 4; i++)fullscreen->section[i] = { 0, 0, 470, 90 };
+
+	fullscreen->section[0] = { 0, 0, 470, 90 };
+	fullscreen->section[1] = { 0, 101, 470, 90 };
+	fullscreen->section[2] = { 0, 202, 470, 90 };
+	fullscreen->section[3] = { 0, 202, 470, 90 };
+
 	fullscreen->tex_id = App->tex.Load("Assets/textures/fullscreen.png");
 
 	//------------------------- QUIT --------------------------------------
@@ -390,7 +400,12 @@ void Scene::LoadMenuScene()
 	C_Button* quit = new C_Button(quit_go, Event(BUTTON_EVENT, this, REQUEST_QUIT));
 	quit->target = { 0.f, 0.65f, .55f, .55f };
 	quit->offset = { 30.f, -55.f };
-	for (int i = 0; i < 4; i++)quit->section[i] = { 0, 0, 470, 90 };
+
+	quit->section[0] = { 0, 0, 470, 90 };
+	quit->section[1] = { 0, 101, 470, 90 };
+	quit->section[2] = { 0, 202, 470, 90 };
+	quit->section[3] = { 0, 202, 470, 90 };
+
 	quit->tex_id = App->tex.Load("Assets/textures/quit.png");
 }
 
@@ -684,18 +699,31 @@ void Scene::UpdatePause()
 			C_Button* resume = new C_Button(resume_go, Event(SCENE_PLAY, App));
 			resume->target = { 0.51f, 0.3f, 0.3f, 0.3f };
 			resume->offset = { -550.f, -100.f };
-			for (int i = 0; i < 4; i++)resume->section[i] = { 0, 0, 1070, 207 };
+
+			resume->section[0] = { 0, 0, 470, 90 };
+			resume->section[1] = { 0, 101, 470, 90 };
+			resume->section[2] = { 0, 202, 470, 90 };
+			resume->section[3] = { 0, 202, 470, 90 };
+
 			resume->tex_id = App->tex.Load("Assets/textures/resume.png");
 
 			C_Button* resume_fx = new C_Button(resume_go, Event(PLAY_FX, App->audio, int(SELECT), 0));
 			resume_fx->target = { 0.51f, 0.3f, 0.3f, 0.3f };
 			resume_fx->offset = { -525.f, -100.f };
-			for (int i = 0; i < 4; i++)resume_fx->section[i] = { 0, 0, 1070, 207 };
+
+			resume_fx->section[0] = { 0, 0, 470, 90 };
+			resume_fx->section[1] = { 0, 101, 470, 90 };
+			resume_fx->section[2] = { 0, 202, 470, 90 };
+			resume_fx->section[3] = { 0, 202, 470, 90 };
 
 			C_Button* resume_inactive = new C_Button(resume_go, Event(RESUME, this, MAIN));
 			resume_inactive->target = { 0.51f, 0.3f, 0.3f, 0.3f };
 			resume_inactive->offset = { -525.f, -100.f };
-			for (int i = 0; i < 4; i++)resume_inactive->section[i] = { 0, 0, 1070, 207 };
+
+			resume_inactive->section[0] = { 0, 0, 470, 90 };
+			resume_inactive->section[1] = { 0, 101, 470, 90 };
+			resume_inactive->section[2] = { 0, 202, 470, 90 };
+			resume_inactive->section[3] = { 0, 202, 470, 90 };
 
 			//------------------------- FULLSCREEN -----------------------------------------
 
@@ -704,7 +732,12 @@ void Scene::UpdatePause()
 			C_Button* fullscreen = new C_Button(fullscreen_go, Event(BUTTON_EVENT, this, TOGGLE_FULLSCREEN));
 			fullscreen->target = { 0.51f, 0.3f, 0.3f, 0.3f };
 			fullscreen->offset = { -525.f, 200.f };
-			for (int i = 0; i < 4; i++)fullscreen->section[i] = { 0, 0, 1070, 207 };
+
+			fullscreen->section[0] = { 0, 0, 470, 90 };
+			fullscreen->section[1] = { 0, 101, 470, 90 };
+			fullscreen->section[2] = { 0, 202, 470, 90 };
+			fullscreen->section[3] = { 0, 202, 470, 90 };
+
 			fullscreen->tex_id = App->tex.Load("Assets/textures/fullscreen.png");
 
 			/*//------------------------- SAVE --------------------------------------
@@ -759,7 +792,12 @@ void Scene::UpdatePause()
 			C_Button* main_menu = new C_Button(main_menu_go, Event(BUTTON_EVENT, this, SCENE_CHANGE, MENU));
 			main_menu->target = { 0.51f, 0.3f, 0.3f, 0.3f };
 			main_menu->offset = { -525.f, 500.f };
-			for (int i = 0; i < 4; i++)main_menu->section[i] = { 0, 0, 1070, 207 };
+
+			main_menu->section[0] = { 0, 0, 470, 90 };
+			main_menu->section[1] = { 0, 101, 470, 90 };
+			main_menu->section[2] = { 0, 202, 470, 90 };
+			main_menu->section[3] = { 0, 202, 470, 90 };
+
 			main_menu->tex_id = App->tex.Load("Assets/textures/main-menu.png");
 		}
 
@@ -1137,12 +1175,22 @@ void Scene::OnEventStateMachine(GameplayState state)
 
 		not_inactive->target = { 0.74f, 0.726f, 0.6f, 0.6f };
 		not_inactive->offset = { -309.f, 37.f };
-		for (int i = 0; i < 4; i++)not_inactive->section[i] = { 0, 0, 309, 37 };
+
+		not_inactive->section[0] = { 0, 0, 309, 37 };
+		not_inactive->section[1] = { 0, 44, 309, 37 };
+		not_inactive->section[2] = { 0, 88, 309, 37 };
+		not_inactive->section[3] = { 0, 88, 309, 37 };
+
 		not_inactive->tex_id = App->tex.Load("Assets/textures/tuto/not-button.png");
 
 		next->target = { 0.74f, 0.726f, 0.6f, 0.6f };
 		next->offset = { -309.f, 37.f };
-		for (int i = 0; i < 4; i++)next->section[i] = { 0, 0, 309, 37 };
+
+		next->section[0] = { 0, 0, 309, 37 };
+		next->section[1] = { 0, 44, 309, 37 };
+		next->section[2] = { 0, 88, 309, 37 };
+		next->section[3] = { 0, 88, 309, 37 };
+
 		next->tex_id = App->tex.Load("Assets/textures/tuto/not-button.png");
 
 

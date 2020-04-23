@@ -147,7 +147,7 @@ void C_Text::PostUpdate()
 
 C_Button::C_Button(Gameobject* go, const Event& e) :
 	UI_Component(go, go->GetUIParent(), UI_BUTTON),
-	event_triggered(e)
+	event_triggered(e), state(BUTTON_IDLE)
 {}
 
 C_Button::~C_Button()
@@ -192,14 +192,15 @@ void C_Button::PreUpdate()
 		state = BUTTON_IDLE;
 		color.a = 0;
 	}
+
 }
 
 void C_Button::PostUpdate()
 {
-	ComputeOutputRect(float(section[0].w), float(section[0].h));
+	ComputeOutputRect(float(section[state].w), float(section[state].h));
 
 	if (tex_id >= 0)
-		App->render->Blit_Scale(tex_id, output.x, output.y, float(output.w) / float(section[0].w), float(output.h) / float(section[0].h), &section[0], HUD, false);
+		App->render->Blit_Scale(tex_id, output.x, output.y, float(output.w) / float(section[state].w), float(output.h) / float(section[state].h), &section[state], HUD, false);
 	else
 		App->render->DrawQuad(output, color, true, HUD, false);
 }
