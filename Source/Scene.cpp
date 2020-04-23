@@ -373,11 +373,6 @@ void Scene::LoadMenuScene()
 	for (int i = 0; i < 4; i++)start->section[i] = { 0, 0, 470, 90 };
 	start->tex_id = App->tex.Load("Assets/textures/new-game.png");
 
-	/*C_Button* start_fx = new C_Button(start_go, Event(PLAY_FX, App->audio, int(SELECT), 0));
-	start_fx->target = { 0.f, 0.67f, .67f, .67f };
-	start_fx->offset = { 25.f, -253.f };
-	for (int i = 0; i < 4; i++)start_fx->section[i] = { 0, 0, 470, 90 };*/
-
 	//------------------------- FULLSCREEN --------------------------------------
 
 	Gameobject* fullscreen_go = AddGameobjectToCanvas("Fullscreen Button");
@@ -388,11 +383,6 @@ void Scene::LoadMenuScene()
 	for (int i = 0; i < 4; i++)fullscreen->section[i] = { 0, 0, 470, 90 };
 	fullscreen->tex_id = App->tex.Load("Assets/textures/fullscreen.png");
 
-	/*C_Button* fullscreen_fx = new C_Button(start_go, Event(PLAY_FX, App->audio, int(SELECT), 0));
-	fullscreen_fx->target = { 0.f, 0.65f, .55f, .55f };
-	fullscreen_fx->offset = { 30.f, -157.f };
-	for (int i = 0; i < 4; i++)fullscreen_fx->section[i] = { 0, 0, 470, 90 };*/
-
 	//------------------------- QUIT --------------------------------------
 
 	Gameobject* quit_go = AddGameobjectToCanvas("Quit Button");
@@ -402,11 +392,6 @@ void Scene::LoadMenuScene()
 	quit->offset = { 30.f, -55.f };
 	for (int i = 0; i < 4; i++)quit->section[i] = { 0, 0, 470, 90 };
 	quit->tex_id = App->tex.Load("Assets/textures/quit.png");
-
-	/*C_Button* quit_fx = new C_Button(quit_go, Event(PLAY_FX, App->audio, int(SELECT), 0));
-	quit_fx->target = { 0.f, 0.65f, .55f, .55f };
-	quit_fx->offset = { 30.f, -55.f };
-	for (int i = 0; i < 4; i++)quit_fx->section[i] = { 0, 0, 470, 90 };*/
 }
 
 void Scene::LoadEndScene()
@@ -722,11 +707,6 @@ void Scene::UpdatePause()
 			for (int i = 0; i < 4; i++)fullscreen->section[i] = { 0, 0, 1070, 207 };
 			fullscreen->tex_id = App->tex.Load("Assets/textures/fullscreen.png");
 
-			/*C_Button* fullscreen_fx = new C_Button(fullscreen_go, Event(PLAY_FX, App->audio, int(SELECT), 0));
-			fullscreen_fx->target = { 0.51f, 0.3f, 0.3f, 0.3f };
-			fullscreen_fx->offset = { -525.f, 200.f };
-			for (int i = 0; i < 4; i++)fullscreen_fx->section[i] = { 0, 0, 1070, 207 };*/
-
 			/*//------------------------- SAVE --------------------------------------
 
 			Gameobject* save_go = AddGameobject("save button", pause_background_go);
@@ -781,11 +761,6 @@ void Scene::UpdatePause()
 			main_menu->offset = { -525.f, 500.f };
 			for (int i = 0; i < 4; i++)main_menu->section[i] = { 0, 0, 1070, 207 };
 			main_menu->tex_id = App->tex.Load("Assets/textures/main-menu.png");
-
-			/*C_Button* main_menu_fx = new C_Button(main_menu_go, Event(PLAY_FX, App->audio, int(SELECT), 0));
-			main_menu_fx->target = { 0.51f, 0.3f, 0.3f, 0.3f };
-			main_menu_fx->offset = { -525.f, 500.f };
-			for (int i = 0; i < 4; i++)main_menu_fx->section[i] = { 0, 0, 1070, 207 };*/
 		}
 
 		if (paused_scene)
