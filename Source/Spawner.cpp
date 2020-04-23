@@ -13,7 +13,7 @@ Spawner::Spawner(Gameobject* go) : Behaviour(go, SPAWNER, NO_UPGRADE, B_SPAWNER)
 {
 	Transform* t = game_object->GetTransform();
 
-	max_life = 10;
+	max_life = 50;
 	current_life = max_life;
 	shoot = true; //Control if active or not
 	damage = 5;//number of unit spawns 
@@ -85,6 +85,7 @@ void Spawner::SpawnSpecial(float x, float y)
 
 void Spawner::ResetSpawner()
 {
+
 	maxSpawns = 100;
 	currentSpawns = 0;
 }

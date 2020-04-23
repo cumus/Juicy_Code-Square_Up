@@ -752,7 +752,7 @@ void B_Unit::OnRightClick(vec posClick, vec modPos)
 
 					}
 				}
-				else if (it->second->GetType() == ENEMY_MELEE || it->second->GetType() == ENEMY_RANGED)//Temporal
+				else if (it->second->GetType() == ENEMY_MELEE || it->second->GetType() == ENEMY_RANGED || it->second->GetType() == SPAWNER)//Temporal
 				{
 					if (distance == 0)//Closest distance
 					{
