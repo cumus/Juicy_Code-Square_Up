@@ -40,7 +40,7 @@ Behaviour::Behaviour(Gameobject* go, UnitType t, UnitState starting_state, Compo
 	audio = new AudioSource(game_object);
 	new AnimatedSprite(this);
 
-	selection_highlight = new Sprite(go, App->tex.Load("Assets/textures/selectionMark.png"), { 0, 0, 64, 64 }, BACK_SCENE, { 0, -32, 1.f, 1.f });
+	selection_highlight = new Sprite(go, App->tex.Load("Assets/textures/selectionMark.png"), { 0, 0, 64, 64 }, BACK_SCENE, { 0, -50, 1.f, 1.f });
 	selection_highlight->SetInactive();
 
 	mini_life_bar.Create(go);

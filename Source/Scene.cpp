@@ -165,24 +165,33 @@ void Scene::RecieveEvent(const Event& e)
 		break; }
 	case PLACE_BUILDING:
 	{
+		imgPreview->SetActive();
 		placing_building = true;
 		buildType = e.data1.AsInt();
 		switch (buildType)
 		{
 		case TOWER:
-			buildingImage->section = { 0, 3, 217, 177 };
+			buildingImage->SetSection({ 0, 3, 217, 177 });
+			imgPreview->GetTransform()->ScaleX(1.0f);
+			imgPreview->GetTransform()->ScaleY(1.0f);
 			LOG("Tower");
 			break;
 		case BARRACKS:
-			buildingImage->section = { 217, 3, 217, 177 };
+			buildingImage->SetSection({ 217, 3, 217, 177 });
+			imgPreview->GetTransform()->ScaleX(6.0f);
+			imgPreview->GetTransform()->ScaleY(6.0f);
 			LOG("Barracks");
 			break;
 		case BASE_CENTER: 
-			buildingImage->section = { 434, 3, 217, 177 };
+			buildingImage->SetSection({ 434, 3, 217, 177 });
+			imgPreview->GetTransform()->ScaleX(4.0f);
+			imgPreview->GetTransform()->ScaleY(4.0f);
 			LOG("Base center");
 			break;
 		default:
-			buildingImage->section = { 0, 3, 217, 177 };
+			buildingImage->SetSection({ 0, 3, 217, 177 });
+			imgPreview->GetTransform()->ScaleX(1.0f);
+			imgPreview->GetTransform()->ScaleY(1.0f);
 			LOG("Default");
 			break;
 		}
@@ -360,11 +369,8 @@ void Scene::LoadMainScene()
 	}
 
 	imgPreview = AddGameobject("Builder image");
-	buildingImage = new C_Image(imgPreview);
-	buildingImage->offset = { 0.0f, 0.0f };
-	not->target = { 1.0f, 1.0f, 1.0f, 1.0f };
-	buildingImage->section = { 0, 3, 217, 177 };
-	buildingImage->tex_id = App->tex.Load("Assets/textures/buildPreview.png");
+	buildingImage = new Sprite(imgPreview,App->tex.Load("Assets/textures/buildPreview.png"), { 0, 3, 217, 177 },FRONT_SCENE);
+	imgPreview->SetInactive();
 }
 
 void Scene::LoadIntroScene()
@@ -707,6 +713,7 @@ void Scene::UpdateBuildingMode()
 	{
 		placing_building = false;
 		buildType = -1;
+		imgPreview->SetInactive();
 	}
 	else if (App->input->GetMouseButtonDown(0) == KEY_DOWN)
 	{

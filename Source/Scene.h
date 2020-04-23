@@ -8,6 +8,7 @@
 #include "Canvas.h"
 #include "Minimap.h"
 
+
 #include <vector>
 
 #define GATHERER_COST 10
@@ -90,6 +91,7 @@ enum PlayerStats : int
 
 struct SDL_Texture;
 class Transform;
+class Sprite;
 
 class Scene : public Module
 {
@@ -198,7 +200,7 @@ private:
 
 	// Place Mode
 	Gameobject* imgPreview = nullptr;
-	C_Image* buildingImage = nullptr;
+	Sprite* buildingImage;
 	bool placing_building = false;
 	int buildType = -1;
 
