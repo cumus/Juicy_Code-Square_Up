@@ -18,14 +18,14 @@ Minimap::Minimap(Gameobject* go) : UI_Component(go, go->GetUIParent(), UI_MINIMA
 	mouse_moving = false;
 
 	// Setup Minimap
-	map_scale = 0.125f;
+	map_scale = 0.5f;
 	std::pair<int, int> map_size = Map::GetMapSize_I();
 	std::pair<int, int> tile_size = Map::GetTileSize_I();
 	std::pair<int, int> total_size = { int(float(map_size.first * tile_size.first) * map_scale), int(float(map_size.second * tile_size.second) * map_scale) };
 	minimap_texture = App->render->GetMinimap(total_size.first, total_size.second, map_scale, false);
 
 	// Set UI_Component values
-	target = { 1.f, 1.f, 1.5f * map_scale, 1.5f * map_scale };
+	target = { 1.f, 1.f, 0.04f, 0.04f };
 	offset = { -total_size.first, -total_size.second };
 
 	// Set Border & Sections
