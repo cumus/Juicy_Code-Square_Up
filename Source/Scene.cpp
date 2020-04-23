@@ -103,6 +103,16 @@ bool Scene::PostUpdate()
 {
 	root.PostUpdate();
 	map.Draw();
+	// Timed Scene Changing
+	if (scene_change_timer >= 0.f)
+	{
+		scene_change_timer -= App->time.GetGameDeltaTime();
+		if (scene_change_timer <= 0.f)
+		{
+			scene_change_timer = -1.0f;
+			Event::Push(SCENE_CHANGE, this, next_scene, 2.f);
+		}
+	}
 	//Reactivate all enemies
 	return true;
 }
@@ -336,6 +346,9 @@ void Scene::LoadIntroScene()
 	OPTICK_EVENT();
 	
 	App->audio->PlayFx(LOGO);
+
+	scene_change_timer = 10.f;
+	next_scene = MENU;
 
 	C_Button* background = new C_Button(AddGameobjectToCanvas("Background"), Event(SCENE_CHANGE, this, MENU, 2.f));
 	background->target = { 1.f, 1.f, 1.f, 1.f };
@@ -681,7 +694,7 @@ void Scene::UpdateBuildingMode()
 		if (App->pathfinding.CheckWalkabilityArea(pos, placing_building->GetGameobject()->GetTransform()->GetGlobalScale()))
 		{			
 			int type = placing_building->GetGameobject()->GetBehaviour()->GetType();
-			placing_building = SpawnBehaviour(type);
+			placing_building = SpawnBehaviour(type,vec(pos.first,pos.second));
 			if (placing_building != nullptr)
 			{
 				placing_building = placing_building->GetGameobject()->GetTransform();
@@ -1611,6 +1624,9 @@ void Scene::OnEventStateMachine(GameplayState state)
 
 void Scene::ResetScene()
 {
+	scene_change_timer = -1.f;
+	next_scene = EMPTY;
+
 	for (int i = 0; i < EDGE_COLLECTED; ++i)
 		hud_texts[i] = nullptr;
 
@@ -1776,6 +1792,9 @@ Transform* Scene::SpawnBehaviour(int type, vec pos)
 		if ((player_stats[CURRENT_EDGE] - TOWER_COST) >= 0)
 		{
 			behaviour = AddGameobject("Tower");
+			behaviour->GetTransform()->SetLocalPos(pos);
+			behaviour->GetTransform()->ScaleX(1.0f);
+			behaviour->GetTransform()->ScaleY(1.0f);
 			new Tower(behaviour);
 			if (costs)
 			{

@@ -194,6 +194,7 @@ private:
 	SceneType current_scene;
 	SceneType next_scene;
 	GameplayState current_state;
+	float scene_change_timer;
 
 	// Place Mode
 	Transform* placing_building = nullptr;

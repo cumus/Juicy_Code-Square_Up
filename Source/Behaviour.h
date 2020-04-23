@@ -95,6 +95,7 @@ public:
 	virtual void create_creation_bar() {}
 	virtual void update_creation_bar() {}
 	virtual void Upgrade() {}
+	virtual void UpdateWalkabilityTiles() {}
 
 
 	UnitType GetType() const { return type; }
@@ -150,6 +151,9 @@ protected:
 	float pos_y_HUD;
 	int bar_text_id;
 	Gameobject* selectionPanel = nullptr;
+	Gameobject* btnTower = nullptr;
+	Gameobject* btnBarrack = nullptr;
+	Gameobject* btnBaseCenter = nullptr;
 	Gameobject* bar_go = nullptr;
 	Gameobject* creation_bar_go = nullptr;
 	C_Image* bar;

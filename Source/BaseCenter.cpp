@@ -31,7 +31,9 @@ Base_Center::Base_Center(Gameobject* go) : BuildingWithQueue(go, BASE_CENTER, NO
 
 	if (t)
 	{
+		LOG("Set walkability");
 		vec pos = t->GetGlobalPosition();
+		LOG("POS X:%f/Y:%f",pos.x,pos.y);
 		for (int i = 0; i < t->GetLocalScaleX(); i++)
 		{
 			for (int a = 0; a < t->GetLocalScaleY(); a++)
@@ -56,6 +58,20 @@ Base_Center::~Base_Center()
 
 	if (baseCenter == game_object)
 		baseCenter = nullptr;
+}
+
+void Base_Center::UpdateWalkabilityTiles()
+{
+	Transform* t = game_object->GetTransform();
+	vec pos = t->GetGlobalPosition();
+	//LOG("POS X:%f/Y:%f", pos.x, pos.y);
+	for (int i = 0; i < t->GetLocalScaleX(); i++)
+	{
+		for (int a = 0; a < t->GetLocalScaleY(); a++)
+		{
+			App->pathfinding.SetWalkabilityTile(int(pos.x) + i + 2, int(pos.y) + a - 1, false);
+		}
+	}
 }
 
 void Base_Center::AfterDamageAction()

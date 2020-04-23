@@ -18,6 +18,7 @@ public:
 	void update_upgrades_ui();
 	void CreatePanel() override;
 	void UpdatePanel() override;
+	void UpdateWalkabilityTiles() override;
 
 protected:
 

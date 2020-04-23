@@ -47,6 +47,14 @@ Tower::~Tower()
 	b_map.erase(GetID());
 }
 
+void Tower::UpdateWalkabilityTiles()
+{
+	Transform* t = game_object->GetTransform();
+	vec pos = t->GetGlobalPosition();
+	//LOG("POS X:%f/Y:%f", pos.x, pos.y);
+	App->pathfinding.SetWalkabilityTile(int(pos.x), int(pos.y), false);
+}
+
 void Tower::Update()
 {
 	if (current_state != DESTROYED)

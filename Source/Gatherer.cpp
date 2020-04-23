@@ -34,6 +34,9 @@ void Gatherer::CreatePanel()
 	//------------------------- BASE PANEL --------------------------------------
 
 	selectionPanel = App->scene->AddGameobjectToCanvas("Gatherer Build Panel");
+	btnTower = App->scene->AddGameobject("Gatherer buttons", selectionPanel);
+	//btnBarrack = App->scene->AddGameobjectToCanvas("Btn Barrack build ");
+	//btnBaseCenter = App->scene->AddGameobjectToCanvas("Btn Base build");
 
 	panel = new C_Image(selectionPanel);
 	panel->target = { 0.9f, posY_panel, 1.0f, 1.0f };
@@ -47,11 +50,18 @@ void Gatherer::CreatePanel()
 	for (int i = 0; i < 4; i++)barracks_btn->section[i] = { 121, 38, 38, 38 };
 	barracks_btn->tex_id = panel_tex_ID;
 
-	tower_btn = new C_Button(selectionPanel, Event(PLACE_BUILDING, App->scene, int(TOWER)));//Top right
+	tower_btn = new C_Button(btnTower, Event(PLACE_BUILDING, App->scene, int(TOWER)));//Top right
 	tower_btn->target = { 0.95f, posY_panel + 0.02f, 1.0f, 1.0f };
 	tower_btn->offset = { 0.0f,0.0f };
 	for (int i = 0; i < 4; i++)tower_btn->section[i] = { 121, 0, 38, 38 };
 	tower_btn->tex_id = panel_tex_ID;
+
+	baseBtn = new C_Button(btnTower, Event(PLACE_BUILDING, App->scene, int(BASE_CENTER)));//Bottom right
+	baseBtn->target = { 0.95f, posY_panel + 0.085f, 1.0f, 1.0f };
+	baseBtn->offset = { 0.0f, 0.0f };
+	for (int i = 0; i < 4; i++)baseBtn->section[i] = { 162, 38, 38, 38 };
+	baseBtn->tex_id = panel_tex_ID;
+
 
 	/*wall_btn = new C_Button(selectionPanel, Event(PLACE_BUILDING,  App->scene, spawnPointX, spawnPointY));//Bottom left
 	wall_btn->target = { 0.912f, posY_panel + 0.085f, 1.0f, 1.0f };
@@ -59,11 +69,6 @@ void Gatherer::CreatePanel()
 	wall_btn->section = { 161, 0, 38, 38 };
 	wall_btn->tex_id = panel_tex_ID;*/
 
-	baseBtn = new C_Button(selectionPanel, Event(PLACE_BUILDING,  App->scene, int(BASE_CENTER)));//Bottom right
-	baseBtn->target = { 0.95f, posY_panel + 0.085f, 1.0f, 1.0f };
-	baseBtn->offset = { 0.0f, 0.0f };
-	for (int i = 0; i < 4; i++)baseBtn->section[i] = { 162, 38, 38, 38 };
-	baseBtn->tex_id = panel_tex_ID;
 }
 
 void Gatherer::UpdatePanel()

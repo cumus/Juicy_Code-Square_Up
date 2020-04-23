@@ -397,7 +397,8 @@ bool PathfindingManager::ValidTile(int x, int y)
 //Utility: Sets tile walkability
 void PathfindingManager::SetWalkabilityTile(int x, int y, bool state)
 {
-	if (x >= 0 && y >= 0)
+	//LOG("Coord X:%d/Y:%d",x,y);
+	if (x >= 0 && y >= 0 && x < map.width && y < map.height)
 	{
 		walkabilityMap[x][y] = state;
 		//unitWalkability[x][y] = state;

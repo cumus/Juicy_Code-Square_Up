@@ -54,7 +54,19 @@ Barracks::~Barracks()
 	b_map.erase(GetID());
 }
 
-
+void Barracks::UpdateWalkabilityTiles()
+{
+	Transform* t = game_object->GetTransform();
+	vec pos = t->GetGlobalPosition();
+	//LOG("POS X:%f/Y:%f", pos.x, pos.y);
+	for (int i = 0; i < t->GetLocalScaleX(); i++)
+	{
+		for (int a = 0; a < t->GetLocalScaleY(); a++)
+		{
+			App->pathfinding.SetWalkabilityTile(int(pos.x) + i + 3, int(pos.y) + a - 2, false);
+		}
+	}
+}
 
 void Barracks::AfterDamageAction()
 {
