@@ -95,6 +95,16 @@ void Behaviour::RecieveEvent(const Event& e)
 	}
 }
 
+void Behaviour::ActivateSprites()
+{
+
+}
+
+void Behaviour::DesactivateSprites()
+{
+
+}
+
 void Behaviour::Selected()
 {
 	// Selection mark

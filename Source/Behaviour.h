@@ -82,6 +82,8 @@ public:
 	void UnSelected();
 	void OnDamage(int damage);
 	void OnKill(const UnitType type);
+	void ActivateSprites();
+	void DesactivateSprites();
 	virtual void UpdatePath(int x,int y) {}
 	virtual void AfterDamageAction() {}
 	virtual void OnRightClick(vec pos, vec modPos) {}

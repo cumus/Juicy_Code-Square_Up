@@ -59,7 +59,18 @@ bool Scene::Start()
 bool Scene::PreUpdate()
 {
 	root.PreUpdate();
-	//Deactivate non in-sight enemies
+	//Fog of war
+	if (Behaviour::enemiesInSight.empty() != false)
+	{
+		for (std::vector<double>::const_iterator it = Behaviour::enemiesInSight.cbegin(); it != Behaviour::enemiesInSight.cend(); ++it)
+		{
+			Behaviour* go = Behaviour::b_map[*it]->GetGameobject()->GetBehaviour();
+			if (go->GetState() != DESTROYED)
+			{
+				Event::Push(SHOW_SPRITE, go);
+			}
+		}
+	}
 	return true;
 }
 
@@ -113,7 +124,16 @@ bool Scene::PostUpdate()
 			Event::Push(SCENE_CHANGE, this, next_scene, 2.f);
 		}
 	}
-	//Reactivate all enemies
+	//Fog of war
+	for (std::vector<double>::const_iterator it = Behaviour::enemiesInSight.cbegin(); it != Behaviour::enemiesInSight.cend(); ++it)
+	{	
+		Behaviour* go = Behaviour::b_map[*it]->GetGameobject()->GetBehaviour();
+		if(go->GetState() != DESTROYED)
+		{
+			Event::Push(HIDE_SPRITE, go);
+		}
+	}
+	Behaviour::enemiesInSight.clear();
 	return true;
 }
 
@@ -178,8 +198,8 @@ void Scene::RecieveEvent(const Event& e)
 			break;
 		case BARRACKS:
 			buildingImage->SetSection({ 217, 3, 217, 177 });
-			imgPreview->GetTransform()->ScaleX(1.3f);
-			imgPreview->GetTransform()->ScaleY(1.3f);
+			imgPreview->GetTransform()->ScaleX(1.4f);
+			imgPreview->GetTransform()->ScaleY(1.4f);
 			//LOG("Barracks");
 			break;
 		case BASE_CENTER: 
@@ -369,7 +389,7 @@ void Scene::LoadMainScene()
 	}
 
 	imgPreview = AddGameobject("Builder image");
-	buildingImage = new Sprite(imgPreview, App->tex.Load("Assets/textures/buildPreview.png"), { 0, 3, 217, 177 }, FRONT_SCENE, {-50.0f,-50.0f,1.0f,1.0f});
+	buildingImage = new Sprite(imgPreview, App->tex.Load("Assets/textures/buildPreview.png"), { 0, 3, 217, 177 }, FRONT_SCENE, {-30.0f,-30.0f,1.0f,1.0f});
 	imgPreview->SetInactive();
 }
 

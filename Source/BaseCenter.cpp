@@ -60,6 +60,11 @@ Base_Center::~Base_Center()
 		baseCenter = nullptr;
 }
 
+void Base_Center::Update()
+{
+
+}
+
 void Base_Center::UpdateWalkabilityTiles()
 {
 	Transform* t = game_object->GetTransform();

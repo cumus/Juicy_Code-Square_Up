@@ -12,7 +12,7 @@ public:
 
 	void Upgrade() override;
 	void AfterDamageAction() override;
-
+	void Update() override;
 	void create_bar() override;
 	void update_health_ui() override;
 	void update_upgrades_ui();
