@@ -141,7 +141,7 @@ AnimatedSprite::AnimatedSprite(Behaviour* unit) : Sprite(unit->GetGameobject(), 
 		animations[ATTACKING_SE].Setup({ 2, 4425, 418, 295 }, 7, 8.0f);
 		animations[ATTACKING_SW].Setup({ 2, 4720, 418, 295 }, 7, 8.0f);
 		animations[DESTROYED].Setup({ 2, 5015, 418, 295 }, 8, 5.0f);
-		offset = { -168.0f, -295.0f, 0.6f, 0.6f };
+		offset = { -168.0f, -280.0f, 0.6f, 0.6f };
 		break;
 	}
 	case ENEMY_MELEE:
@@ -164,7 +164,7 @@ AnimatedSprite::AnimatedSprite(Behaviour* unit) : Sprite(unit->GetGameobject(), 
 		animations[ATTACKING_SE].Setup({ 2, 4425, 418, 295 }, 7, 8.0f);
 		animations[ATTACKING_SW].Setup({ 2, 4720, 418, 295 }, 7, 8.0f);
 		animations[DESTROYED].Setup({ 2, 5015, 418, 295 }, 8, 5.0f);
-		offset = { -168.0f, -295.0f, 0.6f, 0.6f };
+		offset = { -168.0f, -280.0f, 0.6f, 0.6f };
 		break;
 	case GATHERER:
 		tex_id = App->tex.Load("Assets/textures/Unit_Gatherer.png");
@@ -186,7 +186,7 @@ AnimatedSprite::AnimatedSprite(Behaviour* unit) : Sprite(unit->GetGameobject(), 
 		animations[ATTACKING_SE].Setup({ 2, 4425, 418, 295 }, 7, 8.0f);
 		animations[ATTACKING_SW].Setup({ 2, 4720, 418, 295 }, 7, 8.0f);
 		animations[DESTROYED].Setup({ 2, 5015, 418, 295 }, 8, 5.0f);
-		offset = { -168.0f, -295.0f, 0.6f, 0.6f };
+		offset = { -168.0f, -280.0f, 0.6f, 0.6f };
 		break;
 	case UNIT_RANGED:
 		tex_id = App->tex.Load("Assets/textures/Unit_Melee.png");
