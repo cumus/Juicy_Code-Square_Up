@@ -931,12 +931,12 @@ void Scene::UpdateSelection()
 					if (posToWorld.second > groupStart.y && posToWorld.second < mouseExtend.y)//Up
 					{
 						group.push_back(it->second->GetGameobject());
-						Event::Push(ON_SELECT, it->second->GetGameobject());
+						if (it->second->GetState() != DESTROYED) Event::Push(ON_SELECT, it->second->GetGameobject());
 					}
 					else if (posToWorld.second < groupStart.y && posToWorld.second > mouseExtend.y)//Down
 					{
 						group.push_back(it->second->GetGameobject());
-						Event::Push(ON_SELECT, it->second->GetGameobject());
+						if(it->second->GetState() != DESTROYED) Event::Push(ON_SELECT, it->second->GetGameobject());
 					}
 				}
 				else if (posToWorld.first < groupStart.x && posToWorld.first > mouseExtend.x)//Left
@@ -944,12 +944,12 @@ void Scene::UpdateSelection()
 					if (posToWorld.second > groupStart.y && posToWorld.second < mouseExtend.y)//Up
 					{
 						group.push_back(it->second->GetGameobject());
-						Event::Push(ON_SELECT, it->second->GetGameobject());
+						if (it->second->GetState() != DESTROYED) Event::Push(ON_SELECT, it->second->GetGameobject());
 					}
 					else if (posToWorld.second < groupStart.y && posToWorld.second > mouseExtend.y)//Down
 					{
 						group.push_back(it->second->GetGameobject());
-						Event::Push(ON_SELECT, it->second->GetGameobject());
+						if (it->second->GetState() != DESTROYED) Event::Push(ON_SELECT, it->second->GetGameobject());
 					}
 				}
 			}
@@ -1967,7 +1967,7 @@ void Scene::SetSelection(Gameobject* go, bool call_unselect)
 	{
 		for (std::vector<Gameobject*>::iterator it = App->scene->group.begin(); it != App->scene->group.end(); ++it)
 		{
-			Event::Push(ON_UNSELECT, *it);
+			if ((*it)->GetBehaviour()->GetState() != DESTROYED) Event::Push(ON_UNSELECT, *it);
 		}
 		group.clear();
 		groupSelect = false;
