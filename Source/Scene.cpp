@@ -155,7 +155,9 @@ void Scene::RecieveEvent(const Event& e)
 		break; }
 	case PLACE_BUILDING:
 	{
+		costs = false;
 		placing_building = SpawnBehaviour(e.data1.AsInt());
+		costs = true;
 		break;
 	}
 	case UPDATE_STAT:
@@ -659,18 +661,24 @@ void Scene::UpdateBuildingMode()
 	{
 		placing_building->GetGameobject()->Destroy();
 		placing_building = nullptr;
+		//costs = true;
 	}
 	else if (App->input->GetMouseButtonDown(0) == KEY_DOWN)
 	{
+		//costs = true;
 		int x, y;
 		App->input->GetMousePosition(x, y);
 		RectF cam = App->render->GetCameraRectF();
 		std::pair<int, int> pos = Map::WorldToTileBase(float(x) + cam.x, float(y) + cam.y);
 
 		if (App->pathfinding.CheckWalkabilityArea(pos, placing_building->GetGameobject()->GetTransform()->GetGlobalScale()))
-		{
+		{			
 			int type = placing_building->GetGameobject()->GetBehaviour()->GetType();
-			placing_building = SpawnBehaviour(type)->GetGameobject()->GetTransform();
+			placing_building = SpawnBehaviour(type);
+			if (placing_building != nullptr)
+			{
+				placing_building = placing_building->GetGameobject()->GetTransform();
+			}
 		}
 		else
 		{
@@ -1755,14 +1763,22 @@ Transform* Scene::SpawnBehaviour(int type, vec pos)
 		break;
 	case BASE_CENTER:
 	{		
-		behaviour = AddGameobject("Base Center");
-		behaviour->GetTransform()->SetLocalPos(pos);
-		behaviour->GetTransform()->ScaleX(4.0f);
-		behaviour->GetTransform()->ScaleY(4.0f);
-		new Base_Center(behaviour);
-		//Update paths
-		for (std::map<double, Behaviour*>::iterator it = Behaviour::b_map.begin(); it != Behaviour::b_map.end(); ++it)
-			Event::Push(UPDATE_PATH, it->second, pos.x - 1, pos.y - 1);
+		if ((player_stats[CURRENT_EDGE] - 20) >= 0)
+		{
+			behaviour = AddGameobject("Base Center");
+			behaviour->GetTransform()->SetLocalPos(pos);
+			behaviour->GetTransform()->ScaleX(4.0f);
+			behaviour->GetTransform()->ScaleY(4.0f);
+			new Base_Center(behaviour);
+			if(costs) UpdateStat(CURRENT_EDGE, -20);
+			//Update paths
+			for (std::map<double, Behaviour*>::iterator it = Behaviour::b_map.begin(); it != Behaviour::b_map.end(); ++it)
+				Event::Push(UPDATE_PATH, it->second, pos.x - 1, pos.y - 1);
+		}
+		else
+		{
+			LOG("Not enough resources! :(");
+		}
 		break;
 	}
 	case TOWER:
@@ -1771,9 +1787,12 @@ Transform* Scene::SpawnBehaviour(int type, vec pos)
 		{
 			behaviour = AddGameobject("Tower");
 			new Tower(behaviour);
-			UpdateStat(CURRENT_TOWERS, 1);
-			UpdateStat(TOTAL_TOWERS, 1);
-			UpdateStat(CURRENT_EDGE, -TOWER_COST);
+			if (costs)
+			{
+				UpdateStat(CURRENT_TOWERS, 1);
+				UpdateStat(TOTAL_TOWERS, 1);
+				UpdateStat(CURRENT_EDGE, -TOWER_COST);
+			}
 			//Update paths
 			for (std::map<double, Behaviour*>::iterator it = Behaviour::b_map.begin(); it != Behaviour::b_map.end(); ++it)
 				Event::Push(UPDATE_PATH, it->second, pos.x - 1, pos.y - 1);
@@ -1795,9 +1814,12 @@ Transform* Scene::SpawnBehaviour(int type, vec pos)
 			behaviour->GetTransform()->ScaleY(6.0f);
 			new Barracks(behaviour);
 
-			UpdateStat(CURRENT_BARRACKS, 1);
-			UpdateStat(TOTAL_BARRACKS, 1);
-			UpdateStat(CURRENT_EDGE, - BARRACKS_COST);
+			if (costs)
+			{
+				UpdateStat(CURRENT_BARRACKS, 1);
+				UpdateStat(TOTAL_BARRACKS, 1);
+				UpdateStat(CURRENT_EDGE, -BARRACKS_COST);
+			}
 			//Update paths
 			for (std::map<double, Behaviour*>::iterator it = Behaviour::b_map.begin(); it != Behaviour::b_map.end(); ++it)
 				Event::Push(UPDATE_PATH, it->second, pos.x - 1, pos.y - 1);

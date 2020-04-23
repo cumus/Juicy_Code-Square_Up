@@ -196,6 +196,7 @@ private:
 
 	// Place Mode
 	Transform* placing_building = nullptr;
+	bool costs = true;
 
 	// Pause
 	bool paused_scene = false;
