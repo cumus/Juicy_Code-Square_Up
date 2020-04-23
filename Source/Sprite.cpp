@@ -119,11 +119,11 @@ AnimatedSprite::AnimatedSprite(Behaviour* unit) : Sprite(unit->GetGameobject(), 
 	}
 	case SPAWNER:
 	{
-		tex_id = App->tex.Load("Assets/textures/Base_Center.png");
-		animations[FULL_LIFE].Setup(section = { 0, 0, 166, 534 }, 1);
-		animations[HALF_LIFE].Setup({ 0, 0, 166, 534 }, 1);
-		animations[DESTROYED].Setup({ 0, 0, 166, 534 }, 1);
-		offset = { 20.f, -460.f, 0.3f, 0.3f };
+		tex_id = App->tex.Load("Assets/textures/SpawnEnemy.png");
+		animations[FULL_LIFE].Setup(section = { 0, 0, 560, 397 }, 4, 5.0f);
+		animations[HALF_LIFE].Setup({ 0, 0, 560, 397 }, 4, 5.0f);
+		animations[DESTROYED].Setup({ 0, 0, 560, 397 }, 4, 5.0f);
+		offset = { -205.f, -100.f, 0.5f, 0.5f };
 		break;
 	}
 	case UNIT_MELEE:
