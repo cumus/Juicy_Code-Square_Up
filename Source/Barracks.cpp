@@ -165,14 +165,14 @@ void Barracks::create_bar() {
 	//------------------------- BASE PORTRAIT --------------------------------------
 
 	portrait = new C_Image(bar_go);
-	portrait->target = { 0.045f, pos_y_HUD - 0.015f, 1.0f, 1.0f };
+	portrait->target = { 0.042f, pos_y_HUD - 0.01f, 1.0f, 1.0f };
 	portrait->offset = { -34.0f, -47.0f };
-	portrait->section = { 132, 456, 34, 47 };
+	portrait->section = { 218, 468, 45, 34 };
 	portrait->tex_id = bar_text_id;
 
 	//------------------------- BASE TEXT --------------------------------------
 
-	text = new C_Text(bar_go, "Base");
+	text = new C_Text(bar_go, "Barracks");
 	text->target = { 0.055f, pos_y_HUD - 0.085f, 1.5f, 1.5f };
 
 	//------------------------- BASE RED HEALTH --------------------------------------
