@@ -70,10 +70,10 @@ AnimatedSprite::AnimatedSprite(Behaviour* unit) : Sprite(unit->GetGameobject(), 
 	{
 	case BASE_CENTER:
 	{
-		tex_id = App->tex.Load("Assets/textures/Base_Center.png");
-		animations[NO_UPGRADE].Setup(section = { 0, 0, 562, 813 }, 5, 4.0f);
-		animations[FIRST_UPGRADE].Setup({ 2812, 0, 562, 813 }, 5, 4.0f);
-		animations[SECOND_UPGRADE].Setup({ 5625, 0, 562, 813 }, 5, 4.0f);
+		tex_id = App->tex.Load("Assets/textures/BaseCenter.png");
+		animations[NO_UPGRADE].Setup(section = { 0, 0, 546, 813 }, 4, 4.0f);
+		animations[FIRST_UPGRADE].Setup({ 2812, 0, 562, 813 }, 4, 4.0f);
+		animations[SECOND_UPGRADE].Setup({ 5625, 0, 562, 813 }, 4, 4.0f);
 		animations[DESTROYED].Setup({ 8956, 0, 562, 813 }, 5, 8.0f);
 		offset = { -60.0f, -780.0f + Map::GetBaseOffset(), 0.15f, 0.15f };
 		break;
@@ -109,7 +109,7 @@ AnimatedSprite::AnimatedSprite(Behaviour* unit) : Sprite(unit->GetGameobject(), 
 		animations[FIRST_UPGRADE].Setup({ 3130, 0, 625, 485 }, 5, 5.0f);
 		animations[SECOND_UPGRADE].Setup({ 6260, 0, 625, 485 }, 5, 5.0f);
 		animations[DESTROYED].Setup({ 9390, 0, 625, 485 }, 5, 8.0f);
-		offset = { 0.0f, -300.0f + Map::GetBaseOffset(), 0.1f, 0.1f };
+		offset = { 0.0f, -550.0f + Map::GetBaseOffset(), 0.1f, 0.1f };
 		break;
 	}
 	case SPAWNER:
