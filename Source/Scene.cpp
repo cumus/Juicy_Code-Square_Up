@@ -679,6 +679,7 @@ void Scene::UpdateBuildingMode()
 			{
 				placing_building = placing_building->GetGameobject()->GetTransform();
 			}
+			placing_building = nullptr;
 		}
 		else
 		{
@@ -1677,6 +1678,7 @@ bool Scene::OnMainScene() const
 
 Transform* Scene::SpawnBehaviour(int type, vec pos)
 {
+	LOG("Spawn");
 	Transform* ret = nullptr;
 	Gameobject* behaviour = nullptr;
 
