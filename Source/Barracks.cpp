@@ -99,22 +99,24 @@ void Barracks::CreatePanel()
 
 	selectionPanel = App->scene->AddGameobjectToCanvas("Barracks Build Panel");
 
+
 	panel = new C_Image(selectionPanel);
 	panel->target = { 0.15f, posY_panel, 1.0f, 1.0f };
 	panel->offset = { 0.0f, 0.0f };
 	panel->section = { 0, 0, 140, 139 };
 	panel->tex_id = panel_tex_ID;
-	
-	meleeUnit_btn = new C_Button(selectionPanel, Event(BUILD_MELEE, this, spawnPoint, 5.0f));//Top right
-	meleeUnit_btn->target = { 0.205f, posY_panel + 0.01f, 1.0f, 1.0f };
-	meleeUnit_btn->offset = { 0.0f,0.0f };
 
-	meleeUnit_btn->section[0] = { 207, 0, 62, 62 };
-	meleeUnit_btn->section[1] = { 207, 130, 62, 62 };
-	meleeUnit_btn->section[2] = { 207, 260, 62, 62 };
-	meleeUnit_btn->section[3] = { 207, 260, 62, 62 };
+	/*
+	superUnit_btn = new C_Button(selectionPanel, Event(BUILD_SUPER, this, spawnPoint, 5.0f));//Bottom right
+	superUnit_btn->target = { 0.205f, posY_panel + 0.1f, 1.0f, 1.0f };
+	superUnit_btn->offset = { 0.0f, 0.0f };
 
-	meleeUnit_btn->tex_id = panel_tex_ID;
+	superUnit_btn->section[0] = { 207, 65, 62, 62 };
+	superUnit_btn->section[1] = { 207, 195, 62, 62 };
+	superUnit_btn->section[2] = { 207, 325, 62, 62 };
+	superUnit_btn->section[3] = { 207, 325, 62, 62 };
+
+	superUnit_btn->tex_id = panel_tex_ID;
 
 	rangedUnit_btn = new C_Button(selectionPanel, Event(BUILD_RANGED, this, spawnPoint, 5.0f));//Bottom left
 	rangedUnit_btn->target = { 0.155f, posY_panel + 0.1f, 1.0f, 1.0f };
@@ -126,17 +128,19 @@ void Barracks::CreatePanel()
 	rangedUnit_btn->section[3] = { 142, 325, 62, 62 };
 
 	rangedUnit_btn->tex_id = panel_tex_ID;
+*/
+	meleeUnit_btn = new C_Button(selectionPanel, Event(BUILD_MELEE, this, spawnPoint, 5.0f));//Top right
+	meleeUnit_btn->target = { 0.205f, posY_panel + 0.01f, 1.0f, 1.0f };
+	meleeUnit_btn->offset = { 0.0f,0.0f };
 
-	superUnit_btn = new C_Button(selectionPanel, Event(BUILD_SUPER, this, spawnPoint, 5.0f));//Bottom right
-	superUnit_btn->target = { 0.205f, posY_panel + 0.1f, 1.0f, 1.0f };
-	superUnit_btn->offset = { 0.0f, 0.0f };
+	meleeUnit_btn->section[0] = { 207, 0, 62, 62 };
+	meleeUnit_btn->section[1] = { 207, 130, 62, 62 };
+	meleeUnit_btn->section[2] = { 207, 260, 62, 62 };
+	meleeUnit_btn->section[3] = { 207, 260, 62, 62 };
 
-	superUnit_btn->section[0] = { 207, 65, 62, 62 };
-	superUnit_btn->section[1] = { 207, 195, 62, 62 };
-	superUnit_btn->section[2] = { 207, 325, 62, 62 };
-	superUnit_btn->section[3] = { 207, 325, 62, 62 };
+	meleeUnit_btn->tex_id = panel_tex_ID;
 
-	superUnit_btn->tex_id = panel_tex_ID;
+	
 
 }
 
