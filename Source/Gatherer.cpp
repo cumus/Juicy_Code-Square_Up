@@ -22,6 +22,7 @@ Gatherer::Gatherer(Gameobject* go) : B_Unit(go, GATHERER, IDLE, B_GATHERER)
 
 	CreatePanel();
 	selectionPanel->SetInactive();
+
 }
 
 Gatherer::~Gatherer(){}
@@ -34,17 +35,17 @@ void Gatherer::CreatePanel()
 
 	selectionPanel = App->scene->AddGameobjectToCanvas("Gatherer Build Panel");
 	btnTower = App->scene->AddGameobject("Gatherer buttons", selectionPanel);
-	//btnBarrack = App->scene->AddGameobjectToCanvas("Btn Barrack build ");
-	//btnBaseCenter = App->scene->AddGameobjectToCanvas("Btn Base build");
+	btnBarrack = App->scene->AddGameobject("Btn Barrack build ", selectionPanel);
+	btnBaseCenter = App->scene->AddGameobject("Btn Base build", selectionPanel);
 
 	panel = new C_Image(selectionPanel);
-	panel->target = { 0.9f, 0.8f, 1.0f, 1.0f };
+	panel->target = { 0.155f, 0.81f, 0.8f, 0.8f };
 	panel->offset = { 0.0f, 0.0f };
-	panel->section = { 0, 0, 119, 119 };
+	panel->section = { 0, 0, 140, 139 };
 	panel->tex_id = panel_tex_ID;
 
-	barracks_btn = new C_Button(selectionPanel, Event(PLACE_BUILDING, App->scene, int(BARRACKS)));//Top left
-	barracks_btn->target = { 0.912f, 0.82f, 0.7f, 0.7f };
+	barracks_btn = new C_Button(btnBarrack, Event(PLACE_BUILDING, App->scene, int(BARRACKS)));//Top left
+	barracks_btn->target = { 0.1f, 0.08f, 0.7f, 0.7f };
 	barracks_btn->offset = { 0.0f, 0.0f };
 
 	barracks_btn->section[0] = { 337, 0, 62, 62 };
@@ -55,7 +56,7 @@ void Gatherer::CreatePanel()
 	barracks_btn->tex_id = panel_tex_ID;
 
 	tower_btn = new C_Button(btnTower, Event(PLACE_BUILDING, App->scene, int(TOWER)));//Top right
-	tower_btn->target = { 1.2f, 0.0f, 0.7f, 0.7f };
+	tower_btn->target = { 0.55f, 0.08f, 0.7f, 0.7f };
 	tower_btn->offset = { 0.0f, 0.0f };
 
 	tower_btn->section[0] = { 272, 65, 62, 62 };
@@ -65,8 +66,8 @@ void Gatherer::CreatePanel()
 
 	tower_btn->tex_id = panel_tex_ID;
 
-	baseBtn = new C_Button(btnTower, Event(PLACE_BUILDING, App->scene, int(BASE_CENTER)));//Bottom right
-	baseBtn->target = { 1.2f, 1.2f, 0.7f, 0.7f };
+	baseBtn = new C_Button(btnBaseCenter, Event(PLACE_BUILDING, App->scene, int(BASE_CENTER)));//Bottom right
+	baseBtn->target = { 0.55f, 0.55f, 0.7f, 0.7f };
 	baseBtn->offset = { 0.0f, 0.0f };
 
 	baseBtn->section[0] = { 272, 0, 62, 62 };
