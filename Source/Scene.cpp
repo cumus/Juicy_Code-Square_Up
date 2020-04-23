@@ -203,6 +203,8 @@ void Scene::RecieveEvent(const Event& e)
 		case::RESUME:
 		{
 			Event::Push(SCENE_PLAY, App);
+			pause_background_go->SetInactive();
+			paused_scene = false;
 			break;
 		}
 		case::REQUEST_QUIT:
@@ -723,9 +725,9 @@ void Scene::UpdatePause()
 
 			Gameobject* resume_go = AddGameobject("resume Button", pause_background_go);
 
-			C_Button* resume = new C_Button(resume_go, Event(SCENE_PLAY, App));
-			resume->target = { 0.51f, 0.3f, 0.3f, 0.3f };
-			resume->offset = { -550.f, -100.f };
+			C_Button* resume = new C_Button(resume_go, Event(BUTTON_EVENT, this, RESUME));
+			resume->target = { 0.51f, 0.3f, 0.6f, 0.6f };
+			resume->offset = { -250.f, -80.f };
 
 			resume->section[0] = { 0, 0, 470, 90 };
 			resume->section[1] = { 0, 101, 470, 90 };
@@ -734,31 +736,13 @@ void Scene::UpdatePause()
 
 			resume->tex_id = App->tex.Load("Assets/textures/resume.png");
 
-			C_Button* resume_fx = new C_Button(resume_go, Event(PLAY_FX, App->audio, int(SELECT), 0));
-			resume_fx->target = { 0.51f, 0.3f, 0.3f, 0.3f };
-			resume_fx->offset = { -525.f, -100.f };
-
-			resume_fx->section[0] = { 0, 0, 470, 90 };
-			resume_fx->section[1] = { 0, 101, 470, 90 };
-			resume_fx->section[2] = { 0, 202, 470, 90 };
-			resume_fx->section[3] = { 0, 202, 470, 90 };
-
-			C_Button* resume_inactive = new C_Button(resume_go, Event(RESUME, this, MAIN));
-			resume_inactive->target = { 0.51f, 0.3f, 0.3f, 0.3f };
-			resume_inactive->offset = { -525.f, -100.f };
-
-			resume_inactive->section[0] = { 0, 0, 470, 90 };
-			resume_inactive->section[1] = { 0, 101, 470, 90 };
-			resume_inactive->section[2] = { 0, 202, 470, 90 };
-			resume_inactive->section[3] = { 0, 202, 470, 90 };
-
 			//------------------------- FULLSCREEN -----------------------------------------
 
 			Gameobject* fullscreen_go = AddGameobject("resume Button", pause_background_go);
 
 			C_Button* fullscreen = new C_Button(fullscreen_go, Event(BUTTON_EVENT, this, TOGGLE_FULLSCREEN));
-			fullscreen->target = { 0.51f, 0.3f, 0.3f, 0.3f };
-			fullscreen->offset = { -525.f, 200.f };
+			fullscreen->target = { 0.51f, 0.3f, 0.6f, 0.6f };
+			fullscreen->offset = { -250.f, 70.f };
 
 			fullscreen->section[0] = { 0, 0, 470, 90 };
 			fullscreen->section[1] = { 0, 101, 470, 90 };
@@ -817,8 +801,8 @@ void Scene::UpdatePause()
 			Gameobject* main_menu_go = AddGameobject("main menu Button", pause_background_go);
 
 			C_Button* main_menu = new C_Button(main_menu_go, Event(BUTTON_EVENT, this, SCENE_CHANGE, MENU));
-			main_menu->target = { 0.51f, 0.3f, 0.3f, 0.3f };
-			main_menu->offset = { -525.f, 500.f };
+			main_menu->target = { 0.51f, 0.3f, 0.6f, 0.6f };
+			main_menu->offset = { -250.f, 220.f };
 
 			main_menu->section[0] = { 0, 0, 470, 90 };
 			main_menu->section[1] = { 0, 101, 470, 90 };
