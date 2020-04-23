@@ -18,11 +18,11 @@ Minimap::Minimap(Gameobject* go) : UI_Component(go, go->GetUIParent(), UI_MINIMA
 	mouse_moving = false;
 
 	// Setup Minimap
-	float scale = 0.125f;
+	map_scale = 0.125f;
 	std::pair<int, int> map_size = Map::GetMapSize_I();
 	std::pair<int, int> tile_size = Map::GetTileSize_I();
-	std::pair<int, int> total_size = { int(float(map_size.first * tile_size.first) * scale), int(float(map_size.second * tile_size.second) * scale) };
-	minimap_texture = App->render->GetMinimap(total_size.first, total_size.second, scale, false);
+	std::pair<int, int> total_size = { int(float(map_size.first * tile_size.first) * map_scale), int(float(map_size.second * tile_size.second) * map_scale) };
+	minimap_texture = App->render->GetMinimap(total_size.first, total_size.second, map_scale, false);
 
 	// Load Icons
 	hud_texture = App->tex.Load("Assets/textures/Iconos_square_up.png");
@@ -37,7 +37,7 @@ Minimap::Minimap(Gameobject* go) : UI_Component(go, go->GetUIParent(), UI_MINIMA
 	sections[ICON_SPAWNER]		= { 542, 862, 11, 9 };
 
 	// Set UI_Component values
-	target = { 1.f, 1.f, 0.3f, 0.3f };
+	target = { 1.f, 1.f, 0.2f, 0.2f };
 	offset = { -total_size.first, -total_size.second };
 }
 
@@ -52,7 +52,7 @@ void Minimap::PostUpdate()
 	ComputeOutputRect(float(sections[MINIMAP].w), float(sections[MINIMAP].h));
 
 	// Minimap
-	//App->render->DrawQuad(output, { 0, 0, 0, 255 }, true, HUD, false);
+	App->render->DrawQuad(output, { 0, 0, 0, 255 }, true, HUD, false);
 	std::pair<float, float> scale = { float(output.w) / float(sections[MINIMAP].w), float(output.h) / float(sections[MINIMAP].h) };
 	App->render->Blit_Scale(minimap_texture, output.x, output.y, scale.first, scale.second, nullptr, HUD, false);
 
@@ -67,10 +67,10 @@ void Minimap::PostUpdate()
 	// Draw Camera Rect
 	RectF cam = App->render->GetCameraRectF();
 	SDL_Rect cam_rect = {
-		int(float(output.x) + (float(output.w) * 0.5f) + (cam.x * scale.first)),
-		int(float(output.y) + (cam.y * scale.second)),
-		int(cam.w * scale.first),
-		int(cam.h * scale.second) };
+		int(float(output.x) + ((float(output.w) * 0.5f) + (cam.x * scale.first)) * map_scale),
+		int((float(output.y) + (cam.y * scale.second)) * map_scale),
+		int(cam.w * scale.first * map_scale),
+		int(cam.h * scale.second * map_scale) };
 	App->render->DrawQuad(cam_rect, { 255, 255, 255, 255 }, false, HUD, false);
 
 	// Move camera
