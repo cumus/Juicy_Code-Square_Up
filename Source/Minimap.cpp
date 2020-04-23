@@ -56,6 +56,9 @@ void Minimap::PostUpdate()
 	std::pair<float, float> scale = { float(output.w) / float(sections[MINIMAP].w), float(output.h) / float(sections[MINIMAP].h) };
 	App->render->Blit_Scale(minimap_texture, output.x, output.y, scale.first, scale.second, nullptr, HUD, false);
 
+	scale.first *= map_scale;
+	scale.second *= map_scale;
+
 	// Border
 	App->render->Blit_Scale(
 		hud_texture,
@@ -67,10 +70,10 @@ void Minimap::PostUpdate()
 	// Draw Camera Rect
 	RectF cam = App->render->GetCameraRectF();
 	SDL_Rect cam_rect = {
-		int(float(output.x) + ((float(output.w) * 0.5f) + (cam.x * scale.first)) * map_scale),
-		int((float(output.y) + (cam.y * scale.second)) * map_scale),
-		int(cam.w * scale.first * map_scale),
-		int(cam.h * scale.second * map_scale) };
+		int(float(output.x) + (float(output.w) * 0.5f) + (cam.x * scale.first)),
+		int(float(output.y) + (cam.y * scale.second)),
+		int(cam.w * scale.first),
+		int(cam.h * scale.second) };
 	App->render->DrawQuad(cam_rect, { 255, 255, 255, 255 }, false, HUD, false);
 
 	// Move camera
