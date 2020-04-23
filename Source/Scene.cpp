@@ -380,7 +380,7 @@ void Scene::LoadMainScene()
 	}
 
 	imgPreview = AddGameobject("Builder image");
-	buildingImage = new Sprite(imgPreview, App->tex.Load("Assets/textures/buildPreview.png"), { 0, 3, 217, 177 }, FRONT_SCENE, {-40.0f,-40.0f,1.0f,1.0f});
+	buildingImage = new Sprite(imgPreview, App->tex.Load("Assets/textures/buildPreview.png"), { 0, 3, 217, 177 }, FRONT_SCENE, {-60.0f,-100.0f,1.0f,1.0f});
 	imgPreview->SetInactive();
 }
 
