@@ -1198,18 +1198,16 @@ void Scene::UpdateStateMachine()
 	case SPAWNER_STATE:
 
 		if (player_stats[CURRENT_SPAWNERS] == 0) Event::Push(GAMEPLAY, this, WIN);
-
 		break;
 
 	case WIN:
 
-		Event::Push(GAMEPLAY, this, WIN);
-
+		if(!endScene)Event::Push(GAMEPLAY, this, WIN);
 		break;
+
 	case LOSE:
 
-		Event::Push(GAMEPLAY, this, LOSE);
-
+		if(!endScene)Event::Push(GAMEPLAY, this, LOSE);
 		break;
 
 	default:
@@ -1660,6 +1658,7 @@ void Scene::OnEventStateMachine(GameplayState state)
 		//Kill 200 units
 		current_state = WIN;
 		win = true;
+		endScene = true;
 		LoadEndScene();
 
 		break;
@@ -1667,6 +1666,7 @@ void Scene::OnEventStateMachine(GameplayState state)
 		//Base center destroyed
 		current_state = LOSE;
 		win = false;
+		endScene = true;
 		LoadEndScene();
 
 		break;

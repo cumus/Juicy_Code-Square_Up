@@ -176,6 +176,7 @@ public:
 
 private:
 
+	bool endScene = false;
 	Gameobject root;
 	Map map;
 
