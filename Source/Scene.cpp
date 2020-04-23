@@ -174,25 +174,25 @@ void Scene::RecieveEvent(const Event& e)
 			buildingImage->SetSection({ 0, 3, 217, 177 });
 			imgPreview->GetTransform()->ScaleX(1.0f);
 			imgPreview->GetTransform()->ScaleY(1.0f);
-			LOG("Tower");
+			//LOG("Tower");
 			break;
 		case BARRACKS:
 			buildingImage->SetSection({ 217, 3, 217, 177 });
-			imgPreview->GetTransform()->ScaleX(6.0f);
-			imgPreview->GetTransform()->ScaleY(6.0f);
-			LOG("Barracks");
+			imgPreview->GetTransform()->ScaleX(1.3f);
+			imgPreview->GetTransform()->ScaleY(1.3f);
+			//LOG("Barracks");
 			break;
 		case BASE_CENTER: 
 			buildingImage->SetSection({ 434, 3, 217, 177 });
-			imgPreview->GetTransform()->ScaleX(4.0f);
-			imgPreview->GetTransform()->ScaleY(4.0f);
-			LOG("Base center");
+			imgPreview->GetTransform()->ScaleX(1.7f);
+			imgPreview->GetTransform()->ScaleY(1.7f);
+			//LOG("Base center");
 			break;
 		default:
 			buildingImage->SetSection({ 0, 3, 217, 177 });
 			imgPreview->GetTransform()->ScaleX(1.0f);
 			imgPreview->GetTransform()->ScaleY(1.0f);
-			LOG("Default");
+			//LOG("Default");
 			break;
 		}
 		
@@ -369,7 +369,7 @@ void Scene::LoadMainScene()
 	}
 
 	imgPreview = AddGameobject("Builder image");
-	buildingImage = new Sprite(imgPreview,App->tex.Load("Assets/textures/buildPreview.png"), { 0, 3, 217, 177 },FRONT_SCENE);
+	buildingImage = new Sprite(imgPreview, App->tex.Load("Assets/textures/buildPreview.png"), { 0, 3, 217, 177 }, FRONT_SCENE, {-50.0f,-50.0f,1.0f,1.0f});
 	imgPreview->SetInactive();
 }
 

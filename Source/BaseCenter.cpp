@@ -17,7 +17,7 @@ Base_Center::Base_Center(Gameobject* go) : BuildingWithQueue(go, BASE_CENTER, NO
 {
 	Transform* t = game_object->GetTransform();
 
-	max_life = 100;
+	max_life = 1000;
 	current_life = max_life;
 	bc_lvl = 1;
 	bc_max_lvl = 5;
@@ -31,9 +31,9 @@ Base_Center::Base_Center(Gameobject* go) : BuildingWithQueue(go, BASE_CENTER, NO
 
 	if (t)
 	{
-		LOG("Set walkability");
+		//LOG("Set walkability");
 		vec pos = t->GetGlobalPosition();
-		LOG("POS X:%f/Y:%f",pos.x,pos.y);
+		//LOG("POS X:%f/Y:%f",pos.x,pos.y);
 		for (int i = 0; i < t->GetLocalScaleX(); i++)
 		{
 			for (int a = 0; a < t->GetLocalScaleY(); a++)
