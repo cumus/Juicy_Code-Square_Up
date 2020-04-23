@@ -155,7 +155,7 @@ void Scene::RecieveEvent(const Event& e)
 		break;
 	case SCENE_CHANGE:
 	{
-		if (fading == NO_FADE)
+		if (fading != FADE_OUT)
 		{
 			if ((fade_duration = e.data2.AsFloat()) != 0.f)
 			{
@@ -394,10 +394,8 @@ void Scene::LoadIntroScene()
 	next_scene = MENU;
 
 	C_Button* background = new C_Button(AddGameobjectToCanvas("Background"), Event(SCENE_CHANGE, this, MENU, 2.f));
-	background->target = { 1.f, 1.f, 1.f, 1.f };
-	background->offset = { -1920.f, -1080.f };
 	for (int i = 0; i < 4; i++)background->section[i] = { 0, 0, 1920, 1080 };
-	background->tex_id = App->tex.Load("Assets/textures/white.png");
+	background->color = { 255, 255, 255, 255 };
 
 	C_Image* logo = new C_Image(AddGameobjectToCanvas("Team logo"));
 	logo->target = { 0.5f, 0.5f, 0.5f, 0.5f };
@@ -492,7 +490,7 @@ void Scene::LoadEndScene()
 	background->section = { 0, 0, 1280, 720 };
 	background->tex_id = App->tex.Load(win ? "Assets/textures/back-win.png" : "Assets/textures/back-lose.png");
 
-	C_Button* background_btn = new C_Button(background_go, Event(SCENE_CHANGE, this, MENU));
+	C_Button* background_btn = new C_Button(background_go, Event(BUTTON_EVENT, this, SCENE_CHANGE, MENU));
 	background_btn->target = { 1.f, 1.f, 1.f, 1.f };
 	background_btn->offset = { -1920.f, -1080.f };
 	for (int i = 0; i < 4; i++)background_btn->section[i] = { 0, 0, 1920, 1080 };
@@ -1139,10 +1137,10 @@ void Scene::UpdateStateMachine()
 		break;
 	case ENEMY:
 
-		/*if (player_stats[UNITS_KILLED] == 1) {
+		if (player_stats[UNITS_KILLED] == 1) {
 
 			Event::Push(GAMEPLAY, this, MELEE_ATK);
-		}*/
+		}
 
 		break;
 	case MELEE_ATK:
@@ -1164,15 +1162,10 @@ void Scene::UpdateStateMachine()
 		break;
 	case UPGRADE:
 
-		//if()
+		if (t_lvl > 1) Event::Push(GAMEPLAY, this, TOWER_ATK);
 
 		break;
-	case TOWER_STATE:
 
-		/*if (player_stats[CURRENT_TOWERS] == 1) {
-
-			Event::Push(GAMEPLAY, this, TOWER_ATK);
-		}*/
 	case TOWER_ATK:
 
 
@@ -1495,11 +1488,11 @@ void Scene::OnEventStateMachine(GameplayState state)
 		not->section = { 0, 0, 983, 644 };
 		not->tex_id = App->tex.Load("Assets/textures/mobdrop-not.png");
 
-		next = new C_Button(not_go, Event(SCENE_PLAY, App));
+		next = new C_Button(not_go, Event(GAMEPLAY, this, BUILD));
 		next->target = { 0.74f, 0.726f, 0.4f, 0.4f };
 		next->offset = { 500.f, -317.f };
 		for (int i = 0; i < 4; i++)next->section[i] = { 0, 0, 309, 37 };
-		next->tex_id = App->tex.Load("Assets/textures/button.png");
+		next->tex_id = App->tex.Load("Assets/textures/not-button.png");
 
 		not_inactive = new C_Button(not_go, Event(SET_INACTIVE, this, MAIN));
 

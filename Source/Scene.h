@@ -171,6 +171,7 @@ public:
 	//State Machine
 	int tutorial_barrack = 0;
 	int tutorial_tower = 0;
+	int t_lvl = 1;
 	bool tutorial_edge = true;
 
 private:
