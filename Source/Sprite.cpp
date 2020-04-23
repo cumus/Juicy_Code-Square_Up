@@ -81,7 +81,7 @@ AnimatedSprite::AnimatedSprite(Behaviour* unit) : Sprite(unit->GetGameobject(), 
 	case TOWER:
 	{
 		tex_id = App->tex.Load("Assets/textures/Tower.png");
-		animations[NO_UPGRADE].Setup(section = { 1, 0, 499, 746 }, 5, 4.0f);
+		animations[NO_UPGRADE].Setup(section = { 0, 0, 185, 746 }, 1, 4.0f);
 		animations[DESTROYED].Setup({ 0, 0, 502, 747 }, 5, 4.0f);
 		offset = { 15.0f, -715.0f + Map::GetBaseOffset(), 0.3f, 0.3f };
 		break;
