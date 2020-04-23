@@ -246,6 +246,11 @@ void Behaviour::OnKill(const UnitType type)
 			Event::Push(GAMEPLAY, App->scene, LOSE);
 			break;
 		}
+		case SPAWNER:
+		{
+			Event::Push(UPDATE_STAT, App->scene, CURRENT_SPAWNERS, -1);
+			break;
+		}
 	}
 	if(!tilesVisited.empty())
 	{
@@ -845,7 +850,18 @@ BuildingWithQueue::QueuedUnit::QueuedUnit(UnitType type, Gameobject* go, vec pos
 
 		Gameobject* icon = App->scene->AddGameobject("Queued Unit", go);
 		transform = icon->GetTransform();
-		new Sprite(icon, App->tex.Load("Assets/textures/Iconos_square_up.png"), { 0, 0, 100, 100 }, FRONT_SCENE);
+		switch (type)
+		{
+		case GATHERER:
+			new Sprite(icon, App->tex.Load("Assets/textures/Iconos_square_up.png"), { 75, 458, 48, 35 }, FRONT_SCENE, { -0.f, -50.f, 0.2f, 0.2f });
+			break;
+		case UNIT_MELEE:
+			new Sprite(icon, App->tex.Load("Assets/textures/Iconos_square_up.png"), { 22, 463, 48, 35 }, FRONT_SCENE, { -0.f, -50.f, 0.2f, 0.2f });
+			break;
+		case UNIT_RANGED:
+			new Sprite(icon, App->tex.Load("Assets/textures/Iconos_square_up.png"), { 22, 463, 48, 35 }, FRONT_SCENE, { -0.f, -50.f, 0.2f, 0.2f });
+			break;
+		}
 	}
 	else
 		transform = nullptr;
@@ -865,8 +881,8 @@ BuildingWithQueue::BuildingWithQueue(Gameobject* go, UnitType type, UnitState st
 	spawnPoint = game_object->GetTransform()->GetLocalPos();
 	int texture_id = App->tex.Load("Assets/textures/Iconos_square_up.png");
 	Gameobject* back_bar = App->scene->AddGameobject("Creation Bar", game_object);
-	new Sprite(back_bar, texture_id, { 100, 100, 10, 10 }, FRONT_SCENE, { 0.f, 0.f, 1.f, 1.f });
-	progress_bar = new Sprite(back_bar, texture_id, bar_section = { 100, 100, 10, 11 }, FRONT_SCENE, { 0.f, 0.f, 1.f, 1.f });
+	new Sprite(back_bar, texture_id, { 41, 698, 216, 16 }, FRONT_SCENE, { 0.f, 13.f, 0.29f, 0.2f });
+	progress_bar = new Sprite(back_bar, texture_id, bar_section = { 41, 721, 216, 16 }, FRONT_SCENE, { 0.f, 13.f, 0.29f, 0.2f });
 	back_bar->SetInactive();
 }
 
