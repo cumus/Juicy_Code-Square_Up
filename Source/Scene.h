@@ -230,6 +230,16 @@ private:
 	vec spawner_pos2 = { 55.f, 200.f };
 	vec spawner_pos3 = { 155.f, 300.f };
 
+	vec edge_pos1 = { 150.f, 150.f };
+	vec edge_pos2 = { 221.f, 120.f };
+	vec edge_pos3 = { 246.f, 79.f };
+	vec edge_pos4 = { 66.f, 127.f };
+	vec edge_pos5 = { 130.f, 65.f };
+	vec edge_pos6 = { 123.f, 65.f };
+	vec edge_pos7 = { 41.f, 166.f };
+	vec edge_pos8 = { 165.f, 111.f };
+	vec edge_pos9 = { 149.f, 72.f };
+
 	//-------Gameobjects--------
 
 	//Gameobject* lore_go;

@@ -18,7 +18,7 @@ Spawner::Spawner(Gameobject* go) : Behaviour(go, SPAWNER, NO_UPGRADE, B_SPAWNER)
 	shoot = true; //Control if active or not
 	damage = 5;//number of unit spawns 
 	ms_counter = 0;
-	cooldown = 5.0f;
+	cooldown = 20.0f;
 	maxSpawns = 100;
 	currentSpawns = 0;
 

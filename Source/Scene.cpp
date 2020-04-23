@@ -393,6 +393,16 @@ void Scene::LoadMainScene()
 	imgPreview = AddGameobject("Builder image");
 	buildingImage = new Sprite(imgPreview, App->tex.Load("Assets/textures/buildPreview.png"), { 0, 3, 217, 177 }, FRONT_SCENE, {-60.0f,-100.0f,1.0f,1.0f});
 	imgPreview->SetInactive();
+
+	SpawnBehaviour(EDGE, edge_pos1);
+	SpawnBehaviour(EDGE, edge_pos2);
+	SpawnBehaviour(EDGE, edge_pos3);
+	SpawnBehaviour(EDGE, edge_pos4);
+	SpawnBehaviour(EDGE, edge_pos5);
+	SpawnBehaviour(EDGE, edge_pos3);
+	SpawnBehaviour(EDGE, edge_pos4);
+	SpawnBehaviour(EDGE, edge_pos5);
+	SpawnBehaviour(EDGE, edge_pos6);
 }
 
 void Scene::LoadIntroScene()
@@ -1271,12 +1281,20 @@ void Scene::OnEventStateMachine(GameplayState state)
 
 		not_inactive->target = { 0.74f, 0.726f, 0.4f, 0.4f };
 		not_inactive->offset = { 500.f, -317.f };
-		for (int i = 0; i < 4; i++)not_inactive->section[i] = { 0, 0, 309, 37 };
+		not_inactive->section[0] = { 0, 0, 309, 37 };
+		not_inactive->section[1] = { 0, 44, 309, 37 };
+		not_inactive->section[2] = { 0, 88, 309, 37 };
+		not_inactive->section[3] = { 0, 88, 309, 37 };
 		not_inactive->tex_id = App->tex.Load("Assets/textures/tuto/not-button.png");
 
 		next->target = { 0.74f, 0.726f, 0.4f, 0.4f };
 		next->offset = { 500.f, -317.f };
-		for (int i = 0; i < 4; i++)next->section[i] = { 0, 0, 309, 37 };
+
+		next->section[0] = { 0, 0, 309, 37 };
+		next->section[1] = { 0, 44, 309, 37 };
+		next->section[2] = { 0, 88, 309, 37 };
+		next->section[3] = { 0, 88, 309, 37 };
+
 		next->tex_id = App->tex.Load("Assets/textures/tuto/not-button.png");
 
 
@@ -1307,14 +1325,22 @@ void Scene::OnEventStateMachine(GameplayState state)
 
 		next->target = { 0.74f, 0.726f, 0.4f, 0.4f };
 		next->offset = { 500.f, -317.f };
-		for (int i = 0; i < 4; i++)next->section[i] = { 0, 0, 309, 37 };
+
+		next->section[0] = { 0, 0, 309, 37 };
+		next->section[1] = { 0, 44, 309, 37 };
+		next->section[2] = { 0, 88, 309, 37 };
+		next->section[3] = { 0, 88, 309, 37 };
+
 		next->tex_id = App->tex.Load("Assets/textures/tuto/not-button.png");
 
 		not_inactive = new C_Button(not_go, Event(SET_INACTIVE, this, MAIN));
 
 		not_inactive->target = { 0.74f, 0.726f, 0.4f, 0.4f };
 		not_inactive->offset = { 500.f, -317.f };
-		for (int i = 0; i < 4; i++)not_inactive->section[i] = { 0, 0, 309, 37 };
+		not_inactive->section[0] = { 0, 0, 309, 37 };
+		not_inactive->section[1] = { 0, 44, 309, 37 };
+		not_inactive->section[2] = { 0, 88, 309, 37 };
+		not_inactive->section[3] = { 0, 88, 309, 37 };
 
 		std::pair<float, float> current_cam_pos_t = Map::F_WorldToMap(current_cam_pos.first, current_cam_pos.second);
 
@@ -1344,7 +1370,12 @@ void Scene::OnEventStateMachine(GameplayState state)
 
 		next->target = { 0.74f, 0.726f, 0.4f, 0.4f };
 		next->offset = { 500.f, -317.f };
-		for (int i = 0; i < 4; i++)next->section[i] = { 0, 0, 309, 37 };
+
+		next->section[0] = { 0, 0, 309, 37 };
+		next->section[1] = { 0, 44, 309, 37 };
+		next->section[2] = { 0, 88, 309, 37 };
+		next->section[3] = { 0, 88, 309, 37 };
+
 		next->tex_id = App->tex.Load("Assets/textures/tuto/not-button.png");
 
 		/*not_inactive = new C_Button(not_go, Event(GAMEPLAY, this, SET_INACTIVE));
@@ -1370,7 +1401,12 @@ void Scene::OnEventStateMachine(GameplayState state)
 
 		next->target = { 0.74f, 0.726f, 0.4f, 0.4f };
 		next->offset = { 500.f, -317.f };
-		for (int i = 0; i < 4; i++)next->section[i] = { 0, 0, 309, 37 };
+
+		next->section[0] = { 0, 0, 309, 37 };
+		next->section[1] = { 0, 44, 309, 37 };
+		next->section[2] = { 0, 88, 309, 37 };
+		next->section[3] = { 0, 88, 309, 37 };
+
 		next->tex_id = App->tex.Load("Assets/textures/tuto/not-button.png");
 
 		/*not_inactive = new C_Button(not_go, Event(GAMEPLAY, this, SET_INACTIVE));
@@ -1386,25 +1422,6 @@ void Scene::OnEventStateMachine(GameplayState state)
 	case BARRACKS_STATE:
 		not_go->SetInactive();
 		LOG("BARRACKS STATE");
-		/*not_go = AddGameobjectToCanvas("barracks_state_go");
-		not = new C_Image(not_go);
-		next = new C_Button(not_go, Event(SCENE_PLAY, this, MAIN));
-
-		not->target = { 0.66f, 0.95f, 0.6f, 0.6f };
-		not->offset = { -640.f, -985.f };
-		not->section = { 0, 0, 640, 300 };
-		not->tex_id = App->tex.Load("Assets/textures/button.png");
-
-		next->target = { 0.60f, 0.45f, 0.3f, 0.3f };
-		next->offset = { -525.f, 200.f };
-		next->section = { 0, 0, 1070, 207 };
-		next->tex_id = App->tex.Load("Assets/textures/button.png");
-
-		not_inactive = new C_Button(not_go, Event(SET_INACTIVE, this, MAIN));
-
-		not_inactive->target = { 0.74f, 0.726f, 0.6f, 0.6f };
-		not_inactive->offset = { -309.f, 37.f };
-		not_inactive->section = { 0, 0, 309, 37 };*/
 
 		//BUILD BARRACKS -> NEXT STATE
 		current_state = BARRACKS_STATE;
@@ -1425,7 +1442,12 @@ void Scene::OnEventStateMachine(GameplayState state)
 
 		next->target = { 0.74f, 0.726f, 0.4f, 0.4f };
 		next->offset = { 500.f, -317.f };
-		for (int i = 0; i < 4; i++)next->section[i] = { 0, 0, 309, 37 };
+
+		next->section[0] = { 0, 0, 309, 37 };
+		next->section[1] = { 0, 44, 309, 37 };
+		next->section[2] = { 0, 88, 309, 37 };
+		next->section[3] = { 0, 88, 309, 37 };
+
 		next->tex_id = App->tex.Load("Assets/textures/tuto/not-button.png");
 
 		not_inactive = new C_Button(not_go, Event(SET_INACTIVE, this, MAIN));
@@ -1454,7 +1476,12 @@ void Scene::OnEventStateMachine(GameplayState state)
 
 		next->target = { 0.74f, 0.726f, 0.4f, 0.4f };
 		next->offset = { 500.f, -317.f };
-		for (int i = 0; i < 4; i++)next->section[i] = { 0, 0, 309, 37 };
+
+		next->section[0] = { 0, 0, 309, 37 };
+		next->section[1] = { 0, 44, 309, 37 };
+		next->section[2] = { 0, 88, 309, 37 };
+		next->section[3] = { 0, 88, 309, 37 };
+
 		next->tex_id = App->tex.Load("Assets/textures/tuto/not-button.png");
 
 		not_inactive = new C_Button(not_go, Event(SET_INACTIVE, this, MAIN));
@@ -1478,16 +1505,7 @@ void Scene::OnEventStateMachine(GameplayState state)
 		LOG("MELEE ATK STATE");
 		current_state = MELEE_ATK;
 		break;
-		/*case ENEMY_ATK:
-				enemy_atk_go = AddGameobjectToCanvas("enemy_atk_go");
-				enemy_atk = new C_Image(enemy_atk_go);
 
-				enemy_atk->target = { 0.66f, 0.95f, 0.6f, 0.6f };
-				enemy_atk->offset = { -640.f, -985.f };
-				enemy_atk->section = { 0, 0, 640, 985 };
-				enemy_atk->tex_id = App->tex.Load("Assets/textures/pause-bg.png");
-
-		break;*/
 	case MOBDROP:
 		not_go->SetInactive();
 		LOG("not STATE");
@@ -1502,8 +1520,13 @@ void Scene::OnEventStateMachine(GameplayState state)
 		next = new C_Button(not_go, Event(GAMEPLAY, this, BUILD));
 		next->target = { 0.74f, 0.726f, 0.4f, 0.4f };
 		next->offset = { 500.f, -317.f };
-		for (int i = 0; i < 4; i++)next->section[i] = { 0, 0, 309, 37 };
-		next->tex_id = App->tex.Load("Assets/textures/not-button.png");
+
+		next->section[0] = { 0, 0, 309, 37 };
+		next->section[1] = { 0, 44, 309, 37 };
+		next->section[2] = { 0, 88, 309, 37 };
+		next->section[3] = { 0, 88, 309, 37 };
+
+		next->tex_id = App->tex.Load("Assets/textures/tuto/not-button.png");
 
 		not_inactive = new C_Button(not_go, Event(SET_INACTIVE, this, MAIN));
 
@@ -1529,8 +1552,13 @@ void Scene::OnEventStateMachine(GameplayState state)
 
 		next->target = { 0.74f, 0.726f, 0.4f, 0.4f };
 		next->offset = { 500.f, -317.f };
-		for (int i = 0; i < 4; i++)next->section[i] = { 0, 0, 309, 37 };
-		next->tex_id = App->tex.Load("Assets/textures/button.png");
+
+		next->section[0] = { 0, 0, 309, 37 };
+		next->section[1] = { 0, 44, 309, 37 };
+		next->section[2] = { 0, 88, 309, 37 };
+		next->section[3] = { 0, 88, 309, 37 };
+
+		next->tex_id = App->tex.Load("Assets/textures/tuto/not-button.png");
 
 		not_inactive = new C_Button(not_go, Event(SET_INACTIVE, this, MAIN));
 
@@ -1557,7 +1585,12 @@ void Scene::OnEventStateMachine(GameplayState state)
 
 		next->target = { 0.74f, 0.726f, 0.4f, 0.4f };
 		next->offset = { 500.f, -317.f };
-		for (int i = 0; i < 4; i++)next->section[i] = { 0, 0, 309, 37 };
+
+		next->section[0] = { 0, 0, 309, 37 };
+		next->section[1] = { 0, 44, 309, 37 };
+		next->section[2] = { 0, 88, 309, 37 };
+		next->section[3] = { 0, 88, 309, 37 };
+
 		next->tex_id = App->tex.Load("Assets/textures/tuto/not-button.png");
 
 		not_inactive = new C_Button(not_go, Event(SET_INACTIVE, this, MAIN));
@@ -1575,28 +1608,6 @@ void Scene::OnEventStateMachine(GameplayState state)
 		LOG("TOWER STATE");
 		current_state = TOWER_STATE;
 
-		/*not_go = AddGameobjectToCanvas("tower_state_go");
-		not = new C_Image(not_go);
-
-		not->target = { 0.66f, 0.95f, 0.6f, 0.6f };
-		not->offset = { -640.f, -985.f };
-		not->section = { 0, 0, 640, 985 };
-		not->tex_id = App->tex.Load("Assets/textures/tower-not.png");
-
-		next = new C_Button(not_go, Event(SCENE_PLAY, this, MAIN));
-
-		next->target = { 0.74f, 0.726f, 0.6f, 0.6f };
-		next->offset = { -309.f, 37.f };
-		next->section = { 0, 0, 309, 37 };
-		next->tex_id = App->tex.Load("Assets/textures/tuto/not-button.png");
-
-		not_inactive = new C_Button(not_go, Event(SET_INACTIVE, this, MAIN));
-
-		not_inactive->target = { 0.74f, 0.726f, 0.6f, 0.6f };
-		not_inactive->offset = { -309.f, 37.f };
-		not_inactive->section = { 0, 0, 309, 37 };*/
-
-
 		break;
 	case TOWER_ATK:
 
@@ -1613,7 +1624,12 @@ void Scene::OnEventStateMachine(GameplayState state)
 
 		next->target = { 0.74f, 0.726f, 0.4f, 0.4f };
 		next->offset = { 500.f, -317.f };
-		for (int i = 0; i < 4; i++)next->section[i] = { 0, 0, 309, 37 };
+
+		next->section[0] = { 0, 0, 309, 37 };
+		next->section[1] = { 0, 44, 309, 37 };
+		next->section[2] = { 0, 88, 309, 37 };
+		next->section[3] = { 0, 88, 309, 37 };
+
 		next->tex_id = App->tex.Load("Assets/textures/tuto/not-button.png");
 
 		not_inactive = new C_Button(not_go, Event(SET_INACTIVE, this, MAIN));
