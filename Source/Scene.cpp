@@ -662,8 +662,21 @@ void Scene::UpdateBuildingMode()
 	}
 	else if (App->input->GetMouseButtonDown(0) == KEY_DOWN)
 	{
-		int type = placing_building->GetGameobject()->GetBehaviour()->GetType();
-		placing_building = SpawnBehaviour(type)->GetGameobject()->GetTransform();
+		int x, y;
+		App->input->GetMousePosition(x, y);
+		RectF cam = App->render->GetCameraRectF();
+		std::pair<int, int> pos = Map::WorldToTileBase(float(x) + cam.x, float(y) + cam.y);
+
+		if (App->pathfinding.CheckWalkabilityArea(pos, placing_building->GetGameobject()->GetTransform()->GetGlobalScale()))
+		{
+			int type = placing_building->GetGameobject()->GetBehaviour()->GetType();
+			placing_building = SpawnBehaviour(type)->GetGameobject()->GetTransform();
+		}
+		else
+		{
+			LOG("Can't place building");
+		}
+		
 	}
 	else
 	{
