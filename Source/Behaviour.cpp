@@ -44,6 +44,7 @@ Behaviour::Behaviour(Gameobject* go, UnitType t, UnitState starting_state, Compo
 	selection_highlight->SetInactive();
 
 	mini_life_bar.Create(go);
+	mini_life_bar.Hide();
 
 	b_map.insert({ GetID(), this });
 
@@ -113,10 +114,6 @@ void Behaviour::Selected()
 	// Audio Fx
 	audio->Play(SELECT);
 
-	// Lifebar
-	mini_life_bar.Show();
-	mini_life_bar.Update(float(current_life) / float(max_life));
-
 	if (bar_go != nullptr) bar_go->SetActive();
 	if (creation_bar_go != nullptr) creation_bar_go->SetActive();
 	if (selectionPanel != nullptr) selectionPanel->SetActive();
@@ -142,9 +139,6 @@ void Behaviour::UnSelected()
 	// Selection mark
 	selection_highlight->SetInactive();
 
-	// Lifebar
-	mini_life_bar.Hide();
-
 	if (bar_go != nullptr) bar_go->SetInactive();
 	if (creation_bar_go != nullptr) creation_bar_go->SetInactive();
 	if (selectionPanel != nullptr) selectionPanel->SetInactive();
@@ -165,6 +159,10 @@ void Behaviour::OnDamage(int d)
 		if (current_life > 0)
 		{
 			current_life -= d;
+
+			// Lifebar
+			mini_life_bar.Show();
+			mini_life_bar.Update(float(current_life) / float(max_life));
 
 			if (current_life <= 0)
 			{
@@ -187,6 +185,9 @@ void Behaviour::OnKill(const UnitType type)
 {
 	current_life = 0;
 	current_state = DESTROYED;
+
+	// Lifebar
+	mini_life_bar.Hide();
 
 	audio->Play(deathFX);
 	game_object->Destroy(dieDelay);
