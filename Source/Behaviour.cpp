@@ -858,7 +858,7 @@ BuildingWithQueue::QueuedUnit::QueuedUnit(UnitType type, Gameobject* go, vec pos
 		switch (type)
 		{
 		case GATHERER:
-			new Sprite(icon, App->tex.Load("Assets/textures/Iconos_square_up.png"), { 75, 458, 48, 35 }, FRONT_SCENE, { -0.f, -50.f, 0.2f, 0.2f });
+			new Sprite(icon, App->tex.Load("Assets/textures/Iconos_square_up.png"), { 75, 458, 43, 42 }, FRONT_SCENE, { -0.f, -50.f, 0.2f, 0.2f });
 			break;
 		case UNIT_MELEE:
 			new Sprite(icon, App->tex.Load("Assets/textures/Iconos_square_up.png"), { 22, 463, 48, 35 }, FRONT_SCENE, { -0.f, -50.f, 0.2f, 0.2f });
