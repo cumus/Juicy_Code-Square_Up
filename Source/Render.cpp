@@ -166,13 +166,26 @@ bool Render::PostUpdate()
 			// TODO: Check if map layers need sorting
 			for (std::vector<RenderData>::const_iterator data = it->second.cbegin(); data != it->second.cend() && ret; ++data)
 			{
+				/*if (data->camera)
+				{				
+					iPoint pos = ConvertIsoTo2D(iPoint(data->rect.x,data->rect.y));
+					iPoint tempCam = CamToIsometric();
+					//LOG("Camera X:%f/Y:%f/W:%f/H:%f",cam.x,cam.y,cam.w,cam.h);
+					//LOG("Blit X:%d/Y:%d/W:%d/H:%d", data->rect.x, data->rect.y, data->rect.w, data->rect.h);
+					if (data->rect.x < tempCam.x || (data->rect.w) > (tempCam.x+ cam.w) || (data->rect.y) < tempCam.y || (data->rect.h) > (tempCam.y+cam.h))
+					{
+						continue;
+					}
+				}*/
+				
+				
 				switch (data->type)
 				{
 				case RenderData::TEXTURE_FULL:
 				{
 					if (data->texture != nullptr)
 						if (!(ret = SDL_RenderCopy(renderer, data->texture, nullptr, &data->rect) == 0)) {}
-							//LOG("Cannot blit texture to screen. SDL_RenderCopy error: %s", SDL_GetError());
+					//LOG("Cannot blit texture to screen. SDL_RenderCopy error: %s", SDL_GetError());
 
 					break;
 				}
@@ -180,7 +193,7 @@ bool Render::PostUpdate()
 				{
 					if (data->texture != nullptr)
 						if (!(ret = SDL_RenderCopy(renderer, data->texture, &data->extra.section, &data->rect) == 0)) {}
-							//LOG("Cannot blit texture section to screen. SDL_RenderCopy error: %s", SDL_GetError());
+					//LOG("Cannot blit texture section to screen. SDL_RenderCopy error: %s", SDL_GetError());
 
 					break;
 				}
@@ -229,6 +242,7 @@ bool Render::PostUpdate()
 				default:
 					break;
 				}
+				
 			}
 		}
 	}
@@ -241,6 +255,36 @@ bool Render::PostUpdate()
 	SDL_RenderPresent(renderer);
 
 	return ret;
+}
+
+iPoint Render::ConvertIsoTo2D(iPoint point)
+{
+	iPoint temp;
+	temp.x = (2 * point.y + point.x) * 0.5;
+	temp.y = (2 * point.y - point.x) * 0.5;
+	return temp;
+}
+
+iPoint Render::CamToIsometric()
+{
+	iPoint tmpPoint;
+
+	tmpPoint.x=cam.x;
+	tmpPoint.y = cam.y;
+
+	tmpPoint.x = tmpPoint.x * 2;
+
+	if (tmpPoint.x < 0) {
+		tmpPoint.x = abs((int)tmpPoint.x);
+	}
+	else if (tmpPoint.x > 0)
+	{
+		tmpPoint.x = -abs((int)tmpPoint.x);
+	}
+
+	tmpPoint = ConvertIsoTo2D(tmpPoint);
+
+	return tmpPoint;
 }
 
 // Called before quitting
@@ -445,6 +489,7 @@ bool Render::Blit(int texture_id, int x, int y, const SDL_Rect* section, Layer l
 	bool ret;
 	RenderData data(RenderData::TEXTURE_FULL);
 	data.texture = App->tex.GetTexture(texture_id);
+	data.camera = use_cam;
 
 	if (ret = (data.texture != nullptr))
 	{
@@ -489,6 +534,7 @@ bool Render::Blit_Scale(int texture_id, int x, int y, float scale_x, float scale
 	bool ret;
 	RenderData data(RenderData::TEXTURE_FULL);
 	data.texture = App->tex.GetTexture(texture_id);
+	data.camera = use_cam;
 
 	if (ret = (data.texture != nullptr))
 	{
@@ -535,6 +581,7 @@ bool Render::BlitNorm(int texture_id, RectF rect, const SDL_Rect* section, Layer
 	bool ret;
 	RenderData data(RenderData::TEXTURE_FULL);
 	data.texture = App->tex.GetTexture(texture_id);
+	data.camera = false;
 
 	if (ret = (data.texture != nullptr))
 	{
@@ -564,6 +611,7 @@ bool Render::Blit_Text(RenderedText* rendered_text, int x, int y, Layer layer, b
 		{
 			RenderData data(RenderData::TEXTURE_FULL);
 			data.texture = rendered_text->GetTexture();
+			data.camera = use_cam;
 
 			if (use_cam)
 				data.rect = { int(cam.x) + x, int(cam.y) + y, width, height };
@@ -589,6 +637,7 @@ bool Render::Blit_TextSized(RenderedText* rendered_text, SDL_Rect size, Layer la
 	{
 		RenderData data(RenderData::TEXTURE_FULL);
 		data.texture = rendered_text->GetTexture();
+		data.camera = use_cam;
 
 		if (use_cam)
 			data.rect = { int(cam.x) + size.x, int(cam.y) + size.y, size.w, size.h };
@@ -609,6 +658,7 @@ void Render::DrawQuad(const SDL_Rect rect, const SDL_Color color, bool filled, L
 	data.texture = nullptr;
 	data.rect = rect;
 	data.extra.color = color;
+	data.camera = use_camera;
 
 	if (use_camera)
 	{
@@ -625,6 +675,7 @@ void Render::DrawQuadNormCoords(RectF rect, const SDL_Color color, bool filled, 
 	data.texture = nullptr;
 	data.rect = { int(rect.x * cam.w), int(rect.y * cam.h), int(rect.w * cam.w), int(rect.h * cam.h) };
 	data.extra.color = color;
+	data.camera = false;
 
 	AddToLayer(layer, data);
 }
@@ -635,6 +686,7 @@ void Render::DrawLine(const std::pair<int, int> a, const std::pair<int, int> b, 
 	data.texture = nullptr;
 	data.rect = { a.first, a.second, b.first, b.second };
 	data.extra.color = color;
+	data.camera = use_camera;
 
 	if (use_camera)
 	{
@@ -653,6 +705,7 @@ void Render::DrawCircle(const std::pair<int, int> a, const std::pair<int, int> b
 	data.texture = nullptr;
 	data.rect = { a.first, a.second, b.first, b.second };
 	data.extra.color = color;
+	data.camera = use_camera;
 
 	if (use_camera)
 	{
@@ -666,7 +719,8 @@ void Render::DrawCircle(const std::pair<int, int> a, const std::pair<int, int> b
 Render::RenderData::RenderData(Type t) :
 	type(t),
 	texture(nullptr),
-	rect({0, 0, 0, 0})
+	rect({0, 0, 0, 0}),
+	camera(false)
 {
 	extra.section = rect;
 }
@@ -674,7 +728,8 @@ Render::RenderData::RenderData(Type t) :
 Render::RenderData::RenderData(const RenderData& copy) :
 	type(copy.type),
 	texture(copy.texture),
-	rect(copy.rect)
+	rect(copy.rect),
+	camera(copy.camera)
 {
 	if (type <= TEXTURE_SECTION)
 		extra.section = copy.extra.section;

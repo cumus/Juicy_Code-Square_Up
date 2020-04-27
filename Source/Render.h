@@ -56,6 +56,8 @@ public:
 	void ToggleZoomLocked();
 	std::pair<float, float> GetCameraCenter() const;
 	bool InsideCam(float x, float y) const;
+	iPoint CamToIsometric();
+	iPoint ConvertIsoTo2D(iPoint point);
 
 	// Minimap
 	int GetMinimap(int width, int height, float scale, bool trigger_event = true);
@@ -122,6 +124,7 @@ private:
 
 		SDL_Texture* texture;
 		SDL_Rect rect;
+		bool camera;
 		union ExtraData
 		{
 			SDL_Rect section;
