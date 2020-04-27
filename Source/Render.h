@@ -22,6 +22,7 @@ enum Layer : int
 	BACK_SCENE,
 	SCENE,
 	FRONT_SCENE,
+	FOG_OF_WAR,
 	DEBUG_SCENE,
 	HUD,
 	EDITOR,

@@ -59,7 +59,9 @@ bool Scene::Start()
 bool Scene::PreUpdate()
 {
 	root.PreUpdate();
+
 	//Fog of war
+	//if (fogLoaded) App->fogWar.Update();
 	/*if (Behaviour::enemiesInSight.empty() != false)
 	{
 		cacheEnemies = Behaviour::enemiesInSight;
@@ -125,6 +127,7 @@ bool Scene::PostUpdate()
 		}
 	}
 	//Fog of war
+	if(fogLoaded) App->fogWar.DrawFoWMap();
 	/*for (std::vector<double>::const_iterator it = cacheEnemies.cbegin(); it != cacheEnemies.cend(); ++it)
 	{
 		//Behaviour* go = Behaviour::b_map[*it]->GetGameobject()->GetBehaviour();
@@ -338,6 +341,8 @@ void Scene::LoadMainScene()
 	map.Load("Assets/maps/iso.tmx");
 
 	LoadMainHUD();
+
+	fogLoaded = App->fogWar.Init();
 
 	Event::Push(MINIMAP_MOVE_CAMERA, App->render, float(800), float(2900));
 
@@ -1703,11 +1708,13 @@ void Scene::ResetScene()
 	total_distance = 0;
 
 	map.CleanUp();
+	App->fogWar.CleanUp();
 	App->audio->UnloadFx();
 	App->audio->StopMusic(1.f);
 	SetSelection(nullptr, false);
 	root.RemoveChilds();
 	Event::PumpAll();
+	fogLoaded = false;
 	root.UpdateRemoveQueue();
 }
 
@@ -2183,4 +2190,5 @@ void Scene::ToggleGodMode()
 	}
 
 	god_mode = !god_mode;
+	App->fogWar.debugMode = !App->fogWar.debugMode;
 }

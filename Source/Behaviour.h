@@ -86,6 +86,7 @@ public:
 	virtual ~Behaviour();
 
 	void RecieveEvent(const Event& e) override;
+	void PreUpdate() override;
 
 	void Selected();
 	void UnSelected();
@@ -93,7 +94,7 @@ public:
 	void OnKill(const UnitType type);
 	void ActivateSprites();
 	void DesactivateSprites();
-	void CheckFoWMap(bool debug);
+	void CheckFoWMap(bool debug=false);
 	std::vector<iPoint> GetTilesInsideRadius();
 	void ApplyMaskToTiles(std::vector<iPoint>tilesAffected);
 	virtual void UpdatePath(int x,int y) {}
@@ -144,6 +145,7 @@ protected:
 	std::pair<float, float> visionRange;
 	std::pair<float, float> atkRange;
 	Behaviour* attackObjective;
+	std::vector<iPoint> lastFog;
 
 	// Complementary components
 	AudioSource* audio;

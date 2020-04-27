@@ -7,10 +7,11 @@
 #include "Gameobject.h"
 #include "Transform.h"
 #include "Behaviour.h"
+#include "Log.h"
 
 #include <vector>
 
-//std::vector<Gameobject*> FogOfWarManager::fowGos;
+std::vector<std::vector<bool> > FogOfWarManager::fogMap;
 
 FogOfWarManager::FogOfWarManager()
 {
@@ -27,10 +28,11 @@ bool FogOfWarManager::Init()
 
 	width = Map::GetMapSize_I().first;
 	height = Map::GetMapSize_I().second;
+	LOG("Height %d/ Width %d",height,width);
 	debugMode = false;
 	foWMapNeedsRefresh = false;
 
-	smoothTexID = App->tex.Load("Assets/textures/fogTiles.png");
+	smoothTexID = App->tex.Load("Assets/textures/fogTiles60.png");
 	debugTexID = App->tex.Load("Assets/textures/fogTilesDebug.png");
 
 	if (smoothTexID == -1 || debugTexID == -1) ret = false;
@@ -79,7 +81,7 @@ bool FogOfWarManager::Init()
 	bitToTextureTable.insert(std::pair<unsigned short, int>(1, 11));
 	bitToTextureTable.insert(std::pair<unsigned short, int>(256, 12));
 	//------------------------end of map initialization------------------------//
-
+	CreateFoWMap();
 	return ret;
 }
 
@@ -89,7 +91,6 @@ bool FogOfWarManager::CleanUp()
 	bool ret = true;
 	DeleteFoWMap();
 
-//	fowGos.clear();
 	fowMap.clear();
 
 	if (debugTexID != -1)
@@ -109,7 +110,7 @@ bool FogOfWarManager::CleanUp()
 
 void FogOfWarManager::ResetFoWMap()
 {
-	if (!fowMap.empty())
+	/*if (!fowMap.empty())
 	{
 		for (int w = 0; w < width; w++)
 		{
@@ -119,16 +120,29 @@ void FogOfWarManager::ResetFoWMap()
 				fowMap[w][h].tileFogBits = fow_ALL;
 			}
 		}
+	}*/
+
+	if (!fogMap.empty())
+	{
+		for (int w = 0; w < width; w++)
+		{
+			for (int h = 0; h < height; h++)
+			{
+				fogMap[w][h] = false;
+			}
+		}
 	}
 }
 
 
-FoWDataStruct* FogOfWarManager::GetFoWTileState(iPoint mapPos)
+FoWDataStruct FogOfWarManager::GetFoWTileState(iPoint mapPos)
 {
-	FoWDataStruct* ret = nullptr;
+	FoWDataStruct ret;
+	ret.tileFogBits = -1;
+	ret.tileShroudBits = -1;
 	if (CheckFoWTileBoundaries(mapPos) && !fowMap.empty())
 	{
-		ret = &fowMap[mapPos.x][mapPos.y];
+		ret = fowMap[mapPos.x][mapPos.y];
 	}
 
 	return ret;
@@ -142,20 +156,23 @@ bool FogOfWarManager::CheckFoWTileBoundaries(iPoint mapPos)
 	return ret;
 }
 
-void FogOfWarManager::CreateFoWMap(int w, int h)
+void FogOfWarManager::CreateFoWMap()
 {
-	width = w;
-	height = h;
-
-	DeleteFoWMap();
-	std::vector<FoWDataStruct> vec(height); //height
+	/*std::vector<FoWDataStruct> vec(height); //height
 	fowMap.resize(width); //width
 	for (int x = 0; x < width; x++)
 	{
 		fowMap[x] = vec;
+	}*/
+	std::vector<bool> vec(height); //height
+	fogMap.resize(width); //width
+	for (int x = 0; x < width; x++)
+	{
+		fogMap[x] = vec;
 	}
+	
 	ResetFoWMap();
-	MapNeedsUpdate();
+	//MapNeedsUpdate();
 }
 
 
@@ -169,21 +186,25 @@ void FogOfWarManager::DeleteFoWMap()
 
 void FogOfWarManager::Update()
 {
-	if (foWMapNeedsRefresh)
+	ResetFoWMap();
+	/*if (foWMapNeedsRefresh)
 	{
+		LOG("Called refresh");
 		UpdateFoWMap();
 		for (std::map<double, Behaviour*>::iterator it = Behaviour::b_map.begin(); it != Behaviour::b_map.end(); ++it)
 		{
 			Event::Push(CHECK_FOW, it->second,debugMode);
 		}
 		foWMapNeedsRefresh = false;
-	}
+	}*/
 }
 
 void FogOfWarManager::UpdateFoWMap()
 {
+	LOG("Update fog map");
 	if (!fowMap.empty())
 	{
+		LOG("Fog map not empty");
 		for (int w = 0; w < width; w++)
 		{
 			for (int h = 0; h < height; h++)
@@ -196,70 +217,61 @@ void FogOfWarManager::UpdateFoWMap()
 
 void FogOfWarManager::DrawFoWMap()
 {
-	for (int y = 0; y < height; y++)
+	for (int x = 0; x < width; x++)
 	{
-		for (int x = 0; x < width; x++)
+		for (int y = 0; y < height; y++)
 		{
-			FoWDataStruct* tileInfo = GetFoWTileState({ x, y });
+			/*FoWDataStruct tileInfo = GetFoWTileState({ x, y });
 			int fogId = -1;
 			int shroudId = -1;
 
-			if (tileInfo != nullptr)
+			if (tileInfo.tileFogBits != -1 && tileInfo.tileShroudBits != -1)
 			{
-
-				if (bitToTextureTable.find(tileInfo->tileFogBits) != bitToTextureTable.end())
+				if (bitToTextureTable.find(tileInfo.tileFogBits) != bitToTextureTable.end())
 				{
-					fogId = bitToTextureTable[tileInfo->tileFogBits];
+					fogId = bitToTextureTable[tileInfo.tileFogBits];
+					LOG("Fog id:%d",fogId);
 				}
 
-				if (bitToTextureTable.find(tileInfo->tileShroudBits) != bitToTextureTable.end())
+				if (bitToTextureTable.find(tileInfo.tileShroudBits) != bitToTextureTable.end())
 				{
-					shroudId = bitToTextureTable[tileInfo->tileShroudBits];
+					shroudId = bitToTextureTable[tileInfo.tileShroudBits];
+					LOG("Shroud id:%d", shroudId);
 				}
 
-			}
+			}*/
 
 			std::pair<int,int> worldDrawPos = Map::I_MapToWorld(x, y);
 
-			int displayFogTexID = -1;
-			if (debugMode)
-			{
-				displayFogTexID = debugTexID;
-			}
+			int displayFogTexID;
+			if (debugMode) displayFogTexID = debugTexID;			
 			else displayFogTexID = smoothTexID;
 
 			//draw fog
-			if (fogId != -1)
+			/*if (fogId != -1)
 			{
-				App->tex.SetTextureAlpha(displayFogTexID, 128);//set the alpha of the texture to half to reproduce fog
+				//App->tex.SetTextureAlpha(displayFogTexID, 128);//set the alpha of the texture to half to reproduce fog
 				SDL_Rect r = { fogId * 64,0,64,64 }; //this rect crops the desired fog Id texture from the fogTiles spritesheet
-				App->render->Blit(displayFogTexID, worldDrawPos.first, worldDrawPos.second, &r);
+				App->render->Blit(displayFogTexID, x, y, &r, FOG_OF_WAR);
 			}
 			if (shroudId != -1)
 			{
-				App->tex.SetTextureAlpha(displayFogTexID, 255);//set the alpha to white again
+				//App->tex.SetTextureAlpha(displayFogTexID, 255);//set the alpha to white again
 				SDL_Rect r = { shroudId * 64,0,64,64 }; //this rect crops the desired fog Id texture from the fogTiles spritesheet
-				App->render->Blit(displayFogTexID, worldDrawPos.first, worldDrawPos.second, &r);
+				App->render->Blit(displayFogTexID, x, y, &r, FOG_OF_WAR);
+			}*/
+
+			//draw fog
+			if (!debugMode && !fogMap[x][y])
+			{
+				SDL_Rect r = { 0,0,64,64 }; //this rect crops the desired fog Id texture from the fogTiles spritesheet
+				App->render->Blit(displayFogTexID, worldDrawPos.first, worldDrawPos.second, &r, FOG_OF_WAR);
 			}
+		
+			//LOG("Tile X:%d/Y:%d",x,y);
 		}
 	}
 }
-
-/*
-FoWEntity* FogOfWarManager::CreateFoWEntity(iPoint pos, bool providesVisibility)
-{
-	FoWEntity* entity = nullptr;
-
-	entity = new FoWEntity(pos, providesVisibility);
-
-	if (entity != nullptr)
-	{
-		fowEntities.push_back(entity);
-	}
-
-	return entity;
-}*/
-
 
 bool FogOfWarManager::CheckTileVisibility(iPoint mapPos)
 {
@@ -268,14 +280,12 @@ bool FogOfWarManager::CheckTileVisibility(iPoint mapPos)
 	//& get the tile fog information,its state, to check if is visible. 
 	//Note that the function that you need does both things for you, it is recommended to check and understand what the needed function does
 
-	FoWDataStruct* tileState = GetFoWTileState(mapPos);
+	FoWDataStruct tileState = GetFoWTileState(mapPos);
 
-	if (tileState != nullptr)
+	if (tileState.tileFogBits != -1 && tileState.tileShroudBits != -1)
 	{
 		//Entity will only be visible in visible areas (no fog nor shroud)
-		//Think about what happens with the smooth borders, are the considered visible or fogged?
-		//Also, do you need to check both the fog and shroud states?
-		if (tileState->tileFogBits != fow_ALL)
+		if (tileState.tileFogBits != fow_ALL)
 			ret = true;
 	}
 

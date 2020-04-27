@@ -50,6 +50,8 @@ Behaviour::Behaviour(Gameobject* go, UnitType t, UnitState starting_state, Compo
 	b_map.insert({ GetID(), this });
 
 	Minimap::AddUnit(GetID(), t, game_object->GetTransform());
+	//GetTilesInsideRadius();
+	//CheckFoWMap();	
 }
 
 Behaviour::~Behaviour()
@@ -100,33 +102,45 @@ void Behaviour::RecieveEvent(const Event& e)
 	}
 }
 
+void Behaviour::PreUpdate()
+{
+	if(providesVisibility) GetTilesInsideRadius(); 
+}
+
 void Behaviour::ActivateSprites()
 {
 	characteR->SetActive();
-	LOG("Show sprite");
+	//LOG("Show sprite");
 }
 
 void Behaviour::DesactivateSprites()
 {
 	characteR->SetInactive();
-	LOG("Hide sprite");
+	//LOG("Hide sprite");
 }
 
 void Behaviour::CheckFoWMap(bool debug)
 {
-	if (providesVisibility)	ApplyMaskToTiles(GetTilesInsideRadius());
-
+	//if (providesVisibility) ApplyMaskToTiles(GetTilesInsideRadius());
 	vec position = game_object->GetTransform()->GetGlobalPosition();
-	bool visible = App->fogWar.CheckTileVisibility(iPoint(int(position.x), int(position.y)));
-	//if (!visible && !debug) DesactivateSprites();
-	//else ActivateSprites();
+	bool visible = FogOfWarManager::fogMap[int(position.x)][int(position.y)];//App->fogWar.CheckTileVisibility(iPoint(int(position.x), int(position.y)));
+	if (!visible && !debug) DesactivateSprites();
+	else ActivateSprites();
 }
 
 std::vector<iPoint> Behaviour::GetTilesInsideRadius()
 {
+	/*if (!lastFog.empty())
+	{
+		for (std::vector<iPoint>::const_iterator it = lastFog.cbegin(); it != lastFog.cend(); ++it)
+		{
+			FogOfWarManager::fogMap[it->x][it->y] = false;
+		}
+		lastFog.clear();
+	}*/
 	vec pos = game_object->GetTransform()->GetGlobalPosition();
 	std::vector<iPoint> ret;
-	int length = (vision_range * 2) + 1;
+	/*int length = vision_range * 2;
 	iPoint startingPos(int(pos.x-vision_range),int(pos.y-vision_range));
 	iPoint finishingPos(startingPos.x+length, startingPos.y+length);
 
@@ -137,31 +151,48 @@ std::vector<iPoint> Behaviour::GetTilesInsideRadius()
 		{
 			ret.push_back({ j,i });
 		}
+	}*/
+
+	iPoint startingPos(int(pos.x - vision_range),int(pos.y - vision_range));
+	iPoint finishingPos(int(startingPos.x + (vision_range*2)), int(startingPos.y + (vision_range*2)));
+
+	for (int x = startingPos.x; x < finishingPos.x; x++)
+	{
+		for (int y = startingPos.y; y < finishingPos.y; y++)
+		{
+			iPoint tilePos(x, y);
+			if (tilePos.DistanceTo(iPoint(int(pos.x), int(pos.y))) <= vision_range)
+			{
+				FogOfWarManager::fogMap[tilePos.x][tilePos.y] = true;
+				//lastFog.push_back(tilePos);
+			}
+		}
 	}
+
 
 	return ret;
 }
 
 void Behaviour::ApplyMaskToTiles(std::vector<iPoint>tilesAffected)
 {
-	short precMask = App->fogWar.circleMasks[int(vision_range) - fow_MIN_CIRCLE_RADIUS][0];
+	/*short precMask = App->fogWar.circleMasks[int(vision_range) - fow_MIN_CIRCLE_RADIUS][0];
 
 	for (int i = 0; i < tilesAffected.size(); i++)
 	{
-		FoWDataStruct* tileValue = App->fogWar.GetFoWTileState(tilesAffected[i]);
+		FoWDataStruct tileValue = App->fogWar.GetFoWTileState(tilesAffected[i]);
 
 		//And (bitwise AND) them with the mask if the tile FoW values are not nullptr
 		//To bitwise AND values you just simply do this: value1 &= value2 
 		//the operation result will be stored in the variable on the left side. 
 		//In this case you want to modify the fog and shroud values that you have requested above
 
-		if (tileValue != nullptr)
+		if (tileValue.tileFogBits != -1 && tileValue.tileShroudBits != -1)
 		{
 			tileValue->tileShroudBits &= precMask;
 			tileValue->tileFogBits &= precMask;
 		}
 		precMask++;
-	}
+	}*/
 }
 
 void Behaviour::Selected()
@@ -389,6 +420,7 @@ B_Unit::B_Unit(Gameobject* go, UnitType t, UnitState s, ComponentType comp_type)
 
 void B_Unit::Update()
 {	
+	if (!providesVisibility) CheckFoWMap();
 	vec pos = game_object->GetTransform()->GetGlobalPosition();
 	if (current_state != DESTROYED)
 	{
@@ -469,7 +501,7 @@ void B_Unit::Update()
 
 			ChangeState();
 			CheckDirection(actualPos);
-			App->fogWar.MapNeedsUpdate();
+			//App->fogWar.MapNeedsUpdate();
 		}
 	
 

@@ -217,7 +217,8 @@ private:
 	int time = 0;
 
 	//Fog of war
-	std::vector<double> cacheEnemies;
+	bool fogLoaded = false;
+	//std::vector<double> cacheEnemies;
 
 	//--------STATE MACHINE VARIABLES--------
 

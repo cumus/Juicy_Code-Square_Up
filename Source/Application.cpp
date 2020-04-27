@@ -78,7 +78,7 @@ bool Application::Init()
 		}
 
 		if (ret) ret = pathfinding.Init();
-		if (ret) ret = fogWar.Init();
+		//if (ret) ret = fogWar.Init();
 
 		// Start Modules
 		for (std::list<Module*>::iterator it = modules.begin(); it != modules.end() && ret; ++it)
@@ -125,19 +125,21 @@ int Application::Update()
 	static std::list<Module*>::iterator it;
 	static bool no_error = true;
 
+	fogWar.Update();//Pre update
+
 	OPTICK_CATEGORY("PreUpdate Application", Optick::Category::GameLogic);
 	for (it = modules.begin(); it != modules.end() && no_error; ++it)
 		if (!(no_error = (*it)->PreUpdate()))
 			LOG("Module %s encuntered an error during PreUpdate!", (*it)->GetName());
 
-	fogWar.Update();//Pre update
+	
 
 	OPTICK_CATEGORY("Update Application", Optick::Category::GameLogic);
 	for (it = modules.begin(); it != modules.end() && no_error; ++it)
 		if (!(no_error = (*it)->Update()))
 			LOG("Module %s encuntered an error during Update!", (*it)->GetName());
 
-	fogWar.DrawFoWMap();//Post Update
+	//fogWar.DrawFoWMap();//Post Update
 	OPTICK_CATEGORY("PostUpdate Application", Optick::Category::GameLogic);
 	for (it = modules.begin(); it != modules.end() && no_error; ++it)
 		if (!(no_error = (*it)->PostUpdate()))

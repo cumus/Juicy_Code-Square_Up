@@ -10,6 +10,7 @@ public:
 	~Edge();
 
 	void AfterDamageAction() override;
+	void Update() override;
 };
 
 #endif // __EDGE_H__

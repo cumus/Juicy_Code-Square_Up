@@ -21,7 +21,7 @@ Base_Center::Base_Center(Gameobject* go) : BuildingWithQueue(go, BASE_CENTER, NO
 	current_life = max_life;
 	lvl = 1;
 	max_lvl = 5;
-	vision_range = 30.0f;
+	vision_range = 20.0f;
 	providesVisibility = true;
 
 	create_bar();

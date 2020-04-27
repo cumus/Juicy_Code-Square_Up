@@ -28,7 +28,7 @@ public:
 
 	//Resets the map to its shrouded state
 	void ResetFoWMap();
-	void CreateFoWMap(int width, int height);
+	void CreateFoWMap();
 	void DeleteFoWMap();
 	//Updates the data on the FoWMap based on the FoWEntities position and mask shape
 	void UpdateFoWMap();
@@ -37,7 +37,7 @@ public:
 	void MapNeedsUpdate();
 
 	//Returns the visibility state of the chosen tile (given its map coordinates)
-	FoWDataStruct* GetFoWTileState(iPoint mapPos);
+	FoWDataStruct GetFoWTileState(iPoint mapPos);
 	//Returns true if the tile is inside the map boundaries, otherwise returns false
 	bool CheckFoWTileBoundaries(iPoint mapPos);
 	//Returns true if the tile is visible (there's no FOG in it) otherwise returns false
@@ -90,11 +90,13 @@ public:
 		},
 	};
 
+	bool debugMode;
+	static std::vector<std::vector<bool> > fogMap;
+
 private:
-	//This is where the FoWEntites are stored
-	//static std::vector<Gameobject*> fowGos;
+
 	//This is where we store our FoW information
-	std::vector<std::vector<FoWDataStruct> > fowMap; //Stores all generated paths by units
+	std::vector<std::vector<FoWDataStruct> > fowMap; 
 
 	int smoothTexID = -1;
 	int debugTexID = -1;
@@ -104,7 +106,6 @@ private:
 
 	int width;
 	int height;
-	bool debugMode;
 	bool foWMapNeedsRefresh;
 };
 

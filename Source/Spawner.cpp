@@ -21,6 +21,7 @@ Spawner::Spawner(Gameobject* go) : Behaviour(go, SPAWNER, NO_UPGRADE, B_SPAWNER)
 	cooldown = 20.0f;
 	maxSpawns = 100;
 	currentSpawns = 0;
+	providesVisibility = false;
 
 	if (t)
 	{
@@ -92,6 +93,7 @@ void Spawner::ResetSpawner()
 
 void Spawner::Update()
 {
+	CheckFoWMap();
 	if (shoot && ms_counter > cooldown && currentSpawns < maxSpawns)
 	{
 		LOG("Spawn time");

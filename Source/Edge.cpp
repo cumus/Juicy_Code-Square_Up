@@ -10,6 +10,7 @@ Edge::Edge(Gameobject* go) : Behaviour(go, EDGE, NO_UPGRADE, B_EDGE)
 	current_life = max_life;
 	damage = 0;
 	dieDelay = 5.0f;
+	providesVisibility = false;
 	//deathFX = EDGE_FX;
 	Transform* t = game_object->GetTransform();
 	if (t)
@@ -29,6 +30,11 @@ Edge::~Edge()
 	}
 
 	b_map.erase(GetID());
+}
+
+void Edge::Update()
+{
+	CheckFoWMap();
 }
 
 void Edge::AfterDamageAction()
