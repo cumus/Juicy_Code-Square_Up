@@ -93,7 +93,9 @@ public:
 	void OnKill(const UnitType type);
 	void ActivateSprites();
 	void DesactivateSprites();
-	void CheckFoWMap();
+	void CheckFoWMap(bool debug);
+	std::vector<iPoint> GetTilesInsideRadius();
+	void ApplyMaskToTiles(std::vector<iPoint>tilesAffected);
 	virtual void UpdatePath(int x,int y) {}
 	virtual void AfterDamageAction() {}
 	virtual void OnRightClick(vec pos, vec modPos) {}
@@ -129,6 +131,7 @@ public:
 	int max_life, current_life, damage;
 	std::vector<iPoint> tilesVisited;
 	AnimatedSprite* characteR = nullptr;
+	bool providesVisibility;
 
 protected:	
 

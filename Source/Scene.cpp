@@ -60,17 +60,17 @@ bool Scene::PreUpdate()
 {
 	root.PreUpdate();
 	//Fog of war
-	if (Behaviour::enemiesInSight.empty() != false)
+	/*if (Behaviour::enemiesInSight.empty() != false)
 	{
 		cacheEnemies = Behaviour::enemiesInSight;
 		Behaviour::enemiesInSight.clear();
 		//LOG("Not empty");
-		/*for (std::vector<double>::const_iterator it = cacheEnemies.cbegin(); it != cacheEnemies.cend(); ++it)
+		for (std::vector<double>::const_iterator it = cacheEnemies.cbegin(); it != cacheEnemies.cend(); ++it)
 		{
 			Behaviour* go = Behaviour::b_map[*it]->GetGameobject()->GetBehaviour();
 			if (go->GetState() != DESTROYED) { Event::Push(SHOW_SPRITE, go); LOG("Sent event"); }
-		}*/
-	}
+		}
+	}*/
 	return true;
 }
 
@@ -125,12 +125,12 @@ bool Scene::PostUpdate()
 		}
 	}
 	//Fog of war
-	for (std::vector<double>::const_iterator it = cacheEnemies.cbegin(); it != cacheEnemies.cend(); ++it)
+	/*for (std::vector<double>::const_iterator it = cacheEnemies.cbegin(); it != cacheEnemies.cend(); ++it)
 	{
 		//Behaviour* go = Behaviour::b_map[*it]->GetGameobject()->GetBehaviour();
 		//if (go->GetState() != DESTROYED) Event::Push(HIDE_SPRITE, go);
 		cacheEnemies.clear();
-	}
+	}*/
 	return true;
 }
 

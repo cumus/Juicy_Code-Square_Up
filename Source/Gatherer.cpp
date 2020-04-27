@@ -17,6 +17,7 @@ Gatherer::Gatherer(Gameobject* go) : B_Unit(go, GATHERER, IDLE, B_GATHERER)
 	attack_range = 2.0f;
 	vision_range = 10.0f;
 	dieDelay = 5.0f;
+	providesVisibility = true;
 	//deathFX = GATHERER_DIE_FX;
 	//attackFX = GATHERER_ATK_FX;
 

@@ -36,6 +36,7 @@ Behaviour::Behaviour(Gameobject* go, UnitType t, UnitState starting_state, Compo
 	selectionPanel = nullptr;
 	drawRanges = false;
 	attackObjective = nullptr;
+	providesVisibility = true;
 
 	audio = new AudioSource(game_object);
 	characteR = new AnimatedSprite(this);
@@ -95,6 +96,7 @@ void Behaviour::RecieveEvent(const Event& e)
 	case DRAW_RANGE: drawRanges = !drawRanges; break;
 	case SHOW_SPRITE: ActivateSprites(); break;
 	case HIDE_SPRITE: DesactivateSprites(); break;
+	case CHECK_FOW: CheckFoWMap(e.data1.AsBool()); break;
 	}
 }
 
@@ -110,13 +112,55 @@ void Behaviour::DesactivateSprites()
 	LOG("Hide sprite");
 }
 
-void Behaviour::CheckFoWMap()
+void Behaviour::CheckFoWMap(bool debug)
 {
-	vec position = game_object->GetTransform()->GetGlobalPosition();
-	bool check = App->fogWar.CheckTileVisibility(iPoint(int(position.x), int(position.y)));
-	if (check)
-	{
+	if (providesVisibility)	ApplyMaskToTiles(GetTilesInsideRadius());
 
+	vec position = game_object->GetTransform()->GetGlobalPosition();
+	bool visible = App->fogWar.CheckTileVisibility(iPoint(int(position.x), int(position.y)));
+	//if (!visible && !debug) DesactivateSprites();
+	//else ActivateSprites();
+}
+
+std::vector<iPoint> Behaviour::GetTilesInsideRadius()
+{
+	vec pos = game_object->GetTransform()->GetGlobalPosition();
+	std::vector<iPoint> ret;
+	int length = (vision_range * 2) + 1;
+	iPoint startingPos(int(pos.x-vision_range),int(pos.y-vision_range));
+	iPoint finishingPos(startingPos.x+length, startingPos.y+length);
+
+	//Creates a vector with all the tiles inside a bounding box delimited by the radius
+	for (int i = startingPos.y; i < finishingPos.y; i++)
+	{
+		for (int j = startingPos.x; j < finishingPos.x; j++)
+		{
+			ret.push_back({ j,i });
+		}
+	}
+
+	return ret;
+}
+
+void Behaviour::ApplyMaskToTiles(std::vector<iPoint>tilesAffected)
+{
+	short precMask = App->fogWar.circleMasks[int(vision_range) - fow_MIN_CIRCLE_RADIUS][0];
+
+	for (int i = 0; i < tilesAffected.size(); i++)
+	{
+		FoWDataStruct* tileValue = App->fogWar.GetFoWTileState(tilesAffected[i]);
+
+		//And (bitwise AND) them with the mask if the tile FoW values are not nullptr
+		//To bitwise AND values you just simply do this: value1 &= value2 
+		//the operation result will be stored in the variable on the left side. 
+		//In this case you want to modify the fog and shroud values that you have requested above
+
+		if (tileValue != nullptr)
+		{
+			tileValue->tileShroudBits &= precMask;
+			tileValue->tileFogBits &= precMask;
+		}
+		precMask++;
 	}
 }
 
@@ -345,7 +389,6 @@ B_Unit::B_Unit(Gameobject* go, UnitType t, UnitState s, ComponentType comp_type)
 
 void B_Unit::Update()
 {	
-	CheckFoWMap();
 	vec pos = game_object->GetTransform()->GetGlobalPosition();
 	if (current_state != DESTROYED)
 	{
@@ -396,7 +439,7 @@ void B_Unit::Update()
 
 		//LOG("Tile ID: %f", PathfindingManager::unitWalkability[nextTile.x][nextTile.y]);
 		if (move && PathfindingManager::unitWalkability[nextTile.x][nextTile.y] == GetID())
-		{		
+		{
 			//LOG("move");
 			fPoint actualPos = { pos.x, pos.y };
 
@@ -425,8 +468,10 @@ void B_Unit::Update()
 			game_object->GetTransform()->MoveY(dirY * speed * App->time.GetGameDeltaTime());//Move y
 
 			ChangeState();
-			CheckDirection(actualPos);			
+			CheckDirection(actualPos);
+			App->fogWar.MapNeedsUpdate();
 		}
+	
 
 		//Collisions
 		CheckCollision(pos);

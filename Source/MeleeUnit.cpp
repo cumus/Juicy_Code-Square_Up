@@ -17,7 +17,7 @@ MeleeUnit::MeleeUnit(Gameobject* go) : B_Unit(go, UNIT_MELEE, IDLE, B_MELEE_UNIT
 	damage = 5;
 	attack_range = 2.0f;
 	vision_range = 10.0f;
-
+	providesVisibility = true;
 	//SFX
 	deathFX = MELEE_DIE_FX;
 	attackFX = MELEE_ATK_FX;

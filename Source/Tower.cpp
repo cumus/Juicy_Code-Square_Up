@@ -21,6 +21,7 @@ Tower::Tower(Gameobject* go) : Behaviour(go, TOWER, NO_UPGRADE, B_TOWER)
 	atkDelay = 1.5;
 	shoot = false;
 	current_state = NO_UPGRADE;
+	providesVisibility = true;
 
 	create_bar();
 	bar_go->SetInactive();

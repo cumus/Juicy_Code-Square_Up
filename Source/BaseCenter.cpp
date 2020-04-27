@@ -22,6 +22,8 @@ Base_Center::Base_Center(Gameobject* go) : BuildingWithQueue(go, BASE_CENTER, NO
 	lvl = 1;
 	max_lvl = 5;
 	vision_range = 30.0f;
+	providesVisibility = true;
+
 	create_bar();
 	bar_go->SetInactive();
 	CreatePanel();
