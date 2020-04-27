@@ -140,18 +140,26 @@ void Tower::AfterDamageAction()
 
 void Tower::Upgrade()
 {
-	if (App->scene->t_lvl < t_max_lvl)
+	if (lvl < max_lvl)
 	{
-		App->scene->t_lvl += 1;
+		lvl += 1;
 		current_life += 25;
 		max_life += 25;
 		damage += 2;
 		App->audio->PlayFx(B_BUILDED);
 		LOG("LIFE AFTER UPGRADE: %d", max_life);
-		LOG("Tower LEVEL: %d", App->scene->t_lvl);
+		LOG("Tower LEVEL: %d", lvl);
 
 		update_upgrades_ui();
 		update_health_ui();
+		switch (current_state)
+		{	
+		case NO_UPGRADE:
+			current_state = FIRST_UPGRADE;
+			break;
+		case FIRST_UPGRADE: current_state = SECOND_UPGRADE;
+			break;
+		}
 	}
 }
 

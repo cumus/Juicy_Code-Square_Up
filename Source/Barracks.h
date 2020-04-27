@@ -23,8 +23,8 @@ public:
 
 protected:
 
-	int bc_lvl;
-	int bc_max_lvl;
+	int lvl;
+	int max_lvl;
 	int buildQueue;
 	float spawnPointX;
 	float spawnPointY;

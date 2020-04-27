@@ -156,6 +156,7 @@
     <ClCompile Include="EnemyMeleeUnit.cpp" />
     <ClCompile Include="Event.cpp" />
     <ClCompile Include="FileManager.cpp" />
+    <ClCompile Include="FogOfWarManager.cpp" />
     <ClCompile Include="FontManager.cpp" />
     <ClCompile Include="Gameobject.cpp" />
     <ClCompile Include="Gatherer.cpp" />
@@ -212,6 +213,7 @@
     <ClInclude Include="Event.h" />
     <ClInclude Include="EventListener.h" />
     <ClInclude Include="FileManager.h" />
+    <ClInclude Include="FogOfWarManager.h" />
     <ClInclude Include="FontManager.h" />
     <ClInclude Include="Gameobject.h" />
     <ClInclude Include="Gatherer.h" />

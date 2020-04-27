@@ -63,7 +63,14 @@ enum UnitState : int
 	NO_UPGRADE,
 	DESTROYED,
 	FIRST_UPGRADE,
-	SECOND_UPGRADE,
+	SECOND_UPGRADE
+};
+
+enum IAState
+{
+	BASE,
+	CHASING,
+	ATTACKING,
 };
 
 

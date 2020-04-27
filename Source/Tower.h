@@ -30,8 +30,8 @@ public:
 
 protected:
 
-	int t_lvl = 1;
-	int t_max_lvl = 5;
+	int lvl = 1;
+	int max_lvl = 5;
 	int attack_speed = 1;
 	std::pair<float, float> localPos;
 	std::pair<float, float> atkPos;

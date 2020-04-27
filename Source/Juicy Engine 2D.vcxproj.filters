@@ -160,6 +160,9 @@
     <ClCompile Include="Minimap.cpp">
       <Filter>Source\Gameobjects\Components\UI</Filter>
     </ClCompile>
+    <ClCompile Include="FogOfWarManager.cpp">
+      <Filter>Source\Independent Managers</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="PugiXml\src\pugiconfig.hpp">
@@ -350,6 +353,9 @@
     </ClInclude>
     <ClInclude Include="Minimap.h">
       <Filter>Source\Gameobjects\Components\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="FogOfWarManager.h">
+      <Filter>Source\Independent Managers</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

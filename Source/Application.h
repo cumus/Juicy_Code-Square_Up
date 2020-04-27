@@ -9,6 +9,7 @@
 #include "TimeManager.h"
 #include "FontManager.h"
 #include "PathfindingManager.h"
+#include "FogOfWarManager.h"
 
 #include "PugiXml\src\pugixml.hpp"
 #include <list>
@@ -29,6 +30,7 @@ class TimeManager;
 class TextureManager;
 class FontManager;
 class PathfindingManager;
+class FogOfWarManager;
 
 enum GameState : int
 {
@@ -84,6 +86,7 @@ public:
 	TextureManager	tex;
 	FontManager		fonts;
 	PathfindingManager pathfinding;
+	FogOfWarManager fogWar;
 
 
 private:
