@@ -251,6 +251,13 @@ bool TextureManager::GetTextureData(int id, TextureData& data) const
 	return ret;
 }
 
+void TextureManager::SetTextureAlpha(int id, int alpha)
+{
+	TextureData data;
+	GetTextureData(id, data);
+	SDL_SetTextureAlphaMod(data.texture,alpha);
+}
+
 SDL_Texture * TextureManager::GetTexture(int id) const
 {
 	SDL_Texture* ret = nullptr;

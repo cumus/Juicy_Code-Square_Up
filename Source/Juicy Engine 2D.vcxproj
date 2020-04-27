@@ -217,6 +217,7 @@
     <ClInclude Include="FontManager.h" />
     <ClInclude Include="Gameobject.h" />
     <ClInclude Include="Gatherer.h" />
+    <ClInclude Include="FoWDefs.h" />
     <ClInclude Include="HierarchyWindow.h" />
     <ClInclude Include="JuicyMath.h" />
     <ClInclude Include="Map.h" />

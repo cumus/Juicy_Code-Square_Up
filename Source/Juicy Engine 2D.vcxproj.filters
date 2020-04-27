@@ -357,6 +357,9 @@
     <ClInclude Include="FogOfWarManager.h">
       <Filter>Source\Independent Managers</Filter>
     </ClInclude>
+    <ClInclude Include="FoWDefs.h">
+      <Filter>Source\Tools</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Source">

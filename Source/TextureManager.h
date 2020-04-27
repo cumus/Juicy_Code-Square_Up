@@ -50,6 +50,7 @@ public:
 	bool GetTextureData(int id, TextureData& data) const;
 	SDL_Texture* GetTexture(int id) const;
 	TextureData* GetDataPtr(int id);
+	void SetTextureAlpha(int id, int alpha);
 
 private:
 

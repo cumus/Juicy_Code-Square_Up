@@ -78,6 +78,7 @@ bool Application::Init()
 		}
 
 		if (ret) ret = pathfinding.Init();
+		if (ret) ret = fogWar.Init();
 
 		// Start Modules
 		for (std::list<Module*>::iterator it = modules.begin(); it != modules.end() && ret; ++it)
