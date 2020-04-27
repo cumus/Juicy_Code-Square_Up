@@ -104,6 +104,7 @@ void Behaviour::RecieveEvent(const Event& e)
 
 void Behaviour::PreUpdate()
 {
+	pos = game_object->GetTransform()->GetGlobalPosition();
 	if(providesVisibility) GetTilesInsideRadius(); 
 }
 
@@ -121,9 +122,8 @@ void Behaviour::DesactivateSprites()
 
 void Behaviour::CheckFoWMap(bool debug)
 {
-	//if (providesVisibility) ApplyMaskToTiles(GetTilesInsideRadius());
-	vec position = game_object->GetTransform()->GetGlobalPosition();
-	bool visible = FogOfWarManager::fogMap[int(position.x)][int(position.y)];//App->fogWar.CheckTileVisibility(iPoint(int(position.x), int(position.y)));
+	//if (providesVisibility) ApplyMaskToTiles(GetTilesInsideRadius());	
+	bool visible = FogOfWarManager::fogMap[int(pos.x)][int(pos.y)];//App->fogWar.CheckTileVisibility(iPoint(int(position.x), int(position.y)));
 	if (!visible && !debug) DesactivateSprites();
 	else ActivateSprites();
 }
@@ -138,7 +138,6 @@ std::vector<iPoint> Behaviour::GetTilesInsideRadius()
 		}
 		lastFog.clear();
 	}*/
-	vec pos = game_object->GetTransform()->GetGlobalPosition();
 	std::vector<iPoint> ret;
 	/*int length = vision_range * 2;
 	iPoint startingPos(int(pos.x-vision_range),int(pos.y-vision_range));
@@ -421,7 +420,6 @@ B_Unit::B_Unit(Gameobject* go, UnitType t, UnitState s, ComponentType comp_type)
 void B_Unit::Update()
 {	
 	if (!providesVisibility) CheckFoWMap();
-	vec pos = game_object->GetTransform()->GetGlobalPosition();
 	if (current_state != DESTROYED)
 	{
 		IARangeCheck();
@@ -460,7 +458,7 @@ void B_Unit::Update()
 		else if (path != nullptr && !path->empty()) //Movement
 		{
 			//LOG("moving");		
-			CheckPathTiles(pos);
+			CheckPathTiles();
 		}
 		else
 		{
@@ -506,7 +504,7 @@ void B_Unit::Update()
 	
 
 		//Collisions
-		CheckCollision(pos);
+		CheckCollision();
 
 		//Raycast
 		if (shoot) ShootRaycast();
@@ -517,7 +515,7 @@ void B_Unit::Update()
 }
 
 
-void B_Unit::CheckPathTiles(vec pos)
+void B_Unit::CheckPathTiles()
 {
 	if (!next)
 	{
@@ -686,7 +684,7 @@ void B_Unit::CheckDirection(fPoint actualPos)
 	}
 }
 
-void B_Unit::CheckCollision(vec pos)
+void B_Unit::CheckCollision()
 {
 	//Colision check
 	std::map<float, Behaviour*> out;
@@ -768,7 +766,6 @@ void B_Unit::ShootRaycast()
 
 void B_Unit::DrawRanges()
 {
-	vec pos = game_object->GetTransform()->GetGlobalPosition();
 	std::pair<float, float> localPos = Map::F_MapToWorld(pos.x, pos.y, pos.z);
 	localPos.first += 30.0f;
 	localPos.second += 30.0f;
@@ -780,8 +777,7 @@ void B_Unit::DrawRanges()
 
 void B_Unit::DoAttack()
 {
-	vec localPos = game_object->GetTransform()->GetGlobalPosition();
-	std::pair<int, int> Pos(int(localPos.x),int(localPos.y));
+	std::pair<int, int> Pos(int(pos.x),int(pos.y));
 	vec objPos = attackObjective->GetGameobject()->GetTransform()->GetGlobalPosition();
 	std::pair<int,int> atkPos(int(objPos.x), int(objPos.y));
 	arriveDestination = true;

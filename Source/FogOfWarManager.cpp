@@ -28,7 +28,7 @@ bool FogOfWarManager::Init()
 
 	width = Map::GetMapSize_I().first;
 	height = Map::GetMapSize_I().second;
-	LOG("Height %d/ Width %d",height,width);
+	//LOG("Height %d/ Width %d",height,width);
 	debugMode = false;
 	foWMapNeedsRefresh = false;
 

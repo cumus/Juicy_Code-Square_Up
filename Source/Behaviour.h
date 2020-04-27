@@ -129,6 +129,7 @@ public:
 	static std::map<double, Behaviour*> b_map;
 	static std::vector<double> enemiesInSight;
 	UnitState current_state;
+	vec pos;
 	int max_life, current_life, damage;
 	std::vector<iPoint> tilesVisited;
 	AnimatedSprite* characteR = nullptr;
@@ -226,8 +227,8 @@ public:
 	void OnDestroy() override;
 	void OnGetImpulse(float x, float y) override;
 	void CheckAtkRange();
-	void CheckPathTiles(vec pos);
-	void CheckCollision(vec pos);
+	void CheckPathTiles();
+	void CheckCollision();
 	void ChangeState();
 	void CheckDirection(fPoint actualPos);
 	void ShootRaycast();
