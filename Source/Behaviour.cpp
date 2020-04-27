@@ -110,6 +110,16 @@ void Behaviour::DesactivateSprites()
 	LOG("Hide sprite");
 }
 
+void Behaviour::CheckFoWMap()
+{
+	vec position = game_object->GetTransform()->GetGlobalPosition();
+	bool check = App->fogWar.CheckTileVisibility(iPoint(int(position.x), int(position.y)));
+	if (check)
+	{
+
+	}
+}
+
 void Behaviour::Selected()
 {
 	// Selection mark
@@ -335,6 +345,7 @@ B_Unit::B_Unit(Gameobject* go, UnitType t, UnitState s, ComponentType comp_type)
 
 void B_Unit::Update()
 {	
+	CheckFoWMap();
 	vec pos = game_object->GetTransform()->GetGlobalPosition();
 	if (current_state != DESTROYED)
 	{
@@ -342,43 +353,7 @@ void B_Unit::Update()
 		if (attackObjective != nullptr && attackObjective->GetState() != DESTROYED) //Attack
 		{
 			//LOG("FOUND");
-			attackPos = attackObjective->GetGameobject()->GetTransform()->GetGlobalPosition();
-			float d = game_object->GetTransform()->DistanceTo(attackPos);
-			//LOG("Distance 1:%f",d);
-			if (d <= attack_range) //Arriba izquierda
-			{
-				inRange = true;
-				//LOG("In range");
-			}
-			attackPos.x += attackObjective->GetGameobject()->GetTransform()->GetLocalScaleX();
-			attackPos.y += attackObjective->GetGameobject()->GetTransform()->GetLocalScaleY();
-			d = game_object->GetTransform()->DistanceTo(attackPos);
-			//LOG("Distance 2:%f", d);
-			if (d <= attack_range)//Abajo derecha
-			{
-				inRange = true;
-				//LOG("In range");
-			}
-
-			attackPos.x -= attackObjective->GetGameobject()->GetTransform()->GetLocalScaleX();
-			d = game_object->GetTransform()->DistanceTo(attackPos);
-			//LOG("Distance 3:%f", d);
-			if (d <= attack_range)//Abajo izquierda
-			{
-				inRange = true;
-				//LOG("In range");
-			}
-
-			attackPos.x += attackObjective->GetGameobject()->GetTransform()->GetLocalScaleX();
-			attackPos.y -= attackObjective->GetGameobject()->GetTransform()->GetLocalScaleY();
-			d = game_object->GetTransform()->DistanceTo(attackPos);
-			//LOG("Distance 4:%f", d);
-			if (d <= attack_range)//Arriba derecha
-			{
-				inRange = true;
-				//LOG("In range");
-			}
-			//LOG("%d",inRange);
+			CheckAtkRange();
 		}
 		else
 		{
@@ -404,48 +379,13 @@ void B_Unit::Update()
 					UnitAttackType();
 					Event::Push(DAMAGE, attackObjective, damage);
 				}
-
 				msCount = 0;
 			}
 		}
 		else if (path != nullptr && !path->empty()) //Movement
 		{
-			//LOG("moving");
-			
-			if (!next)
-			{				
-				if (PathfindingManager::unitWalkability[nextTile.x][nextTile.y] != 0.0f) PathfindingManager::unitWalkability[nextTile.x][nextTile.y] == 0;
-				nextTile = path->front();				
-				next = true;
-				move = true;
-				gotTile = false;
-				//LOG("Next tile");
-			}
-
-			if (next)
-			{
-				if (PathfindingManager::unitWalkability[nextTile.x][nextTile.y] == 0.0f)
-				{
-					PathfindingManager::unitWalkability[nextTile.x][nextTile.y] = GetID();
-					//LOG("ID: %f",GetID());
-					tilesVisited.push_back(nextTile);
-					gotTile = true;
-					//LOG("Tile found");
-				}
-				else if(!gotTile)
-				{
-					
-					//LOG("Pos X:%d/Y:%d", int(pos.x), int(pos.y));
-					//LOG("Tile X:%d/Y:%d", nextTile.x, nextTile.y);
-					iPoint cell = App->pathfinding.CheckEqualNeighbours(iPoint(int(pos.x), int(pos.y)), nextTile);
-					//LOG("Cell X:%d/Y:%d", cell.x, cell.y);
-					if (cell.x != -1 && cell.y != -1)
-					{
-						//LOG("Tile ok");
-						nextTile = cell;
-					}
-				}
-			}
+			//LOG("moving");		
+			CheckPathTiles(pos);
 		}
 		else
 		{
@@ -484,183 +424,281 @@ void B_Unit::Update()
 			game_object->GetTransform()->MoveX(dirX * speed * App->time.GetGameDeltaTime());//Move x
 			game_object->GetTransform()->MoveY(dirY * speed * App->time.GetGameDeltaTime());//Move y
 
-			//Change state to change sprite
-			if (dirX == 1 && dirY == 1)//S
-			{
-				current_state = MOVING_S;
-			}
-			else if (dirX == -1 && dirY == -1)//N
-			{
-				current_state = MOVING_N;
-			}
-			else if (dirX == 1 && dirY == -1)//E
-			{
-				current_state = MOVING_E;
-			}
-			else if (dirX == -1 && dirY == 1)//W
-			{
-				current_state = MOVING_W;
-			}
-			else if (dirX == 0 && dirY == 1)//SW
-			{
-				current_state = MOVING_SW;
-			}
-			else if (dirX == 1 && dirY == 0)//SE
-			{
-				current_state = MOVING_SE;
-			}
-			else if (dirX == 0 && dirY == -1)//NE
-			{
-				current_state = MOVING_NE;
-			}
-			else if (dirX == -1 && dirY == 0)//NW
-			{
-				current_state = MOVING_NW;
-			}	
-			/*else if (dirX == 0 && dirY == 0)
-			{
-				current_state = IDLE;
-			}*/
-
-			if (dirX == 1 && dirY == 1)
-			{
-				if (actualPos.x >= nextTile.x && actualPos.y >= nextTile.y)
-				{
-					path->erase(path->begin());
-					next = false;
-					PathfindingManager::unitWalkability[nextTile.x][nextTile.y] = 0.0f;
-					//LOG("Arrive");
-				}
-			}
-			else if (dirX == -1 && dirY == -1)
-			{
-				if (actualPos.x <= nextTile.x && actualPos.y <= nextTile.y)
-				{
-					path->erase(path->begin());
-					next = false;
-					PathfindingManager::unitWalkability[nextTile.x][nextTile.y] = 0.0f;
-					//LOG("Arrive");
-				}
-			}
-			else if (dirX == -1 && dirY == 1)
-			{
-				if (actualPos.x <= nextTile.x && actualPos.y >= nextTile.y)
-				{
-					path->erase(path->begin());
-					next = false;
-					PathfindingManager::unitWalkability[nextTile.x][nextTile.y] = 0.0f;
-					//LOG("Arrive");
-				}
-			}
-			else if (dirX == 1 && dirY == -1)
-			{
-				if (actualPos.x >= nextTile.x && actualPos.y <= nextTile.y)
-				{
-					path->erase(path->begin());
-					next = false;
-					PathfindingManager::unitWalkability[nextTile.x][nextTile.y] = 0.0f;
-					//LOG("Arrive");
-				}
-			}
-			else if (dirX == 0 && dirY == -1)
-			{
-				if (actualPos.y <= nextTile.y)
-				{
-					path->erase(path->begin());
-					next = false;
-					PathfindingManager::unitWalkability[nextTile.x][nextTile.y] = 0.0f;
-					//LOG("Arrive");
-				}
-			}
-			else if (dirX == 0 && dirY == 1)
-			{
-				if (actualPos.y >= nextTile.y)
-				{
-					path->erase(path->begin());
-					next = false;
-					PathfindingManager::unitWalkability[nextTile.x][nextTile.y] = 0.0f;
-					//LOG("Arrive");
-				}
-			}
-			else if (dirX == 1 && dirY == 0)
-			{
-				if (actualPos.x >= nextTile.x)
-				{
-					path->erase(path->begin());
-					next = false;
-					PathfindingManager::unitWalkability[nextTile.x][nextTile.y] = 0.0f;
-					//LOG("Arrive");
-				}
-			}
-			else if (dirX == -1 && dirY == 0)
-			{
-				if (actualPos.x <= nextTile.x)
-				{
-					path->erase(path->begin());
-					next = false;
-					PathfindingManager::unitWalkability[nextTile.x][nextTile.y] = 0.0f;
-					//LOG("Arrive");
-				}
-			}
-			else if (dirX == 0 && dirY == 0)
-			{
-				path->erase(path->begin());
-				next = false;
-				PathfindingManager::unitWalkability[nextTile.x][nextTile.y] = 0.0f;
-				//LOG("Arrive");
-			}
+			ChangeState();
+			CheckDirection(actualPos);			
 		}
 
-		//Colision check
-		std::map<float, Behaviour*> out;
-		unsigned int total_found = GetBehavioursInRange(pos, 1.4f, out);
-		if (total_found > 0)
-		{
-			fPoint pos(0, 0);
-			pos.x = game_object->GetTransform()->GetGlobalPosition().x;
-			pos.y = game_object->GetTransform()->GetGlobalPosition().y;
-			for (std::map<float, Behaviour*>::iterator it = out.begin(); it != out.end(); ++it)
-			{
-				vec otherPos = it->second->GetGameobject()->GetTransform()->GetGlobalPosition();
-				fPoint separationSpd(0, 0);
-				separationSpd.x = pos.x - otherPos.x;
-				separationSpd.y = pos.y - otherPos.y;
-				if (it->second->GetState() != DESTROYED)
-				{
-					if(!move) Event::Push(IMPULSE, it->second->AsBehaviour(), -separationSpd.x/2 , -separationSpd.y/2);
-					else Event::Push(IMPULSE, it->second->AsBehaviour(), -separationSpd.x, -separationSpd.y);
-				}
-			}
-		}
+		//Collisions
+		CheckCollision(pos);
 
 		//Raycast
-		if (shoot)
-		{
-			rayCastTimer += App->time.GetGameDeltaTime();
-			if (rayCastTimer < RAYCAST_TIME)
-			{
-				App->render->DrawLine(shootPos, atkObj, { 34,191,255,255 }, FRONT_SCENE, true);
-			}
-			else
-			{
-				shoot = false;
-				rayCastTimer = 0;
-			}
-		}
-
+		if (shoot) ShootRaycast();
+			
 		//Draw vision and attack range
-		if (drawRanges)
+		if (drawRanges) DrawRanges();
+	}
+}
+
+
+void B_Unit::CheckPathTiles(vec pos)
+{
+	if (!next)
+	{
+		if (PathfindingManager::unitWalkability[nextTile.x][nextTile.y] != 0.0f) PathfindingManager::unitWalkability[nextTile.x][nextTile.y] == 0;
+		nextTile = path->front();
+		next = true;
+		move = true;
+		gotTile = false;
+		//LOG("Next tile");
+	}
+	else
+	{
+		if (PathfindingManager::unitWalkability[nextTile.x][nextTile.y] == 0.0f)
 		{
-			vec pos = game_object->GetTransform()->GetGlobalPosition();
-			std::pair<float, float> localPos = Map::F_MapToWorld(pos.x, pos.y, pos.z);
-			localPos.first += 30.0f;
-			localPos.second += 30.0f;
-			visionRange = { vision_range*23, vision_range*23 };
-			atkRange ={ attack_range*23, attack_range*23 };
-			App->render->DrawCircle(localPos,visionRange, { 10, 156, 18, 255 }, FRONT_SCENE, true);//Vision
-			App->render->DrawCircle(localPos,atkRange, { 255, 0, 0, 255 }, FRONT_SCENE, true);//Attack
+			PathfindingManager::unitWalkability[nextTile.x][nextTile.y] = GetID();
+			//LOG("ID: %f",GetID());
+			tilesVisited.push_back(nextTile);
+			gotTile = true;
+			//LOG("Tile found");
+		}
+		else if (!gotTile)
+		{
+
+			//LOG("Pos X:%d/Y:%d", int(pos.x), int(pos.y));
+			//LOG("Tile X:%d/Y:%d", nextTile.x, nextTile.y);
+			iPoint cell = App->pathfinding.CheckEqualNeighbours(iPoint(int(pos.x), int(pos.y)), nextTile);
+			//LOG("Cell X:%d/Y:%d", cell.x, cell.y);
+			if (cell.x != -1 && cell.y != -1)
+			{
+				//LOG("Tile ok");
+				nextTile = cell;
+			}
 		}
 	}
+}
+
+void B_Unit::ChangeState()
+{
+	//Change state to change sprite
+	if (dirX == 1 && dirY == 1)//S
+	{
+		current_state = MOVING_S;
+	}
+	else if (dirX == -1 && dirY == -1)//N
+	{
+		current_state = MOVING_N;
+	}
+	else if (dirX == 1 && dirY == -1)//E
+	{
+		current_state = MOVING_E;
+	}
+	else if (dirX == -1 && dirY == 1)//W
+	{
+		current_state = MOVING_W;
+	}
+	else if (dirX == 0 && dirY == 1)//SW
+	{
+		current_state = MOVING_SW;
+	}
+	else if (dirX == 1 && dirY == 0)//SE
+	{
+		current_state = MOVING_SE;
+	}
+	else if (dirX == 0 && dirY == -1)//NE
+	{
+		current_state = MOVING_NE;
+	}
+	else if (dirX == -1 && dirY == 0)//NW
+	{
+		current_state = MOVING_NW;
+	}
+	/*else if (dirX == 0 && dirY == 0)
+	{
+		current_state = IDLE;
+	}*/
+}
+
+void B_Unit::CheckDirection(fPoint actualPos)
+{
+	if (dirX == 1 && dirY == 1)
+	{
+		if (actualPos.x >= nextTile.x && actualPos.y >= nextTile.y)
+		{
+			path->erase(path->begin());
+			next = false;
+			PathfindingManager::unitWalkability[nextTile.x][nextTile.y] = 0.0f;
+			//LOG("Arrive");
+		}
+	}
+	else if (dirX == -1 && dirY == -1)
+	{
+		if (actualPos.x <= nextTile.x && actualPos.y <= nextTile.y)
+		{
+			path->erase(path->begin());
+			next = false;
+			PathfindingManager::unitWalkability[nextTile.x][nextTile.y] = 0.0f;
+			//LOG("Arrive");
+		}
+	}
+	else if (dirX == -1 && dirY == 1)
+	{
+		if (actualPos.x <= nextTile.x && actualPos.y >= nextTile.y)
+		{
+			path->erase(path->begin());
+			next = false;
+			PathfindingManager::unitWalkability[nextTile.x][nextTile.y] = 0.0f;
+			//LOG("Arrive");
+		}
+	}
+	else if (dirX == 1 && dirY == -1)
+	{
+		if (actualPos.x >= nextTile.x && actualPos.y <= nextTile.y)
+		{
+			path->erase(path->begin());
+			next = false;
+			PathfindingManager::unitWalkability[nextTile.x][nextTile.y] = 0.0f;
+			//LOG("Arrive");
+		}
+	}
+	else if (dirX == 0 && dirY == -1)
+	{
+		if (actualPos.y <= nextTile.y)
+		{
+			path->erase(path->begin());
+			next = false;
+			PathfindingManager::unitWalkability[nextTile.x][nextTile.y] = 0.0f;
+			//LOG("Arrive");
+		}
+	}
+	else if (dirX == 0 && dirY == 1)
+	{
+		if (actualPos.y >= nextTile.y)
+		{
+			path->erase(path->begin());
+			next = false;
+			PathfindingManager::unitWalkability[nextTile.x][nextTile.y] = 0.0f;
+			//LOG("Arrive");
+		}
+	}
+	else if (dirX == 1 && dirY == 0)
+	{
+		if (actualPos.x >= nextTile.x)
+		{
+			path->erase(path->begin());
+			next = false;
+			PathfindingManager::unitWalkability[nextTile.x][nextTile.y] = 0.0f;
+			//LOG("Arrive");
+		}
+	}
+	else if (dirX == -1 && dirY == 0)
+	{
+		if (actualPos.x <= nextTile.x)
+		{
+			path->erase(path->begin());
+			next = false;
+			PathfindingManager::unitWalkability[nextTile.x][nextTile.y] = 0.0f;
+			//LOG("Arrive");
+		}
+	}
+	else if (dirX == 0 && dirY == 0)
+	{
+		path->erase(path->begin());
+		next = false;
+		PathfindingManager::unitWalkability[nextTile.x][nextTile.y] = 0.0f;
+		//LOG("Arrive");
+	}
+}
+
+void B_Unit::CheckCollision(vec pos)
+{
+	//Colision check
+	std::map<float, Behaviour*> out;
+	unsigned int total_found = GetBehavioursInRange(pos, 1.4f, out);
+	if (total_found > 0)
+	{
+		fPoint pos(0, 0);
+		pos.x = game_object->GetTransform()->GetGlobalPosition().x;
+		pos.y = game_object->GetTransform()->GetGlobalPosition().y;
+		for (std::map<float, Behaviour*>::iterator it = out.begin(); it != out.end(); ++it)
+		{
+			vec otherPos = it->second->GetGameobject()->GetTransform()->GetGlobalPosition();
+			fPoint separationSpd(0, 0);
+			separationSpd.x = pos.x - otherPos.x;
+			separationSpd.y = pos.y - otherPos.y;
+			if (it->second->GetState() != DESTROYED)
+			{
+				if (!move) Event::Push(IMPULSE, it->second->AsBehaviour(), -separationSpd.x / 2, -separationSpd.y / 2);
+				else Event::Push(IMPULSE, it->second->AsBehaviour(), -separationSpd.x, -separationSpd.y);
+			}
+		}
+	}
+}
+
+void B_Unit::CheckAtkRange()
+{
+	attackPos = attackObjective->GetGameobject()->GetTransform()->GetGlobalPosition();
+	float d = game_object->GetTransform()->DistanceTo(attackPos);
+	//LOG("Distance 1:%f",d);
+	if (d <= attack_range) //Arriba izquierda
+	{
+		inRange = true;
+		//LOG("In range");
+	}
+	attackPos.x += attackObjective->GetGameobject()->GetTransform()->GetLocalScaleX();
+	attackPos.y += attackObjective->GetGameobject()->GetTransform()->GetLocalScaleY();
+	d = game_object->GetTransform()->DistanceTo(attackPos);
+	//LOG("Distance 2:%f", d);
+	if (d <= attack_range)//Abajo derecha
+	{
+		inRange = true;
+		//LOG("In range");
+	}
+
+	attackPos.x -= attackObjective->GetGameobject()->GetTransform()->GetLocalScaleX();
+	d = game_object->GetTransform()->DistanceTo(attackPos);
+	//LOG("Distance 3:%f", d);
+	if (d <= attack_range)//Abajo izquierda
+	{
+		inRange = true;
+		//LOG("In range");
+	}
+
+	attackPos.x += attackObjective->GetGameobject()->GetTransform()->GetLocalScaleX();
+	attackPos.y -= attackObjective->GetGameobject()->GetTransform()->GetLocalScaleY();
+	d = game_object->GetTransform()->DistanceTo(attackPos);
+	//LOG("Distance 4:%f", d);
+	if (d <= attack_range)//Arriba derecha
+	{
+		inRange = true;
+		//LOG("In range");
+	}
+	//LOG("%d",inRange);
+}
+
+void B_Unit::ShootRaycast()
+{
+	rayCastTimer += App->time.GetGameDeltaTime();
+	if (rayCastTimer < RAYCAST_TIME)
+	{
+		App->render->DrawLine(shootPos, atkObj, { 34,191,255,255 }, FRONT_SCENE, true);
+	}
+	else
+	{
+		shoot = false;
+		rayCastTimer = 0;
+	}
+}
+
+void B_Unit::DrawRanges()
+{
+	vec pos = game_object->GetTransform()->GetGlobalPosition();
+	std::pair<float, float> localPos = Map::F_MapToWorld(pos.x, pos.y, pos.z);
+	localPos.first += 30.0f;
+	localPos.second += 30.0f;
+	visionRange = { vision_range * 23, vision_range * 23 };
+	atkRange = { attack_range * 23, attack_range * 23 };
+	App->render->DrawCircle(localPos, visionRange, { 10, 156, 18, 255 }, FRONT_SCENE, true);//Vision
+	App->render->DrawCircle(localPos, atkRange, { 255, 0, 0, 255 }, FRONT_SCENE, true);//Attack
 }
 
 void B_Unit::DoAttack()
@@ -828,6 +866,7 @@ void Behaviour::Lifebar::Create(Gameobject* parent)
 	green_bar = new Sprite(new Gameobject("GreenBar", go), hud_id, starting_section = { 276, 703, 28, 5 }, FRONT_SCENE, { 4.f, -34.f, 2.f, 2.f }, { 0, 255, 0, 255 });
 	Update(1.0f);
 }
+
 void Behaviour::Lifebar::Show()
 {
 	go->SetActive();

@@ -93,6 +93,7 @@ public:
 	void OnKill(const UnitType type);
 	void ActivateSprites();
 	void DesactivateSprites();
+	void CheckFoWMap();
 	virtual void UpdatePath(int x,int y) {}
 	virtual void AfterDamageAction() {}
 	virtual void OnRightClick(vec pos, vec modPos) {}
@@ -219,6 +220,13 @@ public:
 	void DoAttack() override;
 	void OnDestroy() override;
 	void OnGetImpulse(float x, float y) override;
+	void CheckAtkRange();
+	void CheckPathTiles(vec pos);
+	void CheckCollision(vec pos);
+	void ChangeState();
+	void CheckDirection(fPoint actualPos);
+	void ShootRaycast();
+	void DrawRanges();
 	virtual void UnitAttackType() {}
 	virtual void IARangeCheck() {}
 

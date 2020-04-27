@@ -27,6 +27,7 @@ EnemyMeleeUnit::EnemyMeleeUnit(Gameobject* go) : B_Unit(go, ENEMY_MELEE, IDLE, B
 	scanTimer = 0.0f;
 	scanTime = 3.0f;
 	//LOG("ID: %f", GetID());
+	CheckFoWMap();
 
 	//SFX
 	//deathFX = IA_MELEE_DIE_FX;
