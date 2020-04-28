@@ -37,6 +37,7 @@ Behaviour::Behaviour(Gameobject* go, UnitType t, UnitState starting_state, Compo
 	drawRanges = false;
 	attackObjective = nullptr;
 	providesVisibility = true;
+	visible = true;
 
 	audio = new AudioSource(game_object);
 	characteR = new AnimatedSprite(this);
@@ -124,8 +125,8 @@ void Behaviour::CheckFoWMap(bool debug)
 {
 	//if (providesVisibility) ApplyMaskToTiles(GetTilesInsideRadius());	
 	bool visible = FogOfWarManager::fogMap[int(pos.x)][int(pos.y)];//App->fogWar.CheckTileVisibility(iPoint(int(position.x), int(position.y)));
-	if (!visible && !debug) DesactivateSprites();
-	else ActivateSprites();
+	if (!visible && !debug) { DesactivateSprites(); visible = false; }
+	else{ ActivateSprites(); visible = true; }
 }
 
 std::vector<iPoint> Behaviour::GetTilesInsideRadius()

@@ -115,23 +115,26 @@ bool Minimap::AddUnit(double id, int type, Transform* unit)
 	bool ret = false;
 	if (minimap)
 	{
-		MinimapTexture icon;
-		if (type <= UNIT_SUPER) icon = ICON_ALLIED_UNIT;
-		else if (type <= ENEMY_SPECIAL) icon = ICON_ENEMY_UNIT;
-		else
+		if (!Behaviour::IsHidden(id))
 		{
-			switch (UnitType(type))
+			MinimapTexture icon;
+			if (type <= UNIT_SUPER) icon = ICON_ALLIED_UNIT;
+			else if (type <= ENEMY_SPECIAL) icon = ICON_ENEMY_UNIT;
+			else
 			{
-			case BASE_CENTER: { icon = ICON_BASE_CENTER; break; }
-			case TOWER: { icon = ICON_TOWER; break; }
-			case BARRACKS: { icon = ICON_BARRACKS; break; }
-			case EDGE: { icon = ICON_EDGE; break; }
-			case SPAWNER: { icon = ICON_SPAWNER; break; }
+				switch (UnitType(type))
+				{
+				case BASE_CENTER: { icon = ICON_BASE_CENTER; break; }
+				case TOWER: { icon = ICON_TOWER; break; }
+				case BARRACKS: { icon = ICON_BARRACKS; break; }
+				case EDGE: { icon = ICON_EDGE; break; }
+				case SPAWNER: { icon = ICON_SPAWNER; break; }
+				}
 			}
-		}
 
-		minimap->units.insert({ id, { icon, unit } });
-		ret = true;
+			minimap->units.insert({ id, { icon, unit } });
+			ret = true;
+		}
 	}
 
 	return ret;

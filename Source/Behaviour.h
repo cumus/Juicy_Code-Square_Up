@@ -112,6 +112,7 @@ public:
 	virtual void Upgrade() {}
 	virtual void UpdateWalkabilityTiles() {}
 
+	static bool IsHidden(double id) { return b_map[id]->visible; }
 
 	UnitType GetType() const { return type; }
 	UnitState* GetStatePtr() { return &current_state; }
@@ -133,7 +134,7 @@ public:
 	int max_life, current_life, damage;
 	std::vector<iPoint> tilesVisited;
 	AnimatedSprite* characteR = nullptr;
-	bool providesVisibility;
+	bool providesVisibility,visible;
 
 protected:	
 
