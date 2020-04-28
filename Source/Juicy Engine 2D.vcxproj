@@ -146,6 +146,7 @@
     <ClCompile Include="BaseCenter.cpp" />
     <ClCompile Include="Behaviour.cpp" />
     <ClCompile Include="Canvas.cpp" />
+    <ClCompile Include="Collider.cpp" />
     <ClCompile Include="Component.cpp" />
     <ClCompile Include="ConfigWindow.cpp" />
     <ClCompile Include="ConsoleWindow.cpp" />
@@ -174,6 +175,7 @@
     <ClCompile Include="PathfindingManager.cpp" />
     <ClCompile Include="PlayPauseWindow.cpp" />
     <ClCompile Include="PropertiesWindow.cpp" />
+    <ClCompile Include="QuadTree.cpp" />
     <ClCompile Include="RangedUnit.cpp" />
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="Log.cpp" />
@@ -202,6 +204,7 @@
     <ClInclude Include="BaseCenter.h" />
     <ClInclude Include="Behaviour.h" />
     <ClInclude Include="Canvas.h" />
+    <ClInclude Include="Collider.h" />
     <ClInclude Include="Component.h" />
     <ClInclude Include="ConfigWindow.h" />
     <ClInclude Include="ConsoleWindow.h" />
@@ -231,6 +234,7 @@
     <ClInclude Include="PathfindingManager.h" />
     <ClInclude Include="PlayPauseWindow.h" />
     <ClInclude Include="PropertiesWindow.h" />
+    <ClInclude Include="QuadTree.h" />
     <ClInclude Include="RangedUnit.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="Audio.h" />

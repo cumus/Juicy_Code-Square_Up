@@ -10,6 +10,7 @@ enum ComponentType
 	SPRITE,
 	ANIM_SPRITE,
 	AUDIO_SOURCE,
+	COLLIDER,
 
 	// UI
 	UI_GENERAL,
