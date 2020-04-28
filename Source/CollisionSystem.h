@@ -38,7 +38,7 @@ private:
 private:
 	bool collisionLayers[MAX_LAYERS][MAX_LAYERS]; //Store layers collisions
 	std::map<CollisionLayer, std::vector<Collider*>> layerColliders;
-	Quadtree collisionTree;
+	//Quadtree collisionTree;
 };
 
 

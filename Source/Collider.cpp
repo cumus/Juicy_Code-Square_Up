@@ -10,7 +10,7 @@ Collider::Collider(Gameobject* go, RectF coll, ColliderType t, ComponentType ty)
 {
 	boundary = coll;
     collType = t;
-    layer = DEFAULT_LAYER;
+    //layer = DEFAULT_LAYER;
 }
 
 Collider::~Collider()
