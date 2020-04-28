@@ -11,6 +11,12 @@ enum CollisionLayer
 	TILEMAP,
 };
 
+enum ColliderType
+{
+	NON_TRIGGER,
+	TRIGGER,
+};
+
 struct Manifold
 {
 	bool colliding = false;
@@ -20,7 +26,7 @@ struct Manifold
 class Collider : public Component
 {
 public:
-	Collider(Gameobject* game_object, RectF coll, ComponentType type = COLLIDER);
+	Collider(Gameobject* game_object, RectF coll, ColliderType t=NON_TRIGGER, ComponentType type = COLLIDER);
 	~Collider();
 
 	
@@ -32,6 +38,8 @@ public:
 	void SetColliderBounds(RectF& rect) { boundary = rect; }
 	RectF& GetColliderBounds() { return boundary; }
 	void SetOffset(RectF off) { offset = off; }
+	void SetCollType(ColliderType t) { collType = t; }
+	ColliderType GetCollType() { return collType; }
 
 private:
 	void SetPosition();
@@ -40,6 +48,7 @@ private:
 	RectF boundary;
 	RectF offset;
 	CollisionLayer layer;
+	ColliderType collType;
 };
 
 #endif
