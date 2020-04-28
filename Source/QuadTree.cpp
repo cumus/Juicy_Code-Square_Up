@@ -145,8 +145,8 @@ bool Quadtree::Intersects(const RectF objective)
 
 void Quadtree::Split()
 {
-	const int childWidth = boundary.w / 2;
-	const int childHeight = boundary.h / 2;
+	const float childWidth = boundary.w / 2;
+	const float childHeight = boundary.h / 2;
 
 	children[CHILD_NE] = new Quadtree(maxObjects, maxLevels, level + 1, { boundary.x + childWidth, boundary.y, childWidth, childHeight },this);
 	children[CHILD_NW] = new Quadtree(maxObjects, maxLevels, level + 1,{ boundary.x, boundary.y, childWidth, childHeight },this);

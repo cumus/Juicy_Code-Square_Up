@@ -147,6 +147,7 @@
     <ClCompile Include="Behaviour.cpp" />
     <ClCompile Include="Canvas.cpp" />
     <ClCompile Include="Collider.cpp" />
+    <ClCompile Include="CollisionSystem.cpp" />
     <ClCompile Include="Component.cpp" />
     <ClCompile Include="ConfigWindow.cpp" />
     <ClCompile Include="ConsoleWindow.cpp" />
@@ -205,6 +206,7 @@
     <ClInclude Include="Behaviour.h" />
     <ClInclude Include="Canvas.h" />
     <ClInclude Include="Collider.h" />
+    <ClInclude Include="CollisionSystem.h" />
     <ClInclude Include="Component.h" />
     <ClInclude Include="ConfigWindow.h" />
     <ClInclude Include="ConsoleWindow.h" />

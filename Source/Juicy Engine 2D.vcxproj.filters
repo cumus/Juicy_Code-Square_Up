@@ -169,6 +169,9 @@
     <ClCompile Include="QuadTree.cpp">
       <Filter>Source\Independent Managers</Filter>
     </ClCompile>
+    <ClCompile Include="CollisionSystem.cpp">
+      <Filter>Source\Independent Managers</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="PugiXml\src\pugiconfig.hpp">
@@ -370,6 +373,9 @@
       <Filter>Source\Gameobjects\Components</Filter>
     </ClInclude>
     <ClInclude Include="QuadTree.h">
+      <Filter>Source\Independent Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="CollisionSystem.h">
       <Filter>Source\Independent Managers</Filter>
     </ClInclude>
   </ItemGroup>

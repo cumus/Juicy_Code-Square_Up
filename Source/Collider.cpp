@@ -4,11 +4,13 @@
 #include "Transform.h"
 #include "Vector3.h"
 #include "Application.h"
+#include "CollisionSystem.h"
 
 Collider::Collider(Gameobject* go, RectF coll, ColliderType t, ComponentType ty) : Component(ty,go)
 {
 	boundary = coll;
     collType = t;
+    layer = DEFAULT_LAYER;
 }
 
 Collider::~Collider()

@@ -3,13 +3,7 @@
 
 #include "SDL/include/SDL.h"
 #include "Component.h"
-
-enum CollisionLayer
-{
-	DEFAULT = 0,
-	GAMEOBJECTS,
-	TILEMAP,
-};
+#include "CollisionSystem.h"
 
 enum ColliderType
 {
