@@ -40,6 +40,7 @@ enum ComponentType
 class Gameobject;
 class Transform;
 class Behaviour;
+class Collider;
 class UI_Component;
 
 class Component : public EventListener
@@ -61,6 +62,7 @@ public:
 	ComponentType GetType() const { return type; }
 	Transform* AsTransform() const { return (Transform*)this; }
 	Behaviour* AsBehaviour() const { return (Behaviour*)this; }
+	Collider* AsCollider() const { return (Collider*)this; }
 	UI_Component* AsUIComp() const { return (UI_Component*)this; }
 	Gameobject* GetGameobject() const { return game_object;	}
 
