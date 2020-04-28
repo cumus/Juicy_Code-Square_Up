@@ -8,6 +8,7 @@
 #include "Transform.h"
 #include "Behaviour.h"
 #include "Log.h"
+#include "JuicyMath.h"
 
 #include <vector>
 
@@ -217,10 +218,44 @@ void FogOfWarManager::UpdateFoWMap()
 
 void FogOfWarManager::DrawFoWMap()
 {
-	for (int x = 0; x < width; x++)
+	// Get corner coordinates
+	SDL_Rect cam = App->render->GetCameraRect();
+	std::pair<int, int> up_left = Map::I_WorldToMap(cam.x, cam.y);
+	std::pair<int, int> down_right = Map::I_WorldToMap(cam.x + cam.w, cam.y + cam.h);
+	std::pair<int, int> up_right = Map::I_WorldToMap(cam.x + cam.w, cam.y);
+	std::pair<int, int> down_left = Map::I_WorldToMap(cam.x, cam.y + cam.h);
+	SDL_Rect cam_area = { cam.x - Map::GetTileSize_I().first, cam.y - (Map::GetTileSize_I().second * 2), cam.w + Map::GetTileSize_I().first, cam.h + (Map::GetTileSize_I().second * 2) };
+
+	int displayFogTexID;
+	if (debugMode) displayFogTexID = debugTexID;
+	else displayFogTexID = smoothTexID; 
+	SDL_Rect r = { 0,0,64,64 };
+
+	for (int y = up_right.second - 2; y <= down_left.second; ++y)
 	{
-		for (int y = 0; y < height; y++)
+		for (int x = up_left.first - 2; x <= down_right.first; ++x)
 		{
+			std::pair<int, int> render_pos = Map::I_MapToWorld(x, y);
+			if (JMath::PointInsideRect(render_pos.first, render_pos.second, cam_area))
+			{
+				//LOG("Cam X:%d/Y:%d",x,y);
+				if(x >= 0 && y>= 0)
+				{ 
+					if (!debugMode && !fogMap[x][y])
+					{
+						// Draw tileset spite at render_pos
+						App->render->Blit(displayFogTexID, render_pos.first, render_pos.second, &r, FOG_OF_WAR);
+					}
+				}
+			}
+		}
+	}
+
+
+	//for (int x = 0; x < width; x++)
+	//{
+		//for (int y = 0; y < height; y++)
+		//{
 			/*FoWDataStruct tileInfo = GetFoWTileState({ x, y });
 			int fogId = -1;
 			int shroudId = -1;
@@ -241,11 +276,11 @@ void FogOfWarManager::DrawFoWMap()
 
 			}*/
 
-			std::pair<int,int> worldDrawPos = Map::I_MapToWorld(x, y);
+			/*std::pair<int,int> worldDrawPos = Map::I_MapToWorld(x, y);
 
 			int displayFogTexID;
-			if (debugMode) displayFogTexID = debugTexID;			
-			else displayFogTexID = smoothTexID;
+			if (debugMode) displayFogTexID = debugTexID;
+			else displayFogTexID = smoothTexID;*/
 
 			//draw fog
 			/*if (fogId != -1)
@@ -262,15 +297,15 @@ void FogOfWarManager::DrawFoWMap()
 			}*/
 
 			//draw fog
-			if (!debugMode && !fogMap[x][y])
+			/*if (!debugMode && !fogMap[x][y])
 			{
 				SDL_Rect r = { 0,0,64,64 }; //this rect crops the desired fog Id texture from the fogTiles spritesheet
 				App->render->Blit(displayFogTexID, worldDrawPos.first, worldDrawPos.second, &r, FOG_OF_WAR);
-			}
-		
+			}*/
+
 			//LOG("Tile X:%d/Y:%d",x,y);
-		}
-	}
+		//}
+	//}	
 }
 
 bool FogOfWarManager::CheckTileVisibility(iPoint mapPos)
