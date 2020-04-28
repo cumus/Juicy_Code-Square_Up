@@ -1,5 +1,5 @@
-#ifndef __COLLISIONMANAGER_H__
-#define __COLLISIONMANAGER_H__
+#ifndef __COLLISIONSYSTEM_H__
+#define __COLLISIONSYSTEM_H__
 
 #include "SDL/include/SDL.h"
 #include "Point.h"
@@ -15,8 +15,9 @@ enum CollisionLayer
 	DEFAULT_LAYER = 0,
 	SCENE_LAYER,
 	HUD_LAYER,
+	INPUT_LAYER,
 
-	MAX_LAYERS,
+	MAX_COLLISION_LAYERS,
 };
 
 class CollisionSystem
@@ -36,10 +37,10 @@ private:
 	void ProcessCollisions(std::vector<Gameobject*>& first, std::vector<Gameobject*>& second);
 
 private:
-	bool collisionLayers[MAX_LAYERS][MAX_LAYERS]; //Store layers collisions
+	bool collisionLayers[MAX_COLLISION_LAYERS][MAX_COLLISION_LAYERS]; //Store layers collisions
 	std::map<CollisionLayer, std::vector<Collider*>> layerColliders;
 	//Quadtree collisionTree;
 };
 
 
-#endif
+#endif // !__COLLISIONSYSTEM_H__

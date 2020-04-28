@@ -209,6 +209,8 @@ void Gameobject::AddComponent(Component* comp)
 			ui = comp->AsUIComp();
 		else if (type >= BEHAVIOUR && type < MAX_BEHAVIOUR)
 			behaviour = comp->AsBehaviour();
+		else if (type >= COLLIDER && type < MAX_BEHAVIOUR)
+			collider = comp->AsCollider();
 
 		components.push_back(comp);
 	}
@@ -268,7 +270,7 @@ bool Gameobject::RemoveComponent(Component* comp)
 bool Gameobject::Destroy(float ms)
 {
 	bool ret = true;
-
+	toDestroy = true;
 	if ((death_timer = ms) <= 0.f)
 		ret = (parent != nullptr && parent->RemoveChild(this));
 

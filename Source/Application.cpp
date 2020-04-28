@@ -132,7 +132,7 @@ int Application::Update()
 		if (!(no_error = (*it)->PreUpdate()))
 			LOG("Module %s encuntered an error during PreUpdate!", (*it)->GetName());
 
-	
+	collSystem.Update();
 
 	OPTICK_CATEGORY("Update Application", Optick::Category::GameLogic);
 	for (it = modules.begin(); it != modules.end() && no_error; ++it)

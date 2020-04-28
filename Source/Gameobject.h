@@ -38,6 +38,7 @@ public:
 
 	const Transform*	GetTransform() const { return transform; }
 	const Behaviour*	GetBehaviour() const { return behaviour; }
+	const Collider*		GetCollider() const { return collider; }
 	const UI_Component* GetUI() const { return ui; }
 
 	std::vector<Gameobject*>& GetChilds() { return childs; }
@@ -51,6 +52,9 @@ public:
 	bool RemoveComponent(Component* comp);
 	bool Destroy(float ms = 0.f);
 	void UpdateRemoveQueue();
+	bool BeingDestroyed() { return toDestroy; }
+	void SetStatic(bool s) { isStatic = s; }
+	bool GetStatic() { return isStatic; }
 
 private:
 
@@ -62,6 +66,8 @@ private:
 
 	double id;
 	bool active = true;
+	bool toDestroy = false;
+	bool isStatic = false;
 	std::string name;
 	float death_timer = -1;
 
@@ -74,6 +80,7 @@ private:
 	Gameobject* parent = nullptr;
 	Transform* transform = nullptr;
 	Behaviour* behaviour = nullptr;
+	Collider* collider = nullptr;
 	UI_Component* ui = nullptr;
 };
 

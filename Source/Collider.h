@@ -45,4 +45,4 @@ private:
 	ColliderType collType;
 };
 
-#endif
+#endif // !__COLLIDER_H__

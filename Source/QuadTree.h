@@ -44,4 +44,4 @@ private:
 	RectF boundary;
 };
 
-#endif
+#endif // !__QUADTREE_H__
