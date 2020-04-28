@@ -165,20 +165,7 @@ bool Render::PostUpdate()
 		{
 			// TODO: Check if map layers need sorting
 			for (std::vector<RenderData>::const_iterator data = it->second.cbegin(); data != it->second.cend() && ret; ++data)
-			{
-				/*if (data->camera)
-				{				
-					iPoint pos = ConvertIsoTo2D(iPoint(data->rect.x,data->rect.y));
-					iPoint tempCam = CamToIsometric();
-					//LOG("Camera X:%f/Y:%f/W:%f/H:%f",cam.x,cam.y,cam.w,cam.h);
-					//LOG("Blit X:%d/Y:%d/W:%d/H:%d", data->rect.x, data->rect.y, data->rect.w, data->rect.h);
-					if (data->rect.x < tempCam.x || (data->rect.w) > (tempCam.x+ cam.w) || (data->rect.y) < tempCam.y || (data->rect.h) > (tempCam.y+cam.h))
-					{
-						continue;
-					}
-				}*/
-				
-				
+			{						
 				switch (data->type)
 				{
 				case RenderData::TEXTURE_FULL:
