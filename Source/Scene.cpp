@@ -1688,7 +1688,7 @@ void Scene::OnEventStateMachine(GameplayState state)
 		//Spawner counter
 		spawner_go = AddGameobjectToCanvas("Spawner Count");
 		spawn_img = new C_Image(spawner_go);
-		spawn_img->target = { 1.0f, 0.25f, 1.f , 0.5f };
+		spawn_img->target = { 1.0f, 0.15f, 1.f , 0.5f };
 		spawn_img->offset = { -119.f, -59.5f };
 		spawn_img->section = { 22, 333, 119, 119 };
 		spawn_img->tex_id = App->tex.Load("Assets/textures/Iconos_square_up.png");
