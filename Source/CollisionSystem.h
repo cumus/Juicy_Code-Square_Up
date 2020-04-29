@@ -26,8 +26,10 @@ public:
 	CollisionSystem();
 	~CollisionSystem();
 
+	void Add(Gameobject* obj);
 	void Add(std::vector<Gameobject*>& objects);
 	void ProcessRemovals();
+	void ProcessRemovals(Gameobject* obj);
 	void Update();
 	void SetLayerCollision(CollisionLayer one, CollisionLayer two, bool collide);
 	

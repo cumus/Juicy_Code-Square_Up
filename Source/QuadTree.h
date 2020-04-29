@@ -21,7 +21,7 @@ public:
 	Quadtree(int maxObj,int maxlvl,int lvl, RectF bounds,Quadtree* parent);
 	~Quadtree();
 
-	void Init();
+	void Init(int maxObj, int maxlvl, int lvl, RectF bounds, Quadtree* p);
 	void Clear();
 	void Insert(Collider* obj);
 	void Remove(Collider* obj);

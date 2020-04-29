@@ -21,9 +21,13 @@ Quadtree::Quadtree(int maxObj, int maxlvl, int lvl, RectF bounds, Quadtree* p)
 Quadtree::~Quadtree()
 {}
 
-void Quadtree::Init()
+void Quadtree::Init(int maxObj, int maxlvl, int lvl, RectF bounds, Quadtree* p)
 {
-
+	maxObjects = maxObj;
+	maxLevels = maxlvl;
+	level = lvl;
+	boundary = bounds;
+	parent = p;
 }
 
 void Quadtree::Clear()

@@ -2,6 +2,7 @@
 #include "QuadTree.h"
 #include "Collider.h"
 #include "Gameobject.h"
+#include "Map.h"
 
 #include <vector>
 
@@ -18,6 +19,7 @@ CollisionSystem::CollisionSystem()
 	collisionLayers[SCENE_LAYER][DEFAULT_LAYER] = true;
 	collisionLayers[DEFAULT_LAYER][SCENE_LAYER] = true;
 	collisionLayers[INPUT_LAYER][HUD_LAYER] = true;
+	//collisionTree.Init(5, 5, 0, { 0.0f,0.0f,Map::GetMapSize_F().first,Map::GetMapSize_F().second }, nullptr);
 }
 
 CollisionSystem::~CollisionSystem()
@@ -42,6 +44,16 @@ void CollisionSystem::Add(std::vector<Gameobject*>& objects)
 	}
 }
 
+void CollisionSystem::Add(Gameobject* obj)
+{
+	const Collider* col = obj->GetCollider();
+	if (col != nullptr)
+	{
+		//CollisionLayer layer = col->GetLayer();
+		//layerColliders[layer].push_back(col);
+	}	
+}
+
 void CollisionSystem::ProcessRemovals()
 {
 	for (std::map<CollisionLayer, std::vector<Collider*>>::const_iterator itL = layerColliders.cbegin(); itL != layerColliders.cend(); ++itL)
@@ -56,6 +68,24 @@ void CollisionSystem::ProcessRemovals()
 	}
 }
 
+void CollisionSystem::ProcessRemovals(Gameobject* obj)
+{
+	bool exit=false;
+	for (std::map<CollisionLayer, std::vector<Collider*>>::const_iterator itL = layerColliders.cbegin(); itL != layerColliders.cend(); ++itL)
+	{
+		for (std::vector<Collider*>::const_iterator itV = itL->second.cbegin(); itV != itL->second.cend(); ++itV)
+		{
+			if ((*itV)->GetGameobject()->GetID() == obj->GetID())
+			{
+				layerColliders[itL->first].erase(itV);
+				exit = true;
+			}
+			if (exit) break;
+		}
+		if (exit) break;
+	}
+}
+
 void CollisionSystem::Resolve()
 {
 	for (std::map<CollisionLayer, std::vector<Collider*>>::const_iterator itL = layerColliders.cbegin(); itL != layerColliders.cend(); ++itL)
@@ -67,26 +97,11 @@ void CollisionSystem::Resolve()
 		}
 
 		for (std::vector<Collider*>::const_iterator itV = itL->second.cbegin(); itV != itL->second.cend(); ++itV)
-		{
-			if ((*itV)->GetGameobject()->BeingDestroyed())
+		{		
+			if (!(*itV)->GetGameobject()->GetStatic())//static object not collision resolve
 			{
-				layerColliders[itL->first].erase(itV);
-			}
-		}
-	}
-}
-
-void CollisionSystem::Update()
-{
-	//collisionTree.Clear();
-	for (std::map<CollisionLayer, std::vector<Collider*>>::iterator itL = layerColliders.begin(); itL != layerColliders.end(); ++itL)
-	{
-		for (std::vector<Collider*>::iterator itV = itL->second.begin(); itV != itL->second.end(); ++itV)
-		{
-			//Comented due to compiler errors not declaring classes
-			/*if (!(*itV)->GetGameobject()->GetStatic())//static object not collision resolve
-			{
-				std::vector<Collider*> collisions = collisionTree.Search(*(*itV));
+				//Comented due to compiler errors not declaring classes
+				/*std::vector<Collider*> collisions = collisionTree.Search(*(*itV));
 				for (std::vector<Collider*>::iterator it = collisions.begin(); it != collisions.end(); ++itV)
 				{
 					if ((*itV)->GetID() != (*it)->GetID())
@@ -113,11 +128,23 @@ void CollisionSystem::Update()
 										(*itV)->ResolveOverlap(m);
 									}
 								}
-							}							
+							}
 						}
 					}
-				}
-			}*/
+				}*/
+			}
+		}	
+	}
+}
+
+void CollisionSystem::Update()
+{
+	//collisionTree.Clear();
+	for (std::map<CollisionLayer, std::vector<Collider*>>::iterator itL = layerColliders.begin(); itL != layerColliders.end(); ++itL)
+	{
+		for (std::vector<Collider*>::iterator itV = itL->second.begin(); itV != itL->second.end(); ++itV)
+		{
+			//collisionTree.Insert(*itV);
 		}
 	}
 	Resolve();

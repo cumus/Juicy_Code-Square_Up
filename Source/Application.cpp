@@ -132,12 +132,13 @@ int Application::Update()
 		if (!(no_error = (*it)->PreUpdate()))
 			LOG("Module %s encuntered an error during PreUpdate!", (*it)->GetName());
 
-	collSystem.Update();
 
 	OPTICK_CATEGORY("Update Application", Optick::Category::GameLogic);
 	for (it = modules.begin(); it != modules.end() && no_error; ++it)
 		if (!(no_error = (*it)->Update()))
 			LOG("Module %s encuntered an error during Update!", (*it)->GetName());
+
+	collSystem.Update();
 
 	//fogWar.DrawFoWMap();//Post Update
 	OPTICK_CATEGORY("PostUpdate Application", Optick::Category::GameLogic);

@@ -11,6 +11,7 @@ Collider::Collider(Gameobject* go, RectF coll, ColliderType t, ComponentType ty)
 	boundary = coll;
     collType = t;
     //layer = DEFAULT_LAYER;
+    App->collSystem.Add(this->game_object);
 }
 
 Collider::~Collider()
