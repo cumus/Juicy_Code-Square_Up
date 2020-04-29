@@ -1655,6 +1655,7 @@ void Scene::OnEventStateMachine(GameplayState state)
 
 		break;
 	case SPAWNER_STATE:
+
 		not_go->SetInactive();
 		LOG("SPAWNER STATE");
 		not_go = AddGameobjectToCanvas("spawner_go");
@@ -1687,18 +1688,22 @@ void Scene::OnEventStateMachine(GameplayState state)
 		//Spawner counter
 		spawner_go = AddGameobjectToCanvas("Spawner Count");
 		spawn_img = new C_Image(spawner_go);
-		spawn_img->target = { 0.1f, 1.f, 1.f , 1.f };
-		spawn_img->offset = { -119.f, -119.f };
+		spawn_img->target = { 1.0f, 0.25f, 1.f , 0.5f };
+		spawn_img->offset = { -119.f, -59.5f };
 		spawn_img->section = { 22, 333, 119, 119 };
-		//img->tex_id = icons_text_id;
+		spawn_img->tex_id = App->tex.Load("Assets/textures/Iconos_square_up.png");
 
 		spawner_text_go = AddGameobject("Text Spawners", spawner_go);
 		text_spawner = new C_Text(spawner_text_go, "Spawners");
-		text_spawner->target = { 0.45f, 0.8f, 1.f, 1.f };
+		text_spawner->target = { 0.1f, 0.1f, 1.f, 1.f };
 				
 		spawner_val_go = AddGameobject("Remaining Spawners", spawner_go);
 		hud_texts[CURRENT_SPAWNERS] = new C_Text(spawner_val_go, "3");
-		hud_texts[CURRENT_SPAWNERS]->target = { 0.65f, 0.4f, 1.f, 1.f };
+		hud_texts[CURRENT_SPAWNERS]->target = { 0.65f, 0.1f, 1.f, 1.f };
+
+		all_spawners_go = AddGameobject("All Spawners", spawner_go);
+		all_spawners = new C_Text(all_spawners_go, "/ 3");
+		all_spawners->target = { 0.73f, 0.1f, 1.f, 1.f };
 		//----------------------------------------------------------------		
 
 		SpawnBehaviour(SPAWNER, spawner_pos1);

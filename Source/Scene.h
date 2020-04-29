@@ -272,11 +272,11 @@ private:
 	//Gameobject* tower_atk_go;
 	Gameobject* not_go;
 
+	//Objectives
 	Gameobject* spawner_go;
-	C_Image* spawn_img;
 	Gameobject* spawner_text_go;
-	C_Text* text_spawner;
 	Gameobject* spawner_val_go;
+	Gameobject* all_spawners_go;
 
 	//------Images/Buttons------
 
@@ -299,6 +299,11 @@ private:
 	C_Button* skip;
 	C_Button* not_inactive;
 	C_Image * not;
+
+	//Objectives
+	C_Image* spawn_img;
+	C_Text* text_spawner;
+	C_Text* all_spawners;
 };
 
 #endif // __SCENE_H__
