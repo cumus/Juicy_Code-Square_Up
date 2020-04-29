@@ -1207,7 +1207,7 @@ void Scene::UpdateStateMachine()
 		break;
 
 	case SPAWNER_STATE:
-		
+
 		if (player_stats[CURRENT_SPAWNERS] == 0) Event::Push(GAMEPLAY, this, WIN);
 		break;
 
