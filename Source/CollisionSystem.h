@@ -1,4 +1,4 @@
-#ifndef __COLLISIONSYSTEM_H__
+/*#ifndef __COLLISIONSYSTEM_H__
 #define __COLLISIONSYSTEM_H__
 
 #include "SDL/include/SDL.h"
@@ -46,4 +46,4 @@ private:
 };
 
 
-#endif // !__COLLISIONSYSTEM_H__
+#endif // !__COLLISIONSYSTEM_H__*/

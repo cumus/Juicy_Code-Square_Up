@@ -10,7 +10,7 @@
 #include "FontManager.h"
 #include "PathfindingManager.h"
 #include "FogOfWarManager.h"
-#include "CollisionSystem.h"
+//#include "CollisionSystem.h"
 
 #include "PugiXml\src\pugixml.hpp"
 #include <list>
@@ -32,7 +32,7 @@ class TextureManager;
 class FontManager;
 class PathfindingManager;
 class FogOfWarManager;
-class CollisionSystem;
+//class CollisionSystem;
 
 enum GameState : int
 {
@@ -89,7 +89,7 @@ public:
 	FontManager		fonts;
 	PathfindingManager pathfinding;
 	FogOfWarManager fogWar;
-	CollisionSystem collSystem;
+	//CollisionSystem collSystem;
 
 
 private:

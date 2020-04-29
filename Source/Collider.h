@@ -1,9 +1,10 @@
 #ifndef __COLLIDER_H__
 #define __COLLIDER_H__
 
-#include "SDL/include/SDL.h"
 #include "Component.h"
-#include "CollisionSystem.h"
+#include "SDL/include/SDL.h"
+
+#include <vector>
 
 enum ColliderType
 {
@@ -16,6 +17,7 @@ struct Manifold
 	bool colliding = false;
 	const RectF* other;
 };
+
 
 class Collider : public Component
 {

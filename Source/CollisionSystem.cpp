@@ -1,4 +1,4 @@
-#include "CollisionSystem.h"
+/*#include "CollisionSystem.h"
 #include "QuadTree.h"
 #include "Collider.h"
 #include "Gameobject.h"
@@ -9,7 +9,7 @@
 
 CollisionSystem::CollisionSystem()
 {
-	/*for (int i = 0; i < MAX_COLLISION_LAYERS; i++)
+	for (int i = 0; i < MAX_COLLISION_LAYERS; i++)
 	{
 		for (int a = 0; a < MAX_COLLISION_LAYERS; a++)
 		{
@@ -20,7 +20,7 @@ CollisionSystem::CollisionSystem()
 	collisionLayers[SCENE_LAYER][DEFAULT_LAYER] = true;
 	collisionLayers[DEFAULT_LAYER][SCENE_LAYER] = true;
 	collisionLayers[INPUT_LAYER][HUD_LAYER] = true;
-	//collisionTree.Init(5, 5, 0, { 0.0f,0.0f,Map::GetMapSize_F().first,Map::GetMapSize_F().second }, nullptr);*/
+	//collisionTree.Init(5, 5, 0, { 0.0f,0.0f,Map::GetMapSize_F().first,Map::GetMapSize_F().second }, nullptr);
 }
 
 CollisionSystem::~CollisionSystem()
@@ -34,7 +34,7 @@ void CollisionSystem::SetLayerCollision(CollisionLayer one, CollisionLayer two, 
 
 void CollisionSystem::Add(std::vector<Gameobject*>& objects)
 {
-	/*for (std::vector<Gameobject*>::const_iterator it = objects.cbegin(); it != objects.cend(); ++it)
+	for (std::vector<Gameobject*>::const_iterator it = objects.cbegin(); it != objects.cend(); ++it)
 	{
 		const Collider* col = (*it)->GetCollider();
 		if (col != nullptr)
@@ -42,22 +42,22 @@ void CollisionSystem::Add(std::vector<Gameobject*>& objects)
 			//CollisionLayer layer = col->GetLayer();
 			//layerColliders[layer].push_back(col);
 		}
-	}*/
+	}
 }
 
 void CollisionSystem::Add(Gameobject* obj)
 {
-	/*const Collider* col = obj->GetCollider();
+	const Collider* col = obj->GetCollider();
 	if (col != nullptr)
 	{
 		//CollisionLayer layer = col->GetLayer();
 		//layerColliders[layer].push_back(col);
-	}	*/
+	}	
 }
 
 void CollisionSystem::ProcessRemovals()
 {
-	/*for (std::map<CollisionLayer, std::vector<Collider*>>::const_iterator itL = layerColliders.cbegin(); itL != layerColliders.cend(); ++itL)
+	for (std::map<CollisionLayer, std::vector<Collider*>>::const_iterator itL = layerColliders.cbegin(); itL != layerColliders.cend(); ++itL)
 	{
 		for (std::vector<Collider*>::const_iterator itV = itL->second.cbegin(); itV != itL->second.cend(); ++itV)
 		{
@@ -66,12 +66,12 @@ void CollisionSystem::ProcessRemovals()
 				layerColliders[itL->first].erase(itV);
 			}
 		}
-	}*/
+	}
 }
 
 void CollisionSystem::ProcessRemovals(Gameobject* obj)
 {
-	/*bool exit=false;
+	bool exit=false;
 	for (std::map<CollisionLayer, std::vector<Collider*>>::const_iterator itL = layerColliders.cbegin(); itL != layerColliders.cend(); ++itL)
 	{
 		for (std::vector<Collider*>::const_iterator itV = itL->second.cbegin(); itV != itL->second.cend(); ++itV)
@@ -84,16 +84,14 @@ void CollisionSystem::ProcessRemovals(Gameobject* obj)
 			if (exit) break;
 		}
 		if (exit) break;
-	}*/
-}
-
-/*void CollisionSystem::ProcessCollisions()
-{
-	
+	}
 }*/
 
-void CollisionSystem::Resolve()
-{
+//void CollisionSystem::ProcessCollisions()
+//{}
+
+//void CollisionSystem::Resolve()
+//{
 	/*for (std::map<CollisionLayer, std::vector<Collider*>>::const_iterator itL = layerColliders.cbegin(); itL != layerColliders.cend(); ++itL)
 	{
 		if (collisionLayers[itL->first][DEFAULT_LAYER] == false && collisionLayers[itL->first][SCENE_LAYER] == false && 
@@ -158,18 +156,19 @@ void CollisionSystem::Resolve()
 			/*}
 		}	
 	}*/
-}
+//}
 
 
-void CollisionSystem::Update()
+/*void CollisionSystem::Update()
 {
 	//collisionTree.Clear();
-	/*for (std::map<CollisionLayer, std::vector<Collider*>>::iterator itL = layerColliders.begin(); itL != layerColliders.end(); ++itL)
+	for (std::map<CollisionLayer, std::vector<Collider*>>::iterator itL = layerColliders.begin(); itL != layerColliders.end(); ++itL)
 	{
 		for (std::vector<Collider*>::iterator itV = itL->second.begin(); itV != itL->second.end(); ++itV)
 		{
 			//collisionTree.Insert(*itV);
 		}
 	}
-	Resolve();*/
+	Resolve();
 }
+*/
