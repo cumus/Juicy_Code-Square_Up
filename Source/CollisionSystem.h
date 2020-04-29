@@ -20,8 +20,10 @@ enum CollisionLayer
 	MAX_COLLISION_LAYERS,
 };
 
+
 class CollisionSystem
 {
+/*
 public:
 	CollisionSystem();
 	~CollisionSystem();
@@ -36,12 +38,13 @@ public:
 
 private:
 	void Resolve();
-	void ProcessCollisions(std::vector<Gameobject*>& first, std::vector<Gameobject*>& second);
+	//void ProcessCollisions();
 
 private:
 	bool collisionLayers[MAX_COLLISION_LAYERS][MAX_COLLISION_LAYERS]; //Store layers collisions
 	std::map<CollisionLayer, std::vector<Collider*>> layerColliders;
 	//Quadtree collisionTree;
+	*/
 };
 
 

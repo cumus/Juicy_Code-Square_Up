@@ -83,3 +83,33 @@ void Collider::ResolveOverlap(Manifold& m)
         }
     }
 }
+
+void Collider::SaveCollision(double id)
+{    
+    if (!GetCollisionState(id))
+    {
+        collisions.push_back(id);
+    }    
+}
+
+bool Collider::GetCollisionState(double ID)
+{
+    bool ret = false;
+    for (std::vector<double>::iterator it = collisions.begin(); it != collisions.end(); ++it)
+    {
+        if (ID == *it) ret = true;
+    }
+    return ret;
+}
+
+void Collider::DeleteCollision(double ID)
+{
+    for (std::vector<double>::iterator it = collisions.begin(); it != collisions.end(); ++it)
+    {
+        if (ID == *it)
+        {
+            collisions.erase(it);
+            break;
+        }
+    }
+}

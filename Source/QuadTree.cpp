@@ -1,7 +1,7 @@
 #include "SDL/include/SDL.h"
 #include "QuadTree.h"
 
-
+/*
 Quadtree::Quadtree() : Quadtree(5, 5, 0, {0.0f,0.0f,1920.0f,1080.0f},nullptr)
 {}
 
@@ -183,3 +183,4 @@ int Quadtree::GetChildIndexForObject(const RectF& objBound)
 
 	return index;
 }
+*/

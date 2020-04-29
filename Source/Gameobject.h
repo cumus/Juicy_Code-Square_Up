@@ -3,10 +3,12 @@
 
 #include "Component.h"
 #include <string>
+#include <vector>
 
 class Transform;
 class Behaviour;
 class UI_Component;
+class Collider;
 
 class Gameobject : public EventListener
 {

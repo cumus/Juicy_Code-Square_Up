@@ -19,7 +19,7 @@ struct Manifold
 
 class Collider : public Component
 {
-public:
+/*public:
 	Collider(Gameobject* game_object, RectF coll, ColliderType t=NON_TRIGGER, ComponentType type = COLLIDER);
 	~Collider();
 
@@ -34,6 +34,9 @@ public:
 	void SetOffset(RectF off) { offset = off; }
 	void SetCollType(ColliderType t) { collType = t; }
 	ColliderType GetCollType() { return collType; }
+	void SaveCollision(double ID);
+	bool GetCollisionState(double ID);
+	void DeleteCollision(double ID);
 
 private:
 	void SetPosition();
@@ -43,6 +46,8 @@ private:
 	RectF offset;
 	//CollisionLayer layer;
 	ColliderType collType;
+	std::vector<double> collisions;
+	*/
 };
 
 #endif // !__COLLIDER_H__

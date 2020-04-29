@@ -3,9 +3,10 @@
 #include "Collider.h"
 #include "Gameobject.h"
 #include "Map.h"
+#include "Event.h"
 
 #include <vector>
-
+/*
 CollisionSystem::CollisionSystem()
 {
 	for (int i = 0; i < MAX_COLLISION_LAYERS; i++)
@@ -84,9 +85,14 @@ void CollisionSystem::ProcessRemovals(Gameobject* obj)
 		}
 		if (exit) break;
 	}
-}
+}*/
 
-void CollisionSystem::Resolve()
+/*void CollisionSystem::ProcessCollisions()
+{
+	
+}*/
+
+/*void CollisionSystem::Resolve()
 {
 	for (std::map<CollisionLayer, std::vector<Collider*>>::const_iterator itL = layerColliders.cbegin(); itL != layerColliders.cend(); ++itL)
 	{
@@ -99,46 +105,65 @@ void CollisionSystem::Resolve()
 		for (std::vector<Collider*>::const_iterator itV = itL->second.cbegin(); itV != itL->second.cend(); ++itV)
 		{		
 			if (!(*itV)->GetGameobject()->GetStatic())//static object not collision resolve
-			{
+			{*/
 				//Comented due to compiler errors not declaring classes
-				/*std::vector<Collider*> collisions = collisionTree.Search(*(*itV));
-				for (std::vector<Collider*>::iterator it = collisions.begin(); it != collisions.end(); ++itV)
+				/*d::vector<Collider*> collisions = collisionTree.Search(*(*itV));
+				if (!collisions.empty())
 				{
-					if ((*itV)->GetID() != (*it)->GetID())
+					for (std::vector<Collider*>::iterator it = collisions.begin(); it != collisions.end(); ++it)
 					{
-						if (collisionLayers[(*itV)->GetCollLayer()][(*it)->GetCollLayer()])
+						if ((*itV)->GetID() != (*it)->GetID())
 						{
-							Manifold m = (*itV)->Intersects(*it);
-							if (m.colliding)
+							if (collisionLayers[(*itV)->GetCollLayer()][(*it)->GetCollLayer()])
 							{
-								if ((*itV)->GetCollType() == TRIGGER)
+								Manifold m = (*itV)->Intersects(*it);
+								if (m.colliding)
 								{
-									//TODO: Trigger collider events
-									//onEnter, onExit...
+									//Save collision
+									if (!(*itV)->GetCollisionState((*it)->GetID()))//First collision
+									{
+										(*itV)->SaveCollision((*it)->GetID());
+										Event::Push(ON_COLL_ENTER,(*itV)->GetGameobject(),(*it));
+									}
+									else //Already collisioning
+									{
+										Event::Push(ON_COLL_STAY, (*itV)->GetGameobject(), (*it));
+									}
+
+									if ((*itV)->GetCollType() != TRIGGER)
+									{
+										if ((*it)->GetGameobject()->GetStatic())
+										{
+											(*itV)->ResolveOverlap(m);
+										}
+										else
+										{
+											//Non static collision
+											(*itV)->ResolveOverlap(m);
+										}
+									}
 								}
 								else
 								{
-									if ((*it)->GetGameobject()->GetStatic())
+									if ((*itV)->GetCollisionState((*it)->GetID()))//First collision
 									{
-										(*itV)->ResolveOverlap(m);
-									}
-									else
-									{
-										//TODO: Resolve non static collisions
-										(*itV)->ResolveOverlap(m);
+										Event::Push(ON_COLL_EXIT, (*itV)->GetGameobject(), (*it));
+										(*itV)->DeleteCollision((*it)->GetID());
 									}
 								}
 							}
 						}
 					}
 				}*/
-			}
-		}	
-	}
-}
+			//}
+		//}	
+	//}
+//}
 
+/*
 void CollisionSystem::Update()
 {
+	//ProcessCollisions();
 	//collisionTree.Clear();
 	for (std::map<CollisionLayer, std::vector<Collider*>>::iterator itL = layerColliders.begin(); itL != layerColliders.end(); ++itL)
 	{
@@ -149,3 +174,4 @@ void CollisionSystem::Update()
 	}
 	Resolve();
 }
+*/
