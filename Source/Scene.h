@@ -243,6 +243,12 @@ private:
 	vec edge_pos7 = { 41.f, 166.f };
 	vec edge_pos8 = { 165.f, 111.f };
 	vec edge_pos9 = { 149.f, 72.f };
+	vec edge_pos10 = { 143.f, 107.f };
+	vec edge_pos11 = { 146.f, 108.f };
+	vec edge_pos12 = { 149.f, 106.f };
+	vec edge_pos13 = { 151.f, 105.f };
+	vec edge_pos14 = { 154.f, 104.f };
+	vec edge_pos15 = { 157.f, 102.f };
 
 	//-------Gameobjects--------
 
@@ -265,7 +271,12 @@ private:
 	//Gameobject* tower_state_go;
 	//Gameobject* tower_atk_go;
 	Gameobject* not_go;
+
 	Gameobject* spawner_go;
+	C_Image* spawn_img;
+	Gameobject* spawner_text_go;
+	C_Text* text_spawner;
+	Gameobject* spawner_val_go;
 
 	//------Images/Buttons------
 

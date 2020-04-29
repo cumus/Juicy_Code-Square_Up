@@ -341,7 +341,8 @@ void Scene::LoadMainScene()
 
 	LoadMainHUD();
 
-	Event::Push(MINIMAP_MOVE_CAMERA, App->render, float(800), float(2900));
+	//Event::Push(MINIMAP_MOVE_CAMERA, App->render, float(800), float(2900));
+	Event::Push(MINIMAP_MOVE_CAMERA, App->render, float(350), float(4500));
 
 	//Minimap
 	new Minimap(AddGameobjectToCanvas("Minimap"));
@@ -377,7 +378,7 @@ void Scene::LoadMainScene()
 
 	skip->tex_id = App->tex.Load("Assets/textures/tuto/not-button.png");
 
-	std::pair<int, int> position = Map::WorldToTileBase(float(1400.0f), float(3250.0f));
+	std::pair<int, int> position = Map::WorldToTileBase(float(375.0f), float(4500.0f));
 	if (App->pathfinding.CheckWalkabilityArea(position, vec(1.0f)))
 	{
 		Gameobject* base_go = AddGameobject("Base Center");
@@ -408,6 +409,12 @@ void Scene::LoadMainScene()
 	SpawnBehaviour(EDGE, edge_pos7);
 	SpawnBehaviour(EDGE, edge_pos8);
 	SpawnBehaviour(EDGE, edge_pos9);
+	SpawnBehaviour(EDGE, edge_pos10);
+	SpawnBehaviour(EDGE, edge_pos11);
+	SpawnBehaviour(EDGE, edge_pos12);
+	SpawnBehaviour(EDGE, edge_pos13);
+	SpawnBehaviour(EDGE, edge_pos14);
+	SpawnBehaviour(EDGE, edge_pos15);
 }
 
 void Scene::LoadIntroScene()
@@ -691,6 +698,8 @@ void Scene::LoadMainHUD()
 	Gameobject* resources_value_2_go = AddGameobject("Mob Drop Value", resource_counter_go);
 	hud_texts[CURRENT_MOB_DROP] = new C_Text(resources_2_go, "0");
 	hud_texts[CURRENT_MOB_DROP]->target = { 0.65f, 0.4f, 1.f, 1.f };
+
+	
 
 	//Minimap
 	new Minimap(AddGameobjectToCanvas("Minimap"));
@@ -1198,7 +1207,7 @@ void Scene::UpdateStateMachine()
 		break;
 
 	case SPAWNER_STATE:
-
+		
 		if (player_stats[CURRENT_SPAWNERS] == 0) Event::Push(GAMEPLAY, this, WIN);
 		break;
 
@@ -1648,6 +1657,49 @@ void Scene::OnEventStateMachine(GameplayState state)
 	case SPAWNER_STATE:
 		not_go->SetInactive();
 		LOG("SPAWNER STATE");
+		not_go = AddGameobjectToCanvas("spawner_go");
+		not = new C_Image(not_go);
+
+		not->target = { 0.75f, 0.8f, 0.4f, 0.4f };
+		not->offset = { -183.f, -1044.f };
+		not->section = { 0, 0, 983, 644 };
+		not->tex_id = App->tex.Load("Assets/textures/spawner-lure-quenn-not.png");
+
+		next = new C_Button(not_go, Event(SCENE_PLAY, App));
+
+		next->target = { 0.74f, 0.726f, 0.4f, 0.4f };
+		next->offset = { 500.f, -317.f };
+
+		next->section[0] = { 0, 0, 309, 37 };
+		next->section[1] = { 0, 44, 309, 37 };
+		next->section[2] = { 0, 88, 309, 37 };
+		next->section[3] = { 0, 88, 309, 37 };
+
+		next->tex_id = App->tex.Load("Assets/textures/tuto/not-button.png");
+
+		not_inactive = new C_Button(not_go, Event(SET_INACTIVE, this, MAIN));
+
+		not_inactive->target = { 0.74f, 0.726f, 0.4f, 0.4f };
+		not_inactive->offset = { 500.f, -317.f };
+
+		for (int i = 0; i < 4; i++)not_inactive->section[i] = { 0, 0, 309, 37 };
+		
+		//Spawner counter
+		spawner_go = AddGameobjectToCanvas("Spawner Count");
+		spawn_img = new C_Image(spawner_go);
+		spawn_img->target = { 0.1f, 1.f, 1.f , 1.f };
+		spawn_img->offset = { -119.f, -119.f };
+		spawn_img->section = { 22, 333, 119, 119 };
+		//img->tex_id = icons_text_id;
+
+		spawner_text_go = AddGameobject("Text Spawners", spawner_go);
+		text_spawner = new C_Text(spawner_text_go, "Spawners");
+		text_spawner->target = { 0.45f, 0.8f, 1.f, 1.f };
+				
+		spawner_val_go = AddGameobject("Remaining Spawners", spawner_go);
+		hud_texts[CURRENT_SPAWNERS] = new C_Text(spawner_val_go, "3");
+		hud_texts[CURRENT_SPAWNERS]->target = { 0.65f, 0.4f, 1.f, 1.f };
+		//----------------------------------------------------------------		
 
 		SpawnBehaviour(SPAWNER, spawner_pos1);
 		SpawnBehaviour(SPAWNER, spawner_pos2);
