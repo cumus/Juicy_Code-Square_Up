@@ -8,10 +8,10 @@
 
 Collider::Collider(Gameobject* go, RectF coll, ColliderType t, ComponentType ty) : Component(ty,go)
 {
-	boundary = coll;
+	/*boundary = coll;
     collType = t;
     //layer = DEFAULT_LAYER;
-    App->collSystem.Add(this->game_object);
+    App->collSystem.Add(this->game_object);*/
 }
 
 Collider::~Collider()
@@ -19,17 +19,17 @@ Collider::~Collider()
 
 void Collider::SetPosition()
 {
-    vec pos = game_object->GetTransform()->GetGlobalPosition();
+   /* vec pos = game_object->GetTransform()->GetGlobalPosition();
 
     boundary.x = pos.x - (boundary.w / 2) + offset.x;
-    boundary.y = pos.y - (boundary.h / 2) + offset.y;
+    boundary.y = pos.y - (boundary.h / 2) + offset.y;*/
 }
 
 Manifold Collider::Intersects(Collider* other)
 {
     Manifold m;
     m.colliding = false;
-    const RectF& thisColl = GetColliderBounds();
+    /*const RectF& thisColl = GetColliderBounds();
     const RectF& otherColl = other->GetColliderBounds();
 
     if (otherColl.x - otherColl.w > thisColl.x + thisColl.w ||
@@ -39,14 +39,14 @@ Manifold Collider::Intersects(Collider* other)
     {
         m.colliding = true;
         m.other = &otherColl;
-    }
+    }*/
 
     return m;
 }
 
 void Collider::ResolveOverlap(Manifold& m)
 {
-    if (collType != TRIGGER)
+    /*if (collType != TRIGGER)
     {
         Transform* t = game_object->GetTransform();
 
@@ -81,35 +81,35 @@ void Collider::ResolveOverlap(Manifold& m)
 
             t->MoveY(res * App->time.GetGameDeltaTime());//Move y
         }
-    }
+    }*/
 }
 
 void Collider::SaveCollision(double id)
 {    
-    if (!GetCollisionState(id))
+   /* if (!GetCollisionState(id))
     {
         collisions.push_back(id);
-    }    
+    }    */
 }
 
 bool Collider::GetCollisionState(double ID)
 {
     bool ret = false;
-    for (std::vector<double>::iterator it = collisions.begin(); it != collisions.end(); ++it)
+   /* for (std::vector<double>::iterator it = collisions.begin(); it != collisions.end(); ++it)
     {
         if (ID == *it) ret = true;
-    }
+    }*/
     return ret;
 }
 
 void Collider::DeleteCollision(double ID)
 {
-    for (std::vector<double>::iterator it = collisions.begin(); it != collisions.end(); ++it)
+   /* for (std::vector<double>::iterator it = collisions.begin(); it != collisions.end(); ++it)
     {
         if (ID == *it)
         {
             collisions.erase(it);
             break;
         }
-    }
+    }*/
 }

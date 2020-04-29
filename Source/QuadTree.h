@@ -16,7 +16,7 @@
 
 class Quadtree
 {
-/*public:
+public:
 	Quadtree();
 	Quadtree(int maxObj,int maxlvl,int lvl, RectF bounds,Quadtree* parent);
 	~Quadtree();
@@ -42,7 +42,6 @@ private:
 	std::vector<Collider*> objects;
 	int level;
 	RectF boundary;
-	*/
 };
 
 #endif // !__QUADTREE_H__

@@ -23,7 +23,6 @@ enum CollisionLayer
 
 class CollisionSystem
 {
-/*
 public:
 	CollisionSystem();
 	~CollisionSystem();
@@ -44,7 +43,6 @@ private:
 	bool collisionLayers[MAX_COLLISION_LAYERS][MAX_COLLISION_LAYERS]; //Store layers collisions
 	std::map<CollisionLayer, std::vector<Collider*>> layerColliders;
 	//Quadtree collisionTree;
-	*/
 };
 
 

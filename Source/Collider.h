@@ -19,7 +19,7 @@ struct Manifold
 
 class Collider : public Component
 {
-/*public:
+public:
 	Collider(Gameobject* game_object, RectF coll, ColliderType t=NON_TRIGGER, ComponentType type = COLLIDER);
 	~Collider();
 
@@ -47,7 +47,6 @@ private:
 	//CollisionLayer layer;
 	ColliderType collType;
 	std::vector<double> collisions;
-	*/
 };
 
 #endif // !__COLLIDER_H__
