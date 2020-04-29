@@ -98,6 +98,11 @@ enum EventType : char
 	NEW_BEHAVIOUR,
 	SET_INACTIVE,
 
+	//Collisions
+	ON_COLL_ENTER,
+	ON_COLL_EXIT,
+	ON_COLL_STAY,
+
 	MAX_EVENT_TYPES
 };
 

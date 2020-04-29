@@ -2,6 +2,7 @@
 #define __CVAR__
 
 #include "Vector3.h"
+#include "Collider.h"
 #include <vector>
 
 class Cvar // Global Value Container
@@ -19,6 +20,7 @@ public:
 	Cvar(float float_v);
 	Cvar(const char* char_p_v);
 	Cvar(vec vec_v);
+	Cvar(Collider coll_v);
 	Cvar(std::vector<int>& vector_i_v);
 	Cvar(std::vector<float>& vector_f_v);
 
@@ -36,6 +38,7 @@ public:
 		FLOAT,
 		CHAR_P,
 		VEC,
+		COLLIDER,
 		VECTOR_INT,
 		VECTOR_FLOAT
 	};
@@ -55,6 +58,7 @@ protected:
 		float float_v;
 		const char* char_p_v;
 		vec vec_v;
+		Collider coll_v;
 
 		std::vector<int> vector_i_v;
 		std::vector<float> vector_f_v;
@@ -74,6 +78,7 @@ public:
 	bool SetValue(float float_v, bool force_type = false);
 	bool SetValue(const char* char_p_v, bool force_type = false);
 	bool SetValue(vec vec_v, bool force_type = false);
+	bool SetValue(Collider coll_v, bool force_type = false);
 	bool SetValue(std::vector<int>& vector_i_v, bool force_type = false);
 	bool SetValue(std::vector<float>& vector_f_v, bool force_type = false);
 
@@ -87,6 +92,7 @@ public:
 	float					 AsFloat() const;
 	const char*				 AsCharP() const;
 	vec						 AsVec() const;
+	Collider				 AsCollider() const;
 	const std::vector<int>	 AsIntVector() const;
 	const std::vector<float> AsFloatVector() const;
 };
