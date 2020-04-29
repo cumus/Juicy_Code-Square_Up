@@ -7,6 +7,13 @@ configuration:
 platform: 
   - x86
   - x64
+  
+on_success:
+  - ps: Invoke-RestMethod https://raw.githubusercontent.com/DiscordHooks/appveyor-discord-webhook/master/send.ps1 -o send.ps1
+  - ps: ./send.ps1 success $env:https://discordapp.com/api/webhooks/705095378579751052/MCtwZr5m7_5HVrZ5lW7bbd7JqbU-JMvkuoFWmTnowdNvngjj4WkFd1l48hZHce50p1cd
+on_failure:
+  - ps: Invoke-RestMethod https://raw.githubusercontent.com/DiscordHooks/appveyor-discord-webhook/master/send.ps1 -o send.ps1
+  - ps: ./send.ps1 failure $env:https://discordapp.com/api/webhooks/705095378579751052/MCtwZr5m7_5HVrZ5lW7bbd7JqbU-JMvkuoFWmTnowdNvngjj4WkFd1l48hZHce50p1cd
 
 notifications:
   - provider: Email
