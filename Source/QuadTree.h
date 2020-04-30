@@ -1,4 +1,4 @@
-/*#ifndef __QUADTREE_H__
+#ifndef __QUADTREE_H__
 #define __QUADTREE_H__
 
 #include "SDL/include/SDL.h"
@@ -45,4 +45,3 @@ private:
 };
 
 #endif // !__QUADTREE_H__
-*/

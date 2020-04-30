@@ -12,6 +12,23 @@ enum ColliderType
 	TRIGGER,
 };
 
+enum ColliderShape
+{
+	SQUARE,
+	CIRCLE,
+};
+
+enum CollisionLayer
+{
+	DEFAULT_LAYER = 0,
+	SCENE_LAYER,
+	HUD_LAYER,
+	INPUT_LAYER,
+
+	MAX_COLLISION_LAYERS,
+};
+
+
 struct Manifold
 {
 	bool colliding = false;
@@ -29,8 +46,8 @@ public:
 	Manifold Intersects(Collider* other);
 	void ResolveOverlap(Manifold& m);
 
-	//void SetLayer(CollisionLayer lay) { layer = lay; }
-	//CollisionLayer GetCollLayer() { return layer; }	
+	void SetLayer(CollisionLayer lay) { layer = lay; }
+	CollisionLayer GetCollLayer() { return layer; }	
 	void SetColliderBounds(RectF& rect) { boundary = rect; }
 	RectF& GetColliderBounds() { return boundary; }
 	void SetOffset(RectF off) { offset = off; }
@@ -46,7 +63,7 @@ private:
 private:
 	RectF boundary;
 	RectF offset;
-	//CollisionLayer layer;
+	CollisionLayer layer;
 	ColliderType collType;
 	std::vector<double> collisions;
 };

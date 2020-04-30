@@ -137,7 +137,7 @@ int Application::Update()
 		if (!(no_error = (*it)->Update()))
 			LOG("Module %s encuntered an error during Update!", (*it)->GetName());
 
-	//collSystem.Update();
+	collSystem.Update();
 
 	OPTICK_CATEGORY("PostUpdate Application", Optick::Category::GameLogic);
 	for (it = modules.begin(); it != modules.end() && no_error; ++it)

@@ -1,4 +1,4 @@
-/*#include "SDL/include/SDL.h"
+#include "SDL/include/SDL.h"
 #include "QuadTree.h"
 
 
@@ -32,7 +32,7 @@ void Quadtree::Init(int maxObj, int maxlvl, int lvl, RectF bounds, Quadtree* p)
 
 void Quadtree::Clear()
 {
-	/*objects.clear();
+	objects.clear();
 	for (int i = 0; i < 4; i++)
 	{
 		if (children[i] != nullptr)
@@ -96,7 +96,7 @@ std::vector<Collider*> Quadtree::Search(Collider& obj)
 {
 	std::vector<Collider*> overlaps;
 	std::vector<Collider*> list;
-	/*Search(obj, overlaps);
+	Search(obj, overlaps);
 
 	for (std::vector<Collider*>::const_iterator it = overlaps.cbegin(); it != overlaps.cend(); ++it)
 	{
@@ -111,7 +111,7 @@ std::vector<Collider*> Quadtree::Search(Collider& obj)
 
 void Quadtree::Search(Collider& obj, std::vector<Collider*>& list)
 {
-	/*list.insert(list.end(),objects.begin(),objects.end());
+	list.insert(list.end(),objects.begin(),objects.end());
 	if (children[0] != nullptr)
 	{
 		int index = GetChildIndexForObject(obj.GetColliderBounds());
@@ -183,4 +183,3 @@ int Quadtree::GetChildIndexForObject(const RectF& objBound)
 	
 	return index;
 }
-*/

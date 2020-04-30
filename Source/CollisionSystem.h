@@ -1,4 +1,4 @@
-/*#ifndef __COLLISIONSYSTEM_H__
+#ifndef __COLLISIONSYSTEM_H__
 #define __COLLISIONSYSTEM_H__
 
 #include "SDL/include/SDL.h"
@@ -9,16 +9,6 @@
 
 #include <vector>
 #include <map>
-
-enum CollisionLayer
-{
-	DEFAULT_LAYER = 0,
-	SCENE_LAYER,
-	HUD_LAYER,
-	INPUT_LAYER,
-
-	MAX_COLLISION_LAYERS,
-};
 
 
 class CollisionSystem
@@ -42,8 +32,8 @@ private:
 private:
 	bool collisionLayers[MAX_COLLISION_LAYERS][MAX_COLLISION_LAYERS]; //Store layers collisions
 	std::map<CollisionLayer, std::vector<Collider*>> layerColliders;
-	//Quadtree collisionTree;
+	Quadtree collisionTree;
 };
 
 
-#endif // !__COLLISIONSYSTEM_H__*/
+#endif // !__COLLISIONSYSTEM_H__

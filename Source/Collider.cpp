@@ -5,15 +5,15 @@
 #include "Vector3.h"
 #include "Application.h"
 #include "Log.h"
-//#include "CollisionSystem.h"
+#include "CollisionSystem.h"
 
 
 Collider::Collider(Gameobject* go, RectF coll, ColliderType t, ComponentType ty) : Component(ty,go)
 {
 	boundary = coll;
     collType = t;
-    //layer = DEFAULT_LAYER;
-    //App->collSystem.Add(this->game_object);
+    layer = DEFAULT_LAYER;
+    App->collSystem.Add(this->game_object);
 }
 
 Collider::~Collider()
