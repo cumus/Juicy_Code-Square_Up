@@ -28,6 +28,19 @@ enum CollisionLayer
 	MAX_COLLISION_LAYERS,
 };
 
+enum ColliderTag
+{
+	DEFAULT_TAG = 0,
+	PLAYER_TAG,
+	PLAYER_VISION_TAG,
+	PLAYER_ATTACK_TAG,
+	ENEMY_TAG,
+	ENEMY_VISION_TAG,
+	ENEMY_ATTACK_TAG,
+	UI_TAG,
+	BACKGROUND_TAG,
+	BUILDING_TAG,
+};
 
 struct Manifold
 {
@@ -39,7 +52,7 @@ struct Manifold
 class Collider : public Component
 {
 public:
-	Collider(Gameobject* game_object, RectF coll, ColliderType t=NON_TRIGGER, ComponentType type = COLLIDER);
+	Collider(Gameobject* game_object, RectF coll, ColliderType t=NON_TRIGGER, ColliderTag tag = DEFAULT_TAG,ComponentType type = COLLIDER);
 	~Collider();
 
 	
@@ -53,6 +66,8 @@ public:
 	void SetOffset(RectF off) { offset = off; }
 	void SetCollType(ColliderType t) { collType = t; }
 	ColliderType GetCollType() { return collType; }
+	void SetColliderTag(ColliderTag tg) { tag = tg; }
+	ColliderTag GetColliderTag() { return tag; }
 	void SaveCollision(double ID);
 	bool GetCollisionState(double ID);
 	void DeleteCollision(double ID);
@@ -65,6 +80,7 @@ private:
 	RectF offset;
 	CollisionLayer layer;
 	ColliderType collType;
+	ColliderTag tag;
 	std::vector<double> collisions;
 };
 

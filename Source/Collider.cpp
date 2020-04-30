@@ -8,11 +8,12 @@
 #include "CollisionSystem.h"
 
 
-Collider::Collider(Gameobject* go, RectF coll, ColliderType t, ComponentType ty) : Component(ty,go)
+Collider::Collider(Gameobject* go, RectF coll, ColliderType t, ColliderTag tg, ComponentType ty) : Component(ty,go)
 {
 	boundary = coll;
     collType = t;
     layer = DEFAULT_LAYER;
+    tag = tg;
     App->collSystem.Add(this->game_object);
 }
 

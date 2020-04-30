@@ -73,7 +73,7 @@ void Behaviour::RecieveEvent(const Event& e)
 	case ON_DESTROY: OnDestroy(); break;
 	case ON_RIGHT_CLICK: OnRightClick(e.data1.AsVec(), e.data2.AsVec()); break;
 	case DAMAGE: OnDamage(e.data1.AsInt()); break;
-	case IMPULSE: OnGetImpulse(e.data1.AsFloat(),e.data2.AsFloat()); break;
+	case IMPULSE: OnGetImpulse(e.data1.AsFloat(), e.data2.AsFloat()); break;
 	case BUILD_GATHERER:
 	{
 		AddUnitToQueue(GATHERER, e.data1.AsVec(), e.data2.AsFloat());
@@ -95,11 +95,20 @@ void Behaviour::RecieveEvent(const Event& e)
 		break;
 	}
 	case DO_UPGRADE: Upgrade(); break;
-	case UPDATE_PATH: UpdatePath(e.data1.AsInt(),e.data2.AsInt()); break;
+	case UPDATE_PATH: UpdatePath(e.data1.AsInt(), e.data2.AsInt()); break;
 	case DRAW_RANGE: drawRanges = !drawRanges; break;
 	case SHOW_SPRITE: ActivateSprites(); break;
 	case HIDE_SPRITE: DesactivateSprites(); break;
 	case CHECK_FOW: CheckFoWMap(e.data1.AsBool()); break;
+	case ON_COLL_ENTER:
+		OnCollisionEnter(*Component::ComponentsList[e.data1.AsDouble()]->AsCollider());
+		break;
+	case ON_COLL_STAY:
+		OnCollisionStay(*Component::ComponentsList[e.data1.AsDouble()]->AsCollider());
+		break;
+	case ON_COLL_EXIT:
+		OnCollisionExit(*Component::ComponentsList[e.data1.AsDouble()]->AsCollider());
+		break;
 	}
 }
 

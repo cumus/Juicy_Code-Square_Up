@@ -2,6 +2,7 @@
 #define __COMPONENT_H__
 
 #include "EventListener.h"
+#include <map>
 
 enum ComponentType
 {
@@ -54,6 +55,7 @@ public:
 	virtual void Update() {}
 	virtual void PostUpdate() {}
 
+
 	bool IsActive() const;
 
 	void SetActive() { active = true; }
@@ -69,6 +71,7 @@ public:
 	double GetID() const { return id; }
 
 	bool operator==(Component* comp);
+	static std::map<double, Component*> ComponentsList;
 
 private:
 

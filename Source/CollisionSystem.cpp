@@ -122,10 +122,12 @@ void CollisionSystem::Resolve()
 									{
 										(*itV)->SaveCollision((*it)->GetID());
 										//Event::Push(ON_COLL_ENTER,(*itV)->GetGameobject(),(*it));
+										Event::Push(ON_COLL_ENTER,(*itV)->GetGameobject(),(*it)->GetID());
 									}
 									else //Already collisioning
 									{
 										//Event::Push(ON_COLL_STAY, (*itV)->GetGameobject(), (*it));
+										Event::Push(ON_COLL_STAY, (*itV)->GetGameobject(), (*it)->GetID());
 									}
 
 									if ((*itV)->GetCollType() != TRIGGER)
@@ -146,6 +148,7 @@ void CollisionSystem::Resolve()
 									if ((*itV)->GetCollisionState((*it)->GetID()))//First collision
 									{
 										//Event::Push(ON_COLL_EXIT, (*itV)->GetGameobject(), (*it));
+										Event::Push(ON_COLL_EXIT, (*itV)->GetGameobject(), (*it)->GetID());
 										(*itV)->DeleteCollision((*it)->GetID());
 									}
 								}

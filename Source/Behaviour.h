@@ -6,6 +6,7 @@
 #include "Canvas.h"
 #include "Scene.h"
 #include "Audio.h"
+#include "Collider.h"
 
 #include <vector>
 #include <list>
@@ -111,6 +112,9 @@ public:
 	virtual void update_creation_bar() {}
 	virtual void Upgrade() {}
 	virtual void UpdateWalkabilityTiles() {}
+	virtual void OnCollisionEnter(Collider col) {}
+	virtual void OnCollisionStay(Collider col) {}
+	virtual void OnCollisionExit(Collider col) {}
 
 	static bool IsHidden(double id) { return b_map[id]->visible; }
 
