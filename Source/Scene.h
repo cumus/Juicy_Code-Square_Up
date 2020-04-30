@@ -277,6 +277,7 @@ private:
 	Gameobject* spawner_text_go;
 	Gameobject* spawner_val_go;
 	Gameobject* all_spawners_go;
+	Gameobject* base_text_go;
 
 	//------Images/Buttons------
 
@@ -304,6 +305,7 @@ private:
 	C_Image* spawn_img;
 	C_Text* text_spawner;
 	C_Text* all_spawners;
+	C_Text* base_text;
 };
 
 #endif // __SCENE_H__

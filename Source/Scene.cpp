@@ -1695,15 +1695,20 @@ void Scene::OnEventStateMachine(GameplayState state)
 
 		spawner_text_go = AddGameobject("Text Spawners", spawner_go);
 		text_spawner = new C_Text(spawner_text_go, "Spawners");
-		text_spawner->target = { 0.1f, 0.1f, 1.f, 1.f };
+		text_spawner->target = { 0.1f, 0.15f, 1.f, 1.f };
 				
 		spawner_val_go = AddGameobject("Remaining Spawners", spawner_go);
 		hud_texts[CURRENT_SPAWNERS] = new C_Text(spawner_val_go, "3");
-		hud_texts[CURRENT_SPAWNERS]->target = { 0.65f, 0.1f, 1.f, 1.f };
+		hud_texts[CURRENT_SPAWNERS]->target = { 0.65f, 0.15f, 1.f, 1.f };
 
 		all_spawners_go = AddGameobject("All Spawners", spawner_go);
 		all_spawners = new C_Text(all_spawners_go, "/ 3");
-		all_spawners->target = { 0.73f, 0.1f, 1.f, 1.f };
+		all_spawners->target = { 0.73f, 0.15f, 1.f, 1.f };
+
+		base_text_go = AddGameobject("Defend base", spawner_go);
+		base_text = new C_Text(base_text_go, "Defend the base");
+		base_text->target = { 0.1f, 0.55f, 1.f, 1.f };
+
 		//----------------------------------------------------------------		
 
 		SpawnBehaviour(SPAWNER, spawner_pos1);
