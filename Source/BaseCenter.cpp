@@ -216,7 +216,7 @@ void Base_Center::create_bar() {
 	//------------------------- BASE RED HEALTH --------------------------------------
 
 	red_health = new C_Image(bar_go);
-	red_health->target = { 0.335f, 0.04f, 1.92f, 1.0f };
+	red_health->target = { 0.335f, 0.01f, 1.92f, 1.0f };
 	red_health->offset = { 0.0f, 0.0f };
 	red_health->section = { 39, 696, 220, 20 };
 	red_health->tex_id = bar_text_id;
@@ -224,7 +224,7 @@ void Base_Center::create_bar() {
 	//------------------------- BASE HEALTH --------------------------------------
 
 	health = new C_Image(bar_go);
-	health->target = { 0.335f, 0.04f, 1.92f, 1.0f };
+	health->target = { 0.335f, 0.01f, 1.92f, 1.0f };
 	health->offset = { 0.0f, 0.0f };
 	health->section = { 39, 719, 220, 20 };
 	health->tex_id = bar_text_id;
@@ -232,15 +232,15 @@ void Base_Center::create_bar() {
 	//------------------------- BASE HEALTH BOARDER --------------------------------------
 
 	health_boarder = new C_Image(bar_go);
-	health_boarder->target = { 0.335f, 0.04f, 1.92f, 1.0f };
+	health_boarder->target = { 0.335f, 0.01f, 1.92f, 1.0f };
 	health_boarder->offset = { 0.0f, 0.0f };
 	health_boarder->section = { 39, 744, 220, 20 };
 	health_boarder->tex_id = bar_text_id;
 
 	//------------------------- BASE TEXT --------------------------------------
 
-	text = new C_Text(bar_go, "Base");
-	text->target = { 0.48f, 0.04f, 1.0f, 1.0f };
+	text = new C_Text(bar_go, "Base Center");
+	text->target = { 0.47f, 0.01f, 1.0f, 1.0f };
 
 	//------------------------- BASE UPGRADES --------------------------------------
 
@@ -254,7 +254,7 @@ void Base_Center::create_bar() {
 
 void Base_Center::update_health_ui() {
 
-	health->target = { 0.335f, 0.04f, 1.92f * (float(current_life) / float(max_life)), 1.0f };
+	health->target = { 0.335f, 0.01f, 1.92f * (float(current_life) / float(max_life)), 1.0f };
 
 }
 

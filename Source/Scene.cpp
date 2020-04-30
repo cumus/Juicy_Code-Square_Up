@@ -599,109 +599,111 @@ void Scene::LoadMainHUD()
 {
 	int icons_text_id = App->tex.Load("Assets/textures/Iconos_square_up.png");
 
-	// Unit icon (Melee Unit)
-	Gameobject* melee_counter_go = AddGameobjectToCanvas("Melee Unit Counter");
+	//-----------------------------------------------------------------------------
+	//----------------------------LEFT BAR----------------------------------------
+	//-----------------------------------------------------------------------------
 
-	C_Image* melee_counter_box = new C_Image(melee_counter_go);
-	melee_counter_box->target = { 0.153f, 0.64f, 0.55f , 1.f };
-	melee_counter_box->offset = { -345.f, -45.f };
-	melee_counter_box->section = { 17, 509, 345, 45 };
-	melee_counter_box->tex_id = icons_text_id;
+	Gameobject* left_bar_go = AddGameobjectToCanvas("Left bar");
 
-	C_Image* melee_counter_icon = new C_Image(melee_counter_go);
-	melee_counter_icon->target = { 0.047f, 0.628f, 0.9f , 0.9f };
-	melee_counter_icon->offset = { -48.f, -35.f };
+	C_Image* left_bar_box = new C_Image(left_bar_go);
+	left_bar_box->target = { 0.f, 0.f, 1.1f , 0.8f };
+	left_bar_box->offset = { 0.f, 0.f };
+	left_bar_box->section = { 17, 509, 345, 45 };
+	left_bar_box->tex_id = icons_text_id;
+
+	//-----------------------GATHERER ICON-----------------------------------------
+
+	Gameobject* gatherer_counter_icon_go = AddGameobject("gatherer counter icon", left_bar_go);
+
+	C_Image* gatherer_counter_icon = new C_Image(gatherer_counter_icon_go);
+	gatherer_counter_icon->target = { 0.05f, 0.1f, 0.65f , 0.65f };
+	gatherer_counter_icon->offset = { 0.f, 0.f };
+	gatherer_counter_icon->section = { 75, 458, 48, 42 };
+	gatherer_counter_icon->tex_id = icons_text_id;
+
+	Gameobject* gatherer_counter_go = AddGameobject("gatherer counter", left_bar_go);
+
+	hud_texts[CURRENT_GATHERER_UNITS] = new C_Text(gatherer_counter_go, "0");
+	hud_texts[CURRENT_GATHERER_UNITS]->target = { 0.15f, 0.1f, 1.25f, 1.25f };
+
+	//-----------------------MELEE ICON--------------------------------------------
+
+	Gameobject* melee_counter_icon_go = AddGameobject("melee counter icon", left_bar_go);
+
+	C_Image* melee_counter_icon = new C_Image(melee_counter_icon_go);
+	melee_counter_icon->target = { 0.27f, 0.2f, 0.65f , 0.65f };
+	melee_counter_icon->offset = { 0.f, 0.f };
 	melee_counter_icon->section = { 22, 463, 48, 35 };
 	melee_counter_icon->tex_id = icons_text_id;
 
+	Gameobject* melee_counter_go = AddGameobject("melee counter", left_bar_go);
+
 	hud_texts[CURRENT_MELEE_UNITS] = new C_Text(melee_counter_go, "0");
-	hud_texts[CURRENT_MELEE_UNITS]->target = { 0.049f, 0.587f, 1.6f, 1.6f };
+	hud_texts[CURRENT_MELEE_UNITS]->target = { 0.37f, 0.1f, 1.25f, 1.25f };
 
-	C_Text* melee_diagonal = new C_Text(melee_counter_go, "/");
-	melee_diagonal->target = { 0.088f, 0.587f, 1.6f, 1.6f };
+	//-----------------------RANGED ICON-------------------------------------------
 
-	hud_texts[TOTAL_MELEE_UNITS] = new C_Text(melee_counter_go, "0");
-	hud_texts[TOTAL_MELEE_UNITS]->target = { 0.099f, 0.587f, 1.6f, 1.6f };
+	Gameobject* rangered_counter_icon_go = AddGameobject("rangered counter icon", left_bar_go);
 
-	// Unit icon (Gatherer Unit)
-	Gameobject* gatherer_counter_go = AddGameobjectToCanvas("Gatherer Unit Counter");
-
-	C_Image* gatherer_counter_box = new C_Image(gatherer_counter_go);
-	gatherer_counter_box->target = { 0.153f, 0.72f, 0.55f , 1.f };
-	gatherer_counter_box->offset = { -345.f, -45.f };
-	gatherer_counter_box->section = { 17, 509, 345, 45 };
-	gatherer_counter_box->tex_id = icons_text_id;
-
-	C_Image* gatherer_counter_icon = new C_Image(gatherer_counter_go);
-	gatherer_counter_icon->target = { 0.041f, 0.708f, 0.9f , 0.9f };
-	gatherer_counter_icon->offset = { -48.f, -35.f };
-	gatherer_counter_icon->section = { 75, 458, 48, 35 };
-	gatherer_counter_icon->tex_id = icons_text_id;
-
-	hud_texts[CURRENT_GATHERER_UNITS] = new C_Text(gatherer_counter_go, "0");
-	hud_texts[CURRENT_GATHERER_UNITS]->target = { 0.049f, 0.667f, 1.6f, 1.6f };
-
-	C_Text* gatherer_diagonal = new C_Text(gatherer_counter_go, "/");
-	gatherer_diagonal->target = { 0.088f, 0.667f, 1.6f, 1.6f };
-
-	hud_texts[TOTAL_GATHERER_UNITS] = new C_Text(gatherer_counter_go, "0");
-	hud_texts[TOTAL_GATHERER_UNITS]->target = { 0.099f, 0.667f, 1.6f, 1.6f };
-
-	// Unit icon (Ranged Unit)
-	Gameobject* ranged_counter_go = AddGameobjectToCanvas("Ranged Unit Counter");
-
-	C_Image* ranged_counter_box = new C_Image(ranged_counter_go);
-	ranged_counter_box->target = { 0.153f, 0.80f, 0.55f , 1.f };
-	ranged_counter_box->offset = { -345.f, -45.f };
-	ranged_counter_box->section = { 17, 509, 345, 45 };
-	ranged_counter_box->tex_id = icons_text_id;
-
-	/*
-	C_Image* ranged_counter_icon = new C_Image(ranged_counter_go);
-	ranged_counter_icon->target = { 0.047f, 0.788f, 0.9f , 0.9f };
-	ranged_counter_icon->offset = { -48.f, -35.f };
+	C_Image* ranged_counter_icon = new C_Image(rangered_counter_icon_go);
+	ranged_counter_icon->target = { 0.49f, 0.2f, 0.65f , 0.65f };
+	ranged_counter_icon->offset = { 0.f, 0.f };
 	ranged_counter_icon->section = { 22, 463, 48, 35 };
 	ranged_counter_icon->tex_id = icons_text_id;
-	*/
 
-	hud_texts[CURRENT_RANGED_UNITS] = new C_Text(ranged_counter_go, "0");
-	hud_texts[CURRENT_RANGED_UNITS]->target = { 0.049f, 0.747f, 1.6f, 1.6f };
+	Gameobject* rangered_counter_go = AddGameobject("rangered counter", left_bar_go);
 
-	C_Text* ranged_diagonal = new C_Text(ranged_counter_go, "/");
-	ranged_diagonal->target = { 0.088f, 0.747f, 1.6f, 1.6f };
+	hud_texts[CURRENT_RANGED_UNITS] = new C_Text(rangered_counter_go, "0");
+	hud_texts[CURRENT_RANGED_UNITS]->target = { 0.59f, 0.1f, 1.25f, 1.25f };
 
-	hud_texts[TOTAL_RANGED_UNITS] = new C_Text(ranged_counter_go, "0");
-	hud_texts[TOTAL_RANGED_UNITS]->target = { 0.099f, 0.747f, 1.6f, 1.6f };
+	//--------------------------TURRET ICON----------------------------------------
 
-	//Resources
-	Gameobject* resource_counter_go = AddGameobjectToCanvas("Resources");
-	C_Image* img = new C_Image(resource_counter_go);
-	img->target = { 0.1f, 1.f, 1.f , 1.f };
-	img->offset = { -119.f, -119.f };
-	img->section = { 22, 333, 119, 119 };
-	img->tex_id = icons_text_id;
+	Gameobject* turret_counter_icon_go = AddGameobject("turret counter icon", left_bar_go);
 
-	//Edge
-	Gameobject* resources_go = AddGameobject("Text Edge", resource_counter_go);
-	C_Text* text_edge = new C_Text(resources_go, "Edge");
-	text_edge->target = { 0.1f, 0.1f, 1.f, 1.f };
+	C_Image* turret_counter_icon = new C_Image(turret_counter_icon_go);
+	turret_counter_icon->target = { 0.71f, 0.11f, 0.65f , 0.65f };
+	turret_counter_icon->offset = { 0.f, 0.f };
+	turret_counter_icon->section = { 184, 462, 25, 40 };
+	turret_counter_icon->tex_id = icons_text_id;
 
-	Gameobject* resources_value_go = AddGameobject("Mob Drop Value", resource_counter_go);
-	hud_texts[CURRENT_EDGE] = new C_Text(resources_go, "0");
-	hud_texts[CURRENT_EDGE]->target = { 0.1f, 0.4f, 1.f, 1.f };
+	Gameobject* turret_counter_go = AddGameobject("turret counter", left_bar_go);
 
-	//MobDrop
-	Gameobject* resources_2_go = AddGameobject("Text Mob Drop", resource_counter_go);
-	C_Text* text_mobdrop = new C_Text(resources_2_go, "Mob Drop");
-	text_mobdrop->target = { 0.45f, 0.8f, 1.f, 1.f };
+	hud_texts[CURRENT_TOWERS] = new C_Text(turret_counter_go, "0");
+	hud_texts[CURRENT_TOWERS]->target = { 0.79f, 0.1f, 1.25f, 1.25f };
 
-	Gameobject* resources_value_2_go = AddGameobject("Mob Drop Value", resource_counter_go);
-	hud_texts[CURRENT_MOB_DROP] = new C_Text(resources_2_go, "0");
-	hud_texts[CURRENT_MOB_DROP]->target = { 0.65f, 0.4f, 1.f, 1.f };
+	//-----------------------------------------------------------------------------
+	//------------------------------RIGHT BAR--------------------------------------
+	//-----------------------------------------------------------------------------
 
-	
+	Gameobject* right_bar_go = AddGameobjectToCanvas("Right bar");
+	C_Image* right_bar_box = new C_Image(right_bar_go);
+	right_bar_box->target = { 1.0f, 0.0f, 1.1f , 0.8f };
+	right_bar_box->offset = { -344.f, 0.f };
+	right_bar_box->section = { 17, 509, 345, 45 };
+	right_bar_box->tex_id = icons_text_id;
 
-	//Minimap
+	//------------------------------EDGE-------------------------------------------
+
+	Gameobject* edge_go = AddGameobject("Text Edge", right_bar_go);
+	C_Text* text_edge = new C_Text(edge_go, "Edge");
+	text_edge->target = { 0.18f, 0.25f, 1.f, 1.f };
+
+	Gameobject* edge_value_go = AddGameobject("Mob Drop Value", right_bar_go);
+	hud_texts[CURRENT_EDGE] = new C_Text(edge_value_go, "0");
+	hud_texts[CURRENT_EDGE]->target = { 0.28f, 0.25f, 1.f, 1.f };
+
+	//--------------------------------MOBDROP--------------------------------------
+
+	Gameobject* mobdrop_go = AddGameobject("Text Mob Drop", right_bar_go);
+	C_Text* text_mobdrop = new C_Text(mobdrop_go, "Mob Drop");
+	text_mobdrop->target = { 0.58f, 0.25f, 1.f, 1.f };
+
+	Gameobject* mobdrop_value_go = AddGameobject("Mob Drop Value", right_bar_go);
+	hud_texts[CURRENT_MOB_DROP] = new C_Text(mobdrop_value_go, "0");
+	hud_texts[CURRENT_MOB_DROP]->target = { 0.78f, 0.25f, 1.f, 1.f };
+
+	//-------------------------------MINIMAP---------------------------------------
+
 	new Minimap(AddGameobjectToCanvas("Minimap"));
 }
 
