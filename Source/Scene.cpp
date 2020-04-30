@@ -261,6 +261,13 @@ void Scene::RecieveEvent(const Event& e)
 			paused_scene = false;
 			break;
 		}
+		case::PAUSE:
+		{
+			Event::Push(SCENE_PAUSE, App);
+			pause_background_go->SetActive();
+			paused_scene = true;
+			break;
+		}
 		case::REQUEST_QUIT:
 		{
 			Event::Push(REQUEST_QUIT, App);
@@ -701,10 +708,30 @@ void Scene::LoadMainHUD()
 	Gameobject* mobdrop_value_go = AddGameobject("Mob Drop Value", right_bar_go);
 	hud_texts[CURRENT_MOB_DROP] = new C_Text(mobdrop_value_go, "0");
 	hud_texts[CURRENT_MOB_DROP]->target = { 0.78f, 0.25f, 1.f, 1.f };
+	
+	//-----------------------------------------------------------------------------
+	//------------------------------PAUSE BUTTON-----------------------------------
+	//-----------------------------------------------------------------------------
 
+	Gameobject* pause_button_go = AddGameobjectToCanvas("Pause button");
+
+	C_Button* pause_button = new C_Button(pause_button_go, Event(BUTTON_EVENT, this, PAUSE));
+	pause_button->target = { 0.655f, 1.f, 0.7f, 0.7f };
+	pause_button->offset = { 0.0f, -86.0f };
+
+	pause_button->section[0] = { 22, 4, 86, 86 };
+	pause_button->section[1] = { 123, 4, 86, 86 };
+	pause_button->section[2] = { 22, 4, 86, 86 };
+	pause_button->section[3] = { 22, 4, 86, 86 };
+
+	pause_button->tex_id = icons_text_id;
+
+	//-----------------------------------------------------------------------------
 	//-------------------------------MINIMAP---------------------------------------
+	//-----------------------------------------------------------------------------
 
 	new Minimap(AddGameobjectToCanvas("Minimap"));
+
 }
 
 void Scene::UpdateFade()
