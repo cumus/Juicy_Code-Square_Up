@@ -101,13 +101,13 @@ void Behaviour::RecieveEvent(const Event& e)
 	case HIDE_SPRITE: DesactivateSprites(); break;
 	case CHECK_FOW: CheckFoWMap(e.data1.AsBool()); break;
 	case ON_COLL_ENTER:
-		OnCollisionEnter(*Component::ComponentsList[e.data1.AsDouble()]->AsCollider());
+		OnCollisionEnter(*Component::ComponentsList[e.data1.AsDouble()]->AsCollider(), *Component::ComponentsList[e.data2.AsDouble()]->AsCollider());
 		break;
 	case ON_COLL_STAY:
-		OnCollisionStay(*Component::ComponentsList[e.data1.AsDouble()]->AsCollider());
+		OnCollisionStay(*Component::ComponentsList[e.data1.AsDouble()]->AsCollider(), *Component::ComponentsList[e.data2.AsDouble()]->AsCollider());
 		break;
 	case ON_COLL_EXIT:
-		OnCollisionExit(*Component::ComponentsList[e.data1.AsDouble()]->AsCollider());
+		OnCollisionExit(*Component::ComponentsList[e.data1.AsDouble()]->AsCollider(), *Component::ComponentsList[e.data2.AsDouble()]->AsCollider());
 		break;
 	}
 }
