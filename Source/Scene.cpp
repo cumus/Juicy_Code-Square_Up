@@ -426,12 +426,33 @@ void Scene::LoadMainScene()
 	SpawnBehaviour(EDGE, edge_pos7);
 	SpawnBehaviour(EDGE, edge_pos8);
 	SpawnBehaviour(EDGE, edge_pos9);
+
 	SpawnBehaviour(EDGE, edge_pos10);
 	SpawnBehaviour(EDGE, edge_pos11);
 	SpawnBehaviour(EDGE, edge_pos12);
 	SpawnBehaviour(EDGE, edge_pos13);
 	SpawnBehaviour(EDGE, edge_pos14);
 	SpawnBehaviour(EDGE, edge_pos15);
+	SpawnBehaviour(EDGE, edge_pos16);
+	SpawnBehaviour(EDGE, edge_pos17);
+	SpawnBehaviour(EDGE, edge_pos18);
+	SpawnBehaviour(EDGE, edge_pos19);
+	SpawnBehaviour(EDGE, edge_pos20);
+	SpawnBehaviour(EDGE, edge_pos21);
+	SpawnBehaviour(EDGE, edge_pos22);
+	SpawnBehaviour(EDGE, edge_pos23);
+	SpawnBehaviour(EDGE, edge_pos24);
+	SpawnBehaviour(EDGE, edge_pos25);
+	SpawnBehaviour(EDGE, edge_pos26);
+	SpawnBehaviour(EDGE, edge_pos27);
+	SpawnBehaviour(EDGE, edge_pos28);
+	SpawnBehaviour(EDGE, edge_pos29);
+	SpawnBehaviour(EDGE, edge_pos30);
+	SpawnBehaviour(EDGE, edge_pos31);
+	SpawnBehaviour(EDGE, edge_pos32);
+	SpawnBehaviour(EDGE, edge_pos33);
+	SpawnBehaviour(EDGE, edge_pos34);
+	SpawnBehaviour(EDGE, edge_pos35);
 }
 
 void Scene::LoadIntroScene()

@@ -236,21 +236,45 @@ private:
 	vec spawner_pos2 = { 55.f, 200.f };
 	vec spawner_pos3 = { 155.f, 300.f };
 
-	vec edge_pos1 = { 150.f, 150.f };
+	vec edge_pos1 = { 144.f, 157.f };
 	vec edge_pos2 = { 221.f, 120.f };
 	vec edge_pos3 = { 246.f, 79.f };
-	vec edge_pos4 = { 66.f, 127.f };
+	vec edge_pos4 = { 123.f, 224.f };
 	vec edge_pos5 = { 130.f, 65.f };
 	vec edge_pos6 = { 123.f, 65.f };
 	vec edge_pos7 = { 41.f, 166.f };
 	vec edge_pos8 = { 165.f, 111.f };
 	vec edge_pos9 = { 149.f, 72.f };
-	vec edge_pos10 = { 143.f, 107.f };
-	vec edge_pos11 = { 146.f, 108.f };
-	vec edge_pos12 = { 149.f, 106.f };
-	vec edge_pos13 = { 151.f, 105.f };
-	vec edge_pos14 = { 154.f, 104.f };
-	vec edge_pos15 = { 157.f, 102.f };
+	//Edges near base
+	vec edge_pos10 = { 128.f, 152.f };
+	vec edge_pos11 = { 128.f, 143.f };
+	vec edge_pos12 = { 128.f, 134.f };
+	vec edge_pos13 = { 136.f, 156.f };
+	vec edge_pos14 = { 162.f, 153.f };
+	vec edge_pos15 = { 173.f, 153.f };
+	vec edge_pos16 = { 175.f, 145.f };
+	vec edge_pos17 = { 176.f, 125.f };
+	vec edge_pos18 = { 170.f, 119.f };
+	vec edge_pos19 = { 163.f, 119.f };
+	vec edge_pos20 = { 129.f, 122.f };
+	vec edge_pos21 = { 137.f, 118.f };
+	vec edge_pos22 = { 143.f, 102.f };
+	vec edge_pos23 = { 148.f, 102.f };
+	vec edge_pos24 = { 153.f, 102.f };
+	//Edges Top path
+	vec edge_pos25 = { 82.f, 134.f };
+	vec edge_pos26 = { 94.f, 134.f };
+	vec edge_pos27 = { 98.f, 116.f };
+	vec edge_pos28 = { 54.f, 112.f };
+	//Edges Bottom path
+	vec edge_pos29 = { 228.f, 195.f };
+	vec edge_pos30 = { 217.f, 142.f };
+	vec edge_pos31 = { 223.f, 138.f };
+	vec edge_pos32 = { 205.f, 116.f };
+	vec edge_pos33 = { 247.f, 125.f };
+	//Edges Mid path
+	vec edge_pos34 = { 171.f, 223.f };
+	vec edge_pos35 = { 139.f, 222.f };
 
 	//-------Gameobjects--------
 
