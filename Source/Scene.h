@@ -176,6 +176,8 @@ public:
 
 private:
 
+	bool first_time_pause_button;
+	bool paused_yet = false;
 	bool endScene = false;
 	Gameobject root;
 	Map map;

@@ -263,9 +263,19 @@ void Scene::RecieveEvent(const Event& e)
 		}
 		case::PAUSE:
 		{
-			Event::Push(SCENE_PAUSE, App);
-			pause_background_go->SetActive();
-			paused_scene = true;
+			
+
+			if (first_time_pause_button)
+			{
+				paused_yet = true;
+			}
+
+			else
+			{
+				Event::Push(SCENE_PAUSE, App);
+				pause_background_go->SetActive();
+				paused_scene = true;
+			}
 			break;
 		}
 		case::REQUEST_QUIT:
@@ -812,7 +822,7 @@ void Scene::UpdateBuildingMode()
 void Scene::UpdatePause()
 {
 	//Pause Game
-	if (OnMainScene() && App->input->GetKey(SDL_SCANCODE_ESCAPE) == KEY_DOWN)
+	if (OnMainScene() && App->input->GetKey(SDL_SCANCODE_ESCAPE) == KEY_DOWN || paused_yet == true)
 	{
 		if (!pause_background_go)
 		{
@@ -915,6 +925,9 @@ void Scene::UpdatePause()
 			main_menu->section[3] = { 0, 202, 470, 90 };
 
 			main_menu->tex_id = App->tex.Load("Assets/textures/main-menu.png");
+
+			first_time_pause_button = false;
+			paused_yet = false;
 		}
 
 		if (paused_scene)
