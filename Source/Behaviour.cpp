@@ -119,7 +119,6 @@ void Behaviour::Selected()
 	audio->Play(SELECT);
 
 	if (bar_go != nullptr) bar_go->SetActive();
-	if (creation_bar_go != nullptr) creation_bar_go->SetActive();
 	if (selectionPanel != nullptr) selectionPanel->SetActive();
 
 	/*if (type == TOWER) {
@@ -146,7 +145,6 @@ void Behaviour::UnSelected()
 	if (bar_go != nullptr) {
 		if(type != BASE_CENTER)	bar_go->SetInactive();
 	}
-	//if (creation_bar_go != nullptr) creation_bar_go->SetInactive();
 	if (selectionPanel != nullptr) selectionPanel->SetInactive();
 
 	/*if (type == TOWER) {
@@ -921,10 +919,47 @@ void BuildingWithQueue::Update()
 
 void BuildingWithQueue::AddUnitToQueue(UnitType type, vec pos, float time)
 {
-	if (true /* TODO: has enough resources*/)
+	switch (type)
 	{
-		QueuedUnit unit(type, game_object, pos, time);
-		unit.transform->SetY(build_queue.size());
-		build_queue.push_back(unit);
+	case GATHERER:
+	{
+		if (App->scene->GetStat(CURRENT_EDGE) >= GATHERER_COST)
+		{
+			QueuedUnit unit(type, game_object, pos, time);
+			unit.transform->SetY(build_queue.size());
+			build_queue.push_back(unit);
+		}
+		break;
+	}
+	case UNIT_MELEE:
+	{
+		if (App->scene->GetStat(CURRENT_EDGE) >= MELEE_COST)
+		{
+			QueuedUnit unit(type, game_object, pos, time);
+			unit.transform->SetY(build_queue.size());
+			build_queue.push_back(unit);
+		}
+		break;
+	}
+	case UNIT_RANGED:
+	{
+		if (App->scene->GetStat(CURRENT_EDGE) >= RANGED_COST)
+		{
+			QueuedUnit unit(type, game_object, pos, time);
+			unit.transform->SetY(build_queue.size());
+			build_queue.push_back(unit);
+		}
+		break;
+	}
+	case UNIT_SUPER:
+	{
+		if (App->scene->GetStat(CURRENT_EDGE) >= SUPER_COST)
+		{
+			QueuedUnit unit(type, game_object, pos, time);
+			unit.transform->SetY(build_queue.size());
+			build_queue.push_back(unit);
+		}
+		break;
+	}
 	}
 }

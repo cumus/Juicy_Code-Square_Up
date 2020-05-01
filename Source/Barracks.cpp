@@ -24,8 +24,8 @@ Barracks::Barracks(Gameobject* go) : BuildingWithQueue(go, BARRACKS, NO_UPGRADE,
 	bc_lvl = 1;
 	bc_max_lvl = 5;
 
-	create_bar();
-	bar_go->SetInactive();
+	// create_bar();
+	// bar_go->SetInactive();
 	CreatePanel();
 	selectionPanel->SetInactive();
 

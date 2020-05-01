@@ -22,8 +22,8 @@ Tower::Tower(Gameobject* go) : Behaviour(go, TOWER, NO_UPGRADE, B_TOWER)
 	shoot = false;
 	current_state = NO_UPGRADE;
 
-	create_bar();
-	bar_go->SetInactive();
+	// create_bar();
+	// bar_go->SetInactive();
 	CreatePanel();
 	selectionPanel->SetInactive();
 

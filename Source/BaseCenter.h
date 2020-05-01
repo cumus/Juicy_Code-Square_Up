@@ -18,8 +18,6 @@ public:
 	void update_upgrades_ui();
 	void CreatePanel() override;
 	void UpdatePanel() override;
-	void create_creation_bar() override;
-	void update_creation_bar() override;
 	void UpdateWalkabilityTiles() override;
 
 public:

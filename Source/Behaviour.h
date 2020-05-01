@@ -96,8 +96,6 @@ public:
 	virtual void update_health_ui() {}
 	virtual void CreatePanel() {}
 	virtual void UpdatePanel() {}
-	virtual void create_creation_bar() {}
-	virtual void update_creation_bar() {}
 	virtual void Upgrade() {}
 	virtual void UpdateWalkabilityTiles() {}
 
@@ -160,7 +158,6 @@ protected:
 	Gameobject* btnBarrack = nullptr;
 	Gameobject* btnBaseCenter = nullptr;
 	Gameobject* bar_go = nullptr;
-	Gameobject* creation_bar_go = nullptr;
 	C_Image* bar;
 	C_Image* portrait;
 	C_Text* text;
