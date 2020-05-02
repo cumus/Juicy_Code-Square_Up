@@ -59,6 +59,10 @@ template <class VALUE_TYPE> void SWAP(VALUE_TYPE& a, VALUE_TYPE& b)
 #define MEGABYTE_F 1048576.0
 #define GIGABYTE_F 1073741824.0
 
+// Maths calculations
+#define DEG_2_RAD(a) a * PI / 180.0f
+#define RAD_2_DEG(a) a * 180.0f / PI
+
 #define PERF_START(timer) timer.Start()
 #define PERF_PEEK(timer) LOG("%s took %f ms", __FUNCTION__, timer.ReadMs())
 
