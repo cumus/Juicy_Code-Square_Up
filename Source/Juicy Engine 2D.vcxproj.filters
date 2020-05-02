@@ -172,6 +172,18 @@
     <ClCompile Include="CollisionSystem.cpp">
       <Filter>Source\Independent Managers</Filter>
     </ClCompile>
+    <ClCompile Include="ParticleSystem.cpp">
+      <Filter>Source\Independent Managers</Filter>
+    </ClCompile>
+    <ClCompile Include="Emiter.cpp">
+      <Filter>Source\Gameobjects\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="Particle.cpp">
+      <Filter>Source\Independent Managers</Filter>
+    </ClCompile>
+    <ClCompile Include="ParticlePool.cpp">
+      <Filter>Source\Independent Managers</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="PugiXml\src\pugiconfig.hpp">
@@ -376,6 +388,18 @@
       <Filter>Source\Independent Managers</Filter>
     </ClInclude>
     <ClInclude Include="CollisionSystem.h">
+      <Filter>Source\Independent Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="ParticleSystem.h">
+      <Filter>Source\Independent Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="Emiter.h">
+      <Filter>Source\Gameobjects\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Particle.h">
+      <Filter>Source\Independent Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="ParticlePool.h">
       <Filter>Source\Independent Managers</Filter>
     </ClInclude>
   </ItemGroup>

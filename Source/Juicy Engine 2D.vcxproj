@@ -155,6 +155,7 @@
     <ClCompile Include="Edge.cpp" />
     <ClCompile Include="Editor.cpp" />
     <ClCompile Include="EditorWindow.cpp" />
+    <ClCompile Include="Emiter.cpp" />
     <ClCompile Include="EnemyMeleeUnit.cpp" />
     <ClCompile Include="Event.cpp" />
     <ClCompile Include="FileManager.cpp" />
@@ -173,6 +174,9 @@
     <ClCompile Include="MeleeUnit.cpp" />
     <ClCompile Include="Minimap.cpp" />
     <ClCompile Include="mmgr\mmgr.cpp" />
+    <ClCompile Include="Particle.cpp" />
+    <ClCompile Include="ParticlePool.cpp" />
+    <ClCompile Include="ParticleSystem.cpp" />
     <ClCompile Include="PathfindingManager.cpp" />
     <ClCompile Include="PlayPauseWindow.cpp" />
     <ClCompile Include="PropertiesWindow.cpp" />
@@ -214,6 +218,7 @@
     <ClInclude Include="Edge.h" />
     <ClInclude Include="Editor.h" />
     <ClInclude Include="EditorWindow.h" />
+    <ClInclude Include="Emiter.h" />
     <ClInclude Include="EnemyMeleeUnit.h" />
     <ClInclude Include="Event.h" />
     <ClInclude Include="EventListener.h" />
@@ -233,6 +238,9 @@
     <ClInclude Include="mmgr\nommgr.h" />
     <ClInclude Include="Optick\include\optick.config.h" />
     <ClInclude Include="Optick\include\optick.h" />
+    <ClInclude Include="Particle.h" />
+    <ClInclude Include="ParticlePool.h" />
+    <ClInclude Include="ParticleSystem.h" />
     <ClInclude Include="PathfindingManager.h" />
     <ClInclude Include="PlayPauseWindow.h" />
     <ClInclude Include="PropertiesWindow.h" />
