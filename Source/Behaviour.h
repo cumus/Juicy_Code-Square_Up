@@ -112,6 +112,7 @@ public:
 	virtual void update_creation_bar() {}
 	virtual void Upgrade() {}
 	virtual void UpdateWalkabilityTiles() {}
+	virtual void FreeWalkabilityTiles() {}
 	virtual void OnCollisionEnter(Collider selfCol, Collider col) {}
 	virtual void OnCollisionStay(Collider selfCol, Collider col) {}
 	virtual void OnCollisionExit(Collider selfCol, Collider col) {}

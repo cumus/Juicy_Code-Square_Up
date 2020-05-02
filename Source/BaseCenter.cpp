@@ -62,6 +62,19 @@ Base_Center::~Base_Center()
 		baseCenter = nullptr;
 }
 
+void Base_Center::FreeWalkabilityTiles()
+{
+	Transform* t = game_object->GetTransform();
+	if (t)
+	{
+		vec pos = t->GetGlobalPosition();
+		App->pathfinding.SetWalkabilityTile(int(pos.x), int(pos.y), true);
+	}
+
+	if (baseCenter == game_object)
+		baseCenter = nullptr;
+}
+
 void Base_Center::Update()
 {
 	if (GetState() != DESTROYED)

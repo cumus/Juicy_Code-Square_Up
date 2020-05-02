@@ -21,6 +21,7 @@ public:
 	void create_creation_bar() override;
 	void update_creation_bar() override;
 	void UpdateWalkabilityTiles() override;
+	void FreeWalkabilityTiles() override;
 
 public:
 

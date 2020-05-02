@@ -22,15 +22,19 @@ Edge::Edge(Gameobject* go) : Behaviour(go, EDGE, NO_UPGRADE, B_EDGE)
 
 Edge::~Edge() 
 {
+	
+}
+
+void Edge::FreeWalkabilityTiles()
+{
 	Transform* t = game_object->GetTransform();
 	if (t)
 	{
 		vec pos = t->GetGlobalPosition();
 		App->pathfinding.SetWalkabilityTile(int(pos.x), int(pos.y), true);
 	}
-
-	b_map.erase(GetID());
 }
+
 
 void Edge::Update()
 {

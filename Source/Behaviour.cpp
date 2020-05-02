@@ -361,6 +361,8 @@ void Behaviour::OnKill(const UnitType type)
 			}
 		}
 	}
+	FreeWalkabilityTiles();
+	b_map.erase(GetID());
 }
 
 unsigned int Behaviour::GetBehavioursInRange(vec pos, float dist, std::map<float, Behaviour*>& res) const

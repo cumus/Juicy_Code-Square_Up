@@ -45,6 +45,9 @@ Barracks::Barracks(Gameobject* go) : BuildingWithQueue(go, BARRACKS, NO_UPGRADE,
 }
 
 Barracks::~Barracks()
+{}
+
+void Barracks::FreeWalkabilityTiles()
 {
 	Transform* t = game_object->GetTransform();
 	if (t)
@@ -52,7 +55,6 @@ Barracks::~Barracks()
 		vec pos = t->GetGlobalPosition();
 		App->pathfinding.SetWalkabilityTile(int(pos.x), int(pos.y), true);
 	}
-	b_map.erase(GetID());
 }
 
 void Barracks::UpdateWalkabilityTiles()

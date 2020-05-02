@@ -37,6 +37,9 @@ Tower::Tower(Gameobject* go) : Behaviour(go, TOWER, NO_UPGRADE, B_TOWER)
 }
 
 Tower::~Tower()
+{}
+
+void Tower::FreeWalkabilityTiles()
 {
 	Transform* t = game_object->GetTransform();
 	if (t)
@@ -44,7 +47,6 @@ Tower::~Tower()
 		vec pos = t->GetGlobalPosition();
 		App->pathfinding.SetWalkabilityTile(int(pos.x), int(pos.y), true);
 	}
-	b_map.erase(GetID());
 }
 
 void Tower::UpdateWalkabilityTiles()

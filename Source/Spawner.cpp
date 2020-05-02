@@ -31,6 +31,10 @@ Spawner::Spawner(Gameobject* go) : Behaviour(go, SPAWNER, NO_UPGRADE, B_SPAWNER)
 }
 
 Spawner::~Spawner()
+{}
+
+
+void Spawner::FreeWalkabilityTiles()
 {
 	Transform* t = game_object->GetTransform();
 	if (t)
@@ -38,7 +42,6 @@ Spawner::~Spawner()
 		vec pos = t->GetGlobalPosition();
 		App->pathfinding.SetWalkabilityTile(int(pos.x), int(pos.y), true);
 	}
-	b_map.erase(GetID());
 }
 
 void Spawner::ChangeValues(int spawns, float cd, int spawnPoints)
