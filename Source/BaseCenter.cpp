@@ -10,6 +10,7 @@
 #include "SDL/include/SDL_scancode.h"
 #include "Scene.h"
 #include "Canvas.h"
+#include "Sprite.h"
 
 Gameobject* Base_Center::baseCenter = nullptr;
 
@@ -60,6 +61,29 @@ Base_Center::~Base_Center()
 
 void Base_Center::Update()
 {
+	if (!build_queue.empty())
+	{
+		if (!progress_bar->GetGameobject()->IsActive())
+			progress_bar->GetGameobject()->SetActive();
+
+		float percent = build_queue.front().Update();
+		if (percent >= 1.0f)
+		{
+			Event::Push(SPAWN_UNIT, App->scene, build_queue.front().type, build_queue.front().pos);
+			build_queue.front().transform->GetGameobject()->Destroy();
+			build_queue.pop_front();
+
+			if (build_queue.empty())
+				progress_bar->GetGameobject()->SetInactive();
+		}
+		else
+		{
+			SDL_Rect section = bar_section;
+			section.w = int(float(section.w) * percent);
+			progress_bar->SetSection(section);
+		}
+	}
+	
 	if (GetState() != DESTROYED)
 	{
 		vec pos = game_object->GetTransform()->GetGlobalPosition();
