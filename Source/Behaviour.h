@@ -154,9 +154,6 @@ protected:
 	float pos_y_HUD;
 	int bar_text_id;
 	Gameobject* selectionPanel = nullptr;
-	Gameobject* btnTower = nullptr;
-	Gameobject* btnBarrack = nullptr;
-	Gameobject* btnBaseCenter = nullptr;
 	Gameobject* bar_go = nullptr;
 	C_Image* bar;
 	C_Image* portrait;

@@ -32,9 +32,11 @@ protected:
 	float posY_panel;
 	int panel_tex_ID;
 	C_Image* panel;
+	C_Image* barrack_icon;
 	C_Button* meleeUnit_btn;
 	C_Button* rangedUnit_btn;
 	C_Button* superUnit_btn;
+	C_Button* upgrade_btn;
 	//C_Text* melee_buildNum;
 	//C_Text* ranged_buildNum;
 	//C_Text* super_buildNum;

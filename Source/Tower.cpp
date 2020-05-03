@@ -185,18 +185,36 @@ void Tower::DoAttack()
 void Tower::CreatePanel()
 {
 	posY_panel = 0.8f;
-	panel_tex_ID = App->tex.Load("Assets/textures/buildPanelSample.png");
+	panel_tex_ID = App->tex.Load("Assets/textures/hud-sprites.png");
 
 	//------------------------- TOWER PANEL --------------------------------------
 
 	selectionPanel = App->scene->AddGameobjectToCanvas("Tower Panel");
 
 
-	upgrade_btn = new C_Button(selectionPanel, Event(DO_UPGRADE, this->AsBehaviour()));//Top left
-	upgrade_btn->target = { 0.912f, posY_panel + 0.02f, 1.0f, 1.0f };
-	upgrade_btn->offset = { 0.0f, 0.0f };
-	for (int i = 0; i < 4; i++)upgrade_btn->section[i] = { 121, 38, 38, 38 };
+	tower_icon = new C_Image(selectionPanel);
+	tower_icon->target = { 0.0f, 0.832f, 1.5f, 1.5f };
+	tower_icon->offset = { 0.0f, 0.0f };
+	tower_icon->section = { 439, 651, 104, 81 };
+	tower_icon->tex_id = panel_tex_ID;
+
+	panel = new C_Image(selectionPanel);
+	panel->target = { 0.0f, 0.764f, 1.5f, 1.5f };
+	panel->offset = { 0.0f, 0.0f };
+	panel->section = { 163, 343, 202, 114 };
+	panel->tex_id = panel_tex_ID;
+
+	upgrade_btn = new C_Button(selectionPanel, Event(DO_UPGRADE, this->AsBehaviour()));//Last option from the right
+	upgrade_btn->target = { 0.0950f, 0.9075, 1.5f, 1.5f };
+	upgrade_btn->offset = { 0.0f,0.0f };
+
+	upgrade_btn->section[0] = { 1064, 255, 56, 49 };
+	upgrade_btn->section[1] = { 1122, 255, 56, 49 };
+	upgrade_btn->section[2] = { 1180, 255, 56, 49 };
+	upgrade_btn->section[3] = { 1180, 255, 56, 49 };
+
 	upgrade_btn->tex_id = panel_tex_ID;
+
 }
 
 void Tower::UpdatePanel()
@@ -270,11 +288,11 @@ void Tower::create_bar() {
 
 void Tower::update_health_ui() {
 
-	health->target = { (0.345f - (0.345f - 0.058f) * (1.0f - float(current_life) / float(max_life))), pos_y_HUD - 0.018f, 1.68f * (float(current_life) / float(max_life)), 0.75f };
+//	health->target = { (0.345f - (0.345f - 0.058f) * (1.0f - float(current_life) / float(max_life))), pos_y_HUD - 0.018f, 1.68f * (float(current_life) / float(max_life)), 0.75f };
 }
 
 void Tower::update_upgrades_ui() {
 
-	upgrades->section = { 16 + 36 * (App->scene->t_lvl - 1), 806, 33, 33 };
+//	upgrades->section = { 16 + 36 * (App->scene->t_lvl - 1), 806, 33, 33 };
 
 }

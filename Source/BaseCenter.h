@@ -32,30 +32,17 @@ protected:
 	float posY_panel;
 	int panel_tex_ID;
 	C_Image* panel;
+	C_Image* base_icon;
 	C_Button* gatherer_btn;
 	C_Button* meleeUnit_btn;
 	C_Button* rangedUnit_btn;
 	C_Button* superUnit_btn;
+	C_Button* upgrade_btn;
+	
 	C_Text* gatherer_buildNum;
 	//C_Text* melee_buildNum;
 	//C_Text* ranged_buildNum;
 	//C_Text* super_buildNum;
-
-	// Creation Bars
-
-	C_Image* creation_bar;
-	C_Image* gatherer_icon;
-	C_Image* melee_icon;
-	C_Image* ranged_icon;
-	C_Image* gahterer_creation_bar;
-	C_Image* gatherer_creation_bar_completed;
-	C_Image* gatherer_creation_bar_boarder;
-	C_Image* melee_creation_bar;
-	C_Image* melee_creation_bar_completed;
-	C_Image* melee_creation_bar_boarder;
-	C_Image* ranged_creation_bar;
-	C_Image* ranged_creation_bar_completed;
-	C_Image* ranged_creation_bar_boarder;
 };
 
 #endif // __BASECENTER_H__

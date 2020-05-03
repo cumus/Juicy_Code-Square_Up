@@ -144,40 +144,65 @@ void Base_Center::Upgrade()
 void Base_Center::CreatePanel()
 {
 	posY_panel = 0.8f;
-	panel_tex_ID = App->tex.Load("Assets/textures/buildPanelSample.png");
+	panel_tex_ID = App->tex.Load("Assets/textures/hud-sprites.png");
 
 	//------------------------- BASE PANEL --------------------------------------
 
 	selectionPanel = App->scene->AddGameobjectToCanvas("Main Base Build Panel");
 
+	base_icon = new C_Image(selectionPanel);
+	base_icon->target = { 0.0f, 0.832f, 1.5f, 1.5f };
+	base_icon->offset = { 0.0f, 0.0f };
+	base_icon->section = { 544, 651, 104, 81 };
+	base_icon->tex_id = panel_tex_ID;
+
 	panel = new C_Image(selectionPanel);
-	panel->target = { 0.9f, posY_panel, 1.0f, 1.0f };
+	panel->target = { 0.0f, 0.764f, 1.5f, 1.5f };
 	panel->offset = { 0.0f, 0.0f };
-	panel->section = { 0, 0, 119, 119 };
+	panel->section = { 163, 343, 202, 114 };
 	panel->tex_id = panel_tex_ID;
 
-	gatherer_btn = new C_Button(selectionPanel, Event(BUILD_GATHERER, this, spawnPoint, 5.0f));//Top left
-	gatherer_btn->target = { 0.912f, posY_panel+0.02f, 0.7f, 0.7f };
+
+	gatherer_btn = new C_Button(selectionPanel, Event(BUILD_GATHERER, this, spawnPoint, 5.0f));//First option from the right
+	gatherer_btn->target = { - 0.0165f, 0.7625, 1.5f, 1.5f };
 	gatherer_btn->offset = { 0.0f, 0.0f };
 
-	gatherer_btn->section[0] = { 142, 0, 62, 62 };
-	gatherer_btn->section[1] = { 142, 130, 62, 62 };
-	gatherer_btn->section[3] = { 142, 260, 62, 62 };
-	gatherer_btn->section[2] = { 142, 260, 62, 62 };
+	gatherer_btn->section[0] = { 1064, 203, 56, 49 };
+	gatherer_btn->section[1] = { 1122, 203, 56, 49 };
+	gatherer_btn->section[2] = { 1180, 203, 56, 49 };
+	gatherer_btn->section[3] = { 1180, 203, 56, 49 };
+	
 
 	gatherer_btn->tex_id = panel_tex_ID;
 
-	meleeUnit_btn = new C_Button(selectionPanel, Event(BUILD_MELEE, this, spawnPoint, 5.0f));//Top right
-	meleeUnit_btn->target = { 0.95f, posY_panel+0.02f, 0.7f, 0.7f };
+
+	meleeUnit_btn = new C_Button(selectionPanel, Event(BUILD_MELEE, this, spawnPoint, 5.0f));//Second option from the right
+	meleeUnit_btn->target = { 0.0385f, 0.7575, 1.5f, 1.5f };
 	meleeUnit_btn->offset = { 0.0f,0.0f };
 
-	meleeUnit_btn->section[0] = { 207, 0, 62, 62 };
-	meleeUnit_btn->section[1] = { 207, 130, 62, 62 };
-	meleeUnit_btn->section[2] = { 207, 260, 62, 62 };
-	meleeUnit_btn->section[3] = { 207, 260, 62, 62 };
+	meleeUnit_btn->section[0] = { 1064, 102, 56, 49 };
+	meleeUnit_btn->section[1] = { 1122, 102, 56, 49 };
+	meleeUnit_btn->section[2] = { 1180, 102, 56, 49 };
+	meleeUnit_btn->section[3] = { 1180, 102, 56, 49 };
 
 	meleeUnit_btn->tex_id = panel_tex_ID;
 
+	/*
+	// Positions for third button
+	
+	rangedUnit_btn = new C_Button(selectionPanel, Event(BUILD_RANGED, this, spawnPoint, 5.0f));//Bottom left
+	rangedUnit_btn->target = { 0.085f, 0.8095f, 1.5f, 1.5f };
+	rangedUnit_btn->offset = { 0.0f, 0.0f };
+
+	rangedUnit_btn->section[0] = { 1064, 0, 56, 49 };
+	rangedUnit_btn->section[1] = { 1122, 0, 56, 49 };
+	rangedUnit_btn->section[2] = { 1180, 0, 56, 49 };
+	rangedUnit_btn->section[3] = { 1180, 0, 56, 49 };
+
+	rangedUnit_btn->tex_id = panel_tex_ID;
+	
+	*/
+	
 	/*
 	rangedUnit_btn = new C_Button(selectionPanel, Event(BUILD_RANGED, this, spawnPoint, 5.0f));//Bottom left
 	rangedUnit_btn->target = { 0.912f, posY_panel+0.085f, 0.7f, 0.7f };
@@ -200,7 +225,21 @@ void Base_Center::CreatePanel()
 	superUnit_btn->section[3] = { 207, 325, 62, 62 };
 
 	superUnit_btn->tex_id = panel_tex_ID;
-	sa*/
+	*/
+
+	upgrade_btn = new C_Button(selectionPanel, Event(DO_UPGRADE, this->AsBehaviour()));//Last option from the right
+	upgrade_btn->target = { 0.0950f, 0.9075, 1.5f, 1.5f };
+	upgrade_btn->offset = { 0.0f,0.0f };
+	
+	upgrade_btn->section[0] = { 1064, 255, 56, 49 };
+	upgrade_btn->section[1] = { 1122, 255, 56, 49 };
+	upgrade_btn->section[2] = { 1180, 255, 56, 49 };
+	upgrade_btn->section[3] = { 1180, 255, 56, 49 };
+
+	upgrade_btn->tex_id = panel_tex_ID;
+
+
+
 }
 
 void Base_Center::UpdatePanel()
