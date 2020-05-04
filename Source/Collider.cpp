@@ -6,6 +6,7 @@
 #include "Application.h"
 #include "Log.h"
 #include "CollisionSystem.h"
+#include "Map.h"
 
 
 Collider::Collider(Gameobject* go, RectF coll, ColliderType t, ColliderTag tg, ComponentType ty) : Component(ty,go)
@@ -32,8 +33,10 @@ Manifold Collider::Intersects(Collider* other)
 {
     Manifold m;
     m.colliding = false;
-    const RectF& thisColl = GetColliderBounds();
-    const RectF& otherColl = other->GetColliderBounds();
+    //const RectF& thisColl = GetColliderBounds();
+    //const RectF& otherColl = other->GetColliderBounds();
+    const RectF& thisColl = GetISOColliderBounds();
+    const RectF& otherColl = other->GetISOColliderBounds();
 
     if (otherColl.x - otherColl.w > thisColl.x + thisColl.w ||
         otherColl.x + otherColl.w < thisColl.x - thisColl.w ||
@@ -53,7 +56,8 @@ void Collider::ResolveOverlap(Manifold& m)
     {
         Transform* t = game_object->GetTransform();
 
-        const RectF& rect1 = GetColliderBounds();
+        //const RectF& rect1 = GetColliderBounds();
+        const RectF& rect1 = GetISOColliderBounds();
         const RectF* rect2 = m.other;
         float res = 0;
         float xDif = (rect1.x + (rect1.w * 0.5f)) - (rect2->x + (rect2->w * 0.5f));
@@ -115,4 +119,11 @@ void Collider::DeleteCollision(double ID)
             break;
         }
     }
+}
+
+RectF Collider::GetISOColliderBounds()
+{ 
+    std::pair<float, float> pos = Map::F_WorldToMap(boundary.x, boundary.y);
+    std::pair<float, float> length = Map::F_WorldToMap(boundary.x + boundary.w, boundary.y + boundary.h);
+    return  RectF({ pos.first,pos.second,length.first,length.second});
 }

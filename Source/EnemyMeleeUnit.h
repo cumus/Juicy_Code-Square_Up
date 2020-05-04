@@ -14,6 +14,9 @@ public:
 	~EnemyMeleeUnit();
 	void UpdatePath(int x,int y) override;
 	void IARangeCheck() override;
+	void OnCollisionEnter(Collider selfCol, Collider col) override;
+	//void OnCollisionStay(Collider selfCol, Collider col) override;
+	void OnCollisionExit(Collider selfCol, Collider col) override;
 
 protected:
 	std::pair<int, int> destPos;
@@ -21,7 +24,8 @@ protected:
 	bool going_enemy;
 	bool base_found;
 	Gameobject* baseCenter;
-	float scanTimer, scanTime;
+	IAState state,newState;
+	float atkTime, atkTimer;
 };
 
 #endif

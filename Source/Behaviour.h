@@ -69,9 +69,10 @@ enum UnitState : int
 
 enum IAState
 {
-	BASE,
-	CHASING,
-	ATTACKING,
+	IDLE_IA,
+	BASE_IA,
+	CHASING_IA,
+	ATTACKING_IA,
 };
 
 

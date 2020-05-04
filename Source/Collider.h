@@ -63,6 +63,7 @@ public:
 	CollisionLayer GetCollLayer() { return layer; }	
 	void SetColliderBounds(RectF& rect) { boundary = rect; }
 	RectF& GetColliderBounds() { return boundary; }
+	RectF GetISOColliderBounds();
 	void SetOffset(RectF off) { offset = off; }
 	void SetCollType(ColliderType t) { collType = t; }
 	ColliderType GetCollType() { return collType; }
