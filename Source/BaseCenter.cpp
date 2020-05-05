@@ -164,26 +164,26 @@ void Base_Center::CreatePanel()
 
 
 	gatherer_btn = new C_Button(selectionPanel, Event(BUILD_GATHERER, this, spawnPoint, 5.0f));//First option from the right
-	gatherer_btn->target = { - 0.0165f, 0.7625, 1.5f, 1.5f };
+	gatherer_btn->target = { -0.0125f, 0.7635, 1.5f, 1.5f };
 	gatherer_btn->offset = { 0.0f, 0.0f };
 
-	gatherer_btn->section[0] = { 1064, 203, 56, 49 };
-	gatherer_btn->section[1] = { 1122, 203, 56, 49 };
-	gatherer_btn->section[2] = { 1180, 203, 56, 49 };
-	gatherer_btn->section[3] = { 1180, 203, 56, 49 };
+	gatherer_btn->section[0] = { 1075, 223, 56, 49 };
+	gatherer_btn->section[1] = { 1075, 172, 56, 49 };
+	gatherer_btn->section[2] = { 1075, 274, 56, 49 };
+	gatherer_btn->section[3] = { 1075, 274, 56, 49 };
 	
 
 	gatherer_btn->tex_id = panel_tex_ID;
 
 
 	meleeUnit_btn = new C_Button(selectionPanel, Event(BUILD_MELEE, this, spawnPoint, 5.0f));//Second option from the right
-	meleeUnit_btn->target = { 0.0385f, 0.7575, 1.5f, 1.5f };
+	meleeUnit_btn->target = { 0.043f, 0.7575, 1.5f, 1.5f };
 	meleeUnit_btn->offset = { 0.0f,0.0f };
 
-	meleeUnit_btn->section[0] = { 1064, 102, 56, 49 };
-	meleeUnit_btn->section[1] = { 1122, 102, 56, 49 };
-	meleeUnit_btn->section[2] = { 1180, 102, 56, 49 };
-	meleeUnit_btn->section[3] = { 1180, 102, 56, 49 };
+	meleeUnit_btn->section[0] = { 1147, 51, 56, 49 };
+	meleeUnit_btn->section[1] = { 1147, 0, 56, 49 };
+	meleeUnit_btn->section[2] = { 1147, 102, 56, 49 };
+	meleeUnit_btn->section[3] = { 1147, 102, 56, 49 };
 
 	meleeUnit_btn->tex_id = panel_tex_ID;
 
@@ -191,7 +191,7 @@ void Base_Center::CreatePanel()
 	// Positions for third button
 	
 	rangedUnit_btn = new C_Button(selectionPanel, Event(BUILD_RANGED, this, spawnPoint, 5.0f));//Bottom left
-	rangedUnit_btn->target = { 0.085f, 0.8095f, 1.5f, 1.5f };
+	rangedUnit_btn->target = { 0.089f, 0.81f, 1.5f, 1.5f };
 	rangedUnit_btn->offset = { 0.0f, 0.0f };
 
 	rangedUnit_btn->section[0] = { 1064, 0, 56, 49 };
@@ -228,13 +228,13 @@ void Base_Center::CreatePanel()
 	*/
 
 	upgrade_btn = new C_Button(selectionPanel, Event(DO_UPGRADE, this->AsBehaviour()));//Last option from the right
-	upgrade_btn->target = { 0.0950f, 0.9075, 1.5f, 1.5f };
+	upgrade_btn->target = { 0.0990f, 0.9075, 1.5f, 1.5f };
 	upgrade_btn->offset = { 0.0f,0.0f };
 	
-	upgrade_btn->section[0] = { 1064, 255, 56, 49 };
-	upgrade_btn->section[1] = { 1122, 255, 56, 49 };
-	upgrade_btn->section[2] = { 1180, 255, 56, 49 };
-	upgrade_btn->section[3] = { 1180, 255, 56, 49 };
+	upgrade_btn->section[0] = { 1075, 51, 56, 49 };
+	upgrade_btn->section[1] = { 1075, 0, 56, 49 };
+	upgrade_btn->section[2] = { 1075, 102, 56, 49 };
+	upgrade_btn->section[3] = { 1075, 102, 56, 49 };
 
 	upgrade_btn->tex_id = panel_tex_ID;
 
