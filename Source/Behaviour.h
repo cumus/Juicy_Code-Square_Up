@@ -35,6 +35,7 @@ enum UnitType : int
 	LAB,
 	EDGE,
 	SPAWNER,
+	CAPSULE,
 
 	MAX_UNIT_TYPES
 };
@@ -64,7 +65,15 @@ enum UnitState : int
 	NO_UPGRADE,
 	DESTROYED,
 	FIRST_UPGRADE,
-	SECOND_UPGRADE
+	SECOND_UPGRADE,
+
+	// Capsule
+	FLY,
+	LANDING_1,
+	LANDING_2,
+	POSE,
+	OPEN
+
 };
 
 enum IAState
