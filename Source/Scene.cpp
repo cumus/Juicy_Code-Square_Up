@@ -635,7 +635,7 @@ void Scene::LoadEndScene()
 
 void Scene::LoadMainHUD()
 {
-	int icons_text_id = App->tex.Load("Assets/textures/Iconos_square_up.png");
+	int icons_text_id = App->tex.Load("Assets/textures/hud-sprites.png");
 
 	//-----------------------------------------------------------------------------
 	//----------------------------LEFT BAR----------------------------------------
@@ -644,9 +644,9 @@ void Scene::LoadMainHUD()
 	Gameobject* left_bar_go = AddGameobjectToCanvas("Left bar");
 
 	C_Image* left_bar_box = new C_Image(left_bar_go);
-	left_bar_box->target = { 0.f, 0.f, 1.1f , 0.8f };
+	left_bar_box->target = { 0.f, 0.f, 1.0f , 0.8f };
 	left_bar_box->offset = { 0.f, 0.f };
-	left_bar_box->section = { 17, 509, 345, 45 };
+	left_bar_box->section = { 0, 620, 438, 44 };
 	left_bar_box->tex_id = icons_text_id;
 
 	//-----------------------GATHERER ICON-----------------------------------------
@@ -654,30 +654,30 @@ void Scene::LoadMainHUD()
 	Gameobject* gatherer_counter_icon_go = AddGameobject("gatherer counter icon", left_bar_go);
 
 	C_Image* gatherer_counter_icon = new C_Image(gatherer_counter_icon_go);
-	gatherer_counter_icon->target = { 0.05f, 0.1f, 0.65f , 0.65f };
+	gatherer_counter_icon->target = { 0.05f, 0.07f, 0.65f , 0.65f };
 	gatherer_counter_icon->offset = { 0.f, 0.f };
-	gatherer_counter_icon->section = { 75, 458, 48, 42 };
+	gatherer_counter_icon->section = { 121, 292, 43, 42 };
 	gatherer_counter_icon->tex_id = icons_text_id;
 
 	Gameobject* gatherer_counter_go = AddGameobject("gatherer counter", left_bar_go);
 
 	hud_texts[CURRENT_GATHERER_UNITS] = new C_Text(gatherer_counter_go, "0");
-	hud_texts[CURRENT_GATHERER_UNITS]->target = { 0.15f, 0.1f, 1.25f, 1.25f };
+	hud_texts[CURRENT_GATHERER_UNITS]->target = { 0.15f, 0.15f, 1.25f, 1.25f };
 
 	//-----------------------MELEE ICON--------------------------------------------
 
 	Gameobject* melee_counter_icon_go = AddGameobject("melee counter icon", left_bar_go);
 
 	C_Image* melee_counter_icon = new C_Image(melee_counter_icon_go);
-	melee_counter_icon->target = { 0.27f, 0.2f, 0.65f , 0.65f };
+	melee_counter_icon->target = { 0.27f, 0.15f, 0.65f , 0.65f };
 	melee_counter_icon->offset = { 0.f, 0.f };
-	melee_counter_icon->section = { 22, 463, 48, 35 };
+	melee_counter_icon->section = { 121, 256, 48, 35 };
 	melee_counter_icon->tex_id = icons_text_id;
 
 	Gameobject* melee_counter_go = AddGameobject("melee counter", left_bar_go);
 
 	hud_texts[CURRENT_MELEE_UNITS] = new C_Text(melee_counter_go, "0");
-	hud_texts[CURRENT_MELEE_UNITS]->target = { 0.37f, 0.1f, 1.25f, 1.25f };
+	hud_texts[CURRENT_MELEE_UNITS]->target = { 0.37f, 0.15f, 1.25f, 1.25f };
 
 	//-----------------------RANGED ICON-------------------------------------------
 
@@ -692,7 +692,7 @@ void Scene::LoadMainHUD()
 	Gameobject* rangered_counter_go = AddGameobject("rangered counter", left_bar_go);
 
 	hud_texts[CURRENT_RANGED_UNITS] = new C_Text(rangered_counter_go, "0");
-	hud_texts[CURRENT_RANGED_UNITS]->target = { 0.59f, 0.1f, 1.25f, 1.25f };
+	hud_texts[CURRENT_RANGED_UNITS]->target = { 0.59f, 0.15f, 1.25f, 1.25f };
 
 	//--------------------------TURRET ICON----------------------------------------
 
@@ -701,13 +701,13 @@ void Scene::LoadMainHUD()
 	C_Image* turret_counter_icon = new C_Image(turret_counter_icon_go);
 	turret_counter_icon->target = { 0.71f, 0.11f, 0.65f , 0.65f };
 	turret_counter_icon->offset = { 0.f, 0.f };
-	turret_counter_icon->section = { 184, 462, 25, 40 };
+	turret_counter_icon->section = { 204, 256, 25, 40 };
 	turret_counter_icon->tex_id = icons_text_id;
 
 	Gameobject* turret_counter_go = AddGameobject("turret counter", left_bar_go);
 
 	hud_texts[CURRENT_TOWERS] = new C_Text(turret_counter_go, "0");
-	hud_texts[CURRENT_TOWERS]->target = { 0.79f, 0.1f, 1.25f, 1.25f };
+	hud_texts[CURRENT_TOWERS]->target = { 0.79f, 0.15f, 1.25f, 1.25f };
 
 	//-----------------------------------------------------------------------------
 	//------------------------------RIGHT BAR--------------------------------------
@@ -715,16 +715,18 @@ void Scene::LoadMainHUD()
 
 	Gameobject* right_bar_go = AddGameobjectToCanvas("Right bar");
 	C_Image* right_bar_box = new C_Image(right_bar_go);
-	right_bar_box->target = { 1.0f, 0.0f, 1.1f , 0.8f };
-	right_bar_box->offset = { -344.f, 0.f };
-	right_bar_box->section = { 17, 509, 345, 45 };
+	right_bar_box->target = { 1.0f, 0.0f, 1.0f , 0.8f };
+	right_bar_box->offset = { -438.f, 0.f };
+	right_bar_box->section = { 0, 665, 438, 44 };
 	right_bar_box->tex_id = icons_text_id;
 
 	//------------------------------EDGE-------------------------------------------
 
 	Gameobject* edge_go = AddGameobject("Text Edge", right_bar_go);
-	C_Text* text_edge = new C_Text(edge_go, "Edge");
-	text_edge->target = { 0.18f, 0.25f, 1.f, 1.f };
+	C_Image* image_edge = new C_Image(edge_go);
+	image_edge->target = { 0.18f, 0.15f, 0.9f, 0.9f };
+	image_edge->section = { 165, 304, 31, 29 };
+	image_edge->tex_id = icons_text_id;
 
 	Gameobject* edge_value_go = AddGameobject("Mob Drop Value", right_bar_go);
 	hud_texts[CURRENT_EDGE] = new C_Text(edge_value_go, "0");
@@ -750,10 +752,10 @@ void Scene::LoadMainHUD()
 	pause_button->target = { 0.655f, 1.f, 0.7f, 0.7f };
 	pause_button->offset = { 0.0f, -86.0f };
 
-	pause_button->section[0] = { 22, 4, 86, 86 };
-	pause_button->section[1] = { 123, 4, 86, 86 };
-	pause_button->section[2] = { 22, 4, 86, 86 };
-	pause_button->section[3] = { 22, 4, 86, 86 };
+	pause_button->section[0] = { 0, 0, 86, 86 };
+	pause_button->section[1] = { 87, 0, 86, 86 };
+	pause_button->section[2] = { 0, 0, 86, 86 };
+	pause_button->section[3] = { 0, 0, 86, 86 };
 
 	pause_button->tex_id = icons_text_id;
 
@@ -1751,10 +1753,10 @@ void Scene::OnEventStateMachine(GameplayState state)
 		//Spawner counter
 		spawner_go = AddGameobjectToCanvas("Spawner Count");
 		spawn_img = new C_Image(spawner_go);
-		spawn_img->target = { 1.0f, 0.15f, 1.f , 0.5f };
-		spawn_img->offset = { -119.f, -59.5f };
-		spawn_img->section = { 22, 333, 119, 119 };
-		spawn_img->tex_id = App->tex.Load("Assets/textures/Iconos_square_up.png");
+		spawn_img->target = { 1.0f, 0.1f, 0.8f , 1.f };
+		spawn_img->offset = { -232.f, 0.f };
+		spawn_img->section = { 712, 915, 232, 77 };
+		spawn_img->tex_id = App->tex.Load("Assets/textures/hud-sprites.png");
 
 		spawner_text_go = AddGameobject("Text Spawners", spawner_go);
 		text_spawner = new C_Text(spawner_text_go, "Spawners");

@@ -250,60 +250,41 @@ void Base_Center::UpdatePanel()
 
 void Base_Center::create_bar() {
 
-	pos_y_HUD = 0.17;
-
-	bar_text_id = App->tex.Load("Assets/textures/Iconos_square_up.png");
+	bar_text_id = App->tex.Load("Assets/textures/hud-sprites.png");
 
 	//------------------------- BASE BAR --------------------------------------
 
 	bar_go = App->scene->AddGameobjectToCanvas("Main Base Bar");
 
-	/*bar = new C_Image(bar_go);
-	bar->target = { 0.465f, pos_y_HUD, 1.3f, 1.2f };
-	bar->offset = { -455.0f, -62.0f };
-	bar->section = { 17, 561, 455, 62 };
-	bar->tex_id = bar_text_id;*/
-
-	//------------------------- BASE PORTRAIT --------------------------------------
-
-	/*portrait = new C_Image(bar_go);
-	portrait->target = { 0.045f, pos_y_HUD - 0.015f, 1.0f, 1.0f };
-	portrait->offset = { -34.0f, -47.0f };
-	portrait->section = { 132, 456, 34, 47 };
-	portrait->tex_id = bar_text_id;*/
-
-	
-
-	//------------------------- BASE RED HEALTH --------------------------------------
-
-	red_health = new C_Image(bar_go);
-	red_health->target = { 0.335f, 0.01f, 1.92f, 1.0f };
-	red_health->offset = { 0.0f, 0.0f };
-	red_health->section = { 39, 696, 220, 20 };
-	red_health->tex_id = bar_text_id;
-
-	//------------------------- BASE HEALTH --------------------------------------
-
-	health = new C_Image(bar_go);
-	health->target = { 0.335f, 0.01f, 1.92f, 1.0f };
-	health->offset = { 0.0f, 0.0f };
-	health->section = { 39, 719, 220, 20 };
-	health->tex_id = bar_text_id;
-
-	//------------------------- BASE HEALTH BOARDER --------------------------------------
+	//------------------------- BASE HEALTH BOARDER ---------------------------
 
 	health_boarder = new C_Image(bar_go);
-	health_boarder->target = { 0.335f, 0.01f, 1.92f, 1.0f };
+	health_boarder->target = { 0.32f, 0.01f, 1.f, 0.9f };
 	health_boarder->offset = { 0.0f, 0.0f };
-	health_boarder->section = { 39, 744, 220, 20 };
+	health_boarder->section = { 0, 772, 454, 44 };
 	health_boarder->tex_id = bar_text_id;
+	
+	//------------------------- BASE RED HEALTH -------------------------------
 
-	//------------------------- BASE TEXT --------------------------------------
+	Gameobject* red_health_go = App->scene->AddGameobject("red bar health", bar_go);
 
-	text = new C_Text(bar_go, "Base Center");
-	text->target = { 0.47f, 0.01f, 1.0f, 1.0f };
+	red_health = new C_Image(red_health_go);
+	red_health->target = { 0.018f, 0.06f, 1.f, 0.9f };
+	red_health->offset = { 0.0f, 0.0f };
+	red_health->section = { 163, 733, 438, 38 };
+	red_health->tex_id = bar_text_id;
 
-	//------------------------- BASE UPGRADES --------------------------------------
+	//------------------------- BASE GREEN HEALTH -----------------------------
+
+	Gameobject* green_health_go = App->scene->AddGameobject("green bar health", bar_go);
+
+	green_health = new C_Image(green_health_go);
+	green_health->target = { 0.018f, 0.06f, 1.f, 0.9f };
+	green_health->offset = { 0.0f, 0.0f };
+	green_health->section = { 0, 817, 439, 38 };
+	green_health->tex_id = bar_text_id;
+
+	//------------------------- BASE UPGRADES ---------------------------------
 
 	/*upgrades = new C_Image(bar_go);
 	upgrades->target = { 0.44f, pos_y_HUD - 0.02f, 1.3f, 1.3f };
@@ -315,7 +296,7 @@ void Base_Center::create_bar() {
 
 void Base_Center::update_health_ui() {
 
-	health->target = { 0.335f, 0.01f, 1.92f * (float(current_life) / float(max_life)), 1.0f };
+	green_health->target = { 0.018f, 0.06f, 1.0f * (float(current_life) / float(max_life)), 1.0f };
 
 }
 

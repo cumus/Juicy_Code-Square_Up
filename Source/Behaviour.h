@@ -160,7 +160,7 @@ protected:
 	C_Text* text;
 	C_Image* healthbar;
 	C_Image* red_health;
-	C_Image* health;
+	C_Image* green_health;
 	C_Image* health_boarder;
 	C_Image* upgrades;
 };

@@ -262,11 +262,11 @@ void Tower::create_bar() {
 
 	//------------------------- TOWER HEALTH --------------------------------------
 
-	health = new C_Image(bar_go);
-	health->target = { 0.345f, pos_y_HUD - 0.018f, 1.68f, 0.75f };
-	health->offset = { -220.0f, -20.0f };
-	health->section = { 39, 719, 220, 20 };
-	health->tex_id = bar_text_id;
+	green_health = new C_Image(bar_go);
+	green_health->target = { 0.345f, pos_y_HUD - 0.018f, 1.68f, 0.75f };
+	green_health->offset = { -220.0f, -20.0f };
+	green_health->section = { 39, 719, 220, 20 };
+	green_health->tex_id = bar_text_id;
 
 	//------------------------- TOWER HEALTH BOARDER --------------------------------------
 

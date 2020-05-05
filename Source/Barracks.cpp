@@ -205,11 +205,11 @@ void Barracks::create_bar() {
 
 	//------------------------- BASE HEALTH --------------------------------------
 
-	health = new C_Image(bar_go);
-	health->target = { 0.385f, pos_y_HUD - 0.02f, 1.92f, 1.0f };
-	health->offset = { -220.0f, -20.0f };
-	health->section = { 39, 719, 220, 20 };
-	health->tex_id = bar_text_id;
+	green_health = new C_Image(bar_go);
+	green_health->target = { 0.385f, pos_y_HUD - 0.02f, 1.92f, 1.0f };
+	green_health->offset = { -220.0f, -20.0f };
+	green_health->section = { 39, 719, 220, 20 };
+	green_health->tex_id = bar_text_id;
 
 	//------------------------- BASE HEALTH BOARDER --------------------------------------
 
