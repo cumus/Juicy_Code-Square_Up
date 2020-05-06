@@ -109,6 +109,8 @@ bool Scene::Update()
 			UpdateSelection();
 	}
 
+	if(UNITS_KILLED)
+
 	return true;
 }
 

@@ -223,6 +223,11 @@ void Behaviour::OnKill(const UnitType type)
 			Event::Push(UPDATE_STAT, App->scene, CURRENT_MOB_DROP, 5);
 			Event::Push(UPDATE_STAT, App->scene, MOB_DROP_COLLECTED, 5);
 			Event::Push(UPDATE_STAT, App->scene, UNITS_KILLED, 1);
+			if (App->scene->GetStat(UNITS_KILLED) % 10 == 0) {
+				Event::Push(UPDATE_STAT, App->scene, CURRENT_GOLD, 1);
+				Event::Push(UPDATE_STAT, App->scene, GOLD_COLLECTED, 1);
+				LOG("total gold value %d", App->scene->GetStat(CURRENT_GOLD));
+			}
 			break;
 		}
 		case ENEMY_RANGED:
@@ -230,6 +235,11 @@ void Behaviour::OnKill(const UnitType type)
 			Event::Push(UPDATE_STAT, App->scene, CURRENT_MOB_DROP, 10);
 			Event::Push(UPDATE_STAT, App->scene, MOB_DROP_COLLECTED, 10);
 			Event::Push(UPDATE_STAT, App->scene, UNITS_KILLED, 1);
+			if (App->scene->GetStat(UNITS_KILLED) % 10 == 0) {
+				Event::Push(UPDATE_STAT, App->scene, CURRENT_GOLD, 1);
+				Event::Push(UPDATE_STAT, App->scene, GOLD_COLLECTED, 1);
+				LOG("total gold value %d", App->scene->GetStat(CURRENT_GOLD));
+			}
 			break;
 		}
 		case ENEMY_SPECIAL:
@@ -237,6 +247,11 @@ void Behaviour::OnKill(const UnitType type)
 			Event::Push(UPDATE_STAT, App->scene, CURRENT_MOB_DROP, 15);
 			Event::Push(UPDATE_STAT, App->scene, MOB_DROP_COLLECTED, 15);
 			Event::Push(UPDATE_STAT, App->scene, UNITS_KILLED, 1);
+			if (App->scene->GetStat(UNITS_KILLED) % 10 == 0) {
+				Event::Push(UPDATE_STAT, App->scene, CURRENT_GOLD, 1);
+				Event::Push(UPDATE_STAT, App->scene, GOLD_COLLECTED, 1);
+				LOG("total gold value %d", App->scene->GetStat(CURRENT_GOLD));
+			}
 			break;
 		}
 		case ENEMY_SUPER:
@@ -244,6 +259,11 @@ void Behaviour::OnKill(const UnitType type)
 			Event::Push(UPDATE_STAT, App->scene, CURRENT_MOB_DROP, 20);
 			Event::Push(UPDATE_STAT, App->scene, MOB_DROP_COLLECTED, 20);
 			Event::Push(UPDATE_STAT, App->scene, UNITS_KILLED, 1);
+			if (App->scene->GetStat(UNITS_KILLED) % 10 == 0) {
+				Event::Push(UPDATE_STAT, App->scene, CURRENT_GOLD, 1);
+				Event::Push(UPDATE_STAT, App->scene, GOLD_COLLECTED, 1);
+				LOG("total gold value %d", App->scene->GetStat(CURRENT_GOLD));
+			}
 			break;
 		}
 		case BASE_CENTER:
