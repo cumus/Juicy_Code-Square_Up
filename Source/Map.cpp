@@ -81,7 +81,6 @@ bool Map::Load(const char* file)
 		LOG("ERROR: Could not load map xml file %s.", file);
 
 	doc.reset();
-
 	return loaded;
 }
 

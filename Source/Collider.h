@@ -64,6 +64,7 @@ public:
 	void SetColliderBounds(RectF& rect);
 	RectF GetColliderBounds();
 	RectF GetISOColliderBounds();
+	RectF GetWorldColliderBounds();
 	void SetOffset(RectF off);
 	void SetCollType(ColliderType t);
 	ColliderType GetCollType();

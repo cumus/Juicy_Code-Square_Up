@@ -7,6 +7,7 @@
 #include "Map.h"
 #include "Event.h"
 #include "Log.h"
+#include "Behaviour.h"
 
 #include <vector>
 
@@ -23,7 +24,7 @@ CollisionSystem::CollisionSystem()
 	collisionLayers[SCENE_LAYER][DEFAULT_LAYER] = true;
 	collisionLayers[DEFAULT_LAYER][SCENE_LAYER] = true;
 	collisionLayers[INPUT_LAYER][HUD_LAYER] = true;
-	collisionTree = new Quadtree(10, 5, 0, { 0.0f,0.0f,Map::GetMapSize_F().first,Map::GetMapSize_F().second }, nullptr);
+	collisionTree = new Quadtree(10, 5, 0, { 0.0f,0.0f,/*Map::GetMapSize_F().first,Map::GetMapSize_F().second*/17000,9500 }, nullptr);
 	debug = false;
 }
 
@@ -131,13 +132,14 @@ void CollisionSystem::Resolve()
 				std::vector<Collider*> collisions = collisionTree->Search(*(*itV));
 				if (!collisions.empty())
 				{
-					LOG("Got collisions");
+					//LOG("Got collisions");
 					for (std::vector<Collider*>::iterator it = collisions.begin(); it != collisions.end(); ++it)
 					{
 						//LOG("This go id: %lf", (*itV)->GetGameobject()->GetID());
 						//LOG("Other go id: %lf", (*it)->GetGameobject()->GetID());
 						if ((*itV)->GetID() != (*it)->GetID() && (*itV)->GetGameobject()->GetID() != (*it)->GetGameobject()->GetID())
 						{
+							//LOG("Check if collides");
 							if (collisionLayers[(*itV)->GetCollLayer()][(*it)->GetCollLayer()])
 							{
 								Manifold m = (*itV)->Intersects(*it);
@@ -147,14 +149,12 @@ void CollisionSystem::Resolve()
 									if (!(*itV)->GetCollisionState((*it)->GetID()))//First collision
 									{
 										(*itV)->SaveCollision((*it)->GetID());
-										//Event::Push(ON_COLL_ENTER,(*itV)->GetGameobject(),(*it));
-										Event::Push(ON_COLL_ENTER, (*itV)->GetGameobject(), (*itV)->GetID(), (*it)->GetID());
+										if((*itV)->GetGameobject()->GetBehaviour()->GetState() != DESTROYED) Event::Push(ON_COLL_ENTER, (*itV)->GetGameobject(), (*itV)->GetID(), (*it)->GetID());
 										LOG("Coll enter");
 									}
 									else //Already collisioning
 									{
-										//Event::Push(ON_COLL_STAY, (*itV)->GetGameobject(), (*it));
-										Event::Push(ON_COLL_STAY, (*itV)->GetGameobject(), (*itV)->GetID(),(*it)->GetID());
+										if ((*itV)->GetGameobject()->GetBehaviour()->GetState() != DESTROYED) Event::Push(ON_COLL_STAY, (*itV)->GetGameobject(), (*itV)->GetID(),(*it)->GetID());
 										LOG("Coll stay");
 									}
 
@@ -163,7 +163,7 @@ void CollisionSystem::Resolve()
 										if (!(*itV)->GetGameobject()->GetStatic())
 										{
 											(*itV)->ResolveOverlap(m);
-											LOG("Reolve overlap");
+											//LOG("Reolve overlap");
 										}
 										/*else
 										{
@@ -174,10 +174,9 @@ void CollisionSystem::Resolve()
 								}
 								else
 								{
-									if ((*itV)->GetCollisionState((*it)->GetID()))//First collision
+									if ((*itV)->GetCollisionState((*it)->GetID()))//Last collision
 									{
-										//Event::Push(ON_COLL_EXIT, (*itV)->GetGameobject(), (*it));
-										Event::Push(ON_COLL_EXIT, (*itV)->GetGameobject(), (*itV)->GetID(), (*it)->GetID());
+										if ((*itV)->GetGameobject()->GetBehaviour()->GetState() != DESTROYED) Event::Push(ON_COLL_EXIT, (*itV)->GetGameobject(), (*itV)->GetID(), (*it)->GetID());
 										LOG("Coll exit");
 										(*itV)->DeleteCollision((*it)->GetID());
 									}
@@ -219,9 +218,11 @@ void CollisionSystem::Update()
 				//LOG("colliders length: %d", itL->second.size());
 				for (std::vector<Collider*>::iterator itV = itL->second.begin(); itV != itL->second.end(); ++itV)
 				{
-					RectF rect = (*itV)->GetColliderBounds();
+					RectF rect = (*itV)->GetWorldColliderBounds();
+					RectF rect2 = (*itV)->GetColliderBounds();
 					//LOG("Bounds X:%f/Y:%f/W:%f/H:%f",rect.x,rect.y,rect.w,rect.h);
 					App->render->DrawQuad({int(rect.x),int(rect.y),int(rect.w),int(rect.h)}, {0,255,0,255},false, DEBUG_SCENE,true);
+					App->render->DrawQuad({ int(rect2.x),int(rect2.y),int(rect2.w),int(rect2.h) }, { 255,0,0,255 }, false, DEBUG_SCENE, true);
 				}
 			}
 		}

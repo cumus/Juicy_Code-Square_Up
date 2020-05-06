@@ -11,6 +11,7 @@
 #include "Canvas.h"
 #include "Scene.h"
 #include "Audio.h"
+#include "FogOfWarManager.h"
 #include "MeleeUnit.h"
 #include "Gatherer.h"
 #include "Tower.h"
@@ -69,8 +70,8 @@ void Behaviour::SetColliders()
 	//Colliders
 	pos = game_object->GetTransform()->GetGlobalPosition();
 	bodyColl = new Collider(game_object, { pos.x,pos.y,game_object->GetTransform()->GetLocalScaleX(),game_object->GetTransform()->GetLocalScaleY() }, NON_TRIGGER, PLAYER_TAG);
-	visionColl = new Collider(game_object, { pos.x,pos.y,vision_range * 1.5f,vision_range *1.5f }, TRIGGER, PLAYER_VISION_TAG);
-	attackColl = new Collider(game_object, { pos.x,pos.y,attack_range,attack_range }, TRIGGER, PLAYER_ATTACK_TAG);
+	//visionColl = new Collider(game_object, { pos.x,pos.y,vision_range * 1.5f,vision_range *1.5f }, TRIGGER, PLAYER_VISION_TAG);
+	//attackColl = new Collider(game_object, { pos.x,pos.y,attack_range,attack_range }, TRIGGER, PLAYER_ATTACK_TAG);
 	
 }
 
@@ -185,7 +186,7 @@ std::vector<iPoint> Behaviour::GetTilesInsideRadius()
 			iPoint tilePos(x, y);
 			if (tilePos.DistanceTo(iPoint(int(pos.x), int(pos.y))) <= vision_range)
 			{
-				FogOfWarManager::fogMap[tilePos.x][tilePos.y] = true;
+				if (App->fogWar.CheckFoWTileBoundaries(iPoint(tilePos.x,tilePos.y)))FogOfWarManager::fogMap[tilePos.x][tilePos.y] = true;
 				//lastFog.push_back(tilePos);
 			}
 		}
