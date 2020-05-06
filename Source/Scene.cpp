@@ -312,7 +312,8 @@ void Scene::RecieveEvent(const Event& e)
 
 void Scene::LoadTestScene()
 {
-	OPTICK_EVENT();
+	LoadMainScene();
+	/*OPTICK_EVENT();
 
 	map.Load("Assets/maps/iso.tmx");
 
@@ -331,7 +332,7 @@ void Scene::LoadTestScene()
 	tower->target = { 0.6f, 1.f, 1.f , 1.f };
 	edge->target = { 0.7f, 1.f, 1.f , 1.f };
 	base->offset = tower->offset = edge->offset ={ -40.f, -80.f };
-	for (int i = 0; i < 4; i++)base->section[i] = tower->section[i] = edge->section[i] = { 0, 0, 80, 80 };
+	for (int i = 0; i < 4; i++)base->section[i] = tower->section[i] = edge->section[i] = { 0, 0, 80, 80 };*/
 }
 
 void Scene::LoadMainScene()
@@ -2103,7 +2104,8 @@ void Scene::GodMode()
 	if (App->input->GetKey(SDL_SCANCODE_F5) == KEY_DOWN)
 	{
 		App->pathfinding.DebugShowPaths();
-		draw_collisions = !draw_collisions;
+		//draw_collisions = !draw_collisions;
+		App->collSystem.SetDebug();
 	}
 
 	// F6: Toggle Zoom Locked

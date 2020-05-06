@@ -18,11 +18,13 @@ public:
 	~CollisionSystem();
 
 	void Add(Gameobject* obj);
+	void Add(Collider* coll);
 	void Add(std::vector<Gameobject*>& objects);
 	void ProcessRemovals();
 	void ProcessRemovals(Gameobject* obj);
 	void Update();
 	void SetLayerCollision(CollisionLayer one, CollisionLayer two, bool collide);
+	void SetDebug();
 	
 
 private:
@@ -32,7 +34,8 @@ private:
 private:
 	bool collisionLayers[MAX_COLLISION_LAYERS][MAX_COLLISION_LAYERS]; //Store layers collisions
 	std::map<CollisionLayer, std::vector<Collider*>> layerColliders;
-	Quadtree collisionTree;
+	Quadtree* collisionTree;
+	bool debug;
 };
 
 

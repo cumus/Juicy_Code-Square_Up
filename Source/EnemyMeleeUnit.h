@@ -17,11 +17,12 @@ public:
 	void OnCollisionEnter(Collider selfCol, Collider col) override;
 	//void OnCollisionStay(Collider selfCol, Collider col) override;
 	void OnCollisionExit(Collider selfCol, Collider col) override;
+	void SetColliders() override;
 
 protected:
 	std::pair<int, int> destPos;
-	bool going_base;
-	bool going_enemy;
+	bool inVision;
+	bool inRange;
 	bool base_found;
 	Gameobject* baseCenter;
 	IAState state,newState;

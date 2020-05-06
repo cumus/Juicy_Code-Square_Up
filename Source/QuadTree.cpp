@@ -1,8 +1,9 @@
 #include "SDL/include/SDL.h"
 #include "QuadTree.h"
+#include "Log.h"
 
 
-Quadtree::Quadtree() : Quadtree(5, 5, 0, {0.0f,0.0f,1920.0f,1080.0f},nullptr)
+Quadtree::Quadtree() : Quadtree(10, 5, 0, {0.0f,0.0f,1920.0f,1080.0f},nullptr)
 {}
 
 Quadtree::Quadtree(int maxObj, int maxlvl, int lvl, RectF bounds, Quadtree* p)
@@ -56,8 +57,9 @@ void Quadtree::Insert(Collider* obj)
 	}
 	
 	objects.push_back(obj);
-	if (objects.size() > maxObjects && level < maxLevels && children[0] != nullptr)
+	if (objects.size() > maxObjects && level < maxLevels && children[0] == nullptr)
 	{
+		//LOG("Quad full");
 		Split();
 
 		for (std::vector<Collider*>::const_iterator it = objects.cbegin(); it != objects.cend(); ++it)
@@ -66,9 +68,9 @@ void Quadtree::Insert(Collider* obj)
 			if (placeIndex != THIS_TREE)
 			{
 				children[placeIndex]->Insert(obj);
-				objects.erase(it);
 			}
 		}
+		objects.clear();
 	}
 }
 
@@ -98,20 +100,27 @@ std::vector<Collider*> Quadtree::Search(Collider& obj)
 	std::vector<Collider*> list;
 	Search(obj, overlaps);
 
+	//LOG("Found colliders size: %d", overlaps.size());
 	for (std::vector<Collider*>::const_iterator it = overlaps.cbegin(); it != overlaps.cend(); ++it)
 	{
-		if (obj.Intersects((*it)).colliding)
+		Manifold m = obj.Intersects(*it);
+		if (m.colliding)
 		{
+			LOG("Got intersection");
 			list.push_back((*it));
 		}
 	}
-	
+	//LOG("Final colliders list: %d", list.size());
 	return list;
 }
 
 void Quadtree::Search(Collider& obj, std::vector<Collider*>& list)
 {
-	list.insert(list.end(),objects.begin(),objects.end());
+	for (std::vector<Collider*>::const_iterator it = objects.cbegin(); it != objects.cend(); ++it)
+	{
+		list.push_back(*it);
+	}
+	
 	if (children[0] != nullptr)
 	{
 		int index = GetChildIndexForObject(obj.GetColliderBounds());

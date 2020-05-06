@@ -52,28 +52,26 @@ struct Manifold
 class Collider : public Component
 {
 public:
-	Collider(Gameobject* game_object, RectF coll, ColliderType t=NON_TRIGGER, ColliderTag tag = DEFAULT_TAG,ComponentType type = COLLIDER);
+	Collider(Gameobject* game_object, RectF coll, ColliderType t=NON_TRIGGER, ColliderTag tag = DEFAULT_TAG, CollisionLayer layer = SCENE_LAYER,ComponentType type = COLLIDER);
 	~Collider();
 
 	
 	Manifold Intersects(Collider* other);
 	void ResolveOverlap(Manifold& m);
 
-	void SetLayer(CollisionLayer lay) { layer = lay; }
-	CollisionLayer GetCollLayer() { return layer; }	
-	void SetColliderBounds(RectF& rect) { boundary = rect; }
-	RectF& GetColliderBounds() { return boundary; }
+	void SetLayer(CollisionLayer lay);
+	CollisionLayer GetCollLayer();
+	void SetColliderBounds(RectF& rect);
+	RectF GetColliderBounds();
 	RectF GetISOColliderBounds();
-	void SetOffset(RectF off) { offset = off; }
-	void SetCollType(ColliderType t) { collType = t; }
-	ColliderType GetCollType() { return collType; }
-	void SetColliderTag(ColliderTag tg) { tag = tg; }
-	ColliderTag GetColliderTag() { return tag; }
+	void SetOffset(RectF off);
+	void SetCollType(ColliderType t);
+	ColliderType GetCollType();
+	void SetColliderTag(ColliderTag tg);
+	ColliderTag GetColliderTag();
 	void SaveCollision(double ID);
 	bool GetCollisionState(double ID);
 	void DeleteCollision(double ID);
-
-private:
 	void SetPosition();
 
 private:

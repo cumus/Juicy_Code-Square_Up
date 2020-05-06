@@ -129,8 +129,10 @@ public:
 	virtual void OnCollisionEnter(Collider selfCol, Collider col) {}
 	virtual void OnCollisionStay(Collider selfCol, Collider col) {}
 	virtual void OnCollisionExit(Collider selfCol, Collider col) {}
-
+	virtual void SetColliders();
 	static bool IsHidden(double id) { return b_map[id]->visible; }
+
+
 
 	UnitType GetType() const { return type; }
 	UnitState* GetStatePtr() { return &current_state; }
@@ -153,6 +155,9 @@ public:
 	std::vector<iPoint> tilesVisited;
 	AnimatedSprite* characteR = nullptr;
 	bool providesVisibility,visible;
+	Collider* bodyColl;
+	Collider* visionColl;
+	Collider* attackColl;
 
 protected:	
 

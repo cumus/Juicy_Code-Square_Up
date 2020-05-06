@@ -45,6 +45,7 @@ Base_Center::Base_Center(Gameobject* go) : BuildingWithQueue(go, BASE_CENTER, NO
 		}
 	}
 	baseCenter = this->GetGameobject();
+	//SetColliders();
 }
 
 Base_Center::~Base_Center()

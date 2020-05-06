@@ -18,11 +18,20 @@ Edge::Edge(Gameobject* go) : Behaviour(go, EDGE, NO_UPGRADE, B_EDGE)
 		vec pos = t->GetGlobalPosition();
 		App->pathfinding.SetWalkabilityTile(int(pos.x), int(pos.y), false);
 	}	
+
+	//SetColliders();
 }
 
 Edge::~Edge() 
 {
 	
+}
+
+void Edge::SetColliders()
+{
+	//Collider
+	pos = game_object->GetTransform()->GetGlobalPosition();
+	bodyColl = new Collider(game_object, { pos.x,pos.y,game_object->GetTransform()->GetLocalScaleX(),game_object->GetTransform()->GetLocalScaleY() }, NON_TRIGGER, BUILDING_TAG);
 }
 
 void Edge::FreeWalkabilityTiles()

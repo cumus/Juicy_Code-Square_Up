@@ -238,7 +238,7 @@ void FogOfWarManager::DrawFoWMap()
 			std::pair<int, int> render_pos = Map::I_MapToWorld(x, y);
 			if (JMath::PointInsideRect(render_pos.first, render_pos.second, cam_area))
 			{
-				if(x >= 0 && y>= 0)
+				if(x >= 0 && y>= 0 && x < width && y < height)
 				{ 
 					if (!debugMode && !fogMap[x][y])
 					{

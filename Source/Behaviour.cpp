@@ -38,6 +38,7 @@ Behaviour::Behaviour(Gameobject* go, UnitType t, UnitState starting_state, Compo
 	attackObjective = nullptr;
 	providesVisibility = true;
 	visible = true;
+	game_object->SetStatic(true);
 
 	audio = new AudioSource(game_object);
 	characteR = new AnimatedSprite(this);
@@ -51,6 +52,7 @@ Behaviour::Behaviour(Gameobject* go, UnitType t, UnitState starting_state, Compo
 	b_map.insert({ GetID(), this });
 
 	Minimap::AddUnit(GetID(), t, game_object->GetTransform());
+
 	//GetTilesInsideRadius();
 	//CheckFoWMap();	
 }
@@ -59,6 +61,17 @@ Behaviour::~Behaviour()
 {
 	b_map.erase(GetID());
 	Minimap::RemoveUnit(GetID());
+}
+
+void Behaviour::SetColliders()
+{
+	//LOG("Setup colliders");
+	//Colliders
+	pos = game_object->GetTransform()->GetGlobalPosition();
+	bodyColl = new Collider(game_object, { pos.x,pos.y,game_object->GetTransform()->GetLocalScaleX(),game_object->GetTransform()->GetLocalScaleY() }, NON_TRIGGER, PLAYER_TAG);
+	visionColl = new Collider(game_object, { pos.x,pos.y,vision_range,vision_range }, TRIGGER, PLAYER_VISION_TAG);
+	attackColl = new Collider(game_object, { pos.x,pos.y,attack_range,attack_range }, TRIGGER, PLAYER_ATTACK_TAG);
+	
 }
 
 void Behaviour::RecieveEvent(const Event& e)
@@ -421,6 +434,8 @@ B_Unit::B_Unit(Gameobject* go, UnitType t, UnitState s, ComponentType comp_type)
 	current_state = IDLE;
 	drawRanges = false;
 	gotTile = false;
+	game_object->SetStatic(false);
+	SetColliders();
 
 	//Info for ranged units constructor
 	/*vec pos = game_object->GetTransform()->GetGlobalPosition();
@@ -516,7 +531,7 @@ void B_Unit::Update()
 	
 
 		//Collisions
-		CheckCollision();
+		//CheckCollision();
 
 		//Raycast
 		if (shoot) ShootRaycast();

@@ -20,8 +20,8 @@ EnemyMeleeUnit::EnemyMeleeUnit(Gameobject* go) : B_Unit(go, ENEMY_MELEE, IDLE, B
 	damage = 8;
 	attack_range = 2.0f;
 	vision_range = 10.0f;
-	going_base = false;
-	going_enemy = false;
+	inVision = false;
+	inRange = false;
 	base_found = false;
 	arriveDestination = true;
 	atkTimer = 0.0f;
@@ -39,6 +39,18 @@ EnemyMeleeUnit::EnemyMeleeUnit(Gameobject* go) : B_Unit(go, ENEMY_MELEE, IDLE, B
 
 EnemyMeleeUnit::~EnemyMeleeUnit()
 {
+}
+
+void EnemyMeleeUnit::SetColliders()
+{
+	//Colliders
+	pos = game_object->GetTransform()->GetGlobalPosition();
+	bodyColl = new Collider(game_object, { pos.x,pos.y,game_object->GetTransform()->GetLocalScaleX(),game_object->GetTransform()->GetLocalScaleY() }, NON_TRIGGER, ENEMY_TAG);
+	visionColl = new Collider(game_object, { pos.x,pos.y,vision_range,vision_range }, TRIGGER, ENEMY_VISION_TAG);
+	attackColl = new Collider(game_object, { pos.x,pos.y,attack_range,attack_range }, TRIGGER, ENEMY_ATTACK_TAG);
+	App->collSystem.Add(bodyColl);
+	App->collSystem.Add(visionColl);
+	App->collSystem.Add(attackColl);
 }
 
 void EnemyMeleeUnit::UpdatePath(int x, int y)
@@ -79,7 +91,20 @@ void EnemyMeleeUnit::IARangeCheck()
 		{
 		case IDLE_IA:
 		{
-			std::map<float, Behaviour*> out;
+			if (inRange)
+			{
+				newState = ATTACKING_IA;
+			}
+			else if (inVision)
+			{
+				newState = CHASING_IA;
+			}
+			else
+			{
+				newState = BASE_IA;
+				attackObjective = nullptr;
+			}
+			/*std::map<float, Behaviour*> out;
 			unsigned int total_found = GetBehavioursInRange(vec(pos.x, pos.y, 0.5f), vision_range, out);//Get units in vision range
 			float distance = 0;
 			if (total_found > 0 )//Check if found behaviours in range
@@ -110,7 +135,7 @@ void EnemyMeleeUnit::IARangeCheck()
 			{
 				attackObjective = nullptr;
 				state = BASE_IA;
-			}
+			}*/
 			state = IDLE_IA;
 			break;
 		}
@@ -123,7 +148,7 @@ void EnemyMeleeUnit::IARangeCheck()
 					//LOG("Path to base");
 					vec centerPos = Base_Center::baseCenter->GetTransform()->GetGlobalPosition();
 					Event::Push(UPDATE_PATH, this->AsBehaviour(), int(centerPos.x) - 1, int(centerPos.y) - 1);
-					going_base = true;
+					//going_base = true;
 					//arriveDestination = true;
 					//LOG("Move to base");	
 				}
@@ -202,26 +227,43 @@ void EnemyMeleeUnit::IARangeCheck()
 	}
 }
 
-void OnCollisionEnter(Collider selfCol, Collider col)
+void EnemyMeleeUnit::OnCollisionEnter(Collider selfCol, Collider col)
 {
-	if (selfCol.GetColliderTag() == ENEMY_VISION_TAG)
+	if (selfCol.GetColliderTag() == ENEMY_ATTACK_TAG)
 	{
 		if (col.GetColliderTag() == PLAYER_TAG)
 		{
-
+			inRange = true;
+			inVision = false;
+			if (attackObjective == nullptr) attackObjective = col.GetGameobject()->GetBehaviour();
 		}
 	}
-
-	if(selfCol.GetColliderTag() == ENEMY_ATTACK_TAG)
+	else if (selfCol.GetColliderTag() == ENEMY_VISION_TAG)
 	{
 		if (col.GetColliderTag() == PLAYER_TAG)
 		{
-
+			inRange = false;
+			inVision = true;
+			if (attackObjective == nullptr) attackObjective = col.GetGameobject()->GetBehaviour();
 		}
-	}
+	}	
 }
 
-void OnCollisionExit(Collider selfCol, Collider col)
+void EnemyMeleeUnit::OnCollisionExit(Collider selfCol, Collider col)
 {
 
+	if (selfCol.GetColliderTag() == ENEMY_ATTACK_TAG)
+	{
+		if (col.GetColliderTag() == PLAYER_TAG)
+		{
+			inRange = false;
+		}
+	}
+	else if (selfCol.GetColliderTag() == ENEMY_VISION_TAG)
+	{
+		if (col.GetColliderTag() == PLAYER_TAG)
+		{
+			inVision = false;
+		}
+	}
 }
