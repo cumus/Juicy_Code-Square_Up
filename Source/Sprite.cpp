@@ -97,12 +97,19 @@ AnimatedSprite::AnimatedSprite(Behaviour* unit) : Sprite(unit->GetGameobject(), 
 	case CAPSULE:
 	{
 		tex_id = App->tex.Load("Assets/textures/Capsule.png");
-		animations[FLY].Setup(section = { 0, 0, 105, 518 }, 1);
-		animations[LANDING_1].Setup({ 0, 518, 105, 456 }, 1);
-		animations[LANDING_2].Setup({ 0, 973, 167, 561 }, 1);
+		animations[FLY].Setup(section = { 0, 0, 105, 518 }, 4, 8.0f);
+		animations[LANDING_1].Setup({ 0, 518, 105, 456 }, 4, 8.0f);
+		animations[LANDING_2].Setup({ 0, 973, 167, 561 }, 10, 8.0f);
 		animations[POSE].Setup({ 0, 1534, 104, 361 }, 1);
-		animations[OPEN].Setup({ 0, 1534, 104, 361 }, 1);
+		animations[OPEN].Setup({ 0, 1534, 104, 361 }, 10, 8.0f);
 		offset = { -70.0f, -134.0f + Map::GetBaseOffset(), 0.5f, 0.5f };
+		break;
+	}
+	case MOBDROP:
+	{
+		tex_id = App->tex.Load("Assets/textures/Mob_Drop.png");
+		animations[STAY].Setup(section = { 0, 0, 179, 180 }, 4, 8.0f);
+		offset = { -70.0f, -134.0f + Map::GetBaseOffset(), 0.3f, 0.3f };
 		break;
 	}
 	case WALL:

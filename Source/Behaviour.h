@@ -72,7 +72,10 @@ enum UnitState : int
 	LANDING_1,
 	LANDING_2,
 	POSE,
-	OPEN
+	OPEN,
+
+	// Mob_Drop
+	STAY
 
 };
 
