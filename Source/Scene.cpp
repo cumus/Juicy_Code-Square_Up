@@ -1708,6 +1708,7 @@ void Scene::ResetScene()
 	last_cam_pos = { 0.0f,0.0f };
 	total_distance = 0;
 
+	App->collSystem.Clear();
 	map.CleanUp();
 	App->fogWar.CleanUp();
 	App->audio->UnloadFx();

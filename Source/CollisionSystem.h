@@ -25,6 +25,7 @@ public:
 	void Update();
 	void SetLayerCollision(CollisionLayer one, CollisionLayer two, bool collide);
 	void SetDebug();
+	void Clear();
 	
 
 private:

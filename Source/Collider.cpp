@@ -8,16 +8,21 @@
 #include "Log.h"
 #include "CollisionSystem.h"
 #include "Map.h"
+#include "Point.h"
 
 
 Collider::Collider(Gameobject* go, RectF coll, ColliderType t, ColliderTag tg, CollisionLayer lay, ComponentType ty) : Component(ty, go)
 {
-	boundary = coll;
+    std::pair<float, float> localPos = Map::F_MapToWorld(coll.x, coll.y, 1.0f);
+	boundary.x = localPos.first;
+    boundary.y = localPos.second;
+    boundary.w = coll.w * 64;
+    boundary.h = coll.h * 64;
     collType = t;
     layer = lay;
     tag = tg;
     App->collSystem.Add(this);
-    offset.x = 0;
+    offset.x = 30.0f;
     offset.y = 0;
     offset.w = 0;
     offset.h = 0;
@@ -29,9 +34,10 @@ Collider::~Collider()
 void Collider::SetPosition()
 {
     vec pos = game_object->GetTransform()->GetGlobalPosition();
+    std::pair<float, float> localPos = Map::F_MapToWorld(pos.x, pos.y, pos.z);
     //LOG("Coll pos X:%f/Y:%f", pos.x, pos.y);
-    boundary.x = pos.x - (boundary.w / 2) + offset.x;
-    boundary.y = pos.y - (boundary.h / 2) + offset.y;
+    boundary.x = localPos.first - (boundary.w / 2) + offset.x;
+    boundary.y = localPos.second - (boundary.h / 2) + offset.y;
     
     //LOG("Bound pos X:%f/Y:%f",boundary.x,boundary.y);
 }
@@ -39,13 +45,14 @@ void Collider::SetPosition()
 Manifold Collider::Intersects(Collider* other)
 {
     Manifold m;
-    m.colliding = false;
-    //const RectF& thisColl = GetColliderBounds();
-    //const RectF& otherColl = other->GetColliderBounds();
-    const RectF& thisColl = GetISOColliderBounds();
-    const RectF& otherColl = other->GetISOColliderBounds();
+    const RectF thisColl = GetColliderBounds();
+    const RectF otherColl = other->GetColliderBounds();
+    m.colliding = true;
+    m.other = &otherColl;
+    //LOG("This coll W:%f/H:%f",thisColl.w,thisColl.h);
+    //LOG("Other coll W:%f/H:%f", otherColl.w, otherColl.h);
 
-    if (otherColl.x - otherColl.w > thisColl.x + thisColl.w ||
+    /*if (otherColl.x - otherColl.w > thisColl.x + thisColl.w ||
         otherColl.x + otherColl.w < thisColl.x - thisColl.w ||
         otherColl.y - otherColl.h > thisColl.y + thisColl.h ||
         otherColl.y + otherColl.h < thisColl.y - thisColl.h) //Intersects
@@ -53,8 +60,21 @@ Manifold Collider::Intersects(Collider* other)
         m.colliding = true;
         m.other = &otherColl;
         LOG("Intersects");
+    }*/
+    fPoint topRight1(thisColl.x+thisColl.w, thisColl.y);
+    fPoint topRight2(otherColl.x+otherColl.w, otherColl.y);
+    fPoint bottomLeft1(thisColl.x, thisColl.y + thisColl.h);
+    fPoint bottomLeft2(otherColl.x, otherColl.y + otherColl.h);
+
+
+    if (topRight1.y < bottomLeft2.y || bottomLeft1.y > topRight2.y ||
+        topRight1.x < bottomLeft2.x || bottomLeft1.x > topRight2.x) //Non colliding
+    {
+        m.colliding = false;
+        m.other = nullptr;
     }
 
+ 
     return m;
 }
 
@@ -65,7 +85,7 @@ void Collider::ResolveOverlap(Manifold& m)
         Transform* t = game_object->GetTransform();
 
         //const RectF& rect1 = GetColliderBounds();
-        const RectF rect1 = GetISOColliderBounds();
+        const RectF rect1 = GetColliderBounds();
         const RectF* rect2 = m.other;
         float res = 0;
         float xDif = (rect1.x + (rect1.w * 0.5f)) - (rect2->x + (rect2->w * 0.5f));
@@ -75,27 +95,27 @@ void Collider::ResolveOverlap(Manifold& m)
         {
             if (xDif > 0) // Colliding on the left.
             {
-                res = 5;//(rect2->x + rect2->w) - rect1.x;
+                res = (rect2->x + rect2->w) - rect1.x;
             }
             else // Colliding on the right.
             {
-                res = -5;//((rect1.x + rect1.w) - rect2->x);
+                res = -((rect1.x + rect1.w) - rect2->x);
             }
             LOG("Move res %f",res);
-            t->MoveX(res * App->time.GetGameDeltaTime());//Move x      
+            t->MoveX(res/2 * App->time.GetGameDeltaTime());//Move x      
         }
         else
         {
             if (yDif > 0) // Colliding above.
             {
-                res = 5;//(rect2->y + rect2->h) - rect1.y;
+                res = (rect2->y + rect2->h) - rect1.y;
             }
             else // Colliding below
             {
-                res = -5;//((rect1.y + rect1.h) - rect2->y);
+                res = -((rect1.y + rect1.h) - rect2->y);
             }
             LOG("Move res %f", res);
-            t->MoveY(res * App->time.GetGameDeltaTime());//Move y
+            t->MoveY(res/2 * App->time.GetGameDeltaTime());//Move y
         }
         vec pos = t->GetGlobalPosition();
         LOG("New pos X:%f/Y:%f",pos.x,pos.y);
@@ -143,7 +163,12 @@ void Collider::SetLayer(CollisionLayer lay) { layer = lay; }
 
 CollisionLayer Collider::GetCollLayer() { return layer; }
 
-void Collider::SetColliderBounds(RectF& rect) { boundary = rect; }
+void Collider::SetColliderBounds(RectF& rect) 
+{
+    boundary = rect;
+    boundary.w = rect.w * 23;
+    boundary.h = rect.h * 23;
+}
 
 RectF Collider::GetColliderBounds() { return boundary; }
 

@@ -30,6 +30,15 @@ CollisionSystem::CollisionSystem()
 CollisionSystem::~CollisionSystem()
 {}
 
+void CollisionSystem::Clear()
+{
+	collisionTree->Clear();
+	for (std::map<CollisionLayer, std::vector<Collider*>>::iterator itL = layerColliders.begin(); itL != layerColliders.end(); ++itL)
+	{
+		itL->second.clear();		
+	}
+}
+
 void CollisionSystem::SetLayerCollision(CollisionLayer one, CollisionLayer two, bool collide)
 {
 	collisionLayers[one][two] = collide; 
@@ -125,7 +134,9 @@ void CollisionSystem::Resolve()
 					LOG("Got collisions");
 					for (std::vector<Collider*>::iterator it = collisions.begin(); it != collisions.end(); ++it)
 					{
-						if ((*itV)->GetID() != (*it)->GetID())
+						//LOG("This go id: %lf", (*itV)->GetGameobject()->GetID());
+						//LOG("Other go id: %lf", (*it)->GetGameobject()->GetID());
+						if ((*itV)->GetID() != (*it)->GetID() && (*itV)->GetGameobject()->GetID() != (*it)->GetGameobject()->GetID())
 						{
 							if (collisionLayers[(*itV)->GetCollLayer()][(*it)->GetCollLayer()])
 							{
@@ -208,10 +219,9 @@ void CollisionSystem::Update()
 				//LOG("colliders length: %d", itL->second.size());
 				for (std::vector<Collider*>::iterator itV = itL->second.begin(); itV != itL->second.end(); ++itV)
 				{
-					(*itV)->SetPosition();
-					RectF rect = (*itV)->GetISOColliderBounds();
-					LOG("Bounds X:%f/Y:%f/W:%f/H:%f",rect.x,rect.y,rect.w,rect.h);
-					App->render->DrawQuad({int(rect.x),int(rect.y),int(rect.w),int(rect.h)}, {0,255,0,255},true, DEBUG_SCENE,true);
+					RectF rect = (*itV)->GetColliderBounds();
+					//LOG("Bounds X:%f/Y:%f/W:%f/H:%f",rect.x,rect.y,rect.w,rect.h);
+					App->render->DrawQuad({int(rect.x),int(rect.y),int(rect.w),int(rect.h)}, {0,255,0,255},false, DEBUG_SCENE,true);
 				}
 			}
 		}
