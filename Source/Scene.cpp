@@ -460,7 +460,7 @@ void Scene::LoadMainScene()
 void Scene::LoadIntroScene()
 {
 	OPTICK_EVENT();
-	
+
 	App->audio->PlayFx(LOGO);
 
 	scene_change_timer = 10.f;
@@ -549,6 +549,8 @@ void Scene::LoadEndScene()
 {
 	OPTICK_EVENT();
 
+	float info_pos = 0.34f;
+
 	App->audio->PlayMusic(win ?
 		"Assets/audio/Music/alexander-nakarada-early-probe-eats-the-dust.ogg" :
 		"Assets/audio/Music/alexander-nakarada-inter7ude.ogg");
@@ -557,80 +559,68 @@ void Scene::LoadEndScene()
 
 	Gameobject* background_go = AddGameobjectToCanvas("Background");
 
-	C_Image* background = new C_Image(background_go);
-	background->target = { 1.f, 1.f, 1.f, 1.f };
-	background->offset = { -1280.f, -720.f };
-	background->section = { 0, 0, 1280, 720 };
-	background->tex_id = App->tex.Load(win ? "Assets/textures/back-win.png" : "Assets/textures/back-lose.png");
-
 	C_Button* background_btn = new C_Button(background_go, Event(BUTTON_EVENT, this, SCENE_CHANGE, MENU));
-	background_btn->target = { 1.f, 1.f, 1.f, 1.f };
-	background_btn->offset = { -1920.f, -1080.f };
+	background_btn->target = { 0.f, 0.f, 1.f, 1.f };
 	for (int i = 0; i < 4; i++)background_btn->section[i] = { 0, 0, 1920, 1080 };
 
 	//------------------------- WIN/LOSE --------------------------------------
 	if (win)
 	{
+		C_Image* background = new C_Image(background_go);
+		background->target = { 0.f, 0.f, 1.f, 1.f };
+		background->section = { 0, 0, 1280, 720 };
+		background->tex_id = App->tex.Load("Assets/textures/back-win.png");
+
 		C_Image* win = new C_Image(AddGameobjectToCanvas("Background"));
-		win->target = { 0.66f, 0.25f, 0.8f, 0.8f };
-		win->offset = { -605.f, -100.f };
+		win->target = { 0.285f, 0.12f, 0.8f, 0.8f };
 		win->section = { 0, 0, 693, 100 };
 		win->tex_id = App->tex.Load("Assets/textures/youwin.png");
 	}
 	else
 	{
+		C_Image* background = new C_Image(background_go);
+		background->target = { 0.f, 0.f, 1.f, 1.f };
+		background->section = { 0, 0, 1280, 720 };
+		background->tex_id = App->tex.Load("Assets/textures/back-lose.png");
+
 		C_Image* lose = new C_Image(AddGameobjectToCanvas("Background"));
-		lose->target = { 0.66f, 0.25f, 0.8f, 0.8f };
-		lose->offset = { -605.f, -100.f };
+		lose->target = { 0.285f, 0.12f, 0.8f, 0.8f };
 		lose->section = { 0, 0, 693, 100 };
 		lose->tex_id = App->tex.Load("Assets/textures/youlose.png");
 	}
 
-	/*//------------------------- BACK --------------------------------------
-
-	C_Image* back = new C_Image(AddGameobjectToCanvas("Background"));
-	back->target = { 0.68f, 0.9f, 0.6f, 0.65f };
-	back->offset = { -783.f, -735.f };
-	back->section = { 0, 0, 783, 735 };
-	back->tex_id = App->tex.Load("Assets/textures/back.png");*/
-
 	//------------------------- TIME --------------------------------------
 
 	C_Image* time = new C_Image(AddGameobjectToCanvas("Time"));
-	time->target = { 0.66f, 0.37f, 0.6f, 0.65f };
-	time->offset = { -693.f, -100.f };
+	time->target = { info_pos, 0.28f, 0.6f, 0.65f };
 	time->section = { 0, 0, 693, 100 };
 	time->tex_id = App->tex.Load(win ? "Assets/textures/wtime.png" : "Assets/textures/ltime.png");
 
 	//------------------------- EDGE --------------------------------------
 
 	C_Image* edge = new C_Image(AddGameobjectToCanvas("edge"));
-	edge->target = { 0.66f, 0.49f, 0.6f, 0.65f };
-	edge->offset = { -693.f, -100.f };
+	edge->target = { info_pos, 0.40f, 0.6f, 0.65f };
 	edge->section = { 0, 0, 693, 100 };
 	edge->tex_id = App->tex.Load(win ? "Assets/textures/wedge.png" : "Assets/textures/ledge.png");
 
 	//------------------------- UNITS CREATED --------------------------------------
 
 	C_Image* units_c = new C_Image(AddGameobjectToCanvas("created"));
-	units_c->target = { 0.66f, 0.61f, 0.6f, 0.65f };
-	units_c->offset = { -693.f, -100.f };
+	units_c->target = { info_pos, 0.52f, 0.6f, 0.65f };
 	units_c->section = { 0, 0, 693, 100 };
 	units_c->tex_id = App->tex.Load(win ? "Assets/textures/wunits_c.png" : "Assets/textures/lunits_c.png");
 
 	//------------------------- UNITS LOST --------------------------------------
 
 	C_Image* units_l = new C_Image(AddGameobjectToCanvas("lost"));
-	units_l->target = { 0.66f, 0.73f, 0.6f, 0.65f };
-	units_l->offset = { -693.f, -100.f };
+	units_l->target = { info_pos, 0.64f, 0.6f, 0.65f };
 	units_l->section = { 0, 0, 693, 100 };
 	units_l->tex_id = App->tex.Load(win ? "Assets/textures/wunits_l.png" : "Assets/textures/lunits_l.png");
 
 	//------------------------- UNITS KILLED --------------------------------------
 
 	C_Image* units_k = new C_Image(AddGameobjectToCanvas("killed"));
-	units_k->target = { 0.66f, 0.85f, 0.6f, 0.65f };
-	units_k->offset = { -693.f, -100.f };
+	units_k->target = { info_pos, 0.76f, 0.6f, 0.65f };
 	units_k->section = { 0, 0, 693, 100 };
 	units_k->tex_id = App->tex.Load(win ? "Assets/textures/wunits_k.png" : "Assets/textures/lunits_k.png");
 }
@@ -701,7 +691,7 @@ void Scene::LoadMainHUD()
 	Gameobject* turret_counter_icon_go = AddGameobject("turret counter icon", left_bar_go);
 
 	C_Image* turret_counter_icon = new C_Image(turret_counter_icon_go);
-	turret_counter_icon->target = { 0.71f, 0.11f, 0.65f , 0.65f };
+	turret_counter_icon->target = { 0.71f, 0.11f, 0.65f, 0.65f };
 	turret_counter_icon->offset = { 0.f, 0.f };
 	turret_counter_icon->section = { 204, 256, 25, 40 };
 	turret_counter_icon->tex_id = icons_text_id;
@@ -717,7 +707,7 @@ void Scene::LoadMainHUD()
 
 	Gameobject* right_bar_go = AddGameobjectToCanvas("Right bar");
 	C_Image* right_bar_box = new C_Image(right_bar_go);
-	right_bar_box->target = { 1.0f, 0.0f, 1.0f , 0.8f };
+	right_bar_box->target = { 1.0f, 0.0f, 1.0f, 0.8f };
 	right_bar_box->offset = { -438.f, 0.f };
 	right_bar_box->section = { 0, 665, 438, 44 };
 	right_bar_box->tex_id = icons_text_id;
@@ -1790,7 +1780,7 @@ void Scene::OnEventStateMachine(GameplayState state)
 		current_state = WIN;
 		win = true;
 		endScene = true;
-		LoadEndScene();
+		Event::Push(SCENE_CHANGE, this, END, 2.f);
 
 		break;
 	case LOSE:
@@ -1798,7 +1788,7 @@ void Scene::OnEventStateMachine(GameplayState state)
 		current_state = LOSE;
 		win = false;
 		endScene = true;
-		LoadEndScene();
+		Event::Push(SCENE_CHANGE, this, END, 2.f);
 
 		break;
 	default:
