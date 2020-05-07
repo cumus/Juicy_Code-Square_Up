@@ -145,7 +145,7 @@ void CollisionSystem::Resolve()
 								Manifold m = (*itV)->Intersects(*it);
 								if (m.colliding)
 								{
-									//Save collision
+									LOG("Save collision");
 									if (!(*itV)->GetCollisionState((*it)->GetID()))//First collision
 									{
 										(*itV)->SaveCollision((*it)->GetID());
@@ -225,7 +225,7 @@ void CollisionSystem::Update()
 					//App->render->DrawQuad({ int(rect2.x),int(rect2.y),int(rect2.w),int(rect2.h) }, { 255,0,0,255 }, false, DEBUG_SCENE, true);
 
 					//Coll iso
-					IsoLinesCollider lines = (*itV)->GetIsoLines();
+					IsoLinesCollider lines = (*itV)->GetIsoPoints();
 					App->render->DrawLine({ int(lines.top.first), int(lines.top.second) }, { int(lines.left.first), int(lines.left.second) }, {0,255,0,255}, DEBUG_SCENE);
 					App->render->DrawLine({ int(lines.top.first), int(lines.top.second) }, { int(lines.right.first), int(lines.right.second) }, { 0,255,0,255 }, DEBUG_SCENE);
 					App->render->DrawLine({ int(lines.bot.first), int(lines.bot.second) }, { int(lines.left.first), int(lines.left.second) }, { 0,255,0,255 }, DEBUG_SCENE);

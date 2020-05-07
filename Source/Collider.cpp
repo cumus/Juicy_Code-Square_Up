@@ -9,6 +9,7 @@
 #include "CollisionSystem.h"
 #include "Map.h"
 #include "Point.h"
+#include "JuicyMath.h"
 
 
 Collider::Collider(Gameobject* go, RectF coll, ColliderType t, ColliderTag tg, RectF off ,CollisionLayer lay, ComponentType ty) : Component(ty, go)
@@ -60,7 +61,6 @@ void Collider::ConvertToIsoPoints()
     isoDraw.bot = { boundary.x + (boundary.w * 0.5f), boundary.y + boundary.h };
     isoDraw.right = { boundary.x + boundary.w, boundary.y + (boundary.h * 0.5f) };
     isoDraw.top = { boundary.x + (boundary.w * 0.5f) , boundary.y };
-    //float y_offset = Map::GetBaseOffset();
     isoDraw.right.first += offset.x;
     isoDraw.left.first += offset.x;
     isoDraw.top.first += offset.x;
@@ -71,23 +71,25 @@ void Collider::ConvertToIsoPoints()
     isoDraw.bot.second += offset.y;
 }
 
-IsoLinesCollider Collider::GetIsoLines() { return isoDraw; }
+IsoLinesCollider Collider::GetIsoPoints() { return isoDraw; }
 
 Manifold Collider::Intersects(Collider* other)
 {
     Manifold m;
-    const RectF thisColl = GetWorldColliderBounds();
-    const RectF otherColl = other->GetWorldColliderBounds();
-    m.colliding = true;
-    m.other = &otherColl;
+    //const RectF thisColl = GetWorldColliderBounds();
+    //const RectF otherColl = other->GetWorldColliderBounds();
+    m.colliding = false;
+    m.other = other->GetIsoPoints();
     //LOG("This coll W:%f/H:%f",thisColl.w,thisColl.h);
     //LOG("Other coll W:%f/H:%f", otherColl.w, otherColl.h);
 
-    fPoint topRight1(thisColl.x+thisColl.w, thisColl.y);
+    IsoLinesCollider otherColl = other->GetIsoPoints();
+
+    /*fPoint topRight1(thisColl.x+thisColl.w, thisColl.y);
     fPoint topRight2(otherColl.x+otherColl.w, otherColl.y);
     fPoint bottomLeft1(thisColl.x, thisColl.y + thisColl.h);
     fPoint bottomLeft2(otherColl.x, otherColl.y + otherColl.h);
-   // LOG("This coll tr X:%f/Y:%f    bl X:%f/Y:%f", topRight1.x, topRight1.y, bottomLeft1.x, bottomLeft1.y);
+    //LOG("This coll tr X:%f/Y:%f    bl X:%f/Y:%f", topRight1.x, topRight1.y, bottomLeft1.x, bottomLeft1.y);
     //LOG("Other  coll tr X:%f/Y:%f    bl X:%f/Y:%f", topRight2.x, topRight2.y, bottomLeft2.x, bottomLeft2.y);
     if (topRight1.y > bottomLeft2.y || bottomLeft1.y < topRight2.y ||
         topRight1.x < bottomLeft2.x || bottomLeft1.x > topRight2.x) //Non colliding
@@ -95,7 +97,57 @@ Manifold Collider::Intersects(Collider* other)
         //LOG("Non colliding");
         m.colliding = false;
         m.other = nullptr;
+    }*/
+
+    //LOG("This coll top X:%f/Y:%f     bot X:%f/Y:%f", isoDraw.top.first, isoDraw.bot.second, isoDraw.bot.first, isoDraw.bot.second);
+    //LOG("Other  coll top X:%f/Y:%f    bot X:%f/Y:%f", otherColl.top.first, otherColl.top.second, otherColl.bot.first, otherColl.bot.second);
+    if (JMath::PointInsideTriangle(isoDraw.top,otherColl.top,otherColl.left,otherColl.right))
+    {
+        m.colliding = true;
+        m.other = other->GetIsoPoints();
     }
+    else if (JMath::PointInsideTriangle(isoDraw.top, otherColl.bot, otherColl.left, otherColl.right))
+    {
+        m.colliding = true;
+        m.other = other->GetIsoPoints();
+    }
+    if (JMath::PointInsideTriangle(isoDraw.bot, otherColl.top, otherColl.left, otherColl.right))
+    {
+        m.colliding = true;
+        m.other = other->GetIsoPoints();
+    }
+    else if (JMath::PointInsideTriangle(isoDraw.bot, otherColl.bot, otherColl.left, otherColl.right))
+    {
+        m.colliding = true;
+        m.other = other->GetIsoPoints();
+    }
+    if (JMath::PointInsideTriangle(isoDraw.right, otherColl.top, otherColl.left, otherColl.right))
+    {
+        m.colliding = true;
+        m.other = other->GetIsoPoints();
+    }
+    else if (JMath::PointInsideTriangle(isoDraw.right, otherColl.bot, otherColl.left, otherColl.right))
+    {
+        m.colliding = true;
+        m.other = other->GetIsoPoints();
+    }
+    if (JMath::PointInsideTriangle(isoDraw.left, otherColl.top, otherColl.left, otherColl.right))
+    {
+        m.colliding = true;
+        m.other = other->GetIsoPoints();
+    }
+    else if (JMath::PointInsideTriangle(isoDraw.left, otherColl.bot, otherColl.left, otherColl.right))
+    {
+        m.colliding = true;
+        m.other = other->GetIsoPoints();
+    }
+    /*if (isoDraw.top.first > otherColl.top.first || isoDraw.bot.second < otherColl.top.second ||
+        isoDraw.top.first < otherColl.bot.first || isoDraw.bot.first > otherColl.top.first) //Non colliding
+    {
+        LOG("Non colliding");
+        m.colliding = false;
+    }*/
+
    /* if (topRight1.y > bottomLeft2.y)
     {
         LOG("Bottom");
@@ -126,10 +178,15 @@ void Collider::ResolveOverlap(Manifold& m)
         //const RectF& rect1 = GetColliderBounds();
         const RectF rect1 = GetColliderBounds();
         //const RectF* rect2 = m.other;
-        std::pair<float,float> otherRect = Map::F_WorldToMap(m.other->x,m.other->y);
+        /*std::pair<float,float> otherRect = Map::F_WorldToMap(m.other->x,m.other->y);
         float res = 0;
         float xDif = (rect1.x + (rect1.w * 0.5f)) - (otherRect.first + (m.other->w * 0.5f));
-        float yDif = (rect1.y + (rect1.h * 0.5f)) - (otherRect.second + (m.other->h * 0.5f));
+        float yDif = (rect1.y + (rect1.h * 0.5f)) - (otherRect.second + (m.other->h * 0.5f));*/
+        IsoLinesCollider otherColl = m.other;
+        float res = 0;
+        float xDif = isoDraw.top.first - otherColl.top.first;
+        float yDif = isoDraw.left.second - otherColl.left.second;
+
 
         LOG("Xdif: %f/Ydif:%f",xDif,yDif);
         /*if (xDif > 0) // Colliding on the left.

@@ -49,7 +49,7 @@ void Quadtree::Insert(Collider* obj)
 {
 	if (children[0] != nullptr)
 	{
-		int index = GetChildIndexForObject(obj->GetIsoLines());
+		int index = GetChildIndexForObject(obj->GetIsoPoints());
 		if (index != THIS_TREE)
 		{
 			children[index]->Insert(obj);
@@ -65,7 +65,7 @@ void Quadtree::Insert(Collider* obj)
 
 		for (std::vector<Collider*>::const_iterator it = objects.cbegin(); it != objects.cend(); ++it)
 		{
-			int placeIndex = GetChildIndexForObject((*it)->GetIsoLines());
+			int placeIndex = GetChildIndexForObject((*it)->GetIsoPoints());
 			if (placeIndex != THIS_TREE)
 			{
 				children[placeIndex]->Insert(obj);
@@ -77,7 +77,7 @@ void Quadtree::Insert(Collider* obj)
 
 void Quadtree::Remove(Collider* obj)
 {
-	int index = GetChildIndexForObject(obj->GetIsoLines());
+	int index = GetChildIndexForObject(obj->GetIsoPoints());
 	if (index == THIS_TREE || children[index] == nullptr)
 	{
 		for (std::vector<Collider*>::const_iterator it = objects.cbegin(); it != objects.cend(); ++it)
@@ -111,7 +111,7 @@ std::vector<Collider*> Quadtree::Search(Collider& obj)
 			list.push_back((*it));
 		}
 	}*/
-	//LOG("Final colliders list: %d", list.size());
+	//LOG("Final colliders list: %d", overlaps.size());
 	return overlaps;
 }
 
@@ -124,12 +124,12 @@ void Quadtree::Search(Collider& obj, std::vector<Collider*>& list)
 	
 	if (children[0] != nullptr)
 	{
-		int index = GetChildIndexForObject(obj.GetIsoLines());
+		int index = GetChildIndexForObject(obj.GetIsoPoints());
 		if(index == THIS_TREE)
 		{
 			for (int i = 0; i < 4; i++)
 			{
-				if (children[i]->IntersectsQuad(obj.GetIsoLines()))
+				if (children[i]->IntersectsQuad(obj.GetIsoPoints()))
 				{
 					children[i]->Search(obj, list);
 				}

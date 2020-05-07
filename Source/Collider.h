@@ -42,18 +42,19 @@ enum ColliderTag
 	BUILDING_TAG,
 };
 
-struct Manifold
-{
-	bool colliding = false;
-	const RectF* other;
-};
-
 struct IsoLinesCollider
 {
 	std::pair<float, float> left;
 	std::pair<float, float> right;
 	std::pair<float, float> bot;
 	std::pair<float, float> top;
+};
+
+struct Manifold
+{
+	bool colliding = false;
+	//const RectF* other;
+	IsoLinesCollider other;
 };
 
 
@@ -82,7 +83,7 @@ public:
 	bool GetCollisionState(double ID);
 	void DeleteCollision(double ID);
 	void SetPosition();
-	IsoLinesCollider GetIsoLines();
+	IsoLinesCollider GetIsoPoints();
 
 private:
 	void ConvertToIsoPoints();
