@@ -126,6 +126,7 @@ private:
 		SDL_Texture* texture;
 		SDL_Rect rect;
 		bool camera;
+		double angle = 0;
 		union ExtraData
 		{
 			SDL_Rect section;

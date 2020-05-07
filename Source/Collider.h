@@ -48,11 +48,19 @@ struct Manifold
 	const RectF* other;
 };
 
+struct IsoLinesCollider
+{
+	std::pair<float, float> left;
+	std::pair<float, float> right;
+	std::pair<float, float> bot;
+	std::pair<float, float> top;
+};
+
 
 class Collider : public Component
 {
 public:
-	Collider(Gameobject* game_object, RectF coll, ColliderType t=NON_TRIGGER, ColliderTag tag = DEFAULT_TAG, CollisionLayer layer = SCENE_LAYER,ComponentType type = COLLIDER);
+	Collider(Gameobject* game_object, RectF coll, ColliderType t = NON_TRIGGER, ColliderTag tag = DEFAULT_TAG, RectF offset = {0,0,0,0},CollisionLayer layer = SCENE_LAYER, ComponentType type = COLLIDER);
 	~Collider();
 
 	
@@ -74,6 +82,10 @@ public:
 	bool GetCollisionState(double ID);
 	void DeleteCollision(double ID);
 	void SetPosition();
+	IsoLinesCollider GetIsoLines();
+
+private:
+	void ConvertToIsoPoints();
 
 private:
 	RectF boundary;
@@ -82,6 +94,8 @@ private:
 	ColliderType collType;
 	ColliderTag tag;
 	std::vector<double> collisions;
+	std::pair<float, float> tileSize;
+	IsoLinesCollider isoDraw;
 };
 
 #endif // !__COLLIDER_H__

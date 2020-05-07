@@ -1,6 +1,8 @@
 #include "JuicyMath.h"
 #include "Defs.h"
 
+#include <math.h>  
+
 bool JMath::PointInsideRect(int x, int y, SDL_Rect rect)
 {
 	return (
@@ -77,4 +79,13 @@ float JMath::Cap(const float base, const float lower_bound, const float upper_bo
 		return upper_bound;
 	else
 		return base;
+}
+
+std::pair<float, float> JMath::RotatePoint(float x, float y, double degrees)
+{
+	std::pair<float, float> point;
+	//degrees = x * PI / 180;
+	point.second = y * cos(degrees) - x * sin(degrees);
+	point.first = y * sin(degrees) + x * cos(degrees);
+	return point;
 }

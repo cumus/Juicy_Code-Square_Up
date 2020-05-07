@@ -15,7 +15,7 @@ Gatherer::Gatherer(Gameobject* go) : B_Unit(go, GATHERER, IDLE, B_GATHERER)
 	damage = 10;
 	current_life = max_life = 20;
 	attack_range = 2.0f;
-	vision_range = 10.0f;
+	vision_range = 20.0f;
 	dieDelay = 5.0f;
 	providesVisibility = true;
 	//deathFX = GATHERER_DIE_FX;
@@ -23,7 +23,7 @@ Gatherer::Gatherer(Gameobject* go) : B_Unit(go, GATHERER, IDLE, B_GATHERER)
 
 	CreatePanel();
 	selectionPanel->SetInactive();
-
+	SetColliders();
 }
 
 Gatherer::~Gatherer(){}

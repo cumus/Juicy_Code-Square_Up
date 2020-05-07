@@ -32,6 +32,8 @@ namespace JMath
 	float	DistanceSquared(const std::pair<float, float> origin, const std::pair<float, float> p);
 
 	float Cap(const float base, const float lower_bound, const float upper_bound);
+
+	std::pair<float, float> RotatePoint(float x,float y,double degrees);
 };
 
 

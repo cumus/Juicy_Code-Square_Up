@@ -13,7 +13,7 @@ public:
 	MeleeUnit(Gameobject* go);
 	~MeleeUnit();
 	void IARangeCheck() override;
-
+	void SetColliders();
 };
 
 #endif

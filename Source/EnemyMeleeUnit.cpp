@@ -30,7 +30,7 @@ EnemyMeleeUnit::EnemyMeleeUnit(Gameobject* go) : B_Unit(go, ENEMY_MELEE, IDLE, B
 	state = IDLE_IA;
 	newState = IDLE_IA;
 	//LOG("ID: %f", GetID());
-
+	SetColliders();
 	//SFX
 	//deathFX = IA_MELEE_DIE_FX;
 	//attackFX = IA_MELEE_ATK_FX;
@@ -48,9 +48,6 @@ void EnemyMeleeUnit::SetColliders()
 	bodyColl = new Collider(game_object, { pos.x,pos.y,game_object->GetTransform()->GetLocalScaleX(),game_object->GetTransform()->GetLocalScaleY() }, NON_TRIGGER, ENEMY_TAG);
 	visionColl = new Collider(game_object, { pos.x,pos.y,vision_range,vision_range }, TRIGGER, ENEMY_VISION_TAG);
 	attackColl = new Collider(game_object, { pos.x,pos.y,attack_range,attack_range }, TRIGGER, ENEMY_ATTACK_TAG);
-	App->collSystem.Add(bodyColl);
-	App->collSystem.Add(visionColl);
-	App->collSystem.Add(attackColl);
 }
 
 void EnemyMeleeUnit::UpdatePath(int x, int y)

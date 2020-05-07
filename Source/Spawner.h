@@ -19,7 +19,7 @@ public:
 	void ResetSpawner();
 	void ChangeValues(int spawns,float cooldown, int spawnPoints);
 	void FreeWalkabilityTiles() override;
-	void SetColliders() override;
+	//void SetColliders();
 
 	/*void SpawnMeleeIA(float x, float y);
 	void SpawnRangedIA(float x, float y);

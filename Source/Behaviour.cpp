@@ -29,7 +29,7 @@ Behaviour::Behaviour(Gameobject* go, UnitType t, UnitState starting_state, Compo
 	current_state(starting_state)
 {
 	current_life = max_life = damage = 10;
-	attack_range = vision_range = 5.0f;
+	//attack_range = vision_range = 5.0f;
 	dieDelay = 2.0f;
 	deathFX = EDGE_FX; //temp
 	rayCastTimer = 0;
@@ -66,13 +66,12 @@ Behaviour::~Behaviour()
 
 void Behaviour::SetColliders()
 {
-	//LOG("Setup colliders");
+	LOG("Set colliders");
 	//Colliders
 	pos = game_object->GetTransform()->GetGlobalPosition();
-	bodyColl = new Collider(game_object, { pos.x,pos.y,game_object->GetTransform()->GetLocalScaleX(),game_object->GetTransform()->GetLocalScaleY() }, NON_TRIGGER, PLAYER_TAG);
-	//visionColl = new Collider(game_object, { pos.x,pos.y,vision_range * 1.5f,vision_range *1.5f }, TRIGGER, PLAYER_VISION_TAG);
-	//attackColl = new Collider(game_object, { pos.x,pos.y,attack_range,attack_range }, TRIGGER, PLAYER_ATTACK_TAG);
-	
+	bodyColl = new Collider(game_object, { pos.x,pos.y,game_object->GetTransform()->GetLocalScaleX(),game_object->GetTransform()->GetLocalScaleY() }, NON_TRIGGER, PLAYER_TAG, { 0,Map::GetBaseOffset(),0,0 });
+	visionColl = new Collider(game_object, { pos.x,pos.y,vision_range,vision_range }, TRIGGER, PLAYER_VISION_TAG, { 0,Map::GetBaseOffset(),0,0 });
+	//attackColl = new Collider(game_object, { pos.x,pos.y,attack_range,attack_range }, TRIGGER, PLAYER_ATTACK_TAG, {});
 }
 
 void Behaviour::RecieveEvent(const Event& e)
@@ -415,9 +414,13 @@ B_Unit::B_Unit(Gameobject* go, UnitType t, UnitState s, ComponentType comp_type)
 	atkDelay = 1.0;
 	speed = 5;//MAX SPEED 60
 	attack_range = 3.0f;
+	vision_range = 10.0f;
 	damage = 5;
 	deathFX = UNIT_DIES;
 	attackFX = SELECT;
+	vision_range = 5.0f;
+
+	//UnitInit();
 
 	//Needed
 	path = nullptr;
@@ -436,7 +439,6 @@ B_Unit::B_Unit(Gameobject* go, UnitType t, UnitState s, ComponentType comp_type)
 	drawRanges = false;
 	gotTile = false;
 	game_object->SetStatic(false);
-	SetColliders();
 
 	//Info for ranged units constructor
 	/*vec pos = game_object->GetTransform()->GetGlobalPosition();

@@ -17,7 +17,7 @@ public:
 	void OnCollisionEnter(Collider selfCol, Collider col) override;
 	//void OnCollisionStay(Collider selfCol, Collider col) override;
 	void OnCollisionExit(Collider selfCol, Collider col) override;
-	void SetColliders() override;
+	void SetColliders();
 
 protected:
 	std::pair<int, int> destPos;

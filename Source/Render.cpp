@@ -197,7 +197,6 @@ bool Render::PostUpdate()
 					SetDrawColor(data->extra.color);
 					if (!(ret = (SDL_RenderDrawRect(renderer, &data->rect) == 0)))
 						LOG("Cannot draw empty rect. SDL_RenderFillRect error: %s", SDL_GetError());
-
 					break;
 				}
 				case RenderData::LINE:

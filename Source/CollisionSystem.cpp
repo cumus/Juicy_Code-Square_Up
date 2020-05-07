@@ -219,10 +219,17 @@ void CollisionSystem::Update()
 				for (std::vector<Collider*>::iterator itV = itL->second.begin(); itV != itL->second.end(); ++itV)
 				{
 					RectF rect = (*itV)->GetWorldColliderBounds();
-					RectF rect2 = (*itV)->GetColliderBounds();
+					//RectF rect2 = (*itV)->GetColliderBounds();
 					//LOG("Bounds X:%f/Y:%f/W:%f/H:%f",rect.x,rect.y,rect.w,rect.h);
-					App->render->DrawQuad({int(rect.x),int(rect.y),int(rect.w),int(rect.h)}, {0,255,0,255},false, DEBUG_SCENE,true);
-					App->render->DrawQuad({ int(rect2.x),int(rect2.y),int(rect2.w),int(rect2.h) }, { 255,0,0,255 }, false, DEBUG_SCENE, true);
+					//App->render->DrawQuad({int(rect.x),int(rect.y),int(rect.w),int(rect.h)}, {0,255,0,255},false, DEBUG_SCENE,true);
+					//App->render->DrawQuad({ int(rect2.x),int(rect2.y),int(rect2.w),int(rect2.h) }, { 255,0,0,255 }, false, DEBUG_SCENE, true);
+
+					//Coll iso
+					IsoLinesCollider lines = (*itV)->GetIsoLines();
+					App->render->DrawLine({ int(lines.top.first), int(lines.top.second) }, { int(lines.left.first), int(lines.left.second) }, {0,255,0,255}, DEBUG_SCENE);
+					App->render->DrawLine({ int(lines.top.first), int(lines.top.second) }, { int(lines.right.first), int(lines.right.second) }, { 0,255,0,255 }, DEBUG_SCENE);
+					App->render->DrawLine({ int(lines.bot.first), int(lines.bot.second) }, { int(lines.left.first), int(lines.left.second) }, { 0,255,0,255 }, DEBUG_SCENE);
+					App->render->DrawLine({ int(lines.bot.first), int(lines.bot.second) }, { int(lines.right.first), int(lines.right.second) }, { 0,255,0,255 }, DEBUG_SCENE);
 				}
 			}
 		}

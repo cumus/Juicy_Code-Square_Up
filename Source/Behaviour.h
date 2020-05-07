@@ -129,9 +129,8 @@ public:
 	virtual void OnCollisionEnter(Collider selfCol, Collider col) {}
 	virtual void OnCollisionStay(Collider selfCol, Collider col) {}
 	virtual void OnCollisionExit(Collider selfCol, Collider col) {}
-	virtual void SetColliders();
 	static bool IsHidden(double id) { return b_map[id]->visible; }
-
+	virtual void SetColliders();
 
 
 	UnitType GetType() const { return type; }

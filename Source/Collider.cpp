@@ -11,28 +11,25 @@
 #include "Point.h"
 
 
-Collider::Collider(Gameobject* go, RectF coll, ColliderType t, ColliderTag tg, CollisionLayer lay, ComponentType ty) : Component(ty, go)
+Collider::Collider(Gameobject* go, RectF coll, ColliderType t, ColliderTag tg, RectF off ,CollisionLayer lay, ComponentType ty) : Component(ty, go)
 {
     /*std::pair<float, float> localPos = Map::F_MapToWorld(coll.x, coll.y, 1.0f);
 	boundary.x = localPos.first;
     boundary.y = localPos.second;
     boundary.w = coll.w * 64;
     boundary.h = coll.h * 64;*/
-    vec s = game_object->GetTransform()->GetGlobalScale();
-    std::pair<float, float> tile_size = Map::GetTileSize_F();
-
+    //vec s = game_object->GetTransform()->GetGlobalScale();
+    tileSize = Map::GetTileSize_F();
+    //std::pair<float, float> pos = Map::F_MapToWorld(coll.x, coll.y);
     boundary = coll;
-    boundary.w = tile_size.first *= s.x;
-    boundary.h = tile_size.second *= s.y;
-   
+    boundary.w *= tileSize.first;// *= coll.w;
+    boundary.h *= tileSize.second;// *= coll.h;
+
     collType = t;
     layer = lay;
     tag = tg;
     App->collSystem.Add(this);
-    offset.x = 32.5f;
-    offset.y = 16.5f;
-    offset.w = 0;
-    offset.h = 0;
+    offset = off;
 }
 
 Collider::~Collider()
@@ -40,16 +37,36 @@ Collider::~Collider()
 
 void Collider::SetPosition()
 {
-    vec pos = game_object->GetTransform()->GetGlobalPosition();
+    vec localpos = game_object->GetTransform()->GetGlobalPosition();
+    std::pair<float, float> pos = Map::F_MapToWorld(localpos.x, localpos.y, localpos.z);
     //std::pair<float, float> localPos = Map::F_MapToWorld(pos.x, pos.y, pos.z);
     //LOG("Coll pos X:%f/Y:%f", pos.x, pos.y);
    // boundary.x = localPos.first - (boundary.w / 2) + offset.x;
    // boundary.y = localPos.second - (boundary.h / 2) + offset.y;
-    boundary.x = pos.x - (boundary.w / 2) + offset.x;
-    boundary.y = pos.y - (boundary.h / 2) + offset.y;
-    
+    boundary.x = pos.first; //- (boundary.w / 2) + offset.x;
+    boundary.y = pos.second; //- (boundary.h / 2) + offset.y;
+    ConvertToIsoPoints();
     //LOG("Bound pos X:%f/Y:%f",boundary.x,boundary.y);
 }
+
+void Collider::ConvertToIsoPoints()
+{
+    isoDraw.left = { boundary.x, boundary.y + (boundary.h * 0.5f) - boundary.h };
+    isoDraw.bot = { boundary.x + (boundary.w * 0.5f), boundary.y };
+    isoDraw.right = { boundary.x + boundary.w, boundary.y + (boundary.h * 0.5f) - boundary.h };
+    isoDraw.top = { boundary.x + (boundary.w * 0.5f) , boundary.y - boundary.h};
+    //float y_offset = Map::GetBaseOffset();
+    isoDraw.right.first += offset.x;
+    isoDraw.left.first += offset.x;
+    isoDraw.top.first += offset.x;
+    isoDraw.bot.first += offset.x;
+    isoDraw.right.second += offset.y;
+    isoDraw.left.second += offset.y;
+    isoDraw.top.second += offset.y;
+    isoDraw.bot.second += offset.y;
+}
+
+IsoLinesCollider Collider::GetIsoLines() { return isoDraw; }
 
 Manifold Collider::Intersects(Collider* other)
 {
