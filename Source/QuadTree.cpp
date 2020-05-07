@@ -3,7 +3,7 @@
 #include "Log.h"
 
 
-Quadtree::Quadtree() : Quadtree(10, 5, 0, {0.0f,0.0f,1920.0f,1080.0f},nullptr)
+Quadtree::Quadtree() : Quadtree(20, 5, 0, {0.0f,0.0f,1920.0f,1080.0f},nullptr)
 {}
 
 Quadtree::Quadtree(int maxObj, int maxlvl, int lvl, RectF bounds, Quadtree* p)
@@ -49,7 +49,7 @@ void Quadtree::Insert(Collider* obj)
 {
 	if (children[0] != nullptr)
 	{
-		int index = GetChildIndexForObject(obj->GetWorldColliderBounds());
+		int index = GetChildIndexForObject(obj->GetIsoLines());
 		if (index != THIS_TREE)
 		{
 			children[index]->Insert(obj);
@@ -65,7 +65,7 @@ void Quadtree::Insert(Collider* obj)
 
 		for (std::vector<Collider*>::const_iterator it = objects.cbegin(); it != objects.cend(); ++it)
 		{
-			int placeIndex = GetChildIndexForObject((*it)->GetWorldColliderBounds());
+			int placeIndex = GetChildIndexForObject((*it)->GetIsoLines());
 			if (placeIndex != THIS_TREE)
 			{
 				children[placeIndex]->Insert(obj);
@@ -77,7 +77,7 @@ void Quadtree::Insert(Collider* obj)
 
 void Quadtree::Remove(Collider* obj)
 {
-	int index = GetChildIndexForObject(obj->GetWorldColliderBounds());
+	int index = GetChildIndexForObject(obj->GetIsoLines());
 	if (index == THIS_TREE || children[index] == nullptr)
 	{
 		for (std::vector<Collider*>::const_iterator it = objects.cbegin(); it != objects.cend(); ++it)
@@ -124,12 +124,12 @@ void Quadtree::Search(Collider& obj, std::vector<Collider*>& list)
 	
 	if (children[0] != nullptr)
 	{
-		int index = GetChildIndexForObject(obj.GetWorldColliderBounds());
+		int index = GetChildIndexForObject(obj.GetIsoLines());
 		if(index == THIS_TREE)
 		{
 			for (int i = 0; i < 4; i++)
 			{
-				if (children[i]->IntersectsQuad(obj.GetWorldColliderBounds()))
+				if (children[i]->IntersectsQuad(obj.GetIsoLines()))
 				{
 					children[i]->Search(obj, list);
 				}
@@ -149,20 +149,12 @@ void Quadtree::Search(Collider& obj, std::vector<Collider*>& list)
 	}
 }
 
-bool Quadtree::IntersectsQuad(const RectF objective)
+bool Quadtree::IntersectsQuad(const IsoLinesCollider objective)
 {
-	bool ret = true;
+	bool ret = false;
 	const RectF coll = GetBounds();
-	/*if (objective.x - objective.w > coll.x + coll.w ||
-		objective.x + objective.w < coll.x - coll.w ||
-		objective.y - objective.h > coll.y + coll.h ||
-		objective.y + objective.h < coll.y - coll.h) //Intersects
-	{
-		ret = true;
-	}
-	*/
 //	LOG("Quad intersect obj X:%f/Y:%f",objective.x,objective.y);
-	fPoint topRight1(coll.x + coll.w, coll.y);
+	/*fPoint topRight1(coll.x + coll.w, coll.y);
 	fPoint topRight2(objective.x + objective.w, objective.y);
 	fPoint bottomLeft1(coll.x, coll.y + coll.h);
 	fPoint bottomLeft2(objective.x, objective.y + objective.h);
@@ -171,6 +163,18 @@ bool Quadtree::IntersectsQuad(const RectF objective)
 		topRight1.x < bottomLeft2.x || bottomLeft1.x > topRight2.x) //Non colliding
 	{
 		ret = false;
+	}*/
+	fPoint top(objective.top.first,objective.top.second);
+	fPoint bot(objective.bot.first, objective.bot.second);
+	fPoint left(objective.left.first, objective.left.second);
+	fPoint right(objective.right.first, objective.right.second);
+
+	if ((top.y > coll.y && top.y < coll.y+coll.h) ||
+		(bot.y < coll.y + coll.h && bot.y > coll.y) ||
+		(left.x > coll.x && left.x < coll.x+coll.w) || 
+		(right.x < coll.x+coll.w && right.x > coll.x)) //Colliding
+	{
+		ret = true;
 	}
 	return ret;
 }
@@ -188,16 +192,20 @@ void Quadtree::Split()
 }
 
 
-int Quadtree::GetChildIndexForObject(const RectF& objBound)
+int Quadtree::GetChildIndexForObject(const IsoLinesCollider& objBound)
 {
 	int index = THIS_TREE;
 	float verticalDividingLine = boundary.x + boundary.w * 0.5f;
 	float horizontalDividingLine = boundary.y + boundary.h * 0.5f;
 
-	bool north = objBound.y < horizontalDividingLine && (objBound.h + objBound.y < horizontalDividingLine);
+	/*bool north = objBound.y < horizontalDividingLine && (objBound.h + objBound.y < horizontalDividingLine);
 	bool south = objBound.y > horizontalDividingLine;
 	bool west = objBound.x < verticalDividingLine && (objBound.x + objBound.w < verticalDividingLine);
-	bool east = objBound.x > verticalDividingLine;
+	bool east = objBound.x > verticalDividingLine;*/
+	bool north = objBound.bot.second < horizontalDividingLine;
+	bool south = objBound.top.second > horizontalDividingLine;
+	bool west = objBound.right.first < verticalDividingLine;
+	bool east = objBound.left.first > verticalDividingLine;
 
 	if (east)
 	{

@@ -31,8 +31,8 @@ public:
 private:
 	void Split();
 	void Search(Collider& obj, std::vector<Collider*>& overlap);
-	int GetChildIndexForObject(const RectF& objBound);
-	bool IntersectsQuad(const RectF objective);
+	int GetChildIndexForObject(const IsoLinesCollider& objBound);
+	bool IntersectsQuad(const IsoLinesCollider objective);
 
 private:
 	int maxObjects;
