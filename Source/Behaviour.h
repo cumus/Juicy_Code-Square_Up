@@ -157,6 +157,9 @@ public:
 	Collider* bodyColl;
 	Collider* visionColl;
 	Collider* attackColl;
+	std::pair<float, float> baseCollOffset;
+	std::pair<float, float> visionCollOffset;
+	std::pair<float, float>	attackCollOffset;
 
 protected:	
 

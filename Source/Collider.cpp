@@ -51,10 +51,15 @@ void Collider::SetPosition()
 
 void Collider::ConvertToIsoPoints()
 {
-    isoDraw.left = { boundary.x, boundary.y + (boundary.h * 0.5f) - boundary.h };
-    isoDraw.bot = { boundary.x + (boundary.w * 0.5f), boundary.y };
-    isoDraw.right = { boundary.x + boundary.w, boundary.y + (boundary.h * 0.5f) - boundary.h };
-    isoDraw.top = { boundary.x + (boundary.w * 0.5f) , boundary.y - boundary.h};
+    vec s = game_object->GetTransform()->GetGlobalScale();
+    /*isoDraw.left = { boundary.x, boundary.y + (boundary.h * 0.5f) - (boundary.h * s.z) };
+    isoDraw.bot = { boundary.x + (boundary.w * 0.5f), boundary.y + boundary.h - (boundary.h * s.z) };
+    isoDraw.right = { boundary.x + boundary.w, boundary.y + (boundary.h * 0.5f) - (boundary.h * s.z) };
+    isoDraw.top = { boundary.x + (boundary.w * 0.5f) , boundary.y - (boundary.h * s.z) };*/
+    isoDraw.left = { boundary.x, boundary.y + (boundary.h * 0.5f) };
+    isoDraw.bot = { boundary.x + (boundary.w * 0.5f), boundary.y + boundary.h };
+    isoDraw.right = { boundary.x + boundary.w, boundary.y + (boundary.h * 0.5f) };
+    isoDraw.top = { boundary.x + (boundary.w * 0.5f) , boundary.y };
     //float y_offset = Map::GetBaseOffset();
     isoDraw.right.first += offset.x;
     isoDraw.left.first += offset.x;

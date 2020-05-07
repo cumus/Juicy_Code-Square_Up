@@ -23,6 +23,7 @@ Gatherer::Gatherer(Gameobject* go) : B_Unit(go, GATHERER, IDLE, B_GATHERER)
 
 	CreatePanel();
 	selectionPanel->SetInactive();
+	baseCollOffset = {0,-30};
 	SetColliders();
 }
 

@@ -39,6 +39,9 @@ Behaviour::Behaviour(Gameobject* go, UnitType t, UnitState starting_state, Compo
 	attackObjective = nullptr;
 	providesVisibility = true;
 	visible = true;
+	baseCollOffset = { 0,0 };
+	visionCollOffset = { 0,0 };
+	attackCollOffset = { 0,0 };
 	game_object->SetStatic(true);
 
 	audio = new AudioSource(game_object);
@@ -69,8 +72,8 @@ void Behaviour::SetColliders()
 	LOG("Set colliders");
 	//Colliders
 	pos = game_object->GetTransform()->GetGlobalPosition();
-	bodyColl = new Collider(game_object, { pos.x,pos.y,game_object->GetTransform()->GetLocalScaleX(),game_object->GetTransform()->GetLocalScaleY() }, NON_TRIGGER, PLAYER_TAG, { 0,Map::GetBaseOffset(),0,0 });
-	visionColl = new Collider(game_object, { pos.x,pos.y,vision_range,vision_range }, TRIGGER, PLAYER_VISION_TAG, { 0,Map::GetBaseOffset(),0,0 });
+	bodyColl = new Collider(game_object, { pos.x,pos.y,game_object->GetTransform()->GetLocalScaleX(),game_object->GetTransform()->GetLocalScaleY() }, NON_TRIGGER, PLAYER_TAG, { game_object->GetTransform()->GetLocalScaleX() + baseCollOffset.first,Map::GetBaseOffset()+ baseCollOffset.second,0,0 });
+	//visionColl = new Collider(game_object, { pos.x,pos.y,vision_range,vision_range }, TRIGGER, PLAYER_VISION_TAG, { -vision_range * 30,Map::GetBaseOffset() + vision_range * 9,0,0 });
 	//attackColl = new Collider(game_object, { pos.x,pos.y,attack_range,attack_range }, TRIGGER, PLAYER_ATTACK_TAG, {});
 }
 
