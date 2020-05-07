@@ -136,7 +136,7 @@ void Barracks::CreatePanel()
 	rangedUnit_btn->tex_id = panel_tex_ID;
 */
 	meleeUnit_btn = new C_Button(selectionPanel, Event(BUILD_MELEE, this, spawnPoint, 5.0f));//First option from the right
-	meleeUnit_btn->target = { -0.0125f, 0.7635, 1.5f, 1.5f };
+	meleeUnit_btn->target = { /*-0.0125f*/0.9125, 0.7635, 1.5f, 1.5f };
 	meleeUnit_btn->offset = { 0.0f,0.0f };
 
 	meleeUnit_btn->section[0] = { 1147, 51, 56, 49 };

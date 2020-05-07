@@ -49,6 +49,7 @@ enum EventType : char
 	RESUME,
 	BUTTON_EVENT,
 	PAUSE,
+	OPTIONS,
 
 	//// Scene states
 	//NEXT_STATE,

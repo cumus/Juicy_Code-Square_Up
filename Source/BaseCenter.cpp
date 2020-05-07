@@ -260,7 +260,6 @@ void Base_Center::create_bar() {
 
 	health_boarder = new C_Image(bar_go);
 	health_boarder->target = { 0.32f, 0.01f, 1.f, 0.9f };
-	health_boarder->offset = { 0.0f, 0.0f };
 	health_boarder->section = { 0, 772, 454, 44 };
 	health_boarder->tex_id = bar_text_id;
 	
@@ -270,7 +269,6 @@ void Base_Center::create_bar() {
 
 	red_health = new C_Image(red_health_go);
 	red_health->target = { 0.018f, 0.06f, 1.f, 0.9f };
-	red_health->offset = { 0.0f, 0.0f };
 	red_health->section = { 163, 733, 438, 38 };
 	red_health->tex_id = bar_text_id;
 
@@ -280,7 +278,6 @@ void Base_Center::create_bar() {
 
 	green_health = new C_Image(green_health_go);
 	green_health->target = { 0.018f, 0.06f, 1.f, 0.9f };
-	green_health->offset = { 0.0f, 0.0f };
 	green_health->section = { 0, 817, 439, 38 };
 	green_health->tex_id = bar_text_id;
 
@@ -296,7 +293,7 @@ void Base_Center::create_bar() {
 
 void Base_Center::update_health_ui() {
 
-	green_health->target = { 0.018f, 0.06f, 1.0f * (float(current_life) / float(max_life)), 1.0f };
+	green_health->section.w = 439 * float(current_life) / float(max_life);
 
 }
 

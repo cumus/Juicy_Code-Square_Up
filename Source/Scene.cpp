@@ -486,26 +486,25 @@ void Scene::LoadMenuScene()
 	//------------------------- BACKGROUND --------------------------------------
 
 	C_Image* background = new C_Image(AddGameobjectToCanvas("Background"));
-	background->target = { 1.f, 1.f, 1.f, 1.f };
-	background->offset = { -1280.f, -720.f };
+	background->target = { 0.f, 0.f, 1.f, 1.f };
 	background->section = { 0, 0, 1280, 720 };
 	background->tex_id = App->tex.Load("Assets/textures/background.png");
 
 	//------------------------- LOGO --------------------------------------
 
 	C_Image* g_logo = new C_Image(AddGameobjectToCanvas("Game logo"));
-	g_logo->target = { 0.6f, 0.6f, 0.6f, 0.6f };
-	g_logo->offset = { -1255.f, -500.f };
+	g_logo->target = { 0.05f, 0.05f, 0.6f, 0.6f };
 	g_logo->section = { 0, 0, 1070, 207 };
 	g_logo->tex_id = App->tex.Load("Assets/textures/game-logo.png");
 	
 	//------------------------- START --------------------------------------
 
+	float buttons_x = 0.01f;
+
 	Gameobject* start_go = AddGameobjectToCanvas("Start Button");
 	
 	C_Button* start = new C_Button(start_go, Event(BUTTON_EVENT, this, SCENE_CHANGE, MAIN));
-	start->target = { 0.f, 0.67f, .67f, .67f };
-	start->offset = { 25.f, -253.f };
+	start->target = { buttons_x, 0.43f, .67f, .67f };
 
 	start->section[0] = { 0, 0, 470, 90 };
 	start->section[1] = { 0, 101, 470, 90 };
@@ -514,28 +513,40 @@ void Scene::LoadMenuScene()
 
 	start->tex_id = App->tex.Load("Assets/textures/new-game.png");
 
-	//------------------------- FULLSCREEN --------------------------------------
+	//------------------------- RESUME --------------------------------------
 
-	Gameobject* fullscreen_go = AddGameobjectToCanvas("Fullscreen Button");
+	Gameobject* resume_go = AddGameobjectToCanvas("Resume Button");
 
-	C_Button* fullscreen = new C_Button(fullscreen_go, Event(BUTTON_EVENT, this, TOGGLE_FULLSCREEN));
-	fullscreen->target = { 0.f, 0.65f, .55f, .55f };
-	fullscreen->offset = { 30.f, -157.f };
+	C_Button* resume = new C_Button(resume_go, Event(BUTTON_EVENT, this, TOGGLE_FULLSCREEN));
+	resume->target = { buttons_x, 0.526f, .55f, .55f };
+	
+	resume->section[0] = { 0, 0, 470, 90 };
+	resume->section[1] = { 0, 101, 470, 90 };
+	resume->section[2] = { 0, 202, 470, 90 };
+	resume->section[3] = { 0, 202, 470, 90 };
 
-	fullscreen->section[0] = { 0, 0, 470, 90 };
-	fullscreen->section[1] = { 0, 101, 470, 90 };
-	fullscreen->section[2] = { 0, 202, 470, 90 };
-	fullscreen->section[3] = { 0, 202, 470, 90 };
+	resume->tex_id = App->tex.Load("Assets/textures/resume.png");
 
-	fullscreen->tex_id = App->tex.Load("Assets/textures/fullscreen.png");
+	//------------------------ OPTIONS ------------------------------------
+
+	Gameobject* options_go = AddGameobjectToCanvas("Options button");
+
+	C_Button* options = new C_Button(options_go, Event(BUTTON_EVENT,this, SCENE_CHANGE, OPTIONS));
+	options->target = { buttons_x, 0.605f, .55f, .55f };
+
+	options->section[0] = { 0, 0, 470, 90 };
+	options->section[1] = { 0, 101, 470, 90 };
+	options->section[2] = { 0, 202, 470, 90 };
+	options->section[3] = { 0, 202, 470, 90 };
+
+	options->tex_id = App->tex.Load("Assets/textures/options.png");
 
 	//------------------------- QUIT --------------------------------------
 
 	Gameobject* quit_go = AddGameobjectToCanvas("Quit Button");
 
 	C_Button* quit = new C_Button(quit_go, Event(BUTTON_EVENT, this, REQUEST_QUIT));
-	quit->target = { 0.f, 0.65f, .55f, .55f };
-	quit->offset = { 30.f, -55.f };
+	quit->target = { buttons_x, 0.685f, .55f, .55f };
 
 	quit->section[0] = { 0, 0, 470, 90 };
 	quit->section[1] = { 0, 101, 470, 90 };
@@ -596,28 +607,34 @@ void Scene::LoadEndScene()
 	time->section = { 0, 0, 693, 100 };
 	time->tex_id = App->tex.Load(win ? "Assets/textures/wtime.png" : "Assets/textures/ltime.png");
 
-	//------------------------- EDGE --------------------------------------
+	/*char timer_text[10] = std::to_string(App->time.GetGameTimer()).c_str();
+
+	C_Text* timer = new C_Text(,AddGameobject("Timer"));
+	timer->target = { 0.6f, 0.1f, 1.f, 1.f };
+	timer->text = std::to_string(App->time.GetGameTimer()).c_str();*/
+
+	//------------------------- TOTAL EDGE --------------------------------------
 
 	C_Image* edge = new C_Image(AddGameobjectToCanvas("edge"));
 	edge->target = { info_pos, 0.40f, 0.6f, 0.65f };
 	edge->section = { 0, 0, 693, 100 };
 	edge->tex_id = App->tex.Load(win ? "Assets/textures/wedge.png" : "Assets/textures/ledge.png");
 
-	//------------------------- UNITS CREATED --------------------------------------
+	//------------------------- TOTAL UNITS CREATED --------------------------------------
 
 	C_Image* units_c = new C_Image(AddGameobjectToCanvas("created"));
 	units_c->target = { info_pos, 0.52f, 0.6f, 0.65f };
 	units_c->section = { 0, 0, 693, 100 };
 	units_c->tex_id = App->tex.Load(win ? "Assets/textures/wunits_c.png" : "Assets/textures/lunits_c.png");
 
-	//------------------------- UNITS LOST --------------------------------------
+	//------------------------- TOTAL UNITS LOST --------------------------------------
 
 	C_Image* units_l = new C_Image(AddGameobjectToCanvas("lost"));
 	units_l->target = { info_pos, 0.64f, 0.6f, 0.65f };
 	units_l->section = { 0, 0, 693, 100 };
 	units_l->tex_id = App->tex.Load(win ? "Assets/textures/wunits_l.png" : "Assets/textures/lunits_l.png");
 
-	//------------------------- UNITS KILLED --------------------------------------
+	//------------------------- TOTAL UNITS KILLED --------------------------------------
 
 	C_Image* units_k = new C_Image(AddGameobjectToCanvas("killed"));
 	units_k->target = { info_pos, 0.76f, 0.6f, 0.65f };
@@ -630,7 +647,7 @@ void Scene::LoadMainHUD()
 	int icons_text_id = App->tex.Load("Assets/textures/hud-sprites.png");
 
 	//-----------------------------------------------------------------------------
-	//----------------------------LEFT BAR----------------------------------------
+	//----------------------------LEFT BAR-----------------------------------------
 	//-----------------------------------------------------------------------------
 
 	Gameobject* left_bar_go = AddGameobjectToCanvas("Left bar");
