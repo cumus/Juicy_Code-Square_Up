@@ -19,9 +19,9 @@ Minimap::Minimap(Gameobject* go) : UI_Component(go, go->GetUIParent(), UI_MINIMA
 
 	// Setup Minimap
 	map_scale = 0.5f;
-	std::pair<int, int> map_size = Map::GetMapSize_I();
-	std::pair<int, int> tile_size = Map::GetTileSize_I();
-	std::pair<int, int> total_size = { int(float(map_size.first * tile_size.first) * map_scale), int(float(map_size.second * tile_size.second) * map_scale) };
+	map_size = Map::GetMapSize_I();
+    tile_size = Map::GetTileSize_I();
+	total_size = { int(float(map_size.first * tile_size.first) * map_scale), int(float(map_size.second * tile_size.second) * map_scale) };
 	minimap_texture = App->render->GetMinimap(total_size.first, total_size.second, map_scale, false);
 
 	// Set UI_Component values
@@ -55,6 +55,7 @@ void Minimap::PostUpdate()
 	ComputeOutputRect(float(sections[MINIMAP].w), float(sections[MINIMAP].h));
 
 	// Minimap
+	App->render->RenderMinimap();
 	App->render->DrawQuad(output, { 0, 0, 0, 255 }, true, HUD, false);
 	std::pair<float, float> scale = { float(output.w) / float(sections[MINIMAP].w), float(output.h) / float(sections[MINIMAP].h) };
 	App->render->Blit_Scale(minimap_texture, output.x, output.y, scale.first, scale.second, nullptr, HUD, false);

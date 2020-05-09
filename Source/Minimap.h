@@ -27,6 +27,9 @@ private:
 	int hud_texture;
 	float map_scale;
 	bool mouse_moving;
+	std::pair<int, int> map_size;
+	std::pair<int, int> tile_size;
+	std::pair<int, int> total_size;
 
 	enum MinimapTexture : int
 	{

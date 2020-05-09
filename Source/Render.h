@@ -4,6 +4,7 @@
 #include "Module.h"
 #include "SDL/include/SDL_rect.h"
 #include "SDL/include/SDL_pixels.h"
+#include "TextureManager.h"
 #include "Point.h"
 #include <map>
 #include <vector>
@@ -86,11 +87,11 @@ public:
 
 	// Set background color
 	void SetBackgroundColor(SDL_Color color);
+	bool RenderMinimap();
 
 private:
 
 	bool SetDrawColor(SDL_Color color);
-	bool RenderMinimap();
 
 private:
 
@@ -105,6 +106,12 @@ private:
 	float zoom = 1.0f;
 	static std::pair<float, float> target_res;
 	static std::pair<float, float> res_ratio;
+
+	//Minimap
+	//TextureData data;
+	//int minimap_half_width;
+	//std::vector<std::pair<SDL_Rect, SDL_Rect>> rects;
+	//SDL_Texture* mini_tex = nullptr;
 
 	// Layer mapping
 	struct RenderData

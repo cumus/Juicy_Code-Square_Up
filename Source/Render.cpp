@@ -370,11 +370,13 @@ bool Render::RenderMinimap()
 	bool ret = false;
 	TextureData data;
 
+
 	if (App->tex.GetTextureData(minimap_texture, data))
 	{
 		int minimap_half_width = int(float(data.width) * 0.5f);
 		if (SDL_SetRenderTarget(renderer, data.texture) == 0)
 		{
+			SDL_RenderClear(renderer);
 			std::vector<std::pair<SDL_Rect, SDL_Rect>> rects;
 			Map::SetMapScale(minimap_scale);
 			SDL_Texture* tex = Map::GetMapC()->GetFullMap(rects);
@@ -382,11 +384,15 @@ bool Render::RenderMinimap()
 			{
 				for (std::vector<std::pair<SDL_Rect, SDL_Rect>>::const_iterator it = rects.cbegin(); it != rects.cend() && ret; ++it)
 				{
-					SDL_Rect r = it->second;
-					r.x += minimap_half_width;
+					SDL_Rect r = it->second;					
+					std::pair<int, int> x = Map::I_WorldToMap(r.x,r.y);
+					if (FogOfWarManager::fogMap[x.first][x.second])
+					{
+						r.x += minimap_half_width;
 
-					if (!(ret = SDL_RenderCopy(renderer, tex, &it->first, &r) == 0))
-						LOG("Cannot blit to minimap texture. SDL_RenderCopy error: %s", SDL_GetError());
+						if (!(ret = SDL_RenderCopy(renderer, tex, &it->first, &r) == 0))
+							LOG("Cannot blit to minimap texture. SDL_RenderCopy error: %s", SDL_GetError());
+					}
 				}
 			}
 			else
@@ -423,7 +429,7 @@ int Render::GetMinimap(int width, int height, float scale, bool trigger_event)
 		minimap_texture = App->tex.CreateEmptyTexture(renderer, width, height);
 	}
 
-	trigger_event ? Event::Push(MINIMAP_UPDATE_TEXTURE, this) : RenderMinimap();
+	//trigger_event ? Event::Push(MINIMAP_UPDATE_TEXTURE, this) : RenderMinimap();
 
 	return minimap_texture;
 }
