@@ -66,6 +66,9 @@ void Base_Center::Update()
 		if (!progress_bar->GetGameobject()->IsActive())
 			progress_bar->GetGameobject()->SetActive();
 
+		if (!icon->GetGameobject()->IsActive())
+			icon->GetGameobject()->SetActive();
+
 		float percent = build_queue.front().Update();
 		if (percent >= 1.0f)
 		{
@@ -75,9 +78,23 @@ void Base_Center::Update()
 
 			if (build_queue.empty())
 				progress_bar->GetGameobject()->SetInactive();
+			icon->GetGameobject()->SetInactive();
 		}
 		else
 		{
+			switch (build_queue.front().type)
+			{
+			case GATHERER:
+				icon->SetSection({ 75, 458, 48, 35 });
+				break;
+			case UNIT_MELEE:
+				icon->SetSection({ 22, 463, 48, 35 });
+				break;
+			case UNIT_RANGED:
+				icon->SetSection({ 22, 463, 48, 35 });
+				break;
+			}
+
 			SDL_Rect section = bar_section;
 			section.w = int(float(section.w) * percent);
 			progress_bar->SetSection(section);

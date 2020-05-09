@@ -190,6 +190,7 @@ protected:
 	};
 
 	vec spawnPoint;
+	Sprite* icon;
 	Sprite* progress_bar;
 	static SDL_Rect bar_section;
 	std::list<QueuedUnit> build_queue;

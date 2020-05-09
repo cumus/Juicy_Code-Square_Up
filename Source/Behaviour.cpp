@@ -873,20 +873,8 @@ BuildingWithQueue::QueuedUnit::QueuedUnit(UnitType type, Gameobject* go, vec pos
 	if (go)
 	{
 
-		Gameobject* icon = App->scene->AddGameobject("Queued Unit", go);
-		transform = icon->GetTransform();
-		switch (type)
-		{
-		case GATHERER:
-			new Sprite(icon, App->tex.Load("Assets/textures/Iconos_square_up.png"), { 75, 458, 48, 35 }, FRONT_SCENE, { -0.f, -50.f, 0.2f, 0.2f });
-			break;
-		case UNIT_MELEE:
-			new Sprite(icon, App->tex.Load("Assets/textures/Iconos_square_up.png"), { 22, 463, 48, 35 }, FRONT_SCENE, { -0.f, -50.f, 0.2f, 0.2f });
-			break;
-		case UNIT_RANGED:
-			new Sprite(icon, App->tex.Load("Assets/textures/Iconos_square_up.png"), { 22, 463, 48, 35 }, FRONT_SCENE, { -0.f, -50.f, 0.2f, 0.2f });
-			break;
-		}
+		Gameobject* queued_unit = App->scene->AddGameobject("Queued Unit", go);
+		transform = queued_unit->GetTransform();
 	}
 	else
 		transform = nullptr;
@@ -909,6 +897,12 @@ BuildingWithQueue::BuildingWithQueue(Gameobject* go, UnitType type, UnitState st
 	new Sprite(back_bar, texture_id, { 41, 698, 216, 16 }, FRONT_SCENE, { 0.f, 13.f, 0.29f, 0.2f });
 	progress_bar = new Sprite(back_bar, texture_id, bar_section = { 41, 721, 216, 16 }, FRONT_SCENE, { 0.f, 13.f, 0.29f, 0.2f });
 	back_bar->SetInactive();
+
+	Gameobject* unit_icon = App->scene->AddGameobject("Unit Icon", game_object);
+
+	icon = new Sprite(unit_icon, texture_id, { 0, 0, 0, 0 }, FRONT_SCENE, { -50.f, 0.f, 0.2f, 0.2f });
+
+	unit_icon->SetInactive();
 }
 
 void BuildingWithQueue::Update()
@@ -917,6 +911,9 @@ void BuildingWithQueue::Update()
 	{
 		if (!progress_bar->GetGameobject()->IsActive())
 			progress_bar->GetGameobject()->SetActive();
+
+		if (!icon->GetGameobject()->IsActive())
+			icon->GetGameobject()->SetActive();
 
 		float percent = build_queue.front().Update();
 		if (percent >= 1.0f)
@@ -927,9 +924,23 @@ void BuildingWithQueue::Update()
 
 			if (build_queue.empty())
 				progress_bar->GetGameobject()->SetInactive();
+			    icon->GetGameobject()->SetInactive();
 		}
 		else
 		{
+			switch (build_queue.front().type)
+			{
+			case GATHERER:
+				icon->SetSection({ 75, 458, 48, 35 });
+				break;
+			case UNIT_MELEE:
+				icon->SetSection({ 22, 463, 48, 35 });
+				break;
+			case UNIT_RANGED:
+				icon->SetSection({ 22, 463, 48, 35 });
+				break;
+			}
+
 			SDL_Rect section = bar_section;
 			section.w = int(float(section.w) * percent);
 			progress_bar->SetSection(section);
