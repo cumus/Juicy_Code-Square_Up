@@ -24,7 +24,7 @@ CollisionSystem::CollisionSystem()
 	collisionLayers[SCENE_LAYER][DEFAULT_LAYER] = true;
 	collisionLayers[DEFAULT_LAYER][SCENE_LAYER] = true;
 	collisionLayers[INPUT_LAYER][HUD_LAYER] = true;
-	collisionTree = new Quadtree(20, 5, 0, { 0.0f,0.0f,/*Map::GetMapSize_F().first,Map::GetMapSize_F().second*/17000,9500 }, nullptr);
+	collisionTree = new Quadtree(20, 5, 0, { 0.0f,0.0f,17000,9500 }, nullptr);
 	debug = false;
 }
 
@@ -129,7 +129,7 @@ void CollisionSystem::Resolve()
 		{		
 			if (!(*itV)->GetGameobject()->GetStatic())//static object not collision resolve
 			{
-				std::vector<Collider*> collisions = collisionTree->Search(*(*itV));
+				std::vector<Collider*> collisions= collisionTree->Search(*(*itV));
 				if (!collisions.empty())
 				{
 					//LOG("Got collisions");
@@ -231,27 +231,7 @@ void CollisionSystem::Update()
 				}
 			}
 		}
-
-		for (std::map<CollisionLayer, std::vector<Collider*>>::iterator itL = layerColliders.begin(); itL != layerColliders.end(); ++itL)
-		{
-			if (!itL->second.empty())
-			{
-				//LOG("colliders length: %d", itL->second.size());
-				for (std::vector<Collider*>::iterator itV = itL->second.begin(); itV != itL->second.end(); ++itV)
-				{
-					//Coll iso
-					IsoLinesCollider lines = (*itV)->GetIsoPoints();
-					App->render->DrawLine({ int(lines.top.first), int(lines.top.second) }, { int(lines.left.first), int(lines.left.second) }, { 0,255,0,255 }, DEBUG_SCENE);
-					App->render->DrawLine({ int(lines.top.first), int(lines.top.second) }, { int(lines.right.first), int(lines.right.second) }, { 0,255,0,255 }, DEBUG_SCENE);
-					App->render->DrawLine({ int(lines.bot.first), int(lines.bot.second) }, { int(lines.left.first), int(lines.left.second) }, { 0,255,0,255 }, DEBUG_SCENE);
-					App->render->DrawLine({ int(lines.bot.first), int(lines.bot.second) }, { int(lines.right.first), int(lines.right.second) }, { 0,255,0,255 }, DEBUG_SCENE);
-					//LOG("Bot X:%f/Y:%f",lines.bot.first,lines.bot.second);
-					//LOG("Top X:%f/Y:%f", lines.top.first, lines.top.second);
-					//LOG("Left X:%f/Y:%f", lines.left.first, lines.left.second);
-					//LOG("Right X:%f/Y:%f", lines.right.first, lines.right.second);
-				}
-			}
-		}
+		collisionTree->DebugDrawBounds();
 	}
 }
 

@@ -9,10 +9,10 @@
 #include <vector>
 
 #define THIS_TREE -1
-#define CHILD_NE 0
-#define CHILD_NW 1
-#define CHILD_SE 2
-#define CHILD_SW 3
+#define CHILD_NW 0
+#define CHILD_NE 1
+#define CHILD_SW 2
+#define CHILD_SE 3
 
 class Quadtree
 {
@@ -27,9 +27,13 @@ public:
 	void Remove(Collider* obj);
 	std::vector<Collider*> Search(Collider& obj);
 	RectF GetBounds() { return boundary; }
+	std::vector<Quadtree*> GetChilds();
+	bool GotChilds();
+	void DebugDrawBounds();
+	void Split();
 
 private:
-	void Split();
+	
 	void Search(Collider& obj, std::vector<Collider*>& overlap);
 	int GetChildIndexForObject(const IsoLinesCollider& objBound);
 	bool IntersectsQuad(const IsoLinesCollider objective);

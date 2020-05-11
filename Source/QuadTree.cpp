@@ -1,5 +1,7 @@
 #include "SDL/include/SDL.h"
 #include "QuadTree.h"
+#include "Application.h"
+#include "Render.h"
 #include "Log.h"
 
 
@@ -11,9 +13,9 @@ Quadtree::Quadtree(int maxObj, int maxlvl, int lvl, RectF bounds, Quadtree* p)
 	maxObjects = maxObj;
 	maxLevels = maxlvl;
 	level = lvl;
-	boundary = bounds;
-	boundary.x -= 9100;
+	boundary = bounds;	
 	parent = p;
+	if (parent == nullptr) boundary.x -= 9100;
 	children[0] = nullptr;
 	children[1] = nullptr;
 	children[2] = nullptr;
@@ -42,6 +44,39 @@ void Quadtree::Clear()
 			children[i]->Clear();
 			children[i] = nullptr;
 		}
+	}
+}
+
+std::vector<Quadtree*> Quadtree::GetChilds()
+{
+	std::vector<Quadtree*> childs;
+	if (GotChilds())
+	{
+		childs.push_back(children[0]);
+		childs.push_back(children[1]);
+		childs.push_back(children[2]);
+		childs.push_back(children[3]);
+	}
+	return childs;
+}
+
+bool Quadtree::GotChilds()
+{
+	if (children[0] != nullptr) return true;
+	else return false;
+}
+
+void Quadtree::DebugDrawBounds()
+{
+	RectF quad = GetBounds();
+	LOG("Bounds X:%f/Y:%f/W:%f/H:%f", boundary.x, boundary.y, boundary.w, boundary.h);
+	App->render->DrawQuad(SDL_Rect({ int(quad.x),int(quad.y),int(quad.w),int(quad.h) }), { 255,0,0,255 }, false, DEBUG_SCENE, true);
+	if (GotChilds())
+	{
+		children[0]->DebugDrawBounds();
+		children[1]->DebugDrawBounds();
+		children[2]->DebugDrawBounds();
+		children[3]->DebugDrawBounds();
 	}
 }
 
@@ -182,11 +217,11 @@ bool Quadtree::IntersectsQuad(const IsoLinesCollider objective)
 
 void Quadtree::Split()
 {
-	const float childWidth = boundary.w / 2;
-	const float childHeight = boundary.h / 2;
+	float childWidth = boundary.w / 2;
+	float childHeight = boundary.h / 2;
 
-	children[CHILD_NE] = new Quadtree(maxObjects, maxLevels, level + 1, { boundary.x + childWidth, boundary.y, childWidth, childHeight },this);
-	children[CHILD_NW] = new Quadtree(maxObjects, maxLevels, level + 1,{ boundary.x, boundary.y, childWidth, childHeight },this);
+	children[CHILD_NW] = new Quadtree(maxObjects, maxLevels, level + 1, { boundary.x, boundary.y, childWidth, childHeight },this);
+	children[CHILD_NE] = new Quadtree(maxObjects, maxLevels, level + 1,{ boundary.x+childWidth, boundary.y, childWidth, childHeight },this);
 	children[CHILD_SW] = new Quadtree(maxObjects, maxLevels, level + 1,{ boundary.x, boundary.y + childHeight, childWidth, childHeight }, this);
 	children[CHILD_SE] = new Quadtree(maxObjects, maxLevels, level + 1, { boundary.x + childWidth, boundary.y + childHeight, childWidth, childHeight }, this);
 }
