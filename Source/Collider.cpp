@@ -24,6 +24,7 @@ Collider::Collider(Gameobject* go, RectF coll, ColliderType t, ColliderTag tg, R
     tag = tg;
     App->collSystem.Add(this);
     offset = off;
+    GoID = go->GetID();
 }
 
 Collider::~Collider()
@@ -139,31 +140,6 @@ Manifold Collider::Intersects(Collider* other)
         m.colliding = true;
         m.other = other->GetIsoPoints();
     }
-    /*if (isoDraw.top.first > otherColl.top.first || isoDraw.bot.second < otherColl.top.second ||
-        isoDraw.top.first < otherColl.bot.first || isoDraw.bot.first > otherColl.top.first) //Non colliding
-    {
-        LOG("Non colliding");
-        m.colliding = false;
-    }*/
-
-   /* if (topRight1.y > bottomLeft2.y)
-    {
-        LOG("Bottom");
-    }
-    if (bottomLeft1.y < topRight2.y)
-    {
-        LOG("TOP");
-    }
-    if (topRight1.x < bottomLeft2.x)
-    {
-        LOG("LEFT");
-    }
-    if (bottomLeft1.x > topRight2.x)
-    {
-        LOG("RIGHT");
-    }*/
-
- 
     return m;
 }
 
@@ -173,13 +149,7 @@ void Collider::ResolveOverlap(Manifold& m)
     {
         Transform* t = game_object->GetTransform();
         vec pos = t->GetGlobalPosition();
-        //const RectF& rect1 = GetColliderBounds();
         const RectF rect1 = GetColliderBounds();
-        //const RectF* rect2 = m.other;
-        /*std::pair<float,float> otherRect = Map::F_WorldToMap(m.other->x,m.other->y);
-        float res = 0;
-        float xDif = (rect1.x + (rect1.w * 0.5f)) - (otherRect.first + (m.other->w * 0.5f));
-        float yDif = (rect1.y + (rect1.h * 0.5f)) - (otherRect.second + (m.other->h * 0.5f));*/
         IsoLinesCollider otherColl = m.other;
         float res = 0;
         float xDif = isoDraw.top.first - otherColl.top.first;
@@ -187,33 +157,12 @@ void Collider::ResolveOverlap(Manifold& m)
 
 
         //LOG("Xdif: %f/Ydif:%f",xDif,yDif);
-        /*if (xDif > 0) // Colliding on the left.
-        {
-            res = 9.5f;//(rect2->x + rect2->w) - rect1.x;
-        }
-        else // Colliding on the right.
-        {
-            res = 9.5f;//((rect1.x + rect1.w) - rect2->x);
-        }*/
         //LOG("Move res %f",res);
-        //pos.x += res;
-        //if(App->pathfinding.ValidTile(int(pos.x), int(pos.y)) == true) t->MoveX(res * 0.5 * App->time.GetGameDeltaTime());//Move x      
         t->MoveX(xDif/6 * App->time.GetGameDeltaTime());//Move x      
 
-        /*if (yDif > 0) // Colliding above.
-        {
-            res = -9.5f;//(rect2->y + rect2->h) - rect1.y;
-        }
-        else // Colliding below
-        {
-            res = 9.5f;// ((rect1.y + rect1.h) - rect2->y);
-        }*/
         //LOG("Move res %f", res);
-        //pos.y += res;
-        //if(App->pathfinding.ValidTile(int(pos.x), int(pos.y)) == true) t->MoveY(res * 0.5 * App->time.GetGameDeltaTime());//Move y
         t->MoveY(yDif/6 * App->time.GetGameDeltaTime());//Move y
         
-        //vec pos = t->GetGlobalPosition();
         //LOG("New pos X:%f/Y:%f",pos.x,pos.y);
     }  
 }
@@ -225,6 +174,8 @@ void Collider::SaveCollision(double id)
         collisions.push_back(id);
     }    
 }
+
+double Collider::GetGoID() { return GoID; }
 
 bool Collider::GetCollisionState(double ID)
 {
@@ -258,7 +209,6 @@ RectF Collider::GetISOColliderBounds()
 RectF Collider::GetWorldColliderBounds()
 {
     std::pair<float, float> pos = Map::F_MapToWorld(boundary.x, boundary.y, 1.0f);
-    //std::pair<float, float> length = Map::F_MapToWorld(boundary.x + boundary.w, boundary.y + boundary.h, 1.0f);
     return  RectF({ pos.first,pos.second,boundary.w,boundary.h });
 }
 

@@ -69,7 +69,7 @@ bool Quadtree::GotChilds()
 void Quadtree::DebugDrawBounds()
 {
 	RectF quad = GetBounds();
-	LOG("Bounds X:%f/Y:%f/W:%f/H:%f", boundary.x, boundary.y, boundary.w, boundary.h);
+	//LOG("Bounds X:%f/Y:%f/W:%f/H:%f", boundary.x, boundary.y, boundary.w, boundary.h);
 	App->render->DrawQuad(SDL_Rect({ int(quad.x),int(quad.y),int(quad.w),int(quad.h) }), { 255,0,0,255 }, false, DEBUG_SCENE, true);
 	if (GotChilds())
 	{

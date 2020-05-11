@@ -84,6 +84,7 @@ public:
 	void DeleteCollision(double ID);
 	void SetPosition();
 	IsoLinesCollider GetIsoPoints();
+	double GetGoID();
 
 private:
 	void ConvertToIsoPoints();
@@ -97,6 +98,7 @@ private:
 	std::vector<double> collisions;
 	std::pair<float, float> tileSize;
 	IsoLinesCollider isoDraw;
+	double GoID;
 };
 
 #endif // !__COLLIDER_H__

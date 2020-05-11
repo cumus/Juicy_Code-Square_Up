@@ -45,9 +45,9 @@ void EnemyMeleeUnit::SetColliders()
 {
 	//Colliders
 	pos = game_object->GetTransform()->GetGlobalPosition();
-	bodyColl = new Collider(game_object, { pos.x,pos.y,game_object->GetTransform()->GetLocalScaleX(),game_object->GetTransform()->GetLocalScaleY() }, NON_TRIGGER, ENEMY_TAG);
-	visionColl = new Collider(game_object, { pos.x,pos.y,vision_range,vision_range }, TRIGGER, ENEMY_VISION_TAG);
-	attackColl = new Collider(game_object, { pos.x,pos.y,attack_range,attack_range }, TRIGGER, ENEMY_ATTACK_TAG);
+	bodyColl = new Collider(game_object, { pos.x,pos.y,game_object->GetTransform()->GetLocalScaleX(),game_object->GetTransform()->GetLocalScaleY() }, NON_TRIGGER, ENEMY_TAG, { 0,Map::GetBaseOffset(),0,0 });
+	visionColl = new Collider(game_object, { pos.x,pos.y,vision_range,vision_range }, TRIGGER, ENEMY_VISION_TAG, { 0,Map::GetBaseOffset(),0,0 });
+	attackColl = new Collider(game_object, { pos.x,pos.y,attack_range,attack_range }, TRIGGER, ENEMY_ATTACK_TAG, { 0,Map::GetBaseOffset(),0,0 });
 }
 
 void EnemyMeleeUnit::UpdatePath(int x, int y)
@@ -88,7 +88,7 @@ void EnemyMeleeUnit::IARangeCheck()
 		{
 		case IDLE_IA:
 		{
-			if (inRange)
+			/*if (inRange)
 			{
 				newState = ATTACKING_IA;
 			}
@@ -100,7 +100,7 @@ void EnemyMeleeUnit::IARangeCheck()
 			{
 				newState = BASE_IA;
 				attackObjective = nullptr;
-			}
+			}*/
 			/*std::map<float, Behaviour*> out;
 			unsigned int total_found = GetBehavioursInRange(vec(pos.x, pos.y, 0.5f), vision_range, out);//Get units in vision range
 			float distance = 0;
@@ -205,9 +205,7 @@ void EnemyMeleeUnit::IARangeCheck()
 			state = ATTACKING_IA;
 			break;
 		}
-		}
-
-		
+		}		
 
 		/*if (attackObjective != nullptr && attackObjective->GetType() != BASE_CENTER)//Check if there is a valid objective
 		{
@@ -228,20 +226,29 @@ void EnemyMeleeUnit::OnCollisionEnter(Collider selfCol, Collider col)
 {
 	if (selfCol.GetColliderTag() == ENEMY_ATTACK_TAG)
 	{
+		LOG("Atk");
+		//LOG("Coll tag :%d", selfCol.GetColliderTag());
+		//LOG("Coll tag :%d", col.GetColliderTag());
 		if (col.GetColliderTag() == PLAYER_TAG)
 		{
-			inRange = true;
+			LOG("Player unit in attack range");
+			/*inRange = true;
 			inVision = false;
-			if (attackObjective == nullptr) attackObjective = col.GetGameobject()->GetBehaviour();
+			if (attackObjective == nullptr) attackObjective = col.GetGameobject()->GetBehaviour();*/
 		}
 	}
-	else if (selfCol.GetColliderTag() == ENEMY_VISION_TAG)
+
+	if (selfCol.GetColliderTag() == ENEMY_VISION_TAG)
 	{
+		LOG("Vision");
+		//LOG("Coll tag :%d", selfCol.GetColliderTag());
+		//LOG("Coll tag :%d", col.GetColliderTag());
 		if (col.GetColliderTag() == PLAYER_TAG)
 		{
-			inRange = false;
+			LOG("Player unit in vision");
+			/*inRange = false;
 			inVision = true;
-			if (attackObjective == nullptr) attackObjective = col.GetGameobject()->GetBehaviour();
+			if (attackObjective == nullptr) attackObjective = col.GetGameobject()->GetBehaviour();*/
 		}
 	}	
 }

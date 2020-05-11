@@ -129,7 +129,7 @@ void CollisionSystem::Resolve()
 		{		
 			if (!(*itV)->GetGameobject()->GetStatic())//static object not collision resolve
 			{
-				std::vector<Collider*> collisions= collisionTree->Search(*(*itV));
+				std::vector<Collider*> collisions = collisionTree->Search(*(*itV));
 				if (!collisions.empty())
 				{
 					//LOG("Got collisions");
@@ -137,7 +137,7 @@ void CollisionSystem::Resolve()
 					{
 						//LOG("This go id: %lf", (*itV)->GetGameobject()->GetID());
 						//LOG("Other go id: %lf", (*it)->GetGameobject()->GetID());
-						if ((*itV)->GetID() != (*it)->GetID() && (*itV)->GetGameobject()->GetID() != (*it)->GetGameobject()->GetID())
+						if ((*itV)->GetID() != (*it)->GetID() && (*itV)->GetGoID() != (*it)->GetGoID())
 						{
 							//LOG("Check if collides");
 							if (collisionLayers[(*itV)->GetCollLayer()][(*it)->GetCollLayer()])
@@ -145,8 +145,9 @@ void CollisionSystem::Resolve()
 								Manifold m = (*itV)->Intersects(*it);
 								if (m.colliding)
 								{
+									if ((*itV)->GetGameobject()->GetBehaviour()->GetState() != DESTROYED) Event::Push(ON_COLL_ENTER, (*itV)->GetGameobject(), (*itV)->GetID(), (*it)->GetID());
 									//LOG("Save collision");
-									if (!(*itV)->GetCollisionState((*it)->GetID()))//First collision
+									/*if (!(*itV)->GetCollisionState((*it)->GetID()))//First collision
 									{
 										(*itV)->SaveCollision((*it)->GetID());
 										if((*itV)->GetGameobject()->GetBehaviour()->GetState() != DESTROYED) Event::Push(ON_COLL_ENTER, (*itV)->GetGameobject(), (*itV)->GetID(), (*it)->GetID());
@@ -156,7 +157,7 @@ void CollisionSystem::Resolve()
 									{
 										if ((*itV)->GetGameobject()->GetBehaviour()->GetState() != DESTROYED) Event::Push(ON_COLL_STAY, (*itV)->GetGameobject(), (*itV)->GetID(),(*it)->GetID());
 										//LOG("Coll stay");
-									}
+									}*/
 
 									if ((*itV)->GetCollType() != TRIGGER && (*it)->GetCollType() != TRIGGER)
 									{
