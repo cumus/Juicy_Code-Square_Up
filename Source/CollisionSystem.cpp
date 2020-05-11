@@ -145,19 +145,31 @@ void CollisionSystem::Resolve()
 								Manifold m = (*itV)->Intersects(*it);
 								if (m.colliding)
 								{
-									if ((*itV)->GetGameobject()->GetBehaviour()->GetState() != DESTROYED) Event::Push(ON_COLL_ENTER, (*itV)->GetGameobject(), (*itV)->GetID(), (*it)->GetID());
+									/*if ((*itV)->GetGameobject()->GetBehaviour()->GetState() != DESTROYED && (*it)->GetGameobject()->GetBehaviour()->GetState() != DESTROYED)
+									{
+										Event::Push(ON_COLL_ENTER, (*itV)->GetGameobject(), (*itV)->GetID(), (*it)->GetID());
+										Event::Push(ON_COLL_ENTER, (*it)->GetGameobject(), (*it)->GetID(), (*itV)->GetID());
+									}*/
 									//LOG("Save collision");
-									/*if (!(*itV)->GetCollisionState((*it)->GetID()))//First collision
+									if (!(*itV)->GetCollisionState((*it)->GetID()))//First collision
 									{
 										(*itV)->SaveCollision((*it)->GetID());
-										if((*itV)->GetGameobject()->GetBehaviour()->GetState() != DESTROYED) Event::Push(ON_COLL_ENTER, (*itV)->GetGameobject(), (*itV)->GetID(), (*it)->GetID());
+										if((*itV)->GetGameobject()->GetBehaviour()->GetState() != DESTROYED && (*it)->GetGameobject()->GetBehaviour()->GetState() != DESTROYED)
+										{
+											Event::Push(ON_COLL_ENTER, (*itV)->GetGameobject(), (*itV)->GetID(), (*it)->GetID());
+											Event::Push(ON_COLL_ENTER, (*it)->GetGameobject(), (*it)->GetID(), (*itV)->GetID());
+										}
 										//LOG("Coll enter");
 									}
 									else //Already collisioning
 									{
-										if ((*itV)->GetGameobject()->GetBehaviour()->GetState() != DESTROYED) Event::Push(ON_COLL_STAY, (*itV)->GetGameobject(), (*itV)->GetID(),(*it)->GetID());
+										if ((*itV)->GetGameobject()->GetBehaviour()->GetState() != DESTROYED && (*it)->GetGameobject()->GetBehaviour()->GetState() != DESTROYED)
+										{
+											Event::Push(ON_COLL_STAY, (*itV)->GetGameobject(), (*itV)->GetID(), (*it)->GetID());
+											Event::Push(ON_COLL_STAY, (*it)->GetGameobject(), (*it)->GetID(), (*itV)->GetID());
+										}
 										//LOG("Coll stay");
-									}*/
+									}
 
 									if ((*itV)->GetCollType() != TRIGGER && (*it)->GetCollType() != TRIGGER)
 									{
@@ -177,7 +189,11 @@ void CollisionSystem::Resolve()
 								{
 									if ((*itV)->GetCollisionState((*it)->GetID()))//Last collision
 									{
-										if ((*itV)->GetGameobject()->GetBehaviour()->GetState() != DESTROYED) Event::Push(ON_COLL_EXIT, (*itV)->GetGameobject(), (*itV)->GetID(), (*it)->GetID());
+										if ((*itV)->GetGameobject()->GetBehaviour()->GetState() != DESTROYED && (*it)->GetGameobject()->GetBehaviour()->GetState() != DESTROYED) 
+										{
+											Event::Push(ON_COLL_EXIT, (*itV)->GetGameobject(), (*itV)->GetID(), (*it)->GetID());
+											Event::Push(ON_COLL_EXIT, (*it)->GetGameobject(), (*it)->GetID(), (*itV)->GetID());
+										}
 										//LOG("Coll exit");
 										(*itV)->DeleteCollision((*it)->GetID());
 									}
