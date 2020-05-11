@@ -22,6 +22,7 @@ Base_Center::Base_Center(Gameobject* go) : BuildingWithQueue(go, BASE_CENTER, NO
 	lvl = 1;
 	max_lvl = 5;
 	vision_range = 20.0f;
+	attack_range = 0;
 	providesVisibility = true;
 
 	create_bar();
@@ -45,7 +46,7 @@ Base_Center::Base_Center(Gameobject* go) : BuildingWithQueue(go, BASE_CENTER, NO
 		}
 	}
 	baseCenter = this->GetGameobject();
-	//SetColliders();
+	SetColliders();
 }
 
 Base_Center::~Base_Center()
@@ -61,6 +62,13 @@ Base_Center::~Base_Center()
 
 	if (baseCenter == game_object)
 		baseCenter = nullptr;
+}
+
+void Base_Center::SetColliders()
+{
+	//Collider
+	//pos = game_object->GetTransform()->GetGlobalPosition();
+	//bodyColl = new Collider(game_object, { pos.x,pos.y,game_object->GetTransform()->GetLocalScaleX(),game_object->GetTransform()->GetLocalScaleY() }, NON_TRIGGER, BUILDING_TAG, { 90,Map::GetBaseOffset()+65,0,0 });
 }
 
 void Base_Center::FreeWalkabilityTiles()

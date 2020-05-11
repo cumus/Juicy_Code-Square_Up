@@ -72,9 +72,10 @@ void Behaviour::SetColliders()
 	LOG("Set colliders");
 	//Colliders
 	pos = game_object->GetTransform()->GetGlobalPosition();
-	bodyColl = new Collider(game_object, { pos.x,pos.y,game_object->GetTransform()->GetLocalScaleX(),game_object->GetTransform()->GetLocalScaleY() }, NON_TRIGGER, PLAYER_TAG, { game_object->GetTransform()->GetLocalScaleX() + baseCollOffset.first,Map::GetBaseOffset()+ baseCollOffset.second,0,0 });
-	//visionColl = new Collider(game_object, { pos.x,pos.y,vision_range,vision_range }, TRIGGER, PLAYER_VISION_TAG, { -vision_range * 30,Map::GetBaseOffset() + vision_range * 9,0,0 });
-	//attackColl = new Collider(game_object, { pos.x,pos.y,attack_range,attack_range }, TRIGGER, PLAYER_ATTACK_TAG, {});
+	vec s = game_object->GetTransform()->GetLocalScale();
+	bodyColl = new Collider(game_object, { pos.x,pos.y,game_object->GetTransform()->GetLocalScaleX(),game_object->GetTransform()->GetLocalScaleY() }, NON_TRIGGER, PLAYER_TAG, { 0,Map::GetBaseOffset(),0,0 });
+	visionColl = new Collider(game_object, { pos.x,pos.y,vision_range,vision_range }, TRIGGER, PLAYER_VISION_TAG, { 0,Map::GetBaseOffset(),0,0 });
+	attackColl = new Collider(game_object, { pos.x,pos.y,attack_range,attack_range }, TRIGGER, PLAYER_ATTACK_TAG, { 0,Map::GetBaseOffset(),0,0 });
 }
 
 void Behaviour::RecieveEvent(const Event& e)
@@ -156,29 +157,10 @@ void Behaviour::CheckFoWMap(bool debug)
 
 std::vector<iPoint> Behaviour::GetTilesInsideRadius()
 {
-	/*if (!lastFog.empty())
-	{
-		for (std::vector<iPoint>::const_iterator it = lastFog.cbegin(); it != lastFog.cend(); ++it)
-		{
-			FogOfWarManager::fogMap[it->x][it->y] = false;
-		}
-		lastFog.clear();
-	}*/
 	std::vector<iPoint> ret;
-	/*int length = vision_range * 2;
-	iPoint startingPos(int(pos.x-vision_range),int(pos.y-vision_range));
-	iPoint finishingPos(startingPos.x+length, startingPos.y+length);
-
-	//Creates a vector with all the tiles inside a bounding box delimited by the radius
-	for (int i = startingPos.y; i < finishingPos.y; i++)
-	{
-		for (int j = startingPos.x; j < finishingPos.x; j++)
-		{
-			ret.push_back({ j,i });
-		}
-	}*/
-
-	iPoint startingPos(int(pos.x - vision_range),int(pos.y - vision_range));
+	vec s = game_object->GetTransform()->GetLocalScale();
+	//LOG("Scale X:%f/Y:%f",s.x,s.y);
+	iPoint startingPos(int(pos.x + s.x*0.5 - vision_range),int(pos.y) - s.y*0.5 - vision_range);
 	iPoint finishingPos(int(startingPos.x + (vision_range*2)), int(startingPos.y + (vision_range*2)));
 
 	for (int x = startingPos.x; x < finishingPos.x; x++)
@@ -186,15 +168,13 @@ std::vector<iPoint> Behaviour::GetTilesInsideRadius()
 		for (int y = startingPos.y; y < finishingPos.y; y++)
 		{
 			iPoint tilePos(x, y);
-			if (tilePos.DistanceTo(iPoint(int(pos.x), int(pos.y))) <= vision_range)
+			if (tilePos.DistanceTo(iPoint(int(pos.x), int(pos.y))) <= vision_range*0.6)
 			{
 				if (App->fogWar.CheckFoWTileBoundaries(iPoint(tilePos.x,tilePos.y)))FogOfWarManager::fogMap[tilePos.x][tilePos.y] = true;
 				//lastFog.push_back(tilePos);
 			}
 		}
 	}
-
-
 	return ret;
 }
 

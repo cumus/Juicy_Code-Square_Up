@@ -14,17 +14,10 @@
 
 Collider::Collider(Gameobject* go, RectF coll, ColliderType t, ColliderTag tg, RectF off ,CollisionLayer lay, ComponentType ty) : Component(ty, go)
 {
-    /*std::pair<float, float> localPos = Map::F_MapToWorld(coll.x, coll.y, 1.0f);
-	boundary.x = localPos.first;
-    boundary.y = localPos.second;
-    boundary.w = coll.w * 64;
-    boundary.h = coll.h * 64;*/
-    //vec s = game_object->GetTransform()->GetGlobalScale();
     tileSize = Map::GetTileSize_F();
-    //std::pair<float, float> pos = Map::F_MapToWorld(coll.x, coll.y);
     boundary = coll;
-    boundary.w *= tileSize.first;// *= coll.w;
-    boundary.h *= tileSize.second;// *= coll.h;
+    boundary.w *= tileSize.first;
+    boundary.h *= tileSize.second;
 
     collType = t;
     layer = lay;
@@ -40,27 +33,32 @@ void Collider::SetPosition()
 {
     vec localpos = game_object->GetTransform()->GetGlobalPosition();
     std::pair<float, float> pos = Map::F_MapToWorld(localpos.x, localpos.y, localpos.z);
-    //std::pair<float, float> localPos = Map::F_MapToWorld(pos.x, pos.y, pos.z);
+    //LOG("Map pos X:%f/Y:%f",localpos.x,localpos.y);
+    //LOG("Screen pos X:%f/Y:%f", pos.first, pos.second);
     //LOG("Coll pos X:%f/Y:%f", pos.x, pos.y);
-   // boundary.x = localPos.first - (boundary.w / 2) + offset.x;
-   // boundary.y = localPos.second - (boundary.h / 2) + offset.y;
-    boundary.x = pos.first; //- (boundary.w / 2) + offset.x;
-    boundary.y = pos.second; //- (boundary.h / 2) + offset.y;
-    ConvertToIsoPoints();
+    boundary.x = pos.first;
+    boundary.y = pos.second;
+    isoDraw.left = { boundary.x - boundary.w * 0.5f + tileSize.first * 0.5f, boundary.y };
+    isoDraw.bot = { boundary.x + tileSize.first * 0.5f, boundary.y - boundary.h * 0.5f };
+    isoDraw.right = { boundary.x + boundary.w * 0.5f + tileSize.first * 0.5f, boundary.y };
+    isoDraw.top = { boundary.x + tileSize.first * 0.5f, boundary.y + boundary.h * 0.5f };
+    isoDraw.right.first += offset.x;
+    isoDraw.left.first += offset.x;
+    isoDraw.top.first += offset.x;
+    isoDraw.bot.first += offset.x;
+    isoDraw.right.second += offset.y;
+    isoDraw.left.second += offset.y;
+    isoDraw.top.second += offset.y;
+    isoDraw.bot.second += offset.y;
     //LOG("Bound pos X:%f/Y:%f",boundary.x,boundary.y);
 }
 
 void Collider::ConvertToIsoPoints()
-{
-    vec s = game_object->GetTransform()->GetGlobalScale();
-    /*isoDraw.left = { boundary.x, boundary.y + (boundary.h * 0.5f) - (boundary.h * s.z) };
-    isoDraw.bot = { boundary.x + (boundary.w * 0.5f), boundary.y + boundary.h - (boundary.h * s.z) };
-    isoDraw.right = { boundary.x + boundary.w, boundary.y + (boundary.h * 0.5f) - (boundary.h * s.z) };
-    isoDraw.top = { boundary.x + (boundary.w * 0.5f) , boundary.y - (boundary.h * s.z) };*/
-    isoDraw.left = { boundary.x, boundary.y + (boundary.h * 0.5f) };
-    isoDraw.bot = { boundary.x + (boundary.w * 0.5f), boundary.y + boundary.h };
-    isoDraw.right = { boundary.x + boundary.w, boundary.y + (boundary.h * 0.5f) };
-    isoDraw.top = { boundary.x + (boundary.w * 0.5f) , boundary.y };
+{  
+    isoDraw.left = { boundary.x - boundary.w * 0.5f + tileSize.first * 0.5f, boundary.y };
+    isoDraw.bot = { boundary.x + tileSize.first * 0.5f, boundary.y - boundary.h * 0.5f };
+    isoDraw.right = { boundary.x + boundary.w * 0.5f + tileSize.first * 0.5f, boundary.y };
+    isoDraw.top = { boundary.x + tileSize.first * 0.5f, boundary.y + boundary.h * 0.5f };
     isoDraw.right.first += offset.x;
     isoDraw.left.first += offset.x;
     isoDraw.top.first += offset.x;
@@ -188,7 +186,7 @@ void Collider::ResolveOverlap(Manifold& m)
         float yDif = isoDraw.left.second - otherColl.left.second;
 
 
-        LOG("Xdif: %f/Ydif:%f",xDif,yDif);
+        //LOG("Xdif: %f/Ydif:%f",xDif,yDif);
         /*if (xDif > 0) // Colliding on the left.
         {
             res = 9.5f;//(rect2->x + rect2->w) - rect1.x;
@@ -200,7 +198,7 @@ void Collider::ResolveOverlap(Manifold& m)
         //LOG("Move res %f",res);
         //pos.x += res;
         //if(App->pathfinding.ValidTile(int(pos.x), int(pos.y)) == true) t->MoveX(res * 0.5 * App->time.GetGameDeltaTime());//Move x      
-        t->MoveX(xDif * App->time.GetGameDeltaTime());//Move x      
+        t->MoveX(xDif/6 * App->time.GetGameDeltaTime());//Move x      
 
         /*if (yDif > 0) // Colliding above.
         {
@@ -213,7 +211,7 @@ void Collider::ResolveOverlap(Manifold& m)
         //LOG("Move res %f", res);
         //pos.y += res;
         //if(App->pathfinding.ValidTile(int(pos.x), int(pos.y)) == true) t->MoveY(res * 0.5 * App->time.GetGameDeltaTime());//Move y
-        t->MoveY(yDif * App->time.GetGameDeltaTime());//Move y
+        t->MoveY(yDif/6 * App->time.GetGameDeltaTime());//Move y
         
         //vec pos = t->GetGlobalPosition();
         //LOG("New pos X:%f/Y:%f",pos.x,pos.y);
