@@ -184,6 +184,9 @@
     <ClCompile Include="ParticlePool.cpp">
       <Filter>Source\Independent Managers</Filter>
     </ClCompile>
+    <ClCompile Include="DialogSystem.cpp">
+      <Filter>Source\Independent Managers</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="PugiXml\src\pugiconfig.hpp">
@@ -400,6 +403,9 @@
       <Filter>Source\Independent Managers</Filter>
     </ClInclude>
     <ClInclude Include="ParticlePool.h">
+      <Filter>Source\Independent Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="DialogSystem.h">
       <Filter>Source\Independent Managers</Filter>
     </ClInclude>
   </ItemGroup>

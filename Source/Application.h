@@ -11,6 +11,7 @@
 #include "PathfindingManager.h"
 #include "FogOfWarManager.h"
 #include "CollisionSystem.h"
+#include "DialogSystem.h"
 
 #include "PugiXml\src\pugixml.hpp"
 #include <list>
@@ -33,6 +34,7 @@ class FontManager;
 class PathfindingManager;
 class FogOfWarManager;
 class CollisionSystem;
+class DialogSystem;
 
 enum GameState : int
 {
@@ -90,6 +92,7 @@ public:
 	PathfindingManager pathfinding;
 	FogOfWarManager fogWar;
 	CollisionSystem collSystem;
+	DialogSystem   dialogSys;
 
 
 private:
