@@ -67,8 +67,8 @@ Base_Center::~Base_Center()
 void Base_Center::SetColliders()
 {
 	//Collider
-	//pos = game_object->GetTransform()->GetGlobalPosition();
-	//bodyColl = new Collider(game_object, { pos.x,pos.y,game_object->GetTransform()->GetLocalScaleX(),game_object->GetTransform()->GetLocalScaleY() }, NON_TRIGGER, BUILDING_TAG, { 90,Map::GetBaseOffset()+65,0,0 });
+	pos = game_object->GetTransform()->GetGlobalPosition();
+	bodyColl = new Collider(game_object, { pos.x,pos.y,game_object->GetTransform()->GetLocalScaleX(),game_object->GetTransform()->GetLocalScaleY() }, NON_TRIGGER, BUILDING_TAG, { 90,Map::GetBaseOffset()+65,0,0 });
 }
 
 void Base_Center::FreeWalkabilityTiles()

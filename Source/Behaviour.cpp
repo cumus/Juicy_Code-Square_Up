@@ -147,6 +147,11 @@ void Behaviour::DesactivateSprites()
 	//LOG("Hide sprite");
 }
 
+Collider* Behaviour::GetBodyCollider() 
+{ 
+	return bodyColl;
+}
+
 void Behaviour::CheckFoWMap(bool debug)
 {
 	//if (providesVisibility) ApplyMaskToTiles(GetTilesInsideRadius());	

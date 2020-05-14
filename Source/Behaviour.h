@@ -106,6 +106,7 @@ public:
 	void DesactivateSprites();
 	void CheckFoWMap(bool debug=false);
 	std::vector<iPoint> GetTilesInsideRadius();
+	Collider* GetBodyCollider();
 	virtual void UpdatePath(int x,int y) {}
 	virtual void AfterDamageAction() {}
 	virtual void OnRightClick(vec pos, vec modPos) {}

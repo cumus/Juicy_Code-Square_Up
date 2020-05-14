@@ -23,7 +23,7 @@ MeleeUnit::MeleeUnit(Gameobject* go) : B_Unit(go, UNIT_MELEE, IDLE, B_MELEE_UNIT
 	//SFX
 	deathFX = MELEE_DIE_FX;
 	attackFX = MELEE_ATK_FX;
-	//SetColliders();
+	SetColliders();
 }
 
 MeleeUnit::~MeleeUnit()

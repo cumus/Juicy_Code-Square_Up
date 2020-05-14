@@ -925,7 +925,8 @@ void Scene::UpdateSelection()
 		SDL_Rect cam = App->render->GetCameraRect();
 		for (std::map<double, Behaviour*>::iterator it = Behaviour::b_map.begin(); it != Behaviour::b_map.end(); ++it)
 		{
-			if (it->second->GetType() == UNIT_MELEE || it->second->GetType() == GATHERER || it->second->GetType() == UNIT_RANGED || it->second->GetType() == BASE_CENTER || it->second->GetType() == TOWER)
+			if (it->second->GetType() == UNIT_MELEE || it->second->GetType() == GATHERER || it->second->GetType() == UNIT_RANGED /*|| it->second->GetType() == BASE_CENTER
+				|| it->second->GetType() == TOWER || it->second->GetType() == BARRACKS*/)
 			{
 				vec pos = it->second->GetGameobject()->GetTransform()->GetGlobalPosition();
 				std::pair<float, float> posToWorld = Map::F_MapToWorld(pos.x, pos.y, pos.z);
@@ -972,23 +973,35 @@ void Scene::UpdateSelection()
 	{
 		if (App->input->GetMouseButtonDown(0))
 		{
+			SDL_Rect cam = App->render->GetCameraRect();
 			int x, y;
 			App->input->GetMousePosition(x, y);
-			SDL_Rect cam = App->render->GetCameraRect();
+			x += cam.x;
+			y += cam.y;
 			for (std::map<double, Behaviour*>::iterator it = Behaviour::b_map.begin(); it != Behaviour::b_map.end(); ++it)
 			{
 				if (it->second->GetType() == UNIT_MELEE || it->second->GetType() == GATHERER || it->second->GetType() == UNIT_RANGED
 					|| it->second->GetType() == BASE_CENTER || it->second->GetType() == TOWER || it->second->GetType() == BARRACKS
 					|| it->second->GetType() == UNIT_SUPER)
 				{
-					std::pair<int, int> position = Map::WorldToTileBase(float(x + cam.x), float(y + cam.y));
-					vec pos = it->second->GetGameobject()->GetTransform()->GetGlobalPosition();
-
-					if (int(pos.x) == position.first && int(pos.y) == position.second) //Right
+					Collider* coll = (*it).second->GetBodyCollider();
+					if (coll != nullptr)
 					{
-						SetSelection(it->second->GetGameobject(), true);
-						//Event::Push(ON_SELECT, it->second->GetGameobject());
-						break;
+						IsoLinesCollider points = coll->GetIsoPoints();
+						//LOG("Mouse X:%d/Y:%d", x, y);
+						//LOG("Unit Top X:%f/Y:%f  Bot X:%f/Y:%f  Left X:%f/Y:%f   Right X:%f/Y:%f",points.top.first,points.top.second,points.bot.first,points.bot.second,
+							//points.left.first,points.left.second,points.right.first,points.right.second);
+
+						if (JMath::PointInsideTriangle({float(x),float(y)}, points.top, points.left, points.right))
+						{
+							SetSelection(it->second->GetGameobject(), true);
+							break;
+						}
+						else if (JMath::PointInsideTriangle({float(x),float(y)}, points.bot, points.left, points.right))
+						{
+							SetSelection(it->second->GetGameobject(), true);
+							break;
+						}
 					}
 				}
 			}

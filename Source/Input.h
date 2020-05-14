@@ -39,6 +39,7 @@ public:
 	}
 
 	void GetMousePosition(int &x, int &y) const;
+	void GetMouseRawPosition(int& x, int& y);
 	void GetMouseMotion(int& x, int& y) const;
 	int GetMouseWheelMotion() const;
 

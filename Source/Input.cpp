@@ -198,6 +198,12 @@ void Input::GetMousePosition(int& x, int& y) const
 	y = mouse_y - offset.second;
 }
 
+void Input::GetMouseRawPosition(int& x, int& y)
+{
+	x = mouse_x;
+	y = mouse_y;
+}
+
 void Input::GetMouseMotion(int& x, int& y) const
 {
 	x = mouse_motion_x;

@@ -34,7 +34,7 @@ Tower::Tower(Gameobject* go) : Behaviour(go, TOWER, NO_UPGRADE, B_TOWER)
 		vec pos = t->GetGlobalPosition();
 		App->pathfinding.SetWalkabilityTile(int(pos.x), int(pos.y), false);
 	}
-	//SetColliders();
+	SetColliders();
 }
 
 Tower::~Tower()

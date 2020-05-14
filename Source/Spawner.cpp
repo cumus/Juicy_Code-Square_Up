@@ -28,7 +28,7 @@ Spawner::Spawner(Gameobject* go) : Behaviour(go, SPAWNER, NO_UPGRADE, B_SPAWNER)
 		vec pos = t->GetGlobalPosition();
 		App->pathfinding.SetWalkabilityTile(int(pos.x), int(pos.y), false);
 	}
-	//SetColliders();
+	SetColliders();
 }
 
 Spawner::~Spawner()

@@ -42,7 +42,7 @@ Barracks::Barracks(Gameobject* go) : BuildingWithQueue(go, BARRACKS, NO_UPGRADE,
 			}
 		}
 	}
-	//SetColliders();
+	SetColliders();
 }
 
 Barracks::~Barracks()
