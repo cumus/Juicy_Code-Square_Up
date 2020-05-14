@@ -16,7 +16,7 @@ std::vector<std::vector<bool> > FogOfWarManager::fogMap;
 
 FogOfWarManager::FogOfWarManager()
 {
-
+	initiated = false;
 }
 
 FogOfWarManager::~FogOfWarManager()
@@ -38,51 +38,8 @@ bool FogOfWarManager::Init()
 
 	if (smoothTexID == -1 || debugTexID == -1) ret = false;
 
-	//---------Initialize the map being used to translate bits to texture ID---------//
-	//Straight-forward cases
-	bitToTextureTable.insert(std::pair<unsigned short, int>(fow_ALL, 0));
-	bitToTextureTable.insert(std::pair<unsigned short, int>(fow_NNN, 1));
-	bitToTextureTable.insert(std::pair<unsigned short, int>(fow_WWW, 2));
-	bitToTextureTable.insert(std::pair<unsigned short, int>(fow_EEE, 3));
-	bitToTextureTable.insert(std::pair<unsigned short, int>(fow_SSS, 4));
-	bitToTextureTable.insert(std::pair<unsigned short, int>(fow_CNW, 5));
-	bitToTextureTable.insert(std::pair<unsigned short, int>(fow_CSE, 6));
-	bitToTextureTable.insert(std::pair<unsigned short, int>(fow_CNE, 7));
-	bitToTextureTable.insert(std::pair<unsigned short, int>(fow_CSW, 8));
-	bitToTextureTable.insert(std::pair<unsigned short, int>(fow_JNE, 9));
-	bitToTextureTable.insert(std::pair<unsigned short, int>(fow_JSW, 10));
-	bitToTextureTable.insert(std::pair<unsigned short, int>(fow_JNW, 11));
-	bitToTextureTable.insert(std::pair<unsigned short, int>(fow_JSE, 12));
-
-	//more complicated cases (combinations)
-	//diagonals
-	bitToTextureTable.insert(std::pair<unsigned short, int>(20, 9));
-	bitToTextureTable.insert(std::pair<unsigned short, int>(80, 10));
-	bitToTextureTable.insert(std::pair<unsigned short, int>(17, 11));
-	bitToTextureTable.insert(std::pair<unsigned short, int>(272, 12));
-	bitToTextureTable.insert(std::pair<unsigned short, int>(273, 13));
-	bitToTextureTable.insert(std::pair<unsigned short, int>(84, 14));
-	//lines
-	bitToTextureTable.insert(std::pair<unsigned short, int>(23, 1));
-	bitToTextureTable.insert(std::pair<unsigned short, int>(308, 3));
-	bitToTextureTable.insert(std::pair<unsigned short, int>(89, 2));
-	bitToTextureTable.insert(std::pair<unsigned short, int>(464, 4));
-	//joints
-	bitToTextureTable.insert(std::pair<unsigned short, int>(6, 9));
-	bitToTextureTable.insert(std::pair<unsigned short, int>(36, 9));
-	bitToTextureTable.insert(std::pair<unsigned short, int>(72, 10));
-	bitToTextureTable.insert(std::pair<unsigned short, int>(192, 10));
-	bitToTextureTable.insert(std::pair<unsigned short, int>(3, 11));
-	bitToTextureTable.insert(std::pair<unsigned short, int>(9, 11));
-	bitToTextureTable.insert(std::pair<unsigned short, int>(384, 12));
-	bitToTextureTable.insert(std::pair<unsigned short, int>(288, 12));
-	//corners
-	bitToTextureTable.insert(std::pair<unsigned short, int>(4, 9));
-	bitToTextureTable.insert(std::pair<unsigned short, int>(64, 10));
-	bitToTextureTable.insert(std::pair<unsigned short, int>(1, 11));
-	bitToTextureTable.insert(std::pair<unsigned short, int>(256, 12));
-	//------------------------end of map initialization------------------------//
 	CreateFoWMap();
+	initiated = true;
 	return ret;
 }
 

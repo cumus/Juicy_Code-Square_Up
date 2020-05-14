@@ -435,12 +435,15 @@ SDL_Texture* Map::GetFullMap(std::vector<std::pair<SDL_Rect, SDL_Rect>>& rects) 
 				{
 					for (int x = 0; x < height; ++x)
 					{
-						std::pair<SDL_Rect, SDL_Rect> target;
-						if (GetRectAndTexId(it->GetID(x, y), target.first, tex_id))
+						if (FogOfWarManager::fogMap[x][y])
 						{
-							std::pair<float, float> render_pos = F_MapToWorld(float(x), float(y));
-							target.second = { int(render_pos.first), int(render_pos.second), size_i.first, size_i.second };
-							rects.push_back(target);
+							std::pair<SDL_Rect, SDL_Rect> target;
+							if (GetRectAndTexId(it->GetID(x, y), target.first, tex_id))
+							{
+								std::pair<float, float> render_pos = F_MapToWorld(float(x), float(y));
+								target.second = { int(render_pos.first), int(render_pos.second), size_i.first, size_i.second };
+								rects.push_back(target);
+							}
 						}
 					}
 				}

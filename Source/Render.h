@@ -108,7 +108,7 @@ private:
 	static std::pair<float, float> res_ratio;
 
 	//Minimap
-	//TextureData data;
+	//TextureData dataMin;
 	//int minimap_half_width;
 	//std::vector<std::pair<SDL_Rect, SDL_Rect>> rects;
 	//SDL_Texture* mini_tex = nullptr;
