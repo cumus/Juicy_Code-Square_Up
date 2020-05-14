@@ -55,6 +55,7 @@ struct Manifold
 	bool colliding = false;
 	//const RectF* other;
 	IsoLinesCollider other;
+	float overX, overY;
 };
 
 

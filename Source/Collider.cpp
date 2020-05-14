@@ -79,6 +79,8 @@ Manifold Collider::Intersects(Collider* other)
     //const RectF otherColl = other->GetWorldColliderBounds();
     m.colliding = false;
     m.other = other->GetIsoPoints();
+    m.overX = 0;
+    m.overY = 0;
     //LOG("This coll W:%f/H:%f",thisColl.w,thisColl.h);
     //LOG("Other coll W:%f/H:%f", otherColl.w, otherColl.h);
 
@@ -104,41 +106,52 @@ Manifold Collider::Intersects(Collider* other)
     {
         m.colliding = true;
         m.other = other->GetIsoPoints();
+        m.overY = otherColl.bot.second - isoDraw.top.second;
     }
     else if (JMath::PointInsideTriangle(isoDraw.top, otherColl.bot, otherColl.left, otherColl.right))
     {
         m.colliding = true;
         m.other = other->GetIsoPoints();
+        m.overY = otherColl.bot.second - isoDraw.top.second;
     }
+
     if (JMath::PointInsideTriangle(isoDraw.bot, otherColl.top, otherColl.left, otherColl.right))
     {
         m.colliding = true;
         m.other = other->GetIsoPoints();
+        m.overY = otherColl.top.second - isoDraw.bot.second;
     }
     else if (JMath::PointInsideTriangle(isoDraw.bot, otherColl.bot, otherColl.left, otherColl.right))
     {
         m.colliding = true;
         m.other = other->GetIsoPoints();
+        m.overY = otherColl.top.second - isoDraw.bot.second;
     }
+
     if (JMath::PointInsideTriangle(isoDraw.right, otherColl.top, otherColl.left, otherColl.right))
     {
         m.colliding = true;
         m.other = other->GetIsoPoints();
+        m.overX = otherColl.left.first - isoDraw.right.first;
     }
     else if (JMath::PointInsideTriangle(isoDraw.right, otherColl.bot, otherColl.left, otherColl.right))
     {
         m.colliding = true;
         m.other = other->GetIsoPoints();
+        m.overX = otherColl.left.first - isoDraw.right.first;
     }
+
     if (JMath::PointInsideTriangle(isoDraw.left, otherColl.top, otherColl.left, otherColl.right))
     {
         m.colliding = true;
         m.other = other->GetIsoPoints();
+        m.overX = otherColl.right.first - isoDraw.left.first;
     }
     else if (JMath::PointInsideTriangle(isoDraw.left, otherColl.bot, otherColl.left, otherColl.right))
     {
         m.colliding = true;
         m.other = other->GetIsoPoints();
+        m.overX = otherColl.right.first - isoDraw.left.first;
     }
     return m;
 }
@@ -148,20 +161,24 @@ void Collider::ResolveOverlap(Manifold& m)
     if (collType != TRIGGER)
     {
         Transform* t = game_object->GetTransform();
-        vec pos = t->GetGlobalPosition();
-        const RectF rect1 = GetColliderBounds();
-        IsoLinesCollider otherColl = m.other;
-        float res = 0;
-        float xDif = isoDraw.top.first - otherColl.top.first;
-        float yDif = isoDraw.left.second - otherColl.left.second;
+        //vec pos = t->GetGlobalPosition();
+        //const RectF rect1 = GetColliderBounds();
+        //IsoLinesCollider otherColl = m.other;
+        //float xDif = isoDraw.top.first - otherColl.top.first;
+        //float yDif = isoDraw.left.second - otherColl.left.second;
 
 
         //LOG("Xdif: %f/Ydif:%f",xDif,yDif);
         //LOG("Move res %f",res);
-        t->MoveX(xDif/6 * App->time.GetGameDeltaTime());//Move x      
+        //t->MoveX(xDif/6 * App->time.GetGameDeltaTime());//Move x      
 
         //LOG("Move res %f", res);
-        t->MoveY(yDif/6 * App->time.GetGameDeltaTime());//Move y
+        //t->MoveY(yDif/6 * App->time.GetGameDeltaTime());//Move y
+
+        t->MoveX(m.overX/4 * App->time.GetGameDeltaTime());//Move x      
+
+        //LOG("Move res %f", res);
+        t->MoveY(m.overY/4 * App->time.GetGameDeltaTime());//Move y
         
         //LOG("New pos X:%f/Y:%f",pos.x,pos.y);
     }  
