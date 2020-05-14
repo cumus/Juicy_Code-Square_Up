@@ -497,28 +497,28 @@ std::vector<PathNode> PathNode::FindWalkableAdjacents()
 	cell.create(pos.x+1, pos.y + 1);
 	if (App->pathfinding.ValidTile(cell.x, cell.y))
 	{
-		list.push_back(PathNode(cell, this->pos));
+		if(App->pathfinding.ValidTile(cell.x, cell.y-1) && App->pathfinding.ValidTile(cell.x-1, cell.y)) list.push_back(PathNode(cell, this->pos));
 	}
 
 	// north-west
 	cell.create(pos.x-1, pos.y + 1);
 	if (App->pathfinding.ValidTile(cell.x, cell.y))
 	{
-		list.push_back(PathNode(cell, this->pos));
+		if (App->pathfinding.ValidTile(cell.x+1, cell.y) && App->pathfinding.ValidTile(cell.x, cell.y-1)) list.push_back(PathNode(cell, this->pos));
 	}
 
 	// sud-east
 	cell.create(pos.x + 1, pos.y-1);
 	if (App->pathfinding.ValidTile(cell.x,cell.y))
 	{
-		list.push_back(PathNode(cell, this->pos));
+		if (App->pathfinding.ValidTile(cell.x, cell.y + 1) && App->pathfinding.ValidTile(cell.x - 1, cell.y)) list.push_back(PathNode(cell, this->pos));
 	}
 
 	// sud-west
 	cell.create(pos.x - 1, pos.y-1);
 	if (App->pathfinding.ValidTile(cell.x,cell.y))
 	{
-		list.push_back(PathNode(cell, this->pos));
+		if (App->pathfinding.ValidTile(cell.x, cell.y + 1) && App->pathfinding.ValidTile(cell.x + 1, cell.y)) list.push_back(PathNode(cell, this->pos));
 	}
 
 	return list;
@@ -672,95 +672,6 @@ std::vector<iPoint> * PathfindingManager::CreatePath(iPoint origin, iPoint desti
 	}
 
 	return pathPointer;
-	/*if (ValidTile(destination.x,destination.y))
-	{
-		int loops = 0;
-		std::vector<PathNode> openList, closedList;
-		PathNode originNode(origin, nullPoint);
-		originNode.g = 0;
-		originNode.CalculateF(destination);
-
-		openList.push_back(originNode);
-		LOG("Start node added to open list");
-
-		PathNode checkNode;
-		while (openList.empty() == false && loops <= STARTING_PATH_LENGTH)
-		{			
-			loops++;
-			VectorQuicksort(openList, 0, openList.size() - 1);
-			//VectorMergesort(openList,openList.size());
-			checkNode = openList.front();
-			closedList.push_back(checkNode); //Save node to evaluated list
-			openList.erase(openList.begin());		
-
-			if (checkNode.pos == destination) //Build final path
-			{
-				LOG("Destination reached");
-				PathNode iteratorNode = closedList.back();
-				while (iteratorNode.pos != origin)
-				{
-					finalPath.push_back(iteratorNode.pos);
-					iteratorNode = GetItemInVector(closedList, iteratorNode.parentPos);
-				}
-
-				std::reverse(finalPath.begin(), finalPath.end());
-				//LOG("Path reversed");
-				LOG("Loops done: %d", loops);
-
-				UpdateStoredPaths(ID, finalPath);
-				std::vector<iPoint>* pathPointer = GetPath(ID);
-				return pathPointer;
-			}
-
-			std::vector<PathNode> adjacentCells;
-			adjacentCells = checkNode.FindWalkableAdjacents();
-			int length = adjacentCells.size();
-
-			for (int a = 0; a < length; a++) //Check neighbour cells
-			{
-				if (FindItemInVector(closedList, adjacentCells[a]) == false)//Assertion error sometimes
-				{
-					if (FindItemInVector(openList, adjacentCells[a]) == false)
-					{
-						adjacentCells[a].g = checkNode.g + 1;
-						adjacentCells[a].CalculateF(destination);
-						openList.push_back(adjacentCells[a]);
-					}
-					else
-					{
-						if (adjacentCells[a].g < checkNode.g) checkNode.parentPos = adjacentCells[a].pos;
-					}
-				}
-			}
-			adjacentCells.clear();
-
-		}
-		if (loops >= STARTING_PATH_LENGTH)
-		{
-			LOG("Path uncompleted, added to qeue");
-			PathNode iteratorNode = closedList.back();
-			while (iteratorNode.pos != origin)
-			{
-				finalPath.push_back(iteratorNode.pos);
-				iteratorNode = GetItemInVector(closedList, iteratorNode.parentPos);
-			}
-
-			std::reverse(finalPath.begin(), finalPath.end());
-			//LOG("Path reversed");
-
-			UpdateStoredPaths(ID, finalPath);
-			std::vector<iPoint>* pathPointer = GetPath(ID);
-			return pathPointer;
-		}
-	}
-	else
-	{
-		finalPath.push_back(origin);
-		UpdateStoredPaths(ID, finalPath);
-		std::vector<iPoint>* pathPointer = GetPath(ID);
-		LOG("Unavailable destination!");
-		return pathPointer;
-	}*/
 }
 
 int PathfindingManager::ContinuePath(UncompletedPath pathToDo, int working_ms)
