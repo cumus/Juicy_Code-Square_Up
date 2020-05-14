@@ -36,7 +36,7 @@ Behaviour::Behaviour(Gameobject* go, UnitType t, UnitState starting_state, Compo
 	shoot = false;
 	selectionPanel = nullptr;
 	drawRanges = false;
-	attackObjective = nullptr;
+	objective = nullptr;
 	providesVisibility = true;
 	visible = true;
 	baseCollOffset = { 0,0 };
@@ -90,7 +90,7 @@ void Behaviour::RecieveEvent(const Event& e)
 	case ON_DESTROY: OnDestroy(); break;
 	case ON_RIGHT_CLICK: OnRightClick(e.data1.AsVec(), e.data2.AsVec()); break;
 	case DAMAGE: OnDamage(e.data1.AsInt()); break;
-	case IMPULSE: OnGetImpulse(e.data1.AsFloat(), e.data2.AsFloat()); break;
+	//case IMPULSE: OnGetImpulse(e.data1.AsFloat(), e.data2.AsFloat()); break;
 	case BUILD_GATHERER:
 	{
 		AddUnitToQueue(GATHERER, e.data1.AsVec(), e.data2.AsFloat());
@@ -178,27 +178,6 @@ std::vector<iPoint> Behaviour::GetTilesInsideRadius()
 	return ret;
 }
 
-void Behaviour::ApplyMaskToTiles(std::vector<iPoint>tilesAffected)
-{
-	/*short precMask = App->fogWar.circleMasks[int(vision_range) - fow_MIN_CIRCLE_RADIUS][0];
-
-	for (int i = 0; i < tilesAffected.size(); i++)
-	{
-		FoWDataStruct tileValue = App->fogWar.GetFoWTileState(tilesAffected[i]);
-
-		//And (bitwise AND) them with the mask if the tile FoW values are not nullptr
-		//To bitwise AND values you just simply do this: value1 &= value2 
-		//the operation result will be stored in the variable on the left side. 
-		//In this case you want to modify the fog and shroud values that you have requested above
-
-		if (tileValue.tileFogBits != -1 && tileValue.tileShroudBits != -1)
-		{
-			tileValue->tileShroudBits &= precMask;
-			tileValue->tileFogBits &= precMask;
-		}
-		precMask++;
-	}*/
-}
 
 void Behaviour::Selected()
 {
@@ -279,6 +258,7 @@ void Behaviour::OnKill(const UnitType type)
 {
 	current_life = 0;
 	current_state = DESTROYED;
+	spriteState = DESTROYED;
 
 	// Lifebar
 	mini_life_bar.Hide();
@@ -394,7 +374,8 @@ B_Unit::B_Unit(Gameobject* go, UnitType t, UnitState s, ComponentType comp_type)
 	Behaviour(go, t, s, comp_type)
 {
 	//Depending on unit
-	atkDelay = 1.0;
+	atkTime = 1.0;
+	
 	speed = 5;//MAX SPEED 60
 	attack_range = 3.0f;
 	vision_range = 10.0f;
@@ -415,10 +396,11 @@ B_Unit::B_Unit(Gameobject* go, UnitType t, UnitState s, ComponentType comp_type)
 	positiveY = false;
 	dirX = 0;
 	dirY = 0;
+	atkTimer = 0.0f;
 	inRange = false;
-	msCount = 0;
+	inVision = false;
 	arriveDestination = false;
-	current_state = IDLE;
+	new_state = IDLE;
 	drawRanges = false;
 	gotTile = false;
 	game_object->SetStatic(false);
@@ -433,91 +415,132 @@ B_Unit::B_Unit(Gameobject* go, UnitType t, UnitState s, ComponentType comp_type)
 void B_Unit::Update()
 {	
 	if (!providesVisibility) CheckFoWMap();
-	if (current_state != DESTROYED)
+	if (!game_object->BeingDestroyed())
 	{
-		IARangeCheck();
-		if (attackObjective != nullptr && attackObjective->GetState() != DESTROYED) //Attack
+		switch(new_state)
 		{
-			//LOG("FOUND");
-			CheckAtkRange();
-		}
-		else
-		{
-			attackObjective = nullptr;
-			inRange = false;
-			//LOG("Not in attack range");
-		}
-
-		if (msCount < atkDelay)
-		{
-			msCount += App->time.GetGameDeltaTime();
-		}
-
-		if (inRange)
-		{
-			//LOG("Unit in range");
-			if (msCount >= atkDelay)
+			case IDLE:
 			{
-				if (attackObjective->GetType() != DESTROYED)
+				//LOG("state IDLE");
+				spriteState = IDLE;
+				if (inRange)
 				{
-					//LOG("Do attack");
-					DoAttack();
-					UnitAttackType();
-					Event::Push(DAMAGE, attackObjective, damage);
+					new_state = ATTACKING;
 				}
-				msCount = 0;
+				else if (inVision)
+				{
+					if(!move) new_state = CHASING;				
+				}
+				else
+				{
+					if (path != nullptr && !path->empty())
+					{
+						new_state = MOVING;
+					}
+					else move = false;
+					objective = nullptr;
+				}
+				current_state = IDLE;
+				break;
+			}
+			case MOVING:
+			{
+				//LOG("state MOVING");	
+				CheckPathTiles();
+
+				if (move && PathfindingManager::unitWalkability[nextTile.x][nextTile.y] == GetID())
+				{
+					//LOG("move");
+					fPoint actualPos = { pos.x, pos.y };
+
+					iPoint tilePos = { int(pos.x), int(pos.y) };
+					if (nextTile.x > tilePos.x)
+					{
+						dirX = 1;
+					}
+					else if (nextTile.x < tilePos.x)
+					{
+						dirX = -1;
+					}
+					else dirX = 0;
+
+					if (nextTile.y > tilePos.y)
+					{
+						dirY = 1;
+					}
+					else if (nextTile.y < tilePos.y)
+					{
+						dirY = -1;
+					}
+					else dirY = 0;
+
+					game_object->GetTransform()->MoveX(dirX * speed * App->time.GetGameDeltaTime());//Move x
+					game_object->GetTransform()->MoveY(dirY * speed * App->time.GetGameDeltaTime());//Move y
+
+					ChangeState();
+					CheckDirection(actualPos);
+				}
+				current_state = MOVING;
+				break;
+			}
+			case ATTACKING:
+			{
+				//LOG("state ATTACK");
+				if (atkTimer < atkTime)
+				{
+					atkTimer += App->time.GetGameDeltaTime();
+				}
+				else
+				{
+					if (objective != nullptr && !objective->BeingDestroyed()) //Attack
+					{
+						DoAttack();
+						UnitAttackType();
+						Event::Push(DAMAGE, objective->GetBehaviour(), damage);
+					}
+					objective = nullptr;
+					atkTimer = 0;
+					new_state = IDLE;
+				}
+				
+				current_state = ATTACKING;
+				break;
+			}
+			case CHASING:
+			{
+				//LOG("state CHASING");
+				attackPos = objective->GetTransform()->GetGlobalPosition();
+				//LOG("Distance to enemy: %f", game_object->GetTransform()->DistanceTo(attackPos));
+				if (game_object->GetTransform()->DistanceTo(attackPos) > attack_range)
+				{
+					//LOG("Path to enemy");
+					if (arriveDestination)
+					{
+						destPos.first = int(attackPos.x) - 1;
+						destPos.second = int(attackPos.y) - 1;
+						Event::Push(UPDATE_PATH, this->AsBehaviour(), int(attackPos.x - 1), int(attackPos.y - 1));
+						arriveDestination = false;
+						//LOG("repath");
+					}
+					else
+					{
+						vec localPos = game_object->GetTransform()->GetGlobalPosition();
+						std::pair<int, int> Pos(int(localPos.x), int(localPos.y));
+						//LOG("Pos X:%d/Y:%d", Pos.first, Pos.second);
+						//LOG("DestPos X:%d/Y:%d", destPos.first, destPos.second);
+						if (Pos.first <= destPos.first + 1 && Pos.first >= destPos.first - 1 && Pos.second >= destPos.second - 1 && Pos.second <= destPos.second + 1) arriveDestination = true;
+						//LOG("on destination");
+					}
+					objective = nullptr;
+				}
+				else
+				{
+					new_state = ATTACKING;
+				}
+				current_state = CHASING;
+				break;
 			}
 		}
-		else if (path != nullptr && !path->empty()) //Movement
-		{
-			//LOG("moving");		
-			CheckPathTiles();
-		}
-		else
-		{
-			move = false;
-			//arriveDestination = true;
-			current_state = IDLE;
-		}
-
-		//LOG("Tile ID: %f", PathfindingManager::unitWalkability[nextTile.x][nextTile.y]);
-		if (move && PathfindingManager::unitWalkability[nextTile.x][nextTile.y] == GetID())
-		{
-			//LOG("move");
-			fPoint actualPos = { pos.x, pos.y };
-
-			iPoint tilePos = { int(pos.x), int(pos.y) };
-			if (nextTile.x > tilePos.x)
-			{
-				dirX = 1;
-			}
-			else if (nextTile.x < tilePos.x)
-			{
-				dirX = -1;
-			}
-			else dirX = 0;
-
-			if (nextTile.y > tilePos.y)
-			{
-				dirY = 1;
-			}
-			else if (nextTile.y < tilePos.y)
-			{
-				dirY = -1;
-			}
-			else dirY = 0;
-
-			game_object->GetTransform()->MoveX(dirX * speed * App->time.GetGameDeltaTime());//Move x
-			game_object->GetTransform()->MoveY(dirY * speed * App->time.GetGameDeltaTime());//Move y
-
-			ChangeState();
-			CheckDirection(actualPos);
-			//App->fogWar.MapNeedsUpdate();
-		}
-	
-
-		//Collisions
-		//CheckCollision();
 
 		//Raycast
 		if (shoot) ShootRaycast();
@@ -527,6 +550,87 @@ void B_Unit::Update()
 	}
 }
 
+ void B_Unit::OnCollisionEnter(Collider selfCol, Collider col)
+{
+	 if (selfCol.GetColliderTag() == PLAYER_ATTACK_TAG)
+	 {
+		 //LOG("Atk");
+		 //LOG("Coll tag :%d", selfCol.GetColliderTag());
+		 //LOG("Coll tag :%d", col.GetColliderTag());
+		 if (col.GetColliderTag() == ENEMY_TAG)
+		 {
+			 //LOG("Player unit in attack range");
+			 inRange = true;
+			 //inVision = false;
+			 if (objective == nullptr) objective = col.GetGameobject();
+		 }
+	 }
+
+	 if (selfCol.GetColliderTag() == PLAYER_VISION_TAG)
+	 {
+		 //LOG("Vision");
+		 //LOG("Coll tag :%d", selfCol.GetColliderTag());
+		 //LOG("Coll tag :%d", col.GetColliderTag());
+		 if (col.GetColliderTag() == ENEMY_TAG)
+		 {
+			 //LOG("Player unit in vision");
+			 //inRange = false;
+			 inVision = true;
+			 /*if (attackObjective == nullptr)*/ objective = col.GetGameobject();
+		 }
+	 }
+}
+
+void B_Unit::OnCollisionStay(Collider selfCol, Collider col)
+{
+
+}
+
+void B_Unit::OnCollisionExit(Collider selfCol, Collider col)
+{
+
+	if (selfCol.GetColliderTag() == PLAYER_ATTACK_TAG)
+	{
+		if (col.GetColliderTag() == ENEMY_TAG)
+		{
+			inRange = false;
+		}
+	}
+
+	if (selfCol.GetColliderTag() == PLAYER_VISION_TAG)
+	{
+		if (col.GetColliderTag() == ENEMY_TAG)
+		{
+			inVision = false;
+		}
+	}
+}
+
+
+void B_Unit::UpdatePath(int x, int y)
+{
+	if (x >= 0 && y >= 0)
+	{
+		Transform* t = game_object->GetTransform();
+		path = App->pathfinding.CreatePath({ int(pos.x), int(pos.y) }, { x, y }, GetID());
+
+		next = false;
+		move = false;
+
+		if (!tilesVisited.empty())
+		{
+			for (std::vector<iPoint>::const_iterator it = tilesVisited.cbegin(); it != tilesVisited.cend(); ++it)
+			{
+				if (PathfindingManager::unitWalkability[it->x][it->y] != 0.0f)
+				{
+					PathfindingManager::unitWalkability[it->x][it->y] = 0.0f;
+					//LOG("Clear tiles");
+				}
+			}
+			tilesVisited.clear();
+		}
+	}
+}
 
 void B_Unit::CheckPathTiles()
 {
@@ -570,35 +674,35 @@ void B_Unit::ChangeState()
 	//Change state to change sprite
 	if (dirX == 1 && dirY == 1)//S
 	{
-		current_state = MOVING_S;
+		spriteState = MOVING_S;
 	}
 	else if (dirX == -1 && dirY == -1)//N
 	{
-		current_state = MOVING_N;
+		spriteState = MOVING_N;
 	}
 	else if (dirX == 1 && dirY == -1)//E
 	{
-		current_state = MOVING_E;
+		spriteState = MOVING_E;
 	}
 	else if (dirX == -1 && dirY == 1)//W
 	{
-		current_state = MOVING_W;
+		spriteState = MOVING_W;
 	}
 	else if (dirX == 0 && dirY == 1)//SW
 	{
-		current_state = MOVING_SW;
+		spriteState = MOVING_SW;
 	}
 	else if (dirX == 1 && dirY == 0)//SE
 	{
-		current_state = MOVING_SE;
+		spriteState = MOVING_SE;
 	}
 	else if (dirX == 0 && dirY == -1)//NE
 	{
-		current_state = MOVING_NE;
+		spriteState = MOVING_NE;
 	}
 	else if (dirX == -1 && dirY == 0)//NW
 	{
-		current_state = MOVING_NW;
+		spriteState = MOVING_NW;
 	}
 	/*else if (dirX == 0 && dirY == 0)
 	{
@@ -612,7 +716,7 @@ void B_Unit::CheckDirection(fPoint actualPos)
 	{
 		if (actualPos.x >= nextTile.x && actualPos.y >= nextTile.y)
 		{
-			path->erase(path->begin());
+			if (!path->empty()) path->erase(path->begin());
 			next = false;
 			PathfindingManager::unitWalkability[nextTile.x][nextTile.y] = 0.0f;
 			//LOG("Arrive");
@@ -622,7 +726,7 @@ void B_Unit::CheckDirection(fPoint actualPos)
 	{
 		if (actualPos.x <= nextTile.x && actualPos.y <= nextTile.y)
 		{
-			path->erase(path->begin());
+			if (!path->empty()) path->erase(path->begin());
 			next = false;
 			PathfindingManager::unitWalkability[nextTile.x][nextTile.y] = 0.0f;
 			//LOG("Arrive");
@@ -632,7 +736,7 @@ void B_Unit::CheckDirection(fPoint actualPos)
 	{
 		if (actualPos.x <= nextTile.x && actualPos.y >= nextTile.y)
 		{
-			path->erase(path->begin());
+			if (!path->empty()) path->erase(path->begin());
 			next = false;
 			PathfindingManager::unitWalkability[nextTile.x][nextTile.y] = 0.0f;
 			//LOG("Arrive");
@@ -642,7 +746,7 @@ void B_Unit::CheckDirection(fPoint actualPos)
 	{
 		if (actualPos.x >= nextTile.x && actualPos.y <= nextTile.y)
 		{
-			path->erase(path->begin());
+			if (!path->empty()) path->erase(path->begin());
 			next = false;
 			PathfindingManager::unitWalkability[nextTile.x][nextTile.y] = 0.0f;
 			//LOG("Arrive");
@@ -652,7 +756,7 @@ void B_Unit::CheckDirection(fPoint actualPos)
 	{
 		if (actualPos.y <= nextTile.y)
 		{
-			path->erase(path->begin());
+			if (!path->empty()) path->erase(path->begin());
 			next = false;
 			PathfindingManager::unitWalkability[nextTile.x][nextTile.y] = 0.0f;
 			//LOG("Arrive");
@@ -662,7 +766,7 @@ void B_Unit::CheckDirection(fPoint actualPos)
 	{
 		if (actualPos.y >= nextTile.y)
 		{
-			path->erase(path->begin());
+			if (!path->empty()) path->erase(path->begin());
 			next = false;
 			PathfindingManager::unitWalkability[nextTile.x][nextTile.y] = 0.0f;
 			//LOG("Arrive");
@@ -672,7 +776,7 @@ void B_Unit::CheckDirection(fPoint actualPos)
 	{
 		if (actualPos.x >= nextTile.x)
 		{
-			path->erase(path->begin());
+			if (!path->empty()) path->erase(path->begin());
 			next = false;
 			PathfindingManager::unitWalkability[nextTile.x][nextTile.y] = 0.0f;
 			//LOG("Arrive");
@@ -682,7 +786,7 @@ void B_Unit::CheckDirection(fPoint actualPos)
 	{
 		if (actualPos.x <= nextTile.x)
 		{
-			path->erase(path->begin());
+			if (!path->empty()) path->erase(path->begin());
 			next = false;
 			PathfindingManager::unitWalkability[nextTile.x][nextTile.y] = 0.0f;
 			//LOG("Arrive");
@@ -690,14 +794,16 @@ void B_Unit::CheckDirection(fPoint actualPos)
 	}
 	else if (dirX == 0 && dirY == 0)
 	{
-		path->erase(path->begin());
+		if(!path->empty()) path->erase(path->begin());
 		next = false;
 		PathfindingManager::unitWalkability[nextTile.x][nextTile.y] = 0.0f;
 		//LOG("Arrive");
 	}
+
+	if (path->empty()) new_state = IDLE;
 }
 
-void B_Unit::CheckCollision()
+/*void B_Unit::CheckCollision()
 {
 	//Colision check
 	std::map<float, Behaviour*> out;
@@ -720,9 +826,9 @@ void B_Unit::CheckCollision()
 			}
 		}
 	}
-}
+}*/
 
-void B_Unit::CheckAtkRange()
+/*void B_Unit::CheckAtkRange()
 {
 	attackPos = attackObjective->GetGameobject()->GetTransform()->GetGlobalPosition();
 	float d = game_object->GetTransform()->DistanceTo(attackPos);
@@ -761,7 +867,7 @@ void B_Unit::CheckAtkRange()
 		//LOG("In range");
 	}
 	//LOG("%d",inRange);
-}
+}*/
 
 void B_Unit::ShootRaycast()
 {
@@ -791,7 +897,7 @@ void B_Unit::DrawRanges()
 void B_Unit::DoAttack()
 {
 	std::pair<int, int> Pos(int(pos.x),int(pos.y));
-	vec objPos = attackObjective->GetGameobject()->GetTransform()->GetGlobalPosition();
+	vec objPos = objective->GetTransform()->GetGlobalPosition();
 	std::pair<int,int> atkPos(int(objPos.x), int(objPos.y));
 	arriveDestination = true;
 	//LOG("Pos X:%d/Y:%d", Pos.first, Pos.second);
@@ -800,35 +906,35 @@ void B_Unit::DoAttack()
 	audio->Play(attackFX);
 	if (atkPos.first == Pos.first && atkPos.second < Pos.second)//N
 	{
-		current_state = ATTACKING_N;
+		spriteState = ATTACKING_N;
 	}
 	else if (atkPos.first == Pos.first && atkPos.second > Pos.second)//S
 	{
-		current_state = ATTACKING_S;
+		spriteState = ATTACKING_S;
 	}
 	else if (atkPos.first < Pos.first && atkPos.second == Pos.second)//W
 	{
-		current_state = ATTACKING_W;
+		spriteState = ATTACKING_W;
 	}
 	else if (atkPos.first > Pos.first && atkPos.second == Pos.second)//E
 	{
-		current_state = ATTACKING_E;
+		spriteState = ATTACKING_E;
 	}
 	else if (atkPos.first < Pos.first && atkPos.second > Pos.second)//SW
 	{
-		current_state = ATTACKING_NW;
+		spriteState = ATTACKING_NW;
 	}
 	else if (atkPos.first > Pos.first && atkPos.second > Pos.second)//
 	{
-		current_state = ATTACKING_SW;
+		spriteState = ATTACKING_SW;
 	}
 	else if (atkPos.first < Pos.first && atkPos.second < Pos.second)//
 	{
-		current_state = ATTACKING_NE;
+		spriteState = ATTACKING_NE;
 	}
 	else if (atkPos.first > Pos.first && atkPos.second < Pos.second)//
 	{
-		current_state = ATTACKING_SE; 
+		spriteState = ATTACKING_SE;
 	}
 }
 
@@ -862,7 +968,7 @@ void B_Unit::OnRightClick(vec posClick, vec modPos)
 					{
 						if (distance == 0)//Chose closest
 						{
-							attackObjective = it->second;
+							objective = it->second->GetGameobject();
 							distance = it->first;
 						}
 						else
@@ -870,17 +976,17 @@ void B_Unit::OnRightClick(vec posClick, vec modPos)
 							if (it->first < distance)
 							{
 								distance = it->first;
-								attackObjective = it->second;
+								objective = it->second->GetGameobject();
 							}
 						}
-
+						//new_state = CHASING;
 					}
 				}
 				else if (it->second->GetType() == ENEMY_MELEE || it->second->GetType() == ENEMY_RANGED || it->second->GetType() == SPAWNER)//Temporal
 				{
 					if (distance == 0)//Closest distance
 					{
-						attackObjective = it->second;
+						objective = it->second->GetGameobject();
 						distance = it->first;
 					}
 					else
@@ -888,10 +994,10 @@ void B_Unit::OnRightClick(vec posClick, vec modPos)
 						if (it->first < distance)
 						{
 							distance = it->first;
-							attackObjective = it->second;
+							objective = it->second->GetGameobject();
 						}
 					}
-
+					//new_state = CHASING;
 				}
 			}
 			path = App->pathfinding.CreatePath({ int(pos.x), int(pos.y) }, { int(posClick.x-1), int(posClick.y-1) }, GetID());
@@ -923,12 +1029,13 @@ void B_Unit::OnRightClick(vec posClick, vec modPos)
 				}
 				tilesVisited.clear();
 			}
-			attackObjective = nullptr;
+			objective = nullptr;
+			//new_state = MOVING;
 		}
 	}
 }
  
-void B_Unit::OnGetImpulse(float x, float y)
+/*void B_Unit::OnGetImpulse(float x, float y)
 {
 	float tempX = game_object->GetTransform()->GetGlobalPosition().x;
 	float tempY = game_object->GetTransform()->GetGlobalPosition().y;
@@ -942,7 +1049,7 @@ void B_Unit::OnGetImpulse(float x, float y)
 		game_object->GetTransform()->MoveX(6 * x * App->time.GetGameDeltaTime());//Move x
 		game_object->GetTransform()->MoveY(6 * y * App->time.GetGameDeltaTime());//Move y				
 	}
-}
+}*/
 
 void Behaviour::Lifebar::Create(Gameobject* parent)
 {

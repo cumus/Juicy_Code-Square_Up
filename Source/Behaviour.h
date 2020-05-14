@@ -43,6 +43,7 @@ enum UnitType : int
 enum UnitState : int
 {
 	IDLE,
+	MOVING,
 	MOVING_N,
 	MOVING_S,
 	MOVING_W,
@@ -51,6 +52,7 @@ enum UnitState : int
 	MOVING_NW,
 	MOVING_SE,
 	MOVING_SW,
+	ATTACKING,
 	ATTACKING_N,
 	ATTACKING_S,
 	ATTACKING_W,
@@ -59,6 +61,8 @@ enum UnitState : int
 	ATTACKING_NW,
 	ATTACKING_SE,
 	ATTACKING_SW,
+	CHASING,
+	BASE,
 
 	// Building
 	BUILDING,
@@ -76,16 +80,8 @@ enum UnitState : int
 
 	// Mob_Drop
 	STAY
-
 };
 
-enum IAState
-{
-	IDLE_IA,
-	BASE_IA,
-	CHASING_IA,
-	ATTACKING_IA,
-};
 
 
 class Sprite;
@@ -110,13 +106,12 @@ public:
 	void DesactivateSprites();
 	void CheckFoWMap(bool debug=false);
 	std::vector<iPoint> GetTilesInsideRadius();
-	void ApplyMaskToTiles(std::vector<iPoint>tilesAffected);
 	virtual void UpdatePath(int x,int y) {}
 	virtual void AfterDamageAction() {}
 	virtual void OnRightClick(vec pos, vec modPos) {}
 	virtual void DoAttack() {}
 	virtual void OnDestroy(){}
-	virtual void OnGetImpulse(float x,float y) {}
+	//virtual void OnGetImpulse(float x,float y) {}
 	virtual void create_bar() {}
 	virtual void update_health_ui() {}
 	virtual void CreatePanel() {}
@@ -136,6 +131,8 @@ public:
 	UnitType GetType() const { return type; }
 	UnitState* GetStatePtr() { return &current_state; }
 	UnitState GetState() { return current_state; }
+	UnitState GetSpriteState() { return spriteState; }
+	UnitState* GetSpriteStatePtr() { return &spriteState; }
 
 	//void QuickSort();
 	unsigned int GetBehavioursInRange(vec pos, float dist, std::map<float, Behaviour*>& res) const;
@@ -148,7 +145,8 @@ public:
 	
 	static std::map<double, Behaviour*> b_map;
 	static std::vector<double> enemiesInSight;
-	UnitState current_state;
+	UnitState current_state, new_state;
+	UnitState spriteState;
 	vec pos;
 	int max_life, current_life, damage;
 	std::vector<iPoint> tilesVisited;
@@ -171,7 +169,7 @@ protected:
 	Audio_FX deathFX;
 	std::pair<float, float> visionRange;
 	std::pair<float, float> atkRange;
-	Behaviour* attackObjective;
+	Gameobject* objective;
 	std::vector<iPoint> lastFog;
 
 	// Complementary components
@@ -251,26 +249,30 @@ public:
 	void OnRightClick(vec pos, vec modPos) override;
 	void DoAttack() override;
 	void OnDestroy() override;
-	void OnGetImpulse(float x, float y) override;
-	void CheckAtkRange();
+	void UpdatePath(int x, int y) override;
+	//void OnGetImpulse(float x, float y) override;
+	//void CheckAtkRange();
 	void CheckPathTiles();
-	void CheckCollision();
+	//void CheckCollision();
 	void ChangeState();
 	void CheckDirection(fPoint actualPos);
 	void ShootRaycast();
 	void DrawRanges();
 	virtual void UnitAttackType() {}
-	virtual void IARangeCheck() {}
+	void OnCollisionEnter(Collider selfCol, Collider col) override;
+	void OnCollisionStay(Collider selfCol, Collider col) override;
+	void OnCollisionExit(Collider selfCol, Collider col) override;
 
 protected:
 	float speed;
 	int damage;
-	float atkDelay;
+	float atkTime, atkTimer;
 	Audio_FX attackFX;
-	float msCount;
+	bool inVision;
 	bool inRange;
 	vec attackPos;
 	std::vector<iPoint>* path;
+	std::pair<int, int> destPos;
 	iPoint nextTile;
 	bool next;
 	bool move;

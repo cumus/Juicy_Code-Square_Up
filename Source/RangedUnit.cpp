@@ -12,7 +12,7 @@ RangedUnit::RangedUnit(Gameobject* go) : B_Unit(go, UNIT_RANGED, IDLE, B_RANGED)
 	//Stats
 	max_life = 100;
 	current_life = max_life;
-	atkDelay = 2.0;
+	atkTime = 2.0;
 	speed = 3;
 	damage = 15;
 	attack_range = 10.0f;
@@ -43,7 +43,7 @@ void RangedUnit::UnitAttackType()
 	shootPos.first += 30.0f;
 	shootPos.second += 20.0f;
 
-	pos = attackObjective->GetGameobject()->GetTransform()->GetGlobalPosition();
+	pos = objective->GetTransform()->GetGlobalPosition();
 	atkObj = Map::F_MapToWorld(pos.x, pos.y, pos.z);
 	atkObj.first += 30.0f;
 	atkObj.second += 20.0f;

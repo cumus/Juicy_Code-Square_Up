@@ -219,8 +219,11 @@ void CollisionSystem::Update()
 			//LOG("colliders length: %d", itL->second.size());
 			for (std::vector<Collider*>::iterator itV = itL->second.begin(); itV != itL->second.end(); ++itV)
 			{
-				(*itV)->SetPosition();
-				collisionTree->Insert(*itV);
+				if (!(*itV)->GetGameobject()->BeingDestroyed())
+				{
+					(*itV)->SetPosition();
+					collisionTree->Insert(*itV);
+				}
 			}
 		}
 	}

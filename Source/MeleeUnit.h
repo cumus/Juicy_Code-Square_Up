@@ -12,7 +12,7 @@ class MeleeUnit : public B_Unit
 public:
 	MeleeUnit(Gameobject* go);
 	~MeleeUnit();
-	void IARangeCheck() override;
+	//void IARangeCheck() override;
 	void SetColliders();
 };
 

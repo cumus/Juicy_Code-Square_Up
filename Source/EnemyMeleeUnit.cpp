@@ -15,7 +15,7 @@ EnemyMeleeUnit::EnemyMeleeUnit(Gameobject* go) : B_Unit(go, ENEMY_MELEE, IDLE, B
 	//Stats
 	current_life = 75;
 	max_life = current_life;
-	atkDelay = 1.25;
+	atkTime = 1.25;
 	speed = 3.0f;
 	damage = 8;
 	attack_range = 2.0f;
@@ -24,11 +24,8 @@ EnemyMeleeUnit::EnemyMeleeUnit(Gameobject* go) : B_Unit(go, ENEMY_MELEE, IDLE, B
 	inRange = false;
 	base_found = false;
 	arriveDestination = true;
-	atkTimer = 0.0f;
-	atkTime = 1.0f;
 	providesVisibility = false;
-	state = IDLE_IA;
-	newState = IDLE_IA;
+	new_state = IDLE;
 	//LOG("ID: %f", GetID());
 	SetColliders();
 	//SFX
@@ -50,7 +47,7 @@ void EnemyMeleeUnit::SetColliders()
 	visionColl = new Collider(game_object, { pos.x,pos.y,vision_range,vision_range }, TRIGGER, ENEMY_VISION_TAG, { 0,Map::GetBaseOffset(),0,0 });
 }
 
-void EnemyMeleeUnit::UpdatePath(int x, int y)
+/*void EnemyMeleeUnit::UpdatePath(int x, int y)
 {
 	if (x >=0 && y >= 0)
 	{
@@ -74,151 +71,172 @@ void EnemyMeleeUnit::UpdatePath(int x, int y)
 			tilesVisited.clear();
 		}
 	}
-}
+}*/
 
 
-void EnemyMeleeUnit::IARangeCheck()
+void EnemyMeleeUnit::Update()
 {
-	Transform* t = game_object->GetTransform();
-	if (t)
+	if (!providesVisibility) CheckFoWMap();
+	if (current_state != DESTROYED)
 	{
-		vec pos = t->GetGlobalPosition();
+		Transform* t = game_object->GetTransform();
+		if (t)
+		{
+			vec pos = t->GetGlobalPosition();
 
-		switch (newState)
-		{
-		case IDLE_IA:
-		{
-			/*if (inRange)
+			switch (new_state)
 			{
-				newState = ATTACKING_IA;
-			}
-			else if (inVision)
+			case IDLE:
 			{
-				newState = CHASING_IA;
-			}
-			else
-			{
-				newState = BASE_IA;
-				attackObjective = nullptr;
-			}*/
-			/*std::map<float, Behaviour*> out;
-			unsigned int total_found = GetBehavioursInRange(vec(pos.x, pos.y, 0.5f), vision_range, out);//Get units in vision range
-			float distance = 0;
-			if (total_found > 0 )//Check if found behaviours in range
-			{
-				for (std::map<float, Behaviour*>::iterator it = out.begin(); it != out.end(); ++it)
+				if (inRange)
 				{
-					if (it->second->GetType() != ENEMY_MELEE && it->second->GetType() != ENEMY_RANGED && it->second->GetType() != EDGE &&
-						it->second->GetType() != ENEMY_SUPER && it->second->GetType() != ENEMY_SPECIAL && it->second->GetType() != SPAWNER) //Check if not enemy unit
-					{
-						if (distance == 0)//Not set closest unit yet
-						{
-							attackObjective = it->second;
-							distance = it->first;
-						}
-						else
-						{
-							if (it->first < distance)//Update closest unit
-							{
-								distance = it->first;
-								attackObjective = it->second;
-								newState = CHASING_IA;
-							}
-						}
-					}
+					new_state = ATTACKING;
 				}
-			}
-			else //Not found
-			{
-				attackObjective = nullptr;
-				state = BASE_IA;
-			}*/
-			state = IDLE_IA;
-			break;
-		}
-		case BASE_IA:
-		{			
-			if (Base_Center::baseCenter != nullptr)
-			{
-				if (newState != state)
+				else if (inVision)
 				{
-					//LOG("Path to base");
-					vec centerPos = Base_Center::baseCenter->GetTransform()->GetGlobalPosition();
-					Event::Push(UPDATE_PATH, this->AsBehaviour(), int(centerPos.x) - 1, int(centerPos.y) - 1);
-					//going_base = true;
-					//arriveDestination = true;
-					//LOG("Move to base");	
-				}
-			}
-			else newState = IDLE_IA;
-			state = BASE_IA;
-			break;
-		}
-		case CHASING_IA:
-		{
-			//LOG("Valid objective");
-			//going_base = false;
-			attackPos = attackObjective->GetGameobject()->GetTransform()->GetGlobalPosition();
-			//LOG("Distance to enemy: %f", game_object->GetTransform()->DistanceTo(attackPos));
-			if (game_object->GetTransform()->DistanceTo(attackPos) > attack_range)
-			{
-				//LOG("Path to enemy");
-				if (arriveDestination)
-				{
-					Transform* t = attackObjective->GetGameobject()->GetTransform();
-					destPos.first = int(t->GetGlobalPosition().x) - 1;
-					destPos.second = int(t->GetGlobalPosition().y) - 1;
-					Event::Push(UPDATE_PATH, this->AsBehaviour(), int(t->GetGlobalPosition().x - 1), int(t->GetGlobalPosition().y - 1));
-					arriveDestination = false;
-					//LOG("repath");
+					new_state = CHASING;
 				}
 				else
 				{
-					vec localPos = game_object->GetTransform()->GetGlobalPosition();
-					std::pair<int, int> Pos(int(localPos.x), int(localPos.y));
-					//LOG("Pos X:%d/Y:%d", Pos.first, Pos.second);
-					//LOG("DestPos X:%d/Y:%d", destPos.first, destPos.second);
-					if (Pos.first <= destPos.first + 1 && Pos.first >= destPos.first - 1 && Pos.second >= destPos.second - 1 && Pos.second <= destPos.second + 1) arriveDestination = true;
-					//LOG("on destination");
+					new_state = BASE;
+					objective = nullptr;
 				}
-				attackObjective = nullptr;
+				current_state = IDLE;
+				break;
+			}
+			case BASE:
+			{
+				if (Base_Center::baseCenter != nullptr)
+				{
+					if (new_state != current_state)
+					{
+						//LOG("Path to base");
+						vec centerPos = Base_Center::baseCenter->GetTransform()->GetGlobalPosition();
+						Event::Push(UPDATE_PATH, this->AsBehaviour(), int(centerPos.x) - 1, int(centerPos.y) - 1);
+						//going_base = true;
+						//arriveDestination = true;
+						//LOG("Move to base");	
+					}
+
+					if (inRange) new_state = ATTACKING;
+					else if (inVision) new_state = CHASING;
+				}
+				else new_state = IDLE;
+				current_state = BASE;
+				break;
+			}
+			case CHASING:
+			{
+				//LOG("Valid objective");
+				//going_base = false;
+				attackPos = objective->GetTransform()->GetGlobalPosition();
+				//LOG("Distance to enemy: %f", game_object->GetTransform()->DistanceTo(attackPos));
+				if (game_object->GetTransform()->DistanceTo(attackPos) > attack_range)
+				{
+					//LOG("Path to enemy");
+					if (arriveDestination)
+					{
+						Transform* t = objective->GetTransform();
+						destPos.first = int(t->GetGlobalPosition().x) - 1;
+						destPos.second = int(t->GetGlobalPosition().y) - 1;
+						Event::Push(UPDATE_PATH, this->AsBehaviour(), int(t->GetGlobalPosition().x - 1), int(t->GetGlobalPosition().y - 1));
+						arriveDestination = false;
+						//LOG("repath");
+					}
+					else
+					{
+						vec localPos = game_object->GetTransform()->GetGlobalPosition();
+						std::pair<int, int> Pos(int(localPos.x), int(localPos.y));
+						//LOG("Pos X:%d/Y:%d", Pos.first, Pos.second);
+						//LOG("DestPos X:%d/Y:%d", destPos.first, destPos.second);
+						if (Pos.first <= destPos.first + 1 && Pos.first >= destPos.first - 1 && Pos.second >= destPos.second - 1 && Pos.second <= destPos.second + 1) arriveDestination = true;
+						//LOG("on destination");
+					}
+					objective = nullptr;
+				}
+				else
+				{
+					new_state = ATTACKING;
+				}
+				current_state = CHASING;
+				break;
+			}
+			case ATTACKING:
+			{
+				if (atkTimer < atkTime)
+				{
+					atkTimer += App->time.GetGameDeltaTime();
+				}
+				else
+				{
+					if (!objective->BeingDestroyed())
+					{
+						//LOG("Do attack");
+						DoAttack();
+						UnitAttackType();
+						Event::Push(DAMAGE, objective->GetBehaviour(), damage);
+					}
+					new_state = IDLE;
+					objective = nullptr;
+					atkTimer = 0;
+				}
+				current_state = ATTACKING;
+				break;
+			}
+			}
+			if (path != nullptr && !path->empty() && !inRange) //Movement
+			{
+				//LOG("moving");		
+				CheckPathTiles();
 			}
 			else
 			{
-				newState = ATTACKING_IA;
+				move = false;
+				//arriveDestination = true;
+				current_state = IDLE;
 			}
-			state = CHASING_IA;
-			break;
-		}
-		case ATTACKING_IA:
-		{
-			if (atkTimer < atkTime)
-			{
-				atkTimer += App->time.GetGameDeltaTime();
-			}
-			else
-			{
-				newState = IDLE_IA;
-				attackObjective = nullptr;
-				atkTimer = 0;
-			}		
-			state = ATTACKING_IA;
-			break;
-		}
-		}		
 
-		/*if (attackObjective != nullptr && attackObjective->GetType() != BASE_CENTER)//Check if there is a valid objective
-		{
-			
-		}
-		else
-		{
-			
-			if (!going_base && Base_Center::baseCenter != nullptr)//If no valid objective and not going to base, set path to base
+			//LOG("Tile ID: %f", PathfindingManager::unitWalkability[nextTile.x][nextTile.y]);
+			if (move && PathfindingManager::unitWalkability[nextTile.x][nextTile.y] == GetID())
 			{
+				//LOG("move");
+				fPoint actualPos = { pos.x, pos.y };
 
+				iPoint tilePos = { int(pos.x), int(pos.y) };
+				if (nextTile.x > tilePos.x)
+				{
+					dirX = 1;
+				}
+				else if (nextTile.x < tilePos.x)
+				{
+					dirX = -1;
+				}
+				else dirX = 0;
+
+				if (nextTile.y > tilePos.y)
+				{
+					dirY = 1;
+				}
+				else if (nextTile.y < tilePos.y)
+				{
+					dirY = -1;
+				}
+				else dirY = 0;
+
+				game_object->GetTransform()->MoveX(dirX * speed * App->time.GetGameDeltaTime());//Move x
+				game_object->GetTransform()->MoveY(dirY * speed * App->time.GetGameDeltaTime());//Move y
+
+				ChangeState();
+				CheckDirection(actualPos);
+				//App->fogWar.MapNeedsUpdate();
 			}
-		}*/
+
+			//Raycast
+			if (shoot) ShootRaycast();
+
+			//Draw vision and attack range
+			if (drawRanges) DrawRanges();
+		}
 	}
 }
 
@@ -235,9 +253,9 @@ void EnemyMeleeUnit::OnCollisionEnter(Collider selfCol, Collider col)
 		if (col.GetColliderTag() == PLAYER_TAG)
 		{
 			//LOG("Player unit in attack range");
-			/*inRange = true;
-			inVision = false;
-			if (attackObjective == nullptr) attackObjective = col.GetGameobject()->GetBehaviour();*/
+			inRange = true;
+			//inVision = false;
+			/*if (attackObjective == nullptr)*/ objective = col.GetGameobject();
 		}
 	}
 
@@ -249,9 +267,9 @@ void EnemyMeleeUnit::OnCollisionEnter(Collider selfCol, Collider col)
 		if (col.GetColliderTag() == PLAYER_TAG)
 		{
 			//LOG("Player unit in vision");
-			/*inRange = false;
+			//inRange = false;
 			inVision = true;
-			if (attackObjective == nullptr) attackObjective = col.GetGameobject()->GetBehaviour();*/
+			/*if (attackObjective == nullptr)*/ objective = col.GetGameobject();
 		}
 	}	
 }

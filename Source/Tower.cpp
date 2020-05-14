@@ -67,7 +67,7 @@ void Tower::Update()
 			std::map<float, Behaviour*> inRange;
 			int found = GetBehavioursInRange(game_object->GetTransform()->GetGlobalPosition(), attack_range, inRange);
 			float d = 0;
-			attackObjective = nullptr;
+			objective = nullptr;
 			if (found > 0)
 			{
 				for (std::map<float, Behaviour*>::iterator it = inRange.begin(); it != inRange.end(); ++it)
@@ -77,14 +77,14 @@ void Tower::Update()
 						Behaviour::enemiesInSight.push_back(it->second->GetID());
 						if (d == 0)
 						{
-							attackObjective = it->second;
+							objective = it->second->GetGameobject();
 							d = it->first;
 						}
 						else
 						{
 							if (it->first < d)
 							{
-								attackObjective = it->second;
+								objective = it->second->GetGameobject();
 								d = it->first;
 							}
 						}
@@ -93,8 +93,8 @@ void Tower::Update()
 			}
 		}
 
-		if (attackObjective != nullptr)
-			if(attackObjective->GetState() != DESTROYED)
+		if (objective != nullptr)
+			if(!objective->BeingDestroyed())
 				if (ms_count >= atkDelay) DoAttack();
 		
 
@@ -176,7 +176,7 @@ void Tower::DoAttack()
 {
 	atkPos.first = 0;
 	atkPos.second = 0;
-	vec pos = attackObjective->GetGameobject()->GetTransform()->GetGlobalPosition();
+	vec pos = objective->GetTransform()->GetGlobalPosition();
 	atkPos = Map::F_MapToWorld(pos.x, pos.y, pos.z);
 	atkPos.first += 30.0f;
 	atkPos.second += 20.0f;
@@ -186,11 +186,11 @@ void Tower::DoAttack()
 	localPos.first += 30.0f;
 	localPos.second += -60.0f;
 
-	Event::Push(DAMAGE, attackObjective, damage);
+	Event::Push(DAMAGE, objective->GetBehaviour(), damage);
 
 	shoot = true;
 	ms_count = 0;
-	attackObjective = nullptr;
+	objective = nullptr;
 }
 
 void Tower::CreatePanel()

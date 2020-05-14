@@ -64,7 +64,7 @@ void Sprite::SetSection(const SDL_Rect s)
 
 AnimatedSprite::AnimatedSprite(Behaviour* unit) : Sprite(unit->GetGameobject(), ANIM_SPRITE)
 {
-	current_state = *(unit_state = unit->GetStatePtr());
+	current_state = *(unit_state = unit->GetSpriteStatePtr());
 
 	switch (unit->GetType())
 	{
@@ -186,7 +186,7 @@ AnimatedSprite::AnimatedSprite(Behaviour* unit) : Sprite(unit->GetGameobject(), 
 		break;
 	case GATHERER:
 		tex_id = App->tex.Load("Assets/textures/Unit_Gatherer.png");
-		animations[IDLE].Setup(section = { 2, 2, 418, 295 }, 5, 6.0f);
+		animations[IDLE].Setup(section = { 3, 2, 418, 295 }, 5, 6.0f);
 		animations[MOVING_N].Setup({ 2, 295, 418, 295 }, 7, 8.0f);
 		animations[MOVING_S].Setup({ 2, 590, 418, 295 }, 7, 8.0f);
 		animations[MOVING_E].Setup({ 2, 885, 418, 295 }, 8, 8.0f);
