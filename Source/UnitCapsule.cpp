@@ -33,8 +33,12 @@ Unit_Capsule::~Unit_Capsule()
 
 void Unit_Capsule::AfterDamageAction()
 {
+	vec pos = game_object->GetTransform()->GetGlobalPosition();
+
+	for(int i = 0; i < 10; i++) {
+		Event(SPAWN_UNIT, App->scene, UNIT_MELEE, pos);
+	}
 	
-	//Event(BUILD_MELEE, this, 5.0f));
 
 	if (current_life <= 0)
 		OnKill(type);
