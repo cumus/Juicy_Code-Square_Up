@@ -21,8 +21,8 @@ Barracks::Barracks(Gameobject* go) : BuildingWithQueue(go, BARRACKS, NO_UPGRADE,
 	max_life = 350;
 	current_life = max_life;
 	buildQueue = 0;
-	bc_lvl = 1;
-	bc_max_lvl = 5;
+	current_lvl = 1;
+	max_lvl = 5;
 
 	// create_bar();
 	// bar_go->SetInactive();
@@ -77,16 +77,14 @@ void Barracks::AfterDamageAction()
 
 void Barracks::Upgrade()
 {
-	if (bc_lvl < bc_max_lvl) {
+	if (current_lvl < max_lvl) {
 
 		current_life += 50;
 		max_life += 50;
-		bc_lvl += 1;
+		current_lvl += 1;
 		App->audio->PlayFx(B_BUILDED);
 		LOG("LIFE AFTER UPGRADE: %d", max_life);
-		LOG("BC LEVEL: %d", bc_lvl);
-		update_upgrades_ui();
-		update_health_ui();
+		LOG("BC LEVEL: %d", current_lvl);
 	}
 }
 

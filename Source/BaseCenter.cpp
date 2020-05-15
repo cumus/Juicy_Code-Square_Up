@@ -20,8 +20,8 @@ Base_Center::Base_Center(Gameobject* go) : BuildingWithQueue(go, BASE_CENTER, NO
 
 	max_life = 1000;
 	current_life = max_life;
-	bc_lvl = 1;
-	bc_max_lvl = 5;
+	current_lvl = 1;
+	max_lvl = 5;
 	vision_range = 30.0f;
 	create_bar();
 	//bar_go->SetInactive();
@@ -145,16 +145,14 @@ void Base_Center::AfterDamageAction()
 
 void Base_Center::Upgrade()
 {
-	if (bc_lvl < bc_max_lvl) {
+	if (current_lvl < max_lvl) {
 
 		current_life += 50;
 		max_life += 50;
-		bc_lvl += 1;
+		current_lvl += 1;
 		App->audio->PlayFx(B_BUILDED);
 		LOG("LIFE AFTER UPGRADE: %d", max_life);
-		LOG("BC LEVEL: %d", bc_lvl);
-		update_upgrades_ui();
-		update_health_ui();
+		LOG("BC LEVEL: %d", current_lvl);
 	}
 }
 

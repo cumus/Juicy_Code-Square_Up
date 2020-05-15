@@ -26,9 +26,6 @@ public:
 
 protected:
 
-	int bc_lvl;
-	int bc_max_lvl;
-
 	float posY_panel;
 	int panel_tex_ID;
 	C_Image* panel;

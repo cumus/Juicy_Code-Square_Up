@@ -166,7 +166,7 @@ void Behaviour::OnDamage(int d)
 
 			// Lifebar
 			mini_life_bar.Show();
-			mini_life_bar.Update(float(current_life) / float(max_life));
+			mini_life_bar.Update(float(current_life) / float(max_life), current_lvl);
 
 			if (current_life <= 0)
 			{
@@ -175,7 +175,7 @@ void Behaviour::OnDamage(int d)
 			}
 			else
 			{
-				mini_life_bar.Update(float(current_life) / float(max_life));
+				mini_life_bar.Update(float(current_life) / float(max_life), current_lvl);
 
 				//LOG("Life: %d", current_life);
 				update_health_ui();
@@ -844,9 +844,10 @@ void Behaviour::Lifebar::Create(Gameobject* parent)
 {
 	int hud_id = App->tex.Load("Assets/textures/Iconos_square_up.png");
 	go = new Gameobject("life_bar", parent);
-	new Sprite(go, hud_id, { 275, 698, 30, 4 }, FRONT_SCENE, { 3.f, -35.f, 2.f, 2.f }, { 255, 0, 0, 255});
-	green_bar = new Sprite(new Gameobject("GreenBar", go), hud_id, starting_section = { 276, 703, 28, 5 }, FRONT_SCENE, { 4.f, -34.f, 2.f, 2.f }, { 0, 255, 0, 255 });
-	Update(1.0f);
+	new Sprite(go, hud_id, { 275, 698, 30, 4 }, FRONT_SCENE, { 2.f, -35.f, 2.f, 2.f }, { 255, 0, 0, 255});
+	green_bar = new Sprite(new Gameobject("GreenBar", go), hud_id, life_starting_section = { 276, 703, 28, 5 }, FRONT_SCENE, { 3.f, -34.f, 2.f, 2.f }, { 0, 255, 0, 255 });
+	upgrades = new Sprite(new Gameobject("Upgrades", go), hud_id, upgrades_starting_section = { 0, 0, 0, 0 }, FRONT_SCENE, { 168.f, -184.f, 0.4f, 0.4f });
+	Update(1.0f, 0);
 }
 void Behaviour::Lifebar::Show()
 {
@@ -858,9 +859,16 @@ void Behaviour::Lifebar::Hide()
 	go->SetInactive();
 }
 
-void Behaviour::Lifebar::Update(float life)
+void Behaviour::Lifebar::Update(float life, int lvl)
 {
-	green_bar->SetSection({ starting_section.x, starting_section.y, int(float(starting_section.w) * life), starting_section.h });
+	green_bar->SetSection({ life_starting_section.x, life_starting_section.y, int(float(life_starting_section.w) * life), life_starting_section.h });
+
+	if (lvl <= 0)
+		upgrades->SetSection({ 0,0,0,0 });
+
+	else
+		upgrades->SetSection ({ 16 + 36 * (lvl - 1), 806, 33, 33 });
+	
 }
 
 // Queued Unit

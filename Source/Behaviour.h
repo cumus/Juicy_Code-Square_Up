@@ -116,7 +116,7 @@ public:
 	static std::map<double, Behaviour*> b_map;
 	static std::vector<double> enemiesInSight;
 	UnitState current_state;
-	int max_life, current_life, damage;
+	int max_life, current_life, damage, current_lvl = 0, max_lvl = 0;
 	std::vector<iPoint> tilesVisited;
 	AnimatedSprite* characteR = nullptr;
 
@@ -142,12 +142,14 @@ protected:
 		void Create(Gameobject* parent);
 		void Show();
 		void Hide();
-		void Update(float life);
+		void Update(float life, int lvl);
 
 		Gameobject* go;
 		Sprite* green_bar;
+		Sprite* upgrades;
 		vec offset;
-		SDL_Rect starting_section;
+		SDL_Rect life_starting_section;
+		SDL_Rect upgrades_starting_section;
 	} mini_life_bar;
 
 	//Bulding Units Components
