@@ -25,6 +25,8 @@ Collider::Collider(Gameobject* go, RectF coll, ColliderType t, ColliderTag tg, R
     App->collSystem.Add(this);
     offset = off;
     GoID = go->GetID();
+    if (lay == UNIT_SELECTION_LAYER) selectionColl = true;
+    else selectionColl = false;
 }
 
 Collider::~Collider()
@@ -51,6 +53,17 @@ void Collider::SetPosition()
     isoDraw.left.second += offset.y;
     isoDraw.top.second += offset.y;
     isoDraw.bot.second += offset.y;
+    if (selectionColl)
+    {
+        isoDraw.right.first += rightOffset.first;
+        isoDraw.left.first += leftOffset.first;
+        isoDraw.top.first += topOffset.first;
+        isoDraw.bot.first += botOffset.first;
+        isoDraw.right.second += rightOffset.second;
+        isoDraw.left.second += leftOffset.second;
+        isoDraw.top.second += topOffset.second;
+        isoDraw.bot.second += botOffset.second;
+    }
     //LOG("Bound pos X:%f/Y:%f",boundary.x,boundary.y);
 }
 
@@ -68,6 +81,14 @@ void Collider::ConvertToIsoPoints()
     isoDraw.left.second += offset.y;
     isoDraw.top.second += offset.y;
     isoDraw.bot.second += offset.y;
+}
+
+void Collider::SetPointsOffset(std::pair<float, float> top, std::pair<float, float> bot, std::pair<float, float> right, std::pair<float, float> left)
+{
+    topOffset = top;
+    botOffset = bot;
+    rightOffset = right;
+    leftOffset = left;
 }
 
 IsoLinesCollider Collider::GetIsoPoints() { return isoDraw; }

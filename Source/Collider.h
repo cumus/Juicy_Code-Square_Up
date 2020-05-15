@@ -24,6 +24,10 @@ enum CollisionLayer
 	SCENE_LAYER,
 	HUD_LAYER,
 	INPUT_LAYER,
+	VISION_COLL_LAYER,
+	ATTACK_COLL_LAYER,
+	BODY_COLL_LAYER,
+	UNIT_SELECTION_LAYER,
 
 	MAX_COLLISION_LAYERS,
 };
@@ -86,9 +90,13 @@ public:
 	void SetPosition();
 	IsoLinesCollider GetIsoPoints();
 	double GetGoID();
+	void SetPointsOffset(std::pair<float,float> top,std::pair<float,float> bot,std::pair<float,float> right,std::pair<float,float> left);
 
 private:
 	void ConvertToIsoPoints();
+
+public:
+	bool selectionColl;
 
 private:
 	RectF boundary;
@@ -100,6 +108,10 @@ private:
 	std::pair<float, float> tileSize;
 	IsoLinesCollider isoDraw;
 	double GoID;
+	std::pair<float, float> topOffset;
+	std::pair<float, float> botOffset;
+	std::pair<float, float> rightOffset;
+	std::pair<float, float> leftOffset;
 };
 
 #endif // !__COLLIDER_H__

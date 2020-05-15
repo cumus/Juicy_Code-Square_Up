@@ -20,11 +20,23 @@ CollisionSystem::CollisionSystem()
 			collisionLayers[i][a] = false;
 		}
 	}
+	//Self layer collisions
 	collisionLayers[SCENE_LAYER][SCENE_LAYER] = true;
+	collisionLayers[DEFAULT_LAYER][DEFAULT_LAYER] = true;
+	collisionLayers[INPUT_LAYER][INPUT_LAYER] = true;
+	collisionLayers[HUD_LAYER][HUD_LAYER] = true;
+	collisionLayers[BODY_COLL_LAYER][BODY_COLL_LAYER] = true;
+
+	//Layers collisions
 	collisionLayers[SCENE_LAYER][DEFAULT_LAYER] = true;
 	collisionLayers[DEFAULT_LAYER][SCENE_LAYER] = true;
 	collisionLayers[INPUT_LAYER][HUD_LAYER] = true;
-	collisionTree = new Quadtree(20, 5, 0, { 0.0f,0.0f,17000,9500 }, nullptr);
+	collisionLayers[HUD_LAYER][INPUT_LAYER] = true;
+	collisionLayers[BODY_COLL_LAYER][ATTACK_COLL_LAYER] = true;
+	collisionLayers[ATTACK_COLL_LAYER][BODY_COLL_LAYER] = true;
+	collisionLayers[BODY_COLL_LAYER][VISION_COLL_LAYER] = true;
+	collisionLayers[VISION_COLL_LAYER][BODY_COLL_LAYER] = true;
+	collisionTree = new Quadtree(25, 5, 0, { 0.0f,0.0f,17000,9500 }, nullptr);
 	debug = false;
 }
 
