@@ -160,6 +160,12 @@
     <ClCompile Include="Minimap.cpp">
       <Filter>Source\Gameobjects\Components\UI</Filter>
     </ClCompile>
+    <ClCompile Include="EdgeCapsule.cpp">
+      <Filter>Source\Gameobjects\Components\Behaviours</Filter>
+    </ClCompile>
+    <ClCompile Include="UnitCapsule.cpp">
+      <Filter>Source\Gameobjects\Components\Behaviours</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="PugiXml\src\pugiconfig.hpp">
@@ -350,6 +356,12 @@
     </ClInclude>
     <ClInclude Include="Minimap.h">
       <Filter>Source\Gameobjects\Components\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="EdgeCapsule.h">
+      <Filter>Source\Gameobjects\Components\Behaviours</Filter>
+    </ClInclude>
+    <ClInclude Include="UnitCapsule.h">
+      <Filter>Source\Gameobjects\Components\Behaviours</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

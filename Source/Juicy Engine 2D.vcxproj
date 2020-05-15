@@ -146,6 +146,7 @@
     <ClCompile Include="BaseCenter.cpp" />
     <ClCompile Include="Behaviour.cpp" />
     <ClCompile Include="Canvas.cpp" />
+    <ClCompile Include="EdgeCapsule.cpp" />
     <ClCompile Include="Component.cpp" />
     <ClCompile Include="ConfigWindow.cpp" />
     <ClCompile Include="ConsoleWindow.cpp" />
@@ -191,6 +192,7 @@
     <ClCompile Include="UI_SubMenu.cpp" />
     <ClCompile Include="UI_Text.cpp" />
     <ClCompile Include="UI_TextButton.cpp" />
+    <ClCompile Include="UnitCapsule.cpp" />
     <ClCompile Include="Window.cpp" />
     <ClCompile Include="PugiXml\src\pugixml.cpp" />
   </ItemGroup>
@@ -201,6 +203,7 @@
     <ClInclude Include="BaseCenter.h" />
     <ClInclude Include="Behaviour.h" />
     <ClInclude Include="Canvas.h" />
+    <ClInclude Include="EdgeCapsule.h" />
     <ClInclude Include="Component.h" />
     <ClInclude Include="ConfigWindow.h" />
     <ClInclude Include="ConsoleWindow.h" />
@@ -254,6 +257,7 @@
     <ClInclude Include="UI_SubMenu.h" />
     <ClInclude Include="UI_Text.h" />
     <ClInclude Include="UI_TextButton.h" />
+    <ClInclude Include="UnitCapsule.h" />
     <ClInclude Include="Vector3.h" />
     <ClInclude Include="Window.h" />
     <ClInclude Include="PugiXml\src\pugiconfig.hpp" />

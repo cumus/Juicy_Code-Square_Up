@@ -176,6 +176,9 @@ public:
 	int t_lvl = 1;
 	bool tutorial_edge = true;
 
+	//Capsule reward
+	bool capsule_content = true;
+
 private:
 
 	bool first_time_pause_button;
