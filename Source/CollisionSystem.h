@@ -26,6 +26,7 @@ public:
 	void SetLayerCollision(CollisionLayer one, CollisionLayer two, bool collide);
 	void SetDebug();
 	void Clear();
+	Quadtree* GetQuadTree();
 	
 
 private:

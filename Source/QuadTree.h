@@ -31,11 +31,14 @@ public:
 	bool GotChilds();
 	void DebugDrawBounds();
 	void Split();
+	std::vector<Collider*> SearchSelection(std::pair<int,int> point);
 
 private:
 	
 	void Search(Collider& obj, std::vector<Collider*>& overlap);
+	void SearchSelection(std::pair<int, int> point, std::vector<Collider*>& overlap);
 	int GetChildIndexForObject(const IsoLinesCollider& objBound);
+	int GetChildIndexForObject(std::pair<int,int> point);
 	bool IntersectsQuad(const IsoLinesCollider objective);
 
 private:

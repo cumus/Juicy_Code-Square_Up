@@ -52,6 +52,8 @@ void CollisionSystem::Clear()
 	}
 }
 
+Quadtree* CollisionSystem::GetQuadTree() { return collisionTree; }
+
 void CollisionSystem::SetLayerCollision(CollisionLayer one, CollisionLayer two, bool collide)
 {
 	collisionLayers[one][two] = collide; 
@@ -110,7 +112,7 @@ void CollisionSystem::ProcessRemovals(Gameobject* obj)
 	{
 		for (std::vector<Collider*>::const_iterator itV = itL->second.cbegin(); itV != itL->second.cend(); ++itV)
 		{
-			if ((*itV)->GetGameobject()->GetID() == obj->GetID())
+			if ((*itV)->GetGoID() == obj->GetID())
 			{
 				layerColliders[itL->first].erase(itV);
 				exit = true;

@@ -133,7 +133,6 @@ void Quadtree::Remove(Collider* obj)
 std::vector<Collider*> Quadtree::Search(Collider& obj)
 {
 	std::vector<Collider*> overlaps;
-	std::vector<Collider*> list;
 	Search(obj, overlaps);
 
 	//LOG("Found colliders size: %d", overlaps.size());
@@ -147,6 +146,13 @@ std::vector<Collider*> Quadtree::Search(Collider& obj)
 		}
 	}*/
 	//LOG("Final colliders list: %d", overlaps.size());
+	return overlaps;
+}
+
+std::vector<Collider*> Quadtree::SearchSelection(std::pair<int, int> point)
+{
+	std::vector<Collider*> overlaps;
+	SearchSelection(point, overlaps);
 	return overlaps;
 }
 
@@ -184,21 +190,27 @@ void Quadtree::Search(Collider& obj, std::vector<Collider*>& list)
 	}
 }
 
+void Quadtree::SearchSelection(std::pair<int, int> point, std::vector<Collider*>& overlap)
+{
+	if (children[0] != nullptr)
+	{
+		int index = GetChildIndexForObject(point);
+		children[index]->SearchSelection(point, overlap);
+	}
+	else
+	{
+		for (std::vector<Collider*>::const_iterator it = objects.cbegin(); it != objects.cend(); ++it)
+		{
+			if((*it)->selectionColl) overlap.push_back(*it);
+		}
+	}
+}
+
 bool Quadtree::IntersectsQuad(const IsoLinesCollider objective)
 {
 	bool ret = false;
 	const RectF coll = GetBounds();
-//	LOG("Quad intersect obj X:%f/Y:%f",objective.x,objective.y);
-	/*fPoint topRight1(coll.x + coll.w, coll.y);
-	fPoint topRight2(objective.x + objective.w, objective.y);
-	fPoint bottomLeft1(coll.x, coll.y + coll.h);
-	fPoint bottomLeft2(objective.x, objective.y + objective.h);
 
-	if (topRight1.y < bottomLeft2.y || bottomLeft1.y > topRight2.y ||
-		topRight1.x < bottomLeft2.x || bottomLeft1.x > topRight2.x) //Non colliding
-	{
-		ret = false;
-	}*/
 	fPoint top(objective.top.first,objective.top.second);
 	fPoint bot(objective.bot.first, objective.bot.second);
 	fPoint left(objective.left.first, objective.left.second);
@@ -233,10 +245,6 @@ int Quadtree::GetChildIndexForObject(const IsoLinesCollider& objBound)
 	float verticalDividingLine = boundary.x + boundary.w * 0.5f;
 	float horizontalDividingLine = boundary.y + boundary.h * 0.5f;
 
-	/*bool north = objBound.y < horizontalDividingLine && (objBound.h + objBound.y < horizontalDividingLine);
-	bool south = objBound.y > horizontalDividingLine;
-	bool west = objBound.x < verticalDividingLine && (objBound.x + objBound.w < verticalDividingLine);
-	bool east = objBound.x > verticalDividingLine;*/
 	bool north = objBound.bot.second < horizontalDividingLine;
 	bool south = objBound.top.second > horizontalDividingLine;
 	bool west = objBound.right.first < verticalDividingLine;
@@ -253,5 +261,25 @@ int Quadtree::GetChildIndexForObject(const IsoLinesCollider& objBound)
 		else if (south) index = CHILD_SW;		
 	}
 	
+	return index;
+}
+
+int Quadtree::GetChildIndexForObject(std::pair<int,int> point)
+{
+	int index;
+	float verticalDividingLine = boundary.x + boundary.w * 0.5f;
+	float horizontalDividingLine = boundary.y + boundary.h * 0.5f;
+
+	if (point.second <= horizontalDividingLine) //nord
+	{
+		if (point.first <= verticalDividingLine) index = CHILD_NW; //West
+		else index = CHILD_NE; //East
+	}
+	else //south
+	{
+		if (point.first <= verticalDividingLine) index = CHILD_SW; //West
+		else index = CHILD_SE; //East
+	}
+
 	return index;
 }

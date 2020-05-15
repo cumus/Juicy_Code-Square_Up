@@ -978,6 +978,24 @@ void Scene::UpdateSelection()
 			App->input->GetMousePosition(x, y);
 			x += cam.x;
 			y += cam.y;
+
+			//For quadtree selection colliders list
+			/*std::vector<Collider*> coll = App->collSystem.GetQuadTree()->SearchSelection({x,y});
+			for (std::vector<Collider*>::iterator it = coll.begin(); it != coll.end(); ++it)
+			{
+				IsoLinesCollider points = (*it)->GetIsoPoints();
+
+				if (JMath::PointInsideTriangle({ float(x),float(y) }, points.top, points.left, points.right))
+				{
+					SetSelection((*it)->GetGameobject(), true);
+					break;
+				}
+				else if (JMath::PointInsideTriangle({ float(x),float(y) }, points.bot, points.left, points.right))
+				{
+					SetSelection((*it)->GetGameobject(), true);
+					break;
+				}
+			}*/
 			for (std::map<double, Behaviour*>::iterator it = Behaviour::b_map.begin(); it != Behaviour::b_map.end(); ++it)
 			{
 				if (it->second->GetType() == UNIT_MELEE || it->second->GetType() == GATHERER || it->second->GetType() == UNIT_RANGED
