@@ -5,6 +5,7 @@
 #include "Gameobject.h"
 #include "Transform.h"
 #include "Log.h"
+#include "JuicyMath.h"
 
 #include "optick-1.3.0.0/include/optick.h"
 
@@ -260,8 +261,8 @@ void AnimatedSprite::Update()
 {
 	if (current_state != *unit_state)
 	{
-		section = animations[current_state = *unit_state].Reset();
-		frame_timer = 0.f;
+		section = animations[current_state = *unit_state].Reset(current_state < ATTACKING);
+		frame_timer = current_state < ATTACKING ? JMath::RandomF() : 0.f;
 	}
 	else
 	{
@@ -297,9 +298,9 @@ void Anim::Setup(SDL_Rect rect, int frames, float f)
 	current_frame = 0;
 }
 
-const SDL_Rect Anim::Reset()
+const SDL_Rect Anim::Reset(bool random_start)
 {
-	current_frame = 0;
+	current_frame = random_start ? int(JMath::RandomF(float(max_frames))) : 0;
 	return first_rect;
 }
 
