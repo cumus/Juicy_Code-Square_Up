@@ -265,10 +265,20 @@ void CollisionSystem::Update()
 				{
 					//Coll iso
 					IsoLinesCollider lines = (*itV)->GetIsoPoints();
-					App->render->DrawLine({ int(lines.top.first), int(lines.top.second) }, { int(lines.left.first), int(lines.left.second) }, {0,255,0,255}, DEBUG_SCENE);
-					App->render->DrawLine({ int(lines.top.first), int(lines.top.second) }, { int(lines.right.first), int(lines.right.second) }, { 0,255,0,255 }, DEBUG_SCENE);
-					App->render->DrawLine({ int(lines.bot.first), int(lines.bot.second) }, { int(lines.left.first), int(lines.left.second) }, { 0,255,0,255 }, DEBUG_SCENE);
-					App->render->DrawLine({ int(lines.bot.first), int(lines.bot.second) }, { int(lines.right.first), int(lines.right.second) }, { 0,255,0,255 }, DEBUG_SCENE);
+					if((*itV)->selectionColl)
+					{
+						App->render->DrawLine({ int(lines.top.first), int(lines.top.second) }, { int(lines.left.first), int(lines.left.second) }, { 255,0,0,255 }, DEBUG_SCENE);
+						App->render->DrawLine({ int(lines.top.first), int(lines.top.second) }, { int(lines.right.first), int(lines.right.second) }, { 255,0,0,255 }, DEBUG_SCENE);
+						App->render->DrawLine({ int(lines.bot.first), int(lines.bot.second) }, { int(lines.left.first), int(lines.left.second) }, { 255,0,0,255 }, DEBUG_SCENE);
+						App->render->DrawLine({ int(lines.bot.first), int(lines.bot.second) }, { int(lines.right.first), int(lines.right.second) }, { 255,0,0,255 }, DEBUG_SCENE);
+					}
+					else
+					{
+						App->render->DrawLine({ int(lines.top.first), int(lines.top.second) }, { int(lines.left.first), int(lines.left.second) }, { 0,255,0,255 }, DEBUG_SCENE);
+						App->render->DrawLine({ int(lines.top.first), int(lines.top.second) }, { int(lines.right.first), int(lines.right.second) }, { 0,255,0,255 }, DEBUG_SCENE);
+						App->render->DrawLine({ int(lines.bot.first), int(lines.bot.second) }, { int(lines.left.first), int(lines.left.second) }, { 0,255,0,255 }, DEBUG_SCENE);
+						App->render->DrawLine({ int(lines.bot.first), int(lines.bot.second) }, { int(lines.right.first), int(lines.right.second) }, { 0,255,0,255 }, DEBUG_SCENE);
+					}
 					//LOG("Bot X:%f/Y:%f",lines.bot.first,lines.bot.second);
 					//LOG("Top X:%f/Y:%f", lines.top.first, lines.top.second);
 					//LOG("Left X:%f/Y:%f", lines.left.first, lines.left.second);

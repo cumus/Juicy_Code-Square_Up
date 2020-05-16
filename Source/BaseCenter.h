@@ -22,7 +22,6 @@ public:
 	void update_creation_bar() override;
 	void UpdateWalkabilityTiles() override;
 	void FreeWalkabilityTiles() override;
-	//void SetColliders() override;
 
 public:
 
