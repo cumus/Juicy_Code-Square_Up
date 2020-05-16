@@ -21,6 +21,12 @@ bool JMath::PointInsideRect(float x, float y, RectF rect)
 		y <= rect.y + rect.h);
 }
 
+float JMath::RectArea(std::pair<float, float> top,std::pair<float, float> bot,std::pair<float, float> left,std::pair<float, float> right)
+{
+	float length = sqrt(pow(top.first - right.first,2)+pow(top.second-right.second,2));
+	float width = sqrt(pow(top.first - left.first, 2) + pow(top.second - left.second, 2));
+	return length * width;
+}
 
 float JMath::TriangleArea(const std::pair<float, float> a, const std::pair<float, float> b, const std::pair<float, float> c)
 {

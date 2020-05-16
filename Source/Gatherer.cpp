@@ -10,7 +10,7 @@
 
 Gatherer::Gatherer(Gameobject* go) : B_Unit(go, GATHERER, IDLE, B_GATHERER)
 {
-	atkTime = 2.0;
+	atkTime = 2.0f;
 	speed = 3;
 	damage = 10;
 	current_life = max_life = 20;

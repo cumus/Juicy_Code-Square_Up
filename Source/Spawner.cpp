@@ -34,13 +34,6 @@ Spawner::Spawner(Gameobject* go) : Behaviour(go, SPAWNER, NO_UPGRADE, B_SPAWNER)
 Spawner::~Spawner()
 {}
 
-/*void Spawner::SetColliders()
-{
-	//Collider
-	pos = game_object->GetTransform()->GetGlobalPosition();
-	bodyColl = new Collider(game_object, { pos.x,pos.y,game_object->GetTransform()->GetLocalScaleX(),game_object->GetTransform()->GetLocalScaleY() }, NON_TRIGGER, BUILDING_TAG);
-}*/
-
 void Spawner::FreeWalkabilityTiles()
 {
 	Transform* t = game_object->GetTransform();

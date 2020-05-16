@@ -298,9 +298,12 @@ bool Gameobject::Destroy(float ms)
 {
 	bool ret = true;
 	toDestroy = true;
-	//App->collSystem.ProcessRemovals();
+	
 	if ((death_timer = ms) <= 0.f)
+	{
+		App->collSystem.ProcessRemovals(this);
 		ret = (parent != nullptr && parent->RemoveChild(this));
+	}
 
 	return ret;
 }

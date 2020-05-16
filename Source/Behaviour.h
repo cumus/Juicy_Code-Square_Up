@@ -105,6 +105,7 @@ public:
 	void ActivateSprites();
 	void DesactivateSprites();
 	void CheckFoWMap(bool debug=false);
+	bool IsDestroyed();
 	std::vector<iPoint> GetTilesInsideRadius();
 	Collider* GetBodyCollider();
 	Collider* GetSelectionCollider();
@@ -295,6 +296,7 @@ protected:
 	std::pair<float, float> shootPos;
 	Gameobject* atkObj;
 	Gameobject* chaseObj;
+	bool moveOrder;
 };
 
 #endif // __BEHAVIOUR_H_
