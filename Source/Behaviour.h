@@ -289,6 +289,7 @@ protected:
 	bool positiveY;
 	int dirX;
 	int dirY;
+	bool goingBase;
 	bool arriveDestination;
 	bool calculating_path;
 	bool chasing;

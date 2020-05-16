@@ -109,7 +109,7 @@ void Behaviour::SetColliders()
 		{
 			bodyColl = new Collider(game_object, { pos.x,pos.y,game_object->GetTransform()->GetLocalScaleX(),game_object->GetTransform()->GetLocalScaleY() }, TRIGGER, BUILDING_TAG, { 90,Map::GetBaseOffset() + 65,0,0 }, BODY_COLL_LAYER);
 			selColl = new Collider(game_object, { pos.x,pos.y,game_object->GetTransform()->GetLocalScaleX(),game_object->GetTransform()->GetLocalScaleY() }, TRIGGER, PLAYER_TAG, { 0,0,0,0 }, UNIT_SELECTION_LAYER);
-			selColl->SetPointsOffset({ 90,100 }, { 90,-100 }, { 90,100 }, { 90,100 });
+			selColl->SetPointsOffset({ 0,60 }, { 180,-25 }, { 50,120 }, { 130,-90 });
 			selectableUnits.push_back(GetID());
 			break;
 		}
@@ -512,6 +512,7 @@ B_Unit::B_Unit(Gameobject* go, UnitType t, UnitState s, ComponentType comp_type)
 	inRange = false;
 	inVision = false;
 	arriveDestination = false;
+	goingBase = false;
 	new_state = IDLE;
 	drawRanges = false;
 	gotTile = false;
@@ -535,15 +536,139 @@ void B_Unit::Update()
 	if (!providesVisibility) CheckFoWMap();
 	if (!game_object->BeingDestroyed())
 	{
+		spriteState = IDLE;
+		if (inRange) //ATTACK
+		{
+			if (type == ENEMY_MELEE || type == ENEMY_RANGED || type == ENEMY_SUPER || type == ENEMY_SPECIAL)
+			{
+				if (atkTimer > atkTime)
+				{
+					if (atkObj != nullptr && !atkObj->BeingDestroyed()) //Attack
+					{
+						DoAttack();
+						UnitAttackType();
+						Event::Push(DAMAGE, atkObj->GetBehaviour(), damage);
+					}
+					atkObj = nullptr;
+					atkTimer = 0;
+				}
+			}
+			else
+			{
+				if (!moveOrder)
+				{
+					if (atkTimer > atkTime)
+					{
+						if (atkObj != nullptr && !atkObj->BeingDestroyed()) //Attack
+						{
+							DoAttack();
+							UnitAttackType();
+							Event::Push(DAMAGE, atkObj->GetBehaviour(), damage);
+						}
+						atkObj = nullptr;
+						atkTimer = 0;
+					}
+				}
+			}
+		}
+		else
+		{
+			if (type == ENEMY_MELEE || type == ENEMY_RANGED || type == ENEMY_SUPER || type == ENEMY_SPECIAL)
+			{
+				if (inVision)
+				{
+					if (chaseObj != nullptr && !chasing)
+					{
+						vec pos = chaseObj->GetTransform()->GetGlobalPosition();
+						Event::Push(UPDATE_PATH, this->AsBehaviour(), int(pos.x), int(pos.y));
+						chasing = true;
+						goingBase = false;
+					}
+
+					if (chasing)
+					{
+						if (path != nullptr && path->size() < 3)
+						{
+							chasing = false;
+						}
+					}
+				}
+				else
+				{
+					if (Base_Center::baseCenter != nullptr && !goingBase)
+					{
+						//LOG("Path to base");
+						goingBase = true;
+						vec centerPos = Base_Center::baseCenter->GetTransform()->GetGlobalPosition();
+						Event::Push(UPDATE_PATH, this->AsBehaviour(), int(centerPos.x) - 1, int(centerPos.y) - 1);
+						//LOG("Move to base");	
+
+					}
+				}
+			}			
+		}
+	
+		if (moveOrder)
+		{
+			if (chaseObj != nullptr && !chasing)
+			{
+				vec pos = chaseObj->GetTransform()->GetGlobalPosition();
+				Event::Push(UPDATE_PATH, this->AsBehaviour(), int(pos.x), int(pos.y));
+				chasing = true;
+			}
+
+			if (chasing)
+			{
+				if (path !=  nullptr && path->size() < 3)
+				{
+					chasing = false;
+				}
+			}
+		}
+	
+		if(path != nullptr && !path->empty()) CheckPathTiles();
+		
+		if (move && PathfindingManager::unitWalkability[nextTile.x][nextTile.y] == GetID())
+		{
+			calculating_path = false;
+			//LOG("move");
+			fPoint actualPos = { pos.x, pos.y };
+
+			iPoint tilePos = { int(pos.x), int(pos.y) };
+			if (nextTile.x > tilePos.x)
+			{
+				dirX = 1;
+			}
+			else if (nextTile.x < tilePos.x)
+			{
+				dirX = -1;
+			}
+			else dirX = 0;
+
+			if (nextTile.y > tilePos.y)
+			{
+				dirY = 1;
+			}
+			else if (nextTile.y < tilePos.y)
+			{
+				dirY = -1;
+			}
+			else dirY = 0;
+
+			game_object->GetTransform()->MoveX(dirX * speed * App->time.GetGameDeltaTime());//Move x
+			game_object->GetTransform()->MoveY(dirY * speed * App->time.GetGameDeltaTime());//Move y
+
+			ChangeState();
+			CheckDirection(actualPos);
+			if (path->empty()) moveOrder = false;
+		}
+		
+		/*
 		LOG("Current state %d",current_state);
 		switch(new_state)
 		{
 			case IDLE:
-			{
-				/*if (type == ENEMY_MELEE || type == ENEMY_RANGED || type == ENEMY_SUPER || type == ENEMY_SPECIAL)
-				{
-
-				}*/
+			{				
 				//LOG("state IDLE");
 				spriteState = IDLE;
 				if (inRange && !moveOrder)
@@ -739,6 +864,7 @@ void B_Unit::Update()
 				break;
 			}
 		}
+		*/
 
 		if (atkTimer < atkTime)
 		{
