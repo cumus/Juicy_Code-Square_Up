@@ -27,6 +27,9 @@ public:
 
 	float posY_panel;
 	int panel_tex_ID;
+	
+	C_Image* panel;
+	C_Image* tower_icon;
 	C_Button* upgrade_btn;
 
 protected:

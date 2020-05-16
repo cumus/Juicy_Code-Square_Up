@@ -29,6 +29,7 @@ enum ComponentType
 	B_RANGED,
 	B_ENEMY_MELEE,
 	B_EDGE,
+	B_CAPSULE,
 	B_BASE_CENTER,
 	B_TOWER,
 	B_SPAWNER,

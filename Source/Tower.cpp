@@ -23,8 +23,8 @@ Tower::Tower(Gameobject* go) : Behaviour(go, TOWER, NO_UPGRADE, B_TOWER)
 	current_state = NO_UPGRADE;
 	providesVisibility = true;
 
-	create_bar();
-	bar_go->SetInactive();
+	// create_bar();
+	// bar_go->SetInactive();
 	CreatePanel();
 	selectionPanel->SetInactive();
 
@@ -196,18 +196,36 @@ void Tower::DoAttack()
 void Tower::CreatePanel()
 {
 	posY_panel = 0.8f;
-	panel_tex_ID = App->tex.Load("Assets/textures/buildPanelSample.png");
+	panel_tex_ID = App->tex.Load("Assets/textures/hud-sprites.png");
 
 	//------------------------- TOWER PANEL --------------------------------------
 
 	selectionPanel = App->scene->AddGameobjectToCanvas("Tower Panel");
 
 
-	upgrade_btn = new C_Button(selectionPanel, Event(DO_UPGRADE, this->AsBehaviour()));//Top left
-	upgrade_btn->target = { 0.912f, posY_panel + 0.02f, 1.0f, 1.0f };
-	upgrade_btn->offset = { 0.0f, 0.0f };
-	for (int i = 0; i < 4; i++)upgrade_btn->section[i] = { 121, 38, 38, 38 };
+	tower_icon = new C_Image(selectionPanel);
+	tower_icon->target = { 0.0f, 0.832f, 1.5f, 1.5f };
+	tower_icon->offset = { 0.0f, 0.0f };
+	tower_icon->section = { 439, 651, 104, 81 };
+	tower_icon->tex_id = panel_tex_ID;
+
+	panel = new C_Image(selectionPanel);
+	panel->target = { 0.0f, 0.764f, 1.5f, 1.5f };
+	panel->offset = { 0.0f, 0.0f };
+	panel->section = { 163, 343, 202, 114 };
+	panel->tex_id = panel_tex_ID;
+
+	upgrade_btn = new C_Button(selectionPanel, Event(DO_UPGRADE, this->AsBehaviour()));//Last option from the right
+	upgrade_btn->target = { 0.0990f, 0.9075, 1.5f, 1.5f };
+	upgrade_btn->offset = { 0.0f,0.0f };
+
+	upgrade_btn->section[0] = { 1075, 51, 56, 49 };
+	upgrade_btn->section[1] = { 1075, 0, 56, 49 };
+	upgrade_btn->section[2] = { 1075, 102, 56, 49 };
+	upgrade_btn->section[3] = { 1075, 102, 56, 49 };
+
 	upgrade_btn->tex_id = panel_tex_ID;
+
 }
 
 void Tower::UpdatePanel()
@@ -255,11 +273,11 @@ void Tower::create_bar() {
 
 	//------------------------- TOWER HEALTH --------------------------------------
 
-	health = new C_Image(bar_go);
-	health->target = { 0.345f, pos_y_HUD - 0.018f, 1.68f, 0.75f };
-	health->offset = { -220.0f, -20.0f };
-	health->section = { 39, 719, 220, 20 };
-	health->tex_id = bar_text_id;
+	green_health = new C_Image(bar_go);
+	green_health->target = { 0.345f, pos_y_HUD - 0.018f, 1.68f, 0.75f };
+	green_health->offset = { -220.0f, -20.0f };
+	green_health->section = { 39, 719, 220, 20 };
+	green_health->tex_id = bar_text_id;
 
 	//------------------------- TOWER HEALTH BOARDER --------------------------------------
 
@@ -281,11 +299,11 @@ void Tower::create_bar() {
 
 void Tower::update_health_ui() {
 
-	health->target = { (0.345f - (0.345f - 0.058f) * (1.0f - float(current_life) / float(max_life))), pos_y_HUD - 0.018f, 1.68f * (float(current_life) / float(max_life)), 0.75f };
+//	health->target = { (0.345f - (0.345f - 0.058f) * (1.0f - float(current_life) / float(max_life))), pos_y_HUD - 0.018f, 1.68f * (float(current_life) / float(max_life)), 0.75f };
 }
 
 void Tower::update_upgrades_ui() {
 
-	upgrades->section = { 16 + 36 * (App->scene->t_lvl - 1), 806, 33, 33 };
+//	upgrades->section = { 16 + 36 * (App->scene->t_lvl - 1), 806, 33, 33 };
 
 }

@@ -25,7 +25,7 @@ Minimap::Minimap(Gameobject* go) : UI_Component(go, go->GetUIParent(), UI_MINIMA
 	minimap_texture = App->render->GetMinimap(total_size.first, total_size.second, map_scale, false);
 
 	// Set UI_Component values
-	target = { 1.f, 1.f, 0.04f, 0.04f };
+	target = { 1.f, 1.f, 0.035f, 0.035f };
 	offset = { -total_size.first, -total_size.second };
 
 	// Set Border & Sections

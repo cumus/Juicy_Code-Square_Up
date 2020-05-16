@@ -55,12 +55,12 @@ void Edge::AfterDamageAction()
 	if (App->scene->tutorial_edge == true)
 	{
 		Event::Push(UPDATE_STAT, App->scene, CURRENT_EDGE, 15);
-		Event::Push(UPDATE_STAT, App->scene, EDGE_COLLECTED, 1);
+		Event::Push(UPDATE_STAT, App->scene, EDGE_COLLECTED, 15);
 	}
 	else
 	{
 		Event::Push(UPDATE_STAT, App->scene, CURRENT_EDGE, 5);
-		Event::Push(UPDATE_STAT, App->scene, EDGE_COLLECTED, 1);
+		Event::Push(UPDATE_STAT, App->scene, EDGE_COLLECTED, 5);
 	}
 
 	if (current_life <= 0)
