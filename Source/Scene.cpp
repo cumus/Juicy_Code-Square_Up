@@ -1083,6 +1083,7 @@ void Scene::UpdateSelection()
 
 			//For quadtree selection colliders list
 			std::vector<Collider*> coll = App->collSystem.GetQuadTree()->SearchSelection({x,y});
+			LOG("Selection size %d",coll.size());
 			for (std::vector<Collider*>::iterator it = coll.begin(); it != coll.end(); ++it)
 			{
 				IsoLinesCollider points = (*it)->GetIsoPoints();

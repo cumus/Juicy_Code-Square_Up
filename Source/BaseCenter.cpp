@@ -120,7 +120,7 @@ void Base_Center::Update()
 		}
 	}
 
-	if (GetState() != DESTROYED)
+	/*if (GetState() != DESTROYED)
 	{
 		vec pos = game_object->GetTransform()->GetGlobalPosition();
 		std::map<float, Behaviour*> out;
@@ -138,7 +138,7 @@ void Base_Center::Update()
 				}
 			}
 		}
-	}
+	}*/
 }
 
 void Base_Center::UpdateWalkabilityTiles()

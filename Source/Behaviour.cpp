@@ -22,6 +22,7 @@
 
 std::map<double, Behaviour*> Behaviour::b_map;
 std::vector<double> Behaviour::enemiesInSight;
+std::vector<double> Behaviour::selectableUnits;
 
 Behaviour::Behaviour(Gameobject* go, UnitType t, UnitState starting_state, ComponentType comp_type) :
 	Component(comp_type, go),
@@ -85,6 +86,7 @@ void Behaviour::SetColliders()
 			//attackColl = new Collider(game_object, { pos.x,pos.y,attack_range,attack_range }, TRIGGER, PLAYER_ATTACK_TAG, { 0,Map::GetBaseOffset(),0,0 }, ATTACK_COLL_LAYER);
 			selColl = new Collider(game_object, { pos.x,pos.y,game_object->GetTransform()->GetLocalScaleX(),game_object->GetTransform()->GetLocalScaleY() }, NON_TRIGGER, PLAYER_TAG, { 0,0,0,0 }, UNIT_SELECTION_LAYER);
 			selColl->SetPointsOffset({-20,-70}, {20,50}, {-10,-55}, {10,35});
+			selectableUnits.push_back(GetID());
 			break;
 		}
 		case ENEMY_MELEE:
@@ -430,7 +432,7 @@ void Behaviour::OnKill(const UnitType type)
 	}
 	FreeWalkabilityTiles();
 	b_map.erase(GetID());
-
+	//selectableUnits.erase(GetID());
 }
 
 unsigned int Behaviour::GetBehavioursInRange(vec pos, float dist, std::map<float, Behaviour*>& res) const
@@ -486,6 +488,7 @@ B_Unit::B_Unit(Gameobject* go, UnitType t, UnitState s, ComponentType comp_type)
 	nextTile.y = 0;
 	positiveX = false;
 	positiveY = false;
+	objective = nullptr;
 	dirX = 0;
 	dirY = 0;
 	atkTimer = 0.0f;
