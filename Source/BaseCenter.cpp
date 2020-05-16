@@ -20,7 +20,7 @@ Base_Center::Base_Center(Gameobject* go) : BuildingWithQueue(go, BASE_CENTER, NO
 
 	max_life = 1000;
 	current_life = max_life;
-	lvl = 1;
+	current_lvl = 1;
 	max_lvl = 5;
 	vision_range = 20.0f;
 	attack_range = 0;
@@ -120,6 +120,8 @@ void Base_Center::Update()
 		}
 	}
 
+	mini_life_bar.Update(float(current_life) / float(max_life), current_lvl);
+
 	/*if (GetState() != DESTROYED)
 	{
 		vec pos = game_object->GetTransform()->GetGlobalPosition();
@@ -164,15 +166,14 @@ void Base_Center::AfterDamageAction()
 
 void Base_Center::Upgrade()
 {
-	if (lvl < max_lvl) {
+	if (current_lvl < max_lvl) {
 
 		current_life += 50;
 		max_life += 50;
-		lvl += 1;
+		current_lvl += 1;
 		App->audio->PlayFx(B_BUILDED);
 		LOG("LIFE AFTER UPGRADE: %d", max_life);
-		LOG("BC LEVEL: %d", lvl);
-		update_upgrades_ui();
+		LOG("BC LEVEL: %d", current_lvl);
 		update_health_ui();
 
 		switch (current_state)
@@ -316,28 +317,5 @@ void Base_Center::create_bar() {
 }
 
 void Base_Center::update_health_ui() {
-
 	green_health->section.w = 439 * float(current_life) / float(max_life);
-
-}
-
-void Base_Center::update_upgrades_ui() {
-
-	upgrades->section = { 16 + 36 * (lvl - 1), 806, 33, 33 };
-
-}
-
-void Base_Center::create_creation_bar() {
-
-	
-	
-}
-
-void Base_Center::update_creation_bar() {
-
-
-	//gatherer_creation_bar_completed->target = { (0.97f) - (0.155f) * (1.0f - float(gatherer_timer) / float(CREATION_TIME)), 0.42f, 0.9f * (float(gatherer_timer) / float(CREATION_TIME)), 0.4f };
-	//melee_creation_bar_completed->target = { (0.97f) - (0.155f) * (1.0f - float(melee_timer) / float(CREATION_TIME)), 0.47f, 0.9f * (float(melee_timer) / float(CREATION_TIME)), 0.4f };
-	//ranged_creation_bar_completed->target = { 0.97f - (0.155f) * (1.0f - float(ranged_timer / CREATION_TIME)), 0.52f, 0.9f * (float(ranged_timer) / float(CREATION_TIME)), 0.4f };
-
 }

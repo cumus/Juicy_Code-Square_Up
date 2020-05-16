@@ -21,7 +21,7 @@ Barracks::Barracks(Gameobject* go) : BuildingWithQueue(go, BARRACKS, NO_UPGRADE,
 	max_life = 350;
 	current_life = max_life;
 	buildQueue = 0;
-	lvl = 1;
+	current_lvl = 1;
 	max_lvl = 5;
 	providesVisibility = true;
 
@@ -81,16 +81,14 @@ void Barracks::AfterDamageAction()
 
 void Barracks::Upgrade()
 {
-	if (lvl < max_lvl) {
+	if (current_lvl < max_lvl) {
 
 		current_life += 50;
 		max_life += 50;
-		lvl += 1;
+		current_lvl += 1;
 		App->audio->PlayFx(B_BUILDED);
 		LOG("LIFE AFTER UPGRADE: %d", max_life);
-		LOG("BC LEVEL: %d", lvl);
-		update_upgrades_ui();
-		update_health_ui();
+		LOG("BC LEVEL: %d", current_lvl);
 		switch (current_state)
 		{
 		case NO_UPGRADE:
@@ -239,17 +237,5 @@ void Barracks::create_bar() {
 	upgrades->offset = { -33.0f, -33.0f };
 	upgrades->section = { 16, 806, 33, 33 };
 	upgrades->tex_id = bar_text_id;
-
-}
-
-void Barracks::update_health_ui() {
-
-	//health->target = { (0.385f) - ((0.385f - 0.059f) * (1.0f - float(current_life) / float(max_life))), pos_y_HUD - 0.02f, 1.92f * (float(current_life) / float(max_life)), 1.0f };
-
-}
-
-void Barracks::update_upgrades_ui() {
-
-	//upgrades->section = { 16 + 36 * (lvl - 1), 806, 33, 33 };
 
 }
