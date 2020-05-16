@@ -90,7 +90,7 @@ void Behaviour::SetColliders()
 			bodyColl = new Collider(game_object, { pos.x,pos.y,game_object->GetTransform()->GetLocalScaleX(),game_object->GetTransform()->GetLocalScaleY() }, NON_TRIGGER, PLAYER_TAG, { 0,Map::GetBaseOffset(),0,0 }, BODY_COLL_LAYER);
 			visionColl = new Collider(game_object, { pos.x,pos.y,vision_range,vision_range }, TRIGGER, PLAYER_VISION_TAG, { 0,Map::GetBaseOffset(),0,0 });
 			attackColl = new Collider(game_object, { pos.x,pos.y,attack_range,attack_range }, TRIGGER, PLAYER_ATTACK_TAG, { 0,Map::GetBaseOffset(),0,0 });
-			selColl = new Collider(game_object, { pos.x,pos.y,game_object->GetTransform()->GetLocalScaleX(),game_object->GetTransform()->GetLocalScaleY() }, TRIGGER, PLAYER_TAG, { 0,0,0,0 }, UNIT_SELECTION_LAYER);
+			selColl = new Collider(game_object, { pos.x,pos.y,game_object->GetTransform()->GetLocalScaleX(),game_object->GetTransform()->GetLocalScaleY() }, TRIGGER, SELECTION_TAG, { 0,0,0,0 }, UNIT_SELECTION_LAYER);
 			selColl->SetPointsOffset({-20,-70}, {20,50}, {-10,-55}, {10,35});
 			selectableUnits.push_back(GetID());
 			break;
@@ -108,7 +108,7 @@ void Behaviour::SetColliders()
 		case BASE_CENTER:
 		{
 			bodyColl = new Collider(game_object, { pos.x,pos.y,game_object->GetTransform()->GetLocalScaleX(),game_object->GetTransform()->GetLocalScaleY() }, TRIGGER, BUILDING_TAG, { 90,Map::GetBaseOffset() + 65,0,0 }, BODY_COLL_LAYER);
-			selColl = new Collider(game_object, { pos.x,pos.y,game_object->GetTransform()->GetLocalScaleX(),game_object->GetTransform()->GetLocalScaleY() }, TRIGGER, PLAYER_TAG, { 0,0,0,0 }, UNIT_SELECTION_LAYER);
+			selColl = new Collider(game_object, { pos.x,pos.y,game_object->GetTransform()->GetLocalScaleX(),game_object->GetTransform()->GetLocalScaleY() }, TRIGGER, SELECTION_TAG, { 0,0,0,0 }, UNIT_SELECTION_LAYER);
 			selColl->SetPointsOffset({ 0,60 }, { 180,-25 }, { 50,120 }, { 130,-90 });
 			selectableUnits.push_back(GetID());
 			break;
@@ -343,13 +343,13 @@ void Behaviour::OnKill(const UnitType type)
 	current_state = DESTROYED;
 	spriteState = DESTROYED;
 
-	if (!selectableUnits.empty())
+	/*if (!selectableUnits.empty())
 	{
-		for (std::vector<double>::iterator it = selectableUnits.begin(); it != selectableUnits.end(); ++it)
+		for (std::vector<double>::const_iterator it = selectableUnits.begin(); it != selectableUnits.end(); ++it)
 		{
 			if ((*it) == GetID()) selectableUnits.erase(it);
 		}
-	}
+	}*/
 
 	// Lifebar
 	mini_life_bar.Hide();
@@ -514,6 +514,7 @@ B_Unit::B_Unit(Gameobject* go, UnitType t, UnitState s, ComponentType comp_type)
 	arriveDestination = false;
 	goingBase = false;
 	new_state = IDLE;
+	spriteState = IDLE;
 	drawRanges = false;
 	gotTile = false;
 	game_object->SetStatic(false);
@@ -535,8 +536,7 @@ void B_Unit::Update()
 {	
 	if (!providesVisibility) CheckFoWMap();
 	if (!game_object->BeingDestroyed())
-	{
-		spriteState = IDLE;
+	{		
 		if (inRange) //ATTACK
 		{
 			if (type == ENEMY_MELEE || type == ENEMY_RANGED || type == ENEMY_SUPER || type == ENEMY_SPECIAL)
@@ -548,6 +548,7 @@ void B_Unit::Update()
 						DoAttack();
 						UnitAttackType();
 						Event::Push(DAMAGE, atkObj->GetBehaviour(), damage);
+						//spriteState = IDLE;
 					}
 					atkObj = nullptr;
 					atkTimer = 0;
@@ -575,27 +576,30 @@ void B_Unit::Update()
 		{
 			if (type == ENEMY_MELEE || type == ENEMY_RANGED || type == ENEMY_SUPER || type == ENEMY_SPECIAL)
 			{
-				if (inVision)
+				if (inVision)//CHASE
 				{
+					//LOG("Player in sight");
 					if (chaseObj != nullptr && !chasing)
 					{
+						//LOG("Start player chase");
 						vec pos = chaseObj->GetTransform()->GetGlobalPosition();
 						Event::Push(UPDATE_PATH, this->AsBehaviour(), int(pos.x), int(pos.y));
 						chasing = true;
+						//move = true;
 						goingBase = false;
 					}
-
-					if (chasing)
+					/*else
 					{
-						if (path != nullptr && path->size() < 3)
+						if (path != nullptr && path->empty())
 						{
 							chasing = false;
+							//LOG("Repath chase");
 						}
-					}
+					}*/
 				}
 				else
 				{
-					if (Base_Center::baseCenter != nullptr && !goingBase)
+					if (Base_Center::baseCenter != nullptr && !goingBase && !chasing)//GO TO BASE
 					{
 						//LOG("Path to base");
 						goingBase = true;
@@ -617,13 +621,13 @@ void B_Unit::Update()
 				chasing = true;
 			}
 
-			if (chasing)
+			/*if (chasing)
 			{
-				if (path !=  nullptr && path->size() < 3)
+				if (path !=  nullptr && path->empty())
 				{
 					chasing = false;
 				}
-			}
+			}*/
 		}
 	
 		if(path != nullptr && !path->empty()) CheckPathTiles();
@@ -660,7 +664,13 @@ void B_Unit::Update()
 
 			ChangeState();
 			CheckDirection(actualPos);
-			if (path->empty()) moveOrder = false;
+			if (path->empty())
+			{
+				moveOrder = false;
+				move = false;
+				chasing = false;
+				spriteState = IDLE;
+			}
 		}
 		
 		/*
@@ -972,6 +982,21 @@ void B_Unit::OnCollisionStay(Collider selfCol, Collider col)
 				if (atkObj == nullptr) atkObj = col.parentGo;
 			}
 		}
+
+		if (selfCol.GetColliderTag() == ENEMY_VISION_TAG)
+		{
+			//LOG("Enemy vision");
+			//LOG("Coll tag :%d", selfCol.GetColliderTag());
+			//LOG("Coll tag :%d", col.GetColliderTag());
+			if (col.GetColliderTag() == PLAYER_TAG)
+			{
+				//LOG("Player unit in vision");
+				//inRange = false;
+				inVision = true;
+				chaseObj = col.parentGo;
+			}
+		}
+
 	}
 }
 

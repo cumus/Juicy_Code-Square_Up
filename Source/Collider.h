@@ -42,6 +42,7 @@ enum ColliderTag
 	UI_TAG,
 	BACKGROUND_TAG,
 	BUILDING_TAG,
+	SELECTION_TAG,
 };
 
 struct IsoLinesCollider

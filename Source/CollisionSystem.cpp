@@ -95,7 +95,7 @@ void CollisionSystem::ProcessRemovals()
 	{
 		for (std::vector<Collider*>::const_iterator itV = itL->second.cbegin(); itV != itL->second.cend(); ++itV)
 		{
-			if ((*itV)->GetGameobject()->BeingDestroyed())
+			if ((*itV)->GetGameobject()->GetBehaviour()->GetState() == DESTROYED)
 			{
 				layerColliders[itL->first].erase(itV);
 			}
@@ -109,7 +109,7 @@ void CollisionSystem::ProcessRemovals(Gameobject* obj)
 	{
 		for (std::vector<Collider*>::const_iterator itV = itL->second.cbegin(); itV != itL->second.cend(); ++itV)
 		{
-			LOG("Check 1");
+			//LOG("Check 1");
 			if ((*itV)->GetGoID() == obj->GetID())
 			{
 				layerColliders[itL->first].erase(itV);
@@ -224,6 +224,7 @@ void CollisionSystem::Resolve()
 void CollisionSystem::Update()
 {
 	collisionTree->Clear();
+	Behaviour::selectableUnits.clear();
 	//LOG("Tree clear");
 	for (std::map<CollisionLayer, std::vector<Collider*>>::iterator itL = layerColliders.begin(); itL != layerColliders.end(); ++itL)
 	{
@@ -236,6 +237,7 @@ void CollisionSystem::Update()
 				{
 					(*itV)->SetPosition();
 					collisionTree->Insert(*itV);
+					if ((*itV)->GetColliderTag() == SELECTION_TAG) Behaviour::selectableUnits.push_back((*itV)->GetGameobject()->GetBehaviour()->GetID());
 				}
 			}
 		}

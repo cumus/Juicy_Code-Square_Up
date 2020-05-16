@@ -144,6 +144,8 @@ int Application::Update()
 		if (!(no_error = (*it)->PostUpdate()))
 			LOG("Module %s encuntered an error during PostUpdate!", (*it)->GetName());
 
+	collSystem.ProcessRemovals();
+
 	if (!no_error)
 		return -1; // error
 
