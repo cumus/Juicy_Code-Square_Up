@@ -1082,7 +1082,7 @@ void Scene::UpdateSelection()
 			y += cam.y;
 
 			//For quadtree selection colliders list
-			/*std::vector<Collider*> coll = App->collSystem.GetQuadTree()->SearchSelection({x,y});
+			std::vector<Collider*> coll = App->collSystem.GetQuadTree()->SearchSelection({x,y});
 			for (std::vector<Collider*>::iterator it = coll.begin(); it != coll.end(); ++it)
 			{
 				IsoLinesCollider points = (*it)->GetIsoPoints();
@@ -1097,8 +1097,8 @@ void Scene::UpdateSelection()
 					SetSelection((*it)->GetGameobject(), true);
 					break;
 				}
-			}*/
-			for (std::map<double, Behaviour*>::iterator it = Behaviour::b_map.begin(); it != Behaviour::b_map.end(); ++it)
+			}
+			/*for (std::map<double, Behaviour*>::iterator it = Behaviour::b_map.begin(); it != Behaviour::b_map.end(); ++it)
 			{
 				if (it->second->GetType() == UNIT_MELEE || it->second->GetType() == GATHERER || it->second->GetType() == UNIT_RANGED
 					|| it->second->GetType() == BASE_CENTER || it->second->GetType() == TOWER || it->second->GetType() == BARRACKS
@@ -1124,7 +1124,7 @@ void Scene::UpdateSelection()
 						}
 					}
 				}
-			}
+			}*/
 		}
 	}
 	
