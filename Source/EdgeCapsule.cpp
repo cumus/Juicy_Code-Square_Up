@@ -5,7 +5,7 @@
 #include "Log.h"
 #include "Behaviour.h"
 
-Capsule::Capsule(Gameobject* go) : Behaviour(go, EDGE_CAPSULE, NO_UPGRADE, B_CAPSULE)
+Capsule::Capsule(Gameobject* go) : Behaviour(go, CAPSULE, NO_UPGRADE, B_CAPSULE)
 {
 	max_life = 1;
 	current_life = max_life;

@@ -1105,7 +1105,7 @@ void B_Unit::OnRightClick(vec posClick, vec modPos)
 			{
 				if (GetType() == GATHERER)
 				{
-					if (it->second->GetType() == EDGE || it->second->GetType() == UNIT_CAPSULE || it->second->GetType() == EDGE_CAPSULE)
+					if (it->second->GetType() == EDGE || it->second->GetType() == CAPSULE)
 					{
 						if (distance == 0)//Chose closest
 						{
@@ -1123,7 +1123,7 @@ void B_Unit::OnRightClick(vec posClick, vec modPos)
 						//new_state = CHASING;
 					}
 				}
-				else if (it->second->GetType() == ENEMY_MELEE || it->second->GetType() == ENEMY_RANGED || it->second->GetType() == SPAWNER || it->second->GetType() == UNIT_CAPSULE || it->second->GetType() == EDGE_CAPSULE)//Temporal
+				else if (it->second->GetType() == ENEMY_MELEE || it->second->GetType() == ENEMY_RANGED || it->second->GetType() == SPAWNER || it->second->GetType() == CAPSULE)//Temporal
 				{
 					if (distance == 0)//Closest distance
 					{
