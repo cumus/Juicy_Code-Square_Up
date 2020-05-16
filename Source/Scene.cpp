@@ -21,6 +21,7 @@
 #include "RangedUnit.h"
 #include "Spawner.h"
 #include "Barracks.h"
+#include "EdgeCapsule.h"
 #include "JuicyMath.h"
 
 #include "Defs.h"
@@ -455,6 +456,8 @@ void Scene::LoadMainScene()
 	SpawnBehaviour(EDGE, edge_pos33);
 	SpawnBehaviour(EDGE, edge_pos34);
 	SpawnBehaviour(EDGE, edge_pos35);
+
+	SpawnBehaviour(CAPSULE, capsule_pos_test);
 }
 
 void Scene::LoadIntroScene()
@@ -2111,6 +2114,14 @@ Transform* Scene::SpawnBehaviour(int type, vec pos)
 	{
 		behaviour = AddGameobject("Edge");
 		new Edge(behaviour);
+		break;
+	}
+	case CAPSULE:
+	{
+		behaviour = AddGameobject("Edge");
+		new Capsule(behaviour);
+		for (std::map<double, Behaviour*>::iterator it = Behaviour::b_map.begin(); it != Behaviour::b_map.end(); ++it)
+			Event::Push(UPDATE_PATH, it->second, pos.x - 1, pos.y - 1);
 		break;
 	}
 	case SPAWNER:

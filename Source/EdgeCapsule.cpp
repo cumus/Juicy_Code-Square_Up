@@ -17,6 +17,8 @@ Capsule::Capsule(Gameobject* go) : Behaviour(go, CAPSULE, NO_UPGRADE, B_CAPSULE)
 		vec pos = t->GetGlobalPosition();
 		App->pathfinding.SetWalkabilityTile(int(pos.x), int(pos.y), false);
 	}
+
+	SetColliders();
 }
 
 Capsule::~Capsule()
