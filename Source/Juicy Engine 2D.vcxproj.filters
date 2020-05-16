@@ -187,9 +187,6 @@
     <ClCompile Include="DialogSystem.cpp">
       <Filter>Source\Independent Managers</Filter>
     </ClCompile>
-    <ClCompile Include="UnitCapsule.cpp">
-      <Filter>Source\Gameobjects\Components\Behaviours</Filter>
-    </ClCompile>
     <ClCompile Include="EdgeCapsule.cpp">
       <Filter>Source\Gameobjects\Components\Behaviours</Filter>
     </ClCompile>
@@ -415,9 +412,6 @@
       <Filter>Source\Independent Managers</Filter>
     </ClInclude>
     <ClInclude Include="EdgeCapsule.h">
-      <Filter>Source\Gameobjects\Components\Behaviours</Filter>
-    </ClInclude>
-    <ClInclude Include="UnitCapsule.h">
       <Filter>Source\Gameobjects\Components\Behaviours</Filter>
     </ClInclude>
   </ItemGroup>

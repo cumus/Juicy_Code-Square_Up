@@ -282,6 +282,12 @@ private:
 	vec edge_pos34 = { 171.f, 223.f };
 	vec edge_pos35 = { 139.f, 222.f };
 
+
+	//Capsule test positions
+
+	vec capsule_pos_test = {144.f, 135.f };
+	vec capsule_pos_test2 = {152.f, 135.f};
+
 	//-------Gameobjects--------
 
 	//Gameobject* lore_go;

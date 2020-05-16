@@ -1,13 +1,13 @@
-#ifndef __EDGE_CAPSULE_H__
-#define __EDGE_CAPSULE_H__
+#ifndef __CAPSULE_H__
+#define __CAPSULE_H__
 
 #include "Behaviour.h"
 
-class Edge_Capsule : public Behaviour
+class Capsule : public Behaviour
 {
 public:
-	Edge_Capsule(Gameobject* go);
-	~Edge_Capsule();
+	Capsule(Gameobject* go);
+	~Capsule();
 
 	void AfterDamageAction() override;
 };
