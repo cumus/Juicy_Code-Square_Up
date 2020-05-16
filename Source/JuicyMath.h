@@ -34,6 +34,10 @@ namespace JMath
 	float Cap(const float base, const float lower_bound, const float upper_bound);
 
 	std::pair<float, float> RotatePoint(float x,float y,double degrees);
+
+	// RNG
+	float RandomF(float base = 1.0f);
+	float RandomRangeF(float max = 1.0f, float min = 0.0f);
 };
 
 

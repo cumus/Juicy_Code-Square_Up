@@ -36,7 +36,7 @@ public:
 	Anim(const Anim& copy);
 
 	void Setup(SDL_Rect rect, int total_frames, float frequency = 1.0f);
-	const SDL_Rect Reset();
+	const SDL_Rect Reset(bool random_start);
 	bool Update(float& frame_timer);
 	int GetSectionOffset() const;
 
