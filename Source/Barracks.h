@@ -14,8 +14,6 @@ public:
 	void AfterDamageAction() override;
 
 	void create_bar() override;
-	void update_health_ui();
-	void update_upgrades_ui();
 	void CreatePanel() override;
 	void UpdatePanel() override;
 	void UpdateWalkabilityTiles() override;
@@ -24,8 +22,6 @@ public:
 
 protected:
 
-	int lvl;
-	int max_lvl;
 	int buildQueue;
 	float spawnPointX;
 	float spawnPointY;

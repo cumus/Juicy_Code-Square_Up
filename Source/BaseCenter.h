@@ -15,11 +15,8 @@ public:
 	void Update() override;
 	void create_bar() override;
 	void update_health_ui() override;
-	void update_upgrades_ui();
 	void CreatePanel() override;
 	void UpdatePanel() override;
-	void create_creation_bar() override;
-	void update_creation_bar() override;
 	void UpdateWalkabilityTiles() override;
 	void FreeWalkabilityTiles() override;
 
@@ -28,9 +25,6 @@ public:
 	static Gameobject* baseCenter;
 
 protected:
-
-	int lvl;
-	int max_lvl;
 
 	float posY_panel;
 	int panel_tex_ID;
