@@ -290,8 +290,11 @@ protected:
 	int dirY;
 	bool arriveDestination;
 	bool calculating_path;
-	std::pair<float, float> atkObj;
+	bool chasing;
+	std::pair<float, float> atkObjPos;
 	std::pair<float, float> shootPos;
+	Gameobject* atkObj;
+	Gameobject* chaseObj;
 };
 
 #endif // __BEHAVIOUR_H_

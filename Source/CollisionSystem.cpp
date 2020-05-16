@@ -153,14 +153,14 @@ void CollisionSystem::Resolve()
 				std::vector<Collider*> collisions = collisionTree->Search(*(*itV));
 				if (!collisions.empty())
 				{
-					//LOG("Got collisions");
+					LOG("Got collisions: %d",collisions.size());
 					for (std::vector<Collider*>::iterator it = collisions.begin(); it != collisions.end(); ++it)
 					{
 						//LOG("This go id: %lf", (*itV)->GetGameobject()->GetID());
 						//LOG("Other go id: %lf", (*it)->GetGameobject()->GetID());
 						if ((*itV)->GetID() != (*it)->GetID() && (*itV)->GetGoID() != (*it)->GetGoID())
 						{
-							//LOG("Check if collides");
+							LOG("Check if collides");
 							if (collisionLayers[(*itV)->GetCollLayer()][(*it)->GetCollLayer()])
 							{
 								Manifold m = (*itV)->Intersects(*it);
@@ -171,7 +171,7 @@ void CollisionSystem::Resolve()
 										Event::Push(ON_COLL_ENTER, (*itV)->GetGameobject(), (*itV)->GetID(), (*it)->GetID());
 										Event::Push(ON_COLL_ENTER, (*it)->GetGameobject(), (*it)->GetID(), (*itV)->GetID());
 									}*/
-									//LOG("Save collision");
+									LOG("Save collision");
 									if (!(*itV)->GetCollisionState((*it)->GetID()))//First collision
 									{
 										(*itV)->SaveCollision((*it)->GetID());

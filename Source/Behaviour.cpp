@@ -109,7 +109,7 @@ void Behaviour::SetColliders()
 		}
 		case TOWER:
 		{
-			bodyColl = new Collider(game_object, { pos.x,pos.y,game_object->GetTransform()->GetLocalScaleX(),game_object->GetTransform()->GetLocalScaleY() }, TRIGGER, BUILDING_TAG, { 0,Map::GetBaseOffset(),0,0 }, BODY_COLL_LAYER);
+			//bodyColl = new Collider(game_object, { pos.x,pos.y,game_object->GetTransform()->GetLocalScaleX(),game_object->GetTransform()->GetLocalScaleY() }, TRIGGER, BUILDING_TAG, { 0,Map::GetBaseOffset(),0,0 }, BODY_COLL_LAYER);
 			//selColl = new Collider(game_object, { pos.x,pos.y,game_object->GetTransform()->GetLocalScaleX(),game_object->GetTransform()->GetLocalScaleY() }, NON_TRIGGER, PLAYER_TAG, { 0,0,0,0 }, UNIT_SELECTION_LAYER);
 			//selColl->SetPointsOffset({ -20,-70 }, { 20,50 }, { -10,-55 }, { 10,35 });
 			//selectableUnits.push_back(GetID());
@@ -117,7 +117,7 @@ void Behaviour::SetColliders()
 		}
 		case BARRACKS:
 		{
-			bodyColl = new Collider(game_object, { pos.x,pos.y,game_object->GetTransform()->GetLocalScaleX(),game_object->GetTransform()->GetLocalScaleY() }, TRIGGER, BUILDING_TAG, { 0,Map::GetBaseOffset(),0,0 }, BODY_COLL_LAYER);
+			//bodyColl = new Collider(game_object, { pos.x,pos.y,game_object->GetTransform()->GetLocalScaleX(),game_object->GetTransform()->GetLocalScaleY() }, TRIGGER, BUILDING_TAG, { 0,Map::GetBaseOffset(),0,0 }, BODY_COLL_LAYER);
 			//selColl = new Collider(game_object, { pos.x,pos.y,game_object->GetTransform()->GetLocalScaleX(),game_object->GetTransform()->GetLocalScaleY() }, NON_TRIGGER, PLAYER_TAG, { 0,0,0,0 }, UNIT_SELECTION_LAYER);
 			//selColl->SetPointsOffset({ -20,-70 }, { 20,50 }, { -10,-55 }, { 10,35 });
 			//selectableUnits.push_back(GetID());
@@ -129,7 +129,7 @@ void Behaviour::SetColliders()
 		}
 		case EDGE:
 		{
-			bodyColl = new Collider(game_object, { pos.x,pos.y,game_object->GetTransform()->GetLocalScaleX(),game_object->GetTransform()->GetLocalScaleY() }, TRIGGER, ENEMY_TAG, { 0,Map::GetBaseOffset(),0,0 }, BODY_COLL_LAYER);
+			//bodyColl = new Collider(game_object, { pos.x,pos.y,game_object->GetTransform()->GetLocalScaleX(),game_object->GetTransform()->GetLocalScaleY() }, TRIGGER, ENEMY_TAG, { 0,Map::GetBaseOffset(),0,0 }, BODY_COLL_LAYER);
 			break;
 		}
 		case CAPSULE:
@@ -511,6 +511,9 @@ B_Unit::B_Unit(Gameobject* go, UnitType t, UnitState s, ComponentType comp_type)
 	game_object->SetStatic(false);
 	calculating_path = false;
 	objective = nullptr;
+	atkObj = nullptr;
+	chaseObj = nullptr;
+	chasing = false;
 
 	//Info for ranged units constructor
 	/*vec pos = game_object->GetTransform()->GetGlobalPosition();
@@ -607,30 +610,29 @@ void B_Unit::Update()
 				}
 
 				if (inRange) new_state = ATTACKING;
-				else
-					if (type == ENEMY_MELEE || type == ENEMY_RANGED || type == ENEMY_SUPER || type == ENEMY_SPECIAL)
-					{
-						if (inVision) new_state = CHASING;
-					}
+				else if (type == ENEMY_MELEE || type == ENEMY_RANGED || type == ENEMY_SUPER || type == ENEMY_SPECIAL)
+				{
+					if (inVision) new_state = CHASING;
+				}
+
+
+				if (path->empty()) new_state = IDLE;
+
 				current_state = MOVING;
 				break;
 			}
 			case ATTACKING:
 			{
-				//LOG("state ATTACK");
-				if (atkTimer < atkTime)
+				//LOG("state ATTACK");				
+				if(atkTimer > atkTime)
 				{
-					atkTimer += App->time.GetGameDeltaTime();
-				}
-				else
-				{
-					if (objective != nullptr && !objective->BeingDestroyed()) //Attack
+					if (atkObj != nullptr && !atkObj->BeingDestroyed()) //Attack
 					{
 						DoAttack();
 						UnitAttackType();
-						Event::Push(DAMAGE, objective->GetBehaviour(), damage);
+						Event::Push(DAMAGE, atkObj->GetBehaviour(), damage);
 					}
-					objective = nullptr;
+					atkObj = nullptr;
 					atkTimer = 0;
 					new_state = IDLE;
 				}
@@ -641,7 +643,62 @@ void B_Unit::Update()
 			case CHASING:
 			{
 				//LOG("state CHASING");
-				attackPos = objective->GetTransform()->GetGlobalPosition();
+				if (chaseObj != nullptr && !calculating_path)
+				{
+					vec pos = chaseObj->GetTransform()->GetGlobalPosition();
+					Event::Push(UPDATE_PATH, this->AsBehaviour(), int(pos.x), int(pos.y));
+					chasing = true;
+				}
+
+				if (path != nullptr && !path->empty())
+				{
+					CheckPathTiles();
+
+					if (move && PathfindingManager::unitWalkability[nextTile.x][nextTile.y] == GetID() && !inRange)
+					{
+						calculating_path = false;
+						//LOG("move");
+						fPoint actualPos = { pos.x, pos.y };
+
+						iPoint tilePos = { int(pos.x), int(pos.y) };
+						if (nextTile.x > tilePos.x)
+						{
+							dirX = 1;
+						}
+						else if (nextTile.x < tilePos.x)
+						{
+							dirX = -1;
+						}
+						else dirX = 0;
+
+						if (nextTile.y > tilePos.y)
+						{
+							dirY = 1;
+						}
+						else if (nextTile.y < tilePos.y)
+						{
+							dirY = -1;
+						}
+						else dirY = 0;
+
+						game_object->GetTransform()->MoveX(dirX * speed * App->time.GetGameDeltaTime());//Move x
+						game_object->GetTransform()->MoveY(dirY * speed * App->time.GetGameDeltaTime());//Move y
+
+						ChangeState();
+						CheckDirection(actualPos);
+
+						if (path->size() < 3)
+						{
+							if (chaseObj != nullptr && !calculating_path)
+							{
+								vec pos = chaseObj->GetTransform()->GetGlobalPosition();
+								Event::Push(UPDATE_PATH, this->AsBehaviour(), int(pos.x), int(pos.y));
+							}
+						}
+					}
+				}
+				
+				/*attackPos = objective->GetTransform()->GetGlobalPosition();
 				//LOG("Distance to enemy: %f", game_object->GetTransform()->DistanceTo(attackPos));
 				if (game_object->GetTransform()->DistanceTo(attackPos) > attack_range)
 				{
@@ -668,7 +725,7 @@ void B_Unit::Update()
 				else
 				{
 					new_state = ATTACKING;
-				}
+				}*/
 				current_state = CHASING;
 				break;
 			}
@@ -688,6 +745,11 @@ void B_Unit::Update()
 			}
 		}
 
+		if (atkTimer < atkTime)
+		{
+			atkTimer += App->time.GetGameDeltaTime();
+		}
+
 		//Raycast
 		if (shoot) ShootRaycast();
 			
@@ -698,59 +760,62 @@ void B_Unit::Update()
 
  void B_Unit::OnCollisionEnter(Collider selfCol, Collider col)
 {
-	 if (selfCol.GetColliderTag() == PLAYER_ATTACK_TAG)
+	 if (!col.parentGo->BeingDestroyed())
 	 {
-		 //LOG("Atk");
-		 //LOG("Coll tag :%d", selfCol.GetColliderTag());
-		 //LOG("Coll tag :%d", col.GetColliderTag());
-		 if (col.GetColliderTag() == ENEMY_TAG)
+		 if (selfCol.GetColliderTag() == PLAYER_ATTACK_TAG)
 		 {
-			 LOG("Eenmy unit in attack range");
-			 inRange = true;
-			 //inVision = false;
-			 if (objective == nullptr) objective = col.GetGameobject();
+			 //LOG("Atk");
+			 //LOG("Coll tag :%d", selfCol.GetColliderTag());
+			 //LOG("Coll tag :%d", col.GetColliderTag());
+			 if (col.GetColliderTag() == ENEMY_TAG)
+			 {
+				 LOG("Eenmy unit in attack range");
+				 inRange = true;
+				 //inVision = false;
+				 if (atkObj == nullptr) atkObj = col.parentGo;
+			 }
 		 }
-	 }
 
-	 if (selfCol.GetColliderTag() == PLAYER_VISION_TAG)
-	 {
-		 LOG("Player vision");
-		 //LOG("Coll tag :%d", selfCol.GetColliderTag());
-		 //LOG("Coll tag :%d", col.GetColliderTag());
-		 if (col.GetColliderTag() == ENEMY_TAG)
+		 if (selfCol.GetColliderTag() == PLAYER_VISION_TAG)
 		 {
-			 LOG("Enemy unit in vision");
-			 //inRange = false;
-			 inVision = true;
-			 /*if (attackObjective == nullptr)*/ objective = col.GetGameobject();
+			 LOG("Player vision");
+			 //LOG("Coll tag :%d", selfCol.GetColliderTag());
+			 //LOG("Coll tag :%d", col.GetColliderTag());
+			 if (col.GetColliderTag() == ENEMY_TAG)
+			 {
+				 LOG("Enemy unit in vision");
+				 //inRange = false;
+				 inVision = true;
+				 if (chaseObj == nullptr) chaseObj = col.parentGo;
+			 }
 		 }
-	 }
 
-	 if (selfCol.GetColliderTag() == ENEMY_ATTACK_TAG)
-	 {
-		 LOG("Atk");
-		 //LOG("Coll tag :%d", selfCol.GetColliderTag());
-		 //LOG("Coll tag :%d", col.GetColliderTag());
-		 if (col.GetColliderTag() == PLAYER_TAG)
+		 if (selfCol.GetColliderTag() == ENEMY_ATTACK_TAG)
 		 {
-			 LOG("Player unit in attack range");
-			 inRange = true;
-			 //inVision = false;
-			 if (objective == nullptr) objective = col.GetGameobject();
+			 LOG("Atk");
+			 //LOG("Coll tag :%d", selfCol.GetColliderTag());
+			 //LOG("Coll tag :%d", col.GetColliderTag());
+			 if (col.GetColliderTag() == PLAYER_TAG)
+			 {
+				 LOG("Player unit in attack range");
+				 inRange = true;
+				 //inVision = false;
+				 if (atkObj == nullptr) atkObj = col.parentGo;
+			 }
 		 }
-	 }
 
-	 if (selfCol.GetColliderTag() == ENEMY_VISION_TAG)
-	 {
-		 LOG("Enemy vision");
-		 //LOG("Coll tag :%d", selfCol.GetColliderTag());
-		 //LOG("Coll tag :%d", col.GetColliderTag());
-		 if (col.GetColliderTag() == PLAYER_TAG)
+		 if (selfCol.GetColliderTag() == ENEMY_VISION_TAG)
 		 {
-			 LOG("Player unit in vision");
-			 //inRange = false;
-			 inVision = true;
-			 if (objective == nullptr) objective = col.GetGameobject();
+			 LOG("Enemy vision");
+			 //LOG("Coll tag :%d", selfCol.GetColliderTag());
+			 //LOG("Coll tag :%d", col.GetColliderTag());
+			 if (col.GetColliderTag() == PLAYER_TAG)
+			 {
+				 LOG("Player unit in vision");
+				 //inRange = false;
+				 inVision = true;
+				 if (chaseObj == nullptr) chaseObj = col.parentGo;
+			 }
 		 }
 	 }
 }
@@ -1065,7 +1130,7 @@ void B_Unit::ShootRaycast()
 	rayCastTimer += App->time.GetGameDeltaTime();
 	if (rayCastTimer < RAYCAST_TIME)
 	{
-		App->render->DrawLine(shootPos, atkObj, { 34,191,255,255 }, FRONT_SCENE, true);
+		App->render->DrawLine(shootPos, atkObjPos, { 34,191,255,255 }, FRONT_SCENE, true);
 	}
 	else
 	{

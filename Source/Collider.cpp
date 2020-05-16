@@ -25,6 +25,7 @@ Collider::Collider(Gameobject* go, RectF coll, ColliderType t, ColliderTag tg, R
     App->collSystem.Add(this);
     offset = off;
     GoID = go->GetID();
+    parentGo = go;
     if (lay == UNIT_SELECTION_LAYER) selectionColl = true;
     else selectionColl = false;
 }

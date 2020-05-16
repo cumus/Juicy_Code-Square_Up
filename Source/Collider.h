@@ -95,6 +95,7 @@ private:
 
 public:
 	bool selectionColl;
+	Gameobject* parentGo;
 
 private:
 	RectF boundary;
