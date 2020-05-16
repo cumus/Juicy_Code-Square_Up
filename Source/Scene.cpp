@@ -1081,8 +1081,26 @@ void Scene::UpdateSelection()
 			x += cam.x;
 			y += cam.y;
 
+			if (!Behaviour::selectableUnits.empty())
+			{
+				for (std::vector<double>::iterator it = Behaviour::selectableUnits.begin(); it != Behaviour::selectableUnits.end(); ++it)
+				{
+					IsoLinesCollider points = Behaviour::b_map[(*it)]->GetSelectionCollider()->GetIsoPoints();
+
+					if (JMath::PointInsideTriangle({ float(x),float(y) }, points.top, points.left, points.right))
+					{
+						SetSelection(Behaviour::b_map[(*it)]->GetGameobject(), true);
+						break;
+					}
+					else if (JMath::PointInsideTriangle({ float(x),float(y) }, points.bot, points.left, points.right))
+					{
+						SetSelection(Behaviour::b_map[(*it)]->GetGameobject(), true);
+						break;
+					}
+				}
+			}
 			//For quadtree selection colliders list
-			std::vector<Collider*> coll = App->collSystem.GetQuadTree()->SearchSelection({x,y});
+			/*std::vector<Collider*> coll = App->collSystem.GetQuadTree()->SearchSelection({x,y});
 			LOG("Selection size %d",coll.size());
 			for (std::vector<Collider*>::iterator it = coll.begin(); it != coll.end(); ++it)
 			{
@@ -1098,7 +1116,7 @@ void Scene::UpdateSelection()
 					SetSelection((*it)->GetGameobject(), true);
 					break;
 				}
-			}
+			}*/
 			/*for (std::map<double, Behaviour*>::iterator it = Behaviour::b_map.begin(); it != Behaviour::b_map.end(); ++it)
 			{
 				if (it->second->GetType() == UNIT_MELEE || it->second->GetType() == GATHERER || it->second->GetType() == UNIT_RANGED

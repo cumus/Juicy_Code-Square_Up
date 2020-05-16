@@ -432,7 +432,10 @@ void Behaviour::OnKill(const UnitType type)
 	}
 	FreeWalkabilityTiles();
 	b_map.erase(GetID());
-	//selectableUnits.erase(GetID());
+	for (std::vector<double>::iterator it = selectableUnits.begin(); it != selectableUnits.end(); ++it)
+	{
+		if((*it) == GetID()) selectableUnits.erase(it);
+	}
 }
 
 unsigned int Behaviour::GetBehavioursInRange(vec pos, float dist, std::map<float, Behaviour*>& res) const
