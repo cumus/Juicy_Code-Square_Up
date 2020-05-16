@@ -300,7 +300,13 @@ bool Audio::LoadFx(Audio_FX audio_fx)
 	case B_DESTROYED: audio_path += "Assets/audio/Effects/Buildings/Destroyed/PowerDown.wav"; break;
 	case B_BUILDED: audio_path += "Assets/audio/Effects/Buildings/Nails/HamerNail4Hits.wav"; break;
 	case UNIT_DIES: audio_path += "Assets/audio/Effects/Enemies/realistic_death_effect.wav"; break;
+	case UNIT_MOVES: audio_path += "Assets/audio/Effects/Allies/Spawn/Spawn.wav"; break;
 	case EDGE_FX: audio_path += "Assets/audio/Effects/Buildings/Destroyed/superDestroy.ogg"; break;
+	case B_SELECT: audio_path += "Assets/audio/Effects/Buildings/Select/Select.wav"; break;
+	case SPAWNER_FX: audio_path += "Assets/audio/Effects/Attack_sounds/RobotTransform.wav"; break;
+	case UI_BTON_CLICK: audio_path += "Assets/audio/Effects/UI/Ingame/itempick1.wav"; break;
+	case ALARM: audio_path += "Assets/audio/Effects/Notification/Scifi_Alarm16.wav"; break;
+	case BASE_CENTER_FX: audio_path += "Assets/audio/Effects/Buildings/Scanner1.ogg"; break;
 	default: break;
 	}
 
