@@ -73,9 +73,75 @@ void Behaviour::SetColliders()
 	//Colliders
 	pos = game_object->GetTransform()->GetGlobalPosition();
 	vec s = game_object->GetTransform()->GetLocalScale();
-	bodyColl = new Collider(game_object, { pos.x,pos.y,game_object->GetTransform()->GetLocalScaleX(),game_object->GetTransform()->GetLocalScaleY() }, NON_TRIGGER, PLAYER_TAG, { 0,Map::GetBaseOffset(),0,0 },BODY_COLL_LAYER);
-	visionColl = new Collider(game_object, { pos.x,pos.y,vision_range,vision_range }, TRIGGER, PLAYER_VISION_TAG, { 0,Map::GetBaseOffset(),0,0 }, VISION_COLL_LAYER);
-	attackColl = new Collider(game_object, { pos.x,pos.y,attack_range,attack_range }, TRIGGER, PLAYER_ATTACK_TAG, { 0,Map::GetBaseOffset(),0,0 }, ATTACK_COLL_LAYER);
+	switch(type)
+	{
+		case GATHERER:
+		case UNIT_MELEE:
+		case UNIT_RANGED:
+		case UNIT_SUPER:
+		{
+			bodyColl = new Collider(game_object, { pos.x,pos.y,game_object->GetTransform()->GetLocalScaleX(),game_object->GetTransform()->GetLocalScaleY() }, NON_TRIGGER, PLAYER_TAG, { 0,Map::GetBaseOffset(),0,0 }, BODY_COLL_LAYER);
+			visionColl = new Collider(game_object, { pos.x,pos.y,vision_range,vision_range }, TRIGGER, PLAYER_VISION_TAG, { 0,Map::GetBaseOffset(),0,0 }, VISION_COLL_LAYER);
+			//attackColl = new Collider(game_object, { pos.x,pos.y,attack_range,attack_range }, TRIGGER, PLAYER_ATTACK_TAG, { 0,Map::GetBaseOffset(),0,0 }, ATTACK_COLL_LAYER);
+			selColl = new Collider(game_object, { pos.x,pos.y,game_object->GetTransform()->GetLocalScaleX(),game_object->GetTransform()->GetLocalScaleY() }, NON_TRIGGER, PLAYER_TAG, { 0,Map::GetBaseOffset(),0,0 }, UNIT_SELECTION_LAYER);
+			selColl->SetPointsOffset({0,0}, {0,0}, {0,0}, {0,0}, {0,0});
+			break;
+		}
+		case ENEMY_MELEE:
+		case ENEMY_RANGED:
+		case ENEMY_SUPER:
+		case ENEMY_SPECIAL:
+		{
+			bodyColl = new Collider(game_object, { pos.x,pos.y,game_object->GetTransform()->GetLocalScaleX(),game_object->GetTransform()->GetLocalScaleY() }, NON_TRIGGER, ENEMY_TAG, { 0,Map::GetBaseOffset(),0,0 }, BODY_COLL_LAYER);
+			visionColl = new Collider(game_object, { pos.x,pos.y,vision_range,vision_range }, TRIGGER, ENEMY_VISION_TAG, { 0,Map::GetBaseOffset(),0,0 }, VISION_COLL_LAYER);
+			//attackColl = new Collider(game_object, { pos.x,pos.y,attack_range,attack_range }, TRIGGER, ENEMY_ATTACK_TAG, { 0,Map::GetBaseOffset(),0,0 }, ATTACK_COLL_LAYER);
+			break;
+		}
+		case BASE_CENTER:
+		{
+			bodyColl = new Collider(game_object, { pos.x,pos.y,game_object->GetTransform()->GetLocalScaleX(),game_object->GetTransform()->GetLocalScaleY() }, TRIGGER, BUILDING_TAG, { 90,Map::GetBaseOffset() + 65,0,0 }, BODY_COLL_LAYER);
+			break;
+		}
+		case TOWER:
+		{
+			bodyColl = new Collider(game_object, { pos.x,pos.y,game_object->GetTransform()->GetLocalScaleX(),game_object->GetTransform()->GetLocalScaleY() }, TRIGGER, BUILDING_TAG, { 0,Map::GetBaseOffset(),0,0 }, BODY_COLL_LAYER);
+			break;
+		}
+		case BARRACKS:
+		{
+			bodyColl = new Collider(game_object, { pos.x,pos.y,game_object->GetTransform()->GetLocalScaleX(),game_object->GetTransform()->GetLocalScaleY() }, TRIGGER, BUILDING_TAG, { 0,Map::GetBaseOffset(),0,0 }, BODY_COLL_LAYER);
+			break;
+		}
+		case LAB:
+		{
+			break;
+		}
+		case EDGE:
+		{
+			bodyColl = new Collider(game_object, { pos.x,pos.y,game_object->GetTransform()->GetLocalScaleX(),game_object->GetTransform()->GetLocalScaleY() }, NON_TRIGGER, ENEMY_TAG, { 0,Map::GetBaseOffset(),0,0 }, BODY_COLL_LAYER);
+			break;
+		}
+		case UNIT_CAPSULE:
+		{
+			bodyColl = new Collider(game_object, { pos.x,pos.y,game_object->GetTransform()->GetLocalScaleX(),game_object->GetTransform()->GetLocalScaleY() }, NON_TRIGGER, ENEMY_TAG, { 0,Map::GetBaseOffset(),0,0 }, BODY_COLL_LAYER);
+			break;
+		}
+		case EDGE_CAPSULE:
+		{
+			bodyColl = new Collider(game_object, { pos.x,pos.y,game_object->GetTransform()->GetLocalScaleX(),game_object->GetTransform()->GetLocalScaleY() }, NON_TRIGGER, ENEMY_TAG, { 0,Map::GetBaseOffset(),0,0 }, BODY_COLL_LAYER);
+			break;
+		}
+		case SPAWNER:
+		{
+			bodyColl = new Collider(game_object, { pos.x,pos.y,game_object->GetTransform()->GetLocalScaleX(),game_object->GetTransform()->GetLocalScaleY() }, NON_TRIGGER, ENEMY_TAG, { 0,Map::GetBaseOffset(),0,0 }, BODY_COLL_LAYER);
+			break;
+		}
+	}
+}
+
+Collider* Behaviour::GetSelectionCollider()
+{
+	return selColl;
 }
 
 void Behaviour::RecieveEvent(const Event& e)
@@ -447,6 +513,10 @@ void B_Unit::Update()
 		{
 			case IDLE:
 			{
+				if (type == ENEMY_MELEE || type == ENEMY_RANGED || type == ENEMY_SUPER || type == ENEMY_SPECIAL)
+				{
+
+				}
 				//LOG("state IDLE");
 				spriteState = IDLE;
 				if (inRange)
@@ -463,7 +533,15 @@ void B_Unit::Update()
 					{
 						new_state = MOVING;
 					}
-					else move = false;
+					else
+					{
+						if (type == ENEMY_MELEE || type == ENEMY_RANGED || type == ENEMY_SUPER || type == ENEMY_SPECIAL)
+						{
+							new_state = BASE;
+						}
+						else new_state = IDLE;
+						move = false;
+					}
 					objective = nullptr;
 				}
 				current_state = IDLE;
@@ -474,7 +552,7 @@ void B_Unit::Update()
 				//LOG("state MOVING");	
 				CheckPathTiles();
 
-				if (move && PathfindingManager::unitWalkability[nextTile.x][nextTile.y] == GetID())
+				if (move && PathfindingManager::unitWalkability[nextTile.x][nextTile.y] == GetID() && !inRange)
 				{
 					//LOG("move");
 					fPoint actualPos = { pos.x, pos.y };
@@ -506,6 +584,7 @@ void B_Unit::Update()
 					ChangeState();
 					CheckDirection(actualPos);
 				}
+				else if (inRange) new_state = ATTACKING;
 				current_state = MOVING;
 				break;
 			}
@@ -566,6 +645,27 @@ void B_Unit::Update()
 				current_state = CHASING;
 				break;
 			}
+			case BASE:
+			{
+				if (Base_Center::baseCenter != nullptr)
+				{
+					if (new_state != current_state)
+					{
+						//LOG("Path to base");
+						vec centerPos = Base_Center::baseCenter->GetTransform()->GetGlobalPosition();
+						Event::Push(UPDATE_PATH, this->AsBehaviour(), int(centerPos.x) - 1, int(centerPos.y) - 1);
+						//going_base = true;
+						//arriveDestination = true;
+						//LOG("Move to base");	
+					}
+
+					if (inRange) new_state = ATTACKING;
+					else if (inVision) new_state = CHASING;
+				}
+				else new_state = IDLE;
+				current_state = BASE;
+				break;
+			}
 		}
 
 		//Raycast
@@ -585,7 +685,7 @@ void B_Unit::Update()
 		 //LOG("Coll tag :%d", col.GetColliderTag());
 		 if (col.GetColliderTag() == ENEMY_TAG)
 		 {
-			 //LOG("Player unit in attack range");
+			 LOG("Eenmy unit in attack range");
 			 inRange = true;
 			 //inVision = false;
 			 if (objective == nullptr) objective = col.GetGameobject();
@@ -599,7 +699,7 @@ void B_Unit::Update()
 		 //LOG("Coll tag :%d", col.GetColliderTag());
 		 if (col.GetColliderTag() == ENEMY_TAG)
 		 {
-			 //LOG("Player unit in vision");
+			 //LOG("Enemy unit in vision");
 			 //inRange = false;
 			 inVision = true;
 			 /*if (attackObjective == nullptr)*/ objective = col.GetGameobject();

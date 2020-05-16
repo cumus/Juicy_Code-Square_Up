@@ -38,14 +38,14 @@ EnemyMeleeUnit::~EnemyMeleeUnit()
 {
 }
 
-void EnemyMeleeUnit::SetColliders()
+/*void EnemyMeleeUnit::SetColliders()
 {
 	//Colliders
 	pos = game_object->GetTransform()->GetGlobalPosition();
 	bodyColl = new Collider(game_object, { pos.x,pos.y,game_object->GetTransform()->GetLocalScaleX(),game_object->GetTransform()->GetLocalScaleY() }, NON_TRIGGER, ENEMY_TAG, { 0,Map::GetBaseOffset(),0,0 },BODY_COLL_LAYER);	
-	attackColl = new Collider(game_object, { pos.x,pos.y,attack_range,attack_range }, TRIGGER, ENEMY_ATTACK_TAG, { 0,Map::GetBaseOffset(),0,0 },ATTACK_COLL_LAYER);
-	visionColl = new Collider(game_object, { pos.x,pos.y,vision_range,vision_range }, TRIGGER, ENEMY_VISION_TAG, { 0,Map::GetBaseOffset(),0,0 },VISION_COLL_LAYER);
-}
+	//attackColl = new Collider(game_object, { pos.x,pos.y,attack_range,attack_range }, TRIGGER, ENEMY_ATTACK_TAG, { 0,Map::GetBaseOffset(),0,0 },ATTACK_COLL_LAYER);
+	//visionColl = new Collider(game_object, { pos.x,pos.y,vision_range,vision_range }, TRIGGER, ENEMY_VISION_TAG, { 0,Map::GetBaseOffset(),0,0 },VISION_COLL_LAYER);
+}*/
 
 /*void EnemyMeleeUnit::UpdatePath(int x, int y)
 {
@@ -74,7 +74,7 @@ void EnemyMeleeUnit::SetColliders()
 }*/
 
 
-void EnemyMeleeUnit::Update()
+/*void EnemyMeleeUnit::Update()
 {
 	if (!providesVisibility) CheckFoWMap();
 	if (current_state != DESTROYED)
@@ -238,7 +238,7 @@ void EnemyMeleeUnit::Update()
 			if (drawRanges) DrawRanges();
 		}
 	}
-}
+}*/
 
 void EnemyMeleeUnit::OnCollisionEnter(Collider selfCol, Collider col)
 {
@@ -255,7 +255,7 @@ void EnemyMeleeUnit::OnCollisionEnter(Collider selfCol, Collider col)
 			//LOG("Player unit in attack range");
 			inRange = true;
 			//inVision = false;
-			/*if (attackObjective == nullptr)*/ objective = col.GetGameobject();
+			if (objective == nullptr) objective = col.GetGameobject();
 		}
 	}
 

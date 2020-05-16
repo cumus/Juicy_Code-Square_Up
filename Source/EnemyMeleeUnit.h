@@ -17,8 +17,8 @@ public:
 	void OnCollisionEnter(Collider selfCol, Collider col) override;
 	//void OnCollisionStay(Collider selfCol, Collider col) override;
 	void OnCollisionExit(Collider selfCol, Collider col) override;
-	void SetColliders();
-	void Update() override;
+	//void SetColliders();
+	//void Update() override;
 
 protected:
 	bool base_found;

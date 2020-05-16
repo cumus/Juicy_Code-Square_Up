@@ -20,10 +20,10 @@ enum ColliderShape
 
 enum CollisionLayer
 {
-	DEFAULT_LAYER = 0,
-	SCENE_LAYER,
-	HUD_LAYER,
-	INPUT_LAYER,
+	DEFAULT_COLL_LAYER = 0,
+	SCENE_COLL_LAYER,
+	HUD_COLL_LAYER,
+	INPUT_COLL_LAYER,
 	VISION_COLL_LAYER,
 	ATTACK_COLL_LAYER,
 	BODY_COLL_LAYER,
@@ -66,7 +66,7 @@ struct Manifold
 class Collider : public Component
 {
 public:
-	Collider(Gameobject* game_object, RectF coll, ColliderType t = NON_TRIGGER, ColliderTag tag = DEFAULT_TAG, RectF offset = {0,0,0,0},CollisionLayer layer = SCENE_LAYER, ComponentType type = COLLIDER);
+	Collider(Gameobject* game_object, RectF coll, ColliderType t = NON_TRIGGER, ColliderTag tag = DEFAULT_TAG, RectF offset = {0,0,0,0},CollisionLayer layer = SCENE_COLL_LAYER, ComponentType type = COLLIDER);
 	~Collider();
 
 	

@@ -27,12 +27,12 @@ Edge::~Edge()
 	
 }
 
-void Edge::SetColliders()
+/*void Edge::SetColliders()
 {
 	//Collider
 	pos = game_object->GetTransform()->GetGlobalPosition();
-	bodyColl = new Collider(game_object, { pos.x,pos.y,game_object->GetTransform()->GetLocalScaleX(),game_object->GetTransform()->GetLocalScaleY() }, NON_TRIGGER, ENEMY_TAG, { 0,Map::GetBaseOffset(),0,0 });
-}
+	bodyColl = new Collider(game_object, { pos.x,pos.y,game_object->GetTransform()->GetLocalScaleX(),game_object->GetTransform()->GetLocalScaleY() }, NON_TRIGGER, ENEMY_TAG, { 0,Map::GetBaseOffset(),0,0 },BODY_COLL_LAYER);
+}*/
 
 void Edge::FreeWalkabilityTiles()
 {

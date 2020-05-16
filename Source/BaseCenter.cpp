@@ -64,12 +64,13 @@ Base_Center::~Base_Center()
 		baseCenter = nullptr;
 }
 
-void Base_Center::SetColliders()
+/*void Base_Center::SetColliders()
 {
 	//Collider
+	LOG("Set base collider");
 	pos = game_object->GetTransform()->GetGlobalPosition();
-	bodyColl = new Collider(game_object, { pos.x,pos.y,game_object->GetTransform()->GetLocalScaleX(),game_object->GetTransform()->GetLocalScaleY() }, NON_TRIGGER, BUILDING_TAG, { 90,Map::GetBaseOffset()+65,0,0 },BODY_COLL_LAYER);
-}
+	bodyColl = new Collider(game_object, { pos.x,pos.y,game_object->GetTransform()->GetLocalScaleX(),game_object->GetTransform()->GetLocalScaleY() }, TRIGGER, BUILDING_TAG, { 90,Map::GetBaseOffset()+65,0,0 },BODY_COLL_LAYER);
+}*/
 
 void Base_Center::FreeWalkabilityTiles()
 {

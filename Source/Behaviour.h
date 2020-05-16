@@ -108,6 +108,7 @@ public:
 	void CheckFoWMap(bool debug=false);
 	std::vector<iPoint> GetTilesInsideRadius();
 	Collider* GetBodyCollider();
+	Collider* GetSelectionCollider();
 	virtual void UpdatePath(int x,int y) {}
 	virtual void AfterDamageAction() {}
 	virtual void OnRightClick(vec pos, vec modPos) {}
@@ -127,7 +128,7 @@ public:
 	virtual void OnCollisionStay(Collider selfCol, Collider col) {}
 	virtual void OnCollisionExit(Collider selfCol, Collider col) {}
 	static bool IsHidden(double id) { return b_map[id]->visible; }
-	virtual void SetColliders();
+	void SetColliders();
 
 
 	UnitType GetType() const { return type; }
@@ -154,9 +155,10 @@ public:
 	std::vector<iPoint> tilesVisited;
 	AnimatedSprite* characteR = nullptr;
 	bool providesVisibility,visible;
-	Collider* bodyColl;
-	Collider* visionColl;
-	Collider* attackColl;
+	Collider* bodyColl = nullptr;
+	Collider* visionColl = nullptr;
+	Collider* attackColl = nullptr;
+	Collider* selColl = nullptr;
 	std::pair<float, float> baseCollOffset;
 	std::pair<float, float> visionCollOffset;
 	std::pair<float, float>	attackCollOffset;
