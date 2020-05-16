@@ -132,10 +132,13 @@ void CollisionSystem::Resolve()
 	for (std::map<CollisionLayer, std::vector<Collider*>>::const_iterator itL = layerColliders.cbegin(); itL != layerColliders.cend(); ++itL)//for each layer
 	{
 		//LOG("Layer");
-		if (collisionLayers[itL->first][DEFAULT_LAYER] == false && collisionLayers[itL->first][SCENE_LAYER] == false && 
-			collisionLayers[itL->first][HUD_LAYER] == false && collisionLayers[itL->first][INPUT_LAYER] == false)
+		if (collisionLayers[itL->first][DEFAULT_LAYER] == false && collisionLayers[itL->first][SCENE_LAYER] == false &&
+			collisionLayers[itL->first][HUD_LAYER] == false && collisionLayers[itL->first][INPUT_LAYER] == false &&
+			collisionLayers[itL->first][VISION_COLL_LAYER] == false && collisionLayers[itL->first][BODY_COLL_LAYER] == false &&
+			collisionLayers[itL->first][UNIT_SELECTION_LAYER] == false && collisionLayers[itL->first][ATTACK_COLL_LAYER] == false)
 		{
-			LOG("Layers not colliding");
+
+			//LOG("Layers not colliding");
 			continue;
 		}
 

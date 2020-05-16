@@ -25,8 +25,8 @@ Barracks::Barracks(Gameobject* go) : BuildingWithQueue(go, BARRACKS, NO_UPGRADE,
 	max_lvl = 5;
 	providesVisibility = true;
 
-	create_bar();
-	bar_go->SetInactive();
+	//create_bar();
+	//bar_go->SetInactive();
 	CreatePanel();
 	selectionPanel->SetInactive();
 
@@ -105,17 +105,23 @@ void Barracks::Upgrade()
 void Barracks::CreatePanel()
 {
 	posY_panel = 0.81f;
-	panel_tex_ID = App->tex.Load("Assets/textures/buildPanelSample.png");
+	panel_tex_ID = App->tex.Load("Assets/textures/hud-sprites.png");
 
 	//------------------------- BASE PANEL --------------------------------------
 
 	selectionPanel = App->scene->AddGameobjectToCanvas("Barracks Build Panel");
 
 
+	barrack_icon = new C_Image(selectionPanel);
+	barrack_icon->target = { 0.0f, 0.832f, 1.5f, 1.5f };
+	barrack_icon->offset = { 0.0f, 0.0f };
+	barrack_icon->section = { 649, 651, 104, 81 };
+	barrack_icon->tex_id = panel_tex_ID;
+
 	panel = new C_Image(selectionPanel);
-	panel->target = { 0.15f, posY_panel, 1.0f, 1.0f };
+	panel->target = { 0.0f, 0.764f, 1.5f, 1.5f };
 	panel->offset = { 0.0f, 0.0f };
-	panel->section = { 0, 0, 140, 139 };
+	panel->section = { 163, 343, 202, 114 };
 	panel->tex_id = panel_tex_ID;
 
 	/*
@@ -141,16 +147,27 @@ void Barracks::CreatePanel()
 
 	rangedUnit_btn->tex_id = panel_tex_ID;
 */
-	meleeUnit_btn = new C_Button(selectionPanel, Event(BUILD_MELEE, this, spawnPoint, 5.0f));//Top right
-	meleeUnit_btn->target = { 0.205f, posY_panel + 0.01f, 1.0f, 1.0f };
+	meleeUnit_btn = new C_Button(selectionPanel, Event(BUILD_MELEE, this, spawnPoint, 5.0f));//First option from the right
+	meleeUnit_btn->target = { /*-0.0125f*/0.9125, 0.7635, 1.5f, 1.5f };
 	meleeUnit_btn->offset = { 0.0f,0.0f };
 
-	meleeUnit_btn->section[0] = { 207, 0, 62, 62 };
-	meleeUnit_btn->section[1] = { 207, 130, 62, 62 };
-	meleeUnit_btn->section[2] = { 207, 260, 62, 62 };
-	meleeUnit_btn->section[3] = { 207, 260, 62, 62 };
+	meleeUnit_btn->section[0] = { 1147, 51, 56, 49 };
+	meleeUnit_btn->section[1] = { 1147, 0, 56, 49 };
+	meleeUnit_btn->section[2] = { 1147, 102, 56, 49 };
+	meleeUnit_btn->section[3] = { 1147, 102, 56, 49 };
 
 	meleeUnit_btn->tex_id = panel_tex_ID;
+
+	upgrade_btn = new C_Button(selectionPanel, Event(DO_UPGRADE, this->AsBehaviour()));//Last option from the right
+	upgrade_btn->target = { 0.0990f, 0.9075, 1.5f, 1.5f };
+	upgrade_btn->offset = { 0.0f,0.0f };
+
+	upgrade_btn->section[0] = { 1075, 51, 56, 49 };
+	upgrade_btn->section[1] = { 1075, 0, 56, 49 };
+	upgrade_btn->section[2] = { 1075, 102, 56, 49 };
+	upgrade_btn->section[3] = { 1075, 102, 56, 49 };
+
+	upgrade_btn->tex_id = panel_tex_ID;
 
 	
 
@@ -201,11 +218,11 @@ void Barracks::create_bar() {
 
 	//------------------------- BASE HEALTH --------------------------------------
 
-	health = new C_Image(bar_go);
-	health->target = { 0.385f, pos_y_HUD - 0.02f, 1.92f, 1.0f };
-	health->offset = { -220.0f, -20.0f };
-	health->section = { 39, 719, 220, 20 };
-	health->tex_id = bar_text_id;
+	green_health = new C_Image(bar_go);
+	green_health->target = { 0.385f, pos_y_HUD - 0.02f, 1.92f, 1.0f };
+	green_health->offset = { -220.0f, -20.0f };
+	green_health->section = { 39, 719, 220, 20 };
+	green_health->tex_id = bar_text_id;
 
 	//------------------------- BASE HEALTH BOARDER --------------------------------------
 
@@ -227,12 +244,12 @@ void Barracks::create_bar() {
 
 void Barracks::update_health_ui() {
 
-	health->target = { (0.385f) - ((0.385f - 0.059f) * (1.0f - float(current_life) / float(max_life))), pos_y_HUD - 0.02f, 1.92f * (float(current_life) / float(max_life)), 1.0f };
+	//health->target = { (0.385f) - ((0.385f - 0.059f) * (1.0f - float(current_life) / float(max_life))), pos_y_HUD - 0.02f, 1.92f * (float(current_life) / float(max_life)), 1.0f };
 
 }
 
 void Barracks::update_upgrades_ui() {
 
-	upgrades->section = { 16 + 36 * (lvl - 1), 806, 33, 33 };
+	//upgrades->section = { 16 + 36 * (lvl - 1), 806, 33, 33 };
 
 }

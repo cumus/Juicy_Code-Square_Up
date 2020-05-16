@@ -10,6 +10,7 @@
 #include "SDL/include/SDL_scancode.h"
 #include "Scene.h"
 #include "Canvas.h"
+#include "Sprite.h"
 
 Gameobject* Base_Center::baseCenter = nullptr;
 
@@ -26,11 +27,10 @@ Base_Center::Base_Center(Gameobject* go) : BuildingWithQueue(go, BASE_CENTER, NO
 	providesVisibility = true;
 
 	create_bar();
-	bar_go->SetInactive();
+	//bar_go->SetInactive();
 	CreatePanel();
 	selectionPanel->SetInactive();
-	create_creation_bar();
-	creation_bar_go->SetInactive();
+	
 
 	if (t)
 	{
@@ -86,6 +86,46 @@ void Base_Center::FreeWalkabilityTiles()
 
 void Base_Center::Update()
 {
+	if (!build_queue.empty())
+	{
+		if (!progress_bar->GetGameobject()->IsActive())
+			progress_bar->GetGameobject()->SetActive();
+
+		if (!icon->GetGameobject()->IsActive())
+			icon->GetGameobject()->SetActive();
+
+		float percent = build_queue.front().Update();
+		if (percent >= 1.0f)
+		{
+			Event::Push(SPAWN_UNIT, App->scene, build_queue.front().type, build_queue.front().pos);
+			build_queue.front().transform->GetGameobject()->Destroy();
+			build_queue.pop_front();
+
+			if (build_queue.empty())
+				progress_bar->GetGameobject()->SetInactive();
+			icon->GetGameobject()->SetInactive();
+		}
+		else
+		{
+			switch (build_queue.front().type)
+			{
+			case GATHERER:
+				icon->SetSection({ 75, 458, 48, 35 });
+				break;
+			case UNIT_MELEE:
+				icon->SetSection({ 22, 463, 48, 35 });
+				break;
+			case UNIT_RANGED:
+				icon->SetSection({ 22, 463, 48, 35 });
+				break;
+			}
+
+			SDL_Rect section = bar_section;
+			section.w = int(float(section.w) * percent);
+			progress_bar->SetSection(section);
+		}
+	}
+
 	if (GetState() != DESTROYED)
 	{
 		vec pos = game_object->GetTransform()->GetGlobalPosition();
@@ -155,26 +195,34 @@ void Base_Center::Upgrade()
 void Base_Center::CreatePanel()
 {
 	posY_panel = 0.8f;
-	panel_tex_ID = App->tex.Load("Assets/textures/buildPanelSample.png");
+	panel_tex_ID = App->tex.Load("Assets/textures/hud-sprites.png");
 
 	//------------------------- BASE PANEL --------------------------------------
 
 	selectionPanel = App->scene->AddGameobjectToCanvas("Main Base Build Panel");
 
+	base_icon = new C_Image(selectionPanel);
+	base_icon->target = { 0.0f, 0.832f, 1.5f, 1.5f };
+	base_icon->offset = { 0.0f, 0.0f };
+	base_icon->section = { 544, 651, 104, 81 };
+	base_icon->tex_id = panel_tex_ID;
+
 	panel = new C_Image(selectionPanel);
-	panel->target = { 0.15f, posY_panel, 1.0f, 1.0f };
+	panel->target = { 0.0f, 0.764f, 1.5f, 1.5f };
 	panel->offset = { 0.0f, 0.0f };
-	panel->section = { 0, 0, 140, 139 };
+	panel->section = { 163, 343, 202, 114 };
 	panel->tex_id = panel_tex_ID;
 
-	gatherer_btn = new C_Button(selectionPanel, Event(BUILD_GATHERER, this, spawnPoint, 5.0f));//Top left
-	gatherer_btn->target = { 0.205f, posY_panel + 0.01f, 0.7f, 0.7f };
+
+	gatherer_btn = new C_Button(selectionPanel, Event(BUILD_GATHERER, this, spawnPoint, 5.0f));//First option from the right
+	gatherer_btn->target = { -0.0125f, 0.7635, 1.5f, 1.5f };
 	gatherer_btn->offset = { 0.0f, 0.0f };
 
-	gatherer_btn->section[0] = { 142, 0, 62, 62 };
-	gatherer_btn->section[1] = { 142, 130, 62, 62 };
-	gatherer_btn->section[3] = { 142, 260, 62, 62 };
-	gatherer_btn->section[2] = { 142, 260, 62, 62 };
+	gatherer_btn->section[0] = { 1075, 223, 56, 49 };
+	gatherer_btn->section[1] = { 1075, 172, 56, 49 };
+	gatherer_btn->section[2] = { 1075, 274, 56, 49 };
+	gatherer_btn->section[3] = { 1075, 274, 56, 49 };
+
 
 	gatherer_btn->tex_id = panel_tex_ID;
 	/*
@@ -211,7 +259,17 @@ void Base_Center::CreatePanel()
 	superUnit_btn->section[3] = { 207, 325, 62, 62 };
 
 	superUnit_btn->tex_id = panel_tex_ID;
-	sa*/
+	*/
+	upgrade_btn = new C_Button(selectionPanel, Event(DO_UPGRADE, this->AsBehaviour()));//Last option from the right
+	upgrade_btn->target = { 0.0990f, 0.9075, 1.5f, 1.5f };
+	upgrade_btn->offset = { 0.0f,0.0f };
+
+	upgrade_btn->section[0] = { 1075, 51, 56, 49 };
+	upgrade_btn->section[1] = { 1075, 0, 56, 49 };
+	upgrade_btn->section[2] = { 1075, 102, 56, 49 };
+	upgrade_btn->section[3] = { 1075, 102, 56, 49 };
+
+	upgrade_btn->tex_id = panel_tex_ID;
 }
 
 void Base_Center::UpdatePanel()
@@ -222,70 +280,50 @@ void Base_Center::UpdatePanel()
 
 void Base_Center::create_bar() {
 
-	pos_y_HUD = 0.17;
-
-	bar_text_id = App->tex.Load("Assets/textures/Iconos_square_up.png");
+	bar_text_id = App->tex.Load("Assets/textures/hud-sprites.png");
 
 	//------------------------- BASE BAR --------------------------------------
 
 	bar_go = App->scene->AddGameobjectToCanvas("Main Base Bar");
 
-	bar = new C_Image(bar_go);
-	bar->target = { 0.465f, pos_y_HUD, 1.3f, 1.2f };
-	bar->offset = { -455.0f, -62.0f };
-	bar->section = { 17, 561, 455, 62 };
-	bar->tex_id = bar_text_id;
-
-	//------------------------- BASE PORTRAIT --------------------------------------
-
-	portrait = new C_Image(bar_go);
-	portrait->target = { 0.045f, pos_y_HUD - 0.015f, 1.0f, 1.0f };
-	portrait->offset = { -34.0f, -47.0f };
-	portrait->section = { 132, 456, 34, 47 };
-	portrait->tex_id = bar_text_id;
-
-	//------------------------- BASE TEXT --------------------------------------
-
-	text = new C_Text(bar_go, "Base");
-	text->target = { 0.055f, pos_y_HUD - 0.085f, 1.5f, 1.5f };
-
-	//------------------------- BASE RED HEALTH --------------------------------------
-
-	red_health = new C_Image(bar_go);
-	red_health->target = { 0.385f, pos_y_HUD - 0.02f, 1.92f, 1.0f };
-	red_health->offset = { -220.0f, -20.0f };
-	red_health->section = { 39, 696, 220, 20 };
-	red_health->tex_id = bar_text_id;
-
-	//------------------------- BASE HEALTH --------------------------------------
-
-	health = new C_Image(bar_go);
-	health->target = { 0.385f, pos_y_HUD - 0.02f, 1.92f, 1.0f };
-	health->offset = { -220.0f, -20.0f };
-	health->section = { 39, 719, 220, 20 };
-	health->tex_id = bar_text_id;
-
-	//------------------------- BASE HEALTH BOARDER --------------------------------------
+	//------------------------- BASE HEALTH BOARDER ---------------------------
 
 	health_boarder = new C_Image(bar_go);
-	health_boarder->target = { 0.385f, pos_y_HUD - 0.02f, 1.92f, 1.0f };
-	health_boarder->offset = { -220.0f, -20.0f };
-	health_boarder->section = { 39, 744, 220, 20 };
+	health_boarder->target = { 0.32f, 0.01f, 1.f, 0.9f };
+	health_boarder->section = { 0, 772, 454, 44 };
 	health_boarder->tex_id = bar_text_id;
 
-	//------------------------- BASE UPGRADES --------------------------------------
+	//------------------------- BASE RED HEALTH -------------------------------
 
-	upgrades = new C_Image(bar_go);
+	Gameobject* red_health_go = App->scene->AddGameobject("red bar health", bar_go);
+
+	red_health = new C_Image(red_health_go);
+	red_health->target = { 0.018f, 0.06f, 1.f, 0.9f };
+	red_health->section = { 163, 733, 438, 38 };
+	red_health->tex_id = bar_text_id;
+
+	//------------------------- BASE GREEN HEALTH -----------------------------
+
+	Gameobject* green_health_go = App->scene->AddGameobject("green bar health", bar_go);
+
+	green_health = new C_Image(green_health_go);
+	green_health->target = { 0.018f, 0.06f, 1.f, 0.9f };
+	green_health->section = { 0, 817, 439, 38 };
+	green_health->tex_id = bar_text_id;
+
+	//------------------------- BASE UPGRADES ---------------------------------
+
+	/*upgrades = new C_Image(bar_go);
 	upgrades->target = { 0.44f, pos_y_HUD - 0.02f, 1.3f, 1.3f };
 	upgrades->offset = { -33.0f, -33.0f };
 	upgrades->section = { 16, 806, 33, 33 };
-	upgrades->tex_id = bar_text_id;
+	upgrades->tex_id = bar_text_id;*/
 
 }
 
 void Base_Center::update_health_ui() {
 
-	health->target = { (0.385f) - ((0.385f - 0.059f) * (1.0f - float(current_life) / float(max_life))), pos_y_HUD - 0.02f, 1.92f * (float(current_life) / float(max_life)), 1.0f };
+	green_health->section.w = 439 * float(current_life) / float(max_life);
 
 }
 
@@ -297,86 +335,7 @@ void Base_Center::update_upgrades_ui() {
 
 void Base_Center::create_creation_bar() {
 
-	bar_text_id = App->tex.Load("Assets/textures/Iconos_square_up.png");
-
-	creation_bar_go = App->scene->AddGameobjectToCanvas("Creation Bar");
-
-	creation_bar = new C_Image(creation_bar_go);
-	creation_bar->target = { 0.99f, 0.55f, 0.6f, 0.2f };
-	creation_bar->offset = { -499.0f, -599.0f };
-	creation_bar->section = { 527, 35, 499, 599 };
-	creation_bar->tex_id = bar_text_id;
-
-	gatherer_icon = new C_Image(creation_bar_go);
-	gatherer_icon->target = { 0.8f, 0.44f, 1.f, 1.f };
-	gatherer_icon->offset = { -48.f, -35.f };
-	gatherer_icon->section = { 75, 458, 48, 35 };
-	gatherer_icon->tex_id = bar_text_id;
-
-	melee_icon = new C_Image(creation_bar_go);
-	melee_icon->target = { 0.804f, 0.49f, 0.8f, 0.8f };
-	melee_icon->offset = { -48.f, -35.f };
-	melee_icon->section = { 22, 463, 48, 35 };
-	melee_icon->tex_id = bar_text_id;
-
-	/*
-	ranged_icon = new C_Image(creation_bar_go);
-	ranged_icon->target = { 0.804f, 0.54f, 0.8f, 0.8f };
-	ranged_icon->offset = { -48.f, -35.f };
-	ranged_icon->section = { 22, 463, 48, 35 };
-	ranged_icon->tex_id = bar_text_id;
-	*/
-
-	gahterer_creation_bar = new C_Image(creation_bar_go);
-	gahterer_creation_bar->target = { 0.97f, 0.42f,  0.9f, 0.4f };
-	gahterer_creation_bar->offset = { -220.0f, -20.0f };
-	gahterer_creation_bar->section = { 39, 696, 220, 20 };
-	gahterer_creation_bar->tex_id = bar_text_id;
-
-	gatherer_creation_bar_completed = new C_Image(creation_bar_go);
-	gatherer_creation_bar_completed->offset = { -220.0f, -20.0f };
-	gatherer_creation_bar_completed->section = { 39, 719, 220, 20 };
-	gatherer_creation_bar_completed->tex_id = bar_text_id;
-
-	gatherer_creation_bar_boarder = new C_Image(creation_bar_go);
-	gatherer_creation_bar_boarder->target = { 0.97f, 0.42f, 0.9f, 0.4f };
-	gatherer_creation_bar_boarder->offset = { -220.0f, -20.0f };
-	gatherer_creation_bar_boarder->section = { 39, 744, 220, 20 };
-	gatherer_creation_bar_boarder->tex_id = bar_text_id;
-
-	melee_creation_bar = new C_Image(creation_bar_go);
-	melee_creation_bar->target = { 0.97f, 0.47f, 0.9f, 0.4f };
-	melee_creation_bar->offset = { -220.0f, -20.0f };
-	melee_creation_bar->section = { 39, 696, 220, 20 };
-	melee_creation_bar->tex_id = bar_text_id;
-
-	melee_creation_bar_completed = new C_Image(creation_bar_go);
-	melee_creation_bar_completed->offset = { -220.0f, -20.0f };
-	melee_creation_bar_completed->section = { 39, 719, 220, 20 };
-	melee_creation_bar_completed->tex_id = bar_text_id;
-
-	melee_creation_bar_boarder = new C_Image(creation_bar_go);
-	melee_creation_bar_boarder->target = { 0.97f, 0.47f, 0.9f, 0.4f };
-	melee_creation_bar_boarder->offset = { -220.0f, -20.0f };
-	melee_creation_bar_boarder->section = { 39, 744, 220, 20 };
-	melee_creation_bar_boarder->tex_id = bar_text_id;
-
-	ranged_creation_bar = new C_Image(creation_bar_go);
-	ranged_creation_bar->target = { 0.97f, 0.52f, 0.9f, 0.4f };
-	ranged_creation_bar->offset = { -220.0f, -20.0f };
-	ranged_creation_bar->section = { 39, 696, 220, 20 };
-	ranged_creation_bar->tex_id = bar_text_id;
-
-	ranged_creation_bar_completed = new C_Image(creation_bar_go);
-	ranged_creation_bar_completed->offset = { -220.0f, -20.0f };
-	ranged_creation_bar_completed->section = { 39, 719, 220, 20 };
-	ranged_creation_bar_completed->tex_id = bar_text_id;
-
-	ranged_creation_bar_boarder = new C_Image(creation_bar_go);
-	ranged_creation_bar_boarder->target = { 0.97f, 0.52f, 0.9f, 0.4f };
-	ranged_creation_bar_boarder->offset = { -220.0f, -20.0f };
-	ranged_creation_bar_boarder->section = { 39, 744, 220, 20 };
-	ranged_creation_bar_boarder->tex_id = bar_text_id;
+	
 	
 }
 

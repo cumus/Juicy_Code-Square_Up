@@ -240,7 +240,7 @@ void Behaviour::OnDamage(int d)
 
 			// Lifebar
 			mini_life_bar.Show();
-			mini_life_bar.Update(float(current_life) / float(max_life));
+			mini_life_bar.Update(float(current_life) / float(max_life), current_lvl);
 
 			if (current_life <= 0)
 			{
@@ -249,7 +249,7 @@ void Behaviour::OnDamage(int d)
 			}
 			else
 			{
-				mini_life_bar.Update(float(current_life) / float(max_life));
+				mini_life_bar.Update(float(current_life) / float(max_life), current_lvl);
 
 				//LOG("Life: %d", current_life);
 				update_health_ui();
@@ -298,6 +298,11 @@ void Behaviour::OnKill(const UnitType type)
 			Event::Push(UPDATE_STAT, App->scene, CURRENT_MOB_DROP, 5);
 			Event::Push(UPDATE_STAT, App->scene, MOB_DROP_COLLECTED, 5);
 			Event::Push(UPDATE_STAT, App->scene, UNITS_KILLED, 1);
+			if (App->scene->GetStat(UNITS_KILLED) % 10 == 0) {
+				Event::Push(UPDATE_STAT, App->scene, CURRENT_GOLD, 1);
+				Event::Push(UPDATE_STAT, App->scene, GOLD_COLLECTED, 1);
+				LOG("total gold value %d", App->scene->GetStat(CURRENT_GOLD));
+			}
 			break;
 		}
 		case ENEMY_RANGED:
@@ -305,6 +310,11 @@ void Behaviour::OnKill(const UnitType type)
 			Event::Push(UPDATE_STAT, App->scene, CURRENT_MOB_DROP, 10);
 			Event::Push(UPDATE_STAT, App->scene, MOB_DROP_COLLECTED, 10);
 			Event::Push(UPDATE_STAT, App->scene, UNITS_KILLED, 1);
+			if (App->scene->GetStat(UNITS_KILLED) % 10 == 0) {
+				Event::Push(UPDATE_STAT, App->scene, CURRENT_GOLD, 1);
+				Event::Push(UPDATE_STAT, App->scene, GOLD_COLLECTED, 1);
+				LOG("total gold value %d", App->scene->GetStat(CURRENT_GOLD));
+			}
 			break;
 		}
 		case ENEMY_SPECIAL:
@@ -312,6 +322,11 @@ void Behaviour::OnKill(const UnitType type)
 			Event::Push(UPDATE_STAT, App->scene, CURRENT_MOB_DROP, 15);
 			Event::Push(UPDATE_STAT, App->scene, MOB_DROP_COLLECTED, 15);
 			Event::Push(UPDATE_STAT, App->scene, UNITS_KILLED, 1);
+			if (App->scene->GetStat(UNITS_KILLED) % 10 == 0) {
+				Event::Push(UPDATE_STAT, App->scene, CURRENT_GOLD, 1);
+				Event::Push(UPDATE_STAT, App->scene, GOLD_COLLECTED, 1);
+				LOG("total gold value %d", App->scene->GetStat(CURRENT_GOLD));
+			}
 			break;
 		}
 		case ENEMY_SUPER:
@@ -319,6 +334,11 @@ void Behaviour::OnKill(const UnitType type)
 			Event::Push(UPDATE_STAT, App->scene, CURRENT_MOB_DROP, 20);
 			Event::Push(UPDATE_STAT, App->scene, MOB_DROP_COLLECTED, 20);
 			Event::Push(UPDATE_STAT, App->scene, UNITS_KILLED, 1);
+			if (App->scene->GetStat(UNITS_KILLED) % 10 == 0) {
+				Event::Push(UPDATE_STAT, App->scene, CURRENT_GOLD, 1);
+				Event::Push(UPDATE_STAT, App->scene, GOLD_COLLECTED, 1);
+				LOG("total gold value %d", App->scene->GetStat(CURRENT_GOLD));
+			}
 			break;
 		}
 		case BASE_CENTER:
@@ -970,7 +990,7 @@ void B_Unit::OnRightClick(vec posClick, vec modPos)
 			{
 				if (GetType() == GATHERER)
 				{
-					if (it->second->GetType() == EDGE)
+					if (it->second->GetType() == EDGE || it->second->GetType() == UNIT_CAPSULE || it->second->GetType() == EDGE_CAPSULE)
 					{
 						if (distance == 0)//Chose closest
 						{
@@ -988,7 +1008,7 @@ void B_Unit::OnRightClick(vec posClick, vec modPos)
 						//new_state = CHASING;
 					}
 				}
-				else if (it->second->GetType() == ENEMY_MELEE || it->second->GetType() == ENEMY_RANGED || it->second->GetType() == SPAWNER)//Temporal
+				else if (it->second->GetType() == ENEMY_MELEE || it->second->GetType() == ENEMY_RANGED || it->second->GetType() == SPAWNER || it->second->GetType() == UNIT_CAPSULE || it->second->GetType() == EDGE_CAPSULE)//Temporal
 				{
 					if (distance == 0)//Closest distance
 					{
@@ -1061,9 +1081,10 @@ void Behaviour::Lifebar::Create(Gameobject* parent)
 {
 	int hud_id = App->tex.Load("Assets/textures/Iconos_square_up.png");
 	go = new Gameobject("life_bar", parent);
-	new Sprite(go, hud_id, { 275, 698, 30, 4 }, FRONT_SCENE, { 3.f, -35.f, 2.f, 2.f }, { 255, 0, 0, 255});
-	green_bar = new Sprite(new Gameobject("GreenBar", go), hud_id, starting_section = { 276, 703, 28, 5 }, FRONT_SCENE, { 4.f, -34.f, 2.f, 2.f }, { 0, 255, 0, 255 });
-	Update(1.0f);
+	new Sprite(go, hud_id, { 275, 698, 30, 4 }, FRONT_SCENE, { 2.f, -35.f, 2.f, 2.f }, { 255, 0, 0, 255 });
+	green_bar = new Sprite(new Gameobject("GreenBar", go), hud_id, life_starting_section = { 276, 703, 28, 5 }, FRONT_SCENE, { 3.f, -34.f, 2.f, 2.f }, { 0, 255, 0, 255 });
+	upgrades = new Sprite(new Gameobject("Upgrades", go), hud_id, upgrades_starting_section = { 0, 0, 0, 0 }, FRONT_SCENE, { 168.f, -184.f, 0.4f, 0.4f });
+	Update(1.0f, 0);
 }
 
 void Behaviour::Lifebar::Show()
@@ -1076,9 +1097,15 @@ void Behaviour::Lifebar::Hide()
 	go->SetInactive();
 }
 
-void Behaviour::Lifebar::Update(float life)
+void Behaviour::Lifebar::Update(float life, int lvl)
 {
-	green_bar->SetSection({ starting_section.x, starting_section.y, int(float(starting_section.w) * life), starting_section.h });
+	green_bar->SetSection({ life_starting_section.x, life_starting_section.y, int(float(life_starting_section.w) * life), life_starting_section.h });
+
+	if (lvl <= 0)
+		upgrades->SetSection({ 0,0,0,0 });
+
+	else
+		upgrades->SetSection({ 16 + 36 * (lvl - 1), 806, 33, 33 });
 }
 
 // Queued Unit
@@ -1093,18 +1120,7 @@ BuildingWithQueue::QueuedUnit::QueuedUnit(UnitType type, Gameobject* go, vec pos
 
 		Gameobject* icon = App->scene->AddGameobject("Queued Unit", go);
 		transform = icon->GetTransform();
-		switch (type)
-		{
-		case GATHERER:
-			new Sprite(icon, App->tex.Load("Assets/textures/Iconos_square_up.png"), { 75, 458, 43, 42 }, FRONT_SCENE, { -0.f, -50.f, 0.2f, 0.2f });
-			break;
-		case UNIT_MELEE:
-			new Sprite(icon, App->tex.Load("Assets/textures/Iconos_square_up.png"), { 22, 463, 48, 35 }, FRONT_SCENE, { -0.f, -50.f, 0.2f, 0.2f });
-			break;
-		case UNIT_RANGED:
-			new Sprite(icon, App->tex.Load("Assets/textures/Iconos_square_up.png"), { 22, 463, 48, 35 }, FRONT_SCENE, { -0.f, -50.f, 0.2f, 0.2f });
-			break;
-		}
+		
 	}
 	else
 		transform = nullptr;
@@ -1127,6 +1143,12 @@ BuildingWithQueue::BuildingWithQueue(Gameobject* go, UnitType type, UnitState st
 	new Sprite(back_bar, texture_id, { 41, 698, 216, 16 }, FRONT_SCENE, { 0.f, 13.f, 0.29f, 0.2f });
 	progress_bar = new Sprite(back_bar, texture_id, bar_section = { 41, 721, 216, 16 }, FRONT_SCENE, { 0.f, 13.f, 0.29f, 0.2f });
 	back_bar->SetInactive();
+
+	Gameobject* unit_icon = App->scene->AddGameobject("Unit Icon", game_object);
+
+	icon = new Sprite(unit_icon, texture_id, { 0, 0, 0, 0 }, FRONT_SCENE, { -50.f, 0.f, 0.2f, 0.2f });
+
+	unit_icon->SetInactive();
 }
 
 void BuildingWithQueue::Update()
@@ -1135,6 +1157,9 @@ void BuildingWithQueue::Update()
 	{
 		if (!progress_bar->GetGameobject()->IsActive())
 			progress_bar->GetGameobject()->SetActive();
+
+		if (!icon->GetGameobject()->IsActive())
+			icon->GetGameobject()->SetActive();
 
 		float percent = build_queue.front().Update();
 		if (percent >= 1.0f)
@@ -1145,9 +1170,23 @@ void BuildingWithQueue::Update()
 
 			if (build_queue.empty())
 				progress_bar->GetGameobject()->SetInactive();
+				icon->GetGameobject()->SetInactive();
 		}
 		else
 		{
+			switch (build_queue.front().type)
+			{
+			case GATHERER:
+				icon->SetSection({ 75, 458, 48, 35 });
+				break;
+			case UNIT_MELEE:
+				icon->SetSection({ 22, 463, 48, 35 });
+				break;
+			case UNIT_RANGED:
+				icon->SetSection({ 22, 463, 48, 35 });
+				break;
+			}
+
 			SDL_Rect section = bar_section;
 			section.w = int(float(section.w) * percent);
 			progress_bar->SetSection(section);
@@ -1157,10 +1196,47 @@ void BuildingWithQueue::Update()
 
 void BuildingWithQueue::AddUnitToQueue(UnitType type, vec pos, float time)
 {
-	if (true /* TODO: has enough resources*/)
+	switch (type)
 	{
-		QueuedUnit unit(type, game_object, pos, time);
-		unit.transform->SetY(build_queue.size());
-		build_queue.push_back(unit);
+	case GATHERER:
+	{
+		if (App->scene->GetStat(CURRENT_EDGE) >= GATHERER_COST)
+		{
+			QueuedUnit unit(type, game_object, pos, time);
+			unit.transform->SetY(build_queue.size());
+			build_queue.push_back(unit);
+		}
+		break;
+	}
+	case UNIT_MELEE:
+	{
+		if (App->scene->GetStat(CURRENT_EDGE) >= MELEE_COST)
+		{
+			QueuedUnit unit(type, game_object, pos, time);
+			unit.transform->SetY(build_queue.size());
+			build_queue.push_back(unit);
+		}
+		break;
+	}
+	case UNIT_RANGED:
+	{
+		if (App->scene->GetStat(CURRENT_EDGE) >= RANGED_COST)
+		{
+			QueuedUnit unit(type, game_object, pos, time);
+			unit.transform->SetY(build_queue.size());
+			build_queue.push_back(unit);
+		}
+		break;
+	}
+	case UNIT_SUPER:
+	{
+		if (App->scene->GetStat(CURRENT_EDGE) >= SUPER_COST)
+		{
+			QueuedUnit unit(type, game_object, pos, time);
+			unit.transform->SetY(build_queue.size());
+			build_queue.push_back(unit);
+		}
+		break;
+	}
 	}
 }

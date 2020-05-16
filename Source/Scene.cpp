@@ -262,6 +262,23 @@ void Scene::RecieveEvent(const Event& e)
 			paused_scene = false;
 			break;
 		}
+		case::PAUSE:
+		{
+
+
+			if (first_time_pause_button)
+			{
+				paused_yet = true;
+			}
+
+			else
+			{
+				Event::Push(SCENE_PAUSE, App);
+				pause_background_go->SetActive();
+				paused_scene = true;
+			}
+			break;
+		}
 		case::REQUEST_QUIT:
 		{
 			Event::Push(REQUEST_QUIT, App);
@@ -412,6 +429,32 @@ void Scene::LoadMainScene()
 	SpawnBehaviour(EDGE, edge_pos7);
 	SpawnBehaviour(EDGE, edge_pos8);
 	SpawnBehaviour(EDGE, edge_pos9);
+	SpawnBehaviour(EDGE, edge_pos10);
+	SpawnBehaviour(EDGE, edge_pos11);
+	SpawnBehaviour(EDGE, edge_pos12);
+	SpawnBehaviour(EDGE, edge_pos13);
+	SpawnBehaviour(EDGE, edge_pos14);
+	SpawnBehaviour(EDGE, edge_pos15);
+	SpawnBehaviour(EDGE, edge_pos16);
+	SpawnBehaviour(EDGE, edge_pos17);
+	SpawnBehaviour(EDGE, edge_pos18);
+	SpawnBehaviour(EDGE, edge_pos19);
+	SpawnBehaviour(EDGE, edge_pos20);
+	SpawnBehaviour(EDGE, edge_pos21);
+	SpawnBehaviour(EDGE, edge_pos22);
+	SpawnBehaviour(EDGE, edge_pos23);
+	SpawnBehaviour(EDGE, edge_pos24);
+	SpawnBehaviour(EDGE, edge_pos25);
+	SpawnBehaviour(EDGE, edge_pos26);
+	SpawnBehaviour(EDGE, edge_pos27);
+	SpawnBehaviour(EDGE, edge_pos28);
+	SpawnBehaviour(EDGE, edge_pos29);
+	SpawnBehaviour(EDGE, edge_pos30);
+	SpawnBehaviour(EDGE, edge_pos31);
+	SpawnBehaviour(EDGE, edge_pos32);
+	SpawnBehaviour(EDGE, edge_pos33);
+	SpawnBehaviour(EDGE, edge_pos34);
+	SpawnBehaviour(EDGE, edge_pos35);
 }
 
 void Scene::LoadIntroScene()
@@ -443,26 +486,24 @@ void Scene::LoadMenuScene()
 	//------------------------- BACKGROUND --------------------------------------
 
 	C_Image* background = new C_Image(AddGameobjectToCanvas("Background"));
-	background->target = { 1.f, 1.f, 1.f, 1.f };
-	background->offset = { -1280.f, -720.f };
+	background->target = { 0.f, 0.f, 1.f, 1.f };
 	background->section = { 0, 0, 1280, 720 };
 	background->tex_id = App->tex.Load("Assets/textures/background.png");
 
 	//------------------------- LOGO --------------------------------------
 
 	C_Image* g_logo = new C_Image(AddGameobjectToCanvas("Game logo"));
-	g_logo->target = { 0.6f, 0.6f, 0.6f, 0.6f };
-	g_logo->offset = { -1255.f, -500.f };
+	g_logo->target = { 0.05f, 0.05f, 0.6f, 0.6f };
 	g_logo->section = { 0, 0, 1070, 207 };
 	g_logo->tex_id = App->tex.Load("Assets/textures/game-logo.png");
 	
 	//------------------------- START --------------------------------------
+	float buttons_x = 0.01f;
 
 	Gameobject* start_go = AddGameobjectToCanvas("Start Button");
-	
+
 	C_Button* start = new C_Button(start_go, Event(BUTTON_EVENT, this, SCENE_CHANGE, MAIN));
-	start->target = { 0.f, 0.67f, .67f, .67f };
-	start->offset = { 25.f, -253.f };
+	start->target = { buttons_x, 0.43f, .67f, .67f };
 
 	start->section[0] = { 0, 0, 470, 90 };
 	start->section[1] = { 0, 101, 470, 90 };
@@ -471,13 +512,41 @@ void Scene::LoadMenuScene()
 
 	start->tex_id = App->tex.Load("Assets/textures/new-game.png");
 
+	//------------------------- RESUME --------------------------------------
+
+	Gameobject* resume_go = AddGameobjectToCanvas("Resume Button");
+
+	C_Button* resume = new C_Button(resume_go, Event(BUTTON_EVENT, this, TOGGLE_FULLSCREEN));
+	resume->target = { buttons_x, 0.526f, .55f, .55f };
+
+	resume->section[0] = { 0, 0, 470, 90 };
+	resume->section[1] = { 0, 101, 470, 90 };
+	resume->section[2] = { 0, 202, 470, 90 };
+	resume->section[3] = { 0, 202, 470, 90 };
+
+	resume->tex_id = App->tex.Load("Assets/textures/resume.png");
+
+	//------------------------ OPTIONS ------------------------------------
+
+	Gameobject* options_go = AddGameobjectToCanvas("Options button");
+
+	C_Button* options = new C_Button(options_go, Event(BUTTON_EVENT, this, SCENE_CHANGE, OPTIONS));
+	options->target = { buttons_x, 0.605f, .55f, .55f };
+
+	options->section[0] = { 0, 0, 470, 90 };
+	options->section[1] = { 0, 101, 470, 90 };
+	options->section[2] = { 0, 202, 470, 90 };
+	options->section[3] = { 0, 202, 470, 90 };
+
+	options->tex_id = App->tex.Load("Assets/textures/options.png");
+
 	//------------------------- FULLSCREEN --------------------------------------
 
 	Gameobject* fullscreen_go = AddGameobjectToCanvas("Fullscreen Button");
 
 	C_Button* fullscreen = new C_Button(fullscreen_go, Event(BUTTON_EVENT, this, TOGGLE_FULLSCREEN));
-	fullscreen->target = { 0.f, 0.65f, .55f, .55f };
-	fullscreen->offset = { 30.f, -157.f };
+	fullscreen->target = { buttons_x, 0.680f, .55f, .55f };
+	//fullscreen->offset = { 30.f, -157.f };
 
 	fullscreen->section[0] = { 0, 0, 470, 90 };
 	fullscreen->section[1] = { 0, 101, 470, 90 };
@@ -491,8 +560,8 @@ void Scene::LoadMenuScene()
 	Gameobject* quit_go = AddGameobjectToCanvas("Quit Button");
 
 	C_Button* quit = new C_Button(quit_go, Event(BUTTON_EVENT, this, REQUEST_QUIT));
-	quit->target = { 0.f, 0.65f, .55f, .55f };
-	quit->offset = { 30.f, -55.f };
+	quit->target = { buttons_x, 0.758f, .55f, .55f };
+	//quit->offset = { 30.f, -55.f };
 
 	quit->section[0] = { 0, 0, 470, 90 };
 	quit->section[1] = { 0, 101, 470, 90 };
@@ -505,6 +574,8 @@ void Scene::LoadMenuScene()
 void Scene::LoadEndScene()
 {
 	OPTICK_EVENT();
+
+	float info_pos = 0.34f;
 
 	App->audio->PlayMusic(win ?
 		"Assets/audio/Music/alexander-nakarada-early-probe-eats-the-dust.ogg" :
@@ -528,17 +599,25 @@ void Scene::LoadEndScene()
 	//------------------------- WIN/LOSE --------------------------------------
 	if (win)
 	{
+		C_Image* background = new C_Image(background_go);
+		background->target = { 0.f, 0.f, 1.f, 1.f };
+		background->section = { 0, 0, 1280, 720 };
+		background->tex_id = App->tex.Load("Assets/textures/back-win.png");
+
 		C_Image* win = new C_Image(AddGameobjectToCanvas("Background"));
-		win->target = { 0.66f, 0.25f, 0.8f, 0.8f };
-		win->offset = { -605.f, -100.f };
+		win->target = { 0.285f, 0.12f, 0.8f, 0.8f };
 		win->section = { 0, 0, 693, 100 };
 		win->tex_id = App->tex.Load("Assets/textures/youwin.png");
 	}
 	else
 	{
+		C_Image* background = new C_Image(background_go);
+		background->target = { 0.f, 0.f, 1.f, 1.f };
+		background->section = { 0, 0, 1280, 720 };
+		background->tex_id = App->tex.Load("Assets/textures/back-lose.png");
+
 		C_Image* lose = new C_Image(AddGameobjectToCanvas("Background"));
-		lose->target = { 0.66f, 0.25f, 0.8f, 0.8f };
-		lose->offset = { -605.f, -100.f };
+		lose->target = { 0.285f, 0.12f, 0.8f, 0.8f };
 		lose->section = { 0, 0, 693, 100 };
 		lose->tex_id = App->tex.Load("Assets/textures/youlose.png");
 	}
@@ -554,149 +633,169 @@ void Scene::LoadEndScene()
 	//------------------------- TIME --------------------------------------
 
 	C_Image* time = new C_Image(AddGameobjectToCanvas("Time"));
-	time->target = { 0.66f, 0.37f, 0.6f, 0.65f };
-	time->offset = { -693.f, -100.f };
+	time->target = { info_pos, 0.28f, 0.6f, 0.65f };
 	time->section = { 0, 0, 693, 100 };
 	time->tex_id = App->tex.Load(win ? "Assets/textures/wtime.png" : "Assets/textures/ltime.png");
 
 	//------------------------- EDGE --------------------------------------
 
 	C_Image* edge = new C_Image(AddGameobjectToCanvas("edge"));
-	edge->target = { 0.66f, 0.49f, 0.6f, 0.65f };
-	edge->offset = { -693.f, -100.f };
+	edge->target = { info_pos, 0.40f, 0.6f, 0.65f };
 	edge->section = { 0, 0, 693, 100 };
 	edge->tex_id = App->tex.Load(win ? "Assets/textures/wedge.png" : "Assets/textures/ledge.png");
 
 	//------------------------- UNITS CREATED --------------------------------------
 
 	C_Image* units_c = new C_Image(AddGameobjectToCanvas("created"));
-	units_c->target = { 0.66f, 0.61f, 0.6f, 0.65f };
-	units_c->offset = { -693.f, -100.f };
+	units_c->target = { info_pos, 0.52f, 0.6f, 0.65f };
 	units_c->section = { 0, 0, 693, 100 };
 	units_c->tex_id = App->tex.Load(win ? "Assets/textures/wunits_c.png" : "Assets/textures/lunits_c.png");
 
 	//------------------------- UNITS LOST --------------------------------------
 
 	C_Image* units_l = new C_Image(AddGameobjectToCanvas("lost"));
-	units_l->target = { 0.66f, 0.73f, 0.6f, 0.65f };
-	units_l->offset = { -693.f, -100.f };
+	units_l->target = { info_pos, 0.64f, 0.6f, 0.65f };
 	units_l->section = { 0, 0, 693, 100 };
 	units_l->tex_id = App->tex.Load(win ? "Assets/textures/wunits_l.png" : "Assets/textures/lunits_l.png");
 
 	//------------------------- UNITS KILLED --------------------------------------
 
 	C_Image* units_k = new C_Image(AddGameobjectToCanvas("killed"));
-	units_k->target = { 0.66f, 0.85f, 0.6f, 0.65f };
-	units_k->offset = { -693.f, -100.f };
+	units_k->target = { info_pos, 0.76f, 0.6f, 0.65f };
 	units_k->section = { 0, 0, 693, 100 };
 	units_k->tex_id = App->tex.Load(win ? "Assets/textures/wunits_k.png" : "Assets/textures/lunits_k.png");
 }
 
 void Scene::LoadMainHUD()
 {
-	int icons_text_id = App->tex.Load("Assets/textures/Iconos_square_up.png");
+	int icons_text_id = App->tex.Load("Assets/textures/hud-sprites.png");
 
-	// Unit icon (Melee Unit)
-	Gameobject* melee_counter_go = AddGameobjectToCanvas("Melee Unit Counter");
+	//-----------------------------------------------------------------------------
+	//----------------------------LEFT BAR-----------------------------------------
+	//-----------------------------------------------------------------------------
 
-	C_Image* melee_counter_box = new C_Image(melee_counter_go);
-	melee_counter_box->target = { 0.153f, 0.64f, 0.55f , 1.f };
-	melee_counter_box->offset = { -345.f, -45.f };
-	melee_counter_box->section = { 17, 509, 345, 45 };
-	melee_counter_box->tex_id = icons_text_id;
+	Gameobject* left_bar_go = AddGameobjectToCanvas("Left bar");
 
-	C_Image* melee_counter_icon = new C_Image(melee_counter_go);
-	melee_counter_icon->target = { 0.047f, 0.628f, 0.9f , 0.9f };
-	melee_counter_icon->offset = { -48.f, -35.f };
-	melee_counter_icon->section = { 22, 463, 48, 35 };
-	melee_counter_icon->tex_id = icons_text_id;
+	C_Image* left_bar_box = new C_Image(left_bar_go);
+	left_bar_box->target = { 0.f, 0.f, 1.0f , 0.8f };
+	left_bar_box->offset = { 0.f, 0.f };
+	left_bar_box->section = { 0, 620, 438, 44 };
+	left_bar_box->tex_id = icons_text_id;
 
-	hud_texts[CURRENT_MELEE_UNITS] = new C_Text(melee_counter_go, "0");
-	hud_texts[CURRENT_MELEE_UNITS]->target = { 0.049f, 0.587f, 1.6f, 1.6f };
+	//-----------------------GATHERER ICON-----------------------------------------
 
-	C_Text* melee_diagonal = new C_Text(melee_counter_go, "/");
-	melee_diagonal->target = { 0.088f, 0.587f, 1.6f, 1.6f };
+	Gameobject* gatherer_counter_icon_go = AddGameobject("gatherer counter icon", left_bar_go);
 
-	hud_texts[TOTAL_MELEE_UNITS] = new C_Text(melee_counter_go, "0");
-	hud_texts[TOTAL_MELEE_UNITS]->target = { 0.099f, 0.587f, 1.6f, 1.6f };
-
-	// Unit icon (Gatherer Unit)
-	Gameobject* gatherer_counter_go = AddGameobjectToCanvas("Gatherer Unit Counter");
-
-	C_Image* gatherer_counter_box = new C_Image(gatherer_counter_go);
-	gatherer_counter_box->target = { 0.153f, 0.72f, 0.55f , 1.f };
-	gatherer_counter_box->offset = { -345.f, -45.f };
-	gatherer_counter_box->section = { 17, 509, 345, 45 };
-	gatherer_counter_box->tex_id = icons_text_id;
-
-	C_Image* gatherer_counter_icon = new C_Image(gatherer_counter_go);
-	gatherer_counter_icon->target = { 0.041f, 0.708f, 0.9f , 0.9f };
-	gatherer_counter_icon->offset = { -48.f, -35.f };
-	gatherer_counter_icon->section = { 75, 458, 48, 35 };
+	C_Image* gatherer_counter_icon = new C_Image(gatherer_counter_icon_go);
+	gatherer_counter_icon->target = { 0.05f, 0.07f, 0.65f , 0.65f };
+	gatherer_counter_icon->offset = { 0.f, 0.f };
+	gatherer_counter_icon->section = { 121, 292, 43, 42 };
 	gatherer_counter_icon->tex_id = icons_text_id;
 
+	Gameobject* gatherer_counter_go = AddGameobject("gatherer counter", left_bar_go);
+
 	hud_texts[CURRENT_GATHERER_UNITS] = new C_Text(gatherer_counter_go, "0");
-	hud_texts[CURRENT_GATHERER_UNITS]->target = { 0.049f, 0.667f, 1.6f, 1.6f };
+	hud_texts[CURRENT_GATHERER_UNITS]->target = { 0.15f, 0.15f, 1.25f, 1.25f };
 
-	C_Text* gatherer_diagonal = new C_Text(gatherer_counter_go, "/");
-	gatherer_diagonal->target = { 0.088f, 0.667f, 1.6f, 1.6f };
+	//-----------------------MELEE ICON--------------------------------------------
 
-	hud_texts[TOTAL_GATHERER_UNITS] = new C_Text(gatherer_counter_go, "0");
-	hud_texts[TOTAL_GATHERER_UNITS]->target = { 0.099f, 0.667f, 1.6f, 1.6f };
+	Gameobject* melee_counter_icon_go = AddGameobject("melee counter icon", left_bar_go);
 
-	// Unit icon (Ranged Unit)
-	Gameobject* ranged_counter_go = AddGameobjectToCanvas("Ranged Unit Counter");
+	C_Image* melee_counter_icon = new C_Image(melee_counter_icon_go);
+	melee_counter_icon->target = { 0.27f, 0.15f, 0.65f , 0.65f };
+	melee_counter_icon->offset = { 0.f, 0.f };
+	melee_counter_icon->section = { 121, 256, 48, 35 };
+	melee_counter_icon->tex_id = icons_text_id;
 
-	C_Image* ranged_counter_box = new C_Image(ranged_counter_go);
-	ranged_counter_box->target = { 0.153f, 0.80f, 0.55f , 1.f };
-	ranged_counter_box->offset = { -345.f, -45.f };
-	ranged_counter_box->section = { 17, 509, 345, 45 };
-	ranged_counter_box->tex_id = icons_text_id;
+	Gameobject* melee_counter_go = AddGameobject("melee counter", left_bar_go);
 
-	/*
-	C_Image* ranged_counter_icon = new C_Image(ranged_counter_go);
-	ranged_counter_icon->target = { 0.047f, 0.788f, 0.9f , 0.9f };
-	ranged_counter_icon->offset = { -48.f, -35.f };
+	hud_texts[CURRENT_MELEE_UNITS] = new C_Text(melee_counter_go, "0");
+	hud_texts[CURRENT_MELEE_UNITS]->target = { 0.37f, 0.15f, 1.25f, 1.25f };
+
+	//-----------------------RANGED ICON-------------------------------------------
+
+	Gameobject* rangered_counter_icon_go = AddGameobject("rangered counter icon", left_bar_go);
+
+	C_Image* ranged_counter_icon = new C_Image(rangered_counter_icon_go);
+	ranged_counter_icon->target = { 0.49f, 0.2f, 0.65f , 0.65f };
+	ranged_counter_icon->offset = { 0.f, 0.f };
 	ranged_counter_icon->section = { 22, 463, 48, 35 };
 	ranged_counter_icon->tex_id = icons_text_id;
-	*/
 
-	hud_texts[CURRENT_RANGED_UNITS] = new C_Text(ranged_counter_go, "0");
-	hud_texts[CURRENT_RANGED_UNITS]->target = { 0.049f, 0.747f, 1.6f, 1.6f };
+	Gameobject* rangered_counter_go = AddGameobject("rangered counter", left_bar_go);
 
-	C_Text* ranged_diagonal = new C_Text(ranged_counter_go, "/");
-	ranged_diagonal->target = { 0.088f, 0.747f, 1.6f, 1.6f };
+	hud_texts[CURRENT_RANGED_UNITS] = new C_Text(rangered_counter_go, "0");
+	hud_texts[CURRENT_RANGED_UNITS]->target = { 0.59f, 0.15f, 1.25f, 1.25f };
 
-	hud_texts[TOTAL_RANGED_UNITS] = new C_Text(ranged_counter_go, "0");
-	hud_texts[TOTAL_RANGED_UNITS]->target = { 0.099f, 0.747f, 1.6f, 1.6f };
+	//--------------------------TURRET ICON----------------------------------------
 
-	//Resources
-	Gameobject* resource_counter_go = AddGameobjectToCanvas("Resources");
-	C_Image* img = new C_Image(resource_counter_go);
-	img->target = { 0.1f, 1.f, 1.f , 1.f };
-	img->offset = { -119.f, -119.f };
-	img->section = { 22, 333, 119, 119 };
-	img->tex_id = icons_text_id;
+	Gameobject* turret_counter_icon_go = AddGameobject("turret counter icon", left_bar_go);
 
-	//Edge
-	Gameobject* resources_go = AddGameobject("Text Edge", resource_counter_go);
-	C_Text* text_edge = new C_Text(resources_go, "Edge");
-	text_edge->target = { 0.1f, 0.1f, 1.f, 1.f };
+	C_Image* turret_counter_icon = new C_Image(turret_counter_icon_go);
+	turret_counter_icon->target = { 0.71f, 0.11f, 0.65f, 0.65f };
+	turret_counter_icon->offset = { 0.f, 0.f };
+	turret_counter_icon->section = { 204, 256, 25, 40 };
+	turret_counter_icon->tex_id = icons_text_id;
 
-	Gameobject* resources_value_go = AddGameobject("Mob Drop Value", resource_counter_go);
-	hud_texts[CURRENT_EDGE] = new C_Text(resources_go, "0");
-	hud_texts[CURRENT_EDGE]->target = { 0.1f, 0.4f, 1.f, 1.f };
+	Gameobject* turret_counter_go = AddGameobject("turret counter", left_bar_go);
 
-	//MobDrop
-	Gameobject* resources_2_go = AddGameobject("Text Mob Drop", resource_counter_go);
-	C_Text* text_mobdrop = new C_Text(resources_2_go, "Mob Drop");
-	text_mobdrop->target = { 0.45f, 0.8f, 1.f, 1.f };
+	hud_texts[CURRENT_TOWERS] = new C_Text(turret_counter_go, "0");
+	hud_texts[CURRENT_TOWERS]->target = { 0.79f, 0.15f, 1.25f, 1.25f };
 
-	Gameobject* resources_value_2_go = AddGameobject("Mob Drop Value", resource_counter_go);
-	hud_texts[CURRENT_MOB_DROP] = new C_Text(resources_2_go, "0");
-	hud_texts[CURRENT_MOB_DROP]->target = { 0.65f, 0.4f, 1.f, 1.f };
+	//-----------------------------------------------------------------------------
+	//------------------------------RIGHT BAR--------------------------------------
+	//-----------------------------------------------------------------------------
 
-	//Minimap
+	Gameobject* right_bar_go = AddGameobjectToCanvas("Right bar");
+	C_Image* right_bar_box = new C_Image(right_bar_go);
+	right_bar_box->target = { 1.0f, 0.0f, 1.0f, 0.8f };
+	right_bar_box->offset = { -438.f, 0.f };
+	right_bar_box->section = { 0, 665, 438, 44 };
+	right_bar_box->tex_id = icons_text_id;
+
+	//------------------------------EDGE-------------------------------------------
+
+	Gameobject* edge_go = AddGameobject("Text Edge", right_bar_go);
+	C_Image* image_edge = new C_Image(edge_go);
+	image_edge->target = { 0.18f, 0.15f, 0.9f, 0.9f };
+	image_edge->section = { 165, 304, 31, 29 };
+	image_edge->tex_id = icons_text_id;
+
+	Gameobject* edge_value_go = AddGameobject("Mob Drop Value", right_bar_go);
+	hud_texts[CURRENT_EDGE] = new C_Text(edge_value_go, "0");
+	hud_texts[CURRENT_EDGE]->target = { 0.28f, 0.25f, 1.f, 1.f };
+
+	//--------------------------------MOBDROP--------------------------------------
+
+	Gameobject* mobdrop_go = AddGameobject("Text Mob Drop", right_bar_go);
+	C_Text* text_mobdrop = new C_Text(mobdrop_go, "Mob Drop");
+	text_mobdrop->target = { 0.58f, 0.25f, 1.f, 1.f };
+
+	Gameobject* mobdrop_value_go = AddGameobject("Mob Drop Value", right_bar_go);
+	hud_texts[CURRENT_MOB_DROP] = new C_Text(mobdrop_value_go, "0");
+	hud_texts[CURRENT_MOB_DROP]->target = { 0.78f, 0.25f, 1.f, 1.f };
+
+	//-----------------------------------------------------------------------------
+	//------------------------------PAUSE BUTTON-----------------------------------
+	//-----------------------------------------------------------------------------
+
+	Gameobject* pause_button_go = AddGameobjectToCanvas("Pause button");
+
+	C_Button* pause_button = new C_Button(pause_button_go, Event(BUTTON_EVENT, this, PAUSE));
+	pause_button->target = { 0.655f, 1.f, 0.7f, 0.7f };
+	pause_button->offset = { 0.0f, -86.0f };
+
+	pause_button->section[0] = { 0, 0, 86, 86 };
+	pause_button->section[1] = { 87, 0, 86, 86 };
+	pause_button->section[2] = { 0, 0, 86, 86 };
+	pause_button->section[3] = { 0, 0, 86, 86 };
+
+	pause_button->tex_id = icons_text_id;
+
+	//-----------------------------------------------------------------------------
+	//-------------------------------MINIMAP---------------------------------------
+	//-----------------------------------------------------------------------------
+
 	new Minimap(AddGameobjectToCanvas("Minimap"));
 }
 
@@ -881,6 +980,9 @@ void Scene::UpdatePause()
 			main_menu->section[3] = { 0, 202, 470, 90 };
 
 			main_menu->tex_id = App->tex.Load("Assets/textures/main-menu.png");
+
+			first_time_pause_button = false;
+			paused_yet = false;
 		}
 
 		if (paused_scene)
@@ -1681,8 +1783,61 @@ void Scene::OnEventStateMachine(GameplayState state)
 
 		break;
 	case SPAWNER_STATE:
+
 		not_go->SetInactive();
 		LOG("SPAWNER STATE");
+		not_go = AddGameobjectToCanvas("spawner_go");
+		not = new C_Image(not_go);
+
+		not->target = { 0.75f, 0.8f, 0.4f, 0.4f };
+		not->offset = { -183.f, -1044.f };
+		not->section = { 0, 0, 983, 644 };
+		not->tex_id = App->tex.Load("Assets/textures/spawner-lure-quenn-not.png");
+
+		next = new C_Button(not_go, Event(SCENE_PLAY, App));
+
+		next->target = { 0.74f, 0.726f, 0.4f, 0.4f };
+		next->offset = { 500.f, -317.f };
+
+		next->section[0] = { 0, 0, 309, 37 };
+		next->section[1] = { 0, 44, 309, 37 };
+		next->section[2] = { 0, 88, 309, 37 };
+		next->section[3] = { 0, 88, 309, 37 };
+
+		next->tex_id = App->tex.Load("Assets/textures/tuto/not-button.png");
+
+		not_inactive = new C_Button(not_go, Event(SET_INACTIVE, this, MAIN));
+
+		not_inactive->target = { 0.74f, 0.726f, 0.4f, 0.4f };
+		not_inactive->offset = { 500.f, -317.f };
+
+		for (int i = 0; i < 4; i++)not_inactive->section[i] = { 0, 0, 309, 37 };
+
+		//Spawner counter
+		spawner_go = AddGameobjectToCanvas("Spawner Count");
+		spawn_img = new C_Image(spawner_go);
+		spawn_img->target = { 1.0f, 0.1f, 0.8f , 1.f };
+		spawn_img->offset = { -232.f, 0.f };
+		spawn_img->section = { 712, 915, 232, 77 };
+		spawn_img->tex_id = App->tex.Load("Assets/textures/hud-sprites.png");
+
+		spawner_text_go = AddGameobject("Text Spawners", spawner_go);
+		text_spawner = new C_Text(spawner_text_go, "Spawners");
+		text_spawner->target = { 0.1f, 0.15f, 1.f, 1.f };
+
+		spawner_val_go = AddGameobject("Remaining Spawners", spawner_go);
+		hud_texts[CURRENT_SPAWNERS] = new C_Text(spawner_val_go, "3");
+		hud_texts[CURRENT_SPAWNERS]->target = { 0.65f, 0.15f, 1.f, 1.f };
+
+		all_spawners_go = AddGameobject("All Spawners", spawner_go);
+		all_spawners = new C_Text(all_spawners_go, "/ 3");
+		all_spawners->target = { 0.73f, 0.15f, 1.f, 1.f };
+
+		base_text_go = AddGameobject("Defend base", spawner_go);
+		base_text = new C_Text(base_text_go, "Defend the base");
+		base_text->target = { 0.1f, 0.55f, 1.f, 1.f };
+
+		//----------------------------------------------------------------		
 
 		SpawnBehaviour(SPAWNER, spawner_pos1);
 		SpawnBehaviour(SPAWNER, spawner_pos2);
@@ -1696,7 +1851,7 @@ void Scene::OnEventStateMachine(GameplayState state)
 		current_state = WIN;
 		win = true;
 		endScene = true;
-		LoadEndScene();
+		Event::Push(SCENE_CHANGE, this, END, 2.f);
 
 		break;
 	case LOSE:
@@ -1704,7 +1859,7 @@ void Scene::OnEventStateMachine(GameplayState state)
 		current_state = LOSE;
 		win = false;
 		endScene = true;
-		LoadEndScene();
+		Event::Push(SCENE_CHANGE, this, END, 2.f);
 
 		break;
 	default:

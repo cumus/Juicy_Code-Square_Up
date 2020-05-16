@@ -94,7 +94,18 @@ AnimatedSprite::AnimatedSprite(Behaviour* unit) : Sprite(unit->GetGameobject(), 
 		offset = { -70.0f, -134.0f + Map::GetBaseOffset(), 1.0f, 1.0f };
 		break;
 	}
-	case CAPSULE:
+	case UNIT_CAPSULE:
+	{
+		tex_id = App->tex.Load("Assets/textures/Capsule.png");
+		animations[FLY].Setup(section = { 0, 0, 105, 518 }, 4, 8.0f);
+		animations[LANDING_1].Setup({ 0, 518, 105, 456 }, 4, 8.0f);
+		animations[LANDING_2].Setup({ 0, 973, 167, 561 }, 10, 8.0f);
+		animations[POSE].Setup({ 0, 1534, 104, 361 }, 1);
+		animations[OPEN].Setup({ 0, 1534, 104, 361 }, 10, 8.0f);
+		offset = { -70.0f, -134.0f + Map::GetBaseOffset(), 0.5f, 0.5f };
+		break;
+	}
+	case EDGE_CAPSULE:
 	{
 		tex_id = App->tex.Load("Assets/textures/Capsule.png");
 		animations[FLY].Setup(section = { 0, 0, 105, 518 }, 4, 8.0f);

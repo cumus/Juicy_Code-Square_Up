@@ -34,9 +34,10 @@ enum UnitType : int
 	BARRACKS,
 	LAB,
 	EDGE,
+	UNIT_CAPSULE,
+	EDGE_CAPSULE,
 	SPAWNER,
-	CAPSULE,
-
+	
 	MAX_UNIT_TYPES
 };
 
@@ -149,7 +150,7 @@ public:
 	UnitState current_state, new_state;
 	UnitState spriteState;
 	vec pos;
-	int max_life, current_life, damage;
+	int max_life, current_life, damage, current_lvl = 0, max_lvl = 0;
 	std::vector<iPoint> tilesVisited;
 	AnimatedSprite* characteR = nullptr;
 	bool providesVisibility,visible;
@@ -183,12 +184,14 @@ protected:
 		void Create(Gameobject* parent);
 		void Show();
 		void Hide();
-		void Update(float life);
+		void Update(float life, int lvl);
 
 		Gameobject* go;
 		Sprite* green_bar;
+		Sprite* upgrades;
 		vec offset;
-		SDL_Rect starting_section;
+		SDL_Rect life_starting_section;
+		SDL_Rect upgrades_starting_section;
 	} mini_life_bar;
 
 	//Bulding Units Components
@@ -205,7 +208,7 @@ protected:
 	C_Text* text;
 	C_Image* healthbar;
 	C_Image* red_health;
-	C_Image* health;
+	C_Image* green_health;
 	C_Image* health_boarder;
 	C_Image* upgrades;
 };
@@ -235,6 +238,7 @@ protected:
 	};
 
 	vec spawnPoint;
+	Sprite* icon;
 	Sprite* progress_bar;
 	static SDL_Rect bar_section;
 	std::list<QueuedUnit> build_queue;

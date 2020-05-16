@@ -154,6 +154,7 @@
     <ClCompile Include="Cvar.cpp" />
     <ClCompile Include="DialogSystem.cpp" />
     <ClCompile Include="Edge.cpp" />
+    <ClCompile Include="EdgeCapsule.cpp" />
     <ClCompile Include="Editor.cpp" />
     <ClCompile Include="EditorWindow.cpp" />
     <ClCompile Include="Emiter.cpp" />
@@ -200,6 +201,7 @@
     <ClCompile Include="UI_SubMenu.cpp" />
     <ClCompile Include="UI_Text.cpp" />
     <ClCompile Include="UI_TextButton.cpp" />
+    <ClCompile Include="UnitCapsule.cpp" />
     <ClCompile Include="Window.cpp" />
     <ClCompile Include="PugiXml\src\pugixml.cpp" />
   </ItemGroup>
@@ -218,6 +220,7 @@
     <ClInclude Include="Cvar.h" />
     <ClInclude Include="DialogSystem.h" />
     <ClInclude Include="Edge.h" />
+    <ClInclude Include="EdgeCapsule.h" />
     <ClInclude Include="Editor.h" />
     <ClInclude Include="EditorWindow.h" />
     <ClInclude Include="Emiter.h" />
@@ -273,6 +276,7 @@
     <ClInclude Include="UI_SubMenu.h" />
     <ClInclude Include="UI_Text.h" />
     <ClInclude Include="UI_TextButton.h" />
+    <ClInclude Include="UnitCapsule.h" />
     <ClInclude Include="Vector3.h" />
     <ClInclude Include="Window.h" />
     <ClInclude Include="PugiXml\src\pugiconfig.hpp" />
