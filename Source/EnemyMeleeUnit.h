@@ -14,9 +14,9 @@ public:
 	~EnemyMeleeUnit();
 	//void UpdatePath(int x,int y) override;
 	//void IARangeCheck() override;
-	void OnCollisionEnter(Collider selfCol, Collider col) override;
+	//void OnCollisionEnter(Collider selfCol, Collider col) override;
 	//void OnCollisionStay(Collider selfCol, Collider col) override;
-	void OnCollisionExit(Collider selfCol, Collider col) override;
+	//void OnCollisionExit(Collider selfCol, Collider col) override;
 	//void SetColliders();
 	//void Update() override;
 

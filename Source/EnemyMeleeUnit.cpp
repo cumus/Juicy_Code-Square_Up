@@ -18,7 +18,7 @@ EnemyMeleeUnit::EnemyMeleeUnit(Gameobject* go) : B_Unit(go, ENEMY_MELEE, IDLE, B
 	atkTime = 1.25;
 	speed = 3.0f;
 	damage = 8;
-	attack_range = 2.0f;
+	attack_range = 3.0f;
 	vision_range = 10.0f;
 	inVision = false;
 	inRange = false;
@@ -26,7 +26,7 @@ EnemyMeleeUnit::EnemyMeleeUnit(Gameobject* go) : B_Unit(go, ENEMY_MELEE, IDLE, B
 	arriveDestination = true;
 	providesVisibility = false;
 	new_state = IDLE;
-	//LOG("ID: %f", GetID());
+
 	SetColliders();
 	//SFX
 	//deathFX = IA_MELEE_DIE_FX;
@@ -240,7 +240,7 @@ EnemyMeleeUnit::~EnemyMeleeUnit()
 	}
 }*/
 
-void EnemyMeleeUnit::OnCollisionEnter(Collider selfCol, Collider col)
+/*void EnemyMeleeUnit::OnCollisionEnter(Collider selfCol, Collider col)
 {
 	//LOG("Got coll");
 	//LOG("Coll tag :%d", selfCol.GetColliderTag());
@@ -252,7 +252,7 @@ void EnemyMeleeUnit::OnCollisionEnter(Collider selfCol, Collider col)
 		//LOG("Coll tag :%d", col.GetColliderTag());
 		if (col.GetColliderTag() == PLAYER_TAG)
 		{
-			//LOG("Player unit in attack range");
+			LOG("Player unit in attack range");
 			inRange = true;
 			//inVision = false;
 			if (objective == nullptr) objective = col.GetGameobject();
@@ -266,15 +266,15 @@ void EnemyMeleeUnit::OnCollisionEnter(Collider selfCol, Collider col)
 		//LOG("Coll tag :%d", col.GetColliderTag());
 		if (col.GetColliderTag() == PLAYER_TAG)
 		{
-			//LOG("Player unit in vision");
+			LOG("Player unit in vision");
 			//inRange = false;
 			inVision = true;
-			/*if (attackObjective == nullptr)*/ objective = col.GetGameobject();
+			if (attackObjective == nullptr) objective = col.GetGameobject();
 		}
 	}	
-}
+}*/
 
-void EnemyMeleeUnit::OnCollisionExit(Collider selfCol, Collider col)
+/*void EnemyMeleeUnit::OnCollisionExit(Collider selfCol, Collider col)
 {
 
 	if (selfCol.GetColliderTag() == ENEMY_ATTACK_TAG)
@@ -292,4 +292,4 @@ void EnemyMeleeUnit::OnCollisionExit(Collider selfCol, Collider col)
 			inVision = false;
 		}
 	}
-}
+}*/

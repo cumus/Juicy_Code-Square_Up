@@ -59,41 +59,6 @@ void Spawner::ChangeValues(int spawns, float cd, int spawnPoints)
 }
 
 
-/*void Spawner::SpawnMelee(float x,float y)
-{
-	Gameobject* melee_go = App->scene->AddGameobject("Melee enemy");
-	melee_go->GetTransform()->SetLocalPos({ x, y, 0.0f });
-
-	new EnemyMeleeUnit(melee_go);
-}
-
-void Spawner::SpawnRanged(float x, float y)
-{
-	//Temporal
-	Gameobject* melee_go = App->scene->AddGameobject("Melee enemy");
-	melee_go->GetTransform()->SetLocalPos({ x, y, 0.0f });
-
-	new EnemyMeleeUnit(melee_go);
-}
-
-void Spawner::SpawnSuper(float x, float y)
-{
-	//Temporal
-	Gameobject* melee_go = App->scene->AddGameobject("Melee Enemy");
-	melee_go->GetTransform()->SetLocalPos({ x, y, 0.0f });
-
-	new EnemyMeleeUnit(melee_go);
-}
-
-void Spawner::SpawnSpecial(float x, float y)
-{
-	//Temporal
-	Gameobject* melee_go = App->scene->AddGameobject("Melee enemy");
-	melee_go->GetTransform()->SetLocalPos({ x, y, 0.0f });
-
-	new EnemyMeleeUnit(melee_go);
-}*/
-
 void Spawner::ResetSpawner()
 {
 
@@ -106,7 +71,7 @@ void Spawner::Update()
 	CheckFoWMap();
 	if (shoot && ms_counter > cooldown && currentSpawns < maxSpawns)
 	{
-		LOG("Spawn time");
+		//LOG("Spawn time");
 		vec pos = game_object->GetTransform()->GetGlobalPosition();
 		bool incX = false;
 		for (int i = 0; i < damage; i++)
@@ -123,29 +88,29 @@ void Spawner::Update()
 			}
 
 			int random = std::rand() % 100 + 1;
-			LOG("Random %d", random);
+			//LOG("Random %d", random);
 			if (random < MELEE_RATE) //Spawn melee
 			{
-				LOG("melee");
+				//LOG("melee");
 				Event::Push(SPAWN_UNIT, App->scene, ENEMY_MELEE, pos);
 			}
 			else if (random < (MELEE_RATE+RANGED_RATE)) //Spawn ranged
 			{
-				LOG("ranged");
+				//LOG("ranged");
 				Event::Push(SPAWN_UNIT, App->scene, ENEMY_RANGED, pos);
 			}
 			else if (random < (MELEE_RATE + RANGED_RATE+SUPER_RATE)) //Spawn super
 			{
-				LOG("super");
+				//LOG("super");
 				Event::Push(SPAWN_UNIT, App->scene, ENEMY_SUPER, pos);
 			}
 			else //Spawn special
 			{
-				LOG("Special");
+				//LOG("Special");
 				Event::Push(SPAWN_UNIT, App->scene, ENEMY_SPECIAL, pos);
 			}
 			currentSpawns++;
-			LOG("Spawned one");
+			//LOG("Spawned one");
 		}
 
 		ms_counter = 0;

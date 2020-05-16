@@ -289,6 +289,7 @@ protected:
 	int dirX;
 	int dirY;
 	bool arriveDestination;
+	bool calculating_path;
 	std::pair<float, float> atkObj;
 	std::pair<float, float> shootPos;
 };

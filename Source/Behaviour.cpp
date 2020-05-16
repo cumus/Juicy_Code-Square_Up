@@ -82,9 +82,9 @@ void Behaviour::SetColliders()
 		case UNIT_SUPER:
 		{
 			bodyColl = new Collider(game_object, { pos.x,pos.y,game_object->GetTransform()->GetLocalScaleX(),game_object->GetTransform()->GetLocalScaleY() }, NON_TRIGGER, PLAYER_TAG, { 0,Map::GetBaseOffset(),0,0 }, BODY_COLL_LAYER);
-			visionColl = new Collider(game_object, { pos.x,pos.y,vision_range,vision_range }, TRIGGER, PLAYER_VISION_TAG, { 0,Map::GetBaseOffset(),0,0 }, VISION_COLL_LAYER);
-			//attackColl = new Collider(game_object, { pos.x,pos.y,attack_range,attack_range }, TRIGGER, PLAYER_ATTACK_TAG, { 0,Map::GetBaseOffset(),0,0 }, ATTACK_COLL_LAYER);
-			selColl = new Collider(game_object, { pos.x,pos.y,game_object->GetTransform()->GetLocalScaleX(),game_object->GetTransform()->GetLocalScaleY() }, NON_TRIGGER, PLAYER_TAG, { 0,0,0,0 }, UNIT_SELECTION_LAYER);
+			visionColl = new Collider(game_object, { pos.x,pos.y,vision_range,vision_range }, TRIGGER, PLAYER_VISION_TAG, { 0,Map::GetBaseOffset(),0,0 });
+			//attackColl = new Collider(game_object, { pos.x,pos.y,attack_range,attack_range }, TRIGGER, PLAYER_ATTACK_TAG, { 0,Map::GetBaseOffset(),0,0 });
+			selColl = new Collider(game_object, { pos.x,pos.y,game_object->GetTransform()->GetLocalScaleX(),game_object->GetTransform()->GetLocalScaleY() }, TRIGGER, PLAYER_TAG, { 0,0,0,0 }, UNIT_SELECTION_LAYER);
 			selColl->SetPointsOffset({-20,-70}, {20,50}, {-10,-55}, {10,35});
 			selectableUnits.push_back(GetID());
 			break;
@@ -95,14 +95,14 @@ void Behaviour::SetColliders()
 		case ENEMY_SPECIAL:
 		{
 			bodyColl = new Collider(game_object, { pos.x,pos.y,game_object->GetTransform()->GetLocalScaleX(),game_object->GetTransform()->GetLocalScaleY() }, NON_TRIGGER, ENEMY_TAG, { 0,Map::GetBaseOffset(),0,0 }, BODY_COLL_LAYER);
-			visionColl = new Collider(game_object, { pos.x,pos.y,vision_range,vision_range }, TRIGGER, ENEMY_VISION_TAG, { 0,Map::GetBaseOffset(),0,0 }, VISION_COLL_LAYER);
-			//attackColl = new Collider(game_object, { pos.x,pos.y,attack_range,attack_range }, TRIGGER, ENEMY_ATTACK_TAG, { 0,Map::GetBaseOffset(),0,0 }, ATTACK_COLL_LAYER);
+			visionColl = new Collider(game_object, { pos.x,pos.y,vision_range,vision_range }, TRIGGER, ENEMY_VISION_TAG, { 0,Map::GetBaseOffset(),0,0 });
+			//attackColl = new Collider(game_object, { pos.x,pos.y,attack_range,attack_range }, TRIGGER, ENEMY_ATTACK_TAG, { 0,Map::GetBaseOffset(),0,0 });
 			break;
 		}
 		case BASE_CENTER:
 		{
 			bodyColl = new Collider(game_object, { pos.x,pos.y,game_object->GetTransform()->GetLocalScaleX(),game_object->GetTransform()->GetLocalScaleY() }, TRIGGER, BUILDING_TAG, { 90,Map::GetBaseOffset() + 65,0,0 }, BODY_COLL_LAYER);
-			selColl = new Collider(game_object, { pos.x,pos.y,game_object->GetTransform()->GetLocalScaleX(),game_object->GetTransform()->GetLocalScaleY() }, NON_TRIGGER, PLAYER_TAG, { 0,0,0,0 }, UNIT_SELECTION_LAYER);
+			selColl = new Collider(game_object, { pos.x,pos.y,game_object->GetTransform()->GetLocalScaleX(),game_object->GetTransform()->GetLocalScaleY() }, TRIGGER, PLAYER_TAG, { 0,0,0,0 }, UNIT_SELECTION_LAYER);
 			selColl->SetPointsOffset({ 90,100 }, { 90,-100 }, { 90,100 }, { 90,100 });
 			selectableUnits.push_back(GetID());
 			break;
@@ -129,7 +129,7 @@ void Behaviour::SetColliders()
 		}
 		case EDGE:
 		{
-			bodyColl = new Collider(game_object, { pos.x,pos.y,game_object->GetTransform()->GetLocalScaleX(),game_object->GetTransform()->GetLocalScaleY() }, NON_TRIGGER, ENEMY_TAG, { 0,Map::GetBaseOffset(),0,0 }, BODY_COLL_LAYER);
+			bodyColl = new Collider(game_object, { pos.x,pos.y,game_object->GetTransform()->GetLocalScaleX(),game_object->GetTransform()->GetLocalScaleY() }, TRIGGER, ENEMY_TAG, { 0,Map::GetBaseOffset(),0,0 }, BODY_COLL_LAYER);
 			break;
 		}
 		case CAPSULE:
@@ -345,86 +345,86 @@ void Behaviour::OnKill(const UnitType type)
 	if (bar_go)
 		bar_go->Destroy(dieDelay);
 
-	switch (type) 
+	switch (type)
 	{
-		case UNIT_MELEE:
-		{
-			Event::Push(UPDATE_STAT, App->scene, CURRENT_MELEE_UNITS, -1);
-			Event::Push(UPDATE_STAT, App->scene, UNITS_LOST, 1);
-			break;
-		}
-		case UNIT_RANGED:
-		{
-			Event::Push(UPDATE_STAT, App->scene, CURRENT_RANGED_UNITS, -1);
-			Event::Push(UPDATE_STAT, App->scene, UNITS_LOST, 1);
-			break;
-		}
-		case GATHERER:
-		{
-			Event::Push(UPDATE_STAT, App->scene, CURRENT_GATHERER_UNITS, -1);
-			Event::Push(UPDATE_STAT, App->scene, UNITS_LOST, 1);
-			break;
-		}
-		case ENEMY_MELEE:
-		{
-			Event::Push(UPDATE_STAT, App->scene, CURRENT_MOB_DROP, 5);
-			Event::Push(UPDATE_STAT, App->scene, MOB_DROP_COLLECTED, 5);
-			Event::Push(UPDATE_STAT, App->scene, UNITS_KILLED, 1);
-			if (App->scene->GetStat(UNITS_KILLED) % 10 == 0) {
-				Event::Push(UPDATE_STAT, App->scene, CURRENT_GOLD, 1);
-				Event::Push(UPDATE_STAT, App->scene, GOLD_COLLECTED, 1);
-				LOG("total gold value %d", App->scene->GetStat(CURRENT_GOLD));
-			}
-			break;
-		}
-		case ENEMY_RANGED:
-		{
-			Event::Push(UPDATE_STAT, App->scene, CURRENT_MOB_DROP, 10);
-			Event::Push(UPDATE_STAT, App->scene, MOB_DROP_COLLECTED, 10);
-			Event::Push(UPDATE_STAT, App->scene, UNITS_KILLED, 1);
-			if (App->scene->GetStat(UNITS_KILLED) % 10 == 0) {
-				Event::Push(UPDATE_STAT, App->scene, CURRENT_GOLD, 1);
-				Event::Push(UPDATE_STAT, App->scene, GOLD_COLLECTED, 1);
-				LOG("total gold value %d", App->scene->GetStat(CURRENT_GOLD));
-			}
-			break;
-		}
-		case ENEMY_SPECIAL:
-		{
-			Event::Push(UPDATE_STAT, App->scene, CURRENT_MOB_DROP, 15);
-			Event::Push(UPDATE_STAT, App->scene, MOB_DROP_COLLECTED, 15);
-			Event::Push(UPDATE_STAT, App->scene, UNITS_KILLED, 1);
-			if (App->scene->GetStat(UNITS_KILLED) % 10 == 0) {
-				Event::Push(UPDATE_STAT, App->scene, CURRENT_GOLD, 1);
-				Event::Push(UPDATE_STAT, App->scene, GOLD_COLLECTED, 1);
-				LOG("total gold value %d", App->scene->GetStat(CURRENT_GOLD));
-			}
-			break;
-		}
-		case ENEMY_SUPER:
-		{
-			Event::Push(UPDATE_STAT, App->scene, CURRENT_MOB_DROP, 20);
-			Event::Push(UPDATE_STAT, App->scene, MOB_DROP_COLLECTED, 20);
-			Event::Push(UPDATE_STAT, App->scene, UNITS_KILLED, 1);
-			if (App->scene->GetStat(UNITS_KILLED) % 10 == 0) {
-				Event::Push(UPDATE_STAT, App->scene, CURRENT_GOLD, 1);
-				Event::Push(UPDATE_STAT, App->scene, GOLD_COLLECTED, 1);
-				LOG("total gold value %d", App->scene->GetStat(CURRENT_GOLD));
-			}
-			break;
-		}
-		case BASE_CENTER:
-		{
-			Event::Push(GAMEPLAY, App->scene, LOSE);
-			break;
-		}
-		case SPAWNER:
-		{
-			Event::Push(UPDATE_STAT, App->scene, CURRENT_SPAWNERS, -1);
-			break;
-		}
+	case UNIT_MELEE:
+	{
+		Event::Push(UPDATE_STAT, App->scene, CURRENT_MELEE_UNITS, -1);
+		Event::Push(UPDATE_STAT, App->scene, UNITS_LOST, 1);
+		break;
 	}
-	if(!tilesVisited.empty())
+	case UNIT_RANGED:
+	{
+		Event::Push(UPDATE_STAT, App->scene, CURRENT_RANGED_UNITS, -1);
+		Event::Push(UPDATE_STAT, App->scene, UNITS_LOST, 1);
+		break;
+	}
+	case GATHERER:
+	{
+		Event::Push(UPDATE_STAT, App->scene, CURRENT_GATHERER_UNITS, -1);
+		Event::Push(UPDATE_STAT, App->scene, UNITS_LOST, 1);
+		break;
+	}
+	case ENEMY_MELEE:
+	{
+		Event::Push(UPDATE_STAT, App->scene, CURRENT_MOB_DROP, 5);
+		Event::Push(UPDATE_STAT, App->scene, MOB_DROP_COLLECTED, 5);
+		Event::Push(UPDATE_STAT, App->scene, UNITS_KILLED, 1);
+		if (App->scene->GetStat(UNITS_KILLED) % 10 == 0) {
+			Event::Push(UPDATE_STAT, App->scene, CURRENT_GOLD, 1);
+			Event::Push(UPDATE_STAT, App->scene, GOLD_COLLECTED, 1);
+			LOG("total gold value %d", App->scene->GetStat(CURRENT_GOLD));
+		}
+		break;
+	}
+	case ENEMY_RANGED:
+	{
+		Event::Push(UPDATE_STAT, App->scene, CURRENT_MOB_DROP, 10);
+		Event::Push(UPDATE_STAT, App->scene, MOB_DROP_COLLECTED, 10);
+		Event::Push(UPDATE_STAT, App->scene, UNITS_KILLED, 1);
+		if (App->scene->GetStat(UNITS_KILLED) % 10 == 0) {
+			Event::Push(UPDATE_STAT, App->scene, CURRENT_GOLD, 1);
+			Event::Push(UPDATE_STAT, App->scene, GOLD_COLLECTED, 1);
+			LOG("total gold value %d", App->scene->GetStat(CURRENT_GOLD));
+		}
+		break;
+	}
+	case ENEMY_SPECIAL:
+	{
+		Event::Push(UPDATE_STAT, App->scene, CURRENT_MOB_DROP, 15);
+		Event::Push(UPDATE_STAT, App->scene, MOB_DROP_COLLECTED, 15);
+		Event::Push(UPDATE_STAT, App->scene, UNITS_KILLED, 1);
+		if (App->scene->GetStat(UNITS_KILLED) % 10 == 0) {
+			Event::Push(UPDATE_STAT, App->scene, CURRENT_GOLD, 1);
+			Event::Push(UPDATE_STAT, App->scene, GOLD_COLLECTED, 1);
+			LOG("total gold value %d", App->scene->GetStat(CURRENT_GOLD));
+		}
+		break;
+	}
+	case ENEMY_SUPER:
+	{
+		Event::Push(UPDATE_STAT, App->scene, CURRENT_MOB_DROP, 20);
+		Event::Push(UPDATE_STAT, App->scene, MOB_DROP_COLLECTED, 20);
+		Event::Push(UPDATE_STAT, App->scene, UNITS_KILLED, 1);
+		if (App->scene->GetStat(UNITS_KILLED) % 10 == 0) {
+			Event::Push(UPDATE_STAT, App->scene, CURRENT_GOLD, 1);
+			Event::Push(UPDATE_STAT, App->scene, GOLD_COLLECTED, 1);
+			LOG("total gold value %d", App->scene->GetStat(CURRENT_GOLD));
+		}
+		break;
+	}
+	case BASE_CENTER:
+	{
+		Event::Push(GAMEPLAY, App->scene, LOSE);
+		break;
+	}
+	case SPAWNER:
+	{
+		Event::Push(UPDATE_STAT, App->scene, CURRENT_SPAWNERS, -1);
+		break;
+	}
+	}
+	if (!tilesVisited.empty())
 	{
 		for (std::vector<iPoint>::const_iterator it = tilesVisited.cbegin(); it != tilesVisited.cend(); ++it)
 		{
@@ -436,9 +436,12 @@ void Behaviour::OnKill(const UnitType type)
 	}
 	FreeWalkabilityTiles();
 	b_map.erase(GetID());
-	for (std::vector<double>::iterator it = selectableUnits.begin(); it != selectableUnits.end(); ++it)
-	{
-		if((*it) == GetID()) selectableUnits.erase(it);
+	if (!selectableUnits.empty())
+	{	
+		for (std::vector<double>::iterator it = selectableUnits.begin(); it != selectableUnits.end(); ++it)
+		{
+			if ((*it) == GetID()) selectableUnits.erase(it);
+		}
 	}
 }
 
@@ -506,6 +509,8 @@ B_Unit::B_Unit(Gameobject* go, UnitType t, UnitState s, ComponentType comp_type)
 	drawRanges = false;
 	gotTile = false;
 	game_object->SetStatic(false);
+	calculating_path = false;
+	objective = nullptr;
 
 	//Info for ranged units constructor
 	/*vec pos = game_object->GetTransform()->GetGlobalPosition();
@@ -519,14 +524,15 @@ void B_Unit::Update()
 	if (!providesVisibility) CheckFoWMap();
 	if (!game_object->BeingDestroyed())
 	{
+		//LOG("Current state %d",current_state);
 		switch(new_state)
 		{
 			case IDLE:
 			{
-				if (type == ENEMY_MELEE || type == ENEMY_RANGED || type == ENEMY_SUPER || type == ENEMY_SPECIAL)
+				/*if (type == ENEMY_MELEE || type == ENEMY_RANGED || type == ENEMY_SUPER || type == ENEMY_SPECIAL)
 				{
 
-				}
+				}*/
 				//LOG("state IDLE");
 				spriteState = IDLE;
 				if (inRange)
@@ -535,7 +541,11 @@ void B_Unit::Update()
 				}
 				else if (inVision)
 				{
-					if(!move) new_state = CHASING;				
+					if (type == ENEMY_MELEE || type == ENEMY_RANGED || type == ENEMY_SUPER || type == ENEMY_SPECIAL)
+					{
+						new_state = CHASING;
+					}
+					else if(!move) new_state = CHASING;							
 				}
 				else
 				{
@@ -564,6 +574,7 @@ void B_Unit::Update()
 
 				if (move && PathfindingManager::unitWalkability[nextTile.x][nextTile.y] == GetID() && !inRange)
 				{
+					calculating_path = false;
 					//LOG("move");
 					fPoint actualPos = { pos.x, pos.y };
 
@@ -594,7 +605,13 @@ void B_Unit::Update()
 					ChangeState();
 					CheckDirection(actualPos);
 				}
-				else if (inRange) new_state = ATTACKING;
+
+				if (inRange) new_state = ATTACKING;
+				else
+					if (type == ENEMY_MELEE || type == ENEMY_RANGED || type == ENEMY_SUPER || type == ENEMY_SPECIAL)
+					{
+						if (inVision) new_state = CHASING;
+					}
 				current_state = MOVING;
 				break;
 			}
@@ -657,20 +674,13 @@ void B_Unit::Update()
 			}
 			case BASE:
 			{
-				if (Base_Center::baseCenter != nullptr)
+				if (Base_Center::baseCenter != nullptr && !calculating_path)
 				{
-					if (new_state != current_state)
-					{
-						//LOG("Path to base");
-						vec centerPos = Base_Center::baseCenter->GetTransform()->GetGlobalPosition();
-						Event::Push(UPDATE_PATH, this->AsBehaviour(), int(centerPos.x) - 1, int(centerPos.y) - 1);
-						//going_base = true;
-						//arriveDestination = true;
-						//LOG("Move to base");	
-					}
-
-					if (inRange) new_state = ATTACKING;
-					else if (inVision) new_state = CHASING;
+					//LOG("Path to base");
+					vec centerPos = Base_Center::baseCenter->GetTransform()->GetGlobalPosition();
+					Event::Push(UPDATE_PATH, this->AsBehaviour(), int(centerPos.x) - 1, int(centerPos.y) - 1);
+					//LOG("Move to base");	
+					new_state = IDLE;
 				}
 				else new_state = IDLE;
 				current_state = BASE;
@@ -704,15 +714,43 @@ void B_Unit::Update()
 
 	 if (selfCol.GetColliderTag() == PLAYER_VISION_TAG)
 	 {
-		 //LOG("Vision");
+		 LOG("Player vision");
 		 //LOG("Coll tag :%d", selfCol.GetColliderTag());
 		 //LOG("Coll tag :%d", col.GetColliderTag());
 		 if (col.GetColliderTag() == ENEMY_TAG)
 		 {
-			 //LOG("Enemy unit in vision");
+			 LOG("Enemy unit in vision");
 			 //inRange = false;
 			 inVision = true;
 			 /*if (attackObjective == nullptr)*/ objective = col.GetGameobject();
+		 }
+	 }
+
+	 if (selfCol.GetColliderTag() == ENEMY_ATTACK_TAG)
+	 {
+		 LOG("Atk");
+		 //LOG("Coll tag :%d", selfCol.GetColliderTag());
+		 //LOG("Coll tag :%d", col.GetColliderTag());
+		 if (col.GetColliderTag() == PLAYER_TAG)
+		 {
+			 LOG("Player unit in attack range");
+			 inRange = true;
+			 //inVision = false;
+			 if (objective == nullptr) objective = col.GetGameobject();
+		 }
+	 }
+
+	 if (selfCol.GetColliderTag() == ENEMY_VISION_TAG)
+	 {
+		 LOG("Enemy vision");
+		 //LOG("Coll tag :%d", selfCol.GetColliderTag());
+		 //LOG("Coll tag :%d", col.GetColliderTag());
+		 if (col.GetColliderTag() == PLAYER_TAG)
+		 {
+			 LOG("Player unit in vision");
+			 //inRange = false;
+			 inVision = true;
+			 if (objective == nullptr) objective = col.GetGameobject();
 		 }
 	 }
 }
@@ -740,6 +778,22 @@ void B_Unit::OnCollisionExit(Collider selfCol, Collider col)
 			inVision = false;
 		}
 	}
+
+	if (selfCol.GetColliderTag() == ENEMY_ATTACK_TAG)
+	{
+		if (col.GetColliderTag() == PLAYER_TAG)
+		{
+			inRange = false;
+		}
+	}
+
+	if (selfCol.GetColliderTag() == ENEMY_VISION_TAG)
+	{
+		if (col.GetColliderTag() == PLAYER_TAG)
+		{
+			inVision = false;
+		}
+	}
 }
 
 
@@ -750,6 +804,7 @@ void B_Unit::UpdatePath(int x, int y)
 		Transform* t = game_object->GetTransform();
 		path = App->pathfinding.CreatePath({ int(pos.x), int(pos.y) }, { x, y }, GetID());
 
+		calculating_path = true;
 		next = false;
 		move = false;
 
