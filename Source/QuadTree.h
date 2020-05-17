@@ -25,7 +25,7 @@ public:
 	void Clear();
 	void Insert(Collider* obj);
 	void Remove(Collider* obj);
-	bool IntersectBounds(IsoLinesCollider coll);
+	bool IntersectBounds(Collider coll);
 	std::vector<Collider*> Search(Collider& obj);
 	SDL_Rect GetBounds() { return boundary; }
 	std::vector<Quadtree*> GetChilds();

@@ -70,7 +70,7 @@ bool Quadtree::GotChilds()
 void Quadtree::DebugDrawBounds()
 {
 	SDL_Rect quad = GetBounds();
-	LOG("Level:%d Bounds X:%d/Y:%d/W:%d/H:%d",level, boundary.x, boundary.y, boundary.w, boundary.h);
+//	LOG("Level:%d Bounds X:%d/Y:%d/W:%d/H:%d",level, boundary.x, boundary.y, boundary.w, boundary.h);
 	App->render->DrawQuad(SDL_Rect({ quad.x,quad.y,quad.w,quad.h }), { 255,0,0,255 }, false, DEBUG_SCENE, true);
 	if (GotChilds())
 	{
@@ -83,7 +83,7 @@ void Quadtree::DebugDrawBounds()
 
 void Quadtree::Insert(Collider* obj)
 {
-	if (IntersectBounds(obj->GetIsoPoints()))
+	if (IntersectBounds(*obj))
 	{
 		//LOG("Intersects");
 
@@ -158,7 +158,28 @@ void Quadtree::Insert(Collider* obj)
 
 void Quadtree::Remove(Collider* obj)
 {
-	int index = GetChildIndexForObject(obj->GetIsoPoints());
+	if (children[0 != nullptr])
+	{
+		children[0]->Remove(obj);
+		children[1]->Remove(obj);
+		children[2]->Remove(obj);
+		children[3]->Remove(obj);
+	}
+	else
+	{
+		if (IntersectBounds(*obj))//Inside quad
+		{
+			for (std::vector<Collider*>::const_iterator it = objects.cbegin(); it != objects.cend(); ++it)
+			{
+				if ((*it)->GetID() == obj->GetID())
+				{
+					objects.erase(it);
+					break;
+				}
+			}
+		}
+	}
+	/*int index = GetChildIndexForObject(obj->GetIsoPoints());
 	if (index == THIS_TREE || children[index] == nullptr)
 	{
 		for (std::vector<Collider*>::const_iterator it = objects.cbegin(); it != objects.cend(); ++it)
@@ -173,7 +194,7 @@ void Quadtree::Remove(Collider* obj)
 	else
 	{
 		return children[index]->Remove(obj);
-	}
+	}*/
 }
 
 std::vector<Collider*> Quadtree::Search(Collider& obj)
@@ -209,7 +230,7 @@ void Quadtree::Search(Collider& obj, std::vector<Collider*>& list)
 		list.push_back(*it);
 	}*/
 	
-	if (IntersectBounds(obj.GetIsoPoints()))//Inside quad
+	if (IntersectBounds(obj))//Inside quad
 	{
 		if (children[0] != nullptr)//Got childs
 		{
@@ -292,55 +313,21 @@ void Quadtree::Split()
 	children[CHILD_SE] = new Quadtree(maxObjects, maxLevels, level + 1, { boundary.x + childWidth, boundary.y + childHeight, childWidth, childHeight }, this);
 }
 
-bool Quadtree::IntersectBounds(IsoLinesCollider coll)
+bool Quadtree::IntersectBounds(Collider coll)
 {
 	//LOG("Point X:%f/Y:%f", coll.top.first, coll.top.second);
 	//LOG("Bounds X:%d/Y:%d/W:%d/H:%d", boundary.x, boundary.y, boundary.x + boundary.w, boundary.y + boundary.h);
-	SDL_Rect collider = {coll.left.first,coll.top.second,coll.right.first,coll.bot.second};
+	RectF rect = coll.GetColliderBounds();
+	IsoLinesCollider points = coll.GetIsoPoints();
+	SDL_Rect quadTreeRect = { int(points.left.first),int(points.bot.second),int(rect.w),int(rect.h) };
 
-	if (collider.x > boundary.x + boundary.w || collider.x+collider.w < boundary.x || collider.y > boundary.y + boundary.h || collider.y+collider.h < boundary.y) return false;
+	if (quadTreeRect.x > boundary.x + boundary.w || quadTreeRect.x+ quadTreeRect.w < boundary.x || quadTreeRect.y > boundary.y + boundary.h || quadTreeRect.y+ quadTreeRect.h < boundary.y) return false;
 	else return true;
 
 	/*if (int(coll.top.first) > boundary.x && int(coll.top.first) < boundary.x + boundary.w && int(coll.top.second) > boundary.y && int(coll.top.second) < boundary.y + boundary.h) { return true; }
 	if (int(coll.bot.first) > boundary.x && int(coll.bot.first) < boundary.x + boundary.w && int(coll.bot.second) > boundary.y && int(coll.bot.second) < boundary.y + boundary.h) {  return true; }
 	if (int(coll.right.first) > boundary.x && int(coll.right.first) < boundary.x + boundary.w && int(coll.right.second) > boundary.y && int(coll.right.second) < boundary.y + boundary.h) { return true; }
 	if (int(coll.left.first) > boundary.x && int(coll.left.first) < boundary.x + boundary.w && int(coll.left.second) > boundary.y && int(coll.left.second) < boundary.y + boundary.h) { return true; }*/
-
-	/*if (JMath::PointInsideTriangle(coll.top, { boundary.x,boundary.y }, { boundary.x+boundary.w,boundary.y }, {boundary.x,boundary.y+boundary.h}))
-	{
-		return true;
-	}
-	else if (JMath::PointInsideTriangle(coll.top, { boundary.x+boundary.w,boundary.y+boundary.h }, { boundary.x + boundary.w,boundary.y }, { boundary.x,boundary.y + boundary.h }))
-	{
-		return true;
-	}
-
-	if (JMath::PointInsideTriangle(coll.bot, { boundary.x,boundary.y }, { boundary.x + boundary.w,boundary.y }, { boundary.x,boundary.y + boundary.h }))
-	{
-		return true;
-	}
-	else if (JMath::PointInsideTriangle(coll.bot, { boundary.x + boundary.w,boundary.y + boundary.h }, { boundary.x + boundary.w,boundary.y }, { boundary.x,boundary.y + boundary.h }))
-	{
-		return true;
-	}
-
-	if (JMath::PointInsideTriangle(coll.right, { boundary.x,boundary.y }, { boundary.x + boundary.w,boundary.y }, { boundary.x,boundary.y + boundary.h }))
-	{
-		return true;
-	}
-	else if (JMath::PointInsideTriangle(coll.right, { boundary.x + boundary.w,boundary.y + boundary.h }, { boundary.x + boundary.w,boundary.y }, { boundary.x,boundary.y + boundary.h }))
-	{ 
-		return true; 
-	}
-
-	if (JMath::PointInsideTriangle(coll.left, { boundary.x,boundary.y }, { boundary.x + boundary.w,boundary.y }, { boundary.x,boundary.y + boundary.h }))
-	{
-		return true;
-	}
-	else if (JMath::PointInsideTriangle(coll.left, { boundary.x + boundary.w,boundary.y + boundary.h }, { boundary.x + boundary.w,boundary.y }, { boundary.x,boundary.y + boundary.h }))
-	{
-		return true;
-	}*/
 }
 
 

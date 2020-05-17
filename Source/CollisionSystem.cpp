@@ -34,7 +34,7 @@ CollisionSystem::CollisionSystem()
 	collisionLayers[HUD_COLL_LAYER][INPUT_COLL_LAYER] = true;
 	collisionLayers[BODY_COLL_LAYER][SCENE_COLL_LAYER] = true;
 	collisionLayers[SCENE_COLL_LAYER][BODY_COLL_LAYER] = true;*/
-	collisionTree = new Quadtree(5, 5, 0, { 0,0,14500,9000 }, nullptr);
+	collisionTree = new Quadtree(10, 5, 0, { 0,0,14500,9000 }, nullptr);
 	debug = false;
 }
 
@@ -225,7 +225,7 @@ void CollisionSystem::Update()
 {
 	collisionTree->Clear();
 	Behaviour::selectableUnits.clear();
-	LOG("Tree clear");
+//	LOG("Tree clear");
 	for (std::map<CollisionLayer, std::vector<Collider*>>::iterator itL = layerColliders.begin(); itL != layerColliders.end(); ++itL)
 	{
 		if (!itL->second.empty())
@@ -264,10 +264,12 @@ void CollisionSystem::Update()
 					}
 					else
 					{
+						SDL_Rect quadTreeRect = { int(lines.left.first),int(lines.bot.second),int((*itV)->GetColliderBounds().w),int((*itV)->GetColliderBounds().h) };
 						App->render->DrawLine({ int(lines.top.first), int(lines.top.second) }, { int(lines.left.first), int(lines.left.second) }, { 0,255,0,255 }, DEBUG_SCENE);
 						App->render->DrawLine({ int(lines.top.first), int(lines.top.second) }, { int(lines.right.first), int(lines.right.second) }, { 0,255,0,255 }, DEBUG_SCENE);
 						App->render->DrawLine({ int(lines.bot.first), int(lines.bot.second) }, { int(lines.left.first), int(lines.left.second) }, { 0,255,0,255 }, DEBUG_SCENE);
 						App->render->DrawLine({ int(lines.bot.first), int(lines.bot.second) }, { int(lines.right.first), int(lines.right.second) }, { 0,255,0,255 }, DEBUG_SCENE);
+						App->render->DrawQuad(quadTreeRect, { 234,254,30,255 },false, DEBUG_SCENE);
 					}
 					//LOG("Bot X:%f/Y:%f",lines.bot.first,lines.bot.second);
 					//LOG("Top X:%f/Y:%f", lines.top.first, lines.top.second);

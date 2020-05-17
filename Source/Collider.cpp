@@ -53,7 +53,7 @@ void Collider::SetPosition()
     isoDraw.right.second += offset.y;
     isoDraw.left.second += offset.y;
     isoDraw.top.second += offset.y;
-    isoDraw.bot.second += offset.y;
+    isoDraw.bot.second += offset.y;  
     if (selectionColl)
     {
         isoDraw.right.first += rightOffset.first;
@@ -65,6 +65,8 @@ void Collider::SetPosition()
         isoDraw.top.second += topOffset.second;
         isoDraw.bot.second += botOffset.second;
     }
+    //boundary.x -= boundary.w/4 - offset.x;
+    //boundary.y += Map::GetBaseOffset() - boundary.h/2;
     //LOG("Bound pos X:%f/Y:%f",boundary.x,boundary.y);
 }
 
