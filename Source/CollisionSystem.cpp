@@ -17,11 +17,11 @@ CollisionSystem::CollisionSystem()
 	{
 		for (int a = 0; a < MAX_COLLISION_LAYERS; a++)
 		{
-			collisionLayers[i][a] = true;
+			collisionLayers[i][a] = false;
 		}
 	}
 	//Self layer collisions
-	/*collisionLayers[SCENE_COLL_LAYER][SCENE_COLL_LAYER] = true;
+	collisionLayers[SCENE_COLL_LAYER][SCENE_COLL_LAYER] = true;
 	collisionLayers[DEFAULT_COLL_LAYER][DEFAULT_COLL_LAYER] = true;
 	collisionLayers[INPUT_COLL_LAYER][INPUT_COLL_LAYER] = true;
 	collisionLayers[HUD_COLL_LAYER][HUD_COLL_LAYER] = true;
@@ -33,7 +33,11 @@ CollisionSystem::CollisionSystem()
 	collisionLayers[INPUT_COLL_LAYER][HUD_COLL_LAYER] = true;
 	collisionLayers[HUD_COLL_LAYER][INPUT_COLL_LAYER] = true;
 	collisionLayers[BODY_COLL_LAYER][SCENE_COLL_LAYER] = true;
-	collisionLayers[SCENE_COLL_LAYER][BODY_COLL_LAYER] = true;*/
+	collisionLayers[SCENE_COLL_LAYER][BODY_COLL_LAYER] = true;
+	collisionLayers[BODY_COLL_LAYER][VISION_COLL_LAYER] = true;
+	collisionLayers[VISION_COLL_LAYER][BODY_COLL_LAYER] = true;
+	collisionLayers[BODY_COLL_LAYER][ATTACK_COLL_LAYER] = true;
+	collisionLayers[ATTACK_COLL_LAYER][BODY_COLL_LAYER] = true;
 	collisionTree = new Quadtree(10, 5, 0, { 0,0,14500,9000 }, nullptr);
 	debug = false;
 }
@@ -137,11 +141,8 @@ void CollisionSystem::Resolve()
 			continue;
 		}*/
 
-		if (itL->first == UNIT_SELECTION_LAYER)
-		{
-			//LOG("Layers not colliding");
-			continue;
-		}
+		if (itL->first == UNIT_SELECTION_LAYER) continue;
+		
 
 		for (std::vector<Collider*>::const_iterator itV = itL->second.cbegin(); itV != itL->second.cend(); ++itV)//for each collider in layer
 		{		
@@ -158,8 +159,8 @@ void CollisionSystem::Resolve()
 						if ((*itV)->GetID() != (*it)->GetID() && (*itV)->GetGoID() != (*it)->GetGoID() && !(*it)->parentGo->BeingDestroyed())
 						{
 							//LOG("Check if collides");
-							//if (collisionLayers[(*itV)->GetCollLayer()][(*it)->GetCollLayer()])
-							//{
+							if (collisionLayers[(*itV)->GetCollLayer()][(*it)->GetCollLayer()])
+							{
 								Manifold m = (*itV)->Intersects(*it);
 								if (m.colliding)
 								{
@@ -211,7 +212,7 @@ void CollisionSystem::Resolve()
 										(*itV)->DeleteCollision((*it)->GetID());
 									}
 								}
-							//}
+							}
 						}
 					}
 				}
@@ -236,8 +237,8 @@ void CollisionSystem::Update()
 				if (!(*itV)->GetGameobject()->BeingDestroyed())
 				{
 					(*itV)->SetPosition();
-					collisionTree->Insert(*itV);
-					if ((*itV)->GetColliderTag() == SELECTION_TAG) Behaviour::selectableUnits.push_back((*itV)->GetGameobject()->GetBehaviour()->GetID());
+					if ((*itV)->GetColliderTag() != SELECTION_TAG) collisionTree->Insert(*itV);
+					else Behaviour::selectableUnits.push_back((*itV)->GetGameobject()->GetBehaviour()->GetID());
 				}
 			}
 		}

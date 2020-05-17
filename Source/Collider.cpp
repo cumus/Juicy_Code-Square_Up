@@ -18,16 +18,16 @@ Collider::Collider(Gameobject* go, RectF coll, ColliderType t, ColliderTag tg, R
     boundary = coll;
     boundary.w *= tileSize.first;
     boundary.h *= tileSize.second;
-
+    App->collSystem.Add(this);
     collType = t;
     layer = lay;
-    tag = tg;
-    App->collSystem.Add(this);
+    tag = tg;  
     offset = off;
     GoID = go->GetID();
     parentGo = go;
     if (lay == UNIT_SELECTION_LAYER) selectionColl = true;
     else selectionColl = false;
+    
 }
 
 Collider::~Collider()
