@@ -34,7 +34,7 @@ CollisionSystem::CollisionSystem()
 	collisionLayers[HUD_COLL_LAYER][INPUT_COLL_LAYER] = true;
 	collisionLayers[BODY_COLL_LAYER][SCENE_COLL_LAYER] = true;
 	collisionLayers[SCENE_COLL_LAYER][BODY_COLL_LAYER] = true;*/
-	collisionTree = new Quadtree(25, 5, 0, { 0.0f,0.0f,17000,9500 }, nullptr);
+	collisionTree = new Quadtree(5, 5, 0, { 0,0,14500,9000 }, nullptr);
 	debug = false;
 }
 
@@ -225,7 +225,7 @@ void CollisionSystem::Update()
 {
 	collisionTree->Clear();
 	Behaviour::selectableUnits.clear();
-	//LOG("Tree clear");
+	LOG("Tree clear");
 	for (std::map<CollisionLayer, std::vector<Collider*>>::iterator itL = layerColliders.begin(); itL != layerColliders.end(); ++itL)
 	{
 		if (!itL->second.empty())

@@ -18,15 +18,16 @@ class Quadtree
 {
 public:
 	Quadtree();
-	Quadtree(int maxObj,int maxlvl,int lvl, RectF bounds,Quadtree* parent);
+	Quadtree(int maxObj,int maxlvl,int lvl, SDL_Rect bounds,Quadtree* parent);
 	~Quadtree();
 
-	void Init(int maxObj, int maxlvl, int lvl, RectF bounds, Quadtree* p);
+	void Init(int maxObj, int maxlvl, int lvl, SDL_Rect bounds, Quadtree* p);
 	void Clear();
 	void Insert(Collider* obj);
 	void Remove(Collider* obj);
+	bool IntersectBounds(IsoLinesCollider coll);
 	std::vector<Collider*> Search(Collider& obj);
-	RectF GetBounds() { return boundary; }
+	SDL_Rect GetBounds() { return boundary; }
 	std::vector<Quadtree*> GetChilds();
 	bool GotChilds();
 	void DebugDrawBounds();
@@ -48,7 +49,7 @@ private:
 	Quadtree* children[4];
 	std::vector<Collider*> objects;
 	int level;
-	RectF boundary;
+	SDL_Rect boundary;
 };
 
 #endif // !__QUADTREE_H__
