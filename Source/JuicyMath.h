@@ -16,6 +16,13 @@ namespace JMath
 		const std::pair<float, float> b,
 		const std::pair<float, float> c);
 
+	// Get Triangle abc Area
+	float RectArea(
+		 std::pair<float, float> top,
+		 std::pair<float, float> bot,
+		 std::pair<float, float> left,
+		 std::pair<float, float> right);
+
 	// Check Point p is inside Triangle abc
 	bool PointInsideTriangle(
 		const std::pair<float, float> p,

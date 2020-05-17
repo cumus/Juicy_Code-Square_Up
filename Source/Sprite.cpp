@@ -262,7 +262,7 @@ void AnimatedSprite::Update()
 	if (current_state != *unit_state)
 	{
 		section = animations[current_state = *unit_state].Reset(current_state < ATTACKING);
-		frame_timer = current_state < ATTACKING ? JMath::RandomF() : 0.f;
+		frame_timer = 0.f;
 	}
 	else
 	{

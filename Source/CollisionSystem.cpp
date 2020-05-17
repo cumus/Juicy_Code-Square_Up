@@ -95,7 +95,7 @@ void CollisionSystem::ProcessRemovals()
 	{
 		for (std::vector<Collider*>::const_iterator itV = itL->second.cbegin(); itV != itL->second.cend(); ++itV)
 		{
-			if ((*itV)->GetGameobject()->BeingDestroyed())
+			if ((*itV)->GetGameobject()->GetBehaviour()->GetState() == DESTROYED)
 			{
 				layerColliders[itL->first].erase(itV);
 			}
@@ -105,19 +105,16 @@ void CollisionSystem::ProcessRemovals()
 
 void CollisionSystem::ProcessRemovals(Gameobject* obj)
 {
-	bool exit=false;
 	for (std::map<CollisionLayer, std::vector<Collider*>>::const_iterator itL = layerColliders.cbegin(); itL != layerColliders.cend(); ++itL)
 	{
 		for (std::vector<Collider*>::const_iterator itV = itL->second.cbegin(); itV != itL->second.cend(); ++itV)
 		{
+			//LOG("Check 1");
 			if ((*itV)->GetGoID() == obj->GetID())
 			{
 				layerColliders[itL->first].erase(itV);
-				exit = true;
 			}
-			if (exit) break;
 		}
-		if (exit) break;
 	}
 }
 
@@ -153,25 +150,20 @@ void CollisionSystem::Resolve()
 				std::vector<Collider*> collisions = collisionTree->Search(*(*itV));
 				if (!collisions.empty())
 				{
-					LOG("Got collisions: %d",collisions.size());
+					//LOG("Got collisions: %d",collisions.size());
 					for (std::vector<Collider*>::iterator it = collisions.begin(); it != collisions.end(); ++it)
 					{
 						//LOG("This go id: %lf", (*itV)->GetGameobject()->GetID());
 						//LOG("Other go id: %lf", (*it)->GetGameobject()->GetID());
-						if ((*itV)->GetID() != (*it)->GetID() && (*itV)->GetGoID() != (*it)->GetGoID())
+						if ((*itV)->GetID() != (*it)->GetID() && (*itV)->GetGoID() != (*it)->GetGoID() && !(*it)->parentGo->BeingDestroyed())
 						{
-							LOG("Check if collides");
-							if (collisionLayers[(*itV)->GetCollLayer()][(*it)->GetCollLayer()])
-							{
+							//LOG("Check if collides");
+							//if (collisionLayers[(*itV)->GetCollLayer()][(*it)->GetCollLayer()])
+							//{
 								Manifold m = (*itV)->Intersects(*it);
 								if (m.colliding)
 								{
-									/*if ((*itV)->GetGameobject()->GetBehaviour()->GetState() != DESTROYED && (*it)->GetGameobject()->GetBehaviour()->GetState() != DESTROYED)
-									{
-										Event::Push(ON_COLL_ENTER, (*itV)->GetGameobject(), (*itV)->GetID(), (*it)->GetID());
-										Event::Push(ON_COLL_ENTER, (*it)->GetGameobject(), (*it)->GetID(), (*itV)->GetID());
-									}*/
-									LOG("Save collision");
+									//LOG("Save collision");
 									if (!(*itV)->GetCollisionState((*it)->GetID()))//First collision
 									{
 										(*itV)->SaveCollision((*it)->GetID());
@@ -219,7 +211,7 @@ void CollisionSystem::Resolve()
 										(*itV)->DeleteCollision((*it)->GetID());
 									}
 								}
-							}
+							//}
 						}
 					}
 				}
@@ -232,6 +224,7 @@ void CollisionSystem::Resolve()
 void CollisionSystem::Update()
 {
 	collisionTree->Clear();
+	Behaviour::selectableUnits.clear();
 	//LOG("Tree clear");
 	for (std::map<CollisionLayer, std::vector<Collider*>>::iterator itL = layerColliders.begin(); itL != layerColliders.end(); ++itL)
 	{
@@ -244,6 +237,7 @@ void CollisionSystem::Update()
 				{
 					(*itV)->SetPosition();
 					collisionTree->Insert(*itV);
+					if ((*itV)->GetColliderTag() == SELECTION_TAG) Behaviour::selectableUnits.push_back((*itV)->GetGameobject()->GetBehaviour()->GetID());
 				}
 			}
 		}
