@@ -106,6 +106,7 @@ public:
 	void DesactivateSprites();
 	void CheckFoWMap(bool debug=false);
 	bool IsDestroyed();
+	vec GetPos();
 	std::vector<iPoint> GetTilesInsideRadius();
 	Collider* GetBodyCollider();
 	Collider* GetSelectionCollider();
@@ -174,7 +175,7 @@ protected:
 	Audio_FX deathFX;
 	std::pair<float, float> visionRange;
 	std::pair<float, float> atkRange;
-	Gameobject* objective;
+	Behaviour* objective;
 	std::vector<iPoint> lastFog;
 
 	// Complementary components
@@ -295,8 +296,8 @@ protected:
 	bool chasing;
 	std::pair<float, float> atkObjPos;
 	std::pair<float, float> shootPos;
-	Gameobject* atkObj;
-	Gameobject* chaseObj;
+	Behaviour* atkObj;
+	Behaviour* chaseObj;
 	bool moveOrder;
 };
 

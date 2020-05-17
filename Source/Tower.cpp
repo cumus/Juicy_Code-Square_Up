@@ -77,14 +77,14 @@ void Tower::Update()
 						//Behaviour::enemiesInSight.push_back(it->second->GetID());
 						if (d == 0)
 						{
-							objective = it->second->GetGameobject();
+							objective = it->second;
 							d = it->first;
 						}
 						else
 						{
 							if (it->first < d)
 							{
-								objective = it->second->GetGameobject();
+								objective = it->second;
 								d = it->first;
 							}
 						}
@@ -94,7 +94,7 @@ void Tower::Update()
 		}
 
 		if (objective != nullptr)
-			if(!objective->BeingDestroyed())
+			if(!objective->GetState() != DESTROYED)
 				if (ms_count >= atkDelay) DoAttack();
 		
 
@@ -176,7 +176,7 @@ void Tower::DoAttack()
 {
 	atkPos.first = 0;
 	atkPos.second = 0;
-	vec pos = objective->GetTransform()->GetGlobalPosition();
+	vec pos = objective->GetPos();
 	atkPos = Map::F_MapToWorld(pos.x, pos.y, pos.z);
 	atkPos.first += 30.0f;
 	atkPos.second += 20.0f;
@@ -186,7 +186,7 @@ void Tower::DoAttack()
 	localPos.first += 30.0f;
 	localPos.second += -60.0f;
 
-	Event::Push(DAMAGE, objective->GetBehaviour(), damage);
+	Event::Push(DAMAGE, objective, damage);
 
 	shoot = true;
 	ms_count = 0;

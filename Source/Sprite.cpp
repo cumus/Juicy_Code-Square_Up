@@ -92,7 +92,7 @@ AnimatedSprite::AnimatedSprite(Behaviour* unit) : Sprite(unit->GetGameobject(), 
 		tex_id = App->tex.Load("Assets/textures/Edge.png");
 		animations[NO_UPGRADE].Setup(section = { 0, 0, 217, 134 }, 1);
 		animations[DESTROYED].Setup({ 0, 0, 0, 0 }, 1);
-		offset = { -70.0f, -134.0f + Map::GetBaseOffset(), 1.0f, 1.0f };
+		offset = { -70.0f, -134.0f + Map::GetBaseOffset(), 0.5f, 0.5f };
 		break;
 	}
 	case B_CAPSULE:

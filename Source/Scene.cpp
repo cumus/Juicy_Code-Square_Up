@@ -1095,57 +1095,34 @@ void Scene::UpdateSelection()
 			App->input->GetMousePosition(x, y);
 			x += cam.x;
 			y += cam.y;
-
+			LOG("Mouse X:%d/Y:%d",x,y);
 			if (!Behaviour::selectableUnits.empty())
 			{
 				for (std::vector<double>::iterator it = Behaviour::selectableUnits.begin(); it != Behaviour::selectableUnits.end(); ++it)
 				{
-					IsoLinesCollider points = Behaviour::b_map[(*it)]->GetSelectionCollider()->GetIsoPoints();
-					float tlp, lbp, brp, rtp;
-					tlp = JMath::TriangleArea(points.top, points.left, {x,y});
-					lbp = JMath::TriangleArea(points.left, points.bot, { x,y });
-					brp = JMath::TriangleArea(points.bot, points.right, { x,y });
-					rtp = JMath::TriangleArea(points.right, points.top, { x,y });
-					float area = JMath::RectArea(points.top,points.bot,points.left,points.right);
-					if ((tlp + lbp + brp + rtp) > area)
+					if (Behaviour::b_map[(*it)]->GetSelectionCollider()->GetColliderTag() == SELECTION_TAG)
 					{
-						continue;						
-					}
-					else
-					{
-						SetSelection(Behaviour::b_map[(*it)]->GetGameobject(), true);
-						break;
-					}
-					/*if (JMath::PointInsideTriangle({ float(x),float(y) }, points.top, points.left, points.right))
-					{
-						SetSelection(Behaviour::b_map[(*it)]->GetGameobject(), true);
-						break;
-					}
-					else if (JMath::PointInsideTriangle({ float(x),float(y) }, points.bot, points.left, points.right))
-					{
-						SetSelection(Behaviour::b_map[(*it)]->GetGameobject(), true);
-						break;
-					}*/
+						IsoLinesCollider points = Behaviour::b_map[(*it)]->GetSelectionCollider()->GetIsoPoints();
+						float tlp, lbp, brp, rtp;
+						tlp = JMath::TriangleArea(points.top, points.left, { x,y });
+						lbp = JMath::TriangleArea(points.left, points.bot, { x,y });
+						brp = JMath::TriangleArea(points.bot, points.right, { x,y });
+						rtp = JMath::TriangleArea(points.right, points.top, { x,y });
+						float area = JMath::RectArea(points.top, points.bot, points.left, points.right);
+						if ((tlp + lbp + brp + rtp) > area)
+						{
+							//LOG("OUT");
+							continue;
+						}
+						else
+						{
+							//LOG("INSIDE");
+							SetSelection(Behaviour::b_map[(*it)]->GetGameobject(), true);
+							break;
+						}
+					}					
 				}
 			}
-			//For quadtree selection colliders list
-			/*std::vector<Collider*> coll = App->collSystem.GetQuadTree()->SearchSelection({x,y});
-			LOG("Selection size %d",coll.size());
-			for (std::vector<Collider*>::iterator it = coll.begin(); it != coll.end(); ++it)
-			{
-				IsoLinesCollider points = (*it)->GetIsoPoints();
-
-				if (JMath::PointInsideTriangle({ float(x),float(y) }, points.top, points.left, points.right))
-				{
-					SetSelection((*it)->GetGameobject(), true);
-					break;
-				}
-				else if (JMath::PointInsideTriangle({ float(x),float(y) }, points.bot, points.left, points.right))
-				{
-					SetSelection((*it)->GetGameobject(), true);
-					break;
-				}
-			}*/
 			/*for (std::map<double, Behaviour*>::iterator it = Behaviour::b_map.begin(); it != Behaviour::b_map.end(); ++it)
 			{
 				if (it->second->GetType() == UNIT_MELEE || it->second->GetType() == GATHERER || it->second->GetType() == UNIT_RANGED
@@ -2218,7 +2195,7 @@ void Scene::SetSelection(Gameobject* go, bool call_unselect)
 	{
 		for (std::vector<Gameobject*>::iterator it = App->scene->group.begin(); it != App->scene->group.end(); ++it)
 		{
-			if (!(*it)->BeingDestroyed()) Event::Push(ON_UNSELECT, *it);
+			if (!(*it)->GetBehaviour()->GetState() != DESTROYED) Event::Push(ON_UNSELECT, *it);
 		}
 		group.clear();
 		groupSelect = false;
@@ -2230,7 +2207,7 @@ void Scene::SetSelection(Gameobject* go, bool call_unselect)
 		{
 			if (selection != go)
 			{
-				if (call_unselect && !selection->BeingDestroyed())
+				if (call_unselect && !selection->GetBehaviour()->GetState() != DESTROYED)
 					Event::Push(ON_UNSELECT, selection);
 
 				Event::Push(ON_SELECT, go);
@@ -2239,7 +2216,7 @@ void Scene::SetSelection(Gameobject* go, bool call_unselect)
 		else
 			Event::Push(ON_SELECT, go);
 	}
-	else if (selection != nullptr && call_unselect && !selection->BeingDestroyed())
+	else if (selection != nullptr && call_unselect && !selection->GetBehaviour()->GetState() != DESTROYED)
 		Event::Push(ON_UNSELECT, selection);
 
 	selection = go;

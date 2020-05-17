@@ -43,7 +43,7 @@ void RangedUnit::UnitAttackType()
 	shootPos.first += 30.0f;
 	shootPos.second += 20.0f;
 
-	pos = objective->GetTransform()->GetGlobalPosition();
+	pos = atkObj->GetPos();
 	atkObjPos = Map::F_MapToWorld(pos.x, pos.y, pos.z);
 	atkObjPos.first += 30.0f;
 	atkObjPos.second += 20.0f;

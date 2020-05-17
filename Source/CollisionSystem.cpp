@@ -156,7 +156,7 @@ void CollisionSystem::Resolve()
 					{
 						//LOG("This go id: %lf", (*itV)->GetGameobject()->GetID());
 						//LOG("Other go id: %lf", (*it)->GetGameobject()->GetID());
-						if ((*itV)->GetID() != (*it)->GetID() && (*itV)->GetGoID() != (*it)->GetGoID() && !(*it)->parentGo->BeingDestroyed())
+						if ((*itV)->GetID() != (*it)->GetID() && (*itV)->GetGoID() != (*it)->GetGoID() && !(*it)->parentGo->GetBehaviour()->GetState() != DESTROYED)
 						{
 							//LOG("Check if collides");
 							if (collisionLayers[(*itV)->GetCollLayer()][(*it)->GetCollLayer()])
@@ -234,10 +234,10 @@ void CollisionSystem::Update()
 			//LOG("colliders length: %d", itL->second.size());
 			for (std::vector<Collider*>::iterator itV = itL->second.begin(); itV != itL->second.end(); ++itV)
 			{
-				if (!(*itV)->GetGameobject()->BeingDestroyed())
+				if (!(*itV)->GetGameobject()->GetBehaviour()->GetState() != DESTROYED)
 				{
 					(*itV)->SetPosition();
-					if ((*itV)->GetColliderTag() != SELECTION_TAG) collisionTree->Insert(*itV);
+					if ((*itV)->GetCollLayer() != UNIT_SELECTION_LAYER) collisionTree->Insert(*itV);
 					else Behaviour::selectableUnits.push_back((*itV)->GetGameobject()->GetBehaviour()->GetID());
 				}
 			}
