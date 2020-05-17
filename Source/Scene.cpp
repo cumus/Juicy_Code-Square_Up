@@ -772,11 +772,23 @@ void Scene::LoadMainHUD()
 
 	Gameobject* mobdrop_go = AddGameobject("Text Mob Drop", right_bar_go);
 	C_Text* text_mobdrop = new C_Text(mobdrop_go, "Mob Drop");
-	text_mobdrop->target = { 0.58f, 0.25f, 1.f, 1.f };
+	text_mobdrop->target = { 0.7f, 0.25f, 1.f, 1.f };
 
 	Gameobject* mobdrop_value_go = AddGameobject("Mob Drop Value", right_bar_go);
 	hud_texts[CURRENT_MOB_DROP] = new C_Text(mobdrop_value_go, "0");
-	hud_texts[CURRENT_MOB_DROP]->target = { 0.78f, 0.25f, 1.f, 1.f };
+	hud_texts[CURRENT_MOB_DROP]->target = { 0.85f, 0.25f, 1.f, 1.f };
+
+	//--------------------------------MOBDROP--------------------------------------
+
+	Gameobject* gold_go = AddGameobject("Text Edge", right_bar_go);
+	C_Image* image_gold = new C_Image(edge_go);
+	image_gold->target = { 0.45f, 0.15f, 0.9f, 0.9f };
+	image_gold->section = { 198, 305, 32, 28 };
+	image_gold->tex_id = icons_text_id;
+
+	Gameobject* gold_value_go = AddGameobject("Gold Value", right_bar_go);
+	hud_texts[CURRENT_GOLD] = new C_Text(gold_value_go, "0");
+	hud_texts[CURRENT_GOLD]->target = { 0.55f, 0.25f, 1.f, 1.f };
 
 	//-----------------------------------------------------------------------------
 	//------------------------------PAUSE BUTTON-----------------------------------
