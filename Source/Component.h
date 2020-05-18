@@ -12,6 +12,7 @@ enum ComponentType
 	ANIM_SPRITE,
 	AUDIO_SOURCE,
 	COLLIDER,
+	PARTICLE,
 
 	// UI
 	UI_GENERAL,

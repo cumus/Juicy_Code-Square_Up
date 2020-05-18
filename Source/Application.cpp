@@ -137,6 +137,7 @@ int Application::Update()
 		if (!(no_error = (*it)->Update()))
 			LOG("Module %s encuntered an error during Update!", (*it)->GetName());
 
+	particleSys.Update();
 	collSystem.Update();
 
 	OPTICK_CATEGORY("PostUpdate Application", Optick::Category::GameLogic);

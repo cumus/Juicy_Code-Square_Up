@@ -12,6 +12,7 @@
 #include "FogOfWarManager.h"
 #include "CollisionSystem.h"
 #include "DialogSystem.h"
+#include "ParticleSystem.h"
 
 #include "PugiXml\src\pugixml.hpp"
 #include <list>
@@ -35,6 +36,7 @@ class PathfindingManager;
 class FogOfWarManager;
 class CollisionSystem;
 class DialogSystem;
+class ParticleSystem;
 
 enum GameState : int
 {
@@ -93,6 +95,7 @@ public:
 	FogOfWarManager fogWar;
 	CollisionSystem collSystem;
 	DialogSystem   dialogSys;
+	ParticleSystem particleSys;
 
 
 private:

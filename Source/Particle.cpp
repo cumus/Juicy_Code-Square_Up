@@ -1,152 +1,65 @@
 #include "Particle.h"
+#include "Gameobject.h"
 #include "Application.h"
-#include "Render.h"
-#include "ParticleSystem.h"
-#include "Defs.h"
+#include "TextureManager.h"
+#include "Transform.h"
+#include "Sprite.h"
+#include "Vector3.h"
+#include "Log.h"
 
 
-Particle::Particle() :life(0) 
-{}
+Particle::Particle(Gameobject* go,vec p, vec d, float s, bool ply, ComponentType type) : Component(type, go)
+{
+	destination = d;
+	speed = s;
+	goParent = go;
+	alive = true;
+
+	animCounter = 0;
+	animationSpeed = 0.8f;
+	spriteNum = 0;
+	player = ply;
+	if(player) img = new Sprite(go, App->tex.Load("Assets/textures/ally-enemy-shot.png"), { 0, 0, 30, 30 }, BACK_SCENE, { 0, -50, 1.f, 1.f });
+	else img = new Sprite(go, App->tex.Load("Assets/textures/ally-enemy-shot.png"), { 0, 32, 30, 30 }, BACK_SCENE, { 0, -50, 1.f, 1.f });
+	direction = {abs(p.x- destination.x),abs(p.y- destination.y),0};
+	velocityMod = { direction.x / direction.y, direction.y/direction.x };
+	t = go->GetTransform();
+}
 
 Particle::~Particle()
 {}
 
 
-void Particle::Init(fPoint pos, float startSpeed, float endSpeed, float angle, double rotSpeed, float startSize, float endSize, int life, SDL_Rect textureRect, SDL_Color startColor, SDL_Color endColor, SDL_BlendMode blendMode, bool vortexSensitive)
-{
-	// Movement properties
-	pState.pLive.pos = pos;
-	pState.pLive.startVel.x = startSpeed * cos(DEG_2_RAD(angle));
-	pState.pLive.startVel.y = -startSpeed * sin(DEG_2_RAD(angle));
-	pState.pLive.endVel.x = endSpeed * cos(DEG_2_RAD(angle));
-	pState.pLive.endVel.y = -endSpeed * sin(DEG_2_RAD(angle));
-	pState.pLive.startRotSpeed = rotSpeed;
-	pState.pLive.currentRotSpeed = rotSpeed;
-
-	// Life properties
-	this->life = pState.pLive.startLife = life;
-	pState.pLive.currentSize = pState.pLive.startSize = startSize;
-	pState.pLive.endSize = endSize;
-	pState.pLive.t = 0.0f;
-
-	// Color properties
-	pState.pLive.startColor = startColor;
-	pState.pLive.endColor = endColor;
-	pState.pLive.blendMode = blendMode;
-	pState.pLive.pRect = pState.pLive.rectSize = textureRect;
-
-	// Vortex
-	pState.pLive.vortexSensitive = vortexSensitive;
-
-	// Add vortex to the system (optional and only one is allowed)
-	if (pState.pLive.vortexSensitive)
-		AddVortex({ 250.0f, 200.0f }, 10.0f, 30.0f);
-}
-
 void Particle::Update()
 {
-	// Vortex control 
-	if (!pState.pLive.vortexSensitive && vortex.scale != 0 && vortex.speed != 0)
-		AddVortex({ 0.0f, 0.0f }, 0.0f, 0.0f);
+	float d = (t->GetGlobalPosition().x - destination.x)+(t->GetGlobalPosition().y - destination.y);
+	if (d > 1)
+	{
+		game_object->GetTransform()->MoveX(velocityMod.first * speed * App->time.GetGameDeltaTime());//Move x
+		game_object->GetTransform()->MoveY(velocityMod.second * speed * App->time.GetGameDeltaTime());//Move y
 
-	// Age ratio is used to interpolate between particle properties
-	pState.pLive.ageRatio = (float)life / (float)pState.pLive.startLife;
+		if (animCounter < animationSpeed)
+		{
+			if (spriteNum < 8) spriteNum++;
+			else spriteNum = 0;
 
-	// Particle size interpolation
-	pState.pLive.currentSize = InterpolateBetweenRange(pState.pLive.startSize, pState.pLive.t, pState.pLive.endSize);
-
-	// Particle speed interpolation
-	pState.pLive.currentVel.x = InterpolateBetweenRange(pState.pLive.startVel.x, pState.pLive.t, pState.pLive.endVel.x);
-	pState.pLive.currentVel.y = InterpolateBetweenRange(pState.pLive.startVel.y, pState.pLive.t, pState.pLive.endVel.y);
-
-	// Assign new size to particle rect
-	pState.pLive.rectSize.w = pState.pLive.rectSize.h = pState.pLive.currentSize;
-
-	// Calculates new particle position.
-	CalculateParticlePos();
-
-	// Decrementing particle life
-	life--;
+			if(player) img->SetSection({30 * spriteNum,0,30,30});
+			else img->SetSection({30 * spriteNum,32,30,30});
+			animCounter = 0;
+		}
+		else
+		{
+			animCounter += App->time.GetGameDeltaTime();
+		}
+	}
+	else
+	{
+		img->SetInactive();
+		alive = false;
+	}
 }
 
-bool Particle::Draw()
-{
-	bool ret = true;
 
-	// Calculations to determine the current center of particle texture
-	SDL_Rect tmpRect = { (int)pState.pLive.startSize, (int)pState.pLive.startSize };
-	float centerX = pState.pLive.pos.x + ((tmpRect.w - pState.pLive.rectSize.w) / 2.0f);
-	float centerY = pState.pLive.pos.y + ((tmpRect.h - pState.pLive.rectSize.h) / 2.0f);
+vec Particle::GetPos() { return goParent->GetTransform()->GetGlobalPosition(); }
 
-	// Color interpolation, only if the particle has enough life
-	SDL_Color resColor;
-
-	if (pState.pLive.startLife > MIN_LIFE_TO_INTERPOLATE)
-		resColor = RgbInterpolation(pState.pLive.startColor, pState.pLive.t, pState.pLive.endColor);
-
-	// Blitting particle on screen
-	//ret = App->render->BlitParticle(App->psystem->GetParticleAtlas(), (int)centerX, (int)centerY, &pState.pLive.pRect,
-		//&pState.pLive.rectSize, resColor, pState.pLive.blendMode, 1.0f, pState.pLive.currentRotSpeed);
-
-	// Calculating new rotation according to rotation speed
-	pState.pLive.currentRotSpeed += pState.pLive.startRotSpeed;
-
-	// Time step increment to interpolate colors
-	pState.pLive.t += (1.0f / (float)pState.pLive.startLife);
-
-	if (pState.pLive.t >= 1.0f)
-		pState.pLive.t = 0.0f;
-
-	return ret;
-}
-
-bool Particle::IsAlive()
-{
-	return life > 0;
-}
-
-Particle* Particle::GetNext()
-{
-	return pState.next;
-}
-
-void Particle::SetNext(Particle* next)
-{
-	pState.next = next;
-}
-
-SDL_Color Particle::RgbInterpolation(SDL_Color startColor, float timeStep, SDL_Color endColor)
-{
-	SDL_Color finalColor;
-
-	finalColor.r = startColor.r + (endColor.r - startColor.r) * timeStep;
-	finalColor.g = startColor.g + (endColor.g - startColor.g) * timeStep;
-	finalColor.b = startColor.b + (endColor.b - startColor.b) * timeStep;
-	finalColor.a = startColor.a + (endColor.a - startColor.a) * timeStep;
-
-	return finalColor;
-}
-
-float Particle::InterpolateBetweenRange(float min, float timeStep, float max)
-{
-	return min + (max - min) * timeStep;
-}
-
-void Particle::AddVortex(fPoint pos, float speed, float scale)
-{
-	vortex.pos = pos;
-	vortex.speed = speed;
-	vortex.scale = scale;
-}
-
-void Particle::CalculateParticlePos()
-{
-	float dx = pState.pLive.pos.x - vortex.pos.x;
-	float dy = pState.pLive.pos.y - vortex.pos.y;
-	float vx = -dy * vortex.speed;
-	float vy = dx * vortex.speed;
-	float factor = 1.0f / (1.0f + (dx * dx + dy * dy) / vortex.scale);
-
-	pState.pLive.pos.x += (vx - pState.pLive.currentVel.x) * factor + pState.pLive.currentVel.x;
-	pState.pLive.pos.y += (vy - pState.pLive.currentVel.y) * factor + pState.pLive.currentVel.y;
-}
+bool Particle::IsAlive() { return alive; }
