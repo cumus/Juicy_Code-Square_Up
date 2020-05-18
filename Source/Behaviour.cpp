@@ -97,8 +97,8 @@ void Behaviour::SetColliders()
 			//selColl->SetPointsOffset({-20,-70}, {20,50}, {-10,-55}, {10,35});
 			//selectableUnits.push_back(GetID());
 			std::pair<float, float> world = Map::F_MapToWorld(pos.x, pos.y);
-			selectionOffset = { 0,-40 };
-			selectionRect = { world.first + selectionOffset.first,world.second + selectionOffset.second,50,100 };
+			selectionOffset = { 10,-50 };
+			selectionRect = { world.first + selectionOffset.first,world.second + selectionOffset.second,50,90 };
 			break;
 		}
 		case ENEMY_MELEE:
@@ -112,6 +112,9 @@ void Behaviour::SetColliders()
 			//selColl = new Collider(game_object, { pos.x,pos.y,game_object->GetTransform()->GetLocalScaleX(),game_object->GetTransform()->GetLocalScaleY() }, TRIGGER, ENEMY_TAG, { 0,0,0,0 }, UNIT_SELECTION_LAYER);
 			//selColl->SetPointsOffset({ -20,-70 }, { 20,50 }, { -10,-55 }, { 10,35 });
 			//selectableUnits.push_back(GetID());
+			std::pair<float, float> world = Map::F_MapToWorld(pos.x, pos.y);
+			selectionOffset = { 10,-50 };
+			selectionRect = { world.first + selectionOffset.first,world.second + selectionOffset.second,50,90 };
 			break;
 		}
 		case BASE_CENTER:
@@ -151,6 +154,9 @@ void Behaviour::SetColliders()
 			//selColl = new Collider(game_object, { pos.x,pos.y,game_object->GetTransform()->GetLocalScaleX(),game_object->GetTransform()->GetLocalScaleY() }, TRIGGER, ENEMY_TAG, { 0,0,0,0 }, UNIT_SELECTION_LAYER);
 			//selColl->SetPointsOffset({-65, -20 }, { 40,65 }, { 10,-5 }, { -35,45 });
 			//selectableUnits.push_back(GetID());
+			std::pair<float, float> world = Map::F_MapToWorld(pos.x, pos.y);
+			selectionOffset = { -30,0 };
+			selectionRect = { world.first + selectionOffset.first,world.second + selectionOffset.second,100,50 };
 			break;
 		}
 		case CAPSULE:
@@ -554,7 +560,6 @@ void B_Unit::Update()
 	if (!providesVisibility) CheckFoWMap();
 	if (current_state != DESTROYED)
 	{
-		atkObj = nullptr;
 		if (inRange) //ATTACK
 		{
 			if (type == ENEMY_MELEE || type == ENEMY_RANGED || type == ENEMY_SUPER || type == ENEMY_SPECIAL)
@@ -614,7 +619,7 @@ void B_Unit::Update()
 						LOG("Path to base");
 						goingBase = true;
 						vec centerPos = Base_Center::baseCenter->GetTransform()->GetGlobalPosition();
-						Event::Push(UPDATE_PATH, this->AsBehaviour(), int(centerPos.x) - 1, int(centerPos.y) - 1);
+						Event::Push(UPDATE_PATH, this->AsBehaviour(), int(centerPos.x) - 1, int(centerPos.y));
 						//LOG("Move to base");	
 					}
 				}
@@ -625,8 +630,8 @@ void B_Unit::Update()
 		{
 			if (chaseObj != nullptr && !chasing)
 			{
-				vec pos = chaseObj->GetPos();
-				Event::Push(UPDATE_PATH, this->AsBehaviour(), int(pos.x), int(pos.y));
+				vec goToPos = chaseObj->GetPos();
+				Event::Push(UPDATE_PATH, this->AsBehaviour(), int(goToPos.x)-1, int(goToPos.y));
 				chasing = true;
 			}
 
@@ -901,6 +906,8 @@ void B_Unit::Update()
 			
 		//Draw vision and attack range
 		if (drawRanges) DrawRanges();
+
+		atkObj = nullptr;
 	}
 }
 
@@ -1393,6 +1400,7 @@ void B_Unit::OnDestroy()
 
 void B_Unit::OnRightClick(vec posClick, vec movPos)
 {
+	chaseObj = false;
 	Transform* t = game_object->GetTransform();
 	if (t)
 	{
@@ -1437,54 +1445,6 @@ void B_Unit::OnRightClick(vec posClick, vec movPos)
 				}
 			}
 		
-		/*if (!Behaviour::selectableUnits.empty())
-		{
-			SDL_Rect cam = App->render->GetCameraRect();
-			int x, y;
-			App->input->GetMousePosition(x, y);
-			x += cam.x;
-			y += cam.y;	
-			LOG("Mouse X:%d/Y:%d",x,y);
-			for (std::vector<double>::iterator it = Behaviour::selectableUnits.begin(); it != Behaviour::selectableUnits.end(); ++it)
-			{
-				if (Behaviour::b_map[(*it)]->GetSelectionCollider()->GetColliderTag() == ENEMY_TAG)
-				{
-					//LOG("Enemy tag");
-					IsoLinesCollider points = Behaviour::b_map[(*it)]->GetSelectionCollider()->GetIsoPoints();
-					//LOG("Unit type:%d", Behaviour::b_map[(*it)]->GetType());
-					float tlp, lbp, brp, rtp;
-					tlp = JMath::TriangleArea(points.top, points.left, { x,y });
-					lbp = JMath::TriangleArea(points.left, points.bot, { x,y });
-					brp = JMath::TriangleArea(points.bot, points.right, { x,y });
-					rtp = JMath::TriangleArea(points.right, points.top, { x,y });
-					float area = JMath::RectArea(points.top, points.bot, points.left, points.right);
-					if ((tlp + lbp + brp + rtp) > area)//No inside rect
-					{
-						//LOG("OUT");
-						continue;
-					}
-					else//Inside rect
-					{
-						//LOG("Inside");
-						if (GetType() == GATHERER)
-						{
-							if (Behaviour::b_map[(*it)]->GetType() == CAPSULE || Behaviour::b_map[(*it)]->GetType() == EDGE)
-							{
-								chaseObj = Behaviour::b_map[(*it)];
-								LOG("EDGE");
-							}
-						}
-						else if(Behaviour::b_map[(*it)]->GetType() == ENEMY_MELEE || Behaviour::b_map[(*it)]->GetType() == ENEMY_RANGED || 
-							Behaviour::b_map[(*it)]->GetType() == SPAWNER || Behaviour::b_map[(*it)]->GetType() == CAPSULE)
-						{
-							chaseObj = Behaviour::b_map[(*it)];
-							LOG("ENEMY");
-						}
-						break;
-					}
-									
-				}
-			}*/
 		
 		/*std::map<float, Behaviour*> out;
 		unsigned int total_found = GetBehavioursInRange(vec(posClick.x, posClick.y, 0.5f), 1.5f, out);

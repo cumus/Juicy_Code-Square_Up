@@ -191,6 +191,7 @@ private:
 	static bool god_mode;
 	static bool no_damage;
 	static bool draw_collisions;
+	bool drawSelection = false;;
 
 	// Scene Transitions
 	enum Fade : int

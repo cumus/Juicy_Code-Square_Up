@@ -266,8 +266,6 @@ void CollisionSystem::Update()
 					else
 					{
 						SDL_Rect quadTreeRect = { int(lines.left.first),int(lines.bot.second),int((*itV)->GetColliderBounds().w),int((*itV)->GetColliderBounds().h) };
-						RectF sel = (*itV)->GetGameobject()->GetBehaviour()->GetSelectionRect();
-						App->render->DrawQuad({int(sel.x),int(sel.y),int(sel.w),int(sel.h)}, { 255,0,0,255 }, false, DEBUG_SCENE);
 						App->render->DrawLine({ int(lines.top.first), int(lines.top.second) }, { int(lines.left.first), int(lines.left.second) }, { 0,255,0,255 }, DEBUG_SCENE);
 						App->render->DrawLine({ int(lines.top.first), int(lines.top.second) }, { int(lines.right.first), int(lines.right.second) }, { 0,255,0,255 }, DEBUG_SCENE);
 						App->render->DrawLine({ int(lines.bot.first), int(lines.bot.second) }, { int(lines.left.first), int(lines.left.second) }, { 0,255,0,255 }, DEBUG_SCENE);

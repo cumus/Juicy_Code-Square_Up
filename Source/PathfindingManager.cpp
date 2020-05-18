@@ -641,36 +641,65 @@ void PathfindingManager::Merge(std::vector<PathNode>& vec, int l, int m, int r)
 
 
 // Main function to request a path from A to B
-std::vector<iPoint> * PathfindingManager::CreatePath(iPoint origin, iPoint destination, double ID)
+std::vector<iPoint> * PathfindingManager::CreatePath(iPoint origin, iPoint destination, double ID, bool ignoreWalkability)
 {
 	std::vector<iPoint>* pathPointer = nullptr;
 	std::vector<iPoint> finalPath;
 	
-	if (ValidTile(destination.x,destination.y))
+	if (ignoreWalkability)
 	{
-		PathNode originNode(origin, nullPoint);
-		originNode.g = 0;
-		originNode.CalculateF(destination);
+		if (destination.x >= 0 && destination.y >= 0 && destination.x < map.width && destination.y < map.height)
+		{
+			PathNode originNode(origin, nullPoint);
+			originNode.g = 0;
+			originNode.CalculateF(destination);
 
-		std::vector<PathNode> closed,open;
-		open.push_back(originNode);
-		UncompletedPath path(ID,destination,open,closed);
-		path.localStart = origin;
-		UpdatePendingPaths(ID,path);
-		//LOG("Path added to queue");
+			std::vector<PathNode> closed, open;
+			open.push_back(originNode);
+			UncompletedPath path(ID, destination, open, closed);
+			path.localStart = origin;
+			path.ignoreWalk = ignoreWalkability;
+			UpdatePendingPaths(ID, path);
+			//LOG("Path added to queue");
 
-		//finalPath.push_back(origin);
-		UpdateStoredPaths(ID, finalPath);
-		pathPointer = GetPath(ID);
+			UpdateStoredPaths(ID, finalPath);
+			pathPointer = GetPath(ID);
+		}
+		else
+		{
+			finalPath.push_back(origin);
+			UpdateStoredPaths(ID, finalPath);
+			pathPointer = GetPath(ID);
+			LOG("Out of map bounds");
+		}
 	}
 	else
 	{
-		finalPath.push_back(origin);
-		UpdateStoredPaths(ID, finalPath);
-		pathPointer = GetPath(ID);
-		LOG("Unavailable destination");
-	}
+		if (ValidTile(destination.x, destination.y))
+		{
+			PathNode originNode(origin, nullPoint);
+			originNode.g = 0;
+			originNode.CalculateF(destination);
 
+			std::vector<PathNode> closed, open;
+			open.push_back(originNode);
+			UncompletedPath path(ID, destination, open, closed);
+			path.localStart = origin;
+			path.ignoreWalk = ignoreWalkability;
+			UpdatePendingPaths(ID, path);
+			//LOG("Path added to queue");
+
+			UpdateStoredPaths(ID, finalPath);
+			pathPointer = GetPath(ID);
+		}
+		else
+		{
+			finalPath.push_back(origin);
+			UpdateStoredPaths(ID, finalPath);
+			pathPointer = GetPath(ID);
+			LOG("Unavailable destination");
+		}
+	}
 	return pathPointer;
 }
 

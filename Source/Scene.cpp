@@ -110,6 +110,15 @@ bool Scene::Update()
 			UpdateSelection();
 	}
 
+	if (drawSelection)
+	{
+		for (std::map<double, Behaviour*>::iterator it = Behaviour::b_map.begin(); it != Behaviour::b_map.end(); ++it)
+		{
+			RectF sel = (*it).second->GetSelectionRect();
+			App->render->DrawQuad({ int(sel.x),int(sel.y),int(sel.w),int(sel.h) }, { 255,0,0,255 }, false, DEBUG_SCENE);
+		}
+	}
+
 	return true;
 }
 
@@ -1954,6 +1963,7 @@ Transform* Scene::SpawnBehaviour(int type, vec pos)
 		if ((player_stats[CURRENT_EDGE] - GATHERER_COST) >= 0)
 		{
 			behaviour = AddGameobject("Gatherer");
+			behaviour->GetTransform()->SetLocalPos(pos);
 			new Gatherer(behaviour);
 			UpdateStat(CURRENT_GATHERER_UNITS, 1);
 			UpdateStat(TOTAL_GATHERER_UNITS, 1);
@@ -1970,6 +1980,7 @@ Transform* Scene::SpawnBehaviour(int type, vec pos)
 		if ((player_stats[CURRENT_EDGE] - MELEE_COST) >= 0)
 		{
 			behaviour = AddGameobject("Unit melee");
+			behaviour->GetTransform()->SetLocalPos(pos);
 			new MeleeUnit(behaviour);
 			UpdateStat(CURRENT_MELEE_UNITS, 1);
 			UpdateStat(TOTAL_MELEE_UNITS, 1);
@@ -1985,6 +1996,7 @@ Transform* Scene::SpawnBehaviour(int type, vec pos)
 		if ((player_stats[CURRENT_EDGE] - RANGED_COST) >= 0)
 		{
 			behaviour = AddGameobject("Ranged unit");
+			behaviour->GetTransform()->SetLocalPos(pos);
 			new RangedUnit(behaviour);
 			UpdateStat(CURRENT_RANGED_UNITS, 1);
 			UpdateStat(TOTAL_RANGED_UNITS, 1);
@@ -1999,6 +2011,7 @@ Transform* Scene::SpawnBehaviour(int type, vec pos)
 		if ((player_stats[CURRENT_EDGE] - SUPER_COST) >= 0)
 		{
 			behaviour = AddGameobject("Super unit");
+			behaviour->GetTransform()->SetLocalPos(pos);
 			new RangedUnit(behaviour);
 			UpdateStat(CURRENT_RANGED_UNITS, 1);
 			UpdateStat(TOTAL_RANGED_UNITS, 1);
@@ -2012,19 +2025,23 @@ Transform* Scene::SpawnBehaviour(int type, vec pos)
 	case ENEMY_MELEE:
 	{
 		behaviour = AddGameobject("Enemy Melee");
+		behaviour->GetTransform()->SetLocalPos(pos);
 		new EnemyMeleeUnit(behaviour);
 		break;
 	}
 	case ENEMY_RANGED: 
 		behaviour = AddGameobject("Enemy Melee");
+		behaviour->GetTransform()->SetLocalPos(pos);
 		new EnemyMeleeUnit(behaviour); ///Temporal
 		break;
 	case ENEMY_SUPER: 
 		behaviour = AddGameobject("Enemy Melee");
+		behaviour->GetTransform()->SetLocalPos(pos);
 		new EnemyMeleeUnit(behaviour); ///Temporal
 		break;
 	case ENEMY_SPECIAL: 
 		behaviour = AddGameobject("Enemy Melee");
+		behaviour->GetTransform()->SetLocalPos(pos);
 		new EnemyMeleeUnit(behaviour); ///Temporal
 		break;
 	case BASE_CENTER:
@@ -2103,20 +2120,22 @@ Transform* Scene::SpawnBehaviour(int type, vec pos)
 	case EDGE:
 	{
 		behaviour = AddGameobject("Edge");
+		behaviour->GetTransform()->SetLocalPos(pos);
 		new Edge(behaviour);
 		break;
 	}
 	case CAPSULE:
 	{
-		behaviour = AddGameobject("Edge");
+		behaviour = AddGameobject("Capsule");
 		new Capsule(behaviour);
-		for (std::map<double, Behaviour*>::iterator it = Behaviour::b_map.begin(); it != Behaviour::b_map.end(); ++it)
-			Event::Push(UPDATE_PATH, it->second, pos.x - 1, pos.y - 1);
+		/*for (std::map<double, Behaviour*>::iterator it = Behaviour::b_map.begin(); it != Behaviour::b_map.end(); ++it)
+			Event::Push(UPDATE_PATH, it->second, pos.x - 1, pos.y - 1);*/
 		break;
 	}
 	case SPAWNER:
 	{
 		behaviour = AddGameobject("Spawner");
+		behaviour->GetTransform()->SetLocalPos(pos);
 		new Spawner(behaviour);
 		UpdateStat(CURRENT_SPAWNERS, 1);
 		break;
@@ -2125,9 +2144,9 @@ Transform* Scene::SpawnBehaviour(int type, vec pos)
 	}
 
 	if (behaviour)
-	{
+	{		
 		ret = behaviour->GetTransform();
-		ret->SetLocalPos(pos);
+		//ret->SetLocalPos(pos);
 	}
 
 	return ret;
@@ -2310,9 +2329,10 @@ void Scene::GodMode()
 	// F5: Toggle Collision & Path Drawing
 	if (App->input->GetKey(SDL_SCANCODE_F5) == KEY_DOWN)
 	{
+		drawSelection = !drawSelection;
 		App->pathfinding.DebugShowPaths();
 		//draw_collisions = !draw_collisions;
-		App->collSystem.SetDebug();
+		App->collSystem.SetDebug();		
 	}
 
 	// F6: Toggle Zoom Locked
