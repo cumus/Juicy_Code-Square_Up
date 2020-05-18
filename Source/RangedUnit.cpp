@@ -6,6 +6,7 @@
 #include "Gameobject.h"
 #include "Component.h"
 #include "Log.h"
+#include "ParticleSystem.h"
 
 RangedUnit::RangedUnit(Gameobject* go) : B_Unit(go, UNIT_RANGED, IDLE, B_RANGED)
 {
@@ -38,14 +39,15 @@ RangedUnit::~RangedUnit()
 
 void RangedUnit::UnitAttackType()
 {
-	vec pos = game_object->GetTransform()->GetGlobalPosition();
-	shootPos = Map::F_MapToWorld(pos.x, pos.y, pos.z);
-	shootPos.first += 30.0f;
-	shootPos.second += 20.0f;
+	LOG("Ranged shot");
+	//shootPos = Map::F_MapToWorld(pos.x, pos.y, pos.z);
+	//shootPos.first += 30.0f;
+	//shootPos.second += 20.0f;
 
-	pos = atkObj->GetPos();
-	atkObjPos = Map::F_MapToWorld(pos.x, pos.y, pos.z);
-	atkObjPos.first += 30.0f;
-	atkObjPos.second += 20.0f;
-	shoot = true;
+	attackPos = atkObj->GetPos();
+	App->particleSys.AddParticle(game_object,pos,attackPos,1.0f,true);
+	//atkObjPos = Map::F_MapToWorld(pos.x, pos.y, pos.z);
+	//atkObjPos.first += 30.0f;
+	//atkObjPos.second += 20.0f;
+	//shoot = true;
 }

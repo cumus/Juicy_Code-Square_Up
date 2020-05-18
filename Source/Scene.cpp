@@ -2127,6 +2127,7 @@ Transform* Scene::SpawnBehaviour(int type, vec pos)
 	case CAPSULE:
 	{
 		behaviour = AddGameobject("Capsule");
+		behaviour->GetTransform()->SetLocalPos(pos);
 		new Capsule(behaviour);
 		/*for (std::map<double, Behaviour*>::iterator it = Behaviour::b_map.begin(); it != Behaviour::b_map.end(); ++it)
 			Event::Push(UPDATE_PATH, it->second, pos.x - 1, pos.y - 1);*/

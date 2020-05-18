@@ -119,7 +119,7 @@ void Behaviour::SetColliders()
 		}
 		case BASE_CENTER:
 		{
-			bodyColl = new Collider(game_object, { pos.x,pos.y,game_object->GetTransform()->GetLocalScaleX(),game_object->GetTransform()->GetLocalScaleY() }, TRIGGER, BUILDING_TAG, { 90,Map::GetBaseOffset() + 65,0,0 }, BODY_COLL_LAYER);
+			bodyColl = new Collider(game_object, { pos.x,pos.y,game_object->GetTransform()->GetLocalScaleX(),game_object->GetTransform()->GetLocalScaleY() }, TRIGGER, PLAYER_TAG, { 90,Map::GetBaseOffset() + 65,0,0 }, BODY_COLL_LAYER);
 			//selColl = new Collider(game_object, { pos.x,pos.y,game_object->GetTransform()->GetLocalScaleX(),game_object->GetTransform()->GetLocalScaleY() }, TRIGGER, SELECTION_TAG, { 0,0,0,0 }, UNIT_SELECTION_LAYER);
 			//selColl->SetPointsOffset({ 0,60 }, { 180,-25 }, { 50,120 }, { 130,-90 });
 			//selectableUnits.push_back(GetID());
@@ -569,7 +569,6 @@ void B_Unit::Update()
 					if (atkObj != nullptr && !atkObj->GetState() != DESTROYED) //Attack
 					{
 						DoAttack();
-						UnitAttackType();
 						Event::Push(DAMAGE, atkObj, damage);
 						LOG("Do attack");
 					}
@@ -585,8 +584,7 @@ void B_Unit::Update()
 					{
 						if (atkObj != nullptr && !atkObj->GetState() != DESTROYED) //ATTACK
 						{
-							DoAttack();
-							UnitAttackType();
+							DoAttack();						
 							Event::Push(DAMAGE, atkObj, damage);
 						}
 						atkObj = nullptr;
@@ -619,7 +617,7 @@ void B_Unit::Update()
 						LOG("Path to base");
 						goingBase = true;
 						vec centerPos = Base_Center::baseCenter->GetTransform()->GetGlobalPosition();
-						Event::Push(UPDATE_PATH, this->AsBehaviour(), int(centerPos.x) - 1, int(centerPos.y));
+						Event::Push(UPDATE_PATH, this->AsBehaviour(), int(centerPos.x), int(centerPos.y));
 						//LOG("Move to base");	
 					}
 				}
@@ -908,6 +906,7 @@ void B_Unit::Update()
 		if (drawRanges) DrawRanges();
 
 		atkObj = nullptr;
+		inRange = false;
 	}
 }
 
@@ -922,26 +921,11 @@ void B_Unit::Update()
 			 //LOG("Coll tag :%d", col.GetColliderTag());
 			 if (col.GetColliderTag() == ENEMY_TAG)
 			 {
-				 //LOG("Eenmy unit in attack range");
+				 LOG("Eenmy unit in attack range");
 				 inRange = true;
-				 //inVision = false;
 				 if (atkObj == nullptr) atkObj = col.parentGo->GetBehaviour();
 			 }
 		 }
-
-		 /*if (selfCol.GetColliderTag() == PLAYER_VISION_TAG)
-		 {
-			 //LOG("Player vision");
-			 //LOG("Coll tag :%d", selfCol.GetColliderTag());
-			 //LOG("Coll tag :%d", col.GetColliderTag());
-			 if (col.GetColliderTag() == ENEMY_TAG)
-			 {
-				 //LOG("Enemy unit in vision");
-				 //inRange = false;
-				 inVision = true;
-				 if (chaseObj == nullptr) chaseObj = col.parentGo;
-			 }
-		 }*/
 
 		 if (selfCol.GetColliderTag() == ENEMY_ATTACK_TAG)
 		 {
@@ -952,7 +936,6 @@ void B_Unit::Update()
 			 {
 				 //LOG("Player unit in attack range");
 				 inRange = true;
-				 //inVision = false;
 				 if (atkObj == nullptr) atkObj = col.parentGo->GetBehaviour();
 			 }
 		 }
@@ -965,7 +948,6 @@ void B_Unit::Update()
 			 if (col.GetColliderTag() == PLAYER_TAG)
 			 {
 				 //LOG("Player unit in vision");
-				 //inRange = false;
 				 inVision = true;
 				 if (chaseObj == nullptr) chaseObj = col.parentGo->GetBehaviour();
 			 }
@@ -986,7 +968,6 @@ void B_Unit::OnCollisionStay(Collider selfCol, Collider col)
 			{
 				//LOG("Eenmy unit in attack range stay");
 				inRange = true;
-				//inVision = false;
 				if (atkObj == nullptr) atkObj = col.parentGo->GetBehaviour();
 			}
 		}
@@ -1000,7 +981,6 @@ void B_Unit::OnCollisionStay(Collider selfCol, Collider col)
 			{
 				//LOG("Player unit in attack range stay");
 				inRange = true;
-				//inVision = false;
 				if (atkObj == nullptr) atkObj = col.parentGo->GetBehaviour();
 			}
 		}
@@ -1013,7 +993,6 @@ void B_Unit::OnCollisionStay(Collider selfCol, Collider col)
 			if (col.GetColliderTag() == PLAYER_TAG)
 			{
 				//LOG("Player unit in vision");
-				//inRange = false;
 				inVision = true;
 				chaseObj = col.parentGo->GetBehaviour();
 			}
@@ -1351,6 +1330,7 @@ void B_Unit::DrawRanges()
 
 void B_Unit::DoAttack()
 {
+	UnitAttackType();
 	std::pair<int, int> Pos(int(pos.x),int(pos.y));
 	vec objPos = atkObj->GetPos();
 	std::pair<int,int> atkPos(int(objPos.x), int(objPos.y));

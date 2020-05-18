@@ -1,4 +1,6 @@
 #include "ParticleSystem.h"
+#include "Gameobject.h"
+#include "Transform.h"
 #include "Particle.h"
 #include "Vector3.h"
 
@@ -45,6 +47,7 @@ void ParticleSystem::Draw()
 void ParticleSystem::AddParticle(Gameobject* parent, vec p, vec dest, float speed, bool player)
 {
 	Gameobject* part = new Gameobject("Particle",parent);
+	part->GetTransform()->SetLocalPos(p);
 	new Particle(part,p,dest,speed, player);
 	//particlesID++;
 }
