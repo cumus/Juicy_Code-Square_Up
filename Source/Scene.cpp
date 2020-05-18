@@ -1095,8 +1095,8 @@ void Scene::UpdateSelection()
 			App->input->GetMousePosition(x, y);
 			x += cam.x;
 			y += cam.y;
-			LOG("Mouse X:%d/Y:%d",x,y);
-			if (!Behaviour::selectableUnits.empty())
+			//LOG("Mouse X:%d/Y:%d",x,y);
+			/*if (!Behaviour::selectableUnits.empty())
 			{
 				for (std::vector<double>::iterator it = Behaviour::selectableUnits.begin(); it != Behaviour::selectableUnits.end(); ++it)
 				{
@@ -1122,34 +1122,21 @@ void Scene::UpdateSelection()
 						}
 					}					
 				}
-			}
-			/*for (std::map<double, Behaviour*>::iterator it = Behaviour::b_map.begin(); it != Behaviour::b_map.end(); ++it)
+			}*/
+			for (std::map<double, Behaviour*>::iterator it = Behaviour::b_map.begin(); it != Behaviour::b_map.end(); ++it)
 			{
 				if (it->second->GetType() == UNIT_MELEE || it->second->GetType() == GATHERER || it->second->GetType() == UNIT_RANGED
 					|| it->second->GetType() == BASE_CENTER || it->second->GetType() == TOWER || it->second->GetType() == BARRACKS
 					|| it->second->GetType() == UNIT_SUPER)
 				{
-					Collider* coll = (*it).second->GetBodyCollider();
-					if (coll != nullptr)
+					RectF coll = (*it).second->GetSelectionRect();
+					if (float(x) > coll.x && float(x) < coll.x + coll.w && float(y) > coll.y && float(y) < coll.y + coll.h)
 					{
-						IsoLinesCollider points = coll->GetIsoPoints();
-						//LOG("Mouse X:%d/Y:%d", x, y);
-						//LOG("Unit Top X:%f/Y:%f  Bot X:%f/Y:%f  Left X:%f/Y:%f   Right X:%f/Y:%f",points.top.first,points.top.second,points.bot.first,points.bot.second,
-							//points.left.first,points.left.second,points.right.first,points.right.second);
-
-						if (JMath::PointInsideTriangle({float(x),float(y)}, points.top, points.left, points.right))
-						{
-							SetSelection(it->second->GetGameobject(), true);
-							break;
-						}
-						else if (JMath::PointInsideTriangle({float(x),float(y)}, points.bot, points.left, points.right))
-						{
-							SetSelection(it->second->GetGameobject(), true);
-							break;
-						}
-					}
+						SetSelection(it->second->GetGameobject(), true);
+						break;
+					}					
 				}
-			}*/
+			}
 		}
 	}
 	

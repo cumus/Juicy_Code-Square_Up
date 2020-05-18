@@ -110,6 +110,7 @@ public:
 	std::vector<iPoint> GetTilesInsideRadius();
 	Collider* GetBodyCollider();
 	Collider* GetSelectionCollider();
+	RectF GetSelectionRect();
 	virtual void UpdatePath(int x,int y) {}
 	virtual void AfterDamageAction() {}
 	virtual void OnRightClick(vec pos, vec modPos) {}
@@ -161,6 +162,8 @@ public:
 	Collider* visionColl = nullptr;
 	Collider* attackColl = nullptr;
 	Collider* selColl = nullptr;
+	RectF selectionRect;
+	std::pair<int,int> selectionOffset;
 	std::pair<float, float> baseCollOffset;
 	std::pair<float, float> visionCollOffset;
 	std::pair<float, float>	attackCollOffset;
