@@ -6,6 +6,7 @@
 #include <map>
 
 class Transform;
+class Sprite;
 
 class Minimap : public UI_Component
 {
@@ -23,6 +24,7 @@ private:
 
 	static Minimap* minimap;
 
+	Sprite* back;
 	int minimap_texture;
 	int hud_texture;
 	float map_scale;

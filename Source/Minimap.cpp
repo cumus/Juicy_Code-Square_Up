@@ -5,6 +5,7 @@
 #include "Input.h"
 #include "Transform.h"
 #include "Behaviour.h"
+#include "Sprite.h"
 #include "Log.h"
 #include "JuicyMath.h"
 
@@ -18,6 +19,7 @@ Minimap::Minimap(Gameobject* go) : UI_Component(go, go->GetUIParent(), UI_MINIMA
 	mouse_moving = false;
 
 	// Setup Minimap
+	back = new Sprite(go, App->tex.Load("Assets/textures/minimap.png"), { 0, 0, 1338, 668 }, BACK_SCENE, { 0, -50, 1.f, 1.f });
 	map_scale = 0.5f;
 	map_size = Map::GetMapSize_I();
     tile_size = Map::GetTileSize_I();

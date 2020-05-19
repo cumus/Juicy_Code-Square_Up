@@ -1,12 +1,13 @@
 #ifndef __PARTICLE_H__
 #define __PARTICLE_H__
 
-#include "Sprite.h"
 #include "SDL/include/SDL.h"
+#include "Component.h"
 #include "Vector3.h"
 
 #define MIN_LIFE_TO_INTERPOLATE 15
 
+class Sprite;
 
 class Particle : public Component
 {
