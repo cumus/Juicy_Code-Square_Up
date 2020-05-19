@@ -19,8 +19,9 @@ Particle::Particle(Gameobject* go,vec p, vec d, float s, bool ply, ComponentType
 	animationSpeed = 0.8f;
 	spriteNum = 0;
 	player = ply;
-	if(player) img = new Sprite(go, App->tex.Load("Assets/textures/ally-enemy-shot.png"), { 0, 0, 30, 30 }, BACK_SCENE, { 0, -50, 1.f, 1.f });
-	else img = new Sprite(go, App->tex.Load("Assets/textures/ally-enemy-shot.png"), { 0, 32, 30, 30 }, BACK_SCENE, { 0, -50, 1.f, 1.f });
+	texID = App->tex.Load("Assets/textures/particle_shot.png");
+	if(player) img = new Sprite(go, texID, { 0, 0, 30, 30 }, FRONT_SCENE);
+	else img = new Sprite(go, texID, { 0, 32, 30, 30 }, FRONT_SCENE);
 	direction = {abs(p.x- destination.x),abs(p.y- destination.y),0};
 	velocityMod = { direction.x / direction.y, direction.y/direction.x };
 	t = go->GetTransform();
@@ -35,6 +36,8 @@ void Particle::Update()
 	float d = (t->GetGlobalPosition().x - destination.x)+(t->GetGlobalPosition().y - destination.y);
 	if (d > 1)
 	{
+		//LOG("move particle");
+		//LOG("part pos X:%f/Y:%f", t->GetGlobalPosition().x, t->GetGlobalPosition().y);
 		game_object->GetTransform()->MoveX(velocityMod.first * speed * App->time.GetGameDeltaTime());//Move x
 		game_object->GetTransform()->MoveY(velocityMod.second * speed * App->time.GetGameDeltaTime());//Move y
 
@@ -43,8 +46,8 @@ void Particle::Update()
 			if (spriteNum < 8) spriteNum++;
 			else spriteNum = 0;
 
-			if(player) img->SetSection({30 * spriteNum,0,30,30});
-			else img->SetSection({30 * spriteNum,32,30,30});
+			//if(player) img->SetSection({30 * spriteNum,0,30,30});
+			//else img->SetSection({30 * spriteNum,32,30,30});
 			animCounter = 0;
 		}
 		else
@@ -54,6 +57,7 @@ void Particle::Update()
 	}
 	else
 	{
+		LOG("Img inactive");
 		img->SetInactive();
 		alive = false;
 	}

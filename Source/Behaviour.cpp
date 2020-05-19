@@ -1545,7 +1545,7 @@ void B_Unit::OnRightClick(vec posClick, vec movPos)
 				tilesVisited.clear();
 			}
 		}
-		App->particleSys.AddParticle(game_object, pos, {movPos.x,movPos.y}, 1.0f, true);
+		App->particleSys.AddParticle(pos, {movPos.x,movPos.y}, 0.5f, true);
 	} 
 }
  

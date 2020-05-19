@@ -26,6 +26,7 @@ private:
 	std::pair<float, float> velocityMod;
 	float speed;
 	bool alive;
+	int texID;
 	Gameobject* goParent;
 	Sprite* img;
 	Transform* t;

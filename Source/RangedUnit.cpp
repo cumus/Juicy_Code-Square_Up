@@ -35,7 +35,7 @@ void RangedUnit::UnitAttackType()
 	//shootPos.second += 20.0f;
 
 	attackPos = atkObj->GetPos();
-	App->particleSys.AddParticle(game_object,pos,attackPos,1.0f,true);
+	App->particleSys.AddParticle(pos,attackPos,1.0f,true);
 	//atkObjPos = Map::F_MapToWorld(pos.x, pos.y, pos.z);
 	//atkObjPos.first += 30.0f;
 	//atkObjPos.second += 20.0f;

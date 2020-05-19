@@ -3,6 +3,7 @@
 #include "Transform.h"
 #include "Particle.h"
 #include "Vector3.h"
+#include "Log.h"
 
 #include <vector>
 
@@ -44,9 +45,10 @@ void ParticleSystem::Draw()
 
 }
 
-void ParticleSystem::AddParticle(Gameobject* parent, vec p, vec dest, float speed, bool player)
+void ParticleSystem::AddParticle(vec p, vec dest, float speed, bool player)
 {
-	Gameobject* part = new Gameobject("Particle",parent);
+	LOG("Create new particle");
+	Gameobject* part = new Gameobject("Particle");
 	part->GetTransform()->SetLocalPos(p);
 	new Particle(part,p,dest,speed, player);
 	//particlesID++;
