@@ -19,6 +19,7 @@
 #include "RangedUnit.h"
 #include "JuicyMath.h"
 #include "Input.h"
+#include "ParticleSystem.h"
 
 #include <vector>
 
@@ -150,7 +151,7 @@ void Behaviour::SetColliders()
 		}
 		case EDGE:
 		{
-			bodyColl = new Collider(game_object, { pos.x,pos.y,game_object->GetTransform()->GetLocalScaleX(),game_object->GetTransform()->GetLocalScaleY() }, TRIGGER, ENEMY_TAG, { 0,Map::GetBaseOffset(),0,0 }, BODY_COLL_LAYER);
+			//bodyColl = new Collider(game_object, { pos.x,pos.y,game_object->GetTransform()->GetLocalScaleX(),game_object->GetTransform()->GetLocalScaleY() }, TRIGGER, ENEMY_TAG, { 0,Map::GetBaseOffset(),0,0 }, BODY_COLL_LAYER);
 			//selColl = new Collider(game_object, { pos.x,pos.y,game_object->GetTransform()->GetLocalScaleX(),game_object->GetTransform()->GetLocalScaleY() }, TRIGGER, ENEMY_TAG, { 0,0,0,0 }, UNIT_SELECTION_LAYER);
 			//selColl->SetPointsOffset({-65, -20 }, { 40,65 }, { 10,-5 }, { -35,45 });
 			//selectableUnits.push_back(GetID());
@@ -161,7 +162,7 @@ void Behaviour::SetColliders()
 		}
 		case CAPSULE:
 		{
-			bodyColl = new Collider(game_object, { pos.x,pos.y,game_object->GetTransform()->GetLocalScaleX(),game_object->GetTransform()->GetLocalScaleY() }, TRIGGER, ENEMY_TAG, { 0,Map::GetBaseOffset(),0,0 }, BODY_COLL_LAYER);
+			//bodyColl = new Collider(game_object, { pos.x,pos.y,game_object->GetTransform()->GetLocalScaleX(),game_object->GetTransform()->GetLocalScaleY() }, TRIGGER, ENEMY_TAG, { 0,Map::GetBaseOffset(),0,0 }, BODY_COLL_LAYER);
 			break;
 		}
 		case SPAWNER:
@@ -220,14 +221,17 @@ void Behaviour::RecieveEvent(const Event& e)
 	case SHOW_SPRITE: ActivateSprites(); break;
 	case HIDE_SPRITE: DesactivateSprites(); break;
 	case CHECK_FOW: CheckFoWMap(e.data1.AsBool()); break;
+	case ON_COLLISION:
+		OnCollision(*Component::ComponentsList[e.data1.AsDouble()]->AsCollider(), *Component::ComponentsList[e.data2.AsDouble()]->AsCollider());
+		break;
 	case ON_COLL_ENTER:
-		OnCollisionEnter(*Component::ComponentsList[e.data1.AsDouble()]->AsCollider(), *Component::ComponentsList[e.data2.AsDouble()]->AsCollider());
+		//OnCollisionEnter(*Component::ComponentsList[e.data1.AsDouble()]->AsCollider(), *Component::ComponentsList[e.data2.AsDouble()]->AsCollider());
 		break;
 	case ON_COLL_STAY:
-		OnCollisionStay(*Component::ComponentsList[e.data1.AsDouble()]->AsCollider(), *Component::ComponentsList[e.data2.AsDouble()]->AsCollider());
+		//OnCollisionStay(*Component::ComponentsList[e.data1.AsDouble()]->AsCollider(), *Component::ComponentsList[e.data2.AsDouble()]->AsCollider());
 		break;
 	case ON_COLL_EXIT:
-		OnCollisionExit(*Component::ComponentsList[e.data1.AsDouble()]->AsCollider(), *Component::ComponentsList[e.data2.AsDouble()]->AsCollider());
+		//OnCollisionExit(*Component::ComponentsList[e.data1.AsDouble()]->AsCollider(), *Component::ComponentsList[e.data2.AsDouble()]->AsCollider());
 		break;
 	}
 }
@@ -562,6 +566,7 @@ void B_Unit::Update()
 	{
 		if (inRange) //ATTACK
 		{
+			//LOG("In range");
 			if (type == ENEMY_MELEE || type == ENEMY_RANGED || type == ENEMY_SUPER || type == ENEMY_SPECIAL)
 			{
 				if (atkTimer > atkTime)
@@ -595,14 +600,15 @@ void B_Unit::Update()
 		}
 		else
 		{
+			//LOG("Not in range");
 			if (type == ENEMY_MELEE || type == ENEMY_RANGED || type == ENEMY_SUPER || type == ENEMY_SPECIAL)
 			{
 				if (inVision)//CHASE
 				{
-					//LOG("Player in sight");
+					//LOG("In vision");
 					if (chaseObj != nullptr && !chasing)
 					{
-						LOG("Start player chase");
+						//LOG("Start player chase");
 						vec pos = chaseObj->GetPos();
 						Event::Push(UPDATE_PATH, this->AsBehaviour(), int(pos.x), int(pos.y));
 						chasing = true;
@@ -614,7 +620,7 @@ void B_Unit::Update()
 				{
 					if (Base_Center::baseCenter != nullptr && !goingBase && !chasing)//GO TO BASE
 					{
-						LOG("Path to base");
+						//LOG("Path to base");
 						goingBase = true;
 						vec centerPos = Base_Center::baseCenter->GetTransform()->GetGlobalPosition();
 						Event::Push(UPDATE_PATH, this->AsBehaviour(), int(centerPos.x), int(centerPos.y));
@@ -681,7 +687,7 @@ void B_Unit::Update()
 				moveOrder = false;
 				move = false;
 				chasing = false;
-				spriteState = IDLE;
+				if(!inRange) spriteState = IDLE;
 			}
 		}
 
@@ -906,11 +912,52 @@ void B_Unit::Update()
 		if (drawRanges) DrawRanges();
 
 		atkObj = nullptr;
+		chaseObj = nullptr;
 		inRange = false;
+		inVision = false;
 	}
 }
 
- void B_Unit::OnCollisionEnter(Collider selfCol, Collider col)
+void B_Unit::OnCollision(Collider selfCol, Collider col)
+{
+	if (!col.parentGo->GetBehaviour()->GetState() != DESTROYED)
+	{
+		if (selfCol.GetColliderTag() == PLAYER_ATTACK_TAG)
+		{
+			//LOG("Atk");
+			if (col.GetColliderTag() == ENEMY_TAG)
+			{
+				//LOG("Eenmy unit in attack range");
+				inRange = true;
+				atkObj = col.parentGo->GetBehaviour();
+			}
+		}
+
+		if (selfCol.GetColliderTag() == ENEMY_ATTACK_TAG)
+		{
+			//LOG("Atk");
+			if (col.GetColliderTag() == PLAYER_TAG)
+			{
+				//LOG("Player unit in attack range");
+				inRange = true;
+				atkObj = col.parentGo->GetBehaviour();
+			}
+		}
+
+		if (selfCol.GetColliderTag() == ENEMY_VISION_TAG)
+		{
+			//LOG("Enemy vision");
+			if (col.GetColliderTag() == PLAYER_TAG)
+			{
+				//LOG("Player unit in vision");
+				inVision = true;
+				if (chaseObj == nullptr) chaseObj = col.parentGo->GetBehaviour();
+			}
+		}
+	}
+}
+
+void B_Unit::OnCollisionEnter(Collider selfCol, Collider col)
 {
 	 if (!col.parentGo->GetBehaviour()->GetState() != DESTROYED)
 	 {
@@ -1335,8 +1382,6 @@ void B_Unit::DoAttack()
 	vec objPos = atkObj->GetPos();
 	std::pair<int,int> atkPos(int(objPos.x), int(objPos.y));
 	arriveDestination = true;
-	//LOG("Pos X:%d/Y:%d", Pos.first, Pos.second);
-	//LOG("Atkpos X:%d/Y:%d", atkPos.first, atkPos.second);
 
 	audio->Play(attackFX);
 	if (atkPos.first == Pos.first && atkPos.second < Pos.second)//N
@@ -1500,6 +1545,7 @@ void B_Unit::OnRightClick(vec posClick, vec movPos)
 				tilesVisited.clear();
 			}
 		}
+		App->particleSys.AddParticle(game_object, pos, {movPos.x,movPos.y}, 1.0f, true);
 	} 
 }
  

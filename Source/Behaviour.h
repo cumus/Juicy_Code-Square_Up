@@ -116,7 +116,6 @@ public:
 	virtual void OnRightClick(vec pos, vec modPos) {}
 	virtual void DoAttack() {}
 	virtual void OnDestroy(){}
-	//virtual void OnGetImpulse(float x,float y) {}
 	virtual void create_bar() {}
 	virtual void update_health_ui() {}
 	virtual void CreatePanel() {}
@@ -126,6 +125,7 @@ public:
 	virtual void Upgrade() {}
 	virtual void UpdateWalkabilityTiles() {}
 	virtual void FreeWalkabilityTiles() {}
+	virtual void OnCollision(Collider selfCol, Collider col) {}
 	virtual void OnCollisionEnter(Collider selfCol, Collider col) {}
 	virtual void OnCollisionStay(Collider selfCol, Collider col) {}
 	virtual void OnCollisionExit(Collider selfCol, Collider col) {}
@@ -262,15 +262,13 @@ public:
 	void DoAttack() override;
 	void OnDestroy() override;
 	void UpdatePath(int x, int y) override;
-	//void OnGetImpulse(float x, float y) override;
-	//void CheckAtkRange();
 	void CheckPathTiles();
-	//void CheckCollision();
 	void ChangeState();
 	void CheckDirection(fPoint actualPos);
 	void ShootRaycast();
 	void DrawRanges();
 	virtual void UnitAttackType() {}
+	void OnCollision(Collider selfCol, Collider col) override;
 	void OnCollisionEnter(Collider selfCol, Collider col) override;
 	void OnCollisionStay(Collider selfCol, Collider col) override;
 	void OnCollisionExit(Collider selfCol, Collider col) override;

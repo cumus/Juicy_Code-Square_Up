@@ -25,17 +25,7 @@ RangedUnit::RangedUnit(Gameobject* go) : B_Unit(go, UNIT_RANGED, IDLE, B_RANGED)
 	SetColliders();
 }
 
-RangedUnit::~RangedUnit()
-{
-	/*Transform* t = game_object->GetTransform();
-	if (t)
-	{
-		vec pos = t->GetGlobalPosition();
-		App->pathfinding.SetWalkabilityTile(int(pos.x), int(pos.y), true);
-	}
-
-	b_map.erase(GetID());*/
-}
+RangedUnit::~RangedUnit() {}
 
 void RangedUnit::UnitAttackType()
 {

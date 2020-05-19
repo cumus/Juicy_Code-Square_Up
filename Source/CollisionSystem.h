@@ -28,10 +28,8 @@ public:
 	void Clear();
 	Quadtree* GetQuadTree();
 	
-
 private:
 	void Resolve();
-	//void ProcessCollisions();
 
 private:
 	bool collisionLayers[MAX_COLLISION_LAYERS][MAX_COLLISION_LAYERS]; //Store layers collisions

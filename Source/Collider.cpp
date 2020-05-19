@@ -65,25 +65,6 @@ void Collider::SetPosition()
         isoDraw.top.second += topOffset.second;
         isoDraw.bot.second += botOffset.second;
     }
-    //boundary.x -= boundary.w/4 - offset.x;
-    //boundary.y += Map::GetBaseOffset() - boundary.h/2;
-    //LOG("Bound pos X:%f/Y:%f",boundary.x,boundary.y);
-}
-
-void Collider::ConvertToIsoPoints()
-{  
-    isoDraw.left = { boundary.x - boundary.w * 0.5f + tileSize.first * 0.5f, boundary.y };
-    isoDraw.bot = { boundary.x + tileSize.first * 0.5f, boundary.y - boundary.h * 0.5f };
-    isoDraw.right = { boundary.x + boundary.w * 0.5f + tileSize.first * 0.5f, boundary.y };
-    isoDraw.top = { boundary.x + tileSize.first * 0.5f, boundary.y + boundary.h * 0.5f };
-    isoDraw.right.first += offset.x;
-    isoDraw.left.first += offset.x;
-    isoDraw.top.first += offset.x;
-    isoDraw.bot.first += offset.x;
-    isoDraw.right.second += offset.y;
-    isoDraw.left.second += offset.y;
-    isoDraw.top.second += offset.y;
-    isoDraw.bot.second += offset.y;
 }
 
 void Collider::SetPointsOffset(std::pair<float, float> top, std::pair<float, float> bot, std::pair<float, float> right, std::pair<float, float> left)
@@ -99,34 +80,27 @@ IsoLinesCollider Collider::GetIsoPoints() { return isoDraw; }
 Manifold Collider::Intersects(Collider* other)
 {
     Manifold m;
-    //const RectF thisColl = GetWorldColliderBounds();
-    //const RectF otherColl = other->GetWorldColliderBounds();
     m.colliding = false;
-    m.other = other->GetIsoPoints();
     m.overX = 0;
     m.overY = 0;
     //LOG("This coll W:%f/H:%f",thisColl.w,thisColl.h);
     //LOG("Other coll W:%f/H:%f", otherColl.w, otherColl.h);
 
-    IsoLinesCollider otherColl = other->GetIsoPoints();
+    SDL_Rect thisRect = GetColliderBounds();
+    SDL_Rect rect = other->GetColliderBounds();
+    m.otherColl = rect;
 
-    /*fPoint topRight1(thisColl.x+thisColl.w, thisColl.y);
-    fPoint topRight2(otherColl.x+otherColl.w, otherColl.y);
-    fPoint bottomLeft1(thisColl.x, thisColl.y + thisColl.h);
-    fPoint bottomLeft2(otherColl.x, otherColl.y + otherColl.h);
-    //LOG("This coll tr X:%f/Y:%f    bl X:%f/Y:%f", topRight1.x, topRight1.y, bottomLeft1.x, bottomLeft1.y);
-    //LOG("Other  coll tr X:%f/Y:%f    bl X:%f/Y:%f", topRight2.x, topRight2.y, bottomLeft2.x, bottomLeft2.y);
-    if (topRight1.y > bottomLeft2.y || bottomLeft1.y < topRight2.y ||
-        topRight1.x < bottomLeft2.x || bottomLeft1.x > topRight2.x) //Non colliding
+    if (thisRect.x > rect.x + rect.w || thisRect.x + thisRect.w < rect.x || thisRect.y > rect.y + rect.h || thisRect.y + thisRect.h < rect.y) m.colliding = false;
+    else
     {
-        //LOG("Non colliding");
-        m.colliding = false;
-        m.other = nullptr;
-    }*/
+        m.colliding = true;
+        m.overX = (rect.x+rect.w/2)-(thisRect.x + thisRect.w / 2);
+        m.overY = (rect.y + rect.h / 2) - (thisRect.y + thisRect.h / 2);
+    }
 
     //LOG("This coll top X:%f/Y:%f     bot X:%f/Y:%f", isoDraw.top.first, isoDraw.bot.second, isoDraw.bot.first, isoDraw.bot.second);
     //LOG("Other  coll top X:%f/Y:%f    bot X:%f/Y:%f", otherColl.top.first, otherColl.top.second, otherColl.bot.first, otherColl.bot.second);
-    if (JMath::PointInsideTriangle(isoDraw.top,otherColl.top,otherColl.left,otherColl.right))
+    /*if (JMath::PointInsideTriangle(isoDraw.top,otherColl.top,otherColl.left,otherColl.right))
     {
         m.colliding = true;
         m.other = other->GetIsoPoints();
@@ -176,7 +150,7 @@ Manifold Collider::Intersects(Collider* other)
         m.colliding = true;
         m.other = other->GetIsoPoints();
         m.overX = otherColl.right.first - isoDraw.left.first;
-    }
+    }*/
     return m;
 }
 
@@ -185,48 +159,21 @@ void Collider::ResolveOverlap(Manifold& m)
     if (collType != TRIGGER)
     {
         Transform* t = game_object->GetTransform();
-        //vec pos = t->GetGlobalPosition();
-        //const RectF rect1 = GetColliderBounds();
-        //IsoLinesCollider otherColl = m.other;
-        //float xDif = isoDraw.top.first - otherColl.top.first;
-        //float yDif = isoDraw.left.second - otherColl.left.second;
-
-
         //LOG("Xdif: %f/Ydif:%f",xDif,yDif);
-        //LOG("Move res %f",res);
-        //t->MoveX(xDif/6 * App->time.GetGameDeltaTime());//Move x      
+        //LOG("Move res %f",res); 
 
         //LOG("Move res %f", res);
-        //t->MoveY(yDif/6 * App->time.GetGameDeltaTime());//Move y
-
-        t->MoveX(m.overX/4 * App->time.GetGameDeltaTime());//Move x      
+        std::pair<float, float> mov = Map::F_WorldToMap(m.overX,m.overY);
+        t->MoveX(-mov.first * App->time.GetGameDeltaTime());//Move x      
 
         //LOG("Move res %f", res);
-        t->MoveY(m.overY/4 * App->time.GetGameDeltaTime());//Move y
+        t->MoveY(-mov.second * App->time.GetGameDeltaTime());//Move y
         
         //LOG("New pos X:%f/Y:%f",pos.x,pos.y);
     }  
 }
 
-void Collider::SaveCollision(double id)
-{    
-    if (!GetCollisionState(id))
-    {
-        collisions.push_back(id);
-    }    
-}
-
 double Collider::GetGoID() { return GoID; }
-
-bool Collider::GetCollisionState(double ID)
-{
-    bool ret = false;
-    for (std::vector<double>::iterator it = collisions.begin(); it != collisions.end(); ++it)
-    {
-        if (ID == *it) ret = true;
-    }
-    return ret;
-}
 
 void Collider::DeleteCollision(double ID)
 {
@@ -238,19 +185,6 @@ void Collider::DeleteCollision(double ID)
             break;
         }
     }
-}
-
-RectF Collider::GetISOColliderBounds()
-{ 
-    std::pair<float, float> pos = Map::F_WorldToMap(boundary.x, boundary.y);
-    std::pair<float, float> length = Map::F_WorldToMap(boundary.x + boundary.w, boundary.y + boundary.h);
-    return  RectF({ pos.first,pos.second,length.first,length.second});
-}
-
-RectF Collider::GetWorldColliderBounds()
-{
-    std::pair<float, float> pos = Map::F_MapToWorld(boundary.x, boundary.y, 1.0f);
-    return  RectF({ pos.first,pos.second,boundary.w,boundary.h });
 }
 
 void Collider::SetLayer(CollisionLayer lay) { layer = lay; }
@@ -267,7 +201,11 @@ void Collider::SetColliderBounds(RectF& rect)
     boundary.h = tile_size.second *= s.y;
 }
 
-RectF Collider::GetColliderBounds() { return boundary; }
+SDL_Rect Collider::GetColliderBounds()
+{
+    SDL_Rect Rect = { int(isoDraw.left.first),int(isoDraw.bot.second),int(boundary.w),int(boundary.h) };
+    return Rect;
+}
 
 void Collider::SetOffset(RectF off) { offset = off;}
 

@@ -58,8 +58,7 @@ struct IsoLinesCollider
 struct Manifold
 {
 	bool colliding = false;
-	//const RectF* other;
-	IsoLinesCollider other;
+	SDL_Rect otherColl;
 	float overX, overY;
 };
 
@@ -77,24 +76,18 @@ public:
 	void SetLayer(CollisionLayer lay);
 	CollisionLayer GetCollLayer();
 	void SetColliderBounds(RectF& rect);
-	RectF GetColliderBounds();
-	RectF GetISOColliderBounds();
-	RectF GetWorldColliderBounds();
+	SDL_Rect GetColliderBounds();
 	void SetOffset(RectF off);
 	void SetCollType(ColliderType t);
 	ColliderType GetCollType();
 	void SetColliderTag(ColliderTag tg);
 	ColliderTag GetColliderTag();
-	void SaveCollision(double ID);
-	bool GetCollisionState(double ID);
 	void DeleteCollision(double ID);
 	void SetPosition();
 	IsoLinesCollider GetIsoPoints();
 	double GetGoID();
 	void SetPointsOffset(std::pair<float,float> top,std::pair<float,float> bot,std::pair<float,float> right,std::pair<float,float> left);
 
-private:
-	void ConvertToIsoPoints();
 
 public:
 	bool selectionColl;

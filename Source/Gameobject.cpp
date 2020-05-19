@@ -177,6 +177,15 @@ void Gameobject::RecieveEvent(const Event & e)
 					Cvar(e.data2));
 		break;
 	}
+	case ON_COLLISION:
+	{
+		for (std::vector<Component*>::iterator component = components.begin(); component != components.end(); ++component)
+			if ((*component)->IsActive())
+				Event::Push(ON_COLLISION, *component,
+					Cvar(e.data1),
+					Cvar(e.data2));
+		break;
+	}
 	case ON_COLL_ENTER:
 	{
 		for (std::vector<Component*>::iterator component = components.begin(); component != components.end(); ++component)

@@ -53,7 +53,7 @@ enum EventType : char
 
 	//// Scene states
 	//NEXT_STATE,
-	
+
 	// Gameobjects
 	ON_PLAY,
 	ON_PAUSE,
@@ -101,6 +101,7 @@ enum EventType : char
 	SET_INACTIVE,
 
 	//Collisions
+	ON_COLLISION,
 	ON_COLL_ENTER,
 	ON_COLL_EXIT,
 	ON_COLL_STAY,
