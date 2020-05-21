@@ -2,6 +2,7 @@
 #define __COMPONENT_H__
 
 #include "EventListener.h"
+#include "PugiXml/src/pugixml.hpp"
 #include <map>
 
 enum ComponentType
@@ -57,6 +58,8 @@ public:
 	virtual void Update() {}
 	virtual void PostUpdate() {}
 
+	virtual void Load(pugi::xml_node& node) {}
+	virtual void Save(pugi::xml_node& node) const {}
 
 	bool IsActive() const;
 

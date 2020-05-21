@@ -2168,6 +2168,42 @@ int Scene::GetStat(int stat)
 	return player_stats[stat];
 }
 
+void Scene::SaveGameNow()
+{
+	pugi::xml_document doc;
+
+	// Dump Scene values onto doc
+	pugi::xml_node scene_node = doc.append_child("Scene");
+	scene_node.append_attribute("god_mode").set_value(god_mode);
+	scene_node.append_attribute("no_damage").set_value(no_damage);
+	scene_node.append_attribute("draw_collisions").set_value(draw_collisions);
+	scene_node.append_attribute("drawSelection").set_value(drawSelection);
+
+	// Dump GO content onto doc
+	root.Save(scene_node.append_child("Hierarchy"));
+
+	if (!doc.save_file((std::string(App->files.GetBasePath()) + "Assets/save_file.xml").c_str(), "\t", 1u, pugi::encoding_utf8))
+		LOG("Error saving scene");
+}
+
+void Scene::LoadGameNow()
+{
+	pugi::xml_document doc;
+	if (App->files.LoadXML("Assets/save_file.xml", doc))
+	{
+		// Clear Scene content
+		ResetScene();
+
+		// Set scene values
+		pugi::xml_node scene_node = doc.child("Scene Data");
+
+		// Set Hierarchy
+		root.Load(doc.child("Hierarchy"));
+	}
+	else
+		LOG("Error loading scene");
+}
+
 Gameobject* Scene::GetRoot()
 {
 	return &root;
@@ -2352,7 +2388,7 @@ void Scene::GodMode()
 	}
 
 	// SPACE: Swap map orientation
-	if (App->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN) Map::SwapMapType();
+	if (App->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN) Event::Push(REQUEST_SAVE, App); // Map::SwapMapType();
 
 	// DEL: Remove Selected Gameobject/s
 	if (App->input->GetKey(SDL_SCANCODE_DELETE) == KEY_DOWN)

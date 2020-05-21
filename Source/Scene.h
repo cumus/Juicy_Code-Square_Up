@@ -124,6 +124,10 @@ public:
 	static bool DrawCollisions();
 	static int GetStat(int stat);
 
+	// Scene Serialization
+	void SaveGameNow();
+	void LoadGameNow();
+
 private:
 
 	void GodMode();

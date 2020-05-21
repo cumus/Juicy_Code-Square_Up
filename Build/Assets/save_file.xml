@@ -1,0 +1,792 @@
+<?xml version="1.0"?>
+<Scene god_mode="true" no_damage="true" draw_collisions="false" drawSelection="false">
+	<Hierarchy>
+		<Gameobject name="root" id="1" active="true" isStatic="false">
+			<Components count="1" />
+			<Childs count="39">
+				<Gameobject name="Canvas" id="13" active="true" isStatic="false">
+					<Components count="1" />
+					<Childs count="8">
+						<Gameobject name="Left bar" id="14" active="true" isStatic="false">
+							<Components count="1" />
+							<Childs count="8">
+								<Gameobject name="gatherer counter icon" id="15" active="true" isStatic="false">
+									<Components count="1" />
+									<Childs count="0" />
+								</Gameobject>
+								<Gameobject name="gatherer counter" id="16" active="true" isStatic="false">
+									<Components count="1" />
+									<Childs count="0" />
+								</Gameobject>
+								<Gameobject name="melee counter icon" id="17" active="true" isStatic="false">
+									<Components count="1" />
+									<Childs count="0" />
+								</Gameobject>
+								<Gameobject name="melee counter" id="18" active="true" isStatic="false">
+									<Components count="1" />
+									<Childs count="0" />
+								</Gameobject>
+								<Gameobject name="rangered counter icon" id="19" active="true" isStatic="false">
+									<Components count="1" />
+									<Childs count="0" />
+								</Gameobject>
+								<Gameobject name="rangered counter" id="20" active="true" isStatic="false">
+									<Components count="1" />
+									<Childs count="0" />
+								</Gameobject>
+								<Gameobject name="turret counter icon" id="21" active="true" isStatic="false">
+									<Components count="1" />
+									<Childs count="0" />
+								</Gameobject>
+								<Gameobject name="turret counter" id="22" active="true" isStatic="false">
+									<Components count="1" />
+									<Childs count="0" />
+								</Gameobject>
+							</Childs>
+						</Gameobject>
+						<Gameobject name="Right bar" id="23" active="true" isStatic="false">
+							<Components count="1" />
+							<Childs count="6">
+								<Gameobject name="Text Edge" id="24" active="true" isStatic="false">
+									<Components count="2" />
+									<Childs count="0" />
+								</Gameobject>
+								<Gameobject name="Mob Drop Value" id="25" active="true" isStatic="false">
+									<Components count="1" />
+									<Childs count="0" />
+								</Gameobject>
+								<Gameobject name="Text Mob Drop" id="26" active="true" isStatic="false">
+									<Components count="1" />
+									<Childs count="0" />
+								</Gameobject>
+								<Gameobject name="Mob Drop Value" id="27" active="true" isStatic="false">
+									<Components count="1" />
+									<Childs count="0" />
+								</Gameobject>
+								<Gameobject name="Text Edge" id="28" active="true" isStatic="false">
+									<Components count="1" />
+									<Childs count="0" />
+								</Gameobject>
+								<Gameobject name="Gold Value" id="29" active="true" isStatic="false">
+									<Components count="1" />
+									<Childs count="0" />
+								</Gameobject>
+							</Childs>
+						</Gameobject>
+						<Gameobject name="Pause button" id="30" active="true" isStatic="false">
+							<Components count="1" />
+							<Childs count="0" />
+						</Gameobject>
+						<Gameobject name="Minimap" id="31" active="true" isStatic="false">
+							<Components count="2" />
+							<Childs count="0" />
+						</Gameobject>
+						<Gameobject name="Minimap" id="32" active="true" isStatic="false">
+							<Components count="2" />
+							<Childs count="0" />
+						</Gameobject>
+						<Gameobject name="lore" id="33" active="true" isStatic="false">
+							<Components count="3" />
+							<Childs count="0" />
+						</Gameobject>
+						<Gameobject name="Main Base Bar" id="40" active="true" isStatic="false">
+							<Components count="1" />
+							<Childs count="2">
+								<Gameobject name="red bar health" id="41" active="true" isStatic="false">
+									<Components count="1" />
+									<Childs count="0" />
+								</Gameobject>
+								<Gameobject name="green bar health" id="42" active="true" isStatic="false">
+									<Components count="1" />
+									<Childs count="0" />
+								</Gameobject>
+							</Childs>
+						</Gameobject>
+						<Gameobject name="Main Base Build Panel" id="43" active="false" isStatic="false">
+							<Components count="5" />
+							<Childs count="0" />
+						</Gameobject>
+					</Childs>
+				</Gameobject>
+				<Gameobject name="Base Center" id="34" active="true" isStatic="true">
+					<Components count="6" />
+					<Childs count="3">
+						<Gameobject name="life_bar" id="35" active="false" isStatic="false">
+							<Components count="2" />
+							<Childs count="2">
+								<Gameobject name="GreenBar" id="36" active="true" isStatic="false">
+									<Components count="2" />
+									<Childs count="0" />
+								</Gameobject>
+								<Gameobject name="Upgrades" id="37" active="true" isStatic="false">
+									<Components count="2" />
+									<Childs count="0" />
+								</Gameobject>
+							</Childs>
+						</Gameobject>
+						<Gameobject name="Creation Bar" id="38" active="false" isStatic="false">
+							<Components count="3" />
+							<Childs count="0" />
+						</Gameobject>
+						<Gameobject name="Unit Icon" id="39" active="false" isStatic="false">
+							<Components count="2" />
+							<Childs count="0" />
+						</Gameobject>
+					</Childs>
+				</Gameobject>
+				<Gameobject name="Builder image" id="44" active="false" isStatic="false">
+					<Components count="2" />
+					<Childs count="0" />
+				</Gameobject>
+				<Gameobject name="Edge" id="45" active="true" isStatic="true">
+					<Components count="5" />
+					<Childs count="1">
+						<Gameobject name="life_bar" id="46" active="false" isStatic="false">
+							<Components count="2" />
+							<Childs count="2">
+								<Gameobject name="GreenBar" id="47" active="true" isStatic="false">
+									<Components count="2" />
+									<Childs count="0" />
+								</Gameobject>
+								<Gameobject name="Upgrades" id="48" active="true" isStatic="false">
+									<Components count="2" />
+									<Childs count="0" />
+								</Gameobject>
+							</Childs>
+						</Gameobject>
+					</Childs>
+				</Gameobject>
+				<Gameobject name="Edge" id="49" active="true" isStatic="true">
+					<Components count="5" />
+					<Childs count="1">
+						<Gameobject name="life_bar" id="50" active="false" isStatic="false">
+							<Components count="2" />
+							<Childs count="2">
+								<Gameobject name="GreenBar" id="51" active="true" isStatic="false">
+									<Components count="2" />
+									<Childs count="0" />
+								</Gameobject>
+								<Gameobject name="Upgrades" id="52" active="true" isStatic="false">
+									<Components count="2" />
+									<Childs count="0" />
+								</Gameobject>
+							</Childs>
+						</Gameobject>
+					</Childs>
+				</Gameobject>
+				<Gameobject name="Edge" id="53" active="true" isStatic="true">
+					<Components count="5" />
+					<Childs count="1">
+						<Gameobject name="life_bar" id="54" active="false" isStatic="false">
+							<Components count="2" />
+							<Childs count="2">
+								<Gameobject name="GreenBar" id="55" active="true" isStatic="false">
+									<Components count="2" />
+									<Childs count="0" />
+								</Gameobject>
+								<Gameobject name="Upgrades" id="56" active="true" isStatic="false">
+									<Components count="2" />
+									<Childs count="0" />
+								</Gameobject>
+							</Childs>
+						</Gameobject>
+					</Childs>
+				</Gameobject>
+				<Gameobject name="Edge" id="57" active="true" isStatic="true">
+					<Components count="5" />
+					<Childs count="1">
+						<Gameobject name="life_bar" id="58" active="false" isStatic="false">
+							<Components count="2" />
+							<Childs count="2">
+								<Gameobject name="GreenBar" id="59" active="true" isStatic="false">
+									<Components count="2" />
+									<Childs count="0" />
+								</Gameobject>
+								<Gameobject name="Upgrades" id="60" active="true" isStatic="false">
+									<Components count="2" />
+									<Childs count="0" />
+								</Gameobject>
+							</Childs>
+						</Gameobject>
+					</Childs>
+				</Gameobject>
+				<Gameobject name="Edge" id="61" active="true" isStatic="true">
+					<Components count="5" />
+					<Childs count="1">
+						<Gameobject name="life_bar" id="62" active="false" isStatic="false">
+							<Components count="2" />
+							<Childs count="2">
+								<Gameobject name="GreenBar" id="63" active="true" isStatic="false">
+									<Components count="2" />
+									<Childs count="0" />
+								</Gameobject>
+								<Gameobject name="Upgrades" id="64" active="true" isStatic="false">
+									<Components count="2" />
+									<Childs count="0" />
+								</Gameobject>
+							</Childs>
+						</Gameobject>
+					</Childs>
+				</Gameobject>
+				<Gameobject name="Edge" id="65" active="true" isStatic="true">
+					<Components count="5" />
+					<Childs count="1">
+						<Gameobject name="life_bar" id="66" active="false" isStatic="false">
+							<Components count="2" />
+							<Childs count="2">
+								<Gameobject name="GreenBar" id="67" active="true" isStatic="false">
+									<Components count="2" />
+									<Childs count="0" />
+								</Gameobject>
+								<Gameobject name="Upgrades" id="68" active="true" isStatic="false">
+									<Components count="2" />
+									<Childs count="0" />
+								</Gameobject>
+							</Childs>
+						</Gameobject>
+					</Childs>
+				</Gameobject>
+				<Gameobject name="Edge" id="69" active="true" isStatic="true">
+					<Components count="5" />
+					<Childs count="1">
+						<Gameobject name="life_bar" id="70" active="false" isStatic="false">
+							<Components count="2" />
+							<Childs count="2">
+								<Gameobject name="GreenBar" id="71" active="true" isStatic="false">
+									<Components count="2" />
+									<Childs count="0" />
+								</Gameobject>
+								<Gameobject name="Upgrades" id="72" active="true" isStatic="false">
+									<Components count="2" />
+									<Childs count="0" />
+								</Gameobject>
+							</Childs>
+						</Gameobject>
+					</Childs>
+				</Gameobject>
+				<Gameobject name="Edge" id="73" active="true" isStatic="true">
+					<Components count="5" />
+					<Childs count="1">
+						<Gameobject name="life_bar" id="74" active="false" isStatic="false">
+							<Components count="2" />
+							<Childs count="2">
+								<Gameobject name="GreenBar" id="75" active="true" isStatic="false">
+									<Components count="2" />
+									<Childs count="0" />
+								</Gameobject>
+								<Gameobject name="Upgrades" id="76" active="true" isStatic="false">
+									<Components count="2" />
+									<Childs count="0" />
+								</Gameobject>
+							</Childs>
+						</Gameobject>
+					</Childs>
+				</Gameobject>
+				<Gameobject name="Edge" id="77" active="true" isStatic="true">
+					<Components count="5" />
+					<Childs count="1">
+						<Gameobject name="life_bar" id="78" active="false" isStatic="false">
+							<Components count="2" />
+							<Childs count="2">
+								<Gameobject name="GreenBar" id="79" active="true" isStatic="false">
+									<Components count="2" />
+									<Childs count="0" />
+								</Gameobject>
+								<Gameobject name="Upgrades" id="80" active="true" isStatic="false">
+									<Components count="2" />
+									<Childs count="0" />
+								</Gameobject>
+							</Childs>
+						</Gameobject>
+					</Childs>
+				</Gameobject>
+				<Gameobject name="Edge" id="81" active="true" isStatic="true">
+					<Components count="5" />
+					<Childs count="1">
+						<Gameobject name="life_bar" id="82" active="false" isStatic="false">
+							<Components count="2" />
+							<Childs count="2">
+								<Gameobject name="GreenBar" id="83" active="true" isStatic="false">
+									<Components count="2" />
+									<Childs count="0" />
+								</Gameobject>
+								<Gameobject name="Upgrades" id="84" active="true" isStatic="false">
+									<Components count="2" />
+									<Childs count="0" />
+								</Gameobject>
+							</Childs>
+						</Gameobject>
+					</Childs>
+				</Gameobject>
+				<Gameobject name="Edge" id="85" active="true" isStatic="true">
+					<Components count="5" />
+					<Childs count="1">
+						<Gameobject name="life_bar" id="86" active="false" isStatic="false">
+							<Components count="2" />
+							<Childs count="2">
+								<Gameobject name="GreenBar" id="87" active="true" isStatic="false">
+									<Components count="2" />
+									<Childs count="0" />
+								</Gameobject>
+								<Gameobject name="Upgrades" id="88" active="true" isStatic="false">
+									<Components count="2" />
+									<Childs count="0" />
+								</Gameobject>
+							</Childs>
+						</Gameobject>
+					</Childs>
+				</Gameobject>
+				<Gameobject name="Edge" id="89" active="true" isStatic="true">
+					<Components count="5" />
+					<Childs count="1">
+						<Gameobject name="life_bar" id="90" active="false" isStatic="false">
+							<Components count="2" />
+							<Childs count="2">
+								<Gameobject name="GreenBar" id="91" active="true" isStatic="false">
+									<Components count="2" />
+									<Childs count="0" />
+								</Gameobject>
+								<Gameobject name="Upgrades" id="92" active="true" isStatic="false">
+									<Components count="2" />
+									<Childs count="0" />
+								</Gameobject>
+							</Childs>
+						</Gameobject>
+					</Childs>
+				</Gameobject>
+				<Gameobject name="Edge" id="93" active="true" isStatic="true">
+					<Components count="5" />
+					<Childs count="1">
+						<Gameobject name="life_bar" id="94" active="false" isStatic="false">
+							<Components count="2" />
+							<Childs count="2">
+								<Gameobject name="GreenBar" id="95" active="true" isStatic="false">
+									<Components count="2" />
+									<Childs count="0" />
+								</Gameobject>
+								<Gameobject name="Upgrades" id="96" active="true" isStatic="false">
+									<Components count="2" />
+									<Childs count="0" />
+								</Gameobject>
+							</Childs>
+						</Gameobject>
+					</Childs>
+				</Gameobject>
+				<Gameobject name="Edge" id="97" active="true" isStatic="true">
+					<Components count="5" />
+					<Childs count="1">
+						<Gameobject name="life_bar" id="98" active="false" isStatic="false">
+							<Components count="2" />
+							<Childs count="2">
+								<Gameobject name="GreenBar" id="99" active="true" isStatic="false">
+									<Components count="2" />
+									<Childs count="0" />
+								</Gameobject>
+								<Gameobject name="Upgrades" id="100" active="true" isStatic="false">
+									<Components count="2" />
+									<Childs count="0" />
+								</Gameobject>
+							</Childs>
+						</Gameobject>
+					</Childs>
+				</Gameobject>
+				<Gameobject name="Edge" id="101" active="true" isStatic="true">
+					<Components count="5" />
+					<Childs count="1">
+						<Gameobject name="life_bar" id="102" active="false" isStatic="false">
+							<Components count="2" />
+							<Childs count="2">
+								<Gameobject name="GreenBar" id="103" active="true" isStatic="false">
+									<Components count="2" />
+									<Childs count="0" />
+								</Gameobject>
+								<Gameobject name="Upgrades" id="104" active="true" isStatic="false">
+									<Components count="2" />
+									<Childs count="0" />
+								</Gameobject>
+							</Childs>
+						</Gameobject>
+					</Childs>
+				</Gameobject>
+				<Gameobject name="Edge" id="105" active="true" isStatic="true">
+					<Components count="5" />
+					<Childs count="1">
+						<Gameobject name="life_bar" id="106" active="false" isStatic="false">
+							<Components count="2" />
+							<Childs count="2">
+								<Gameobject name="GreenBar" id="107" active="true" isStatic="false">
+									<Components count="2" />
+									<Childs count="0" />
+								</Gameobject>
+								<Gameobject name="Upgrades" id="108" active="true" isStatic="false">
+									<Components count="2" />
+									<Childs count="0" />
+								</Gameobject>
+							</Childs>
+						</Gameobject>
+					</Childs>
+				</Gameobject>
+				<Gameobject name="Edge" id="109" active="true" isStatic="true">
+					<Components count="5" />
+					<Childs count="1">
+						<Gameobject name="life_bar" id="110" active="false" isStatic="false">
+							<Components count="2" />
+							<Childs count="2">
+								<Gameobject name="GreenBar" id="111" active="true" isStatic="false">
+									<Components count="2" />
+									<Childs count="0" />
+								</Gameobject>
+								<Gameobject name="Upgrades" id="112" active="true" isStatic="false">
+									<Components count="2" />
+									<Childs count="0" />
+								</Gameobject>
+							</Childs>
+						</Gameobject>
+					</Childs>
+				</Gameobject>
+				<Gameobject name="Edge" id="113" active="true" isStatic="true">
+					<Components count="5" />
+					<Childs count="1">
+						<Gameobject name="life_bar" id="114" active="false" isStatic="false">
+							<Components count="2" />
+							<Childs count="2">
+								<Gameobject name="GreenBar" id="115" active="true" isStatic="false">
+									<Components count="2" />
+									<Childs count="0" />
+								</Gameobject>
+								<Gameobject name="Upgrades" id="116" active="true" isStatic="false">
+									<Components count="2" />
+									<Childs count="0" />
+								</Gameobject>
+							</Childs>
+						</Gameobject>
+					</Childs>
+				</Gameobject>
+				<Gameobject name="Edge" id="117" active="true" isStatic="true">
+					<Components count="5" />
+					<Childs count="1">
+						<Gameobject name="life_bar" id="118" active="false" isStatic="false">
+							<Components count="2" />
+							<Childs count="2">
+								<Gameobject name="GreenBar" id="119" active="true" isStatic="false">
+									<Components count="2" />
+									<Childs count="0" />
+								</Gameobject>
+								<Gameobject name="Upgrades" id="120" active="true" isStatic="false">
+									<Components count="2" />
+									<Childs count="0" />
+								</Gameobject>
+							</Childs>
+						</Gameobject>
+					</Childs>
+				</Gameobject>
+				<Gameobject name="Edge" id="121" active="true" isStatic="true">
+					<Components count="5" />
+					<Childs count="1">
+						<Gameobject name="life_bar" id="122" active="false" isStatic="false">
+							<Components count="2" />
+							<Childs count="2">
+								<Gameobject name="GreenBar" id="123" active="true" isStatic="false">
+									<Components count="2" />
+									<Childs count="0" />
+								</Gameobject>
+								<Gameobject name="Upgrades" id="124" active="true" isStatic="false">
+									<Components count="2" />
+									<Childs count="0" />
+								</Gameobject>
+							</Childs>
+						</Gameobject>
+					</Childs>
+				</Gameobject>
+				<Gameobject name="Edge" id="125" active="true" isStatic="true">
+					<Components count="5" />
+					<Childs count="1">
+						<Gameobject name="life_bar" id="126" active="false" isStatic="false">
+							<Components count="2" />
+							<Childs count="2">
+								<Gameobject name="GreenBar" id="127" active="true" isStatic="false">
+									<Components count="2" />
+									<Childs count="0" />
+								</Gameobject>
+								<Gameobject name="Upgrades" id="128" active="true" isStatic="false">
+									<Components count="2" />
+									<Childs count="0" />
+								</Gameobject>
+							</Childs>
+						</Gameobject>
+					</Childs>
+				</Gameobject>
+				<Gameobject name="Edge" id="129" active="true" isStatic="true">
+					<Components count="5" />
+					<Childs count="1">
+						<Gameobject name="life_bar" id="130" active="false" isStatic="false">
+							<Components count="2" />
+							<Childs count="2">
+								<Gameobject name="GreenBar" id="131" active="true" isStatic="false">
+									<Components count="2" />
+									<Childs count="0" />
+								</Gameobject>
+								<Gameobject name="Upgrades" id="132" active="true" isStatic="false">
+									<Components count="2" />
+									<Childs count="0" />
+								</Gameobject>
+							</Childs>
+						</Gameobject>
+					</Childs>
+				</Gameobject>
+				<Gameobject name="Edge" id="133" active="true" isStatic="true">
+					<Components count="5" />
+					<Childs count="1">
+						<Gameobject name="life_bar" id="134" active="false" isStatic="false">
+							<Components count="2" />
+							<Childs count="2">
+								<Gameobject name="GreenBar" id="135" active="true" isStatic="false">
+									<Components count="2" />
+									<Childs count="0" />
+								</Gameobject>
+								<Gameobject name="Upgrades" id="136" active="true" isStatic="false">
+									<Components count="2" />
+									<Childs count="0" />
+								</Gameobject>
+							</Childs>
+						</Gameobject>
+					</Childs>
+				</Gameobject>
+				<Gameobject name="Edge" id="137" active="true" isStatic="true">
+					<Components count="5" />
+					<Childs count="1">
+						<Gameobject name="life_bar" id="138" active="false" isStatic="false">
+							<Components count="2" />
+							<Childs count="2">
+								<Gameobject name="GreenBar" id="139" active="true" isStatic="false">
+									<Components count="2" />
+									<Childs count="0" />
+								</Gameobject>
+								<Gameobject name="Upgrades" id="140" active="true" isStatic="false">
+									<Components count="2" />
+									<Childs count="0" />
+								</Gameobject>
+							</Childs>
+						</Gameobject>
+					</Childs>
+				</Gameobject>
+				<Gameobject name="Edge" id="141" active="true" isStatic="true">
+					<Components count="5" />
+					<Childs count="1">
+						<Gameobject name="life_bar" id="142" active="false" isStatic="false">
+							<Components count="2" />
+							<Childs count="2">
+								<Gameobject name="GreenBar" id="143" active="true" isStatic="false">
+									<Components count="2" />
+									<Childs count="0" />
+								</Gameobject>
+								<Gameobject name="Upgrades" id="144" active="true" isStatic="false">
+									<Components count="2" />
+									<Childs count="0" />
+								</Gameobject>
+							</Childs>
+						</Gameobject>
+					</Childs>
+				</Gameobject>
+				<Gameobject name="Edge" id="145" active="true" isStatic="true">
+					<Components count="5" />
+					<Childs count="1">
+						<Gameobject name="life_bar" id="146" active="false" isStatic="false">
+							<Components count="2" />
+							<Childs count="2">
+								<Gameobject name="GreenBar" id="147" active="true" isStatic="false">
+									<Components count="2" />
+									<Childs count="0" />
+								</Gameobject>
+								<Gameobject name="Upgrades" id="148" active="true" isStatic="false">
+									<Components count="2" />
+									<Childs count="0" />
+								</Gameobject>
+							</Childs>
+						</Gameobject>
+					</Childs>
+				</Gameobject>
+				<Gameobject name="Edge" id="149" active="true" isStatic="true">
+					<Components count="5" />
+					<Childs count="1">
+						<Gameobject name="life_bar" id="150" active="false" isStatic="false">
+							<Components count="2" />
+							<Childs count="2">
+								<Gameobject name="GreenBar" id="151" active="true" isStatic="false">
+									<Components count="2" />
+									<Childs count="0" />
+								</Gameobject>
+								<Gameobject name="Upgrades" id="152" active="true" isStatic="false">
+									<Components count="2" />
+									<Childs count="0" />
+								</Gameobject>
+							</Childs>
+						</Gameobject>
+					</Childs>
+				</Gameobject>
+				<Gameobject name="Edge" id="153" active="true" isStatic="true">
+					<Components count="5" />
+					<Childs count="1">
+						<Gameobject name="life_bar" id="154" active="false" isStatic="false">
+							<Components count="2" />
+							<Childs count="2">
+								<Gameobject name="GreenBar" id="155" active="true" isStatic="false">
+									<Components count="2" />
+									<Childs count="0" />
+								</Gameobject>
+								<Gameobject name="Upgrades" id="156" active="true" isStatic="false">
+									<Components count="2" />
+									<Childs count="0" />
+								</Gameobject>
+							</Childs>
+						</Gameobject>
+					</Childs>
+				</Gameobject>
+				<Gameobject name="Edge" id="157" active="true" isStatic="true">
+					<Components count="5" />
+					<Childs count="1">
+						<Gameobject name="life_bar" id="158" active="false" isStatic="false">
+							<Components count="2" />
+							<Childs count="2">
+								<Gameobject name="GreenBar" id="159" active="true" isStatic="false">
+									<Components count="2" />
+									<Childs count="0" />
+								</Gameobject>
+								<Gameobject name="Upgrades" id="160" active="true" isStatic="false">
+									<Components count="2" />
+									<Childs count="0" />
+								</Gameobject>
+							</Childs>
+						</Gameobject>
+					</Childs>
+				</Gameobject>
+				<Gameobject name="Edge" id="161" active="true" isStatic="true">
+					<Components count="5" />
+					<Childs count="1">
+						<Gameobject name="life_bar" id="162" active="false" isStatic="false">
+							<Components count="2" />
+							<Childs count="2">
+								<Gameobject name="GreenBar" id="163" active="true" isStatic="false">
+									<Components count="2" />
+									<Childs count="0" />
+								</Gameobject>
+								<Gameobject name="Upgrades" id="164" active="true" isStatic="false">
+									<Components count="2" />
+									<Childs count="0" />
+								</Gameobject>
+							</Childs>
+						</Gameobject>
+					</Childs>
+				</Gameobject>
+				<Gameobject name="Edge" id="165" active="true" isStatic="true">
+					<Components count="5" />
+					<Childs count="1">
+						<Gameobject name="life_bar" id="166" active="false" isStatic="false">
+							<Components count="2" />
+							<Childs count="2">
+								<Gameobject name="GreenBar" id="167" active="true" isStatic="false">
+									<Components count="2" />
+									<Childs count="0" />
+								</Gameobject>
+								<Gameobject name="Upgrades" id="168" active="true" isStatic="false">
+									<Components count="2" />
+									<Childs count="0" />
+								</Gameobject>
+							</Childs>
+						</Gameobject>
+					</Childs>
+				</Gameobject>
+				<Gameobject name="Edge" id="169" active="true" isStatic="true">
+					<Components count="5" />
+					<Childs count="1">
+						<Gameobject name="life_bar" id="170" active="false" isStatic="false">
+							<Components count="2" />
+							<Childs count="2">
+								<Gameobject name="GreenBar" id="171" active="true" isStatic="false">
+									<Components count="2" />
+									<Childs count="0" />
+								</Gameobject>
+								<Gameobject name="Upgrades" id="172" active="true" isStatic="false">
+									<Components count="2" />
+									<Childs count="0" />
+								</Gameobject>
+							</Childs>
+						</Gameobject>
+					</Childs>
+				</Gameobject>
+				<Gameobject name="Edge" id="173" active="true" isStatic="true">
+					<Components count="5" />
+					<Childs count="1">
+						<Gameobject name="life_bar" id="174" active="false" isStatic="false">
+							<Components count="2" />
+							<Childs count="2">
+								<Gameobject name="GreenBar" id="175" active="true" isStatic="false">
+									<Components count="2" />
+									<Childs count="0" />
+								</Gameobject>
+								<Gameobject name="Upgrades" id="176" active="true" isStatic="false">
+									<Components count="2" />
+									<Childs count="0" />
+								</Gameobject>
+							</Childs>
+						</Gameobject>
+					</Childs>
+				</Gameobject>
+				<Gameobject name="Edge" id="177" active="true" isStatic="true">
+					<Components count="5" />
+					<Childs count="1">
+						<Gameobject name="life_bar" id="178" active="false" isStatic="false">
+							<Components count="2" />
+							<Childs count="2">
+								<Gameobject name="GreenBar" id="179" active="true" isStatic="false">
+									<Components count="2" />
+									<Childs count="0" />
+								</Gameobject>
+								<Gameobject name="Upgrades" id="180" active="true" isStatic="false">
+									<Components count="2" />
+									<Childs count="0" />
+								</Gameobject>
+							</Childs>
+						</Gameobject>
+					</Childs>
+				</Gameobject>
+				<Gameobject name="Edge" id="181" active="true" isStatic="true">
+					<Components count="5" />
+					<Childs count="1">
+						<Gameobject name="life_bar" id="182" active="false" isStatic="false">
+							<Components count="2" />
+							<Childs count="2">
+								<Gameobject name="GreenBar" id="183" active="true" isStatic="false">
+									<Components count="2" />
+									<Childs count="0" />
+								</Gameobject>
+								<Gameobject name="Upgrades" id="184" active="true" isStatic="false">
+									<Components count="2" />
+									<Childs count="0" />
+								</Gameobject>
+							</Childs>
+						</Gameobject>
+					</Childs>
+				</Gameobject>
+				<Gameobject name="Capsule" id="185" active="true" isStatic="true">
+					<Components count="5" />
+					<Childs count="1">
+						<Gameobject name="life_bar" id="186" active="false" isStatic="false">
+							<Components count="2" />
+							<Childs count="2">
+								<Gameobject name="GreenBar" id="187" active="true" isStatic="false">
+									<Components count="2" />
+									<Childs count="0" />
+								</Gameobject>
+								<Gameobject name="Upgrades" id="188" active="true" isStatic="false">
+									<Components count="2" />
+									<Childs count="0" />
+								</Gameobject>
+							</Childs>
+						</Gameobject>
+					</Childs>
+				</Gameobject>
+			</Childs>
+		</Gameobject>
+	</Hierarchy>
+</Scene>

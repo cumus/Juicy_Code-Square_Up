@@ -487,11 +487,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <Xml Include="..\Build\config.xml">
-      <Filter>Source\Data Files</Filter>
-    </Xml>
-  </ItemGroup>
-  <ItemGroup>
     <None Include="..\Build\maps\iso.tmx">
       <Filter>Source\Data Files</Filter>
     </None>
@@ -503,5 +498,13 @@
     <Text Include="..\Platform_Data\x86\DebugData\memleaks.log">
       <Filter>Source\Data Files\x86 memleaks</Filter>
     </Text>
+  </ItemGroup>
+  <ItemGroup>
+    <Xml Include="..\Build\Assets\config.xml">
+      <Filter>Source\Data Files</Filter>
+    </Xml>
+    <Xml Include="..\Build\Assets\save_file.xml">
+      <Filter>Source\Data Files</Filter>
+    </Xml>
   </ItemGroup>
 </Project>

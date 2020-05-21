@@ -2,6 +2,7 @@
 #define __GAMEOBJECT_H__
 
 #include "Component.h"
+#include "PugiXml/src/pugixml.hpp"
 #include <string>
 #include <vector>
 
@@ -58,6 +59,9 @@ public:
 	void SetStatic(bool s) { isStatic = s; }
 	bool GetStatic() { return isStatic; }
 
+	void Load(pugi::xml_node& node);
+	void Save(pugi::xml_node& node) const;
+
 private:
 
 	void AddNewChild(Gameobject* child);
@@ -66,16 +70,16 @@ private:
 
 	static double go_count;
 
+	std::string name;
 	double id;
 	bool active = true;
-	bool toDestroy = false;
 	bool isStatic = false;
-	std::string name;
-	float death_timer = -1;
 
 	std::vector<Component*> components;
 	std::vector<Gameobject*> childs;
 
+	float death_timer = -1;
+	bool toDestroy = false;
 	std::queue<double> comp_to_remove;
 	std::queue<double> go_to_remove;
 

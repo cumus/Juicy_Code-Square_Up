@@ -162,11 +162,17 @@ void Application::PrepareUpdate()
 
 void Application::FinishUpdate()
 {
-	/*(want_to_save)
-		SavegameNow();
+	if (want_to_save)
+	{
+		scene->SaveGameNow();
+		want_to_save = false;
+	}
 
 	if(want_to_load)
-		LoadGameNow();*/
+	{
+		scene->LoadGameNow();
+		want_to_load = false;
+	}
 
 	if (state == TICKING)
 	{

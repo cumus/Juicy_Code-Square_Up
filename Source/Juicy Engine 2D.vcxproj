@@ -281,14 +281,15 @@
     <ClInclude Include="PugiXml\src\pugixml.hpp" />
   </ItemGroup>
   <ItemGroup>
-    <Xml Include="..\Build\config.xml" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="..\Build\maps\iso.tmx" />
     <None Include="..\Build\maps\level1.tmx" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="..\Platform_Data\x86\DebugData\memleaks.log" />
+  </ItemGroup>
+  <ItemGroup>
+    <Xml Include="..\Build\Assets\config.xml" />
+    <Xml Include="..\Build\Assets\save_file.xml" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

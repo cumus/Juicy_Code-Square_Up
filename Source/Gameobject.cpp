@@ -357,6 +357,37 @@ void Gameobject::UpdateRemoveQueue()
 	}
 }
 
+void Gameobject::Load(pugi::xml_node& node)
+{
+	// Setup Gameobject Values
+	// Setup Components
+	// Setup Childs
+}
+
+void Gameobject::Save(pugi::xml_node& node) const
+{
+	// Serialize Gameobject Values
+	pugi::xml_node go_data = node.append_child("Gameobject");
+	go_data.append_attribute("name").set_value(name.c_str());
+	go_data.append_attribute("id").set_value(id);
+	go_data.append_attribute("active").set_value(active);
+	go_data.append_attribute("isStatic").set_value(isStatic);
+
+	// Serialize Components
+	pugi::xml_node go_components = go_data.append_child("Components");
+	go_components.append_attribute("count").set_value(components.size());
+
+	for (std::vector<Component*>::const_iterator it = components.cbegin(); it != components.cend(); ++it)
+		(*it)->Save(go_components);
+
+	// Serialize Childs
+	pugi::xml_node go_childs = go_data.append_child("Childs");
+	go_childs.append_attribute("count").set_value(childs.size());
+
+	for (std::vector<Gameobject*>::const_iterator it = childs.cbegin(); it != childs.cend(); ++it)
+		(*it)->Save(go_childs);
+}
+
 void Gameobject::AddNewChild(Gameobject * child)
 {
 	if (child != nullptr)
