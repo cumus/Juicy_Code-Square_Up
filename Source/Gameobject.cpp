@@ -4,6 +4,17 @@
 #include "Audio.h"
 #include "Defs.h"
 #include "Transform.h"
+#include "Behaviour.h"
+#include "Gatherer.h"
+#include "MeleeUnit.h"
+#include "RangedUnit.h"
+#include "EnemyMeleeUnit.h"
+#include "BaseCenter.h"
+#include "Tower.h"
+#include "Barracks.h"
+#include "Edge.h"
+#include "EdgeCapsule.h"
+#include "Spawner.h"
 
 #include "optick-1.3.0.0/include/optick.h"
 
@@ -360,8 +371,75 @@ void Gameobject::UpdateRemoveQueue()
 void Gameobject::Load(pugi::xml_node& node)
 {
 	// Setup Gameobject Values
-	// Setup Components
+	pugi::xml_node go_node = node.child("Gameobject");
+	name = go_node.attribute("name").as_string(name.c_str());
+	id = go_node.attribute("id").as_float(id);
+	active = go_node.attribute("active").as_bool(active);
+	isStatic = go_node.attribute("isStatic").as_bool(isStatic);
+
 	// Setup Childs
+	pugi::xml_node childs_node = go_node.child("Childs");
+	for (pugi::xml_node bh_node = childs_node.first_child(); bh_node != childs_node.last_child(); bh_node = childs_node.next_sibling())
+	{
+		Gameobject* go = new Gameobject(bh_node.attribute("name").as_string("from XML"), this);
+		go->transform->Load(bh_node);
+
+		switch (UnitType(bh_node.attribute("type").as_int(0)))
+		{
+		case GATHERER:
+		{
+			(new Gatherer(this))->Load(bh_node);
+			break;
+		}
+		case UNIT_MELEE:
+		{
+			(new MeleeUnit(this))->Load(bh_node);
+			break;
+		}
+		case UNIT_RANGED:
+		{
+			(new RangedUnit(this))->Load(bh_node);
+			break;
+		}
+		case ENEMY_MELEE:
+		{
+			(new EnemyMeleeUnit(this))->Load(bh_node);
+			break;
+		}
+		case BASE_CENTER:
+		{
+			(new Base_Center(this))->Load(bh_node);
+			break;
+		}
+		case TOWER:
+		{
+			(new Tower(this))->Load(bh_node);
+			break;
+		}
+		case BARRACKS:
+		{
+			(new Barracks(this))->Load(bh_node);
+			break;
+		}
+		case EDGE:
+		{
+			(new Edge(this))->Load(bh_node);
+			break;
+		}
+		case CAPSULE:
+		{
+			(new Capsule(this))->Load(bh_node);
+			break;
+		}
+		case SPAWNER:
+		{
+			(new Spawner(this))->Load(bh_node);
+			break;
+		}
+		default:
+			break;
+		}
+	}
 }
 
 void Gameobject::Save(pugi::xml_node& node) const
@@ -373,19 +451,19 @@ void Gameobject::Save(pugi::xml_node& node) const
 	go_data.append_attribute("active").set_value(active);
 	go_data.append_attribute("isStatic").set_value(isStatic);
 
-	// Serialize Components
-	pugi::xml_node go_components = go_data.append_child("Components");
-	go_components.append_attribute("count").set_value(components.size());
-
-	for (std::vector<Component*>::const_iterator it = components.cbegin(); it != components.cend(); ++it)
-		(*it)->Save(go_components);
-
 	// Serialize Childs
 	pugi::xml_node go_childs = go_data.append_child("Childs");
-	go_childs.append_attribute("count").set_value(childs.size());
-
 	for (std::vector<Gameobject*>::const_iterator it = childs.cbegin(); it != childs.cend(); ++it)
-		(*it)->Save(go_childs);
+	{
+		const Behaviour* bh = (*it)->behaviour;
+		if (bh != nullptr)
+		{
+			pugi::xml_node bh_node = go_childs.append_child("Behaviour");
+			bh_node.append_attribute("name").set_value((*it)->name.c_str());
+			(*it)->transform->Save(bh_node);
+			bh->Save(bh_node);
+		}
+	}
 }
 
 void Gameobject::AddNewChild(Gameobject * child)

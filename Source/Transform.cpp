@@ -23,6 +23,35 @@ Transform::Transform(Gameobject* go) : Component(TRANSFORM, go)
 Transform::~Transform()
 {}
 
+void Transform::Load(pugi::xml_node& node)
+{
+	pos =
+	{
+		node.attribute("x").as_float(),
+		node.attribute("y").as_float(),
+		node.attribute("z").as_float()
+	};
+
+	scale = 
+	{
+		node.attribute("sx").as_float(),
+		node.attribute("sy").as_float(),
+		node.attribute("sz").as_float()
+	};
+
+	modified = true;
+}
+
+void Transform::Save(pugi::xml_node& node) const
+{
+	node.append_attribute("x").set_value(pos.x);
+	node.append_attribute("y").set_value(pos.y);
+	node.append_attribute("z").set_value(pos.z);
+	node.append_attribute("sx").set_value(pos.x);
+	node.append_attribute("sy").set_value(pos.y);
+	node.append_attribute("sz").set_value(pos.z);
+}
+
 void Transform::PreUpdate()
 {}
 

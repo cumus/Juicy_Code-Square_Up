@@ -291,6 +291,17 @@ std::vector<iPoint> Behaviour::GetTilesInsideRadius()
 }
 
 
+void Behaviour::Load(pugi::xml_node& node)
+{
+	current_life = node.attribute("current_life").as_int();
+}
+
+void Behaviour::Save(pugi::xml_node& node) const
+{
+	node.append_attribute("current_life").set_value(current_life);
+	node.append_attribute("type").set_value((int)type);
+}
+
 void Behaviour::Selected()
 {
 	// Selection mark

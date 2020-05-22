@@ -10,6 +10,9 @@ public:
 	Transform(Gameobject* game_object);
 	~Transform();
 
+	void Load(pugi::xml_node& node) override;
+	void Save(pugi::xml_node& node) const override;
+
 	void PreUpdate() override;
 	void Update() override;
 	void PostUpdate() override;

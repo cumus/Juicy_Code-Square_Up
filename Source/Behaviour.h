@@ -98,6 +98,9 @@ public:
 	void RecieveEvent(const Event& e) override;
 	void PreUpdate() override;
 
+	void Load(pugi::xml_node& node) override;
+	void Save(pugi::xml_node& node) const override;
+
 	void Selected();
 	void UnSelected();
 	void OnDamage(int damage);
