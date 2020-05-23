@@ -5,7 +5,7 @@
 #include "Log.h"
 #include "Behaviour.h"
 
-Capsule::Capsule(Gameobject* go) : Behaviour(go, CAPSULE, NO_UPGRADE, B_CAPSULE)
+Capsule::Capsule(Gameobject* go) : Behaviour(go, CAPSULE, POSE, B_CAPSULE)
 {
 	max_life = 1;
 	current_life = max_life;
@@ -33,8 +33,14 @@ Capsule::~Capsule()
 	b_map.erase(GetID());
 }
 
+void Capsule::Update()
+{
+
+}
+
 void Capsule::AfterDamageAction()
 {
+	spriteState = OPEN;
 	if (App->scene->capsule_content == true) {
 		Event::Push(UPDATE_STAT, App->scene, CURRENT_EDGE, 100);
 		Event::Push(UPDATE_STAT, App->scene, EDGE_COLLECTED, 100);
