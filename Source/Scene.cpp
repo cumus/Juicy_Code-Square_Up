@@ -2399,7 +2399,7 @@ void Scene::GodMode()
 		if (!group.empty())
 		{
 			for (std::vector<Gameobject*>::iterator it = group.begin(); it != group.end(); ++it)
-				(*it)->Destroy();
+				(*it)->GetBehaviour()->OnKill((*it)->GetBehaviour()->GetType());
 							
 			groupSelect = false;
 			group.clear();
@@ -2408,7 +2408,7 @@ void Scene::GodMode()
 		
 		if (selection)
 		{
-			selection->Destroy();
+			selection->GetBehaviour()->OnKill(selection->GetBehaviour()->GetType());
 			SetSelection();
 			App->audio->PlayFx(UNIT_DIES);
 		}
