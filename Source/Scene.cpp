@@ -1180,22 +1180,25 @@ void Scene::UpdateSelection()
 							incX = true;
 						}
 					}
-					Event::Push(ON_RIGHT_CLICK, *it, vec(mouseOnMap.first, mouseOnMap.second, 0.5f), vec(modPos.first, modPos.second, 0.5f));
-					if (incX)
-					{
-						modPos.first++;
-						incX = false;
-					}
+					if((*it)->GetBehaviour()->GetState() != DESTROYED) Event::Push(ON_RIGHT_CLICK, *it, vec(mouseOnMap.first, mouseOnMap.second, 0.5f), vec(modPos.first, modPos.second, 0.5f));
 					else
 					{
-						modPos.second++;
-						incX = true;
+						if (incX)
+						{
+							modPos.first++;
+							incX = false;
+						}
+						else
+						{
+							modPos.second++;
+							incX = true;
+						}
 					}
 				}
 			}
 			else//Move one selected
 			{
-				if (selection) Event::Push(ON_RIGHT_CLICK, selection, vec(mouseOnMap.first, mouseOnMap.second, 0.5f), vec(-1, -1, -1));					
+				if (selection && selection->GetBehaviour()->GetState() != DESTROYED) Event::Push(ON_RIGHT_CLICK, selection, vec(mouseOnMap.first, mouseOnMap.second, 0.5f), vec(-1, -1, -1));					
 				groupSelect = false;
 				group.clear();
 			}

@@ -43,7 +43,6 @@ Minimap::Minimap(Gameobject* go) : UI_Component(go, go->GetUIParent(), UI_MINIMA
 	sections[ICON_BARRACKS]		= { 530, 862, 9, 9 };
 	sections[ICON_EDGE]			= { 0, 0, 0, 0 };
 	sections[ICON_SPAWNER]		= { 542, 862, 11, 9 };
-
 }
 
 Minimap::~Minimap()
