@@ -694,6 +694,12 @@ void B_Unit::Update()
 			game_object->GetTransform()->MoveX(dirX * speed * App->time.GetGameDeltaTime());//Move x
 			game_object->GetTransform()->MoveY(dirY * speed * App->time.GetGameDeltaTime());//Move y
 
+			if (App->pathfinding.ValidTile(int(pos.x), int(pos.y)) == false)
+			{
+				game_object->GetTransform()->MoveX(-dirX * speed * App->time.GetGameDeltaTime());//Move x back
+				game_object->GetTransform()->MoveY(-dirY * speed * App->time.GetGameDeltaTime());//Move y back
+			}		
+
 			ChangeState();
 			CheckDirection(actualPos);
 			if (path->empty())
