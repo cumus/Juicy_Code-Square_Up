@@ -578,14 +578,15 @@ void B_Unit::Update()
 	if (!providesVisibility) CheckFoWMap();
 	if (current_state != DESTROYED)
 	{
-		if (inRange) //ATTACK
+		if (moveOrder) atkObj = nullptr;
+		if (atkObj != nullptr) //ATTACK
 		{
 			//LOG("In range");
-			if (type == ENEMY_MELEE || type == ENEMY_RANGED || type == ENEMY_SUPER || type == ENEMY_SPECIAL)
+			if (type == ENEMY_MELEE || type == ENEMY_RANGED || type == ENEMY_SUPER || type == ENEMY_SPECIAL)//IA
 			{
 				if (atkTimer > atkTime)
 				{
-					if (atkObj != nullptr && !atkObj->GetState() != DESTROYED) //Attack
+					if (!atkObj->GetState() != DESTROYED) //Attack
 					{
 						DoAttack();
 						Event::Push(DAMAGE, atkObj, damage);
@@ -595,27 +596,24 @@ void B_Unit::Update()
 					atkTimer = 0;
 				}
 			}
-			else
+			else//PLAYER
 			{
-				if (!moveOrder)
+				if (atkTimer > atkTime)
 				{
-					if (atkTimer > atkTime)
+					if (!atkObj->GetState() != DESTROYED) //ATTACK
 					{
-						if (atkObj != nullptr && !atkObj->GetState() != DESTROYED) //ATTACK
-						{
-							DoAttack();						
-							Event::Push(DAMAGE, atkObj, damage);
-						}
-						atkObj = nullptr;
-						atkTimer = 0;
+						DoAttack();						
+						Event::Push(DAMAGE, atkObj, damage);
 					}
-				}
+					atkObj = nullptr;
+					atkTimer = 0;
+				}				
 			}
 		}
-		else
+		else//CHECK IF MOVES
 		{
 			//LOG("Not in range");
-			if (type == ENEMY_MELEE || type == ENEMY_RANGED || type == ENEMY_SUPER || type == ENEMY_SPECIAL)
+			if (type == ENEMY_MELEE || type == ENEMY_RANGED || type == ENEMY_SUPER || type == ENEMY_SPECIAL) //IA
 			{
 				if (inVision)//CHASE
 				{
@@ -637,288 +635,78 @@ void B_Unit::Update()
 						//LOG("Path to base");
 						goingBase = true;
 						vec centerPos = Base_Center::baseCenter->GetTransform()->GetGlobalPosition();
-						Event::Push(UPDATE_PATH, this->AsBehaviour(), int(centerPos.x), int(centerPos.y));
+						Event::Push(UPDATE_PATH, this->AsBehaviour(), int(centerPos.x+2), int(centerPos.y+2));
 						//LOG("Move to base");	
 					}
 				}
 			}
-		}
 
-		if (moveOrder)
-		{
-			if (chaseObj != nullptr && !chasing)
+			if (moveOrder)
 			{
-				vec goToPos = chaseObj->GetPos();
-				Event::Push(UPDATE_PATH, this->AsBehaviour(), int(goToPos.x)-1, int(goToPos.y));
-				chasing = true;
-			}
-
-			/*if (chasing)
-			{
-				if (path !=  nullptr && path->empty())
+				if (chaseObj != nullptr && !chasing)
 				{
-					chasing = false;
+					vec goToPos = chaseObj->GetPos();
+					Event::Push(UPDATE_PATH, this->AsBehaviour(), int(goToPos.x), int(goToPos.y));
+					chasing = true;
 				}
-			}*/
-		}
-
-		if (path != nullptr && !path->empty()) CheckPathTiles();
-
-		if (move && PathfindingManager::unitWalkability[nextTile.x][nextTile.y] == GetID())
-		{
-			calculating_path = false;
-			//LOG("move");
-			fPoint actualPos = { pos.x, pos.y };
-
-			iPoint tilePos = { int(pos.x), int(pos.y) };
-			if (nextTile.x > tilePos.x)
-			{
-				dirX = 1;
 			}
-			else if (nextTile.x < tilePos.x)
-			{
-				dirX = -1;
-			}
-			else dirX = 0;
 
-			if (nextTile.y > tilePos.y)
-			{
-				dirY = 1;
-			}
-			else if (nextTile.y < tilePos.y)
-			{
-				dirY = -1;
-			}
-			else dirY = 0;
 
-			game_object->GetTransform()->MoveX(dirX * speed * App->time.GetGameDeltaTime());//Move x
-			game_object->GetTransform()->MoveY(dirY * speed * App->time.GetGameDeltaTime());//Move y
+			if (path != nullptr && !path->empty()) CheckPathTiles();
 
-			if (App->pathfinding.ValidTile(int(pos.x), int(pos.y)) == false)
+			if (move && PathfindingManager::unitWalkability[nextTile.x][nextTile.y] == GetID())
 			{
-				game_object->GetTransform()->MoveX(-dirX * speed * App->time.GetGameDeltaTime());//Move x back
-				game_object->GetTransform()->MoveY(-dirY * speed * App->time.GetGameDeltaTime());//Move y back
-			}		
+				calculating_path = false;
+				//LOG("move");
+				fPoint actualPos = { pos.x, pos.y };
 
-			ChangeState();
-			CheckDirection(actualPos);
-			if (path->empty())
-			{
-				moveOrder = false;
-				move = false;
-				chasing = false;
-				if(!inRange) spriteState = IDLE;
+				iPoint tilePos = { int(pos.x), int(pos.y) };
+				if (nextTile.x > tilePos.x)
+				{
+					dirX = 1;
+				}
+				else if (nextTile.x < tilePos.x)
+				{
+					dirX = -1;
+				}
+				else dirX = 0;
+
+				if (nextTile.y > tilePos.y)
+				{
+					dirY = 1;
+				}
+				else if (nextTile.y < tilePos.y)
+				{
+					dirY = -1;
+				}
+				else dirY = 0;
+
+				game_object->GetTransform()->MoveX(dirX * speed * App->time.GetGameDeltaTime());//Move x
+				game_object->GetTransform()->MoveY(dirY * speed * App->time.GetGameDeltaTime());//Move y
+
+				if (App->pathfinding.ValidTile(int(pos.x), int(pos.y)) == false)
+				{
+					game_object->GetTransform()->MoveX(-dirX * speed * App->time.GetGameDeltaTime());//Move x back
+					game_object->GetTransform()->MoveY(-dirY * speed * App->time.GetGameDeltaTime());//Move y back
+				}
+
+				ChangeState();
+				CheckDirection(actualPos);
+				if (path->empty())
+				{
+					moveOrder = false;
+					move = false;
+					chasing = false;
+					if (!inRange) spriteState = IDLE;
+				}
 			}
-		}
+		}	
+
 
 		//Move selection rect
 		std::pair<float, float> world = Map::F_MapToWorld(pos.x, pos.y);
 		selectionRect.x = world.first + selectionOffset.first;
 		selectionRect.y = world.second + selectionOffset.second;
-	
-		
-		/*
-		LOG("Current state %d",current_state);
-		switch(new_state)
-		{
-			case IDLE:
-			{				
-				//LOG("state IDLE");
-				spriteState = IDLE;
-				if (inRange && !moveOrder)
-				{
-					new_state = ATTACKING;
-				}
-				else
-				{
-					if (inVision && type == ENEMY_MELEE || type == ENEMY_RANGED || type == ENEMY_SUPER || type == ENEMY_SPECIAL)
-					{
-						new_state = CHASING;
-					}
-					else
-					{
-						if(chaseObj != nullptr) new_state = CHASING;
-						else
-						{
-							if (path != nullptr && !path->empty())
-							{
-								new_state = MOVING;
-							}
-							else
-							{
-								if (type == ENEMY_MELEE || type == ENEMY_RANGED || type == ENEMY_SUPER || type == ENEMY_SPECIAL)
-								{
-									new_state = BASE;
-								}
-								else new_state = IDLE;
-								move = false;
-							}
-							objective = nullptr;
-						}
-					}
-				}
-
-				current_state = IDLE;
-				break;
-			}
-			case MOVING:
-			{
-				//LOG("state MOVING");	
-				CheckPathTiles();
-
-				if (move && PathfindingManager::unitWalkability[nextTile.x][nextTile.y] == GetID() && !inRange)
-				{
-					spriteState = MOVING;
-					calculating_path = false;
-					//LOG("move");
-					fPoint actualPos = { pos.x, pos.y };
-
-					iPoint tilePos = { int(pos.x), int(pos.y) };
-					if (nextTile.x > tilePos.x)
-					{
-						dirX = 1;
-					}
-					else if (nextTile.x < tilePos.x)
-					{
-						dirX = -1;
-					}
-					else dirX = 0;
-
-					if (nextTile.y > tilePos.y)
-					{
-						dirY = 1;
-					}
-					else if (nextTile.y < tilePos.y)
-					{
-						dirY = -1;
-					}
-					else dirY = 0;
-
-					game_object->GetTransform()->MoveX(dirX * speed * App->time.GetGameDeltaTime());//Move x
-					game_object->GetTransform()->MoveY(dirY * speed * App->time.GetGameDeltaTime());//Move y
-
-					ChangeState();
-					CheckDirection(actualPos);
-				}
-
-				if (inRange) new_state = ATTACKING;
-				else if (inVision && type == ENEMY_MELEE || type == ENEMY_RANGED || type == ENEMY_SUPER || type == ENEMY_SPECIAL) new_state = CHASING;
-
-				if (path->empty()) 
-				{
-					new_state = IDLE; 
-					moveOrder = false;
-				}
-
-				current_state = MOVING;
-				break;
-			}
-			case ATTACKING:
-			{
-				//LOG("state ATTACK");	
-				spriteState = ATTACKING;
-				if (atkTimer > atkTime)
-				{
-					if (atkObj != nullptr && !atkObj->BeingDestroyed()) //Attack
-					{
-						DoAttack();
-						UnitAttackType();
-						Event::Push(DAMAGE, atkObj->GetBehaviour(), damage);
-					}
-					atkObj = nullptr;
-					atkTimer = 0;
-					new_state = IDLE;
-				}
-				else if(!inRange || moveOrder) new_state = IDLE;
-			
-				current_state = ATTACKING;
-				break;
-			}
-			case CHASING:
-			{
-				//LOG("state CHASING");
-				if (chaseObj != nullptr && !calculating_path && !chasing)
-				{
-					vec pos = chaseObj->GetTransform()->GetGlobalPosition();
-					Event::Push(UPDATE_PATH, this->AsBehaviour(), int(pos.x), int(pos.y));
-					chasing = true;
-				}
-
-				if (inRange) new_state = ATTACKING;
-				else if (path != nullptr && !path->empty())
-				{
-					CheckPathTiles();
-
-					if (move && PathfindingManager::unitWalkability[nextTile.x][nextTile.y] == GetID() && !inRange)
-					{
-						calculating_path = false;
-						//LOG("move");
-						fPoint actualPos = { pos.x, pos.y };
-
-						iPoint tilePos = { int(pos.x), int(pos.y) };
-						if (nextTile.x > tilePos.x)
-						{
-							dirX = 1;
-						}
-						else if (nextTile.x < tilePos.x)
-						{
-							dirX = -1;
-						}
-						else dirX = 0;
-
-						if (nextTile.y > tilePos.y)
-						{
-							dirY = 1;
-						}
-						else if (nextTile.y < tilePos.y)
-						{
-							dirY = -1;
-						}
-						else dirY = 0;
-
-						game_object->GetTransform()->MoveX(dirX * speed * App->time.GetGameDeltaTime());//Move x
-						game_object->GetTransform()->MoveY(dirY * speed * App->time.GetGameDeltaTime());//Move y
-
-						ChangeState();
-						CheckDirection(actualPos);
-
-						if (path->size() < 3)
-						{
-							if (chaseObj != nullptr && !calculating_path)
-							{
-								vec pos = chaseObj->GetTransform()->GetGlobalPosition();
-								Event::Push(UPDATE_PATH, this->AsBehaviour(), int(pos.x), int(pos.y));
-							}
-						}
-					}
-				}
-				else new_state = IDLE;
-
-				if (path->empty())
-				{
-					new_state = IDLE;
-					moveOrder = false;
-					chasing = false;
-				}
-				current_state = CHASING;
-				break;
-			}
-			case BASE:
-			{
-				if (Base_Center::baseCenter != nullptr && !calculating_path)
-				{
-					//LOG("Path to base");
-					vec centerPos = Base_Center::baseCenter->GetTransform()->GetGlobalPosition();
-					Event::Push(UPDATE_PATH, this->AsBehaviour(), int(centerPos.x) - 1, int(centerPos.y) - 1);
-					//LOG("Move to base");	
-					new_state = IDLE;
-				}
-				else new_state = IDLE;
-				current_state = BASE;
-				break;
-			}
-		}
-		*/
 
 		if (atkTimer < atkTime)
 		{
@@ -932,7 +720,7 @@ void B_Unit::Update()
 		if (drawRanges) DrawRanges();
 
 		atkObj = nullptr;
-		chaseObj = nullptr;
+		//chaseObj = nullptr;
 		inRange = false;
 		inVision = false;
 	}
@@ -948,7 +736,7 @@ void B_Unit::OnCollision(Collider selfCol, Collider col)
 			if (col.GetColliderTag() == ENEMY_TAG)
 			{
 				//LOG("Eenmy unit in attack range");
-				inRange = true;
+				//inRange = true;
 				atkObj = col.parentGo->GetBehaviour();
 			}
 		}
@@ -959,7 +747,7 @@ void B_Unit::OnCollision(Collider selfCol, Collider col)
 			if (col.GetColliderTag() == PLAYER_TAG)
 			{
 				//LOG("Player unit in attack range");
-				inRange = true;
+				//inRange = true;
 				atkObj = col.parentGo->GetBehaviour();
 			}
 		}
@@ -1445,14 +1233,14 @@ void B_Unit::OnDestroy()
 
 void B_Unit::OnRightClick(vec posClick, vec movPos)
 {
-	chaseObj = false;
+	chaseObj = nullptr;
 	Transform* t = game_object->GetTransform();
 	if (t)
 	{
 		vec pos = t->GetGlobalPosition();		
 		next = false;
 		move = false;
-		moveOrder = true;
+		//moveOrder = true;
 		audio->Play(HAMMER);
 
 		SDL_Rect cam = App->render->GetCameraRect();
@@ -1468,7 +1256,7 @@ void B_Unit::OnRightClick(vec posClick, vec movPos)
 				if ( it->second->GetType() == EDGE || it->second->GetType() == CAPSULE)
 				{
 					RectF coll = (*it).second->GetSelectionRect();
-					if (float(x) > coll.x&& float(x) < coll.x + coll.w && float(y) > coll.y&& float(y) < coll.y + coll.h)
+					if (float(x) > coll.x && float(x) < coll.x + coll.w && float(y) > coll.y && float(y) < coll.y + coll.h)
 					{
 						chaseObj = (*it).second;
 						break;
@@ -1478,62 +1266,16 @@ void B_Unit::OnRightClick(vec posClick, vec movPos)
 			else
 			{
 				if (it->second->GetType() == ENEMY_MELEE || it->second->GetType() == ENEMY_RANGED || it->second->GetType() == ENEMY_SUPER
-					|| it->second->GetType() == ENEMY_SPECIAL || it->second->GetType() == EDGE || it->second->GetType() == CAPSULE
-					|| it->second->GetType() == SPAWNER)
+					|| it->second->GetType() == ENEMY_SPECIAL || it->second->GetType() == CAPSULE || it->second->GetType() == SPAWNER)
 				{
 					RectF coll = (*it).second->GetSelectionRect();
-					if (float(x) > coll.x&& float(x) < coll.x + coll.w && float(y) > coll.y&& float(y) < coll.y + coll.h)
+					if (float(x) > coll.x && float(x) < coll.x + coll.w && float(y) > coll.y && float(y) < coll.y + coll.h)
 					{
 						chaseObj = (*it).second;
 						break;
 					}
 				}
-			}
-		
-		
-		/*std::map<float, Behaviour*> out;
-		unsigned int total_found = GetBehavioursInRange(vec(posClick.x, posClick.y, 0.5f), 1.5f, out);
-		float distance = 0;
-		if (total_found > 0)
-		{
-			LOG("Unit cliked");
-			for (std::map<float, Behaviour*>::iterator it = out.begin(); it != out.end(); ++it)
-			{
-				if (GetType() == GATHERER)
-				{
-					if (it->second->GetType() == EDGE || it->second->GetType() == CAPSULE)
-					{
-						if (distance == 0)//Chose closest
-						{
-							chaseObj = it->second;
-							distance = it->first;
-						}
-						else
-						{
-							if (it->first < distance)
-							{
-								distance = it->first;
-								chaseObj = it->second;
-							}
-						}
-					}
-				}
-				else if (it->second->GetType() == ENEMY_MELEE || it->second->GetType() == ENEMY_RANGED || it->second->GetType() == SPAWNER || it->second->GetType() == CAPSULE)//Temporal
-				{
-					if (distance == 0)//Closest distance
-					{
-						chaseObj = it->second;
-						distance = it->first;
-					}
-					else
-					{
-						if (it->first < distance)
-						{
-							distance = it->first;
-							chaseObj = it->second;
-						}
-					}
-				}*/
+			}	
 			
 			//path = App->pathfinding.CreatePath({ int(pos.x), int(pos.y) }, { int(posClick.x-1), int(posClick.y-1) }, GetID());
 			if (!tilesVisited.empty())
@@ -1548,6 +1290,7 @@ void B_Unit::OnRightClick(vec posClick, vec movPos)
 				tilesVisited.clear();
 			}
 		}
+
 		if(chaseObj == nullptr)
 		{
 			if (movPos.x != -1 && movPos.y != -1) path = App->pathfinding.CreatePath({ int(pos.x), int(pos.y) }, { int(movPos.x), int(movPos.y) }, GetID());

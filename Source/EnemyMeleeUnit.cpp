@@ -18,7 +18,7 @@ EnemyMeleeUnit::EnemyMeleeUnit(Gameobject* go) : B_Unit(go, ENEMY_MELEE, IDLE, B
 	atkTime = 1.25f;
 	speed = 3.0f;
 	damage = 8;
-	attack_range = 3.0f;
+	attack_range = 2.0f;
 	vision_range = 10.0f;
 	inVision = false;
 	inRange = false;

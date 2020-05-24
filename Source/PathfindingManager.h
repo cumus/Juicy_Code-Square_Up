@@ -46,7 +46,6 @@ struct UncompletedPath
 	double ID;
 	iPoint end;
 	iPoint localStart;
-	bool ignoreWalk;
 	std::vector<PathNode> closedList;
 	std::vector<PathNode> openList;
 };
@@ -67,7 +66,7 @@ public:
 	void SetWalkabilityLayer(const MapLayer& layer);
 
 	// Main function to request a path from A to B
-	std::vector<iPoint>* CreatePath(iPoint origin, iPoint destination, double ID,bool ignoreWalkability = false);
+	std::vector<iPoint>* CreatePath(iPoint origin, iPoint destination, double ID);
 
 	int ContinuePath(UncompletedPath path,int working_ms);
 

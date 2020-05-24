@@ -390,7 +390,7 @@ bool PathfindingManager::GetTileAt(iPoint& pos)
 //Utility: Return true if tile is valid
 bool PathfindingManager::ValidTile(int x, int y)
 {
-	if(x >= 0 && y >= 0 && x < map.width && y < map.height) return walkabilityMap[x][y];
+	if (x >= 0 && y >= 0 && x < map.width && y < map.height) return walkabilityMap[x][y]; 
 	return false;
 }
 
@@ -641,65 +641,55 @@ void PathfindingManager::Merge(std::vector<PathNode>& vec, int l, int m, int r)
 
 
 // Main function to request a path from A to B
-std::vector<iPoint> * PathfindingManager::CreatePath(iPoint origin, iPoint destination, double ID, bool ignoreWalkability)
+std::vector<iPoint> * PathfindingManager::CreatePath(iPoint origin, iPoint destination, double ID)
 {
 	std::vector<iPoint>* pathPointer = nullptr;
 	std::vector<iPoint> finalPath;
+	iPoint goPoint = destination;
 	
-	if (ignoreWalkability)
+	if (!ValidTile(goPoint.x, goPoint.y))
 	{
-		if (destination.x >= 0 && destination.y >= 0 && destination.x < map.width && destination.y < map.height)
+		LOG("No valid");
+		bool found = false;
+		do
 		{
-			PathNode originNode(origin, nullPoint);
-			originNode.g = 0;
-			originNode.CalculateF(destination);
+			if (goPoint.x > origin.x) goPoint.x--;
+			else goPoint.x++;
 
-			std::vector<PathNode> closed, open;
-			open.push_back(originNode);
-			UncompletedPath path(ID, destination, open, closed);
-			path.localStart = origin;
-			path.ignoreWalk = ignoreWalkability;
-			UpdatePendingPaths(ID, path);
-			//LOG("Path added to queue");
+			if (goPoint.y > origin.y) goPoint.y--;
+			else goPoint.y++;
 
-			UpdateStoredPaths(ID, finalPath);
-			pathPointer = GetPath(ID);
-		}
-		else
-		{
-			finalPath.push_back(origin);
-			UpdateStoredPaths(ID, finalPath);
-			pathPointer = GetPath(ID);
-			LOG("Out of map bounds");
-		}
+			LOG("Tile check X:%d/Y:%d", goPoint.x, goPoint.y);
+
+			if (ValidTile(goPoint.x, goPoint.y)) break;
+		} while (goPoint.x != origin.x && goPoint.y != origin.y);
+	}
+
+	if (ValidTile(goPoint.x, goPoint.y))
+	{
+		LOG("Do path");
+		PathNode originNode(origin, nullPoint);
+		originNode.g = 0;
+		originNode.CalculateF(goPoint);
+
+		std::vector<PathNode> closed, open;
+		open.push_back(originNode);
+		UncompletedPath path(ID, goPoint, open, closed);
+		path.localStart = origin;
+		UpdatePendingPaths(ID, path);
+		//LOG("Path added to queue");
+
+		UpdateStoredPaths(ID, finalPath);
+		pathPointer = GetPath(ID);
 	}
 	else
 	{
-		if (ValidTile(destination.x, destination.y))
-		{
-			PathNode originNode(origin, nullPoint);
-			originNode.g = 0;
-			originNode.CalculateF(destination);
-
-			std::vector<PathNode> closed, open;
-			open.push_back(originNode);
-			UncompletedPath path(ID, destination, open, closed);
-			path.localStart = origin;
-			path.ignoreWalk = ignoreWalkability;
-			UpdatePendingPaths(ID, path);
-			//LOG("Path added to queue");
-
-			UpdateStoredPaths(ID, finalPath);
-			pathPointer = GetPath(ID);
-		}
-		else
-		{
-			finalPath.push_back(origin);
-			UpdateStoredPaths(ID, finalPath);
-			pathPointer = GetPath(ID);
-			LOG("Unavailable destination");
-		}
+		finalPath.push_back(origin);
+		UpdateStoredPaths(ID, finalPath);
+		pathPointer = GetPath(ID);
+		LOG("Unavailable destination");
 	}
+	
 	return pathPointer;
 }
 
@@ -754,53 +744,8 @@ int PathfindingManager::ContinuePath(UncompletedPath pathToDo, int working_ms)
 			
 		}
 		adjacentCells.clear();
-		//pathPointer->push_back(checkNode.pos);
 	}
 
-	
-
-	/*else //Update pending map list
-	{
-		if (checkNode.pos != origin)
-		{
-			
-		}
-	}*/
-	/*if (path.length >= MAX_PATH_CALCULATIONS || pathEnd)
-	{
-		//if (!path.closedList.empty())
-		//{
-			std::vector<iPoint> finalPath;
-			PathNode iteratorNode = path.closedList.back(); //Build path
-	
-			int i = 0;
-			while (iteratorNode.pos != path.localStart || i < MAX_PATH_CALCULATIONS && iteratorNode.pos != path.localStart)
-			{
-				//LOG("Node POS X: %d,Y: %d",iteratorNode.pos.x,iteratorNode.pos.y);
-				//LOG("Origin POS X: %d,Y: %d", origin.pos.x, origin.pos.y);
-				finalPath.push_back(iteratorNode.pos);
-				iteratorNode = GetItemInVector(path.closedList, iteratorNode.parentPos);	
-				i++;
-			}
-		//}
-
-		//if (!finalPath.empty())
-		//{
-			std::reverse(finalPath.begin(), finalPath.end());
-			for (std::vector<iPoint>::iterator it = finalPath.begin(); it != finalPath.end(); it++) //Save new path positions
-			{
-				pathPointer->push_back(*it);
-			}
-			LOG("Path calculation limit");
-			//path.openList.clear();
-			//path.openList.push_back(checkNode);
-			path.length = 0;
-			//path.localStart = checkNode.pos();
-
-			//UncompletedPath path(path.ID, path.end,path.openList,path.closedList);			
-		//}
-	}*/
-	
 	if (pathEnd)//Delete pending path from map list
 	{
 		std::vector<iPoint> finalPath;
