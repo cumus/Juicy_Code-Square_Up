@@ -22,41 +22,55 @@ void ParticleSystem::Start()
 
 void ParticleSystem::Update()
 {
-	for (std::vector<Particle>::iterator it = particles.begin(); it != particles.end(); ++it)
+	if (!particles.empty())
 	{
-		if (it->IsAlive()) it->Update();
-		else
+		for (std::vector<Particle*>::iterator it = particles.begin(); it != particles.end(); ++it)
 		{
-			it->GetGameobject()->Destroy();
-			particles.erase(it);
+			if ((*it)->IsAlive())
+			{
+				(*it)->Update();
+				aliveCache.push_back(*it);
+			}
+			else deathCache.push_back(*it);			
 		}
 	}
+
+	if (!deathCache.empty())
+	{
+		for (std::vector<Particle*>::iterator it = deathCache.begin(); it != deathCache.end(); ++it)
+		{
+			(*it)->GetGameobject()->Destroy();
+			LOG("Destroy particle");
+		}
+		deathCache.clear();
+	}
+	particles = aliveCache;
+	aliveCache.clear();
 }
 
 void ParticleSystem::CleanUp()
 {
-	for (std::vector<Particle>::iterator it = particles.begin(); it != particles.end(); ++it)
+	if (!particles.empty())
 	{
-		it->GetGameobject()->Destroy();
+		for (std::vector<Particle*>::iterator it = particles.begin(); it != particles.end(); ++it)
+		{
+			(*it)->GetGameobject()->Destroy();
+		}
+		particles.clear();
 	}
-	particles.clear();
-}
-
-void ParticleSystem::Draw()
-{
-
+	aliveCache.clear();
+	deathCache.clear();
 }
 
 void ParticleSystem::AddParticle(vec p, vec dest, float speed, ParticleType t)
 {
-	LOG("Create new particle");
-	Gameobject* part = App->scene->AddGameobject("Particle");
-	part->GetTransform()->SetLocalPos(p);
-	new Particle(part,p,dest,speed, t);
-	//particlesID++;
-}
-
-void ParticleSystem::DestroyParticle()
-{
-
+	if (particles.size() < MAX_PARTICLES)
+	{
+		LOG("Create new particle");
+		Gameobject* part = App->scene->AddGameobject("Particle");
+		part->GetTransform()->SetLocalPos(p);
+		Particle* particle = new Particle(part, p, dest, speed, t);
+		particles.push_back(particle);
+		//particlesID++;
+	}
 }

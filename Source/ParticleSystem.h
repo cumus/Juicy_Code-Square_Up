@@ -6,6 +6,9 @@
 #include "Gameobject.h"
 
 #include <vector>
+#include <list>
+
+#define MAX_PARTICLES 1000
 
 class ParticleSystem
 {
@@ -16,12 +19,12 @@ public:
 	void Start();
 	void Update();
 	void CleanUp();
-	void Draw();
 	void AddParticle(vec pos,vec dest,float speed, ParticleType t);
-	void DestroyParticle();
 
 private:
-	std::vector<Particle> particles;
+	std::vector<Particle*> particles;
+	std::vector<Particle*> aliveCache;
+	std::vector<Particle*> deathCache;
 	int particlesID;
 };
 

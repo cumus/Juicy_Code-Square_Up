@@ -1284,7 +1284,7 @@ void B_Unit::OnRightClick(vec posClick, vec movPos)
 				tilesVisited.clear();
 			}
 		}
-		App->particleSys.AddParticle(pos, {movPos.x,movPos.y}, 0.5f, GREEN_PARTICLE);
+		App->particleSys.AddParticle(pos, { posClick.x,posClick.y}, 8.0f, ORANGE_PARTICLE);
 	} 
 }
  

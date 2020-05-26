@@ -15,31 +15,35 @@ Particle::Particle(Gameobject* go,vec p, vec d, float s, ParticleType typ, Compo
 	alive = true;
 
 	animCounter = 0;
-	animationSpeed = 0.8f;
+	animationSpeed = 1.5f;
 	spriteNum = 0;
 	type = typ;
-	direction = { abs(p.x - destination.x),abs(p.y - destination.y),0 };
-	velocityMod = { direction.x / direction.y, direction.y / direction.x };
+	direction = { d.x - p.x,d.y - p.y};
+	float normal = sqrt(pow(direction.x,2) + pow(direction.y,2));
+	direction = {direction.x/normal,direction.y/normal};
+	//velocityMod = {1,1};//{ direction.x / direction.y, direction.y / direction.x };
+	//LOG("Direction X:%f/Y:%f",direction.x,direction.y);
+	//LOG("Velocity mod X:%f/Y:%f", velocityMod.first, velocityMod.second);
 	t = go->GetTransform();
 
 	
 	switch (type)
 	{
-	case GREEN_PARTICLE:
-		texID = App->tex.Load("Assets/textures/particle_shot.png");
-		img = new Sprite(go, texID, { 0, 0, 30, 31 }, FRONT_SCENE, {0.0f,0.0f,1.0f,1.0f});
-		animationSprites = 8;
-		break;
-	case RED_PARTICLE:
-		texID = App->tex.Load("Assets/textures/particle_shot.png");
-		img = new Sprite(go, texID, { 0, 32, 30, 31 }, FRONT_SCENE, { 0.0f,0.0f,1.0f,1.0f });
-		animationSprites = 8;
-		break;
-	case ENERGY_BALL_PARTICLE:
-		texID = App->tex.Load("Assets/textures/energyBall.png");
-		img = new Sprite(go, texID, { 0, 0, 59, 60 }, FRONT_SCENE, { 0.0f,0.0f,1.0f,1.0f });
-		animationSprites = 16;
-		break;
+		case ORANGE_PARTICLE:
+			texID = App->tex.Load("Assets/textures/particle_shot.png");
+			img = new Sprite(go, texID, { 0, 0, 30, 31 }, FRONT_SCENE, {0.0f,0.0f,1.0f,1.0f});
+			animationSprites = 8;
+			break;
+		case PURPLE_PARTICLE:
+			texID = App->tex.Load("Assets/textures/particle_shot.png");
+			img = new Sprite(go, texID, { 0, 32, 30, 31 }, FRONT_SCENE, { 0.0f,0.0f,1.0f,1.0f });
+			animationSprites = 8;
+			break;
+		case ENERGY_BALL_PARTICLE:
+			texID = App->tex.Load("Assets/textures/energyBall.png");
+			img = new Sprite(go, texID, { 0, 0, 59, 60 }, FRONT_SCENE, { 0.0f,0.0f,1.0f,1.0f });
+			animationSprites = 16;
+			break;
 	}	
 }
 
@@ -49,13 +53,18 @@ Particle::~Particle()
 
 void Particle::Update()
 {
-	float d = (t->GetGlobalPosition().x - destination.x)+(t->GetGlobalPosition().y - destination.y);
+	float d = (abs(t->GetGlobalPosition().x - destination.x))+(abs(t->GetGlobalPosition().y - destination.y));
 	if (d > 1)
 	{
-		//LOG("move particle");
-		//LOG("part pos X:%f/Y:%f", t->GetGlobalPosition().x, t->GetGlobalPosition().y);
-		game_object->GetTransform()->MoveX(velocityMod.first * speed * App->time.GetGameDeltaTime());//Move x
-		game_object->GetTransform()->MoveY(velocityMod.second * speed * App->time.GetGameDeltaTime());//Move y
+		/*if(destination.x > t->GetGlobalPosition().x) game_object->GetTransform()->MoveX(velocityMod.first * speed * App->time.GetGameDeltaTime());//Move x
+		else game_object->GetTransform()->MoveX(-velocityMod.first * speed * App->time.GetGameDeltaTime());//Move x
+
+		if (destination.y > t->GetGlobalPosition().y) game_object->GetTransform()->MoveY(velocityMod.second * speed * App->time.GetGameDeltaTime());//Move y
+		else game_object->GetTransform()->MoveY(-velocityMod.second * speed * App->time.GetGameDeltaTime());//Move y
+		*/
+		game_object->GetTransform()->MoveX(direction.x * speed * App->time.GetGameDeltaTime());//Move X
+		game_object->GetTransform()->MoveY(direction.y * speed * App->time.GetGameDeltaTime());//Move Y
+
 
 		if (animCounter < animationSpeed)
 		{
@@ -64,10 +73,10 @@ void Particle::Update()
 
 			switch (type)
 			{
-			case GREEN_PARTICLE:
-				img->SetSection({ 30 * spriteNum,0,30,30 });
+			case ORANGE_PARTICLE:
+				img->SetSection({ 30 * spriteNum,0,30,31 });
 				break;
-			case RED_PARTICLE:
+			case PURPLE_PARTICLE:
 				img->SetSection({ 30 * spriteNum,32,30,30 });
 				break;
 			case ENERGY_BALL_PARTICLE:
@@ -83,9 +92,9 @@ void Particle::Update()
 	}
 	else
 	{
-		LOG("Img inactive");
+		//LOG("Img inactive");
 		//img->SetInactive();
-		//alive = false;
+		alive = false;
 	}
 }
 
