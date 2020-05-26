@@ -102,7 +102,8 @@ bool Render::PreUpdate()
 bool Render::Update()
 {
 	OPTICK_EVENT();
-
+	int x, y;
+	App->input->GetMousePosition(x, y);
 	// Zoom
 	if (zoom_allowed)
 	{
@@ -124,8 +125,7 @@ bool Render::Update()
 			else if (wheel_motion != 0)
 			{
 				// Get Tile at mouse
-				int x, y;
-				App->input->GetMousePosition(x, y);
+				
 				std::pair<int, int> mouse_tile = Map::WorldToTileBase(cam.x + float(x), cam.y + float(y));
 				std::pair<float, float> mouse_tile_f = { float(mouse_tile.first), float(mouse_tile.second) };
 
@@ -149,6 +149,13 @@ bool Render::Update()
 	if (App->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT) {cam.x += moveSpeed; moved = true;}
 	if (App->input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT) {cam.y -= moveSpeed; moved = true;}
 	if (App->input->GetKey(SDL_SCANCODE_S) == KEY_REPEAT) {cam.y += moveSpeed; moved = true;}
+	//MOUSE CAMERA MOVEMENT
+	x += cam.x;
+	y += cam.y;
+	if(x <= (cam.x + 10)) { cam.x -= moveSpeed; moved = true; } //LEFT
+	if (x >= (cam.x + cam.w - 10 )) { cam.x += moveSpeed; moved = true; } //RIGHT
+	if (y <= (cam.y + 10)) { cam.y -= moveSpeed; moved = true; } //UP
+	if (y >= (cam.y + cam.h - 10)) { cam.y += moveSpeed; moved = true; } //DOWN
 
 	if (moved) Event::Push(CAMERA_MOVED, App->audio);
 	return true;
