@@ -48,9 +48,13 @@ CollisionSystem::~CollisionSystem()
 void CollisionSystem::Clear()
 {
 	collisionTree->Clear();
-	for (std::map<CollisionLayer, std::vector<Collider*>>::iterator itL = layerColliders.begin(); itL != layerColliders.end(); ++itL)
+	/*for (std::map<CollisionLayer, std::vector<Collider*>>::iterator itL = layerColliders.begin(); itL != layerColliders.end(); ++itL)
 	{
 		itL->second.clear();		
+	}*/
+	for (int i=0;i<MAX_COLLISION_LAYERS;i++)
+	{
+		layerColliders[i].clear();
 	}
 }
 
@@ -70,7 +74,7 @@ void CollisionSystem::Add(std::vector<Gameobject*>& objects)
 		if (col != nullptr)
 		{
 			CollisionLayer layer = col->AsCollider()->GetCollLayer();
-			layerColliders[layer].push_back(col->AsCollider());
+			layerColliders[int(layer)].push_back(col->AsCollider());
 		}
 	}
 }
@@ -81,7 +85,7 @@ void CollisionSystem::Add(Gameobject* obj)
 	if (col != nullptr)
 	{
 		CollisionLayer layer = col->AsCollider()->GetCollLayer();
-		layerColliders[layer].push_back(col->AsCollider());
+		layerColliders[int(layer)].push_back(col->AsCollider());
 	}	
 }
 
@@ -89,34 +93,94 @@ void CollisionSystem::Add(Collider* coll)
 {
 	if (coll != nullptr)
 	{
-		layerColliders[coll->GetCollLayer()].push_back(coll);
+		int a = coll->GetCollLayer();
+		//LOG("Layer %d",a);
+		layerColliders[a].push_back(coll);
 	}
 }
 
 void CollisionSystem::ProcessRemovals()
 {
-	for (std::map<CollisionLayer, std::vector<Collider*>>::iterator itL = layerColliders.begin(); itL != layerColliders.end(); ++itL)
+	/*for (std::map<CollisionLayer, std::vector<Collider*>>::iterator itL = layerColliders.begin(); itL != layerColliders.end(); ++itL)
 	{
 		for (std::vector<Collider*>::iterator itV = itL->second.begin(); itV != itL->second.end(); ++itV)
 		{
 			if ((*itV)->GetGameobject()->GetBehaviour()->GetState() == DESTROYED)
 			{
-				layerColliders[itL->first].erase(itV);
+				itL->second.erase(itV);
+			}
+		}
+	}*/
+
+	for (int i = 0; i < MAX_COLLISION_LAYERS; i++)
+	{
+		if (!layerColliders[i].empty())
+		{
+			for (std::vector<Collider*>::iterator it = layerColliders[i].begin(); it != layerColliders[i].end(); ++it)
+			{
+				if ((*it)->GetGameobject()->GetBehaviour()->GetState() == DESTROYED)
+				{
+					layerColliders[i].erase(it);
+				}
 			}
 		}
 	}
 }
 
-void CollisionSystem::ProcessRemovals(Gameobject* obj)
+void CollisionSystem::ProcessRemovals(double id)
 {
-	for (std::map<CollisionLayer, std::vector<Collider*>>::iterator itL = layerColliders.begin(); itL != layerColliders.end(); ++itL)
+	/*for (std::map<CollisionLayer, std::vector<Collider*>>::iterator itL = layerColliders.begin(); itL != layerColliders.end(); ++itL)
 	{
 		for (std::vector<Collider*>::iterator itV = itL->second.begin(); itV != itL->second.end(); ++itV)
 		{
 			//LOG("Check 1");
 			if ((*itV)->GetGoID() == obj->GetID())
 			{
-				layerColliders[itL->first].erase(itV);
+				itL->second.erase(itV);
+				LOG("Delete go collider");
+			}
+		}
+	}*/
+
+	for (int i = 0; i < MAX_COLLISION_LAYERS; i++)
+	{
+		if (!layerColliders[i].empty())
+		{
+			for (std::vector<Collider*>::iterator it = layerColliders[i].begin(); it != layerColliders[i].end(); ++it)
+			{
+				if ((*it)->GetGoID() == id)
+				{
+					layerColliders[i].erase(it);
+				}
+			}
+		}
+	}
+}
+
+void CollisionSystem::DeleteCollider(Collider coll)
+{
+	/*for (std::map<CollisionLayer, std::vector<Collider*>>::iterator itL = layerColliders.begin(); itL != layerColliders.end(); ++itL)
+	{
+		for (std::vector<Collider*>::iterator itV = itL->second.begin(); itV != itL->second.end(); ++itV)
+		{			
+			if ((*itV)->GetID() == coll.GetID())
+			{
+				itL->second.erase(itV);
+				LOG("Deleted collider");
+				break;
+			}
+		}
+	}*/
+	for (int i = 0; i < MAX_COLLISION_LAYERS; i++)
+	{
+		if (!layerColliders[i].empty())
+		{
+			for (std::vector<Collider*>::iterator it = layerColliders[i].begin(); it != layerColliders[i].end(); ++it)
+			{
+				if ((*it)->GetID() == coll.GetID())
+				{
+					layerColliders[i].erase(it);
+				}
 			}
 		}
 	}
@@ -124,7 +188,8 @@ void CollisionSystem::ProcessRemovals(Gameobject* obj)
 
 void CollisionSystem::Resolve()
 {
-	for (std::map<CollisionLayer, std::vector<Collider*>>::iterator itL = layerColliders.begin(); itL != layerColliders.end(); ++itL)//for each layer
+	//for (std::map<CollisionLayer, std::vector<Collider*>>::iterator itL = layerColliders.begin(); itL != layerColliders.end(); ++itL)//for each layer
+	for (int i = 0; i < MAX_COLLISION_LAYERS; i++)
 	{
 		//LOG("Layer");
 		/*if (collisionLayers[itL->first][DEFAULT_COLL_LAYER] == false && collisionLayers[itL->first][SCENE_COLL_LAYER] == false &&
@@ -137,25 +202,26 @@ void CollisionSystem::Resolve()
 			continue;
 		}*/
 
-		if (itL->first == UNIT_SELECTION_LAYER) continue;
+		if (i == UNIT_SELECTION_LAYER) continue;
+		if (layerColliders[i].empty()) continue;
 		
 
-		for (std::vector<Collider*>::iterator itV = itL->second.begin(); itV != itL->second.end(); ++itV)//for each collider in layer
+		for (std::vector<Collider*>::iterator it = layerColliders[i].begin(); it != layerColliders[i].end(); ++it)//for each collider in layer
 		{		
-			if (!(*itV)->GetGameobject()->GetStatic())//static object not collision resolve
+			if (!(*it)->GetGameobject()->GetStatic())//static object not collision resolve
 			{
-				std::vector<Collider*> collisions = collisionTree->Search(*(*itV));
+				std::vector<Collider*> collisions = collisionTree->Search(*(*it));
 				if (!collisions.empty())
 				{
 					//LOG("Got collisions: %d",collisions.size());
-					for (std::vector<Collider*>::iterator it = collisions.begin(); it != collisions.end(); ++it)//For each posible detection in quad tree
+					for (std::vector<Collider*>::iterator itColls = collisions.begin(); itColls != collisions.end(); ++itColls)//For each posible detection in quad tree
 					{					
-						if ((*itV)->GetID() != (*it)->GetID() && (*itV)->GetGoID() != (*it)->GetGoID() && !(*it)->parentGo->GetBehaviour()->GetState() != DESTROYED)
+						if ((*it)->GetID() != (*itColls)->GetID() && (*it)->GetGoID() != (*itColls)->GetGoID() && !(*itColls)->parentGo->GetBehaviour()->GetState() != DESTROYED)
 						{
 							//LOG("Check if collides");
-							if (collisionLayers[(*itV)->GetCollLayer()][(*it)->GetCollLayer()])
+							if (collisionLayers[(*it)->GetCollLayer()][(*itColls)->GetCollLayer()])
 							{
-								Manifold m = (*itV)->Intersects(*it);
+								Manifold m = (*it)->Intersects(*itColls);
 								if (m.colliding)
 								{
 									//LOG("Save collision");
@@ -179,14 +245,14 @@ void CollisionSystem::Resolve()
 										//LOG("Coll stay");
 									}*/
 
-									Event::Push(ON_COLLISION, (*itV)->GetGameobject(), (*itV)->GetID(), (*it)->GetID());
-									Event::Push(ON_COLLISION, (*it)->GetGameobject(), (*it)->GetID(), (*itV)->GetID());
+									Event::Push(ON_COLLISION, (*it)->GetGameobject(), (*it)->GetID(), (*itColls)->GetID());
+									Event::Push(ON_COLLISION, (*itColls)->GetGameobject(), (*itColls)->GetID(), (*it)->GetID());
 
-									if ((*itV)->GetCollType() != TRIGGER && (*it)->GetCollType() != TRIGGER)
+									if ((*it)->GetCollType() != TRIGGER && (*itColls)->GetCollType() != TRIGGER)
 									{
-										if (!(*itV)->GetGameobject()->GetStatic())
+										if (!(*it)->GetGameobject()->GetStatic())
 										{
-											(*itV)->ResolveOverlap(m);
+											(*it)->ResolveOverlap(m);
 											//(*itV)->ResolveOverlap(m);
 											//LOG("Reolve overlap");
 										}
@@ -225,17 +291,19 @@ void CollisionSystem::Update()
 	collisionTree->Clear();
 	Behaviour::selectableUnits.clear();
 //	LOG("Tree clear");
-	for (std::map<CollisionLayer, std::vector<Collider*>>::iterator itL = layerColliders.begin(); itL != layerColliders.end(); ++itL)
+	//for (std::map<CollisionLayer, std::vector<Collider*>>::iterator itL = layerColliders.begin(); itL != layerColliders.end(); ++itL)
+	for (int i = 0; i < MAX_COLLISION_LAYERS; i++)
 	{
-		if (!itL->second.empty())
+		//if (!itL->second.empty())
+		if(!layerColliders[i].empty())
 		{
-			for (std::vector<Collider*>::iterator itV = itL->second.begin(); itV != itL->second.end(); ++itV)
+			for (std::vector<Collider*>::iterator it = layerColliders[i].begin(); it != layerColliders[i].end(); ++it)
 			{
-				if (!(*itV)->GetGameobject()->GetBehaviour()->GetState() != DESTROYED)
+				if (!(*it)->GetGameobject()->GetBehaviour()->GetState() != DESTROYED)
 				{
-					(*itV)->SetPosition();
-					if ((*itV)->GetCollLayer() != UNIT_SELECTION_LAYER) collisionTree->Insert(*itV);
-					else Behaviour::selectableUnits.push_back((*itV)->GetGameobject()->GetBehaviour()->GetID());
+					(*it)->SetPosition();
+					if ((*it)->GetCollLayer() != UNIT_SELECTION_LAYER) collisionTree->Insert(*it);
+					else Behaviour::selectableUnits.push_back((*it)->GetGameobject()->GetBehaviour()->GetID());
 				}
 			}
 		}
@@ -244,18 +312,18 @@ void CollisionSystem::Update()
 
 	if (debug)
 	{
-		for (std::map<CollisionLayer, std::vector<Collider*>>::iterator itL = layerColliders.begin(); itL != layerColliders.end(); ++itL)
+		for (int i = 0; i < MAX_COLLISION_LAYERS; i++)
 		{
-			if (!itL->second.empty())
+			if (!layerColliders[i].empty())
 			{
 				//LOG("colliders length: %d", itL->second.size());
-				for (std::vector<Collider*>::iterator itV = itL->second.begin(); itV != itL->second.end(); ++itV)
+				for (std::vector<Collider*>::iterator it = layerColliders[i].begin(); it != layerColliders[i].end(); ++it)
 				{
 					//Coll iso
-					IsoLinesCollider lines = (*itV)->GetIsoPoints();
-					if(!(*itV)->selectionColl)
+					IsoLinesCollider lines = (*it)->GetIsoPoints();
+					if(!(*it)->selectionColl)
 					{
-						SDL_Rect quadTreeRect = (*itV)->GetColliderBounds();
+						SDL_Rect quadTreeRect = (*it)->GetColliderBounds();
 						App->render->DrawLine({ int(lines.top.first), int(lines.top.second) }, { int(lines.left.first), int(lines.left.second) }, { 0,255,0,255 }, DEBUG_SCENE);
 						App->render->DrawLine({ int(lines.top.first), int(lines.top.second) }, { int(lines.right.first), int(lines.right.second) }, { 0,255,0,255 }, DEBUG_SCENE);
 						App->render->DrawLine({ int(lines.bot.first), int(lines.bot.second) }, { int(lines.left.first), int(lines.left.second) }, { 0,255,0,255 }, DEBUG_SCENE);

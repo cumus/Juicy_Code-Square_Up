@@ -128,6 +128,7 @@ public:
 	virtual void Upgrade() {}
 	virtual void UpdateWalkabilityTiles() {}
 	virtual void FreeWalkabilityTiles() {}
+	virtual void Repath() {};
 	virtual void OnCollision(Collider selfCol, Collider col) {}
 	virtual void OnCollisionEnter(Collider selfCol, Collider col) {}
 	virtual void OnCollisionStay(Collider selfCol, Collider col) {}
@@ -270,6 +271,7 @@ public:
 	void CheckDirection(fPoint actualPos);
 	void ShootRaycast();
 	void DrawRanges();
+	void Repath() override;
 	virtual void UnitAttackType() {}
 	void OnCollision(Collider selfCol, Collider col) override;
 	void OnCollisionEnter(Collider selfCol, Collider col) override;
@@ -284,6 +286,7 @@ protected:
 	bool inVision;
 	bool inRange;
 	vec attackPos;
+	iPoint movDest;
 	std::vector<iPoint>* path;
 	std::pair<int, int> destPos;
 	iPoint nextTile;

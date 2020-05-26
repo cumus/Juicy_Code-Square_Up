@@ -50,7 +50,6 @@ Behaviour::Behaviour(Gameobject* go, UnitType t, UnitState starting_state, Compo
 	game_object->SetStatic(true);
 
 	audio = new AudioSource(game_object);
-	spriteState = current_state;
 	characteR = new AnimatedSprite(this);
 
 	selection_highlight = new Sprite(go, App->tex.Load("Assets/textures/selectionMark.png"), { 0, 0, 64, 64 }, BACK_SCENE, { 0, -50, 1.f, 1.f });
@@ -237,6 +236,7 @@ void Behaviour::RecieveEvent(const Event& e)
 	case ON_COLL_EXIT:
 		//OnCollisionExit(*Component::ComponentsList[e.data1.AsDouble()]->AsCollider(), *Component::ComponentsList[e.data2.AsDouble()]->AsCollider());
 		break;
+	case REPATH: Repath(); break;
 	}
 }
 
@@ -409,6 +409,8 @@ void Behaviour::OnKill(const UnitType type)
 	{
 		Event::Push(UPDATE_STAT, App->scene, CURRENT_MELEE_UNITS, -1);
 		Event::Push(UPDATE_STAT, App->scene, UNITS_LOST, 1);
+		App->collSystem.DeleteCollider(*bodyColl);
+		App->collSystem.DeleteCollider(*bodyColl);
 		break;
 	}
 	case UNIT_RANGED:
@@ -900,8 +902,33 @@ void B_Unit::UpdatePath(int x, int y)
 {
 	if (x >= 0 && y >= 0)
 	{
-		Transform* t = game_object->GetTransform();
 		path = App->pathfinding.CreatePath({ int(pos.x), int(pos.y) }, { x, y }, GetID());
+
+		calculating_path = true;
+		next = false;
+		move = false;
+		movDest = { x, y };
+
+		if (!tilesVisited.empty())
+		{
+			for (std::vector<iPoint>::const_iterator it = tilesVisited.cbegin(); it != tilesVisited.cend(); ++it)
+			{
+				if (PathfindingManager::unitWalkability[it->x][it->y] != 0.0f)
+				{
+					PathfindingManager::unitWalkability[it->x][it->y] = 0.0f;
+					//LOG("Clear tiles");
+				}
+			}
+			tilesVisited.clear();
+		}
+	}
+}
+
+void B_Unit::Repath()
+{
+	if (!path->empty())
+	{
+		path = App->pathfinding.CreatePath({ int(pos.x), int(pos.y) }, { movDest.x, movDest.y }, GetID());
 
 		calculating_path = true;
 		next = false;
@@ -1241,7 +1268,8 @@ void B_Unit::OnRightClick(vec posClick, vec movPos)
 		vec pos = t->GetGlobalPosition();		
 		next = false;
 		move = false;
-		//moveOrder = true;
+		moveOrder = true;
+		chasing = false;
 		audio->Play(HAMMER);
 
 		SDL_Rect cam = App->render->GetCameraRect();

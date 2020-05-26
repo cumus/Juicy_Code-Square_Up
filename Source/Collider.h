@@ -18,7 +18,7 @@ enum ColliderShape
 	CIRCLE,
 };
 
-enum CollisionLayer
+enum CollisionLayer : int
 {
 	DEFAULT_COLL_LAYER = 0,
 	SCENE_COLL_LAYER,

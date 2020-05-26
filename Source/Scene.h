@@ -21,7 +21,6 @@
 enum SceneType : int
 {
 	EMPTY,
-	TEST,
 	INTRO,
 	MENU,
 	MAIN,
@@ -116,7 +115,6 @@ public:
 	Gameobject* AddGameobjectToCanvas(const char* name);
 
 	void SetSelection(Gameobject* go = nullptr, bool call_unselect = true);
-	Gameobject* MouseClickSelect(int mouse_x, int mouse_y);
 
 	Transform* SpawnBehaviour(int type, vec pos = { 0.f, 0.f, 0.f });
 	
@@ -133,7 +131,6 @@ private:
 	void GodMode();
 	void ToggleGodMode();
 
-	void LoadTestScene();
 	void LoadIntroScene();
 	void LoadMenuScene();
 	void LoadMainScene();

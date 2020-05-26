@@ -17,8 +17,7 @@ Collider::Collider(Gameobject* go, RectF coll, ColliderType t, ColliderTag tg, R
     tileSize = Map::GetTileSize_F();
     boundary = coll;
     boundary.w *= tileSize.first;
-    boundary.h *= tileSize.second;
-    App->collSystem.Add(this);
+    boundary.h *= tileSize.second;   
     collType = t;
     layer = lay;
     tag = tg;  
@@ -27,7 +26,7 @@ Collider::Collider(Gameobject* go, RectF coll, ColliderType t, ColliderTag tg, R
     parentGo = go;
     if (lay == UNIT_SELECTION_LAYER) selectionColl = true;
     else selectionColl = false;
-    
+    App->collSystem.Add(this);
 }
 
 Collider::~Collider()

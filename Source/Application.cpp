@@ -93,7 +93,6 @@ bool Application::Init()
 		{
 			state = STOPED;
 #ifdef DEBUG
-			Event::Push(SCENE_CHANGE, scene, TEST, 0.f);
 #else
 			time.SetMaxFPS(60);
 			Event::Push(SCENE_CHANGE, scene, INTRO, 0.f);

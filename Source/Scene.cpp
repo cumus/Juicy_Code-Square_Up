@@ -337,31 +337,6 @@ void Scene::RecieveEvent(const Event& e)
 	}
 }
 
-void Scene::LoadTestScene()
-{
-	LoadMainScene();
-	/*OPTICK_EVENT();
-
-	map.Load("Assets/maps/iso.tmx");
-
-	LoadMainHUD();
-
-	god_mode = true;
-	App->audio->PlayMusic("Assets/audio/Music/alexander-nakarada-buzzkiller.ogg");
-	id_mouse_tex = App->tex.Load("Assets/textures/meta.png");
-
-	// Build mode
-	Gameobject* builder = AddGameobjectToCanvas("Building Mode");
-	C_Button* base = new C_Button(builder, Event(PLACE_BUILDING, this, int(BASE_CENTER)));
-	C_Button* tower = new C_Button(builder, Event(PLACE_BUILDING, this, int(TOWER)));
-	C_Button* edge = new C_Button(builder, Event(PLACE_BUILDING, this, int(EDGE)));
-	base->target = { 0.5f, 1.f, 1.f , 1.f };
-	tower->target = { 0.6f, 1.f, 1.f , 1.f };
-	edge->target = { 0.7f, 1.f, 1.f , 1.f };
-	base->offset = tower->offset = edge->offset ={ -40.f, -80.f };
-	for (int i = 0; i < 4; i++)base->section[i] = tower->section[i] = edge->section[i] = { 0, 0, 80, 80 };*/
-}
-
 void Scene::LoadMainScene()
 {
 	OPTICK_EVENT();
@@ -1908,7 +1883,6 @@ void Scene::ChangeToScene(SceneType scene)
 
 	switch (current_scene = scene)
 	{
-	case TEST: LoadTestScene(); break;
 	case INTRO: LoadIntroScene(); break;
 	case MENU: LoadMenuScene(); break;
 	case MAIN: LoadMainScene(); break;
@@ -2034,7 +2008,7 @@ Transform* Scene::SpawnBehaviour(int type, vec pos)
 				UpdateStat(CURRENT_EDGE, -20);
 				//Update paths
 				for (std::map<double, Behaviour*>::iterator it = Behaviour::b_map.begin(); it != Behaviour::b_map.end(); ++it)
-					Event::Push(UPDATE_PATH, it->second, pos.x - 1, pos.y - 1);
+					Event::Push(REPATH, it->second, pos.x - 1, pos.y - 1);
 			}	
 			else LOG("Can't place building");			
 		}
@@ -2058,7 +2032,7 @@ Transform* Scene::SpawnBehaviour(int type, vec pos)
 				UpdateStat(CURRENT_EDGE, -TOWER_COST);
 				//Update paths
 				for (std::map<double, Behaviour*>::iterator it = Behaviour::b_map.begin(); it != Behaviour::b_map.end(); ++it)
-					Event::Push(UPDATE_PATH, it->second, pos.x - 1, pos.y - 1);
+					Event::Push(REPATH, it->second, pos.x - 1, pos.y - 1);
 			}
 			else LOG("Can't place building");			
 		}
@@ -2084,7 +2058,7 @@ Transform* Scene::SpawnBehaviour(int type, vec pos)
 
 				//Update paths
 				for (std::map<double, Behaviour*>::iterator it = Behaviour::b_map.begin(); it != Behaviour::b_map.end(); ++it)
-					Event::Push(UPDATE_PATH, it->second, pos.x - 1, pos.y - 1);
+					Event::Push(REPATH, it->second, pos.x - 1, pos.y - 1);
 			}
 			else LOG("Can't place building");			
 		}
@@ -2105,7 +2079,7 @@ Transform* Scene::SpawnBehaviour(int type, vec pos)
 		behaviour->GetTransform()->SetLocalPos(pos);
 		new Capsule(behaviour);
 		/*for (std::map<double, Behaviour*>::iterator it = Behaviour::b_map.begin(); it != Behaviour::b_map.end(); ++it)
-			Event::Push(UPDATE_PATH, it->second, pos.x - 1, pos.y - 1);*/
+			Event::Push(REPATH, it->second, pos.x - 1, pos.y - 1);*/
 		break;
 	}
 	case SPAWNER:
@@ -2240,50 +2214,6 @@ void Scene::SetSelection(Gameobject* go, bool call_unselect)
 	selection = go;
 }
 
-Gameobject* Scene::MouseClickSelect(int mouse_x, int mouse_y)
-{
-	Gameobject* ret = nullptr;
-	std::queue<Gameobject*> queue;
-	std::vector<Gameobject*> root_childs = root.GetChilds();
-	
-	for (std::vector<Gameobject*>::iterator it = root_childs.begin(); it != root_childs.end(); ++it)
-		queue.push(*it);
-
-	if (!queue.empty())
-	{
-		SDL_Rect cam_rect = App->render->GetCameraRect();
-		std::pair<float, float> map_coordinates = Map::WorldToTileBase(cam_rect.x + mouse_x, cam_rect.y + mouse_y);
-
-		while (!queue.empty())
-		{
-			// TODO: Quadtree
-			Gameobject* go = queue.front();
-			if (go != nullptr)
-			{
-				// Get transform
-				Transform* t = go->GetTransform();
-				if (t != nullptr)
-				{
-					// Check intersection
-					if (t->Intersects(map_coordinates))
-					{
-						ret = go;
-						groupSelect = false;
-					}
-
-					// Push childs
-					std::vector<Gameobject*> go_childs = go->GetChilds();
-					for (std::vector<Gameobject*>::iterator it = go_childs.begin(); it != go_childs.end(); ++it)
-						queue.push(*it);
-				}
-			}
-
-			queue.pop();
-		}
-	}
-
-	return ret;
-}
 
 void Scene::GodMode()
 {
@@ -2302,15 +2232,13 @@ void Scene::GodMode()
 	// LALT + #: Change Scene
 	if (App->input->GetKey(SDL_SCANCODE_LALT) == KEY_REPEAT)
 	{
-		if (App->input->GetKey(SDL_SCANCODE_1) == KEY_DOWN)
-			Event::Push(SCENE_CHANGE, this, TEST, 0.f);
-		else if (App->input->GetKey(SDL_SCANCODE_2) == KEY_DOWN)
+		 if (App->input->GetKey(SDL_SCANCODE_1) == KEY_DOWN)
 			Event::Push(SCENE_CHANGE, this, INTRO, 2.f);
-		else if (App->input->GetKey(SDL_SCANCODE_3) == KEY_DOWN)
+		else if (App->input->GetKey(SDL_SCANCODE_2) == KEY_DOWN)
 			Event::Push(SCENE_CHANGE, this, MENU, 2.f);
-		else if (App->input->GetKey(SDL_SCANCODE_4) == KEY_DOWN)
+		else if (App->input->GetKey(SDL_SCANCODE_3) == KEY_DOWN)
 			Event::Push(SCENE_CHANGE, this, MAIN, 2.f);
-		else if (App->input->GetKey(SDL_SCANCODE_5) == KEY_DOWN)
+		else if (App->input->GetKey(SDL_SCANCODE_4) == KEY_DOWN)
 			Event::Push(SCENE_CHANGE, this, END, 2.f);
 	}
 
