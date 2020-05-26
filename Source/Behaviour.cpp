@@ -11,6 +11,7 @@
 #include "Canvas.h"
 #include "Scene.h"
 #include "Audio.h"
+#include "BaseCenter.h"
 #include "FogOfWarManager.h"
 #include "JuicyMath.h"
 #include "Input.h"
@@ -538,8 +539,6 @@ B_Unit::B_Unit(Gameobject* go, UnitType t, UnitState s, ComponentType comp_type)
 	dirX = 0;
 	dirY = 0;
 	atkTimer = 0.0f;
-	inRange = false;
-	inVision = false;
 	arriveDestination = false;
 	goingBase = false;
 	new_state = IDLE;
@@ -602,10 +601,10 @@ void B_Unit::Update()
 			//LOG("Not in range");
 			if (type == ENEMY_MELEE || type == ENEMY_RANGED || type == ENEMY_SUPER || type == ENEMY_SPECIAL) //IA
 			{
-				if (inVision)//CHASE
+				if (chaseObj != nullptr)//CHASE
 				{
 					//LOG("In vision");
-					if (chaseObj != nullptr && !chasing)
+					if (!chasing)
 					{
 						//LOG("Start player chase");
 						vec pos = chaseObj->GetPos();
@@ -630,7 +629,7 @@ void B_Unit::Update()
 
 			if (moveOrder)
 			{
-				if (chaseObj != nullptr && !chasing)
+				if (chaseObj != nullptr && !chaseObj->IsDestroyed() && !chasing)
 				{
 					vec goToPos = chaseObj->GetPos();
 					Event::Push(UPDATE_PATH, this->AsBehaviour(), int(goToPos.x), int(goToPos.y));
@@ -684,7 +683,8 @@ void B_Unit::Update()
 					moveOrder = false;
 					move = false;
 					chasing = false;
-					if (!inRange) spriteState = IDLE;
+					if (atkObj == nullptr) spriteState = IDLE;
+					if (chaseObj != nullptr && chaseObj->IsDestroyed()) chaseObj = nullptr;
 				}
 			}
 		}	
@@ -708,8 +708,6 @@ void B_Unit::Update()
 
 		atkObj = nullptr;
 		//chaseObj = nullptr;
-		inRange = false;
-		inVision = false;
 	}
 }
 
@@ -745,137 +743,7 @@ void B_Unit::OnCollision(Collider selfCol, Collider col)
 			if (col.GetColliderTag() == PLAYER_TAG)
 			{
 				//LOG("Player unit in vision");
-				inVision = true;
 				if (chaseObj == nullptr) chaseObj = col.parentGo->GetBehaviour();
-			}
-		}
-	}
-}
-
-void B_Unit::OnCollisionEnter(Collider selfCol, Collider col)
-{
-	 if (!col.parentGo->GetBehaviour()->GetState() != DESTROYED)
-	 {
-		 if (selfCol.GetColliderTag() == PLAYER_ATTACK_TAG)
-		 {
-			 //LOG("Atk");
-			 //LOG("Coll tag :%d", selfCol.GetColliderTag());
-			 //LOG("Coll tag :%d", col.GetColliderTag());
-			 if (col.GetColliderTag() == ENEMY_TAG)
-			 {
-				 LOG("Eenmy unit in attack range");
-				 inRange = true;
-				 if (atkObj == nullptr) atkObj = col.parentGo->GetBehaviour();
-			 }
-		 }
-
-		 if (selfCol.GetColliderTag() == ENEMY_ATTACK_TAG)
-		 {
-			 //LOG("Atk");
-			 //LOG("Coll tag :%d", selfCol.GetColliderTag());
-			 //LOG("Coll tag :%d", col.GetColliderTag());
-			 if (col.GetColliderTag() == PLAYER_TAG)
-			 {
-				 //LOG("Player unit in attack range");
-				 inRange = true;
-				 if (atkObj == nullptr) atkObj = col.parentGo->GetBehaviour();
-			 }
-		 }
-
-		 if (selfCol.GetColliderTag() == ENEMY_VISION_TAG)
-		 {
-			 //LOG("Enemy vision");
-			 //LOG("Coll tag :%d", selfCol.GetColliderTag());
-			 //LOG("Coll tag :%d", col.GetColliderTag());
-			 if (col.GetColliderTag() == PLAYER_TAG)
-			 {
-				 //LOG("Player unit in vision");
-				 inVision = true;
-				 if (chaseObj == nullptr) chaseObj = col.parentGo->GetBehaviour();
-			 }
-		 }
-	 }
-}
-
-void B_Unit::OnCollisionStay(Collider selfCol, Collider col)
-{
-	if (!col.parentGo->GetBehaviour()->GetState() != DESTROYED)
-	{
-		if (selfCol.GetColliderTag() == PLAYER_ATTACK_TAG)
-		{
-			//LOG("Atk stay");
-			//LOG("Coll tag :%d", selfCol.GetColliderTag());
-			//LOG("Coll tag :%d", col.GetColliderTag());
-			if (col.GetColliderTag() == ENEMY_TAG)
-			{
-				//LOG("Eenmy unit in attack range stay");
-				inRange = true;
-				if (atkObj == nullptr) atkObj = col.parentGo->GetBehaviour();
-			}
-		}
-
-		if (selfCol.GetColliderTag() == ENEMY_ATTACK_TAG)
-		{
-			//LOG("Atk stay");
-			//LOG("Coll tag :%d", selfCol.GetColliderTag());
-			//LOG("Coll tag :%d", col.GetColliderTag());
-			if (col.GetColliderTag() == PLAYER_TAG)
-			{
-				//LOG("Player unit in attack range stay");
-				inRange = true;
-				if (atkObj == nullptr) atkObj = col.parentGo->GetBehaviour();
-			}
-		}
-
-		if (selfCol.GetColliderTag() == ENEMY_VISION_TAG)
-		{
-			//LOG("Enemy vision");
-			//LOG("Coll tag :%d", selfCol.GetColliderTag());
-			//LOG("Coll tag :%d", col.GetColliderTag());
-			if (col.GetColliderTag() == PLAYER_TAG)
-			{
-				//LOG("Player unit in vision");
-				inVision = true;
-				chaseObj = col.parentGo->GetBehaviour();
-			}
-		}
-
-	}
-}
-
-void B_Unit::OnCollisionExit(Collider selfCol, Collider col)
-{
-	if (!col.parentGo->GetBehaviour()->GetState() != DESTROYED)
-	{
-		if (selfCol.GetColliderTag() == PLAYER_ATTACK_TAG)
-		{
-			if (col.GetColliderTag() == ENEMY_TAG)
-			{
-				inRange = false;
-			}
-		}
-
-		/*if (selfCol.GetColliderTag() == PLAYER_VISION_TAG)
-		{
-			if (col.GetColliderTag() == ENEMY_TAG)
-			{
-				inVision = false;
-			}
-		}*/
-
-		if (selfCol.GetColliderTag() == ENEMY_ATTACK_TAG)
-		{
-			if (col.GetColliderTag() == PLAYER_TAG)
-			{
-				inRange = false;
-			}
-		}
-
-		if (selfCol.GetColliderTag() == ENEMY_VISION_TAG)
-		{
-			if (col.GetColliderTag() == PLAYER_TAG)
-			{
-				inVision = false;
 			}
 		}
 	}
@@ -1190,85 +1058,99 @@ void B_Unit::DoAttack()
 
 
 void B_Unit::OnRightClick(vec posClick, vec movPos)
-{
+{		
+	audio->Play(HAMMER);
 	chaseObj = nullptr;
-	Transform* t = game_object->GetTransform();
-	if (t)
+	SDL_Rect cam = App->render->GetCameraRect();
+	int x, y;
+	App->input->GetMousePosition(x, y);
+	x += cam.x;
+	y += cam.y;
+
+	for (std::map<double, Behaviour*>::iterator it = Behaviour::b_map.begin(); it != Behaviour::b_map.end(); ++it)
 	{
-		vec pos = t->GetGlobalPosition();		
-		next = false;
-		move = false;
-		moveOrder = true;
-		chasing = false;
-		audio->Play(HAMMER);
-
-		SDL_Rect cam = App->render->GetCameraRect();
-		int x, y;
-		App->input->GetMousePosition(x, y);
-		x += cam.x;
-		y += cam.y;
-
-		for (std::map<double, Behaviour*>::iterator it = Behaviour::b_map.begin(); it != Behaviour::b_map.end(); ++it)
+		if (GetType() == GATHERER)
 		{
-			if (GetType() == GATHERER)
+			if ( it->second->GetType() == EDGE || it->second->GetType() == CAPSULE)
 			{
-				if ( it->second->GetType() == EDGE || it->second->GetType() == CAPSULE)
+				RectF coll = (*it).second->GetSelectionRect();
+				if (float(x) > coll.x && float(x) < coll.x + coll.w && float(y) > coll.y && float(y) < coll.y + coll.h)
 				{
-					RectF coll = (*it).second->GetSelectionRect();
-					if (float(x) > coll.x && float(x) < coll.x + coll.w && float(y) > coll.y && float(y) < coll.y + coll.h)
-					{
-						chaseObj = (*it).second;
-						break;
-					}
+					//LOG("Selected unit");
+					chaseObj = (*it).second;
+					next = false;
+					move = false;
+					moveOrder = true;
+					chasing = false;
+					break;
 				}
 			}
-			else
+		}
+		else
+		{
+			if (it->second->GetType() == ENEMY_MELEE || it->second->GetType() == ENEMY_RANGED || it->second->GetType() == ENEMY_SUPER
+				|| it->second->GetType() == ENEMY_SPECIAL || it->second->GetType() == CAPSULE || it->second->GetType() == SPAWNER)
 			{
-				if (it->second->GetType() == ENEMY_MELEE || it->second->GetType() == ENEMY_RANGED || it->second->GetType() == ENEMY_SUPER
-					|| it->second->GetType() == ENEMY_SPECIAL || it->second->GetType() == CAPSULE || it->second->GetType() == SPAWNER)
+				RectF coll = (*it).second->GetSelectionRect();
+				if (float(x) > coll.x && float(x) < coll.x + coll.w && float(y) > coll.y && float(y) < coll.y + coll.h)
 				{
-					RectF coll = (*it).second->GetSelectionRect();
-					if (float(x) > coll.x && float(x) < coll.x + coll.w && float(y) > coll.y && float(y) < coll.y + coll.h)
-					{
-						chaseObj = (*it).second;
-						break;
-					}
+					//LOG("Selected unit");
+					chaseObj = (*it).second;
+					next = false;
+					move = false;
+					moveOrder = true;
+					chasing = false;
+					break;
 				}
-			}	
+			}
+		}	
 			
-			//path = App->pathfinding.CreatePath({ int(pos.x), int(pos.y) }, { int(posClick.x-1), int(posClick.y-1) }, GetID());
-			if (!tilesVisited.empty())
-			{
-				for (std::vector<iPoint>::const_iterator it = tilesVisited.cbegin(); it != tilesVisited.cend(); ++it)
-				{
-					if (PathfindingManager::unitWalkability[it->x][it->y] != 0)
-					{
-						PathfindingManager::unitWalkability[it->x][it->y] = 0;
-					}
-				}
-				tilesVisited.clear();
-			}
-		}
-
-		if(chaseObj == nullptr)
+		//path = App->pathfinding.CreatePath({ int(pos.x), int(pos.y) }, { int(posClick.x-1), int(posClick.y-1) }, GetID());
+		if (!tilesVisited.empty())//Clean path tiles
 		{
-			if (movPos.x != -1 && movPos.y != -1) path = App->pathfinding.CreatePath({ int(pos.x), int(pos.y) }, { int(movPos.x), int(movPos.y) }, GetID());
-			else path = App->pathfinding.CreatePath({ int(pos.x), int(pos.y) }, { int(posClick.x), int(posClick.y) }, GetID());
-
-			if (!tilesVisited.empty())
+			for (std::vector<iPoint>::const_iterator it = tilesVisited.cbegin(); it != tilesVisited.cend(); ++it)
 			{
-				for (std::vector<iPoint>::const_iterator it = tilesVisited.cbegin(); it != tilesVisited.cend(); ++it)
+				if (PathfindingManager::unitWalkability[it->x][it->y] != 0)
 				{
-					if (PathfindingManager::unitWalkability[it->x][it->y] != 0)
-					{
-						PathfindingManager::unitWalkability[it->x][it->y] = 0;
-					}
+					PathfindingManager::unitWalkability[it->x][it->y] = 0;
 				}
-				tilesVisited.clear();
 			}
+			tilesVisited.clear();
 		}
-		App->particleSys.AddParticle(pos, { posClick.x,posClick.y}, 9.0f, ORANGE_PARTICLE);
-	} 
+	}
+
+	if(chaseObj == nullptr)
+	{
+		if (movPos.x != -1 && movPos.y != -1)
+		{
+			path = App->pathfinding.CreatePath({ int(pos.x), int(pos.y) }, { int(movPos.x), int(movPos.y) }, GetID());
+			next = false;
+			move = false;
+			moveOrder = true;
+			chasing = false;			
+		}
+		else if (App->pathfinding.ValidTile(int(posClick.x), int(posClick.y)))
+		{
+			path = App->pathfinding.CreatePath({ int(pos.x), int(pos.y) }, { int(posClick.x), int(posClick.y) }, GetID());
+			next = false;
+			move = false;
+			moveOrder = true;
+			chasing = false;
+		}
+
+		if (!tilesVisited.empty())//Clean path tiles
+		{
+			for (std::vector<iPoint>::const_iterator it = tilesVisited.cbegin(); it != tilesVisited.cend(); ++it)
+			{
+				if (PathfindingManager::unitWalkability[it->x][it->y] != 0)
+				{
+					PathfindingManager::unitWalkability[it->x][it->y] = 0;
+				}
+			}
+			tilesVisited.clear();
+		}
+	}
+	//App->particleSys.AddParticle(pos, { posClick.x,posClick.y}, 9.0f, ORANGE_PARTICLE);	 
 }
  
 void Behaviour::Lifebar::Create(Gameobject* parent)

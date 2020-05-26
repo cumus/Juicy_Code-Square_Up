@@ -29,5 +29,5 @@ EnemyRangedUnit::~EnemyRangedUnit() {}
 void EnemyRangedUnit::UnitAttackType()
 {
 	attackPos = atkObj->GetPos();
-	App->particleSys.AddParticle(pos, attackPos, 1.0f, ORANGE_PARTICLE);
+	App->particleSys.AddParticle(pos, attackPos, 1.0f, PURPLE_PARTICLE);
 }

@@ -130,9 +130,6 @@ public:
 	virtual void FreeWalkabilityTiles() {}
 	virtual void Repath() {};
 	virtual void OnCollision(Collider selfCol, Collider col) {}
-	virtual void OnCollisionEnter(Collider selfCol, Collider col) {}
-	virtual void OnCollisionStay(Collider selfCol, Collider col) {}
-	virtual void OnCollisionExit(Collider selfCol, Collider col) {}
 	static bool IsHidden(double id) { return b_map[id]->visible; }
 	void SetColliders();
 
@@ -272,17 +269,12 @@ public:
 	void Repath() override;
 	virtual void UnitAttackType() {}
 	void OnCollision(Collider selfCol, Collider col) override;
-	void OnCollisionEnter(Collider selfCol, Collider col) override;
-	void OnCollisionStay(Collider selfCol, Collider col) override;
-	void OnCollisionExit(Collider selfCol, Collider col) override;
 
 protected:
 	float speed;
 	int damage;
 	float atkTime, atkTimer;
 	Audio_FX attackFX;
-	bool inVision;
-	bool inRange;
 	vec attackPos;
 	iPoint movDest;
 	std::vector<iPoint>* path;
