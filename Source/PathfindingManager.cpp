@@ -649,7 +649,7 @@ std::vector<iPoint> * PathfindingManager::CreatePath(iPoint origin, iPoint desti
 	
 	if (!ValidTile(goPoint.x, goPoint.y))
 	{
-		LOG("No valid");
+		//LOG("No valid");
 		bool found = false;
 		do
 		{
@@ -659,7 +659,7 @@ std::vector<iPoint> * PathfindingManager::CreatePath(iPoint origin, iPoint desti
 			if (goPoint.y > origin.y) goPoint.y--;
 			else goPoint.y++;
 
-			LOG("Tile check X:%d/Y:%d", goPoint.x, goPoint.y);
+			//LOG("Tile check X:%d/Y:%d", goPoint.x, goPoint.y);
 
 			if (ValidTile(goPoint.x, goPoint.y)) break;
 		} while (goPoint.x != origin.x && goPoint.y != origin.y);
@@ -667,7 +667,7 @@ std::vector<iPoint> * PathfindingManager::CreatePath(iPoint origin, iPoint desti
 
 	if (ValidTile(goPoint.x, goPoint.y))
 	{
-		LOG("Do path");
+		//LOG("Do path");
 		PathNode originNode(origin, nullPoint);
 		originNode.g = 0;
 		originNode.CalculateF(goPoint);

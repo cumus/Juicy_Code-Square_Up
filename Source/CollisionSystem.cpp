@@ -95,9 +95,9 @@ void CollisionSystem::Add(Collider* coll)
 
 void CollisionSystem::ProcessRemovals()
 {
-	for (std::map<CollisionLayer, std::vector<Collider*>>::const_iterator itL = layerColliders.cbegin(); itL != layerColliders.cend(); ++itL)
+	for (std::map<CollisionLayer, std::vector<Collider*>>::iterator itL = layerColliders.begin(); itL != layerColliders.end(); ++itL)
 	{
-		for (std::vector<Collider*>::const_iterator itV = itL->second.cbegin(); itV != itL->second.cend(); ++itV)
+		for (std::vector<Collider*>::iterator itV = itL->second.begin(); itV != itL->second.end(); ++itV)
 		{
 			if ((*itV)->GetGameobject()->GetBehaviour()->GetState() == DESTROYED)
 			{
@@ -109,9 +109,9 @@ void CollisionSystem::ProcessRemovals()
 
 void CollisionSystem::ProcessRemovals(Gameobject* obj)
 {
-	for (std::map<CollisionLayer, std::vector<Collider*>>::const_iterator itL = layerColliders.cbegin(); itL != layerColliders.cend(); ++itL)
+	for (std::map<CollisionLayer, std::vector<Collider*>>::iterator itL = layerColliders.begin(); itL != layerColliders.end(); ++itL)
 	{
-		for (std::vector<Collider*>::const_iterator itV = itL->second.cbegin(); itV != itL->second.cend(); ++itV)
+		for (std::vector<Collider*>::iterator itV = itL->second.begin(); itV != itL->second.end(); ++itV)
 		{
 			//LOG("Check 1");
 			if ((*itV)->GetGoID() == obj->GetID())
@@ -124,7 +124,7 @@ void CollisionSystem::ProcessRemovals(Gameobject* obj)
 
 void CollisionSystem::Resolve()
 {
-	for (std::map<CollisionLayer, std::vector<Collider*>>::const_iterator itL = layerColliders.cbegin(); itL != layerColliders.cend(); ++itL)//for each layer
+	for (std::map<CollisionLayer, std::vector<Collider*>>::iterator itL = layerColliders.begin(); itL != layerColliders.end(); ++itL)//for each layer
 	{
 		//LOG("Layer");
 		/*if (collisionLayers[itL->first][DEFAULT_COLL_LAYER] == false && collisionLayers[itL->first][SCENE_COLL_LAYER] == false &&
@@ -140,7 +140,7 @@ void CollisionSystem::Resolve()
 		if (itL->first == UNIT_SELECTION_LAYER) continue;
 		
 
-		for (std::vector<Collider*>::const_iterator itV = itL->second.cbegin(); itV != itL->second.cend(); ++itV)//for each collider in layer
+		for (std::vector<Collider*>::iterator itV = itL->second.begin(); itV != itL->second.end(); ++itV)//for each collider in layer
 		{		
 			if (!(*itV)->GetGameobject()->GetStatic())//static object not collision resolve
 			{
