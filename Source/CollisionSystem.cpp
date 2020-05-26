@@ -289,7 +289,6 @@ void CollisionSystem::Resolve()
 void CollisionSystem::Update()
 {
 	collisionTree->Clear();
-	Behaviour::selectableUnits.clear();
 //	LOG("Tree clear");
 	//for (std::map<CollisionLayer, std::vector<Collider*>>::iterator itL = layerColliders.begin(); itL != layerColliders.end(); ++itL)
 	for (int i = 0; i < MAX_COLLISION_LAYERS; i++)
@@ -302,8 +301,7 @@ void CollisionSystem::Update()
 				if (!(*it)->GetGameobject()->GetBehaviour()->GetState() != DESTROYED)
 				{
 					(*it)->SetPosition();
-					if ((*it)->GetCollLayer() != UNIT_SELECTION_LAYER) collisionTree->Insert(*it);
-					else Behaviour::selectableUnits.push_back((*it)->GetGameobject()->GetBehaviour()->GetID());
+					if ((*it)->GetCollLayer() != UNIT_SELECTION_LAYER) collisionTree->Insert(*it);					
 				}
 			}
 		}

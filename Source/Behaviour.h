@@ -153,8 +153,6 @@ protected:
 public: 
 	
 	static std::map<double, Behaviour*> b_map;
-	static std::vector<double> enemiesInSight;
-	static std::vector<double> selectableUnits;
 	UnitState current_state, new_state;
 	UnitState spriteState;
 	vec pos;

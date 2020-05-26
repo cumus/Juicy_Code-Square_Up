@@ -12,11 +12,6 @@
 #include "Scene.h"
 #include "Audio.h"
 #include "FogOfWarManager.h"
-#include "MeleeUnit.h"
-#include "Gatherer.h"
-#include "Tower.h"
-#include "BaseCenter.h"
-#include "RangedUnit.h"
 #include "JuicyMath.h"
 #include "Input.h"
 #include "ParticleSystem.h"
@@ -24,8 +19,6 @@
 #include <vector>
 
 std::map<double, Behaviour*> Behaviour::b_map;
-std::vector<double> Behaviour::enemiesInSight;
-std::vector<double> Behaviour::selectableUnits;
 
 Behaviour::Behaviour(Gameobject* go, UnitType t, UnitState starting_state, ComponentType comp_type) :
 	Component(comp_type, go),

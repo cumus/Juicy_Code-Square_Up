@@ -21,6 +21,9 @@
 #include "RangedUnit.h"
 #include "Spawner.h"
 #include "Barracks.h"
+#include "SuperUnit.h"
+#include "EnemyRangedUnit.h"
+#include "EnemySuperUnit.h"
 #include "EdgeCapsule.h"
 #include "JuicyMath.h"
 
@@ -2107,9 +2110,9 @@ Transform* Scene::SpawnBehaviour(int type, vec pos)
 		{
 			behaviour = AddGameobject("Super unit");
 			behaviour->GetTransform()->SetLocalPos(pos);
-			new RangedUnit(behaviour);
-			UpdateStat(CURRENT_RANGED_UNITS, 1);
-			UpdateStat(TOTAL_RANGED_UNITS, 1);
+			new SuperUnit(behaviour);
+			UpdateStat(CUERRENT_SUPER_UNITS, 1);
+			UpdateStat(TOTAL_SUPER_UNITS, 1);
 			UpdateStat(CURRENT_EDGE, - SUPER_COST);
 		}
 		else
@@ -2125,19 +2128,19 @@ Transform* Scene::SpawnBehaviour(int type, vec pos)
 		break;
 	}
 	case ENEMY_RANGED: 
-		behaviour = AddGameobject("Enemy Melee");
+		behaviour = AddGameobject("Enemy Ranged");
 		behaviour->GetTransform()->SetLocalPos(pos);
-		new EnemyMeleeUnit(behaviour); ///Temporal
+		new EnemyRangedUnit(behaviour); ///Temporal
 		break;
 	case ENEMY_SUPER: 
-		behaviour = AddGameobject("Enemy Melee");
+		behaviour = AddGameobject("Enemy Super");
 		behaviour->GetTransform()->SetLocalPos(pos);
-		new EnemyMeleeUnit(behaviour); ///Temporal
+		new EnemySuperUnit(behaviour); ///Temporal
 		break;
 	case ENEMY_SPECIAL: 
 		behaviour = AddGameobject("Enemy Melee");
 		behaviour->GetTransform()->SetLocalPos(pos);
-		new EnemyMeleeUnit(behaviour); ///Temporal
+		new EnemySuperUnit(behaviour); ///Temporal
 		break;
 	case BASE_CENTER:
 	{		
