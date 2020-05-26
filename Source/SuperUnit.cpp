@@ -1,4 +1,4 @@
-#include "RangedUnit.h"
+#include "SuperUnit.h"
 #include "Behaviour.h"
 #include "Application.h"
 #include "Transform.h"
@@ -7,7 +7,7 @@
 #include "Log.h"
 #include "ParticleSystem.h"
 
-RangedUnit::RangedUnit(Gameobject* go) : B_Unit(go, UNIT_RANGED, IDLE, B_RANGED)
+SuperUnit::SuperUnit(Gameobject* go) : B_Unit(go, UNIT_SUPER, IDLE, B_RANGED)
 {
 	//Stats
 	max_life = 100;
@@ -19,15 +19,15 @@ RangedUnit::RangedUnit(Gameobject* go) : B_Unit(go, UNIT_RANGED, IDLE, B_RANGED)
 	vision_range = 15.0f;
 	providesVisibility = true;
 	//SFX
-	deathFX = RANGED_DIE_FX;
-	attackFX = RANGED_ATK_FX;
+	deathFX = SUPER_DIE_FX;
+	attackFX = SUPER_ATK_FX;
 	SetColliders();
 }
 
-RangedUnit::~RangedUnit() {}
+SuperUnit::~SuperUnit() {}
 
-void RangedUnit::UnitAttackType()
+void SuperUnit::UnitAttackType()
 {
 	attackPos = atkObj->GetPos();
-	App->particleSys.AddParticle(pos,attackPos,1.0f, ORANGE_PARTICLE);
+	App->particleSys.AddParticle(pos, attackPos, 1.0f, ORANGE_PARTICLE);
 }

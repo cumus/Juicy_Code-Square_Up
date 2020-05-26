@@ -159,6 +159,8 @@
     <ClCompile Include="EditorWindow.cpp" />
     <ClCompile Include="Emiter.cpp" />
     <ClCompile Include="EnemyMeleeUnit.cpp" />
+    <ClCompile Include="EnemyRangedUnit.cpp" />
+    <ClCompile Include="EnemySuperUnit.cpp" />
     <ClCompile Include="Event.cpp" />
     <ClCompile Include="FileManager.cpp" />
     <ClCompile Include="FogOfWarManager.cpp" />
@@ -189,6 +191,7 @@
     <ClCompile Include="Render.cpp" />
     <ClCompile Include="Spawner.cpp" />
     <ClCompile Include="Sprite.cpp" />
+    <ClCompile Include="SuperUnit.cpp" />
     <ClCompile Include="TextureManager.cpp" />
     <ClCompile Include="TimeManager.cpp" />
     <ClCompile Include="Tower.cpp" />
@@ -224,6 +227,8 @@
     <ClInclude Include="EditorWindow.h" />
     <ClInclude Include="Emiter.h" />
     <ClInclude Include="EnemyMeleeUnit.h" />
+    <ClInclude Include="EnemyRangedUnit.h" />
+    <ClInclude Include="EnemySuperUnit.h" />
     <ClInclude Include="Event.h" />
     <ClInclude Include="EventListener.h" />
     <ClInclude Include="FileManager.h" />
@@ -263,6 +268,7 @@
     <ClInclude Include="SDL_mixer\include\SDL_mixer.h" />
     <ClInclude Include="Spawner.h" />
     <ClInclude Include="Sprite.h" />
+    <ClInclude Include="SuperUnit.h" />
     <ClInclude Include="TextureManager.h" />
     <ClInclude Include="TimeManager.h" />
     <ClInclude Include="Tower.h" />

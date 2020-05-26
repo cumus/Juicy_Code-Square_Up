@@ -1,7 +1,6 @@
 #include "EnemyMeleeUnit.h"
 #include "Behaviour.h"
 #include "Application.h"
-#include "Sprite.h"
 #include "Transform.h"
 #include "Gameobject.h"
 #include "Component.h"

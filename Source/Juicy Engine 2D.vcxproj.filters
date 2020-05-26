@@ -190,6 +190,15 @@
     <ClCompile Include="EdgeCapsule.cpp">
       <Filter>Source\Gameobjects\Components\Behaviours</Filter>
     </ClCompile>
+    <ClCompile Include="SuperUnit.cpp">
+      <Filter>Source\Gameobjects\Components\Behaviours</Filter>
+    </ClCompile>
+    <ClCompile Include="EnemyRangedUnit.cpp">
+      <Filter>Source\Gameobjects\Components\Behaviours</Filter>
+    </ClCompile>
+    <ClCompile Include="EnemySuperUnit.cpp">
+      <Filter>Source\Gameobjects\Components\Behaviours</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="PugiXml\src\pugiconfig.hpp">
@@ -412,6 +421,15 @@
       <Filter>Source\Independent Managers</Filter>
     </ClInclude>
     <ClInclude Include="EdgeCapsule.h">
+      <Filter>Source\Gameobjects\Components\Behaviours</Filter>
+    </ClInclude>
+    <ClInclude Include="SuperUnit.h">
+      <Filter>Source\Gameobjects\Components\Behaviours</Filter>
+    </ClInclude>
+    <ClInclude Include="EnemyRangedUnit.h">
+      <Filter>Source\Gameobjects\Components\Behaviours</Filter>
+    </ClInclude>
+    <ClInclude Include="EnemySuperUnit.h">
       <Filter>Source\Gameobjects\Components\Behaviours</Filter>
     </ClInclude>
   </ItemGroup>

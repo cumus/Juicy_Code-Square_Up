@@ -1,5 +1,5 @@
-#ifndef __RANGEDUNIT_H__
-#define __RANGEDUNIT_H__
+#ifndef __SUPERUNIT_H__
+#define __SUPERUNIT_H__
 
 #include "Behaviour.h"
 #include "Gameobject.h"
@@ -7,11 +7,11 @@
 
 class Gameobject;
 
-class RangedUnit : public B_Unit
+class SuperUnit : public B_Unit
 {
 public:
-	RangedUnit(Gameobject* go);
-	~RangedUnit();
+	SuperUnit(Gameobject* go);
+	~SuperUnit();
 	void UnitAttackType() override;
 };
 
