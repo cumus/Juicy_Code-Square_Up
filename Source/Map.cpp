@@ -426,6 +426,7 @@ SDL_Texture* Map::GetFullMap(std::vector<std::pair<SDL_Rect, SDL_Rect>>& rects) 
 	if (loaded)
 	{
 		int tex_id;
+		int visible_count = 0;
 
 		for (std::vector<MapLayer>::const_iterator it = layers.cbegin(); it != layers.cend(); ++it)
 		{
@@ -440,6 +441,7 @@ SDL_Texture* Map::GetFullMap(std::vector<std::pair<SDL_Rect, SDL_Rect>>& rects) 
 							std::pair<SDL_Rect, SDL_Rect> target;
 							if (GetRectAndTexId(it->GetID(x, y), target.first, tex_id))
 							{
+								visible_count++;
 								std::pair<float, float> render_pos = F_MapToWorld(float(x), float(y));
 								target.second = { int(render_pos.first), int(render_pos.second), size_i.first, size_i.second };
 								rects.push_back(target);
@@ -450,7 +452,8 @@ SDL_Texture* Map::GetFullMap(std::vector<std::pair<SDL_Rect, SDL_Rect>>& rects) 
 			}
 		}
 
-		ret = App->tex.GetTexture(tex_id);
+		if (visible_count > 0)
+			ret = App->tex.GetTexture(tex_id);
 	}
 
 	return ret;

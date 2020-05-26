@@ -40,6 +40,7 @@ void Transform::Load(pugi::xml_node& node)
 	};
 
 	modified = true;
+	Update();
 }
 
 void Transform::Save(pugi::xml_node& node) const
@@ -47,9 +48,9 @@ void Transform::Save(pugi::xml_node& node) const
 	node.append_attribute("x").set_value(pos.x);
 	node.append_attribute("y").set_value(pos.y);
 	node.append_attribute("z").set_value(pos.z);
-	node.append_attribute("sx").set_value(pos.x);
-	node.append_attribute("sy").set_value(pos.y);
-	node.append_attribute("sz").set_value(pos.z);
+	node.append_attribute("sx").set_value(scale.x);
+	node.append_attribute("sy").set_value(scale.y);
+	node.append_attribute("sz").set_value(scale.z);
 }
 
 void Transform::PreUpdate()

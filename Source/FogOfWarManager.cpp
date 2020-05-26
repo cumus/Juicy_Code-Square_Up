@@ -22,24 +22,28 @@ FogOfWarManager::FogOfWarManager()
 FogOfWarManager::~FogOfWarManager()
 {}
 
-
 bool FogOfWarManager::Init()
 {
 	bool ret = true;
 
-	width = Map::GetMapSize_I().first;
-	height = Map::GetMapSize_I().second;
-	//LOG("Height %d/ Width %d",height,width);
-	debugMode = false;
-	foWMapNeedsRefresh = false;
+	if (!initiated)
+	{
+		width = Map::GetMapSize_I().first;
+		height = Map::GetMapSize_I().second;
+		//LOG("Height %d/ Width %d",height,width);
 
-	smoothTexID = App->tex.Load("Assets/textures/fogTiles60.png");
-	debugTexID = App->tex.Load("Assets/textures/fogTilesDebug.png");
+		debugMode = false;
+		foWMapNeedsRefresh = false;
 
-	if (smoothTexID == -1 || debugTexID == -1) ret = false;
+		smoothTexID = App->tex.Load("Assets/textures/fogTiles60.png");
+		debugTexID = App->tex.Load("Assets/textures/fogTilesDebug.png");
 
-	CreateFoWMap();
-	initiated = true;
+		if (smoothTexID == -1 || debugTexID == -1) ret = false;
+
+		CreateFoWMap();
+		initiated = true;
+	}
+
 	return ret;
 }
 
@@ -175,32 +179,35 @@ void FogOfWarManager::UpdateFoWMap()
 
 void FogOfWarManager::DrawFoWMap()
 {
-	// Get corner coordinates
-	SDL_Rect cam = App->render->GetCameraRect();
-	std::pair<int, int> up_left = Map::I_WorldToMap(cam.x, cam.y);
-	std::pair<int, int> down_right = Map::I_WorldToMap(cam.x + cam.w, cam.y + cam.h);
-	std::pair<int, int> up_right = Map::I_WorldToMap(cam.x + cam.w, cam.y);
-	std::pair<int, int> down_left = Map::I_WorldToMap(cam.x, cam.y + cam.h);
-	SDL_Rect cam_area = { cam.x - Map::GetTileSize_I().first, cam.y - (Map::GetTileSize_I().second * 2), cam.w + Map::GetTileSize_I().first, cam.h + (Map::GetTileSize_I().second * 2) };
-
-	int displayFogTexID;
-	if (debugMode) displayFogTexID = debugTexID;
-	else displayFogTexID = smoothTexID; 
-	SDL_Rect r = { 0,0,64,64 };
-
-	for (int y = up_right.second - 2; y <= down_left.second; ++y)
+	if (initiated)
 	{
-		for (int x = up_left.first - 2; x <= down_right.first; ++x)
+		// Get corner coordinates
+		SDL_Rect cam = App->render->GetCameraRect();
+		std::pair<int, int> up_left = Map::I_WorldToMap(cam.x, cam.y);
+		std::pair<int, int> down_right = Map::I_WorldToMap(cam.x + cam.w, cam.y + cam.h);
+		std::pair<int, int> up_right = Map::I_WorldToMap(cam.x + cam.w, cam.y);
+		std::pair<int, int> down_left = Map::I_WorldToMap(cam.x, cam.y + cam.h);
+		SDL_Rect cam_area = { cam.x - Map::GetTileSize_I().first, cam.y - (Map::GetTileSize_I().second * 2), cam.w + Map::GetTileSize_I().first, cam.h + (Map::GetTileSize_I().second * 2) };
+
+		int displayFogTexID;
+		if (debugMode) displayFogTexID = debugTexID;
+		else displayFogTexID = smoothTexID;
+		SDL_Rect r = { 0,0,64,64 };
+
+		for (int y = up_right.second - 2; y <= down_left.second; ++y)
 		{
-			std::pair<int, int> render_pos = Map::I_MapToWorld(x, y);
-			if (JMath::PointInsideRect(render_pos.first, render_pos.second, cam_area))
+			for (int x = up_left.first - 2; x <= down_right.first; ++x)
 			{
-				if(x >= 0 && y>= 0 && x < width && y < height)
-				{ 
-					if (!debugMode && !fogMap[x][y])
+				std::pair<int, int> render_pos = Map::I_MapToWorld(x, y);
+				if (JMath::PointInsideRect(render_pos.first, render_pos.second, cam_area))
+				{
+					if (x >= 0 && y >= 0 && x < width && y < height)
 					{
-						// Draw tileset spite at render_pos
-						App->render->Blit(displayFogTexID, render_pos.first, render_pos.second, &r, FOG_OF_WAR);
+						if (!debugMode && !fogMap[x][y])
+						{
+							// Draw tileset spite at render_pos
+							App->render->Blit(displayFogTexID, render_pos.first, render_pos.second, &r, FOG_OF_WAR);
+						}
 					}
 				}
 			}

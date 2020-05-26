@@ -128,6 +128,8 @@ bool Scene::PostUpdate()
 {
 	root.PostUpdate();
 	map.Draw();
+	App->fogWar.DrawFoWMap();
+
 	// Timed Scene Changing
 	if (scene_change_timer >= 0.f)
 	{
@@ -138,14 +140,15 @@ bool Scene::PostUpdate()
 			Event::Push(SCENE_CHANGE, this, next_scene, 2.f);
 		}
 	}
+
 	//Fog of war
-	if(fogLoaded) App->fogWar.DrawFoWMap();
 	/*for (std::vector<double>::const_iterator it = cacheEnemies.cbegin(); it != cacheEnemies.cend(); ++it)
 	{
 		//Behaviour* go = Behaviour::b_map[*it]->GetGameobject()->GetBehaviour();
 		//if (go->GetState() != DESTROYED) Event::Push(HIDE_SPRITE, go);
 		cacheEnemies.clear();
 	}*/
+
 	return true;
 }
 
@@ -276,13 +279,10 @@ void Scene::RecieveEvent(const Event& e)
 		}
 		case::PAUSE:
 		{
-
-
 			if (first_time_pause_button)
 			{
 				paused_yet = true;
 			}
-
 			else
 			{
 				Event::Push(SCENE_PAUSE, App);
@@ -298,12 +298,10 @@ void Scene::RecieveEvent(const Event& e)
 		}
 		case::REQUEST_SAVE:
 		{
-
 			break;
 		}
 		case::REQUEST_LOAD:
 		{
-
 			break;
 		}
 		}
@@ -344,106 +342,15 @@ void Scene::LoadMainScene()
 	OPTICK_EVENT();
 
 	map.Load("Assets/maps/iso.tmx");
+	App->fogWar.Init();
 
 	LoadMainHUD();
+	LoadTutorial();
+	LoadBaseCenter();
+	LoadStartingMapResources();
 
-	fogLoaded = App->fogWar.Init();
-
-	Event::Push(MINIMAP_MOVE_CAMERA, App->render, float(800), float(2900));
-
-	//Minimap
-	new Minimap(AddGameobjectToCanvas("Minimap"));
+	Event::Push(MINIMAP_MOVE_CAMERA, App->render, 800.0f, 2900.0f);
 	//Event::Push(ON_PAUSE, &root);
-	not_go = AddGameobjectToCanvas("lore");
-	not = new C_Image(not_go);
-	next = new C_Button(not_go, Event(GAMEPLAY, this, CAM_MOVEMENT));
-
-	not->target = { 0.75f, 0.8f, 0.4f, 0.4f };
-	not->offset = { -183.f, -1044.f };
-	not->section = { 0, 0, 983, 644 };
-	not->tex_id = App->tex.Load("Assets/textures/tuto/lore-not.png");
-
-	next->target = { 0.74f, 0.726f, 0.4f, 0.4f };
-	next->offset = { 500.f, -317.f };
-
-	next->section[0] = { 0, 0, 309, 37 };
-	next->section[1] = { 0, 44, 309, 37 };
-	next->section[2] = { 0, 88, 309, 37 };
-	next->section[3] = { 0, 88, 309, 37 };
-
-	next->tex_id = App->tex.Load("Assets/textures/tuto/not-button.png");
-
-	skip = new C_Button(not_go, Event(GAMEPLAY, this, SPAWNER_STATE));
-
-	skip->target = { 0.74f, 0.726f, 0.4f, 0.4f };
-	skip->offset = { 100.f, -317.f };
-
-	skip->section[0] = { 0, 0, 309, 37 };
-	skip->section[1] = { 0, 44, 309, 37 };
-	skip->section[2] = { 0, 88, 309, 37 };
-	skip->section[3] = { 0, 88, 309, 37 };
-
-	skip->tex_id = App->tex.Load("Assets/textures/tuto/not-button.png");
-
-	std::pair<int, int> position = Map::WorldToTileBase(float(1400.0f), float(3250.0f));
-	if (App->pathfinding.CheckWalkabilityArea(position, vec(1.0f)))
-	{
-		Gameobject* base_go = AddGameobject("Base Center");
-		base_go->GetTransform()->SetLocalPos({ float(position.first), float(position.second), 0.0f });
-		base_go->GetTransform()->ScaleX(4.0f);
-		base_go->GetTransform()->ScaleY(4.0f);
-		//App->audio->PlayFx(B_BUILDED);
-		new Base_Center(base_go);
-		std::pair<int, int> baseCenterPos = {
-			base_go->GetTransform()->GetGlobalPosition().x,
-			baseCenterPos.second = base_go->GetTransform()->GetGlobalPosition().y};
-		for (std::map<double, Behaviour*>::iterator it = Behaviour::b_map.begin(); it != Behaviour::b_map.end(); ++it)//Update paths 
-		{
-			Event::Push(UPDATE_PATH, it->second, baseCenterPos.first - 1, baseCenterPos.second - 1);
-		}
-	}
-
-	imgPreview = AddGameobject("Builder image");
-	buildingImage = new Sprite(imgPreview, App->tex.Load("Assets/textures/buildPreview.png"), { 0, 3, 217, 177 }, FRONT_SCENE, {-60.0f,-100.0f,1.0f,1.0f});
-	imgPreview->SetInactive();
-
-	SpawnBehaviour(EDGE, edge_pos1);
-	SpawnBehaviour(EDGE, edge_pos2);
-	SpawnBehaviour(EDGE, edge_pos3);
-	SpawnBehaviour(EDGE, edge_pos4);
-	SpawnBehaviour(EDGE, edge_pos5);
-	SpawnBehaviour(EDGE, edge_pos6);
-	SpawnBehaviour(EDGE, edge_pos7);
-	SpawnBehaviour(EDGE, edge_pos8);
-	SpawnBehaviour(EDGE, edge_pos9);
-	SpawnBehaviour(EDGE, edge_pos10);
-	SpawnBehaviour(EDGE, edge_pos11);
-	SpawnBehaviour(EDGE, edge_pos12);
-	SpawnBehaviour(EDGE, edge_pos13);
-	SpawnBehaviour(EDGE, edge_pos14);
-	SpawnBehaviour(EDGE, edge_pos15);
-	SpawnBehaviour(EDGE, edge_pos16);
-	SpawnBehaviour(EDGE, edge_pos17);
-	SpawnBehaviour(EDGE, edge_pos18);
-	SpawnBehaviour(EDGE, edge_pos19);
-	SpawnBehaviour(EDGE, edge_pos20);
-	SpawnBehaviour(EDGE, edge_pos21);
-	SpawnBehaviour(EDGE, edge_pos22);
-	SpawnBehaviour(EDGE, edge_pos23);
-	SpawnBehaviour(EDGE, edge_pos24);
-	SpawnBehaviour(EDGE, edge_pos25);
-	SpawnBehaviour(EDGE, edge_pos26);
-	SpawnBehaviour(EDGE, edge_pos27);
-	SpawnBehaviour(EDGE, edge_pos28);
-	SpawnBehaviour(EDGE, edge_pos29);
-	SpawnBehaviour(EDGE, edge_pos30);
-	SpawnBehaviour(EDGE, edge_pos31);
-	SpawnBehaviour(EDGE, edge_pos32);
-	SpawnBehaviour(EDGE, edge_pos33);
-	SpawnBehaviour(EDGE, edge_pos34);
-	SpawnBehaviour(EDGE, edge_pos35);
-
-	SpawnBehaviour(CAPSULE, capsule_pos_test);
 }
 
 void Scene::LoadIntroScene()
@@ -505,7 +412,7 @@ void Scene::LoadMenuScene()
 
 	Gameobject* resume_go = AddGameobjectToCanvas("Resume Button");
 
-	C_Button* resume = new C_Button(resume_go, Event(BUTTON_EVENT, this, TOGGLE_FULLSCREEN));
+	C_Button* resume = new C_Button(resume_go, Event(BUTTON_EVENT, this, SCENE_CHANGE, MAIN_FROM_SAFE));
 	resume->target = { buttons_x, 0.526f, .55f, .55f };
 
 	resume->section[0] = { 0, 0, 470, 90 };
@@ -909,6 +816,122 @@ void Scene::LoadMainHUD()
 	//-----------------------------------------------------------------------------
 
 	new Minimap(AddGameobjectToCanvas("Minimap"));
+}
+
+void Scene::LoadTutorial()
+{
+	not_go = AddGameobjectToCanvas("lore");
+	not = new C_Image(not_go);
+	next = new C_Button(not_go, Event(GAMEPLAY, this, CAM_MOVEMENT));
+
+	not->target = { 0.75f, 0.8f, 0.4f, 0.4f };
+	not->offset = { -183.f, -1044.f };
+	not->section = { 0, 0, 983, 644 };
+	not->tex_id = App->tex.Load("Assets/textures/tuto/lore-not.png");
+
+	next->target = { 0.74f, 0.726f, 0.4f, 0.4f };
+	next->offset = { 500.f, -317.f };
+
+	next->section[0] = { 0, 0, 309, 37 };
+	next->section[1] = { 0, 44, 309, 37 };
+	next->section[2] = { 0, 88, 309, 37 };
+	next->section[3] = { 0, 88, 309, 37 };
+
+	next->tex_id = App->tex.Load("Assets/textures/tuto/not-button.png");
+
+	skip = new C_Button(not_go, Event(GAMEPLAY, this, SPAWNER_STATE));
+
+	skip->target = { 0.74f, 0.726f, 0.4f, 0.4f };
+	skip->offset = { 100.f, -317.f };
+
+	skip->section[0] = { 0, 0, 309, 37 };
+	skip->section[1] = { 0, 44, 309, 37 };
+	skip->section[2] = { 0, 88, 309, 37 };
+	skip->section[3] = { 0, 88, 309, 37 };
+
+	skip->tex_id = App->tex.Load("Assets/textures/tuto/not-button.png");
+
+	imgPreview = AddGameobject("Builder image");
+	buildingImage = new Sprite(imgPreview, App->tex.Load("Assets/textures/buildPreview.png"), { 0, 3, 217, 177 }, FRONT_SCENE, { -60.0f,-100.0f,1.0f,1.0f });
+	imgPreview->SetInactive();
+}
+
+void Scene::LoadBaseCenter()
+{
+	std::pair<int, int> position = Map::WorldToTileBase(float(1400.0f), float(3250.0f));
+	if (App->pathfinding.CheckWalkabilityArea(position, vec(1.0f)))
+	{
+		Gameobject* base_go = AddGameobject("Base Center");
+		base_go->GetTransform()->SetLocalPos({ float(position.first), float(position.second), 0.0f });
+		base_go->GetTransform()->ScaleX(4.0f);
+		base_go->GetTransform()->ScaleY(4.0f);
+		//App->audio->PlayFx(B_BUILDED);
+		new Base_Center(base_go);
+		std::pair<int, int> baseCenterPos = {
+			base_go->GetTransform()->GetGlobalPosition().x,
+			baseCenterPos.second = base_go->GetTransform()->GetGlobalPosition().y };
+		for (std::map<double, Behaviour*>::iterator it = Behaviour::b_map.begin(); it != Behaviour::b_map.end(); ++it)//Update paths 
+		{
+			Event::Push(UPDATE_PATH, it->second, baseCenterPos.first - 1, baseCenterPos.second - 1);
+		}
+	}
+}
+
+void Scene::LoadStartingMapResources()
+{
+	const int edge_count = 35;
+	vec edge_pos[edge_count] = {
+		{ 144.f, 157.f },
+		{ 221.f, 120.f },
+		{ 246.f, 79.f },
+		{ 123.f, 224.f },
+		{ 130.f, 65.f },
+		{ 123.f, 65.f },
+		{ 41.f, 166.f },
+		{ 165.f, 111.f },
+		{ 149.f, 72.f },
+	//Edges near base
+		{ 128.f, 152.f },
+		{ 128.f, 143.f },
+		{ 128.f, 134.f },
+		{ 136.f, 156.f },
+		{ 162.f, 153.f },
+		{ 173.f, 153.f },
+		{ 175.f, 145.f },
+		{ 176.f, 125.f },
+		{ 170.f, 119.f },
+		{ 163.f, 119.f },
+		{ 129.f, 122.f },
+		{ 137.f, 118.f },
+		{ 143.f, 102.f },
+		{ 148.f, 102.f },
+		{ 153.f, 102.f },
+	//Edges Top path
+		{ 82.f, 134.f },
+		{ 94.f, 134.f },
+		{ 98.f, 116.f },
+		{ 54.f, 112.f },
+	//Edges Bottom path
+		{ 228.f, 195.f },
+		{ 217.f, 142.f },
+		{ 223.f, 138.f },
+		{ 205.f, 116.f },
+		{ 247.f, 125.f },
+	//Edges Mid path
+		{ 171.f, 223.f },
+		{ 139.f, 222.f } };
+
+	for (int i = 0; i < edge_count; ++i)
+		SpawnBehaviour(EDGE, edge_pos[i]);
+
+	//Capsule test positions
+	const int capsule_count = 2;
+	vec capsule_pos[capsule_count] =
+	{ { 144.f, 135.f },
+	{ 152.f, 135.f } };
+
+	for (int i = 0; i < capsule_count; ++i)
+		SpawnBehaviour(CAPSULE, capsule_pos[i]);
 }
 
 void Scene::UpdateFade()
@@ -1440,6 +1463,17 @@ void Scene::UpdateStateMachine()
 
 void Scene::OnEventStateMachine(GameplayState state)
 {
+	//Objectives
+	Gameobject* spawner_go;
+	Gameobject* spawner_text_go;
+	Gameobject* spawner_val_go;
+	Gameobject* all_spawners_go;
+	Gameobject* base_text_go;
+	C_Image* spawn_img;
+	C_Text* text_spawner;
+	C_Text* all_spawners;
+	C_Text* base_text;
+
 	switch (state)
 	{
 		//------------------STATE MACHINE CASES-----------------------
@@ -1526,9 +1560,8 @@ void Scene::OnEventStateMachine(GameplayState state)
 		std::pair<float, float> current_cam_pos_t = Map::F_WorldToMap(current_cam_pos.first, current_cam_pos.second);
 
 
-		gather_go = AddGameobject("Tutorial Gatherer");
+		Gameobject* gather_go = AddGameobject("Tutorial Gatherer");
 		gather_go->GetTransform()->SetLocalPos({ current_cam_pos_t.first, current_cam_pos_t.second,0.0f });
-
 		new Gatherer(gather_go);
 
 		current_state = R_CLICK_MOVEMENT;
@@ -1717,7 +1750,7 @@ void Scene::OnEventStateMachine(GameplayState state)
 		std::pair<float, float> current_cam_pos_t = Map::F_WorldToMap(current_cam_pos.first, current_cam_pos.second);
 
 
-		enemy_go = AddGameobject("Tutorial Enemy");
+		Gameobject* enemy_go = AddGameobject("Tutorial Enemy");
 		enemy_go->GetTransform()->SetLocalPos({ current_cam_pos_t.first, current_cam_pos_t.second,0.0f });
 
 		new EnemyMeleeUnit(enemy_go);
@@ -1923,9 +1956,9 @@ void Scene::OnEventStateMachine(GameplayState state)
 
 		//----------------------------------------------------------------		
 
-		SpawnBehaviour(SPAWNER, spawner_pos1);
-		SpawnBehaviour(SPAWNER, spawner_pos2);
-		SpawnBehaviour(SPAWNER, spawner_pos3);
+		SpawnBehaviour(SPAWNER, vec(230.f, 160.f));
+		SpawnBehaviour(SPAWNER, vec(55.f, 200.f));
+		SpawnBehaviour(SPAWNER, vec(155.f, 300.f));
 
 		current_state = SPAWNER_STATE;
 		break;
@@ -1986,7 +2019,6 @@ void Scene::ResetScene()
 	SetSelection(nullptr, false);
 	root.RemoveChilds();
 	Event::PumpAll();
-	fogLoaded = false;
 	root.UpdateRemoveQueue();
 }
 
@@ -2000,7 +2032,7 @@ void Scene::ChangeToScene(SceneType scene)
 	case MENU: LoadMenuScene(); break;
 	case MAIN: LoadMainScene(); break;
 	case OPTIONS: LoadOptionsScene(); break;
-	case MAIN_FROM_SAFE: break;
+	case MAIN_FROM_SAFE: LoadGameNow(); break;
 	case END: LoadEndScene(); break;
 	case CREDITS: break;
 	default: break;
@@ -2254,14 +2286,19 @@ void Scene::LoadGameNow()
 	pugi::xml_document doc;
 	if (App->files.LoadXML("Assets/save_file.xml", doc))
 	{
-		// Clear Scene content
-		ResetScene();
+		map.Load("Assets/maps/iso.tmx");
+		LoadMainHUD();
+		App->fogWar.Init();
 
 		// Set scene values
-		pugi::xml_node scene_node = doc.child("Scene Data");
+		pugi::xml_node scene_node = doc.child("Scene");
+
+		//Event::Push(MINIMAP_MOVE_CAMERA, App->render, 800.0f, 2900.0f);
 
 		// Set Hierarchy
-		root.Load(doc.child("Hierarchy"));
+		pugi::xml_node hierarchy = scene_node.child("Hierarchy");
+		root.Load(hierarchy);
+
 	}
 	else
 		LOG("Error loading scene");

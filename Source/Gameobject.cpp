@@ -371,15 +371,14 @@ void Gameobject::UpdateRemoveQueue()
 void Gameobject::Load(pugi::xml_node& node)
 {
 	// Setup Gameobject Values
-	pugi::xml_node go_node = node.child("Gameobject");
+	/*pugi::xml_node go_node = node.child("Gameobject");
 	name = go_node.attribute("name").as_string(name.c_str());
 	id = go_node.attribute("id").as_float(id);
 	active = go_node.attribute("active").as_bool(active);
-	isStatic = go_node.attribute("isStatic").as_bool(isStatic);
+	isStatic = go_node.attribute("isStatic").as_bool(isStatic);*/
 
 	// Setup Childs
-	pugi::xml_node childs_node = go_node.child("Childs");
-	for (pugi::xml_node bh_node = childs_node.first_child(); bh_node != childs_node.last_child(); bh_node = childs_node.next_sibling())
+	for (pugi::xml_node bh_node : node.children("Behaviour"))
 	{
 		Gameobject* go = new Gameobject(bh_node.attribute("name").as_string("from XML"), this);
 		go->transform->Load(bh_node);
@@ -388,52 +387,52 @@ void Gameobject::Load(pugi::xml_node& node)
 		{
 		case GATHERER:
 		{
-			(new Gatherer(this))->Load(bh_node);
+			(new Gatherer(go))->Load(bh_node);
 			break;
 		}
 		case UNIT_MELEE:
 		{
-			(new MeleeUnit(this))->Load(bh_node);
+			(new MeleeUnit(go))->Load(bh_node);
 			break;
 		}
 		case UNIT_RANGED:
 		{
-			(new RangedUnit(this))->Load(bh_node);
+			(new RangedUnit(go))->Load(bh_node);
 			break;
 		}
 		case ENEMY_MELEE:
 		{
-			(new EnemyMeleeUnit(this))->Load(bh_node);
+			(new EnemyMeleeUnit(go))->Load(bh_node);
 			break;
 		}
 		case BASE_CENTER:
 		{
-			(new Base_Center(this))->Load(bh_node);
+			(new Base_Center(go))->Load(bh_node);
 			break;
 		}
 		case TOWER:
 		{
-			(new Tower(this))->Load(bh_node);
+			(new Tower(go))->Load(bh_node);
 			break;
 		}
 		case BARRACKS:
 		{
-			(new Barracks(this))->Load(bh_node);
+			(new Barracks(go))->Load(bh_node);
 			break;
 		}
 		case EDGE:
 		{
-			(new Edge(this))->Load(bh_node);
+			(new Edge(go))->Load(bh_node);
 			break;
 		}
 		case CAPSULE:
 		{
-			(new Capsule(this))->Load(bh_node);
+			(new Capsule(go))->Load(bh_node);
 			break;
 		}
 		case SPAWNER:
 		{
-			(new Spawner(this))->Load(bh_node);
+			(new Spawner(go))->Load(bh_node);
 			break;
 		}
 		default:
@@ -444,21 +443,19 @@ void Gameobject::Load(pugi::xml_node& node)
 
 void Gameobject::Save(pugi::xml_node& node) const
 {
-	// Serialize Gameobject Values
-	pugi::xml_node go_data = node.append_child("Gameobject");
-	go_data.append_attribute("name").set_value(name.c_str());
-	go_data.append_attribute("id").set_value(id);
-	go_data.append_attribute("active").set_value(active);
-	go_data.append_attribute("isStatic").set_value(isStatic);
+	/*/ Serialize Gameobject Values
+	node.append_attribute("name").set_value(name.c_str());
+	node.append_attribute("id").set_value(id);
+	node.append_attribute("active").set_value(active);
+	node.append_attribute("isStatic").set_value(isStatic);*/
 
 	// Serialize Childs
-	pugi::xml_node go_childs = go_data.append_child("Childs");
 	for (std::vector<Gameobject*>::const_iterator it = childs.cbegin(); it != childs.cend(); ++it)
 	{
 		const Behaviour* bh = (*it)->behaviour;
 		if (bh != nullptr)
 		{
-			pugi::xml_node bh_node = go_childs.append_child("Behaviour");
+			pugi::xml_node bh_node = node.append_child("Behaviour");
 			bh_node.append_attribute("name").set_value((*it)->name.c_str());
 			(*it)->transform->Save(bh_node);
 			bh->Save(bh_node);

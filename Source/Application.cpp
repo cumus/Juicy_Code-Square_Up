@@ -88,17 +88,15 @@ bool Application::Init()
 				LOG("Error starting module: %s.", (*it)->GetName());
 		}
 
-		// Load sample scene
+		// Load Intro scene
 		if (ret)
 		{
 			state = STOPED;
-#ifdef DEBUG
-#else
 			time.SetMaxFPS(60);
+
 			Event::Push(SCENE_CHANGE, scene, INTRO, 0.f);
 			Event::PumpAll();
 			Event::Push(SCENE_PLAY, this);
-#endif // DEBUG
 		}
 	}
 	else

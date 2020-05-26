@@ -1,46 +1,62 @@
 <?xml version="1.0"?>
 <Scene god_mode="true" no_damage="true" draw_collisions="false" drawSelection="false">
-	<Hierarchy>
-		<Gameobject name="root" id="1" active="true" isStatic="false">
-			<Childs>
-				<Behaviour name="Base Center" x="122" y="79" z="0" sx="122" sy="79" sz="0" current_life="1000" type="8" />
-				<Behaviour name="Edge" x="144" y="157" z="0" sx="144" sy="157" sz="0" current_life="100" type="13" />
-				<Behaviour name="Edge" x="221" y="120" z="0" sx="221" sy="120" sz="0" current_life="100" type="13" />
-				<Behaviour name="Edge" x="246" y="79" z="0" sx="246" sy="79" sz="0" current_life="100" type="13" />
-				<Behaviour name="Edge" x="123" y="224" z="0" sx="123" sy="224" sz="0" current_life="100" type="13" />
-				<Behaviour name="Edge" x="130" y="65" z="0" sx="130" sy="65" sz="0" current_life="100" type="13" />
-				<Behaviour name="Edge" x="123" y="65" z="0" sx="123" sy="65" sz="0" current_life="100" type="13" />
-				<Behaviour name="Edge" x="41" y="166" z="0" sx="41" sy="166" sz="0" current_life="100" type="13" />
-				<Behaviour name="Edge" x="165" y="111" z="0" sx="165" sy="111" sz="0" current_life="100" type="13" />
-				<Behaviour name="Edge" x="149" y="72" z="0" sx="149" sy="72" sz="0" current_life="100" type="13" />
-				<Behaviour name="Edge" x="128" y="152" z="0" sx="128" sy="152" sz="0" current_life="100" type="13" />
-				<Behaviour name="Edge" x="128" y="143" z="0" sx="128" sy="143" sz="0" current_life="100" type="13" />
-				<Behaviour name="Edge" x="128" y="134" z="0" sx="128" sy="134" sz="0" current_life="100" type="13" />
-				<Behaviour name="Edge" x="136" y="156" z="0" sx="136" sy="156" sz="0" current_life="100" type="13" />
-				<Behaviour name="Edge" x="162" y="153" z="0" sx="162" sy="153" sz="0" current_life="100" type="13" />
-				<Behaviour name="Edge" x="173" y="153" z="0" sx="173" sy="153" sz="0" current_life="100" type="13" />
-				<Behaviour name="Edge" x="175" y="145" z="0" sx="175" sy="145" sz="0" current_life="100" type="13" />
-				<Behaviour name="Edge" x="176" y="125" z="0" sx="176" sy="125" sz="0" current_life="100" type="13" />
-				<Behaviour name="Edge" x="170" y="119" z="0" sx="170" sy="119" sz="0" current_life="100" type="13" />
-				<Behaviour name="Edge" x="163" y="119" z="0" sx="163" sy="119" sz="0" current_life="100" type="13" />
-				<Behaviour name="Edge" x="129" y="122" z="0" sx="129" sy="122" sz="0" current_life="100" type="13" />
-				<Behaviour name="Edge" x="137" y="118" z="0" sx="137" sy="118" sz="0" current_life="100" type="13" />
-				<Behaviour name="Edge" x="143" y="102" z="0" sx="143" sy="102" sz="0" current_life="100" type="13" />
-				<Behaviour name="Edge" x="148" y="102" z="0" sx="148" sy="102" sz="0" current_life="100" type="13" />
-				<Behaviour name="Edge" x="153" y="102" z="0" sx="153" sy="102" sz="0" current_life="100" type="13" />
-				<Behaviour name="Edge" x="82" y="134" z="0" sx="82" sy="134" sz="0" current_life="100" type="13" />
-				<Behaviour name="Edge" x="94" y="134" z="0" sx="94" sy="134" sz="0" current_life="100" type="13" />
-				<Behaviour name="Edge" x="98" y="116" z="0" sx="98" sy="116" sz="0" current_life="100" type="13" />
-				<Behaviour name="Edge" x="54" y="112" z="0" sx="54" sy="112" sz="0" current_life="100" type="13" />
-				<Behaviour name="Edge" x="228" y="195" z="0" sx="228" sy="195" sz="0" current_life="100" type="13" />
-				<Behaviour name="Edge" x="217" y="142" z="0" sx="217" sy="142" sz="0" current_life="100" type="13" />
-				<Behaviour name="Edge" x="223" y="138" z="0" sx="223" sy="138" sz="0" current_life="100" type="13" />
-				<Behaviour name="Edge" x="205" y="116" z="0" sx="205" sy="116" sz="0" current_life="100" type="13" />
-				<Behaviour name="Edge" x="247" y="125" z="0" sx="247" sy="125" sz="0" current_life="100" type="13" />
-				<Behaviour name="Edge" x="171" y="223" z="0" sx="171" sy="223" sz="0" current_life="100" type="13" />
-				<Behaviour name="Edge" x="139" y="222" z="0" sx="139" sy="222" sz="0" current_life="100" type="13" />
-				<Behaviour name="Capsule" x="144" y="135" z="0" sx="144" sy="135" sz="0" current_life="1" type="14" />
-			</Childs>
-		</Gameobject>
+	<Hierarchy name="root" id="1" active="true" isStatic="false">
+		<Behaviour name="Base Center" x="122" y="79" z="0" sx="4" sy="4" sz="1" current_life="1000" type="8" />
+		<Behaviour name="Edge" x="144" y="157" z="0" sx="1" sy="1" sz="1" current_life="100" type="13" />
+		<Behaviour name="Edge" x="221" y="120" z="0" sx="1" sy="1" sz="1" current_life="100" type="13" />
+		<Behaviour name="Edge" x="246" y="79" z="0" sx="1" sy="1" sz="1" current_life="100" type="13" />
+		<Behaviour name="Edge" x="123" y="224" z="0" sx="1" sy="1" sz="1" current_life="100" type="13" />
+		<Behaviour name="Edge" x="130" y="65" z="0" sx="1" sy="1" sz="1" current_life="100" type="13" />
+		<Behaviour name="Edge" x="123" y="65" z="0" sx="1" sy="1" sz="1" current_life="100" type="13" />
+		<Behaviour name="Edge" x="41" y="166" z="0" sx="1" sy="1" sz="1" current_life="100" type="13" />
+		<Behaviour name="Edge" x="165" y="111" z="0" sx="1" sy="1" sz="1" current_life="100" type="13" />
+		<Behaviour name="Edge" x="149" y="72" z="0" sx="1" sy="1" sz="1" current_life="100" type="13" />
+		<Behaviour name="Edge" x="128" y="152" z="0" sx="1" sy="1" sz="1" current_life="100" type="13" />
+		<Behaviour name="Edge" x="128" y="143" z="0" sx="1" sy="1" sz="1" current_life="100" type="13" />
+		<Behaviour name="Edge" x="128" y="134" z="0" sx="1" sy="1" sz="1" current_life="100" type="13" />
+		<Behaviour name="Edge" x="136" y="156" z="0" sx="1" sy="1" sz="1" current_life="100" type="13" />
+		<Behaviour name="Edge" x="162" y="153" z="0" sx="1" sy="1" sz="1" current_life="100" type="13" />
+		<Behaviour name="Edge" x="173" y="153" z="0" sx="1" sy="1" sz="1" current_life="100" type="13" />
+		<Behaviour name="Edge" x="175" y="145" z="0" sx="1" sy="1" sz="1" current_life="100" type="13" />
+		<Behaviour name="Edge" x="176" y="125" z="0" sx="1" sy="1" sz="1" current_life="100" type="13" />
+		<Behaviour name="Edge" x="170" y="119" z="0" sx="1" sy="1" sz="1" current_life="100" type="13" />
+		<Behaviour name="Edge" x="163" y="119" z="0" sx="1" sy="1" sz="1" current_life="100" type="13" />
+		<Behaviour name="Edge" x="129" y="122" z="0" sx="1" sy="1" sz="1" current_life="100" type="13" />
+		<Behaviour name="Edge" x="137" y="118" z="0" sx="1" sy="1" sz="1" current_life="100" type="13" />
+		<Behaviour name="Edge" x="143" y="102" z="0" sx="1" sy="1" sz="1" current_life="100" type="13" />
+		<Behaviour name="Edge" x="148" y="102" z="0" sx="1" sy="1" sz="1" current_life="100" type="13" />
+		<Behaviour name="Edge" x="153" y="102" z="0" sx="1" sy="1" sz="1" current_life="100" type="13" />
+		<Behaviour name="Edge" x="82" y="134" z="0" sx="1" sy="1" sz="1" current_life="100" type="13" />
+		<Behaviour name="Edge" x="94" y="134" z="0" sx="1" sy="1" sz="1" current_life="100" type="13" />
+		<Behaviour name="Edge" x="98" y="116" z="0" sx="1" sy="1" sz="1" current_life="100" type="13" />
+		<Behaviour name="Edge" x="54" y="112" z="0" sx="1" sy="1" sz="1" current_life="100" type="13" />
+		<Behaviour name="Edge" x="228" y="195" z="0" sx="1" sy="1" sz="1" current_life="100" type="13" />
+		<Behaviour name="Edge" x="217" y="142" z="0" sx="1" sy="1" sz="1" current_life="100" type="13" />
+		<Behaviour name="Edge" x="223" y="138" z="0" sx="1" sy="1" sz="1" current_life="100" type="13" />
+		<Behaviour name="Edge" x="205" y="116" z="0" sx="1" sy="1" sz="1" current_life="100" type="13" />
+		<Behaviour name="Edge" x="247" y="125" z="0" sx="1" sy="1" sz="1" current_life="100" type="13" />
+		<Behaviour name="Edge" x="171" y="223" z="0" sx="1" sy="1" sz="1" current_life="100" type="13" />
+		<Behaviour name="Edge" x="139" y="222" z="0" sx="1" sy="1" sz="1" current_life="100" type="13" />
+		<Behaviour name="Capsule" x="144" y="135" z="0" sx="1" sy="1" sz="1" current_life="1" type="14" />
+		<Behaviour name="Capsule" x="152" y="135" z="0" sx="1" sy="1" sz="1" current_life="1" type="14" />
+		<Behaviour name="Gatherer" x="115" y="79" z="0" sx="1" sy="1" sz="1" current_life="20" type="0" />
+		<Behaviour name="Gatherer" x="116" y="74" z="0" sx="1" sy="1" sz="1" current_life="20" type="0" />
+		<Behaviour name="Unit melee" x="117" y="70" z="0" sx="1" sy="1" sz="1" current_life="100" type="1" />
+		<Behaviour name="Unit melee" x="123" y="85" z="0" sx="1" sy="1" sz="1" current_life="100" type="1" />
+		<Behaviour name="Gatherer" x="132.31073" y="89.0128326" z="0" sx="1" sy="1" sz="1" current_life="20" type="0" />
+		<Behaviour name="Gatherer" x="139" y="91" z="0" sx="1" sy="1" sz="1" current_life="20" type="0" />
+		<Behaviour name="Unit melee" x="137" y="86" z="0" sx="1" sy="1" sz="1" current_life="100" type="1" />
+		<Behaviour name="Gatherer" x="137" y="83" z="0" sx="1" sy="1" sz="1" current_life="20" type="0" />
+		<Behaviour name="Unit melee" x="137" y="82" z="0" sx="1" sy="1" sz="1" current_life="100" type="1" />
+		<Behaviour name="Unit melee" x="138" y="79" z="0" sx="1" sy="1" sz="1" current_life="100" type="1" />
+		<Behaviour name="Gatherer" x="134" y="89" z="0" sx="1" sy="1" sz="1" current_life="20" type="0" />
+		<Behaviour name="Gatherer" x="137" y="94" z="0" sx="1" sy="1" sz="1" current_life="20" type="0" />
+		<Behaviour name="Gatherer" x="142" y="96" z="0" sx="1" sy="1" sz="1" current_life="20" type="0" />
+		<Behaviour name="Gatherer" x="135" y="93" z="0" sx="1" sy="1" sz="1" current_life="20" type="0" />
+		<Behaviour name="Gatherer" x="145" y="96" z="0" sx="1" sy="1" sz="1" current_life="20" type="0" />
+		<Behaviour name="Unit melee" x="145" y="96" z="0" sx="1" sy="1" sz="1" current_life="100" type="1" />
+		<Behaviour name="Gatherer" x="144" y="97" z="0" sx="1" sy="1" sz="1" current_life="20" type="0" />
+		<Behaviour name="Unit melee" x="142" y="99" z="0" sx="1" sy="1" sz="1" current_life="100" type="1" />
+		<Behaviour name="Unit melee" x="141" y="100" z="0" sx="1" sy="1" sz="1" current_life="100" type="1" />
 	</Hierarchy>
 </Scene>
