@@ -18,8 +18,8 @@ Gatherer::Gatherer(Gameobject* go) : B_Unit(go, GATHERER, IDLE, B_GATHERER)
 	vision_range = 20.0f;
 	dieDelay = 5.0f;
 	providesVisibility = true;
-	//deathFX = GATHERER_DIE_FX;
-	//attackFX = GATHERER_ATK_FX;
+	deathFX = GATHERER_DIE_FX;
+	attackFX = GATHERER_ATK_FX;
 
 	CreatePanel();
 	selectionPanel->SetInactive();

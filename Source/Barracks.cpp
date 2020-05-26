@@ -13,7 +13,6 @@
 #include "Log.h"
 
 
-
 Barracks::Barracks(Gameobject* go) : BuildingWithQueue(go, BARRACKS, NO_UPGRADE, B_BARRACKS)
 {
 	Transform* t = game_object->GetTransform();
@@ -24,6 +23,7 @@ Barracks::Barracks(Gameobject* go) : BuildingWithQueue(go, BARRACKS, NO_UPGRADE,
 	current_lvl = 1;
 	max_lvl = 5;
 	providesVisibility = true;
+	vision_range = 10.0f;
 
 	//create_bar();
 	//bar_go->SetInactive();

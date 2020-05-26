@@ -11,7 +11,7 @@ Edge::Edge(Gameobject* go) : Behaviour(go, EDGE, NO_UPGRADE, B_EDGE)
 	damage = 0;
 	dieDelay = 5.0f;
 	providesVisibility = false;
-	//deathFX = EDGE_FX;
+	deathFX = EDGE_FX;
 	Transform* t = game_object->GetTransform();
 	if (t)
 	{

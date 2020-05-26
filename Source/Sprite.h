@@ -20,12 +20,14 @@ public:
 
 	void SetSection(const SDL_Rect section);
 
+public:
+	RectF offset;
+
 protected:
 
 	int tex_id = -1;
 	SDL_Rect section;
 	Layer layer = SCENE;
-	RectF offset;
 	SDL_Color color;
 };
 

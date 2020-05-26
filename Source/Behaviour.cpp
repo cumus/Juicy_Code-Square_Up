@@ -92,11 +92,7 @@ void Behaviour::SetColliders()
 		case UNIT_SUPER:
 		{
 			bodyColl = new Collider(game_object, { pos.x,pos.y,game_object->GetTransform()->GetLocalScaleX(),game_object->GetTransform()->GetLocalScaleY() }, NON_TRIGGER, PLAYER_TAG, { 0,Map::GetBaseOffset(),0,0 }, BODY_COLL_LAYER);
-			//visionColl = new Collider(game_object, { pos.x,pos.y,vision_range,vision_range }, TRIGGER, PLAYER_VISION_TAG, { 0,Map::GetBaseOffset(),0,0 });
 			attackColl = new Collider(game_object, { pos.x,pos.y,attack_range,attack_range }, TRIGGER, PLAYER_ATTACK_TAG, { 0,Map::GetBaseOffset(),0,0 }, ATTACK_COLL_LAYER);
-			//selColl = new Collider(game_object, { pos.x,pos.y,game_object->GetTransform()->GetLocalScaleX(),game_object->GetTransform()->GetLocalScaleY() }, TRIGGER, SELECTION_TAG, { 0,0,0,0 }, UNIT_SELECTION_LAYER);
-			//selColl->SetPointsOffset({-20,-70}, {20,50}, {-10,-55}, {10,35});
-			//selectableUnits.push_back(GetID());
 			std::pair<float, float> world = Map::F_MapToWorld(pos.x, pos.y);
 			selectionOffset = { 10,-50 };
 			selectionRect = { world.first + selectionOffset.first,world.second + selectionOffset.second,50,90 };
@@ -110,9 +106,6 @@ void Behaviour::SetColliders()
 			bodyColl = new Collider(game_object, { pos.x,pos.y,game_object->GetTransform()->GetLocalScaleX(),game_object->GetTransform()->GetLocalScaleY() }, NON_TRIGGER, ENEMY_TAG, { 0,Map::GetBaseOffset(),0,0 }, BODY_COLL_LAYER);
 			visionColl = new Collider(game_object, { pos.x,pos.y,vision_range,vision_range }, TRIGGER, ENEMY_VISION_TAG, { 0,Map::GetBaseOffset(),0,0 }, VISION_COLL_LAYER);
 			attackColl = new Collider(game_object, { pos.x,pos.y,attack_range,attack_range }, TRIGGER, ENEMY_ATTACK_TAG, { 0,Map::GetBaseOffset(),0,0 }, ATTACK_COLL_LAYER);
-			//selColl = new Collider(game_object, { pos.x,pos.y,game_object->GetTransform()->GetLocalScaleX(),game_object->GetTransform()->GetLocalScaleY() }, TRIGGER, ENEMY_TAG, { 0,0,0,0 }, UNIT_SELECTION_LAYER);
-			//selColl->SetPointsOffset({ -20,-70 }, { 20,50 }, { -10,-55 }, { 10,35 });
-			//selectableUnits.push_back(GetID());
 			std::pair<float, float> world = Map::F_MapToWorld(pos.x, pos.y);
 			selectionOffset = { 10,-50 };
 			selectionRect = { world.first + selectionOffset.first,world.second + selectionOffset.second,50,90 };
@@ -121,9 +114,6 @@ void Behaviour::SetColliders()
 		case BASE_CENTER:
 		{
 			bodyColl = new Collider(game_object, { pos.x,pos.y,game_object->GetTransform()->GetLocalScaleX(),game_object->GetTransform()->GetLocalScaleY() }, TRIGGER, PLAYER_TAG, { 90,Map::GetBaseOffset() + 65,0,0 }, BODY_COLL_LAYER);
-			//selColl = new Collider(game_object, { pos.x,pos.y,game_object->GetTransform()->GetLocalScaleX(),game_object->GetTransform()->GetLocalScaleY() }, TRIGGER, SELECTION_TAG, { 0,0,0,0 }, UNIT_SELECTION_LAYER);
-			//selColl->SetPointsOffset({ 0,60 }, { 180,-25 }, { 50,120 }, { 130,-90 });
-			//selectableUnits.push_back(GetID());
 			std::pair<float, float> world = Map::F_MapToWorld(pos.x, pos.y);
 			selectionOffset = { 30,-100};
 			selectionRect = { world.first + selectionOffset.first,world.second + selectionOffset.second,185,250 };
@@ -131,18 +121,20 @@ void Behaviour::SetColliders()
 		}
 		case TOWER:
 		{
-			//bodyColl = new Collider(game_object, { pos.x,pos.y,game_object->GetTransform()->GetLocalScaleX(),game_object->GetTransform()->GetLocalScaleY() }, TRIGGER, BUILDING_TAG, { 0,Map::GetBaseOffset(),0,0 }, BODY_COLL_LAYER);
-			//selColl = new Collider(game_object, { pos.x,pos.y,game_object->GetTransform()->GetLocalScaleX(),game_object->GetTransform()->GetLocalScaleY() }, NON_TRIGGER, PLAYER_TAG, { 0,0,0,0 }, UNIT_SELECTION_LAYER);
-			//selColl->SetPointsOffset({ -20,-70 }, { 20,50 }, { -10,-55 }, { 10,35 });
-			//selectableUnits.push_back(GetID());
+			bodyColl = new Collider(game_object, { pos.x,pos.y,game_object->GetTransform()->GetLocalScaleX(),game_object->GetTransform()->GetLocalScaleY() }, TRIGGER, BUILDING_TAG, { 0,Map::GetBaseOffset()+10,0,0 }, BODY_COLL_LAYER);
+			std::pair<float, float> world = Map::F_MapToWorld(pos.x, pos.y);
+			selectionOffset = { 5,-105 };
+			selectionRect = { world.first + selectionOffset.first,world.second + selectionOffset.second,55,160 };
+			selection_highlight->offset = { 0, -30, 1.f, 1.f };
 			break;
 		}
 		case BARRACKS:
 		{
-			//bodyColl = new Collider(game_object, { pos.x,pos.y,game_object->GetTransform()->GetLocalScaleX(),game_object->GetTransform()->GetLocalScaleY() }, TRIGGER, BUILDING_TAG, { 0,Map::GetBaseOffset(),0,0 }, BODY_COLL_LAYER);
-			//selColl = new Collider(game_object, { pos.x,pos.y,game_object->GetTransform()->GetLocalScaleX(),game_object->GetTransform()->GetLocalScaleY() }, NON_TRIGGER, PLAYER_TAG, { 0,0,0,0 }, UNIT_SELECTION_LAYER);
-			//selColl->SetPointsOffset({ -20,-70 }, { 20,50 }, { -10,-55 }, { 10,35 });
-			//selectableUnits.push_back(GetID());
+			bodyColl = new Collider(game_object, { pos.x,pos.y,game_object->GetTransform()->GetLocalScaleX(),game_object->GetTransform()->GetLocalScaleY() }, TRIGGER, BUILDING_TAG, { 150,Map::GetBaseOffset()+95,0,0 }, BODY_COLL_LAYER);
+			std::pair<float, float> world = Map::F_MapToWorld(pos.x, pos.y);
+			selectionOffset = { 30,-50 };
+			selectionRect = { world.first + selectionOffset.first,world.second + selectionOffset.second,300,250 };
+			selection_highlight->offset = { 0, -50, 1.f, 1.f };
 			break;
 		}
 		case LAB:
@@ -152,9 +144,6 @@ void Behaviour::SetColliders()
 		case EDGE:
 		{
 			//bodyColl = new Collider(game_object, { pos.x,pos.y,game_object->GetTransform()->GetLocalScaleX(),game_object->GetTransform()->GetLocalScaleY() }, TRIGGER, ENEMY_TAG, { 0,Map::GetBaseOffset(),0,0 }, BODY_COLL_LAYER);
-			//selColl = new Collider(game_object, { pos.x,pos.y,game_object->GetTransform()->GetLocalScaleX(),game_object->GetTransform()->GetLocalScaleY() }, TRIGGER, ENEMY_TAG, { 0,0,0,0 }, UNIT_SELECTION_LAYER);
-			//selColl->SetPointsOffset({-65, -20 }, { 40,65 }, { 10,-5 }, { -35,45 });
-			//selectableUnits.push_back(GetID());
 			std::pair<float, float> world = Map::F_MapToWorld(pos.x, pos.y);
 			selectionOffset = { -30,0 };
 			selectionRect = { world.first + selectionOffset.first,world.second + selectionOffset.second,100,50 };
@@ -927,7 +916,7 @@ void B_Unit::UpdatePath(int x, int y)
 
 void B_Unit::Repath()
 {
-	if (!path->empty())
+	if (path != nullptr && !path->empty())
 	{
 		path = App->pathfinding.CreatePath({ int(pos.x), int(pos.y) }, { movDest.x, movDest.y }, GetID());
 
@@ -1284,7 +1273,7 @@ void B_Unit::OnRightClick(vec posClick, vec movPos)
 				tilesVisited.clear();
 			}
 		}
-		App->particleSys.AddParticle(pos, { posClick.x,posClick.y}, 8.0f, ORANGE_PARTICLE);
+		App->particleSys.AddParticle(pos, { posClick.x,posClick.y}, 9.0f, ORANGE_PARTICLE);
 	} 
 }
  
@@ -1364,6 +1353,9 @@ BuildingWithQueue::BuildingWithQueue(Gameobject* go, UnitType type, UnitState st
 
 void BuildingWithQueue::Update()
 {
+	pos = game_object->GetTransform()->GetGlobalPosition();
+	if (providesVisibility) GetTilesInsideRadius();
+
 	if (!build_queue.empty())
 	{
 		if (!progress_bar->GetGameobject()->IsActive())
