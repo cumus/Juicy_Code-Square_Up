@@ -65,8 +65,6 @@ void Sprite::SetSection(const SDL_Rect s)
 
 AnimatedSprite::AnimatedSprite(Behaviour* unit) : Sprite(unit->GetGameobject(), ANIM_SPRITE)
 {
-	current_state = *(unit_state = unit->GetSpriteStatePtr());
-
 	switch (unit->GetType())
 	{
 	case BASE_CENTER:
@@ -247,6 +245,12 @@ AnimatedSprite::AnimatedSprite(Behaviour* unit) : Sprite(unit->GetGameobject(), 
 	default:
 		break;
 	}
+
+	unit_state = unit->GetSpriteStatePtr();
+	section = animations[current_state = *unit_state].Reset(current_state < ATTACKING);
+
+	if (current_state < ATTACKING)
+		frame_timer = JMath::RandomF(animations[current_state].Period());
 }
 
 AnimatedSprite::~AnimatedSprite()
@@ -298,16 +302,16 @@ void Anim::Setup(SDL_Rect rect, int frames, float f)
 
 const SDL_Rect Anim::Reset(bool random_start)
 {
-	current_frame = random_start ? int(JMath::RandomF(float(max_frames))) : 0;
+	current_frame = random_start ? int(JMath::RandomF(float(max_frames+1))) : 0;
 	return first_rect;
 }
 
 bool Anim::Update(float& frame_timer)
 {
 	bool ret;
-	if (ret = (frame_timer >= 1.0f / frequency))
+	if (ret = (frame_timer >= Period()))
 	{
-		frame_timer -= 1.0f / frequency;
+		frame_timer -= Period();
 		if (++current_frame >= max_frames)
 			current_frame = 0;
 	}
@@ -318,4 +322,9 @@ bool Anim::Update(float& frame_timer)
 int Anim::GetSectionOffset() const
 {
 	return first_rect.x + (first_rect.w * current_frame);
+}
+
+float Anim::Period() const
+{
+	return 1.0f / frequency;
 }

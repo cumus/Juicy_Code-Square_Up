@@ -98,7 +98,7 @@ std::pair<float, float> JMath::RotatePoint(float x, float y, double degrees)
 
 float JMath::RandomF(float base)
 {
-	return base * (32767.0f / float(std::rand()));
+	return base * (float(std::rand()) / 32767.0f);
 }
 
 float JMath::RandomRangeF(float max, float min)

@@ -41,6 +41,7 @@ public:
 	const SDL_Rect Reset(bool random_start);
 	bool Update(float& frame_timer);
 	int GetSectionOffset() const;
+	inline float Period() const;
 
 private:
 

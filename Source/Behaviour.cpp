@@ -30,7 +30,8 @@ std::vector<double> Behaviour::selectableUnits;
 Behaviour::Behaviour(Gameobject* go, UnitType t, UnitState starting_state, ComponentType comp_type) :
 	Component(comp_type, go),
 	type(t),
-	current_state(starting_state)
+	current_state(starting_state),
+	spriteState(starting_state)
 {
 	current_life = max_life = damage = 10;
 	//attack_range = vision_range = 5.0f;
