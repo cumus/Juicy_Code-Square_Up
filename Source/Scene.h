@@ -134,6 +134,7 @@ private:
 	void LoadIntroScene();
 	void LoadMenuScene();
 	void LoadMainScene();
+	void LoadOptionsScene();
 	void LoadEndScene();
 
 	void LoadMainHUD();
@@ -187,6 +188,11 @@ private:
 	bool endScene = false;
 	Gameobject root;
 	Map map;
+
+	// Music and Sounds Value
+
+		static int music_value;
+	static int sfx_value;
 
 	// God Mode
 	static bool god_mode;

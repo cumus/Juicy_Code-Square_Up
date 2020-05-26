@@ -37,6 +37,8 @@
 #include <string.h>
 #include <time.h>
 
+int Scene::music_value = 50;
+int Scene::sfx_value = 50;
 
 bool Scene::god_mode = false;
 bool Scene::no_damage = true;
@@ -556,6 +558,117 @@ void Scene::LoadMenuScene()
 	quit->section[3] = { 0, 202, 470, 90 };
 
 	quit->tex_id = App->tex.Load("Assets/textures/quit.png");
+}
+
+void Scene::LoadOptionsScene()
+{
+	OPTICK_EVENT();
+
+	App->audio->PlayMusic("Assets/audio/Music/alexander-nakarada-early-probe-eats-the-dust.ogg");
+
+	float buttons_x = 0.01f;
+
+	//------------------------- BACKGROUND --------------------------------------
+
+	C_Image* background = new C_Image(AddGameobjectToCanvas("Background"));
+	background->target = { 0.f, 0.f, 1.f, 1.f };
+	background->section = { 0, 0, 1280, 720 };
+	background->tex_id = App->tex.Load("Assets/textures/background2.png");
+
+	//---------------------- OPTIONS MENU TITLE ---------------------------------
+
+	C_Image* options_title = new C_Image(AddGameobjectToCanvas("Options Menu Title"));
+	options_title->target = { buttons_x + 0.02f, 0.25f, 1.3f, 1.3f };
+	options_title->section = { 0, 0, 159, 49 };
+	options_title->tex_id = App->tex.Load("Assets/textures/options_title.png");
+
+	//------------------------- FULLSCREEN --------------------------------------
+
+	Gameobject* fullscreen_go = AddGameobjectToCanvas("Fullscreen Button");
+
+	C_Button* fullscreen = new C_Button(fullscreen_go, Event(BUTTON_EVENT, this, TOGGLE_FULLSCREEN));
+	fullscreen->target = { buttons_x, 0.443f, .55f, .55f };
+
+	fullscreen->section[0] = { 0, 0, 470, 90 };
+	fullscreen->section[1] = { 0, 101, 470, 90 };
+	fullscreen->section[2] = { 0, 202, 470, 90 };
+	fullscreen->section[3] = { 0, 202, 470, 90 };
+
+	fullscreen->tex_id = App->tex.Load("Assets/textures/fullscreen.png");
+
+	//------------------------- MUSIC VOLUME SETTINGS --------------------------------------
+
+	C_Image* music_background = new C_Image(AddGameobjectToCanvas("SFX Background"));
+	music_background->target = { buttons_x, 0.523f, 0.25f, 0.25f };
+	music_background->section = { 0, 0, 1762, 205 };
+	music_background->tex_id = App->tex.Load("Assets/textures/button3.png");
+
+	C_Image* music_volume = new C_Image(AddGameobjectToCanvas("Music Volume"));
+	music_volume->target = { buttons_x + 0.02f, 0.545f, 0.4f, 0.4f };
+	music_volume->section = { 0, 0, 274, 38 };
+	music_volume->tex_id = App->tex.Load("Assets/textures/music-volume.png");
+
+	Gameobject* music_slider_go = AddGameobjectToCanvas("Music Slider");
+
+	C_Image* music_slider_bar = new C_Image(music_slider_go);
+
+	music_slider_bar->target = { buttons_x + 0.12f, 0.545f, 1.f, 1.f };
+	music_slider_bar->section = { 174, 0, 245, 20 };
+	music_slider_bar->tex_id = App->tex.Load("Assets/textures/hud-sprites.png");
+
+	C_Slider_Button* music_slider_button = new C_Slider_Button(music_slider_go, buttons_x + 0.105f, buttons_x + 0.295f, &music_value);
+	music_slider_button->target = { buttons_x + 0.105f + (0.19f * float(music_value) * 0.01f), 0.526f, 1.f, 1.f };
+
+	music_slider_button->section[0] = { 174, 21, 45, 45 };
+	music_slider_button->section[1] = { 1081, 933, 45, 45 };
+	music_slider_button->section[2] = { 1152, 933, 45, 45 };
+	music_slider_button->section[3] = { 1152, 933, 45, 45 };
+	music_slider_button->tex_id = App->tex.Load("Assets/textures/hud-sprites.png");
+
+	//------------------------- SFX VOLUME SETTINGS --------------------------------------
+
+	C_Image* sfx_background = new C_Image(AddGameobjectToCanvas("SFX Background"));
+	sfx_background->target = { buttons_x, 0.602f, 0.25f, 0.25f };
+	sfx_background->section = { 0, 0, 1762, 205 };
+	sfx_background->tex_id = App->tex.Load("Assets/textures/button3.png");
+
+	C_Image* sfx_volume = new C_Image(AddGameobjectToCanvas("SFX Volume"));
+	sfx_volume->target = { buttons_x + 0.025f, 0.624f, 0.4f, 0.4f };
+	sfx_volume->section = { 0, 0, 223, 38 };
+	sfx_volume->tex_id = App->tex.Load("Assets/textures/sfx-volume.png");
+
+	Gameobject* sfx_slider_go = AddGameobjectToCanvas("SFX Slider");
+
+	C_Image* sfx_slider_bar = new C_Image(sfx_slider_go);
+
+	sfx_slider_bar->target = { buttons_x + 0.12f, 0.624f, 1.f, 1.f };
+	sfx_slider_bar->section = { 174, 0, 245, 20 };
+	sfx_slider_bar->tex_id = App->tex.Load("Assets/textures/hud-sprites.png");
+
+	C_Slider_Button* sfx_slider_button = new C_Slider_Button(sfx_slider_go, buttons_x + 0.105f, buttons_x + 0.295f, &sfx_value);
+	sfx_slider_button->target = { buttons_x + 0.105f + (0.19f * float(sfx_value) * 0.01f), 0.605f, 1.f, 1.f };
+
+	sfx_slider_button->section[0] = { 174, 21, 45, 45 };
+	sfx_slider_button->section[1] = { 1081, 933, 45, 45 };
+	sfx_slider_button->section[2] = { 1152, 933, 45, 45 };
+	sfx_slider_button->section[3] = { 1152, 933, 45, 45 };
+	sfx_slider_button->tex_id = App->tex.Load("Assets/textures/hud-sprites.png");
+
+
+	//------------------------- MAIN MENU BUTTON --------------------------------------
+
+	Gameobject* main_menu_go = AddGameobjectToCanvas("Main Menu Button");
+
+	C_Button* main_menu = new C_Button(main_menu_go, Event(BUTTON_EVENT, this, SCENE_CHANGE, MENU));
+	main_menu->target = { buttons_x, 0.680f, .55f, .55f };
+
+	main_menu->section[0] = { 0, 0, 470, 90 };
+	main_menu->section[1] = { 0, 101, 470, 90 };
+	main_menu->section[2] = { 0, 202, 470, 90 };
+	main_menu->section[3] = { 0, 202, 470, 90 };
+
+	main_menu->tex_id = App->tex.Load("Assets/textures/main-menu.png");
+
 }
 
 void Scene::LoadEndScene()
@@ -1886,6 +1999,7 @@ void Scene::ChangeToScene(SceneType scene)
 	case INTRO: LoadIntroScene(); break;
 	case MENU: LoadMenuScene(); break;
 	case MAIN: LoadMainScene(); break;
+	case OPTIONS: LoadOptionsScene(); break;
 	case MAIN_FROM_SAFE: break;
 	case END: LoadEndScene(); break;
 	case CREDITS: break;

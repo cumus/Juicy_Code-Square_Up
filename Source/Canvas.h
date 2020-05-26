@@ -4,6 +4,9 @@
 #include "Component.h"
 #include "SDL/include/SDL_rect.h"
 
+
+#include <sstream>
+
 class C_Canvas;
 
 class UI_Component : public Component
@@ -100,6 +103,44 @@ public:
 	int tex_id = -1;
 
 	enum ButtonStates : int
+	{
+		BUTTON_IDLE,
+		BUTTON_HOVERED,
+		BUTTON_PRESSED,
+		BUTTON_PRESSING,
+
+		MAX_BUTTON_STATES
+	} state;
+
+	SDL_Rect section[MAX_BUTTON_STATES];
+	SDL_Color color;
+
+private:
+
+	bool mouse_inside = false;
+};
+
+class C_Slider_Button : public UI_Component
+{
+public:
+
+	C_Slider_Button(Gameobject* go, float min_x, float max_x, int* value);
+	~C_Slider_Button();
+
+	void PreUpdate() override;
+	void PostUpdate() override;
+
+public:
+
+	float min_x, max_x;
+
+	int* value;
+
+	bool trigger_while_pressed = false;
+
+	int tex_id = -1;
+
+	enum SliderButtonStates : int
 	{
 		BUTTON_IDLE,
 		BUTTON_HOVERED,

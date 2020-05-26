@@ -203,3 +203,102 @@ void C_Button::PostUpdate()
 	else
 		App->render->DrawQuad(output, color, true, HUD, false);
 }
+
+C_Slider_Button::C_Slider_Button(Gameobject* go, float min_x, float max_x, int* value) :
+	UI_Component(go, go->GetUIParent(), UI_SLIDER_BUTTON),
+	state(BUTTON_IDLE), min_x(min_x), max_x(max_x), value(value)
+{}
+
+C_Slider_Button::~C_Slider_Button()
+{
+}
+
+void C_Slider_Button::PreUpdate()
+{
+	int x, y;
+	App->input->GetMousePosition(x, y);
+
+	RectF camera = App->render->GetCameraRectF();
+
+	float button_x = (float(x)) / (camera.w);
+
+	if ((mouse_inside = PointInsideOutputRect(x, y)))
+	{
+		KeyState mouse_click = App->input->GetMouseButtonDown(0);
+
+		switch (mouse_click)
+		{
+		case KEY_IDLE:
+		{
+			if (target.x < min_x)
+				target.x = min_x;
+
+			if (target.x > max_x)
+				target.x = max_x;
+
+			state = BUTTON_HOVERED;
+			break;
+		}
+		case KEY_DOWN:
+		{
+			target.x = button_x - 0.015f;
+
+			if (target.x < min_x)
+				target.x = min_x;
+
+			if (target.x > max_x)
+				target.x = max_x;
+
+			state = BUTTON_PRESSED;
+			break;
+		}
+		case KEY_REPEAT:
+		{
+			target.x = button_x - 0.015f;
+
+			if (target.x < min_x)
+				target.x = min_x;
+
+			if (target.x > max_x)
+				target.x = max_x;
+
+			state = BUTTON_PRESSING;
+			break;
+		}
+		case KEY_UP:
+		{
+			if (target.x < min_x)
+				target.x = min_x;
+
+			if (target.x > max_x)
+				target.x = max_x;
+
+			state = BUTTON_HOVERED;
+			break;
+		}
+		}
+	}
+	else
+	{
+		if (target.x < min_x)
+			target.x = min_x;
+
+		if (target.x > max_x)
+			target.x = max_x;
+
+		state = BUTTON_IDLE;
+	}
+
+}
+
+void C_Slider_Button::PostUpdate()
+{
+	ComputeOutputRect(float(section[state].w), float(section[state].h));
+
+	if (tex_id >= 0)
+		App->render->Blit_Scale(tex_id, output.x, output.y, float(output.w) / float(section[state].w), float(output.h) / float(section[state].h), &section[state], HUD, false);
+	else
+		App->render->DrawQuad(output, color, true, HUD, false);
+
+	*value = int(((target.x - min_x) / (max_x - min_x)) * 100);
+}

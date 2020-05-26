@@ -21,6 +21,7 @@ enum ComponentType
 	UI_IMAGE,
 	UI_TEXT,
 	UI_BUTTON,
+	UI_SLIDER_BUTTON,
 	UI_MINIMAP,
 	UI_MAX,
 
