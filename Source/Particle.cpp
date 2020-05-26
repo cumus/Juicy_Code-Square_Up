@@ -84,8 +84,8 @@ void Particle::Update()
 	else
 	{
 		LOG("Img inactive");
-		img->SetInactive();
-		alive = false;
+		//img->SetInactive();
+		//alive = false;
 	}
 }
 

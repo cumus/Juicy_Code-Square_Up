@@ -1,4 +1,6 @@
 #include "ParticleSystem.h"
+#include "Application.h"
+#include "Scene.h"
 #include "Gameobject.h"
 #include "Transform.h"
 #include "Particle.h"
@@ -48,7 +50,7 @@ void ParticleSystem::Draw()
 void ParticleSystem::AddParticle(vec p, vec dest, float speed, ParticleType t)
 {
 	LOG("Create new particle");
-	Gameobject* part = new Gameobject("Particle");
+	Gameobject* part = App->scene->AddGameobject("Particle");
 	part->GetTransform()->SetLocalPos(p);
 	new Particle(part,p,dest,speed, t);
 	//particlesID++;
