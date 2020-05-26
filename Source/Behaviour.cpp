@@ -50,6 +50,7 @@ Behaviour::Behaviour(Gameobject* go, UnitType t, UnitState starting_state, Compo
 	game_object->SetStatic(true);
 
 	audio = new AudioSource(game_object);
+	spriteState = current_state;
 	characteR = new AnimatedSprite(this);
 
 	selection_highlight = new Sprite(go, App->tex.Load("Assets/textures/selectionMark.png"), { 0, 0, 64, 64 }, BACK_SCENE, { 0, -50, 1.f, 1.f });
