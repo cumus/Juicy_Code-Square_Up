@@ -8,23 +8,39 @@
 #include "Log.h"
 
 
-Particle::Particle(Gameobject* go,vec p, vec d, float s, bool ply, ComponentType type) : Component(type, go)
+Particle::Particle(Gameobject* go,vec p, vec d, float s, ParticleType typ, ComponentType cT) : Component(cT, go)
 {
 	destination = d;
 	speed = s;
-	goParent = go;
 	alive = true;
 
 	animCounter = 0;
 	animationSpeed = 0.8f;
 	spriteNum = 0;
-	player = ply;
-	texID = App->tex.Load("Assets/textures/particle_shot.png");
-	if(player) img = new Sprite(go, texID, { 0, 0, 30, 31 }, FRONT_SCENE);
-	else img = new Sprite(go, texID, { 0, 32, 30, 31 }, FRONT_SCENE, { 0, -50.0f, 1.f, 1.f });
-	direction = {abs(p.x- destination.x),abs(p.y- destination.y),0};
-	velocityMod = { direction.x / direction.y, direction.y/direction.x };
+	type = typ;
+	direction = { abs(p.x - destination.x),abs(p.y - destination.y),0 };
+	velocityMod = { direction.x / direction.y, direction.y / direction.x };
 	t = go->GetTransform();
+
+	
+	switch (type)
+	{
+	case GREEN_PARTICLE:
+		texID = App->tex.Load("Assets/textures/particle_shot.png");
+		img = new Sprite(go, texID, { 0, 0, 30, 31 }, FRONT_SCENE, {0.0f,0.0f,1.0f,1.0f});
+		animationSprites = 8;
+		break;
+	case RED_PARTICLE:
+		texID = App->tex.Load("Assets/textures/particle_shot.png");
+		img = new Sprite(go, texID, { 0, 32, 30, 31 }, FRONT_SCENE, { 0.0f,0.0f,1.0f,1.0f });
+		animationSprites = 8;
+		break;
+	case ENERGY_BALL_PARTICLE:
+		texID = App->tex.Load("Assets/textures/energyBall.png");
+		img = new Sprite(go, texID, { 0, 0, 59, 60 }, FRONT_SCENE, { 0.0f,0.0f,1.0f,1.0f });
+		animationSprites = 16;
+		break;
+	}	
 }
 
 Particle::~Particle()
@@ -43,11 +59,21 @@ void Particle::Update()
 
 		if (animCounter < animationSpeed)
 		{
-			if (spriteNum < 8) spriteNum++;
+			if (spriteNum < animationSprites) spriteNum++;
 			else spriteNum = 0;
 
-			if(player) img->SetSection({30 * spriteNum,0,30,30});
-			else img->SetSection({30 * spriteNum,32,30,30});
+			switch (type)
+			{
+			case GREEN_PARTICLE:
+				img->SetSection({ 30 * spriteNum,0,30,30 });
+				break;
+			case RED_PARTICLE:
+				img->SetSection({ 30 * spriteNum,32,30,30 });
+				break;
+			case ENERGY_BALL_PARTICLE:
+				img->SetSection({ 59 * spriteNum,0,59,60 });
+				break;
+			}
 			animCounter = 0;
 		}
 		else
@@ -64,6 +90,8 @@ void Particle::Update()
 }
 
 
-vec Particle::GetPos() { return goParent->GetTransform()->GetGlobalPosition(); }
+vec Particle::GetPos() { return t->GetGlobalPosition(); }
 
 bool Particle::IsAlive() { return alive; }
+
+ParticleType Particle::GetType() { return type; }

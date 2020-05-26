@@ -29,15 +29,6 @@ RangedUnit::~RangedUnit() {}
 
 void RangedUnit::UnitAttackType()
 {
-	LOG("Ranged shot");
-	//shootPos = Map::F_MapToWorld(pos.x, pos.y, pos.z);
-	//shootPos.first += 30.0f;
-	//shootPos.second += 20.0f;
-
 	attackPos = atkObj->GetPos();
-	App->particleSys.AddParticle(pos,attackPos,1.0f,true);
-	//atkObjPos = Map::F_MapToWorld(pos.x, pos.y, pos.z);
-	//atkObjPos.first += 30.0f;
-	//atkObjPos.second += 20.0f;
-	//shoot = true;
+	App->particleSys.AddParticle(pos,attackPos,1.0f, GREEN_PARTICLE);
 }

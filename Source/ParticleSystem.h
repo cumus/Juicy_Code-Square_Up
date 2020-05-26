@@ -17,7 +17,7 @@ public:
 	void Update();
 	void CleanUp();
 	void Draw();
-	void AddParticle(vec pos,vec dest,float speed,bool player);
+	void AddParticle(vec pos,vec dest,float speed, ParticleType t);
 	void DestroyParticle();
 
 private:

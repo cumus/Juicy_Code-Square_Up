@@ -9,16 +9,26 @@
 
 class Sprite;
 
+enum ParticleType
+{
+	GREEN_PARTICLE,
+	RED_PARTICLE,
+	ENERGY_BALL_PARTICLE,
+
+	MAX_PARTICLES_TYPES,
+};
+
 class Particle : public Component
 {
 public:
 
-	Particle (Gameobject* game_object,vec pos, vec destination,float speed,bool player, ComponentType type = PARTICLE);
+	Particle (Gameobject* game_object,vec pos, vec destination,float speed, ParticleType t, ComponentType type = PARTICLE);
 	~Particle();
 
 	void Update();
 	bool IsAlive();
 	vec GetPos();
+	ParticleType GetType();
 
 private:
 
@@ -28,13 +38,13 @@ private:
 	float speed;
 	bool alive;
 	int texID;
-	Gameobject* goParent;
 	Sprite* img;
 	Transform* t;
 	float animationSpeed;
 	float animCounter;
-	bool player;
 	int spriteNum;
+	int animationSprites;
+	ParticleType type;
 };
 
 #endif

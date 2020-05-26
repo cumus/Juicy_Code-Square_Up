@@ -45,12 +45,12 @@ void ParticleSystem::Draw()
 
 }
 
-void ParticleSystem::AddParticle(vec p, vec dest, float speed, bool player)
+void ParticleSystem::AddParticle(vec p, vec dest, float speed, ParticleType t)
 {
 	LOG("Create new particle");
 	Gameobject* part = new Gameobject("Particle");
 	part->GetTransform()->SetLocalPos(p);
-	new Particle(part,p,dest,speed, player);
+	new Particle(part,p,dest,speed, t);
 	//particlesID++;
 }
 

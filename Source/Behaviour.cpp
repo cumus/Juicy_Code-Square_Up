@@ -34,7 +34,7 @@ Behaviour::Behaviour(Gameobject* go, UnitType t, UnitState starting_state, Compo
 {
 	current_life = max_life = damage = 10;
 	//attack_range = vision_range = 5.0f;
-	dieDelay = 5.0f;
+	dieDelay = 2.0f;
 	deathFX = EDGE_FX; //temp
 	rayCastTimer = 0;
 	shoot = false;
@@ -396,6 +396,7 @@ void Behaviour::OnKill(const UnitType type)
 	}*/
 
 	// Lifebar
+	OnDestroy();
 	mini_life_bar.Hide();
 
 	audio->Play(deathFX);
@@ -589,7 +590,7 @@ void B_Unit::Update()
 			{
 				if (atkTimer > atkTime)
 				{
-					if (!atkObj->GetState() != DESTROYED) //Attack
+					if (!atkObj->IsDestroyed()) //Attack
 					{
 						DoAttack();
 						Event::Push(DAMAGE, atkObj, damage);
@@ -603,7 +604,7 @@ void B_Unit::Update()
 			{
 				if (atkTimer > atkTime)
 				{
-					if (!atkObj->GetState() != DESTROYED) //ATTACK
+					if (!atkObj->IsDestroyed()) //ATTACK
 					{
 						DoAttack();						
 						Event::Push(DAMAGE, atkObj, damage);
@@ -731,7 +732,7 @@ void B_Unit::Update()
 
 void B_Unit::OnCollision(Collider selfCol, Collider col)
 {
-	if (!col.parentGo->GetBehaviour()->GetState() != DESTROYED)
+	if (current_state != DESTROYED)
 	{
 		if (selfCol.GetColliderTag() == PLAYER_ATTACK_TAG)
 		{
@@ -1120,71 +1121,21 @@ void B_Unit::CheckDirection(fPoint actualPos)
 	if (path->empty()) new_state = IDLE;
 }
 
-/*void B_Unit::CheckCollision()
+void B_Unit::OnDestroy()
 {
-	//Colision check
-	std::map<float, Behaviour*> out;
-	unsigned int total_found = GetBehavioursInRange(pos, 1.4f, out);
-	if (total_found > 0)
+	App->pathfinding.DeletePath(GetID());
+	if (!tilesVisited.empty())
 	{
-		fPoint pos(0, 0);
-		pos.x = game_object->GetTransform()->GetGlobalPosition().x;
-		pos.y = game_object->GetTransform()->GetGlobalPosition().y;
-		for (std::map<float, Behaviour*>::iterator it = out.begin(); it != out.end(); ++it)
+		for (std::vector<iPoint>::const_iterator it = tilesVisited.cbegin(); it != tilesVisited.cend(); ++it)
 		{
-			vec otherPos = it->second->GetGameobject()->GetTransform()->GetGlobalPosition();
-			fPoint separationSpd(0, 0);
-			separationSpd.x = pos.x - otherPos.x;
-			separationSpd.y = pos.y - otherPos.y;
-			if (it->second->GetState() != DESTROYED)
+			if (PathfindingManager::unitWalkability[it->x][it->y] != 0)
 			{
-				if (!move) Event::Push(IMPULSE, it->second->AsBehaviour(), -separationSpd.x / 2, -separationSpd.y / 2);
-				else Event::Push(IMPULSE, it->second->AsBehaviour(), -separationSpd.x, -separationSpd.y);
+				PathfindingManager::unitWalkability[it->x][it->y] = 0;
 			}
 		}
+		tilesVisited.clear();
 	}
-}*/
-
-/*void B_Unit::CheckAtkRange()
-{
-	attackPos = attackObjective->GetGameobject()->GetTransform()->GetGlobalPosition();
-	float d = game_object->GetTransform()->DistanceTo(attackPos);
-	//LOG("Distance 1:%f",d);
-	if (d <= attack_range) //Arriba izquierda
-	{
-		inRange = true;
-		//LOG("In range");
-	}
-	attackPos.x += attackObjective->GetGameobject()->GetTransform()->GetLocalScaleX();
-	attackPos.y += attackObjective->GetGameobject()->GetTransform()->GetLocalScaleY();
-	d = game_object->GetTransform()->DistanceTo(attackPos);
-	//LOG("Distance 2:%f", d);
-	if (d <= attack_range)//Abajo derecha
-	{
-		inRange = true;
-		//LOG("In range");
-	}
-
-	attackPos.x -= attackObjective->GetGameobject()->GetTransform()->GetLocalScaleX();
-	d = game_object->GetTransform()->DistanceTo(attackPos);
-	//LOG("Distance 3:%f", d);
-	if (d <= attack_range)//Abajo izquierda
-	{
-		inRange = true;
-		//LOG("In range");
-	}
-
-	attackPos.x += attackObjective->GetGameobject()->GetTransform()->GetLocalScaleX();
-	attackPos.y -= attackObjective->GetGameobject()->GetTransform()->GetLocalScaleY();
-	d = game_object->GetTransform()->DistanceTo(attackPos);
-	//LOG("Distance 4:%f", d);
-	if (d <= attack_range)//Arriba derecha
-	{
-		inRange = true;
-		//LOG("In range");
-	}
-	//LOG("%d",inRange);
-}*/
+}
 
 void B_Unit::ShootRaycast()
 {
@@ -1254,10 +1205,6 @@ void B_Unit::DoAttack()
 	}
 }
 
-void B_Unit::OnDestroy()
-{
-	App->pathfinding.DeletePath(GetID());
-}
 
 void B_Unit::OnRightClick(vec posClick, vec movPos)
 {
@@ -1337,26 +1284,10 @@ void B_Unit::OnRightClick(vec posClick, vec movPos)
 				tilesVisited.clear();
 			}
 		}
-		App->particleSys.AddParticle(pos, {movPos.x,movPos.y}, 0.5f, true);
+		App->particleSys.AddParticle(pos, {movPos.x,movPos.y}, 0.5f, GREEN_PARTICLE);
 	} 
 }
  
-/*void B_Unit::OnGetImpulse(float x, float y)
-{
-	float tempX = game_object->GetTransform()->GetGlobalPosition().x;
-	float tempY = game_object->GetTransform()->GetGlobalPosition().y;
-	if (App->pathfinding.ValidTile(int(tempX), int(tempY)) == false)
-	{
-		game_object->GetTransform()->MoveX(-6 * x * App->time.GetGameDeltaTime());//Move x
-		game_object->GetTransform()->MoveY(-6 * y * App->time.GetGameDeltaTime());//Move y
-	}
-	else
-	{		
-		game_object->GetTransform()->MoveX(6 * x * App->time.GetGameDeltaTime());//Move x
-		game_object->GetTransform()->MoveY(6 * y * App->time.GetGameDeltaTime());//Move y				
-	}
-}*/
-
 void Behaviour::Lifebar::Create(Gameobject* parent)
 {
 	int hud_id = App->tex.Load("Assets/textures/Iconos_square_up.png");
