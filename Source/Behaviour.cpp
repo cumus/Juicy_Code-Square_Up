@@ -75,7 +75,7 @@ bool Behaviour::IsDestroyed()
 
 void Behaviour::SetColliders()
 {
-	LOG("Set colliders");
+	//LOG("Set colliders");
 	//Colliders
 	pos = game_object->GetTransform()->GetGlobalPosition();
 	vec s = game_object->GetTransform()->GetLocalScale();
@@ -116,7 +116,7 @@ void Behaviour::SetColliders()
 		}
 		case TOWER:
 		{
-			bodyColl = new Collider(game_object, { pos.x,pos.y,game_object->GetTransform()->GetLocalScaleX(),game_object->GetTransform()->GetLocalScaleY() }, TRIGGER, BUILDING_TAG, { 0,Map::GetBaseOffset()+10,0,0 }, BODY_COLL_LAYER);
+			bodyColl = new Collider(game_object, { pos.x,pos.y,game_object->GetTransform()->GetLocalScaleX(),game_object->GetTransform()->GetLocalScaleY() }, TRIGGER, PLAYER_TAG, { 0,Map::GetBaseOffset()+10,0,0 }, BODY_COLL_LAYER);
 			std::pair<float, float> world = Map::F_MapToWorld(pos.x, pos.y);
 			selectionOffset = { 5,-105 };
 			selectionRect = { world.first + selectionOffset.first,world.second + selectionOffset.second,55,160 };
@@ -125,7 +125,7 @@ void Behaviour::SetColliders()
 		}
 		case BARRACKS:
 		{
-			bodyColl = new Collider(game_object, { pos.x,pos.y,game_object->GetTransform()->GetLocalScaleX(),game_object->GetTransform()->GetLocalScaleY() }, TRIGGER, BUILDING_TAG, { 150,Map::GetBaseOffset()+95,0,0 }, BODY_COLL_LAYER);
+			bodyColl = new Collider(game_object, { pos.x,pos.y,game_object->GetTransform()->GetLocalScaleX(),game_object->GetTransform()->GetLocalScaleY() }, TRIGGER, PLAYER_TAG, { 150,Map::GetBaseOffset()+95,0,0 }, BODY_COLL_LAYER);
 			std::pair<float, float> world = Map::F_MapToWorld(pos.x, pos.y);
 			selectionOffset = { 30,-50 };
 			selectionRect = { world.first + selectionOffset.first,world.second + selectionOffset.second,300,250 };
@@ -138,23 +138,26 @@ void Behaviour::SetColliders()
 		}
 		case EDGE:
 		{
-			//bodyColl = new Collider(game_object, { pos.x,pos.y,game_object->GetTransform()->GetLocalScaleX(),game_object->GetTransform()->GetLocalScaleY() }, TRIGGER, ENEMY_TAG, { 0,Map::GetBaseOffset(),0,0 }, BODY_COLL_LAYER);
+			bodyColl = new Collider(game_object, { pos.x,pos.y,game_object->GetTransform()->GetLocalScaleX(),game_object->GetTransform()->GetLocalScaleY() }, NON_TRIGGER, ENEMY_TAG, { 0,Map::GetBaseOffset(),0,0 }, BODY_COLL_LAYER);
 			std::pair<float, float> world = Map::F_MapToWorld(pos.x, pos.y);
-			selectionOffset = { -30,0 };
-			selectionRect = { world.first + selectionOffset.first,world.second + selectionOffset.second,100,50 };
+			selectionOffset = { 0,20 };
+			selectionRect = { world.first + selectionOffset.first,world.second + selectionOffset.second,65,35 };
 			break;
 		}
 		case CAPSULE:
 		{
-			//bodyColl = new Collider(game_object, { pos.x,pos.y,game_object->GetTransform()->GetLocalScaleX(),game_object->GetTransform()->GetLocalScaleY() }, TRIGGER, ENEMY_TAG, { 0,Map::GetBaseOffset(),0,0 }, BODY_COLL_LAYER);
+			bodyColl = new Collider(game_object, { pos.x,pos.y,game_object->GetTransform()->GetLocalScaleX(),game_object->GetTransform()->GetLocalScaleY() }, TRIGGER, ENEMY_TAG, { 0,Map::GetBaseOffset(),0,0 }, BODY_COLL_LAYER);
 			std::pair<float, float> world = Map::F_MapToWorld(pos.x, pos.y);
 			selectionOffset = { 0,-50 };
 			selectionRect = { world.first + selectionOffset.first,world.second + selectionOffset.second,60,100 };
 			break;
 		}
 		case SPAWNER:
-		{
-			//bodyColl = new Collider(game_object, { pos.x,pos.y,game_object->GetTransform()->GetLocalScaleX(),game_object->GetTransform()->GetLocalScaleY() }, NON_TRIGGER, ENEMY_TAG, { 0,Map::GetBaseOffset(),0,0 }, BODY_COLL_LAYER);
+		{			
+			bodyColl = new Collider(game_object, { pos.x,pos.y,game_object->GetTransform()->GetLocalScaleX(),game_object->GetTransform()->GetLocalScaleY() }, TRIGGER, ENEMY_TAG, { 0,Map::GetBaseOffset(),0,0 }, BODY_COLL_LAYER);
+			std::pair<float, float> world = Map::F_MapToWorld(pos.x, pos.y);
+			selectionOffset = { -30,0 };
+			selectionRect = { world.first + selectionOffset.first,world.second + selectionOffset.second,100,50 };
 			break;
 		}
 	}
@@ -211,15 +214,6 @@ void Behaviour::RecieveEvent(const Event& e)
 	case ON_COLLISION:
 		OnCollision(*Component::ComponentsList[e.data1.AsDouble()]->AsCollider(), *Component::ComponentsList[e.data2.AsDouble()]->AsCollider());
 		break;
-	case ON_COLL_ENTER:
-		//OnCollisionEnter(*Component::ComponentsList[e.data1.AsDouble()]->AsCollider(), *Component::ComponentsList[e.data2.AsDouble()]->AsCollider());
-		break;
-	case ON_COLL_STAY:
-		//OnCollisionStay(*Component::ComponentsList[e.data1.AsDouble()]->AsCollider(), *Component::ComponentsList[e.data2.AsDouble()]->AsCollider());
-		break;
-	case ON_COLL_EXIT:
-		//OnCollisionExit(*Component::ComponentsList[e.data1.AsDouble()]->AsCollider(), *Component::ComponentsList[e.data2.AsDouble()]->AsCollider());
-		break;
 	case REPATH: Repath(); break;
 	}
 }
@@ -228,6 +222,7 @@ void Behaviour::PreUpdate()
 {
 	pos = game_object->GetTransform()->GetGlobalPosition();
 	if(providesVisibility) GetTilesInsideRadius(); 
+	else CheckFoWMap();
 }
 
 void Behaviour::ActivateSprites()
@@ -249,8 +244,7 @@ Collider* Behaviour::GetBodyCollider()
 
 void Behaviour::CheckFoWMap(bool debug)
 {
-	//if (providesVisibility) ApplyMaskToTiles(GetTilesInsideRadius());	
-	bool visible = FogOfWarManager::fogMap[int(pos.x)][int(pos.y)];//App->fogWar.CheckTileVisibility(iPoint(int(position.x), int(position.y)));
+	bool visible = FogOfWarManager::fogMap[int(pos.x)][int(pos.y)];
 	if (!visible && !debug) { DesactivateSprites(); visible = false; }
 	else{ ActivateSprites(); visible = true; }
 }
@@ -259,19 +253,37 @@ std::vector<iPoint> Behaviour::GetTilesInsideRadius()
 {
 	std::vector<iPoint> ret;
 	vec s = game_object->GetTransform()->GetLocalScale();
-	//LOG("Scale X:%f/Y:%f",s.x,s.y);
-	iPoint startingPos(int(pos.x + s.x*0.5 - vision_range),int(pos.y) - s.y*0.5 - vision_range);
-	iPoint finishingPos(int(startingPos.x + (vision_range*2)), int(startingPos.y + (vision_range*2)));
-
-	for (int x = startingPos.x; x < finishingPos.x; x++)
+	if (type == BARRACKS)
 	{
-		for (int y = startingPos.y; y < finishingPos.y; y++)
+		iPoint startingPos(int(pos.x + s.x * 0.5 - vision_range)+5, int(pos.y) - s.y * 0.5 - vision_range);
+		iPoint finishingPos(int(startingPos.x + (vision_range * 2)+5), int(startingPos.y + (vision_range * 2)));
+
+		for (int x = startingPos.x; x < finishingPos.x; x++)
 		{
-			iPoint tilePos(x, y);
-			if (tilePos.DistanceTo(iPoint(int(pos.x), int(pos.y))) <= vision_range*0.6)
+			for (int y = startingPos.y; y < finishingPos.y; y++)
 			{
-				if (App->fogWar.CheckFoWTileBoundaries(iPoint(tilePos.x,tilePos.y)))FogOfWarManager::fogMap[tilePos.x][tilePos.y] = true;
-				//lastFog.push_back(tilePos);
+				iPoint tilePos(x, y);
+				if (tilePos.DistanceTo(iPoint(int(pos.x), int(pos.y))) <= vision_range * 0.6)
+				{
+					if (App->fogWar.CheckFoWTileBoundaries(iPoint(tilePos.x, tilePos.y)))FogOfWarManager::fogMap[tilePos.x][tilePos.y] = true;
+				}
+			}
+		}
+	}
+	else
+	{
+		iPoint startingPos(int(pos.x + s.x * 0.5 - vision_range), int(pos.y) - s.y * 0.5 - vision_range);
+		iPoint finishingPos(int(startingPos.x + (vision_range * 2)), int(startingPos.y + (vision_range * 2)));
+
+		for (int x = startingPos.x; x < finishingPos.x; x++)
+		{
+			for (int y = startingPos.y; y < finishingPos.y; y++)
+			{
+				iPoint tilePos(x, y);
+				if (tilePos.DistanceTo(iPoint(int(pos.x), int(pos.y))) <= vision_range * 0.6)
+				{
+					if (App->fogWar.CheckFoWTileBoundaries(iPoint(tilePos.x, tilePos.y)))FogOfWarManager::fogMap[tilePos.x][tilePos.y] = true;
+				}
 			}
 		}
 	}
@@ -561,7 +573,6 @@ B_Unit::B_Unit(Gameobject* go, UnitType t, UnitState s, ComponentType comp_type)
 
 void B_Unit::Update()
 {	
-	if (!providesVisibility) CheckFoWMap();
 	if (current_state != DESTROYED)
 	{
 		if (moveOrder) atkObj = nullptr;
@@ -576,7 +587,7 @@ void B_Unit::Update()
 					{
 						DoAttack();
 						Event::Push(DAMAGE, atkObj, damage);
-						LOG("Do attack");
+						//LOG("Do attack");
 					}
 					atkObj = nullptr;
 					atkTimer = 0;
@@ -700,6 +711,8 @@ void B_Unit::Update()
 			atkTimer += App->time.GetGameDeltaTime();
 		}
 
+		if(atkObj == nullptr && !move) spriteState = IDLE;
+
 		//Raycast
 		if (shoot) ShootRaycast();
 			
@@ -707,7 +720,6 @@ void B_Unit::Update()
 		if (drawRanges) DrawRanges();
 
 		atkObj = nullptr;
-		//chaseObj = nullptr;
 	}
 }
 
@@ -721,7 +733,6 @@ void B_Unit::OnCollision(Collider selfCol, Collider col)
 			if (col.GetColliderTag() == ENEMY_TAG)
 			{
 				//LOG("Eenmy unit in attack range");
-				//inRange = true;
 				atkObj = col.parentGo->GetBehaviour();
 			}
 		}
@@ -732,7 +743,6 @@ void B_Unit::OnCollision(Collider selfCol, Collider col)
 			if (col.GetColliderTag() == PLAYER_TAG)
 			{
 				//LOG("Player unit in attack range");
-				//inRange = true;
 				atkObj = col.parentGo->GetBehaviour();
 			}
 		}

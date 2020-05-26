@@ -29,5 +29,5 @@ EnemySuperUnit::~EnemySuperUnit() {}
 void EnemySuperUnit::UnitAttackType()
 {
 	attackPos = atkObj->GetPos();
-	App->particleSys.AddParticle(pos, attackPos, 1.0f, PURPLE_PARTICLE);
+	App->particleSys.AddParticle(pos, attackPos, 8.0f, PURPLE_PARTICLE);
 }

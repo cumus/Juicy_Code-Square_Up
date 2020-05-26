@@ -101,87 +101,64 @@ void CollisionSystem::Add(Collider* coll)
 
 void CollisionSystem::ProcessRemovals()
 {
-	/*for (std::map<CollisionLayer, std::vector<Collider*>>::iterator itL = layerColliders.begin(); itL != layerColliders.end(); ++itL)
-	{
-		for (std::vector<Collider*>::iterator itV = itL->second.begin(); itV != itL->second.end(); ++itV)
-		{
-			if ((*itV)->GetGameobject()->GetBehaviour()->GetState() == DESTROYED)
-			{
-				itL->second.erase(itV);
-			}
-		}
-	}*/
-
+	std::vector<Collider*> cache;
 	for (int i = 0; i < MAX_COLLISION_LAYERS; i++)
 	{
 		if (!layerColliders[i].empty())
 		{
 			for (std::vector<Collider*>::iterator it = layerColliders[i].begin(); it != layerColliders[i].end(); ++it)
 			{
-				if ((*it)->GetGameobject()->GetBehaviour()->GetState() == DESTROYED)
+				/*if ((*it)->GetGameobject()->GetBehaviour()->GetState() == DESTROYED)
 				{
 					layerColliders[i].erase(it);
-				}
+				}*/
+				if ((*it)->GetGameobject()->GetBehaviour()->IsDestroyed() == false) cache.push_back(*it);								
 			}
+			layerColliders[i] = cache;
+			cache.clear();
 		}
 	}
 }
 
 void CollisionSystem::ProcessRemovals(double id)
 {
-	/*for (std::map<CollisionLayer, std::vector<Collider*>>::iterator itL = layerColliders.begin(); itL != layerColliders.end(); ++itL)
-	{
-		for (std::vector<Collider*>::iterator itV = itL->second.begin(); itV != itL->second.end(); ++itV)
-		{
-			//LOG("Check 1");
-			if ((*itV)->GetGoID() == obj->GetID())
-			{
-				itL->second.erase(itV);
-				LOG("Delete go collider");
-			}
-		}
-	}*/
-
+	std::vector<Collider*> cache;
 	for (int i = 0; i < MAX_COLLISION_LAYERS; i++)
 	{
 		if (!layerColliders[i].empty())
 		{
 			for (std::vector<Collider*>::iterator it = layerColliders[i].begin(); it != layerColliders[i].end(); ++it)
 			{
-				if ((*it)->GetGoID() == id)
+				/*if ((*it)->GetGoID() == id)
 				{
 					layerColliders[i].erase(it);
-				}
+				}*/
+				if ((*it)->GetGoID() != id) cache.push_back(*it);
 			}
+			layerColliders[i] = cache;
+			cache.clear();
 		}
 	}
 }
 
 void CollisionSystem::DeleteCollider(Collider coll)
 {
-	/*for (std::map<CollisionLayer, std::vector<Collider*>>::iterator itL = layerColliders.begin(); itL != layerColliders.end(); ++itL)
-	{
-		for (std::vector<Collider*>::iterator itV = itL->second.begin(); itV != itL->second.end(); ++itV)
-		{			
-			if ((*itV)->GetID() == coll.GetID())
-			{
-				itL->second.erase(itV);
-				LOG("Deleted collider");
-				break;
-			}
-		}
-	}*/
+	std::vector<Collider*> cache;
 	for (int i = 0; i < MAX_COLLISION_LAYERS; i++)
 	{
 		if (!layerColliders[i].empty())
 		{
 			for (std::vector<Collider*>::iterator it = layerColliders[i].begin(); it != layerColliders[i].end(); ++it)
 			{
-				if ((*it)->GetID() == coll.GetID())
+				/*if ((*it)->GetID() == coll.GetID())
 				{
 					layerColliders[i].erase(it);
-				}
+				}*/
+
+				if ((*it)->GetID() != coll.GetID()) cache.push_back(*it);
 			}
+			layerColliders[i] = cache;
+			cache.clear();
 		}
 	}
 }
@@ -191,17 +168,6 @@ void CollisionSystem::Resolve()
 	//for (std::map<CollisionLayer, std::vector<Collider*>>::iterator itL = layerColliders.begin(); itL != layerColliders.end(); ++itL)//for each layer
 	for (int i = 0; i < MAX_COLLISION_LAYERS; i++)
 	{
-		//LOG("Layer");
-		/*if (collisionLayers[itL->first][DEFAULT_COLL_LAYER] == false && collisionLayers[itL->first][SCENE_COLL_LAYER] == false &&
-			collisionLayers[itL->first][HUD_COLL_LAYER] == false && collisionLayers[itL->first][INPUT_COLL_LAYER] == false &&
-			collisionLayers[itL->first][VISION_COLL_LAYER] == false && collisionLayers[itL->first][BODY_COLL_LAYER] == false &&
-			collisionLayers[itL->first][UNIT_SELECTION_LAYER] == false && collisionLayers[itL->first][ATTACK_COLL_LAYER] == false)
-		{
-
-			//LOG("Layers not colliding");
-			continue;
-		}*/
-
 		if (i == UNIT_SELECTION_LAYER) continue;
 		if (layerColliders[i].empty()) continue;
 		

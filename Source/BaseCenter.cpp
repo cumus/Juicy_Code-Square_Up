@@ -34,9 +34,6 @@ Base_Center::Base_Center(Gameobject* go) : BuildingWithQueue(go, BASE_CENTER, NO
 
 	if (t)
 	{
-		//LOG("Set walkability");
-		vec pos = t->GetGlobalPosition();
-		//LOG("POS X:%f/Y:%f",pos.x,pos.y);
 		for (int i = 0; i < t->GetLocalScaleX(); i++)
 		{
 			for (int a = 0; a < t->GetLocalScaleY(); a++)
@@ -121,33 +118,11 @@ void Base_Center::Update()
 	}
 
 	mini_life_bar.Update(float(current_life) / float(max_life), current_lvl);
-
-	/*if (GetState() != DESTROYED)
-	{
-		vec pos = game_object->GetTransform()->GetGlobalPosition();
-		std::map<float, Behaviour*> out;
-		unsigned int total_found = GetBehavioursInRange(vec(pos.x, pos.y, 0.5f), vision_range, out);//Get units in vision range
-		float distance = 0;
-		if (total_found > 0)//Check if found behaviours in range
-		{
-			for (std::map<float, Behaviour*>::iterator it = out.begin(); it != out.end(); ++it)
-			{
-				if (it->second->GetType() == ENEMY_MELEE || it->second->GetType() == ENEMY_RANGED ||
-					it->second->GetType() == ENEMY_SUPER || it->second->GetType() == ENEMY_SPECIAL) //Check if it is an emey
-				{
-					Behaviour::enemiesInSight.push_back(it->second->GetID());
-					//LOG("Added to in sight");
-				}
-			}
-		}
-	}*/
 }
 
 void Base_Center::UpdateWalkabilityTiles()
 {
 	Transform* t = game_object->GetTransform();
-	vec pos = t->GetGlobalPosition();
-	//LOG("POS X:%f/Y:%f", pos.x, pos.y);
 	for (int i = 0; i < t->GetLocalScaleX(); i++)
 	{
 		for (int a = 0; a < t->GetLocalScaleY(); a++)

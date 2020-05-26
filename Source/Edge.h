@@ -10,7 +10,6 @@ public:
 	~Edge();
 
 	void AfterDamageAction() override;
-	void Update() override;
 	void FreeWalkabilityTiles() override;
 };
 

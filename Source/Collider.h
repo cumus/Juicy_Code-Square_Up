@@ -12,12 +12,6 @@ enum ColliderType
 	TRIGGER,
 };
 
-enum ColliderShape
-{
-	SQUARE,
-	CIRCLE,
-};
-
 enum CollisionLayer : int
 {
 	DEFAULT_COLL_LAYER = 0,
@@ -43,7 +37,6 @@ enum ColliderTag
 	ENEMY_ATTACK_TAG,
 	UI_TAG,
 	BACKGROUND_TAG,
-	BUILDING_TAG,
 	SELECTION_TAG,
 };
 

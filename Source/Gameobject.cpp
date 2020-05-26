@@ -197,33 +197,6 @@ void Gameobject::RecieveEvent(const Event & e)
 					Cvar(e.data2));
 		break;
 	}
-	case ON_COLL_ENTER:
-	{
-		for (std::vector<Component*>::iterator component = components.begin(); component != components.end(); ++component)
-			if ((*component)->IsActive())
-				Event::Push(ON_COLL_ENTER, *component,
-					Cvar(e.data1),
-					Cvar(e.data2));
-		break;
-	}
-	case ON_COLL_EXIT:
-	{
-		for (std::vector<Component*>::iterator component = components.begin(); component != components.end(); ++component)
-			if ((*component)->IsActive())
-				Event::Push(ON_COLL_EXIT, *component,
-					Cvar(e.data1),
-					Cvar(e.data2));
-		break;
-	}
-	case ON_COLL_STAY:
-	{
-		for (std::vector<Component*>::iterator component = components.begin(); component != components.end(); ++component)
-			if ((*component)->IsActive())
-				Event::Push(ON_COLL_STAY, *component,
-					Cvar(e.data1),
-					Cvar(e.data2));
-		break;
-	}
 	}
 }
 
