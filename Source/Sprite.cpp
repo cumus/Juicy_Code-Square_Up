@@ -223,7 +223,7 @@ AnimatedSprite::AnimatedSprite(Behaviour* unit) : Sprite(unit->GetGameobject(), 
 		animations[ATTACKING_SE].Setup({ 0, 5475, 464, 365 }, 7, 8.0f);
 		animations[ATTACKING_SW].Setup({ 0, 5840, 464, 365 }, 7, 8.0f);
 		animations[DESTROYED].Setup({ 0, 6205, 464, 365 }, 8, 5.0f);
-		offset = { -225.0f, -350.f, 0.6f, 0.6f };
+		offset = { -225.0f, -280.f, 0.5f, 0.5f };
 		break;
 	case UNIT_SUPER:
 		tex_id = App->tex.Load("Assets/textures/Unit_Super.png");
@@ -245,7 +245,7 @@ AnimatedSprite::AnimatedSprite(Behaviour* unit) : Sprite(unit->GetGameobject(), 
 		animations[ATTACKING_SE].Setup({ 0, 5475, 464, 365 }, 7, 8.0f);
 		animations[ATTACKING_SW].Setup({ 0, 5840, 464, 365 }, 7, 8.0f);
 		animations[DESTROYED].Setup({ 0, 6205, 464, 365 }, 8, 5.0f);
-		offset = { -225.0f, -350.f, 0.6f, 0.6f };
+		offset = { -225.0f, -280.f, 0.6f, 0.6f };
 		break;
 	default:
 		break;
