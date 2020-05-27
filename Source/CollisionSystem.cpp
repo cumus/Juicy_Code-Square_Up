@@ -48,13 +48,13 @@ CollisionSystem::~CollisionSystem()
 void CollisionSystem::Clear()
 {
 	collisionTree->Clear();
-	for (int i=0;i < MAX_COLLISION_LAYERS;i++)
+	/*for (std::map<CollisionLayer, std::vector<Collider*>>::iterator itL = layerColliders.begin(); itL != layerColliders.end(); ++itL)
 	{
-		//layerColliders[i].clear();
-		for (int a=0;a < layerColliders->next;a++)
-		{
-			layerColliders[i].colliders[a] = nullptr;
-		}
+		itL->second.clear();
+	}*/
+	for (int i = 0; i < MAX_COLLISION_LAYERS; i++)
+	{
+		layerColliders[i].clear();
 	}
 }
 
@@ -62,7 +62,7 @@ Quadtree* CollisionSystem::GetQuadTree() { return collisionTree; }
 
 void CollisionSystem::SetLayerCollision(CollisionLayer one, CollisionLayer two, bool collide)
 {
-	collisionLayers[one][two] = collide; 
+	collisionLayers[one][two] = collide;
 	collisionLayers[two][one] = collide;
 }
 
@@ -74,10 +74,7 @@ void CollisionSystem::Add(std::vector<Gameobject*>& objects)
 		if (col != nullptr)
 		{
 			CollisionLayer layer = col->AsCollider()->GetCollLayer();
-			LayerColliders* coll = &layerColliders[int(layer)];
-			//layerColliders[int(layer)].push_back(col->AsCollider());
-			coll->colliders[coll->next] = col->AsCollider();
-			coll->next++;
+			layerColliders[int(layer)].push_back(col->AsCollider());
 		}
 	}
 }
@@ -88,11 +85,8 @@ void CollisionSystem::Add(Gameobject* obj)
 	if (col != nullptr)
 	{
 		CollisionLayer layer = col->AsCollider()->GetCollLayer();
-		LayerColliders* coll = &layerColliders[int(layer)];
-		//layerColliders[int(layer)].push_back(col->AsCollider());
-		coll->colliders[coll->next] = col->AsCollider();
-		coll->next++;
-	}	
+		layerColliders[int(layer)].push_back(col->AsCollider());
+	}
 }
 
 void CollisionSystem::Add(Collider* coll)
@@ -100,62 +94,57 @@ void CollisionSystem::Add(Collider* coll)
 	if (coll != nullptr)
 	{
 		int a = coll->GetCollLayer();
-		LayerColliders* collLay = &layerColliders[a];
-		//layerColliders[a].push_back(coll);
-		collLay->colliders[collLay->next] = coll;
-		collLay->next++;
+		//LOG("Layer %d",a);
+		layerColliders[a].push_back(coll);
 	}
 }
 
 void CollisionSystem::ProcessRemovals()
 {
-	for (int i = 0; i < MAX_COLLISION_LAYERS; i++)
+	/*for (std::map<CollisionLayer, std::vector<Collider*>>::iterator itL = layerColliders.begin(); itL != layerColliders.end(); ++itL)
 	{
-		if (layerColliders[i].next != 0)//not empty
+		for (std::vector<Collider*>::iterator itV = itL->second.begin(); itV != itL->second.end(); ++itV)
 		{
-			LayerColliders* lay = &layerColliders[i];
-			for (int a=0;a < lay->next;a++)
+			if ((*itV)->GetGameobject()->GetBehaviour()->GetState() == DESTROYED)
 			{
-				if (lay->colliders[a]->parentGo->GetBehaviour()->IsDestroyed())
-				{
-					lay->colliders[a] = lay->colliders[lay->next - 1];
-					lay->next--;
-					a -= 1;
-				}
+				itL->second.erase(itV);
 			}
 		}
-		/*if (!layerColliders[i].empty())
+	}*/
+
+	for (int i = 0; i < MAX_COLLISION_LAYERS; i++)
+	{
+		if (!layerColliders[i].empty())
 		{
 			for (std::vector<Collider*>::iterator it = layerColliders[i].begin(); it != layerColliders[i].end(); ++it)
 			{
 				if ((*it)->GetGameobject()->GetBehaviour()->GetState() == DESTROYED)
 				{
 					layerColliders[i].erase(it);
-				}							
-			}			
-		}*/
+				}
+			}
+		}
 	}
 }
 
 void CollisionSystem::ProcessRemovals(double id)
 {
-	//std::vector<Collider*> cache;
-	for (int i = 0; i < MAX_COLLISION_LAYERS; i++)
+	/*for (std::map<CollisionLayer, std::vector<Collider*>>::iterator itL = layerColliders.begin(); itL != layerColliders.end(); ++itL)
 	{
-		if (layerColliders[i].next != 0)//not empty
+		for (std::vector<Collider*>::iterator itV = itL->second.begin(); itV != itL->second.end(); ++itV)
 		{
-			LayerColliders* lay = &layerColliders[i];
-			for (int a = 0; a < lay->next; a++)
+			//LOG("Check 1");
+			if ((*itV)->GetGoID() == obj->GetID())
 			{
-				if (lay->colliders[a]->GetGoID() == id)
-				{
-					lay->colliders[a] = lay->colliders[lay->next - 1];
-					lay->next--;
-					a -= 1;
-				}
+				itL->second.erase(itV);
+				LOG("Delete go collider");
 			}
 		}
-		/*if (!layerColliders[i].empty())
+	}*/
+
+	for (int i = 0; i < MAX_COLLISION_LAYERS; i++)
+	{
+		if (!layerColliders[i].empty())
 		{
 			for (std::vector<Collider*>::iterator it = layerColliders[i].begin(); it != layerColliders[i].end(); ++it)
 			{
@@ -164,29 +153,27 @@ void CollisionSystem::ProcessRemovals(double id)
 					layerColliders[i].erase(it);
 				}
 			}
-		}*/
+		}
 	}
 }
 
 void CollisionSystem::DeleteCollider(Collider coll)
 {
-	//std::vector<Collider*> cache;
-	for (int i = 0; i < MAX_COLLISION_LAYERS; i++)
+	/*for (std::map<CollisionLayer, std::vector<Collider*>>::iterator itL = layerColliders.begin(); itL != layerColliders.end(); ++itL)
 	{
-		if (layerColliders[i].next != 0)//not empty
+		for (std::vector<Collider*>::iterator itV = itL->second.begin(); itV != itL->second.end(); ++itV)
 		{
-			LayerColliders* lay = &layerColliders[i];
-			for (int a = 0; a < lay->next; a++)
+			if ((*itV)->GetID() == coll.GetID())
 			{
-				if (lay->colliders[a]->GetID() == coll.GetID())
-				{
-					lay->colliders[a] = lay->colliders[lay->next - 1];
-					lay->next--;
-					a -= 1;
-				}
+				itL->second.erase(itV);
+				LOG("Deleted collider");
+				break;
 			}
 		}
-		/*if (!layerColliders[i].empty())
+	}*/
+	for (int i = 0; i < MAX_COLLISION_LAYERS; i++)
+	{
+		if (!layerColliders[i].empty())
 		{
 			for (std::vector<Collider*>::iterator it = layerColliders[i].begin(); it != layerColliders[i].end(); ++it)
 			{
@@ -195,7 +182,7 @@ void CollisionSystem::DeleteCollider(Collider coll)
 					layerColliders[i].erase(it);
 				}
 			}
-		}*/
+		}
 	}
 }
 
@@ -205,59 +192,46 @@ void CollisionSystem::Resolve()
 	for (int i = 0; i < MAX_COLLISION_LAYERS; i++)
 	{
 		if (i == UNIT_SELECTION_LAYER) continue;
-		//if (layerColliders[i].empty()) continue;
-		if (layerColliders[i].next == 0) continue;
-		
-		LayerColliders* lay = &layerColliders[i];
-		//for (std::vector<Collider*>::iterator it = layerColliders[i].begin(); it != layerColliders[i].end(); ++it)//for each collider in layer
-		for (int a = 0; a < lay->next;a++)//for each collider in layer
-		{		
-			//if (!(*it)->GetGameobject()->GetStatic())//static object not collision resolve
-			if(!lay->colliders[a]->GetGameobject()->GetStatic())
+		if (layerColliders[i].empty()) continue;
+
+
+		for (std::vector<Collider*>::iterator it = layerColliders[i].begin(); it != layerColliders[i].end(); ++it)//for each collider in layer
+		{
+			if (!(*it)->GetGameobject()->GetStatic())//static object not collision resolve
 			{
-				//std::vector<Collider*> collisions = collisionTree->Search(*(*it));
-				std::vector<Collider*> collisions = collisionTree->Search(*lay->colliders[a]);
+				std::vector<Collider*> collisions = collisionTree->Search(*(*it));
 				if (!collisions.empty())
 				{
 					//LOG("Got collisions: %d",collisions.size());
 					for (std::vector<Collider*>::iterator itColls = collisions.begin(); itColls != collisions.end(); ++itColls)//For each posible detection in quad tree
-					{					
-						if (/*(*it)->GetID()*/lay->colliders[a]->GetID() != (*itColls)->GetID() && /*(*it)->GetGoID()*/  lay->colliders[a]->GetGoID() != (*itColls)->GetGoID() && !(*itColls)->parentGo->GetBehaviour()->IsDestroyed())
+					{
+						if ((*it)->GetID() != (*itColls)->GetID() && (*it)->GetGoID() != (*itColls)->GetGoID() && !(*itColls)->parentGo->GetBehaviour()->GetState() != DESTROYED)
 						{
 							//LOG("Check if collides");
-							if (collisionLayers[/*(*it)->GetCollLayer()*/lay->colliders[a]->GetCollLayer()][(*itColls)->GetCollLayer()])
+							if (collisionLayers[(*it)->GetCollLayer()][(*itColls)->GetCollLayer()])
 							{
-								Manifold m = lay->colliders[a]->Intersects(*itColls);//(*it)->Intersects(*itColls);
+								Manifold m = (*it)->Intersects(*itColls);
 								if (m.colliding)
 								{
-									Event::Push(ON_COLLISION, lay->colliders[a]->parentGo, lay->colliders[a]->GetID(), (*itColls)->GetID());
-									//Event::Push(ON_COLLISION, (*it)->parentGo, (*it)->GetID(), (*itColls)->GetID());
-									//Event::Push(ON_COLLISION, (*itColls)->parentGo, (*itColls)->GetID(), (*it)->GetID());
+									Event::Push(ON_COLLISION, (*it)->GetGameobject(), (*it)->GetID(), (*itColls)->GetID());
+									Event::Push(ON_COLLISION, (*itColls)->GetGameobject(), (*itColls)->GetID(), (*it)->GetID());
 
-									//if ((*it)->GetCollType() != TRIGGER && (*itColls)->GetCollType() != TRIGGER)
-									if (lay->colliders[a]->GetCollType() != TRIGGER && (*itColls)->GetCollType() != TRIGGER)
+									if ((*it)->GetCollType() != TRIGGER && (*itColls)->GetCollType() != TRIGGER)
 									{
-										if(!lay->colliders[a]->parentGo->GetStatic())
-										//if (!(*it)->ParentGo->GetStatic())
+										if (!(*it)->GetGameobject()->GetStatic())
 										{
-											lay->colliders[a]->ResolveOverlap(m);
-											//(*it)->ResolveOverlap(m);
+											(*it)->ResolveOverlap(m);
 											//(*itV)->ResolveOverlap(m);
 											//LOG("Reolve overlap");
 										}
-										/*else
-										{
-											//Non static collision
-											(*itV)->ResolveOverlap(m);
-										}*/
 									}
-								}								
+								}
 							}
 						}
 					}
 				}
 			}
-		}	
+		}
 	}
 }
 
@@ -265,29 +239,17 @@ void CollisionSystem::Resolve()
 void CollisionSystem::Update()
 {
 	collisionTree->Clear();
-	//ProcessRemovals();
-	//for (std::map<CollisionLayer, std::vector<Collider*>>::iterator itL = layerColliders.begin(); itL != layerColliders.end(); ++itL)
 	for (int i = 0; i < MAX_COLLISION_LAYERS; i++)
 	{
 		//if (!itL->second.empty())
-		//if(!layerColliders[i].empty())
-		if(layerColliders[i].next != 0)
+		if (!layerColliders[i].empty())
 		{
-			/*for (std::vector<Collider*>::iterator it = layerColliders[i].begin(); it != layerColliders[i].end(); ++it)
+			for (std::vector<Collider*>::iterator it = layerColliders[i].begin(); it != layerColliders[i].end(); ++it)
 			{
 				if (!(*it)->GetGameobject()->GetBehaviour()->GetState() != DESTROYED)
 				{
 					(*it)->SetPosition();
-					if ((*it)->GetCollLayer() != UNIT_SELECTION_LAYER) collisionTree->Insert(*it);					
-				}
-			}*/
-			LayerColliders* lay = &layerColliders[i];
-			for (int a=0;a < lay->next;a++)
-			{
-				if (!lay->colliders[a]->parentGo->GetBehaviour()->IsDestroyed())
-				{
-					lay->colliders[a]->SetPosition();
-					if (lay->colliders[a]->GetCollLayer() != UNIT_SELECTION_LAYER) collisionTree->Insert(lay->colliders[a]);
+					if ((*it)->GetCollLayer() != UNIT_SELECTION_LAYER) collisionTree->Insert(*it);
 				}
 			}
 		}
@@ -298,32 +260,16 @@ void CollisionSystem::Update()
 	{
 		for (int i = 0; i < MAX_COLLISION_LAYERS; i++)
 		{
-			//if (!layerColliders[i].empty())
-			if(layerColliders[i].next != 0)
+			if (!layerColliders[i].empty())
 			{
 				//LOG("colliders length: %d", itL->second.size());
-				/*for (std::vector<Collider*>::iterator it = layerColliders[i].begin(); it != layerColliders[i].end(); ++it)
+				for (std::vector<Collider*>::iterator it = layerColliders[i].begin(); it != layerColliders[i].end(); ++it)
 				{
 					//Coll iso
 					IsoLinesCollider lines = (*it)->GetIsoPoints();
-					if(!(*it)->selectionColl)
+					if (!(*it)->selectionColl)
 					{
 						SDL_Rect quadTreeRect = (*it)->GetColliderBounds();
-						App->render->DrawLine({ int(lines.top.first), int(lines.top.second) }, { int(lines.left.first), int(lines.left.second) }, { 0,255,0,255 }, DEBUG_SCENE);
-						App->render->DrawLine({ int(lines.top.first), int(lines.top.second) }, { int(lines.right.first), int(lines.right.second) }, { 0,255,0,255 }, DEBUG_SCENE);
-						App->render->DrawLine({ int(lines.bot.first), int(lines.bot.second) }, { int(lines.left.first), int(lines.left.second) }, { 0,255,0,255 }, DEBUG_SCENE);
-						App->render->DrawLine({ int(lines.bot.first), int(lines.bot.second) }, { int(lines.right.first), int(lines.right.second) }, { 0,255,0,255 }, DEBUG_SCENE);
-						App->render->DrawQuad(quadTreeRect, { 234,254,30,255 }, false, DEBUG_SCENE);
-					}
-				}*/
-				LayerColliders* lay = &layerColliders[i];
-				for (int a = 0; a < lay->next; a++)
-				{
-					//Coll iso
-					IsoLinesCollider lines = lay->colliders[a]->GetIsoPoints();
-					if(!lay->colliders[a]->selectionColl)
-					{
-						SDL_Rect quadTreeRect = lay->colliders[a]->GetColliderBounds();
 						App->render->DrawLine({ int(lines.top.first), int(lines.top.second) }, { int(lines.left.first), int(lines.left.second) }, { 0,255,0,255 }, DEBUG_SCENE);
 						App->render->DrawLine({ int(lines.top.first), int(lines.top.second) }, { int(lines.right.first), int(lines.right.second) }, { 0,255,0,255 }, DEBUG_SCENE);
 						App->render->DrawLine({ int(lines.bot.first), int(lines.bot.second) }, { int(lines.left.first), int(lines.left.second) }, { 0,255,0,255 }, DEBUG_SCENE);
