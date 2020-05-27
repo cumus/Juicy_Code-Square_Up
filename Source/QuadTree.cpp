@@ -114,12 +114,12 @@ void Quadtree::Insert(Collider* obj)
 				{
 					Split();
 					objects.push_back(obj);
-					for (std::vector<Collider*>::const_iterator it = objects.cbegin(); it != objects.cend(); ++it)
+					for (std::vector<Collider*>::iterator it = objects.begin(); it != objects.end(); ++it)
 					{
-						children[0]->Insert(obj);
-						children[1]->Insert(obj);
-						children[2]->Insert(obj);
-						children[3]->Insert(obj);
+						children[0]->Insert(*it);
+						children[1]->Insert(*it);
+						children[2]->Insert(*it);
+						children[3]->Insert(*it);
 					}
 					objects.clear();
 				}
