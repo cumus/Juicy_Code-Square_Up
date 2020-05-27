@@ -8,8 +8,11 @@ class Capsule : public Behaviour
 public:
 	Capsule(Gameobject* go);
 	~Capsule();
-	void Update() override;
+	
+	
 	void AfterDamageAction() override;
+	void Update() override;
+	void FreeWalkabilityTiles() override;
 };
 
 #endif 

@@ -3,7 +3,6 @@
 #include "Gameobject.h"
 #include "Transform.h"
 #include "Log.h"
-#include "Behaviour.h"
 
 Capsule::Capsule(Gameobject* go) : Behaviour(go, CAPSULE, POSE, B_CAPSULE)
 {
@@ -11,6 +10,9 @@ Capsule::Capsule(Gameobject* go) : Behaviour(go, CAPSULE, POSE, B_CAPSULE)
 	current_life = max_life;
 	damage = 0;
 	dieDelay = 5.0f;
+	spriteState = POSE;
+	current_state = POSE;
+	providesVisibility = true;
 	Transform* t = game_object->GetTransform();
 	if (t)
 	{
@@ -23,19 +25,23 @@ Capsule::Capsule(Gameobject* go) : Behaviour(go, CAPSULE, POSE, B_CAPSULE)
 
 Capsule::~Capsule()
 {
+	
+}
+
+
+void Capsule::FreeWalkabilityTiles()
+{
 	Transform* t = game_object->GetTransform();
 	if (t)
 	{
 		vec pos = t->GetGlobalPosition();
 		App->pathfinding.SetWalkabilityTile(int(pos.x), int(pos.y), true);
 	}
-
-	b_map.erase(GetID());
 }
 
 void Capsule::Update()
 {
-
+	CheckFoWMap();
 }
 
 void Capsule::AfterDamageAction()

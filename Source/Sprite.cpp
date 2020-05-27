@@ -93,13 +93,13 @@ AnimatedSprite::AnimatedSprite(Behaviour* unit) : Sprite(unit->GetGameobject(), 
 		offset = { 0, -115.0f + Map::GetBaseOffset(), 0.3f, 0.3f };
 		break;
 	}
-	case B_CAPSULE:
+	case CAPSULE:
 	{
 		tex_id = App->tex.Load("Assets/textures/Capsule2.png");
 		animations[FLY].Setup(section = { 0, 0, 105, 518 }, 18, 8.0f);
 		animations[POSE].Setup({ 0, 519, 104, 360 }, 1);
 		animations[OPEN].Setup({ 0, 519, 104, 360 }, 10, 8.0f);
-		offset = { -70.0f, -134.0f + Map::GetBaseOffset(), 0.5f, 0.5f };
+		offset = { 2.0f, -360.0f + Map::GetBaseOffset(), 0.5f, 0.5f };
 		break;
 	}
 	case MOBDROP:
