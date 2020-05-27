@@ -37,8 +37,7 @@ enum GameplayState : int
 
 	EDGE_STATE,
 	RESOURCES,
-	MOBDROP,
-
+	
 	BUILD,
 	UPGRADE,
 
@@ -56,7 +55,9 @@ enum GameplayState : int
 	SPAWNER_STATE,
 
 	WIN,
-	LOSE
+	LOSE,
+
+	MOBDROP
 };
 
 enum PlayerStats : int
