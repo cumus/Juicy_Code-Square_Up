@@ -12,7 +12,9 @@ public:
 	
 	void AfterDamageAction() override;
 	void Update() override;
-	void FreeWalkabilityTiles() override;
+
+public:
+	bool gives_edge;
 };
 
 #endif 

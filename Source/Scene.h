@@ -182,9 +182,7 @@ public:
 	int tutorial_tower = 0;
 	int t_lvl = 1;
 	bool tutorial_edge = true;
-
-	//Capsule reward
-	bool capsule_content = true;
+		
 
 private:
 
@@ -226,7 +224,7 @@ private:
 	C_Text* hud_texts[EDGE_COLLECTED];
 	static int player_stats[MAX_PLAYER_STATS];
 	bool win = false;
-	int time = 0;
+	//int time = 0;
 
 	//--------STATE MACHINE VARIABLES--------
 

@@ -23,26 +23,14 @@ Spawner::Spawner(Gameobject* go) : Behaviour(go, SPAWNER, NO_UPGRADE, B_SPAWNER)
 	currentSpawns = 0;
 	providesVisibility = false;
 
-	if (t)
-	{
-		vec pos = t->GetGlobalPosition();
-		App->pathfinding.SetWalkabilityTile(int(pos.x), int(pos.y), false);
-	}
+	
 	SetColliders();
 }
 
 Spawner::~Spawner()
 {}
 
-void Spawner::FreeWalkabilityTiles()
-{
-	Transform* t = game_object->GetTransform();
-	if (t)
-	{
-		vec pos = t->GetGlobalPosition();
-		App->pathfinding.SetWalkabilityTile(int(pos.x), int(pos.y), true);
-	}
-}
+
 
 void Spawner::ChangeValues(int spawns, float cd, int spawnPoints)
 {

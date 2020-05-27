@@ -931,6 +931,7 @@ void Scene::LoadStartingMapResources()
 	for (int i = 0; i < edge_count; ++i)
 		SpawnBehaviour(EDGE, edge_pos[i]);
 
+
 	//Capsule test positions
 	const int capsule_count = 13;
 	vec capsule_pos[capsule_count] =
@@ -2242,7 +2243,14 @@ Transform* Scene::SpawnBehaviour(int type, vec pos)
 			//{
 				behaviour = AddGameobject("Capsule");
 				behaviour->GetTransform()->SetLocalPos(pos);
-				new Capsule(behaviour);
+				Capsule* cap = new Capsule(behaviour);
+				int random = std::rand() % 10 + 1;
+
+				if (random <= 5) {
+					cap->gives_edge = true;
+				}
+				else cap->gives_edge = false;
+				std::srand(time(NULL));
 				//UpdateStat(CURRENT_GOLD, -10);
 				//Update paths
 				/*for (std::map<double, Behaviour*>::iterator it = Behaviour::b_map.begin(); it != Behaviour::b_map.end(); ++it)

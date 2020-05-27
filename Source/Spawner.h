@@ -18,12 +18,9 @@ public:
 	void ToggleSpawn(bool toggle) { shoot = toggle; }
 	void ResetSpawner();
 	void ChangeValues(int spawns,float cooldown, int spawnPoints);
-	void FreeWalkabilityTiles() override;
+	
 
-	/*void SpawnMeleeIA(float x, float y);
-	void SpawnRangedIA(float x, float y);
-	void SpawnSuperIA(float x, float y);
-	void SpawnSpecialIA(float x, float y);*/
+	
 
 private:
 	float ms_counter,cooldown;
