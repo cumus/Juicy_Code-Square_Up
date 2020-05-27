@@ -36,12 +36,10 @@ public:
 
 	Gameobject* dialogGo;
 	C_Image* retail;
+	C_Image* queen;
+	C_Image* soldier;
 	C_Text* txt;
-	C_Text* txtOptionA;
-	C_Text* txtOptionB;
-	C_Text* txtOptionC;
 	bool end;
-	bool question;
 	int dStep;
 };
 #endif

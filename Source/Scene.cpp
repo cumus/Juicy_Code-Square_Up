@@ -351,6 +351,8 @@ void Scene::LoadMainScene()
 	LoadTutorial();
 	LoadBaseCenter();
 	LoadStartingMapResources();
+	App->dialogSys.Start();
+	current_state = LORE;
 
 	Event::Push(MINIMAP_MOVE_CAMERA, App->render, 800.0f, 2900.0f);
 	//Event::Push(ON_PAUSE, &root);
@@ -1353,7 +1355,7 @@ void Scene::UpdateStateMachine()
 	switch (current_state)
 	{
 	case LORE:
-		
+		if(!App->dialogSys.Update()) Event::Push(GAMEPLAY, this, CAM_MOVEMENT);
 		break;
 	case CAM_MOVEMENT:
 		
@@ -1383,9 +1385,7 @@ void Scene::UpdateStateMachine()
 			if (tutorial_clicks == 10) Event::Push(GAMEPLAY, this, EDGE_STATE);
 
 			LOG("Clicks %d", tutorial_clicks);
-
 		}
-
 		break;
 	case EDGE_STATE:
 
@@ -1394,7 +1394,6 @@ void Scene::UpdateStateMachine()
 			edge_t_go = nullptr;
 			Event::Push(GAMEPLAY, this, BASE_CENTER_STATE);
 		}
-
 		break;
 	case BASE_CENTER_STATE:
 
@@ -1495,8 +1494,6 @@ void Scene::OnEventStateMachine(GameplayState state)
 	{
 		//------------------STATE MACHINE CASES-----------------------
 	case CAM_MOVEMENT:
-
-
 		distance = 0.0f;
 		last_distance = 0.0f;
 		total_distance = 0.0f;

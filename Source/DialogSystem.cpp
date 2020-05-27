@@ -15,7 +15,6 @@ DialogSystem::~DialogSystem()
 
 bool DialogSystem::Start()
 {
-	question = false;
 	dStep = 0;
 	end = false;
 	CreateScreenUI();
@@ -26,69 +25,52 @@ bool DialogSystem::Start()
 
 bool DialogSystem::Update()
 {
-	bool ret = true;
 	if (!end)
-	{
-		if (question)
+	{	
+		if (App->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN)
 		{
-			if (App->input->GetKey(SDL_SCANCODE_1) == KEY_DOWN)
-			{
-				UpdateScreenUI(OPTION_A);
-			}
-			else if (App->input->GetKey(SDL_SCANCODE_2) == KEY_DOWN)
-			{
-				UpdateScreenUI(OPTION_B);
-			}
-			else if (App->input->GetKey(SDL_SCANCODE_3) == KEY_DOWN)
-			{
-				UpdateScreenUI(OPTION_C);
-			}
-		}
-		else
-		{
-			if (App->input->GetKey(SDL_SCANCODE_SPACE))
-			{
-				UpdateScreenUI();
-			}
-		}
+			UpdateScreenUI();
+		}		
+		return true;
 	}
-
-	if (end)
+	else
 	{
-		if (App->input->GetKey(SDL_SCANCODE_SPACE))
+		if (App->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN)
 		{
 			retail->SetInactive();
 			txt->SetInactive();
-			txtOptionA->SetInactive();
-			txtOptionB->SetInactive();
-			txtOptionC->SetInactive();
+			soldier->SetInactive();
+			queen->SetInactive();
+			return false;
 		}
+		else return true;
 	}
-	return ret;
 }
 
 void DialogSystem::CreateScreenUI()
 {
 	dialogGo = App->scene->AddGameobjectToCanvas("Dialog");
 
-	retail = new C_Image(dialogGo);
-	retail->target = { 1.f, 1.f, 1.f, 1.f };
-	retail->offset = { 50.0f, 50.0f };
-	retail->section = { 40, 450, 945, 266 };
-	retail->tex_id = App->tex.Load("Assets/textures/fullscreen.png");
+	queen = new C_Image(dialogGo);
+	queen->target = { 0.6f, 0.2f, 0.4f, 0.4f };
+	queen->offset = { 0, 0 };
+	queen->section = { 7, 3, 793, 1447 };
+	queen->tex_id = App->tex.Load("Assets/textures/queen.png");
 
+	soldier = new C_Image(dialogGo);
+	soldier->target = { 0.1f, 0.32f, 0.4f, 0.4f };
+	soldier->offset = { 0, 0 };
+	soldier->section = { 6, 2, 788, 1245 };
+	soldier->tex_id = App->tex.Load("Assets/textures/soldier.png");
+
+	retail = new C_Image(dialogGo);
+	retail->target = { 0.3f, 0.75f, 2.0f, 2.0f };
+	retail->offset = { 0, 0 };
+	retail->section = { 712, 915, 232, 77 };
+	retail->tex_id = App->tex.Load("Assets/textures/hud-sprites.png");
 
 	txt = new C_Text(dialogGo, "");//Text line
-	txt->target = { 0.047f, 0.628f, 0.9f , 0.9f };
-
-	txtOptionA = new C_Text(dialogGo, "");//Option A
-	txtOptionA->target = { 0.047f, 0.628f, 0.9f , 0.9f };
-
-	txtOptionB = new C_Text(dialogGo, "");//Option B
-	txtOptionB->target = { 0.047f, 0.628f, 0.9f , 0.9f };
-
-	txtOptionC = new C_Text(dialogGo, "");//Option C
-	txtOptionC->target = { 0.047f, 0.628f, 0.9f , 0.9f };
+	txt->target = { 0.36f, 0.84f, 1.5f , 1.5f };
 }
 
 void DialogSystem::UpdateScreenUI(Option answer)
@@ -96,63 +78,24 @@ void DialogSystem::UpdateScreenUI(Option answer)
 	switch (dStep)
 	{
 	case 0:
-		txt->text->SetText("Press space to see next text.");
+		txt->text->SetText("QUEEN!! WE ARE BEING INVADED!!");
 		dStep += 1;
 		break;
 	case 1:
 		txt->text->SetText("Now choose one option:");
-		txtOptionA->text->SetText("1-Option A.");
-		txtOptionB->text->SetText("2-Option B.");
-		txtOptionC->text->SetText("3-Option C.");
-		question = true;
 		dStep += 1;
 		break;
-	case 2:
-		txtOptionA->text->SetText("");
-		txtOptionB->text->SetText("");
-		txtOptionC->text->SetText("");
-		switch (answer)
-		{
-		case OPTION_A:
-			txt->text->SetText("This is option A.");
-			question = false;
-			dStep += 1;
-			break;
-		case OPTION_B:
-			txt->text->SetText("This is option B.");
-			question = false;
-			dStep += 1;
-			break;
-		case OPTION_C:
-			txt->text->SetText("This is option C.");
-			question = false;
-			dStep += 1;
-			break;
-		}
+	case 2:	
+		txt->text->SetText("This is option C.");
+		dStep += 1;
 		break;
 	case 3:
 		txt->text->SetText("Want to finish?");
-		txtOptionA->text->SetText("1- Yes.");
-		txtOptionB->text->SetText("2- No.");
-		question = true;
 		dStep += 1;
 		break;
 	case 4:
-		txtOptionA->text->SetText("");
-		txtOptionB->text->SetText("");
-		switch (answer)
-		{
-		case OPTION_A:
-			txt->text->SetText("Dialog end.");
-			question = false;
-			end = true;
-			break;
-		case OPTION_B:
-			dStep = CHOOSE_OPTION;
-			question = false;
-			UpdateScreenUI();
-			break;
-		}
+		txt->text->SetText("Dialog end.");
+		end = true;
 		break;
 	}
 }
