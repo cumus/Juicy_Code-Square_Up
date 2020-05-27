@@ -930,10 +930,22 @@ void Scene::LoadStartingMapResources()
 		SpawnBehaviour(EDGE, edge_pos[i]);
 
 	//Capsule test positions
-	const int capsule_count = 2;
+	const int capsule_count = 13;
 	vec capsule_pos[capsule_count] =
-	{ { 144.f, 135.f },
-	{ 152.f, 135.f } };
+	{ { 144.f, 135.f }, //test
+	{ 152.f, 135.f }, //test
+	{35.f,156.f},//Edge
+	{62.f,177.f},//Units
+	{116.f,256.f},//Units
+	{122.f,233.f},//Edge
+	{180.f,256.f},//Units
+	{185.f,229.f},//Edge
+	{229.f,220.f},//Edge
+	{119.f,195.f},//Edge
+	{252.f,179.f},//Units
+	{265.f,124.f},//Units
+	{253.f,85.f},//Edge
+	};
 
 	for (int i = 0; i < capsule_count; ++i)
 		SpawnBehaviour(CAPSULE, capsule_pos[i]);
