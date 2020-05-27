@@ -879,7 +879,7 @@ void Scene::LoadBaseCenter()
 			baseCenterPos.second = base_go->GetTransform()->GetGlobalPosition().y };
 		for (std::map<double, Behaviour*>::iterator it = Behaviour::b_map.begin(); it != Behaviour::b_map.end(); ++it)//Update paths 
 		{
-			Event::Push(UPDATE_PATH, it->second, baseCenterPos.first - 1, baseCenterPos.second - 1);
+			Event::Push(REPATH, it->second);
 		}
 	}
 }
@@ -932,6 +932,8 @@ void Scene::LoadStartingMapResources()
 		SpawnBehaviour(EDGE, edge_pos[i]);
 
 
+	
+
 	//Capsule test positions
 	const int capsule_count = 13;
 	vec capsule_pos[capsule_count] =
@@ -950,8 +952,12 @@ void Scene::LoadStartingMapResources()
 	{253.f,85.f},//Edge
 	};
 
-	for (int i = 0; i < capsule_count; ++i)
-		SpawnBehaviour(CAPSULE, capsule_pos[i]);
+	for (int i = 0; i < capsule_count; ++i) {
+		Gameobject* capsule_go = AddGameobject("Base Center");
+		capsule_go->GetTransform()->SetLocalPos(capsule_pos[i]);
+		new Capsule(capsule_go);
+	}
+		
 }
 
 void Scene::UpdateFade()
@@ -2236,11 +2242,12 @@ Transform* Scene::SpawnBehaviour(int type, vec pos)
 	}
 	case CAPSULE:
 	{
-		//if ((player_stats[CURRENT_GOLD] - 10) >= 0)
-		//{
-			//std::pair<int, int> thisPos(pos.x, pos.y);
-			//if (App->pathfinding.CheckWalkabilityArea(thisPos, vec(1.0f, 1.0f, 1.0f)))
-			//{
+		LOG("current gold %d", CURRENT_GOLD);
+		if ((player_stats[CURRENT_GOLD] - 10) >= 0)
+		{
+			std::pair<int, int> thisPos(pos.x, pos.y);
+			if (App->pathfinding.ValidTile(int(thisPos.first), int(thisPos.second)))
+			{
 				behaviour = AddGameobject("Capsule");
 				behaviour->GetTransform()->SetLocalPos(pos);
 				Capsule* cap = new Capsule(behaviour);
@@ -2251,14 +2258,16 @@ Transform* Scene::SpawnBehaviour(int type, vec pos)
 				}
 				else cap->gives_edge = false;
 				std::srand(time(NULL));
-				//UpdateStat(CURRENT_GOLD, -10);
+
+				UpdateStat(CURRENT_GOLD, -10);
 				//Update paths
-				/*for (std::map<double, Behaviour*>::iterator it = Behaviour::b_map.begin(); it != Behaviour::b_map.end(); ++it)
-					Event::Push(REPATH, it->second, pos.x - 1, pos.y - 1);*/
-			//}
-			//else LOG("Can't spawn capsule!");
-		//}
-		//else LOG("Not enough resources! :(");
+				for (std::map<double, Behaviour*>::iterator it = Behaviour::b_map.begin(); it != Behaviour::b_map.end(); ++it)
+					Event::Push(REPATH, it->second, pos.x - 1, pos.y - 1);
+			}
+			else LOG("Can't spawn capsule!");
+			
+		}
+		else LOG("Not enough resources! :(");
 		break;
 	}
 	case SPAWNER:

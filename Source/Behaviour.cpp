@@ -204,7 +204,7 @@ void Behaviour::RecieveEvent(const Event& e)
 	}
 	case BUILD_CAPSULE:
 	{
-		App->scene->SpawnBehaviour(CAPSULE, { 504,162,0 });
+		App->scene->SpawnBehaviour(CAPSULE, { 124, 72});
 		break;
 	}
 	case DO_UPGRADE: Upgrade(); break;
