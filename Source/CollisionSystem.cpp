@@ -134,7 +134,8 @@ void CollisionSystem::DeleteCollider(Collider coll)
 		{
 			for (std::vector<Collider*>::iterator it = layerColliders[i].begin(); it != layerColliders[i].end(); ++it)
 			{
-				if ((*it)->GetID() != coll.GetID()) cache.push_back(*it); 
+				if ((*it)->GetID() != coll.GetID()) cache.push_back(*it);
+				else (*it)->SetInactive();
 			}
 			if (!cache.empty()) layerColliders[i] = cache;
 			cache.clear();
@@ -197,8 +198,11 @@ void CollisionSystem::Update()
 			{
 				if (!(*it)->GetGameobject()->GetBehaviour()->GetState() != DESTROYED)
 				{
-					(*it)->SetPosition();
-					if((*it)->IsActive())collisionTree->Insert(*it);
+					if ((*it)->IsActive())
+					{
+						(*it)->SetPosition();
+						collisionTree->Insert(*it);
+					}
 				}
 			}
 		}
