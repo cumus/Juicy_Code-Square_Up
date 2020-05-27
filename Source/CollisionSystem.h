@@ -10,6 +10,13 @@
 #include <vector>
 #include <map>
 
+#define MAX_COLLIDERS 1000
+
+struct LayerColliders
+{
+	Collider* colliders[MAX_COLLIDERS];
+	int next=0;
+};
 
 class CollisionSystem
 {
@@ -35,7 +42,8 @@ private:
 private:
 	bool collisionLayers[MAX_COLLISION_LAYERS][MAX_COLLISION_LAYERS]; //Store layers collisions
 	//std::map<CollisionLayer, std::vector<Collider*>> layerColliders;
-	std::vector<Collider*> layerColliders[MAX_COLLISION_LAYERS];
+	//std::vector<Collider*> layerColliders[MAX_COLLISION_LAYERS];
+	LayerColliders layerColliders[MAX_COLLISION_LAYERS];
 	Quadtree* collisionTree;
 	bool debug;
 };

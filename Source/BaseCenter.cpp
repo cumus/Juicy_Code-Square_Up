@@ -34,6 +34,7 @@ Base_Center::Base_Center(Gameobject* go) : BuildingWithQueue(go, BASE_CENTER, NO
 
 	if (t)
 	{
+		vec pos = t->GetGlobalPosition();
 		for (int i = 0; i < t->GetLocalScaleX(); i++)
 		{
 			for (int a = 0; a < t->GetLocalScaleY(); a++)
