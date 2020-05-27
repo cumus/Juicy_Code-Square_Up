@@ -11,6 +11,7 @@ public:
 
 	void AfterDamageAction() override;
 	void FreeWalkabilityTiles() override;
+	void Update() override;
 };
 
 #endif // __EDGE_H__

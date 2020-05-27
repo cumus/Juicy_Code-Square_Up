@@ -11,12 +11,15 @@ Edge::Edge(Gameobject* go) : Behaviour(go, EDGE, NO_UPGRADE, B_EDGE)
 	dieDelay = 3.0f;
 	providesVisibility = false;
 	deathFX = EDGE_FX;
-	//App->pathfinding.SetWalkabilityTile(int(pos.x), int(pos.y), false);
-
 	SetColliders();
 }
 
 Edge::~Edge() {}
+
+void Edge::Update()
+{
+	CheckFoWMap();
+}
 
 void Edge::FreeWalkabilityTiles()
 {

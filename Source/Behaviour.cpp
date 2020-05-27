@@ -251,21 +251,38 @@ void Behaviour::CheckFoWMap(bool debug)
 	else{ ActivateSprites(); visible = true; }
 }
 
-std::vector<iPoint> Behaviour::GetTilesInsideRadius()
+void Behaviour::GetTilesInsideRadius()
 {
-	std::vector<iPoint> ret;
 	vec s = game_object->GetTransform()->GetLocalScale();
 	if (type == BARRACKS)
 	{
-		iPoint startingPos(int(pos.x + s.x * 0.5 - vision_range)+5, int(pos.y) - s.y * 0.5 - vision_range);
-		iPoint finishingPos(int(startingPos.x + (vision_range * 2)+5), int(startingPos.y + (vision_range * 2)));
+		iPoint startingPos(int(pos.x + 4 + s.x * 0.5 - vision_range), int(pos.y - s.y * 0.5 - vision_range));
+		iPoint finishingPos(int(startingPos.x + (vision_range * 2)), int(startingPos.y + (vision_range * 2)));
 
 		for (int x = startingPos.x; x < finishingPos.x; x++)
 		{
 			for (int y = startingPos.y; y < finishingPos.y; y++)
 			{
 				iPoint tilePos(x, y);
-				if (tilePos.DistanceTo(iPoint(int(pos.x), int(pos.y))) <= vision_range * 0.6)
+				if (tilePos.DistanceTo(iPoint(int(pos.x + 5), int(pos.y))) <= vision_range * 0.6)
+				{
+					if (App->fogWar.CheckFoWTileBoundaries(iPoint(tilePos.x, tilePos.y)))FogOfWarManager::fogMap[tilePos.x][tilePos.y] = true;
+				}
+			}
+		}
+	}
+	else if(type == BASE_CENTER)
+	{
+
+		iPoint startingPos(int(pos.x+3 + s.x * 0.5 - vision_range), int(pos.y - s.y * 0.5 - vision_range));
+		iPoint finishingPos(int(startingPos.x + (vision_range * 2)), int(startingPos.y + (vision_range * 2)));
+
+		for (int x = startingPos.x; x < finishingPos.x; x++)
+		{
+			for (int y = startingPos.y; y < finishingPos.y; y++)
+			{
+				iPoint tilePos(x, y);
+				if (tilePos.DistanceTo(iPoint(int(pos.x+3), int(pos.y))) <= vision_range * 0.6)
 				{
 					if (App->fogWar.CheckFoWTileBoundaries(iPoint(tilePos.x, tilePos.y)))FogOfWarManager::fogMap[tilePos.x][tilePos.y] = true;
 				}
@@ -274,7 +291,7 @@ std::vector<iPoint> Behaviour::GetTilesInsideRadius()
 	}
 	else
 	{
-		iPoint startingPos(int(pos.x + s.x * 0.5 - vision_range), int(pos.y) - s.y * 0.5 - vision_range);
+		iPoint startingPos(int(pos.x + s.x * 0.5 - vision_range), int(pos.y - s.y * 0.5 - vision_range));
 		iPoint finishingPos(int(startingPos.x + (vision_range * 2)), int(startingPos.y + (vision_range * 2)));
 
 		for (int x = startingPos.x; x < finishingPos.x; x++)
@@ -289,7 +306,6 @@ std::vector<iPoint> Behaviour::GetTilesInsideRadius()
 			}
 		}
 	}
-	return ret;
 }
 
 

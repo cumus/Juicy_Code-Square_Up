@@ -23,7 +23,7 @@ Barracks::Barracks(Gameobject* go) : BuildingWithQueue(go, BARRACKS, NO_UPGRADE,
 	current_lvl = 1;
 	max_lvl = 5;
 	providesVisibility = true;
-	vision_range = 10.0f;
+	vision_range = 15.0f;
 
 	//create_bar();
 	//bar_go->SetInactive();

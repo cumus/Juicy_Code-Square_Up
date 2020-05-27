@@ -110,7 +110,7 @@ public:
 	void CheckFoWMap(bool debug=false);
 	bool IsDestroyed();
 	vec GetPos();
-	std::vector<iPoint> GetTilesInsideRadius();
+	void GetTilesInsideRadius();
 	Collider* GetBodyCollider();
 	Collider* GetSelectionCollider();
 	RectF GetSelectionRect();
