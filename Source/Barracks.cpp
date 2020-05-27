@@ -109,6 +109,12 @@ void Barracks::CreatePanel()
 
 	selectionPanel = App->scene->AddGameobjectToCanvas("Barracks Build Panel");
 
+	posY_panel = 0.81f;
+	panel_tex_ID = App->tex.Load("Assets/textures/hud-sprites.png");
+
+	//------------------------- BASE PANEL --------------------------------------
+
+	selectionPanel = App->scene->AddGameobjectToCanvas("Barracks Build Panel");
 
 	barrack_icon = new C_Image(selectionPanel);
 	barrack_icon->target = { 0.0f, 0.832f, 1.5f, 1.5f };
@@ -122,31 +128,10 @@ void Barracks::CreatePanel()
 	panel->section = { 163, 343, 202, 114 };
 	panel->tex_id = panel_tex_ID;
 
-	/*
-	superUnit_btn = new C_Button(selectionPanel, Event(BUILD_SUPER, this, spawnPoint, 5.0f));//Bottom right
-	superUnit_btn->target = { 0.205f, posY_panel + 0.1f, 1.0f, 1.0f };
-	superUnit_btn->offset = { 0.0f, 0.0f };
+	Gameobject* melee_btn_go = App->scene->AddGameobject("Melee Button", selectionPanel);
 
-	superUnit_btn->section[0] = { 207, 65, 62, 62 };
-	superUnit_btn->section[1] = { 207, 195, 62, 62 };
-	superUnit_btn->section[2] = { 207, 325, 62, 62 };
-	superUnit_btn->section[3] = { 207, 325, 62, 62 };
-
-	superUnit_btn->tex_id = panel_tex_ID;
-
-	rangedUnit_btn = new C_Button(selectionPanel, Event(BUILD_RANGED, this, spawnPoint, 5.0f));//Bottom left
-	rangedUnit_btn->target = { 0.155f, posY_panel + 0.1f, 1.0f, 1.0f };
-	rangedUnit_btn->offset = { 0.0f, 0.0f };
-
-	rangedUnit_btn->section[0] = { 142, 65, 62, 62 };
-	rangedUnit_btn->section[1] = { 142, 195, 62, 62 };
-	rangedUnit_btn->section[2] = { 142, 325, 62, 62 };
-	rangedUnit_btn->section[3] = { 142, 325, 62, 62 };
-
-	rangedUnit_btn->tex_id = panel_tex_ID;
-*/
-	meleeUnit_btn = new C_Button(selectionPanel, Event(BUILD_MELEE, this, spawnPoint, 5.0f));//First option from the right
-	meleeUnit_btn->target = { /*-0.0125f*/0.9125, 0.7635, 1.5f, 1.5f };
+	meleeUnit_btn = new C_Button(melee_btn_go, Event(BUILD_MELEE, this, spawnPoint, 5.0f));//First option from the right
+	meleeUnit_btn->target = { -0.0535f, -0.007, 1.5f, 1.5f };
 	meleeUnit_btn->offset = { 0.0f,0.0f };
 
 	meleeUnit_btn->section[0] = { 1147, 51, 56, 49 };
@@ -156,8 +141,39 @@ void Barracks::CreatePanel()
 
 	meleeUnit_btn->tex_id = panel_tex_ID;
 
-	upgrade_btn = new C_Button(selectionPanel, Event(DO_UPGRADE, this->AsBehaviour()));//Last option from the right
-	upgrade_btn->target = { 0.0990f, 0.9075, 1.5f, 1.5f };
+	/*
+
+	Gameobject* superUnit_btn_go = App->scene->AddGameobject("Super Unit Button", selectionPanel);
+
+	superUnit_btn = new C_Button(superUnit_btn_go, Event(BUILD_SUPER, this, spawnPoint, 5.0f)); // Second option from the right
+	superUnit_btn->target = { 0.18f, -0.024, 1.5f, 1.5f };
+	superUnit_btn->offset = { 0.0f, 0.0f };
+
+	superUnit_btn->section[0] = { 207, 65, 62, 62 };
+	superUnit_btn->section[1] = { 207, 195, 62, 62 };
+	superUnit_btn->section[2] = { 207, 325, 62, 62 };
+	superUnit_btn->section[3] = { 207, 325, 62, 62 };
+
+	superUnit_btn->tex_id = panel_tex_ID;
+
+	Gameobject* rangedUnit_btn_go = App->scene->AddGameobject("Ranged Unit Button", selectionPanel);
+
+	rangedUnit_btn = new C_Button(rangedUnit_btn_go, Event(BUILD_RANGED, this, spawnPoint, 5.0f));// Third option from the right
+	rangedUnit_btn->target = { 0.38f, 0.20f, 1.5f, 1.5f };
+	rangedUnit_btn->offset = { 0.0f, 0.0f };
+
+	rangedUnit_btn->section[0] = { 142, 65, 62, 62 };
+	rangedUnit_btn->section[1] = { 142, 195, 62, 62 };
+	rangedUnit_btn->section[2] = { 142, 325, 62, 62 };
+	rangedUnit_btn->section[3] = { 142, 325, 62, 62 };
+
+	rangedUnit_btn->tex_id = panel_tex_ID;
+*/
+
+	Gameobject* upgrade_btn_go = App->scene->AddGameobject("Upgrade Button", selectionPanel);
+
+	upgrade_btn = new C_Button(upgrade_btn_go, Event(DO_UPGRADE, this->AsBehaviour()));//Last option from the right
+	upgrade_btn->target = { 0.4190f, 0.6075, 1.5f, 1.5f };
 	upgrade_btn->offset = { 0.0f,0.0f };
 
 	upgrade_btn->section[0] = { 1075, 51, 56, 49 };
@@ -166,9 +182,6 @@ void Barracks::CreatePanel()
 	upgrade_btn->section[3] = { 1075, 102, 56, 49 };
 
 	upgrade_btn->tex_id = panel_tex_ID;
-
-	
-
 }
 
 void Barracks::UpdatePanel()

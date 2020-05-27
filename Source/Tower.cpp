@@ -200,8 +200,7 @@ void Tower::CreatePanel()
 
 	//------------------------- TOWER PANEL --------------------------------------
 
-	selectionPanel = App->scene->AddGameobjectToCanvas("Tower Panel");
-
+	selectionPanel = App->scene->AddGameobjectToCanvas("Tower Build Panel");
 
 	tower_icon = new C_Image(selectionPanel);
 	tower_icon->target = { 0.0f, 0.832f, 1.5f, 1.5f };
@@ -215,8 +214,10 @@ void Tower::CreatePanel()
 	panel->section = { 163, 343, 202, 114 };
 	panel->tex_id = panel_tex_ID;
 
-	upgrade_btn = new C_Button(selectionPanel, Event(DO_UPGRADE, this->AsBehaviour()));//Last option from the right
-	upgrade_btn->target = { 0.0990f, 0.9075, 1.5f, 1.5f };
+	Gameobject* upgrade_btn_go = App->scene->AddGameobject("Upgrade Button", selectionPanel);
+
+	upgrade_btn = new C_Button(upgrade_btn_go, Event(DO_UPGRADE, this->AsBehaviour()));//Last option from the right
+	upgrade_btn->target = { 0.4190f, 0.6075, 1.5f, 1.5f };
 	upgrade_btn->offset = { 0.0f,0.0f };
 
 	upgrade_btn->section[0] = { 1075, 51, 56, 49 };
@@ -225,7 +226,6 @@ void Tower::CreatePanel()
 	upgrade_btn->section[3] = { 1075, 102, 56, 49 };
 
 	upgrade_btn->tex_id = panel_tex_ID;
-
 }
 
 void Tower::UpdatePanel()

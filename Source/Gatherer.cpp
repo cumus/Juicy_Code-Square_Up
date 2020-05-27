@@ -34,7 +34,6 @@ void Gatherer::CreatePanel()
 	panel_tex_ID = App->tex.Load("Assets/textures/hud-sprites.png");
 
 	//------------------------- BASE PANEL --------------------------------------
-
 	selectionPanel = App->scene->AddGameobjectToCanvas("Gatherer Build Panel");
 
 	gatherer_icon = new C_Image(selectionPanel);
@@ -49,8 +48,10 @@ void Gatherer::CreatePanel()
 	panel->section = { 163, 343, 202, 114 };
 	panel->tex_id = panel_tex_ID;
 
-	barracks_btn = new C_Button(selectionPanel, Event(PLACE_BUILDING, App->scene, int(BARRACKS)));//Top left
-	barracks_btn->target = { -0.0125f, 0.7635, 1.5f, 1.5f };
+	Gameobject* barracks_btn_go = App->scene->AddGameobject("Barracks Button", selectionPanel);
+
+	barracks_btn = new C_Button(barracks_btn_go, Event(PLACE_BUILDING, App->scene, int(BARRACKS)));//First option from the right
+	barracks_btn->target = { -0.0535f, -0.007, 1.5f, 1.5f };
 	barracks_btn->offset = { 0.0f, 0.0f };
 
 	barracks_btn->section[0] = { 1147, 223, 56, 49 };
@@ -60,8 +61,10 @@ void Gatherer::CreatePanel()
 
 	barracks_btn->tex_id = panel_tex_ID;
 
-	tower_btn = new C_Button(selectionPanel, Event(PLACE_BUILDING, App->scene, int(TOWER)));//Top right
-	tower_btn->target = { 0.043f, 0.7575, 1.5f, 1.5f };
+	Gameobject* tower_btn_go = App->scene->AddGameobject("Tower Button", selectionPanel);
+
+	tower_btn = new C_Button(tower_btn_go, Event(PLACE_BUILDING, App->scene, int(TOWER)));//Second option from the right
+	tower_btn->target = { 0.18f, -0.024, 1.5f, 1.5f };
 	tower_btn->offset = { 0.0f, 0.0f };
 
 	tower_btn->section[0] = { 1075, 395, 56, 49 };
@@ -71,8 +74,10 @@ void Gatherer::CreatePanel()
 
 	tower_btn->tex_id = panel_tex_ID;
 
-	baseBtn = new C_Button(selectionPanel, Event(PLACE_BUILDING, App->scene, int(BASE_CENTER)));//Bottom right
-	baseBtn->target = { 0.089f, 0.81f, 1.5f, 1.5f };
+	Gameobject* base_btn_go = App->scene->AddGameobject("Base Button", selectionPanel);
+
+	baseBtn = new C_Button(base_btn_go, Event(PLACE_BUILDING, App->scene, int(BASE_CENTER)));//Third option from the right
+	baseBtn->target = { 0.38f, 0.20f, 1.5f, 1.5f };
 	baseBtn->offset = { 0.0f, 0.0f };
 
 	baseBtn->section[0] = { 1147, 395, 56, 49 };
@@ -82,13 +87,14 @@ void Gatherer::CreatePanel()
 
 	baseBtn->tex_id = panel_tex_ID;
 
+	/*
+	Gameobject* wall_btn_go = App->scene->AddGameobject("Wall Button", selectionPanel);
 
-	/*wall_btn = new C_Button(selectionPanel, Event(PLACE_BUILDING,  App->scene, spawnPointX, spawnPointY));//Bottom left
-	wall_btn->target = { 0.912f, posY_panel + 0.085f, 1.0f, 1.0f };
+	wall_btn = new C_Button(wall_btn_go, Event(PLACE_BUILDING,  App->scene,int(WALL)));//Last option from the right
+	wall_btn->target = { 0.4190f, 0.6075, 1.5f, 1.5f };
 	wall_btn->offset = { 0.0f, 0.0f };
 	wall_btn->section = { 161, 0, 38, 38 };
 	wall_btn->tex_id = panel_tex_ID;*/
-
 }
 
 void Gatherer::UpdatePanel()

@@ -184,9 +184,10 @@ void Base_Center::CreatePanel()
 	panel->section = { 163, 343, 202, 114 };
 	panel->tex_id = panel_tex_ID;
 
+	Gameobject* gatherer_btn_go = App->scene->AddGameobject("Gatherer Button", selectionPanel);
 
-	gatherer_btn = new C_Button(selectionPanel, Event(BUILD_GATHERER, this, spawnPoint, 5.0f));//First option from the right
-	gatherer_btn->target = { -0.0125f, 0.7635, 1.5f, 1.5f };
+	gatherer_btn = new C_Button(gatherer_btn_go, Event(BUILD_GATHERER, this, spawnPoint, 5.0f));//First option from the right
+	gatherer_btn->target = { -0.0535f, -0.007, 1.5f, 1.5f };
 	gatherer_btn->offset = { 0.0f, 0.0f };
 
 	gatherer_btn->section[0] = { 1075, 223, 56, 49 };
@@ -199,8 +200,10 @@ void Base_Center::CreatePanel()
 
 	//-----------------------------CAPSULE BUTTON-------------------------------------------
 
-	capsule_button = new C_Button(selectionPanel, Event(BUILD_CAPSULE, this, spawnPoint, 5.0f));//First option from the right
-	capsule_button->target = { 0.043f, 0.7575, 1.5f, 1.5f };
+	Gameobject* capsule_btn_go = App->scene->AddGameobject("Capsule Button", selectionPanel);
+
+	capsule_button = new C_Button(capsule_btn_go, Event(BUILD_CAPSULE, this, spawnPoint, 5.0f));//First option from the right
+	capsule_button->target = { 0.18f, -0.024, 1.5f, 1.5f };
 	capsule_button->offset = { 0.0f, 0.0f };
 
 	capsule_button->section[0] = { 1075, 395, 56, 49 };
@@ -212,20 +215,11 @@ void Base_Center::CreatePanel()
 	capsule_button->tex_id = panel_tex_ID;
 
 	/*
-	meleeUnit_btn = new C_Button(selectionPanel, Event(BUILD_MELEE, this, spawnPoint, 5.0f));//Top right
-	meleeUnit_btn->target = { 0.95f, posY_panel+0.02f, 0.7f, 0.7f };
-	meleeUnit_btn->offset = { 0.0f,0.0f };
 
-	meleeUnit_btn->section[0] = { 207, 0, 62, 62 };
-	meleeUnit_btn->section[1] = { 207, 130, 62, 62 };
-	meleeUnit_btn->section[2] = { 207, 260, 62, 62 };
-	meleeUnit_btn->section[3] = { 207, 260, 62, 62 };
+	Gameobject* rangedUnit_btn_go = App->scene->AddGameobject("Ranged Unit Button", selectionPanel);
 
-	meleeUnit_btn->tex_id = panel_tex_ID;
-
-	
-	rangedUnit_btn = new C_Button(selectionPanel, Event(BUILD_RANGED, this, spawnPoint, 5.0f));//Bottom left
-	rangedUnit_btn->target = { 0.912f, posY_panel+0.085f, 0.7f, 0.7f };
+	rangedUnit_btn = new C_Button(rangedUnit_btn_go, Event(BUILD_RANGED, this, spawnPoint, 5.0f));//Third option from the right
+	rangedUnit_btn->target = { 0.38f, 0.20f, 1.5f, 1.5f };
 	rangedUnit_btn->offset = { 0.0f, 0.0f };
 
 	rangedUnit_btn->section[0] = { 142, 65, 62, 62 };
@@ -235,7 +229,9 @@ void Base_Center::CreatePanel()
 
 	rangedUnit_btn->tex_id = panel_tex_ID;
 
-	superUnit_btn = new C_Button(selectionPanel, Event(BUILD_SUPER, this, spawnPoint, 5.0f));//Bottom right
+	Gameobject* superUnit_btn_go = App->scene->AddGameobject("Super Unit Button", selectionPanel);
+
+	superUnit_btn = new C_Button(superUnit_btn_go, Event(BUILD_SUPER, this, spawnPoint, 5.0f));//Bottom right
 	superUnit_btn->target = { 0.95f, posY_panel+0.085f, 0.7f, 0.7f };
 	superUnit_btn->offset = { 0.0f, 0.0f };
 
@@ -246,8 +242,11 @@ void Base_Center::CreatePanel()
 
 	superUnit_btn->tex_id = panel_tex_ID;
 	*/
-	upgrade_btn = new C_Button(selectionPanel, Event(DO_UPGRADE, this->AsBehaviour()));//Last option from the right
-	upgrade_btn->target = { 0.0990f, 0.9075, 1.5f, 1.5f };
+
+	Gameobject* upgrade_btn_go = App->scene->AddGameobject("Upgrade Button", selectionPanel);
+
+	upgrade_btn = new C_Button(upgrade_btn_go, Event(DO_UPGRADE, this->AsBehaviour()));//Last option from the right
+	upgrade_btn->target = { 0.4190f, 0.6075, 1.5f, 1.5f };
 	upgrade_btn->offset = { 0.0f,0.0f };
 
 	upgrade_btn->section[0] = { 1075, 51, 56, 49 };
