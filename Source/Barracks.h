@@ -11,7 +11,6 @@ public:
 	~Barracks();
 
 	void Upgrade() override;
-	void AfterDamageAction() override;
 
 	void create_bar() override;
 	void CreatePanel() override;

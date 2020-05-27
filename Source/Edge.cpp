@@ -26,7 +26,7 @@ void Edge::FreeWalkabilityTiles()
 	//App->pathfinding.SetWalkabilityTile(int(pos.x), int(pos.y), true);
 }
 
-void Edge::AfterDamageAction()
+void Edge::AfterDamageAction(UnitType from)
 {
 	if (App->scene->tutorial_edge == true)
 	{

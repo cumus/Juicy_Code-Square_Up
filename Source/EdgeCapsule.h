@@ -10,7 +10,7 @@ public:
 	~Capsule();
 	
 	
-	void AfterDamageAction() override;
+	void AfterDamageAction(UnitType from) override;
 	void Update() override;
 
 public:

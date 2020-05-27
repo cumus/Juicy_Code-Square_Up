@@ -12,7 +12,6 @@ public:
 
 	void OnRightClick(vec pos, vec modPos) override;
 	void Upgrade() override;
-	void AfterDamageAction() override;
 	void DoAttack() override;
 	void Update() override;
 	void create_bar() override;

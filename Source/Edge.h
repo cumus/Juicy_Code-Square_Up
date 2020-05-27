@@ -9,7 +9,7 @@ public:
 	Edge(Gameobject* go);
 	~Edge();
 
-	void AfterDamageAction() override;
+	void AfterDamageAction(UnitType from) override;
 	void FreeWalkabilityTiles() override;
 	void Update() override;
 };

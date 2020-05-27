@@ -130,17 +130,6 @@ void Tower::Update()
 	}
 }
 
-void Tower::AfterDamageAction()
-{
-	if (current_state != DESTROYED)
-	{
-		update_health_ui();
-		if (current_life <= 0)
-			OnKill(type);
-	}
-}
-
-
 void Tower::Upgrade()
 {
 	if (lvl < max_lvl)
@@ -186,7 +175,7 @@ void Tower::DoAttack()
 	localPos.first += 30.0f;
 	localPos.second += -60.0f;
 
-	Event::Push(DAMAGE, objective, damage);
+	Event::Push(DAMAGE, objective, damage,GetType());
 
 	shoot = true;
 	ms_count = 0;

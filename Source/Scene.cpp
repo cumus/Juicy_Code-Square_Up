@@ -145,7 +145,7 @@ bool Scene::Update()
 			timeEarthquake = 0;
 			for (std::map<double, Behaviour*>::iterator it = Behaviour::b_map.begin(); it != Behaviour::b_map.end(); ++it)
 			{
-				if((*it).second->GetType() != EDGE && (*it).second->GetType() != SPAWNER && (*it).second->GetType() != CAPSULE) Event::Push(DAMAGE, (*it).second, 5);
+				if((*it).second->GetType() != EDGE && (*it).second->GetType() != SPAWNER) Event::Push(DAMAGE, (*it).second, 5, EARTHQUAKE);
 			}
 		}
 	}

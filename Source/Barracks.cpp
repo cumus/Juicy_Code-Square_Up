@@ -72,12 +72,6 @@ void Barracks::UpdateWalkabilityTiles()
 	}
 }
 
-void Barracks::AfterDamageAction()
-{
-	if (current_life <= 0)
-		OnKill(type);
-}
-
 
 void Barracks::Upgrade()
 {

@@ -17,6 +17,7 @@
 
 enum UnitType : int
 {
+	UNKNOWN,
 	GATHERER,
 	UNIT_MELEE,
 	UNIT_RANGED,
@@ -36,6 +37,9 @@ enum UnitType : int
 	EDGE,
 	CAPSULE,
 	SPAWNER,
+
+	//Other//
+	EARTHQUAKE,
 	
 	MAX_UNIT_TYPES
 };
@@ -103,7 +107,7 @@ public:
 
 	void Selected();
 	void UnSelected();
-	void OnDamage(int damage);
+	void OnDamage(int damage,UnitType from = UNKNOWN);
 	void OnKill(const UnitType type);
 	void ActivateSprites();
 	void DesactivateSprites();
@@ -115,7 +119,7 @@ public:
 	Collider* GetSelectionCollider();
 	RectF GetSelectionRect();
 	virtual void UpdatePath(int x,int y) {}
-	virtual void AfterDamageAction() {}
+	virtual void AfterDamageAction(UnitType from) {}
 	virtual void OnRightClick(vec pos, vec modPos) {}
 	virtual void DoAttack() {}
 	virtual void OnDestroy(){}

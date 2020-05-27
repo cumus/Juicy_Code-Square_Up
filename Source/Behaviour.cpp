@@ -180,7 +180,7 @@ void Behaviour::RecieveEvent(const Event& e)
 	case ON_UNSELECT: UnSelected(); break;
 	case ON_DESTROY: OnDestroy(); break;
 	case ON_RIGHT_CLICK: OnRightClick(e.data1.AsVec(), e.data2.AsVec()); break;
-	case DAMAGE: OnDamage(e.data1.AsInt()); break;
+	case DAMAGE: OnDamage(e.data1.AsInt(), UnitType(e.data2.AsInt())); break;
 	//case IMPULSE: OnGetImpulse(e.data1.AsFloat(), e.data2.AsFloat()); break;
 	case BUILD_GATHERER:
 	{
@@ -344,7 +344,7 @@ void Behaviour::UnSelected()
 }
 
 
-void Behaviour::OnDamage(int d)
+void Behaviour::OnDamage(int d, UnitType from)
 {	
 	if (current_state != DESTROYED && Scene::DamageAllowed())
 	{
@@ -368,7 +368,7 @@ void Behaviour::OnDamage(int d)
 
 				//LOG("Life: %d", current_life);
 				update_health_ui();
-				AfterDamageAction();
+				AfterDamageAction(from);
 			}
 		}
 	}
@@ -565,7 +565,7 @@ void B_Unit::Update()
 					if (!atkObj->IsDestroyed()) //Attack
 					{
 						DoAttack();
-						Event::Push(DAMAGE, atkObj, damage);
+						Event::Push(DAMAGE, atkObj, damage,GetType());
 						LOG("Do attack");
 					}
 					else atkObj = nullptr;
@@ -579,7 +579,7 @@ void B_Unit::Update()
 					if (!atkObj->IsDestroyed()) //ATTACK
 					{
 						DoAttack();						
-						Event::Push(DAMAGE, atkObj, damage);
+						Event::Push(DAMAGE, atkObj, damage,GetType());
 					}
 					else atkObj = nullptr;
 					atkTimer = 0;

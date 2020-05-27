@@ -23,30 +23,32 @@ Capsule::~Capsule()
 	
 }
 
-
-
-
 void Capsule::Update()
 {
 	CheckFoWMap();
 }
 
-void Capsule::AfterDamageAction()
+void Capsule::AfterDamageAction(UnitType from)
 {
 	current_life = 1;
 	spriteState = OPEN;
-	if (gives_edge) {
-		Event::Push(UPDATE_STAT, App->scene, CURRENT_EDGE, 100);
-		Event::Push(UPDATE_STAT, App->scene, EDGE_COLLECTED, 100);
-		LOG("Capsule Destroyed");
-	}
-	else {
-		vec pos = game_object->GetTransform()->GetGlobalPosition();
-
-		for (int i = 0; i < 10; i++) {
-			Event::Push(SPAWN_UNIT, App->scene, UNIT_MELEE, pos - 5 + i);
+	if (from != EARTHQUAKE)
+	{
+		if (gives_edge)
+		{
+			Event::Push(UPDATE_STAT, App->scene, CURRENT_EDGE, 100);
+			Event::Push(UPDATE_STAT, App->scene, EDGE_COLLECTED, 100);
+			//LOG("Edge capsule");
 		}
-		LOG("Unit capsule");
+		else 
+		{
+			vec pos = game_object->GetTransform()->GetGlobalPosition();
+
+			for (int i = 0; i < 10; i++) {
+				Event::Push(SPAWN_UNIT, App->scene, UNIT_MELEE, pos - 5 + i);
+			}
+			//LOG("Unit capsule");
+		}
 	}
 }
 

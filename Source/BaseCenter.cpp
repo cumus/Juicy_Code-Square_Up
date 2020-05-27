@@ -133,12 +133,6 @@ void Base_Center::UpdateWalkabilityTiles()
 	}
 }
 
-void Base_Center::AfterDamageAction()
-{
-	if (current_life <= 0)
-		OnKill(type);
-}
-
 
 void Base_Center::Upgrade()
 {
