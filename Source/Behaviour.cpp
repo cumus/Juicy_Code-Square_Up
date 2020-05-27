@@ -56,9 +56,6 @@ Behaviour::Behaviour(Gameobject* go, UnitType t, UnitState starting_state, Compo
 	b_map.insert({ GetID(), this });
 
 	Minimap::AddUnit(GetID(), t, game_object->GetTransform());
-
-	//GetTilesInsideRadius();
-	//CheckFoWMap();	
 }
 
 Behaviour::~Behaviour()
@@ -367,14 +364,6 @@ void Behaviour::OnKill(const UnitType type)
 	current_state = DESTROYED;
 	spriteState = DESTROYED;
 
-	/*if (!selectableUnits.empty())
-	{
-		for (std::vector<double>::const_iterator it = selectableUnits.begin(); it != selectableUnits.end(); ++it)
-		{
-			if ((*it) == GetID()) selectableUnits.erase(it);
-		}
-	}*/
-
 	// Lifebar
 	OnDestroy();
 	mini_life_bar.Hide();
@@ -520,8 +509,6 @@ B_Unit::B_Unit(Gameobject* go, UnitType t, UnitState s, ComponentType comp_type)
 	attackFX = SELECT;
 	vision_range = 5.0f;
 
-	//UnitInit();
-
 	//Needed
 	path = nullptr;
 	next = false;
@@ -563,9 +550,9 @@ void B_Unit::Update()
 					{
 						DoAttack();
 						Event::Push(DAMAGE, atkObj, damage);
-						//LOG("Do attack");
+						LOG("Do attack");
 					}
-					atkObj = nullptr;
+					else atkObj = nullptr;
 					atkTimer = 0;
 				}
 			}
@@ -578,7 +565,7 @@ void B_Unit::Update()
 						DoAttack();						
 						Event::Push(DAMAGE, atkObj, damage);
 					}
-					atkObj = nullptr;
+					else atkObj = nullptr;
 					atkTimer = 0;
 				}				
 			}
@@ -675,26 +662,20 @@ void B_Unit::Update()
 			}
 		}	
 
-
 		//Move selection rect
 		std::pair<float, float> world = Map::F_MapToWorld(pos.x, pos.y);
 		selectionRect.x = world.first + selectionOffset.first;
 		selectionRect.y = world.second + selectionOffset.second;
 
-		if (atkTimer < atkTime)
-		{
-			atkTimer += App->time.GetGameDeltaTime();
-		}
+		if (atkTimer < atkTime) atkTimer += App->time.GetGameDeltaTime();	
 
-		if(atkObj == nullptr && !move) spriteState = IDLE;
+		if (atkObj != nullptr && atkObj->IsDestroyed()) { spriteState = IDLE;  atkObj = nullptr; LOG("IDLE"); }
 
 		//Raycast
-		if (shoot) ShootRaycast();
+		//if (shoot) ShootRaycast();
 			
 		//Draw vision and attack range
 		if (drawRanges) DrawRanges();
-
-		atkObj = nullptr;
 	}
 }
 
