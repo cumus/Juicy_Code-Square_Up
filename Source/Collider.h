@@ -16,12 +16,9 @@ enum CollisionLayer : int
 {
 	DEFAULT_COLL_LAYER = 0,
 	SCENE_COLL_LAYER,
-	HUD_COLL_LAYER,
-	INPUT_COLL_LAYER,
 	BODY_COLL_LAYER,
 	VISION_COLL_LAYER,
 	ATTACK_COLL_LAYER,
-	UNIT_SELECTION_LAYER,
 
 	MAX_COLLISION_LAYERS,
 };
@@ -35,9 +32,6 @@ enum ColliderTag
 	ENEMY_TAG,
 	ENEMY_VISION_TAG,
 	ENEMY_ATTACK_TAG,
-	UI_TAG,
-	BACKGROUND_TAG,
-	SELECTION_TAG,
 };
 
 struct IsoLinesCollider
@@ -83,7 +77,6 @@ public:
 
 
 public:
-	bool selectionColl;
 	Gameobject* parentGo;
 
 private:

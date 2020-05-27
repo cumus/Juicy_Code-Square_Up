@@ -23,15 +23,11 @@ CollisionSystem::CollisionSystem()
 	//Self layer collisions
 	collisionLayers[SCENE_COLL_LAYER][SCENE_COLL_LAYER] = true;
 	collisionLayers[DEFAULT_COLL_LAYER][DEFAULT_COLL_LAYER] = true;
-	collisionLayers[INPUT_COLL_LAYER][INPUT_COLL_LAYER] = true;
-	collisionLayers[HUD_COLL_LAYER][HUD_COLL_LAYER] = true;
 	collisionLayers[BODY_COLL_LAYER][BODY_COLL_LAYER] = true;
 
 	//Layers collisions
 	collisionLayers[SCENE_COLL_LAYER][DEFAULT_COLL_LAYER] = true;
 	collisionLayers[DEFAULT_COLL_LAYER][SCENE_COLL_LAYER] = true;
-	collisionLayers[INPUT_COLL_LAYER][HUD_COLL_LAYER] = true;
-	collisionLayers[HUD_COLL_LAYER][INPUT_COLL_LAYER] = true;
 	collisionLayers[BODY_COLL_LAYER][SCENE_COLL_LAYER] = true;
 	collisionLayers[SCENE_COLL_LAYER][BODY_COLL_LAYER] = true;
 	collisionLayers[BODY_COLL_LAYER][VISION_COLL_LAYER] = true;
@@ -191,9 +187,7 @@ void CollisionSystem::Resolve()
 	//for (std::map<CollisionLayer, std::vector<Collider*>>::iterator itL = layerColliders.begin(); itL != layerColliders.end(); ++itL)//for each layer
 	for (int i = 0; i < MAX_COLLISION_LAYERS; i++)
 	{
-		if (i == UNIT_SELECTION_LAYER) continue;
 		if (layerColliders[i].empty()) continue;
-
 
 		for (std::vector<Collider*>::iterator it = layerColliders[i].begin(); it != layerColliders[i].end(); ++it)//for each collider in layer
 		{
@@ -205,7 +199,7 @@ void CollisionSystem::Resolve()
 					//LOG("Got collisions: %d",collisions.size());
 					for (std::vector<Collider*>::iterator itColls = collisions.begin(); itColls != collisions.end(); ++itColls)//For each posible detection in quad tree
 					{
-						if ((*it)->GetID() != (*itColls)->GetID() && (*it)->GetGoID() != (*itColls)->GetGoID() && !(*itColls)->parentGo->GetBehaviour()->GetState() != DESTROYED)
+						if ((*it)->GetID() != (*itColls)->GetID() && (*it)->GetGoID() != (*itColls)->GetGoID())
 						{
 							//LOG("Check if collides");
 							if (collisionLayers[(*it)->GetCollLayer()][(*itColls)->GetCollLayer()])
@@ -213,17 +207,15 @@ void CollisionSystem::Resolve()
 								Manifold m = (*it)->Intersects(*itColls);
 								if (m.colliding)
 								{
-									Event::Push(ON_COLLISION, (*it)->GetGameobject(), (*it)->GetID(), (*itColls)->GetID());
-									Event::Push(ON_COLLISION, (*itColls)->GetGameobject(), (*itColls)->GetID(), (*it)->GetID());
+									//LOG("Collides");
+									Event::Push(ON_COLLISION, (*it)->parentGo, (*it)->GetID(), (*itColls)->GetID());
+									Event::Push(ON_COLLISION, (*itColls)->parentGo, (*itColls)->GetID(), (*it)->GetID());
 
 									if ((*it)->GetCollType() != TRIGGER && (*itColls)->GetCollType() != TRIGGER)
-									{
-										if (!(*it)->GetGameobject()->GetStatic())
-										{
-											(*it)->ResolveOverlap(m);
-											//(*itV)->ResolveOverlap(m);
-											//LOG("Reolve overlap");
-										}
+									{									
+										(*it)->ResolveOverlap(m);
+										//(*itV)->ResolveOverlap(m);
+										//LOG("Reolve overlap");
 									}
 								}
 							}
@@ -249,7 +241,7 @@ void CollisionSystem::Update()
 				if (!(*it)->GetGameobject()->GetBehaviour()->GetState() != DESTROYED)
 				{
 					(*it)->SetPosition();
-					if ((*it)->GetCollLayer() != UNIT_SELECTION_LAYER) collisionTree->Insert(*it);
+					collisionTree->Insert(*it);
 				}
 			}
 		}
@@ -267,15 +259,12 @@ void CollisionSystem::Update()
 				{
 					//Coll iso
 					IsoLinesCollider lines = (*it)->GetIsoPoints();
-					if (!(*it)->selectionColl)
-					{
-						SDL_Rect quadTreeRect = (*it)->GetColliderBounds();
-						App->render->DrawLine({ int(lines.top.first), int(lines.top.second) }, { int(lines.left.first), int(lines.left.second) }, { 0,255,0,255 }, DEBUG_SCENE);
-						App->render->DrawLine({ int(lines.top.first), int(lines.top.second) }, { int(lines.right.first), int(lines.right.second) }, { 0,255,0,255 }, DEBUG_SCENE);
-						App->render->DrawLine({ int(lines.bot.first), int(lines.bot.second) }, { int(lines.left.first), int(lines.left.second) }, { 0,255,0,255 }, DEBUG_SCENE);
-						App->render->DrawLine({ int(lines.bot.first), int(lines.bot.second) }, { int(lines.right.first), int(lines.right.second) }, { 0,255,0,255 }, DEBUG_SCENE);
-						App->render->DrawQuad(quadTreeRect, { 234,254,30,255 }, false, DEBUG_SCENE);
-					}
+					SDL_Rect quadTreeRect = (*it)->GetColliderBounds();
+					App->render->DrawLine({ int(lines.top.first), int(lines.top.second) }, { int(lines.left.first), int(lines.left.second) }, { 0,255,0,255 }, DEBUG_SCENE);
+					App->render->DrawLine({ int(lines.top.first), int(lines.top.second) }, { int(lines.right.first), int(lines.right.second) }, { 0,255,0,255 }, DEBUG_SCENE);
+					App->render->DrawLine({ int(lines.bot.first), int(lines.bot.second) }, { int(lines.left.first), int(lines.left.second) }, { 0,255,0,255 }, DEBUG_SCENE);
+					App->render->DrawLine({ int(lines.bot.first), int(lines.bot.second) }, { int(lines.right.first), int(lines.right.second) }, { 0,255,0,255 }, DEBUG_SCENE);
+					App->render->DrawQuad(quadTreeRect, { 234,254,30,255 }, false, DEBUG_SCENE);					
 				}
 			}
 		}

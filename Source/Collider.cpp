@@ -24,8 +24,6 @@ Collider::Collider(Gameobject* go, RectF coll, ColliderType t, ColliderTag tg, R
     offset = off;
     GoID = go->GetID();
     parentGo = go;
-    if (lay == UNIT_SELECTION_LAYER) selectionColl = true;
-    else selectionColl = false;
     App->collSystem.Add(this);
 }
 
@@ -36,9 +34,6 @@ void Collider::SetPosition()
 {
     vec localpos = game_object->GetTransform()->GetGlobalPosition();
     std::pair<float, float> pos = Map::F_MapToWorld(localpos.x, localpos.y, localpos.z);
-    //LOG("Map pos X:%f/Y:%f",localpos.x,localpos.y);
-    //LOG("Screen pos X:%f/Y:%f", pos.first, pos.second);
-    //LOG("Coll pos X:%f/Y:%f", pos.x, pos.y);
     boundary.x = pos.first;
     boundary.y = pos.second;
     isoDraw.left = { boundary.x - boundary.w * 0.5f + tileSize.first * 0.5f, boundary.y };
@@ -53,17 +48,6 @@ void Collider::SetPosition()
     isoDraw.left.second += offset.y;
     isoDraw.top.second += offset.y;
     isoDraw.bot.second += offset.y;  
-    if (selectionColl)
-    {
-        isoDraw.right.first += rightOffset.first;
-        isoDraw.left.first += leftOffset.first;
-        isoDraw.top.first += topOffset.first;
-        isoDraw.bot.first += botOffset.first;
-        isoDraw.right.second += rightOffset.second;
-        isoDraw.left.second += leftOffset.second;
-        isoDraw.top.second += topOffset.second;
-        isoDraw.bot.second += botOffset.second;
-    }
 }
 
 void Collider::SetPointsOffset(std::pair<float, float> top, std::pair<float, float> bot, std::pair<float, float> right, std::pair<float, float> left)

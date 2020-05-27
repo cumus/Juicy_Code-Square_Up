@@ -138,7 +138,7 @@ void Behaviour::SetColliders()
 		}
 		case EDGE:
 		{
-			bodyColl = new Collider(game_object, { pos.x,pos.y,game_object->GetTransform()->GetLocalScaleX(),game_object->GetTransform()->GetLocalScaleY() }, NON_TRIGGER, ENEMY_TAG, { 0,Map::GetBaseOffset(),0,0 }, BODY_COLL_LAYER);
+			//bodyColl = new Collider(game_object, { pos.x,pos.y,game_object->GetTransform()->GetLocalScaleX(),game_object->GetTransform()->GetLocalScaleY() }, NON_TRIGGER, ENEMY_TAG, { 0,Map::GetBaseOffset(),0,0 }, BODY_COLL_LAYER);
 			std::pair<float, float> world = Map::F_MapToWorld(pos.x, pos.y);
 			selectionOffset = { 0,20 };
 			selectionRect = { world.first + selectionOffset.first,world.second + selectionOffset.second,65,35 };
@@ -146,7 +146,7 @@ void Behaviour::SetColliders()
 		}
 		case CAPSULE:
 		{
-			bodyColl = new Collider(game_object, { pos.x,pos.y,game_object->GetTransform()->GetLocalScaleX(),game_object->GetTransform()->GetLocalScaleY() }, TRIGGER, ENEMY_TAG, { 0,Map::GetBaseOffset(),0,0 }, BODY_COLL_LAYER);
+			//bodyColl = new Collider(game_object, { pos.x,pos.y,game_object->GetTransform()->GetLocalScaleX(),game_object->GetTransform()->GetLocalScaleY() }, TRIGGER, ENEMY_TAG, { 0,Map::GetBaseOffset(),0,0 }, BODY_COLL_LAYER);
 			std::pair<float, float> world = Map::F_MapToWorld(pos.x, pos.y);
 			selectionOffset = { 0,-130 };
 			selectionRect = { world.first + selectionOffset.first,world.second + selectionOffset.second,55,175 };
@@ -318,21 +318,6 @@ void Behaviour::Selected()
 	if (bar_go != nullptr) bar_go->SetActive();
 	if (creation_bar_go != nullptr) creation_bar_go->SetActive();
 	if (selectionPanel != nullptr) selectionPanel->SetActive();
-
-	/*if (type == TOWER) {
-		if (App->scene->building_bars_created < 4)
-			App->scene->building_bars_created++;
-
-		pos_y_HUD = 0.17 + 0.1 * App->scene->building_bars_created;
-		bar->target.y = pos_y_HUD;
-		portrait->target.y = pos_y_HUD - 0.014f;
-		text->target.y = pos_y_HUD - 0.073f;
-		red_health->target.y = pos_y_HUD - 0.018f;
-		health->target.y = pos_y_HUD - 0.018f;
-		health_boarder->target.y = pos_y_HUD - 0.018f;
-		upgrades->target.y = pos_y_HUD - 0.018f;
-	}*/
-	
 }
 
 void Behaviour::UnSelected()
@@ -343,12 +328,6 @@ void Behaviour::UnSelected()
 	if (bar_go != nullptr) bar_go->SetInactive();
 	if (creation_bar_go != nullptr) creation_bar_go->SetInactive();
 	if (selectionPanel != nullptr) selectionPanel->SetInactive();
-
-	/*if (type == TOWER) {
-		if (App->scene->building_bars_created > 0)
-			App->scene->building_bars_created--;
-	}*/
-	
 }
 
 
@@ -566,12 +545,6 @@ B_Unit::B_Unit(Gameobject* go, UnitType t, UnitState s, ComponentType comp_type)
 	chaseObj = nullptr;
 	chasing = false;
 	moveOrder = false;
-
-	//Info for ranged units constructor
-	/*vec pos = game_object->GetTransform()->GetGlobalPosition();
-	shootPos = Map::F_MapToWorld(pos.x, pos.y, pos.z);
-	shootPos.first += 30.0f;
-	shootPos.second += 20.0f;*/
 }
 
 void B_Unit::Update()
