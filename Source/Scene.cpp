@@ -151,21 +151,24 @@ bool Scene::Update()
 	}
 	else
 	{
-		if (timeEarthquake == 0 && current_state == SPAWNER_STATE)
+		if (current_state == SPAWNER_STATE)
 		{
-			timeEarthquake = std::rand() % 180 + 120;
-			std::srand(time(NULL));
-		}
-		else
-		{
-			if (earthquakeTimer < timeEarthquake)
+			if (timeEarthquake == 0)
 			{
-				earthquakeTimer += App->time.GetGameDeltaTime();
+				timeEarthquake = std::rand() % 180 + 120;
+				std::srand(time(NULL));
 			}
 			else
 			{
-				earthquakeTimer = 0;
-				earthquake = true;
+				if (earthquakeTimer < timeEarthquake)
+				{
+					earthquakeTimer += App->time.GetGameDeltaTime();
+				}
+				else
+				{
+					earthquakeTimer = 0;
+					earthquake = true;
+				}
 			}
 		}
 	}

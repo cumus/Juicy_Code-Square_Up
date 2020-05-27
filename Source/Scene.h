@@ -229,7 +229,7 @@ private:
 
 	//Earthquake
 	int timeEarthquake = 0;
-	bool earthquake = false;;
+	bool earthquake = false;
 	float shakeTimer = 0;
 	float earthquakeTimer = 0;
 
