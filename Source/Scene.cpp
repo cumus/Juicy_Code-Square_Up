@@ -727,9 +727,9 @@ void Scene::LoadMainHUD()
 	Gameobject* rangered_counter_icon_go = AddGameobject("rangered counter icon", left_bar_go);
 
 	C_Image* ranged_counter_icon = new C_Image(rangered_counter_icon_go);
-	ranged_counter_icon->target = { 0.49f, 0.2f, 0.65f , 0.65f };
+	ranged_counter_icon->target = { 0.49f, 0.15f, 0.65f , 0.65f };
 	ranged_counter_icon->offset = { 0.f, 0.f };
-	ranged_counter_icon->section = { 22, 463, 48, 35 };
+	ranged_counter_icon->section = { 231, 310, 35, 33 };
 	ranged_counter_icon->tex_id = icons_text_id;
 
 	Gameobject* rangered_counter_go = AddGameobject("rangered counter", left_bar_go);
@@ -737,20 +737,20 @@ void Scene::LoadMainHUD()
 	hud_texts[CURRENT_RANGED_UNITS] = new C_Text(rangered_counter_go, "0");
 	hud_texts[CURRENT_RANGED_UNITS]->target = { 0.59f, 0.15f, 1.25f, 1.25f };
 
-	//--------------------------TURRET ICON----------------------------------------
+	//--------------------------SUPER ICON----------------------------------------
 
-	Gameobject* turret_counter_icon_go = AddGameobject("turret counter icon", left_bar_go);
+	Gameobject* super_counter_icon_go = AddGameobject("super units' counter icon", left_bar_go);
 
-	C_Image* turret_counter_icon = new C_Image(turret_counter_icon_go);
-	turret_counter_icon->target = { 0.71f, 0.11f, 0.65f, 0.65f };
-	turret_counter_icon->offset = { 0.f, 0.f };
-	turret_counter_icon->section = { 204, 256, 25, 40 };
-	turret_counter_icon->tex_id = icons_text_id;
+	C_Image* super_counter_icon = new C_Image(super_counter_icon_go);
+	super_counter_icon->target = { 0.7f, 0.15f, 0.65f, 0.65f };
+	super_counter_icon->offset = { 0.f, 0.f };
+	super_counter_icon->section = { 121, 335, 35, 33 };
+	super_counter_icon->tex_id = icons_text_id;
 
 	Gameobject* turret_counter_go = AddGameobject("turret counter", left_bar_go);
 
-	hud_texts[CURRENT_TOWERS] = new C_Text(turret_counter_go, "0");
-	hud_texts[CURRENT_TOWERS]->target = { 0.79f, 0.15f, 1.25f, 1.25f };
+	hud_texts[CUERRENT_SUPER_UNITS] = new C_Text(turret_counter_go, "0");
+	hud_texts[CUERRENT_SUPER_UNITS]->target = { 0.79f, 0.15f, 1.25f, 1.25f };
 
 	//-----------------------------------------------------------------------------
 	//------------------------------RIGHT BAR--------------------------------------
@@ -777,13 +777,15 @@ void Scene::LoadMainHUD()
 
 	//--------------------------------MOBDROP--------------------------------------
 
-	Gameobject* mobdrop_go = AddGameobject("Text Mob Drop", right_bar_go);
-	C_Text* text_mobdrop = new C_Text(mobdrop_go, "Mob Drop");
-	text_mobdrop->target = { 0.7f, 0.25f, 1.f, 1.f };
+	Gameobject* mobdrop_go = AddGameobject("Text Edge", right_bar_go);
+	C_Image* image_mobdrop = new C_Image(mobdrop_go);
+	image_mobdrop->target = { 0.72f, 0.15f, 0.9f, 0.9f };
+	image_mobdrop->section = { 267, 311, 32, 29 };
+	image_mobdrop->tex_id = icons_text_id;
 
 	Gameobject* mobdrop_value_go = AddGameobject("Mob Drop Value", right_bar_go);
 	hud_texts[CURRENT_MOB_DROP] = new C_Text(mobdrop_value_go, "0");
-	hud_texts[CURRENT_MOB_DROP]->target = { 0.85f, 0.25f, 1.f, 1.f };
+	hud_texts[CURRENT_MOB_DROP]->target = { 0.83f, 0.25f, 1.f, 1.f };
 
 	//--------------------------------MOBDROP--------------------------------------
 
@@ -2224,11 +2226,22 @@ Transform* Scene::SpawnBehaviour(int type, vec pos)
 	}
 	case CAPSULE:
 	{
-		behaviour = AddGameobject("Capsule");
-		behaviour->GetTransform()->SetLocalPos(pos);
-		new Capsule(behaviour);
-		/*for (std::map<double, Behaviour*>::iterator it = Behaviour::b_map.begin(); it != Behaviour::b_map.end(); ++it)
-			Event::Push(REPATH, it->second, pos.x - 1, pos.y - 1);*/
+		//if ((player_stats[CURRENT_GOLD] - 10) >= 0)
+		//{
+			//std::pair<int, int> thisPos(pos.x, pos.y);
+			//if (App->pathfinding.CheckWalkabilityArea(thisPos, vec(1.0f, 1.0f, 1.0f)))
+			//{
+				behaviour = AddGameobject("Capsule");
+				behaviour->GetTransform()->SetLocalPos(pos);
+				new Capsule(behaviour);
+				//UpdateStat(CURRENT_GOLD, -10);
+				//Update paths
+				/*for (std::map<double, Behaviour*>::iterator it = Behaviour::b_map.begin(); it != Behaviour::b_map.end(); ++it)
+					Event::Push(REPATH, it->second, pos.x - 1, pos.y - 1);*/
+			//}
+			//else LOG("Can't spawn capsule!");
+		//}
+		//else LOG("Not enough resources! :(");
 		break;
 	}
 	case SPAWNER:
