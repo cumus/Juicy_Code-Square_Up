@@ -46,18 +46,18 @@ void Capsule::Update()
 
 void Capsule::AfterDamageAction()
 {
-	spriteState = OPEN;
-	if (App->scene->capsule_content == true) {
+	//spriteState = OPEN;
+	//if (App->scene->capsule_content == true) {
 		Event::Push(UPDATE_STAT, App->scene, CURRENT_EDGE, 100);
 		Event::Push(UPDATE_STAT, App->scene, EDGE_COLLECTED, 100);
-	}
-	else {
+	//}
+	/*else {
 		vec pos = game_object->GetTransform()->GetGlobalPosition();
 
 		for (int i = 0; i < 10; i++) {
 			Event(SPAWN_UNIT, App->scene, UNIT_MELEE, pos - 5 + i);
 		}
-	}
+	}*/
 
 	if (current_life <= 0)
 		OnKill(type);

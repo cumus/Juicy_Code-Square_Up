@@ -205,6 +205,11 @@ void Behaviour::RecieveEvent(const Event& e)
 		AddUnitToQueue(UNIT_SUPER, e.data1.AsVec(), e.data2.AsFloat());
 		break;
 	}
+	case BUILD_CAPSULE:
+	{
+		App->scene->SpawnBehaviour(CAPSULE, { 504,162,0 });
+		break;
+	}
 	case DO_UPGRADE: Upgrade(); break;
 	case UPDATE_PATH: UpdatePath(e.data1.AsInt(), e.data2.AsInt()); break;
 	case DRAW_RANGE: drawRanges = !drawRanges; break;

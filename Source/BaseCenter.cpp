@@ -196,6 +196,21 @@ void Base_Center::CreatePanel()
 
 
 	gatherer_btn->tex_id = panel_tex_ID;
+
+	//-----------------------------CAPSULE BUTTON-------------------------------------------
+
+	capsule_button = new C_Button(selectionPanel, Event(BUILD_CAPSULE, this, spawnPoint, 5.0f));//First option from the right
+	capsule_button->target = { 0.043f, 0.7575, 1.5f, 1.5f };
+	capsule_button->offset = { 0.0f, 0.0f };
+
+	capsule_button->section[0] = { 1075, 395, 56, 49 };
+	capsule_button->section[1] = { 1075, 344, 56, 49 };
+	capsule_button->section[2] = { 1075, 446, 56, 49 };
+	capsule_button->section[3] = { 1075, 446, 56, 49 };
+
+
+	capsule_button->tex_id = panel_tex_ID;
+
 	/*
 	meleeUnit_btn = new C_Button(selectionPanel, Event(BUILD_MELEE, this, spawnPoint, 5.0f));//Top right
 	meleeUnit_btn->target = { 0.95f, posY_panel+0.02f, 0.7f, 0.7f };

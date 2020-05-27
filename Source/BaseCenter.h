@@ -31,6 +31,7 @@ protected:
 	C_Image* panel;
 	C_Image* base_icon;
 	C_Button* gatherer_btn;
+	C_Button* capsule_button;
 	C_Button* meleeUnit_btn;
 	C_Button* rangedUnit_btn;
 	C_Button* superUnit_btn;
