@@ -345,6 +345,7 @@ void Scene::LoadMainScene()
 	OPTICK_EVENT();
 
 	map.Load("Assets/maps/iso.tmx");
+	App->audio->PlayMusic("Assets/audio/Music/alexander-nakarada-buzzkiller.ogg");
 	App->fogWar.Init();
 
 	LoadMainHUD();
