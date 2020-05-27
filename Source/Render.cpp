@@ -161,6 +161,12 @@ bool Render::Update()
 	return true;
 }
 
+void Render::MoveCamera(float x,float y)
+{
+	cam.x -= x;
+	cam.y -= y;
+}
+
 bool Render::PostUpdate()
 {
 	bool ret = true;

@@ -124,6 +124,52 @@ bool Scene::Update()
 		}
 	}
 
+	if (earthquake)
+	{
+		shakeTimer += App->time.GetGameDeltaTime();
+		if (shakeTimer < 2.0f)
+		{
+			int randomX = std::rand() % 10 + 1;
+			int randomY = std::rand() % 10 + 1;
+			int dirX = std::rand() % 10 + 1;
+			int dirY = std::rand() % 10 + 1;
+			if (dirX <= 5) randomX = -randomX;
+			if (dirY <= 5) randomY = -randomY;
+			//LOG("Random X:%d/Y:%d",randomX,randomY);
+			App->render->MoveCamera(randomX, randomY);
+		}
+		else
+		{
+			shakeTimer = 0;
+			earthquake = false;
+			timeEarthquake = 0;
+			for (std::map<double, Behaviour*>::iterator it = Behaviour::b_map.begin(); it != Behaviour::b_map.end(); ++it)
+			{
+				if((*it).second->GetType() != EDGE && (*it).second->GetType() != SPAWNER && (*it).second->GetType() != CAPSULE) Event::Push(DAMAGE, (*it).second, 5);
+			}
+		}
+	}
+	else
+	{
+		if (timeEarthquake == 0 && current_state == SPAWNER_STATE)
+		{
+			timeEarthquake = std::rand() % 180 + 120;
+			std::srand(time(NULL));
+		}
+		else
+		{
+			if (earthquakeTimer < timeEarthquake)
+			{
+				earthquakeTimer += App->time.GetGameDeltaTime();
+			}
+			else
+			{
+				earthquakeTimer = 0;
+				earthquake = true;
+			}
+		}
+	}
+
 	return true;
 }
 

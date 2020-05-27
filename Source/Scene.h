@@ -227,6 +227,13 @@ private:
 	bool win = false;
 	//int time = 0;
 
+	//Earthquake
+	int timeEarthquake = 0;
+	bool earthquake = false;;
+	float shakeTimer = 0;
+	float earthquakeTimer = 0;
+
+
 	//--------STATE MACHINE VARIABLES--------
 
 	float distance;

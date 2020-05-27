@@ -89,6 +89,8 @@ public:
 	void SetBackgroundColor(SDL_Color color);
 	bool RenderMinimap();
 
+	void MoveCamera(float x, float y);
+
 private:
 
 	bool SetDrawColor(SDL_Color color);
