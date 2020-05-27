@@ -138,7 +138,7 @@ void Behaviour::SetColliders()
 		}
 		case EDGE:
 		{
-			//bodyColl = new Collider(game_object, { pos.x,pos.y,game_object->GetTransform()->GetLocalScaleX(),game_object->GetTransform()->GetLocalScaleY() }, NON_TRIGGER, ENEMY_TAG, { 0,Map::GetBaseOffset(),0,0 }, BODY_COLL_LAYER);
+			bodyColl = new Collider(game_object, { pos.x,pos.y,game_object->GetTransform()->GetLocalScaleX(),game_object->GetTransform()->GetLocalScaleY() }, NON_TRIGGER, ENEMY_TAG, { 0,Map::GetBaseOffset(),0,0 }, BODY_COLL_LAYER);
 			std::pair<float, float> world = Map::F_MapToWorld(pos.x, pos.y);
 			selectionOffset = { 0,20 };
 			selectionRect = { world.first + selectionOffset.first,world.second + selectionOffset.second,65,35 };
@@ -146,7 +146,7 @@ void Behaviour::SetColliders()
 		}
 		case CAPSULE:
 		{
-			//bodyColl = new Collider(game_object, { pos.x,pos.y,game_object->GetTransform()->GetLocalScaleX(),game_object->GetTransform()->GetLocalScaleY() }, TRIGGER, ENEMY_TAG, { 0,Map::GetBaseOffset(),0,0 }, BODY_COLL_LAYER);
+			bodyColl = new Collider(game_object, { pos.x,pos.y,game_object->GetTransform()->GetLocalScaleX(),game_object->GetTransform()->GetLocalScaleY() }, TRIGGER, ENEMY_TAG, { 0,Map::GetBaseOffset(),0,0 }, BODY_COLL_LAYER);
 			std::pair<float, float> world = Map::F_MapToWorld(pos.x, pos.y);
 			selectionOffset = { 0,-130 };
 			selectionRect = { world.first + selectionOffset.first,world.second + selectionOffset.second,55,175 };
@@ -670,7 +670,6 @@ void B_Unit::Update()
 					moveOrder = false;
 					move = false;
 					chasing = false;
-					if (atkObj == nullptr) spriteState = IDLE;
 					if (chaseObj != nullptr && chaseObj->IsDestroyed()) chaseObj = nullptr;
 				}
 			}
