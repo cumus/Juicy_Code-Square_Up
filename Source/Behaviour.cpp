@@ -566,7 +566,7 @@ void B_Unit::Update()
 					{
 						DoAttack();
 						Event::Push(DAMAGE, atkObj, damage,GetType());
-						LOG("Do attack");
+						//LOG("Do attack");
 					}
 					else atkObj = nullptr;
 					atkTimer = 0;
@@ -673,6 +673,7 @@ void B_Unit::Update()
 					moveOrder = false;
 					move = false;
 					chasing = false;
+					spriteState = IDLE;
 					if (chaseObj != nullptr && chaseObj->IsDestroyed()) chaseObj = nullptr;
 				}
 			}
