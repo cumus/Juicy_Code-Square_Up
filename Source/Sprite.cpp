@@ -181,7 +181,7 @@ AnimatedSprite::AnimatedSprite(Behaviour* unit) : Sprite(unit->GetGameobject(), 
 		animations[ATTACKING_SE].Setup({ 0, 5475, 464, 365 }, 6, 10.0f);
 		animations[ATTACKING_SW].Setup({ 0, 5840, 464, 365 }, 6, 10.0f);
 		animations[DESTROYED].Setup({ 0, 6205, 464, 365 }, 8, 5.0f);
-		offset = { -215.0f, -320.f, 0.5f, 0.5f };
+		offset = { -215.0f, -350.f, 0.5f, 0.5f };
 		break;
 	case ENEMY_RANGED:
 		tex_id = App->tex.Load("Assets/textures/Enemy_Ranged_Temp.png");
