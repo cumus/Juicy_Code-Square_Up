@@ -26,7 +26,7 @@ public:
 	C_Image* gatherer_icon;
 	C_Button* barracks_btn;
 	C_Button* tower_btn;
-	C_Button* baseBtn;
+	C_Button* labBtn;
 	//C_Button* wall_btn;	
 };
 
