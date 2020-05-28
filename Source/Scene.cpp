@@ -1290,8 +1290,7 @@ void Scene::UpdateSelection()
 		SDL_Rect cam = App->render->GetCameraRect();
 		for (std::map<double, Behaviour*>::iterator it = Behaviour::b_map.begin(); it != Behaviour::b_map.end(); ++it)
 		{
-			if (it->second->GetType() == UNIT_MELEE || it->second->GetType() == GATHERER || it->second->GetType() == UNIT_RANGED /*|| it->second->GetType() == BASE_CENTER
-				|| it->second->GetType() == TOWER || it->second->GetType() == BARRACKS*/)
+			if (it->second->GetType() == UNIT_MELEE || it->second->GetType() == GATHERER || it->second->GetType() == UNIT_RANGED || it->second->GetType() == UNIT_SUPER)
 			{
 				vec pos = it->second->GetGameobject()->GetTransform()->GetGlobalPosition();
 				std::pair<float, float> posToWorld = Map::F_MapToWorld(pos.x, pos.y, pos.z);
@@ -1347,7 +1346,7 @@ void Scene::UpdateSelection()
 			{
 				if (it->second->GetType() == UNIT_MELEE || it->second->GetType() == GATHERER || it->second->GetType() == UNIT_RANGED
 					|| it->second->GetType() == BASE_CENTER || it->second->GetType() == TOWER || it->second->GetType() == BARRACKS
-					|| it->second->GetType() == UNIT_SUPER)
+					||  it->second->GetType() == UNIT_SUPER || it->second->GetType() == LAB)
 				{
 					RectF coll = (*it).second->GetSelectionRect();
 					if (float(x) > coll.x && float(x) < coll.x + coll.w && float(y) > coll.y && float(y) < coll.y + coll.h)
@@ -2413,8 +2412,8 @@ Transform* Scene::SpawnBehaviour(int type, vec pos)
 			{
 				behaviour = AddGameobject("Lab");
 				behaviour->GetTransform()->SetLocalPos(pos);
-				behaviour->GetTransform()->ScaleX(2.0f);
-				behaviour->GetTransform()->ScaleY(2.0f);
+				behaviour->GetTransform()->ScaleX(4.0f);
+				behaviour->GetTransform()->ScaleY(4.0f);
 				new Lab(behaviour);
 				UpdateStat(CURRENT_EDGE, -50);
 				//Update paths

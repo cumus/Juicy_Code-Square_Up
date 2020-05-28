@@ -132,6 +132,10 @@ void Behaviour::SetColliders()
 		}
 		case LAB:
 		{
+			bodyColl = new Collider(game_object, { pos.x,pos.y,game_object->GetTransform()->GetLocalScaleX(),game_object->GetTransform()->GetLocalScaleY() }, TRIGGER, PLAYER_TAG, { 90,Map::GetBaseOffset() + 65,0,0 }, BODY_COLL_LAYER);
+			std::pair<float, float> world = Map::F_MapToWorld(pos.x, pos.y);
+			selectionOffset = { 25,-100 };
+			selectionRect = { world.first + selectionOffset.first,world.second + selectionOffset.second,215,235 };
 			break;
 		}
 		case EDGE:
@@ -284,6 +288,24 @@ void Behaviour::GetTilesInsideRadius()
 			{
 				iPoint tilePos(x, y);
 				if (tilePos.DistanceTo(iPoint(int(pos.x+3), int(pos.y))) <= vision_range * 0.6)
+				{
+					if (App->fogWar.CheckFoWTileBoundaries(iPoint(tilePos.x, tilePos.y)))FogOfWarManager::fogMap[tilePos.x][tilePos.y] = true;
+				}
+			}
+		}
+	}
+	else if (type == LAB)
+	{
+
+		iPoint startingPos(int(pos.x + 3 + s.x * 0.5 - vision_range), int(pos.y - s.y * 0.5 - vision_range));
+		iPoint finishingPos(int(startingPos.x + (vision_range * 2)), int(startingPos.y + (vision_range * 2)));
+
+		for (int x = startingPos.x; x < finishingPos.x; x++)
+		{
+			for (int y = startingPos.y; y < finishingPos.y; y++)
+			{
+				iPoint tilePos(x, y);
+				if (tilePos.DistanceTo(iPoint(int(pos.x + 3), int(pos.y))) <= vision_range * 0.6)
 				{
 					if (App->fogWar.CheckFoWTileBoundaries(iPoint(tilePos.x, tilePos.y)))FogOfWarManager::fogMap[tilePos.x][tilePos.y] = true;
 				}
@@ -1132,7 +1154,7 @@ void B_Unit::OnRightClick(vec posClick, vec movPos)
 		else
 		{
 			if (it->second->GetType() == ENEMY_MELEE || it->second->GetType() == ENEMY_RANGED || it->second->GetType() == ENEMY_SUPER
-				|| it->second->GetType() == ENEMY_SPECIAL || it->second->GetType() == CAPSULE || it->second->GetType() == SPAWNER)
+				|| it->second->GetType() == ENEMY_SPECIAL || it->second->GetType() == SPAWNER)
 			{
 				RectF coll = (*it).second->GetSelectionRect();
 				if (float(x) > coll.x && float(x) < coll.x + coll.w && float(y) > coll.y && float(y) < coll.y + coll.h)

@@ -21,7 +21,7 @@ Lab::Lab(Gameobject* go) : Behaviour(go, LAB, NO_UPGRADE, B_LAB)
 	current_life = max_life;
 	current_lvl = 1;
 	max_lvl = 5;
-	vision_range = 10.0f;
+	vision_range = 15.0f;
 	attack_range = 0;
 	providesVisibility = true;
 

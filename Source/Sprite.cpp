@@ -116,7 +116,7 @@ AnimatedSprite::AnimatedSprite(Behaviour* unit) : Sprite(unit->GetGameobject(), 
 		animations[FIRST_UPGRADE].Setup({ 0, 532, 462, 488 }, 18, 5.0f);
 		animations[SECOND_UPGRADE].Setup({ 0, 1037, 462, 488 }, 18, 5.0f);
 		animations[DESTROYED].Setup({ 8316, 0, 462, 488 }, 18, 8.0f);
-		offset = { -60.0f, -480.0f, 0.3f, 0.3f };
+		offset = { 0.0f, -500.0f, 0.13f, 0.13f };
 		break;
 	}
 	case BARRACKS:
