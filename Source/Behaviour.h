@@ -130,7 +130,6 @@ public:
 	virtual void create_creation_bar() {}
 	virtual void update_creation_bar() {}
 	virtual void Upgrade() {}
-	virtual void UpdateWalkabilityTiles() {}
 	virtual void FreeWalkabilityTiles() {}
 	virtual void Repath() {};
 	virtual void OnCollision(Collider selfCol, Collider col) {}

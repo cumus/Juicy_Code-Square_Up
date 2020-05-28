@@ -14,7 +14,7 @@ Tower::Tower(Gameobject* go) : Behaviour(go, TOWER, NO_UPGRADE, B_TOWER)
 {
 	max_life = 50;
 	current_life = max_life;
-	attack_range = 15.0f;
+	attack_range = 20.0f;
 	vision_range = 20.0f;
 	damage = 20;
 	ms_count = 0;
@@ -28,12 +28,12 @@ Tower::Tower(Gameobject* go) : Behaviour(go, TOWER, NO_UPGRADE, B_TOWER)
 	CreatePanel();
 	selectionPanel->SetInactive();
 
-	Transform* t = game_object->GetTransform();
+	/*Transform* t = game_object->GetTransform();
 	if (t)
 	{
 		vec pos = t->GetGlobalPosition();
 		App->pathfinding.SetWalkabilityTile(int(pos.x), int(pos.y), false);
-	}
+	}*/
 	SetColliders();
 }
 
@@ -42,79 +42,39 @@ Tower::~Tower()
 
 void Tower::FreeWalkabilityTiles()
 {
-	Transform* t = game_object->GetTransform();
+	/*Transform* t = game_object->GetTransform();
 	if (t)
 	{
 		vec pos = t->GetGlobalPosition();
 		App->pathfinding.SetWalkabilityTile(int(pos.x), int(pos.y), true);
-	}
+	}*/
 }
 
-void Tower::UpdateWalkabilityTiles()
+void Tower::OnCollision(Collider selfCol, Collider col)
 {
-	Transform* t = game_object->GetTransform();
-	vec pos = t->GetGlobalPosition();
-	//LOG("POS X:%f/Y:%f", pos.x, pos.y);
-	App->pathfinding.SetWalkabilityTile(int(pos.x), int(pos.y), false);
+	if (current_state != DESTROYED)
+	{
+		if (selfCol.GetColliderTag() == PLAYER_ATTACK_TAG)
+		{
+			//LOG("Atk");
+			if (col.GetColliderTag() == ENEMY_TAG)
+			{				
+				if (col.parentGo->GetBehaviour()->GetType() != EDGE && col.parentGo->GetBehaviour()->GetType() != CAPSULE) objective = col.parentGo->GetBehaviour();
+				//LOG("Eenmy unit in attack range");				
+			}
+		}
+	}	
 }
 
 void Tower::Update()
 {
 	if (current_state != DESTROYED)
-	{
-		if (!shoot)
-		{
-			std::map<float, Behaviour*> inRange;
-			int found = GetBehavioursInRange(game_object->GetTransform()->GetGlobalPosition(), attack_range, inRange);
-			float d = 0;
-			objective = nullptr;
-			if (found > 0)
-			{
-				for (std::map<float, Behaviour*>::iterator it = inRange.begin(); it != inRange.end(); ++it)
-				{
-					if ((it->second->GetType() == ENEMY_MELEE || it->second->GetType() == ENEMY_RANGED) && it->second->GetState() != DESTROYED)
-					{
-						//Behaviour::enemiesInSight.push_back(it->second->GetID());
-						if (d == 0)
-						{
-							objective = it->second;
-							d = it->first;
-						}
-						else
-						{
-							if (it->first < d)
-							{
-								objective = it->second;
-								d = it->first;
-							}
-						}
-					}
-				}
-			}
-		}
-
-		if (objective != nullptr)
-			if(!objective->GetState() != DESTROYED)
-				if (ms_count >= atkDelay) DoAttack();
+	{		
+		if (objective != nullptr && objective->GetState() != DESTROYED)
+			if (ms_count >= atkDelay) DoAttack();
 		
-
 		if (ms_count < atkDelay) ms_count += App->time.GetGameDeltaTime();
 		
-		//Cast ray
-		if (shoot)
-		{
-			rayCastTimer += App->time.GetGameDeltaTime();
-			if (rayCastTimer < RAYCAST_TIME)
-			{
-				App->render->DrawLine(localPos, atkPos, { 34,191,255,255 }, FRONT_SCENE, true);
-			}
-			else
-			{
-				shoot = false;
-				rayCastTimer = 0;
-			}
-		}
-
 		//Draw vision and attack range
 		if (drawRanges)
 		{	
@@ -127,6 +87,7 @@ void Tower::Update()
 			App->render->DrawCircle(drawPos, visionRange, { 10, 156, 18, 255 }, FRONT_SCENE, true);//Vision
 			App->render->DrawCircle(drawPos, atkRange, { 255, 0, 0, 255 }, FRONT_SCENE, true);//Attack
 		}
+		objective = nullptr;
 	}
 }
 
@@ -155,29 +116,10 @@ void Tower::Upgrade()
 	}
 }
 
-void Tower::OnRightClick(vec pos, vec modPos)
-{
-	Upgrade();
-	//OnDamage(10);
-}
-
 void Tower::DoAttack()
-{
-	atkPos.first = 0;
-	atkPos.second = 0;
-	vec pos = objective->GetPos();
-	atkPos = Map::F_MapToWorld(pos.x, pos.y, pos.z);
-	atkPos.first += 30.0f;
-	atkPos.second += 20.0f;
-
-	pos = game_object->GetTransform()->GetGlobalPosition();
-	localPos = Map::F_MapToWorld(pos.x, pos.y, pos.z);
-	localPos.first += 30.0f;
-	localPos.second += -60.0f;
-
+{	
+	App->particleSys.AddParticle(pos,objective->GetPos(),15.0f,ENERGY_BALL_PARTICLE);
 	Event::Push(DAMAGE, objective, damage,GetType());
-
-	shoot = true;
 	ms_count = 0;
 	objective = nullptr;
 }

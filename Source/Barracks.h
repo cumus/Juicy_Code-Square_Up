@@ -15,7 +15,6 @@ public:
 	void create_bar() override;
 	void CreatePanel() override;
 	void UpdatePanel() override;
-	void UpdateWalkabilityTiles() override;
 	void FreeWalkabilityTiles() override;
 	
 

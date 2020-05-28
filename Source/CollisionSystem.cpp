@@ -197,7 +197,7 @@ void CollisionSystem::Update()
 		{
 			for (std::vector<Collider*>::iterator it = layerColliders[i].begin(); it != layerColliders[i].end(); ++it)
 			{
-				if (!(*it)->GetGameobject()->GetBehaviour()->GetState() != DESTROYED)
+				if ((*it)->GetGameobject()->GetBehaviour()->GetState() != DESTROYED)
 				{
 					if ((*it)->IsActive())
 					{

@@ -54,20 +54,13 @@ void Barracks::FreeWalkabilityTiles()
 	if (t)
 	{
 		vec pos = t->GetGlobalPosition();
-		App->pathfinding.SetWalkabilityTile(int(pos.x), int(pos.y), true);
-	}
-}
-
-void Barracks::UpdateWalkabilityTiles()
-{
-	Transform* t = game_object->GetTransform();
-	vec pos = t->GetGlobalPosition();
-	//LOG("POS X:%f/Y:%f", pos.x, pos.y);
-	for (int i = 0; i < t->GetLocalScaleX(); i++)
-	{
-		for (int a = 0; a < t->GetLocalScaleY(); a++)
+		vec scale = t->GetGlobalScale();
+		for (int i = 0; i < scale.x; i++)
 		{
-			App->pathfinding.SetWalkabilityTile(int(pos.x) + i + 3, int(pos.y) + a - 2, false);
+			for (int a = 0; a < scale.y; a++)
+			{
+				App->pathfinding.SetWalkabilityTile(int(pos.x) + i + 3, int(pos.y) + a - 2, true);
+			}
 		}
 	}
 }

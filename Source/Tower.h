@@ -10,7 +10,6 @@ public:
 	Tower(Gameobject* go);
 	~Tower();
 
-	void OnRightClick(vec pos, vec modPos) override;
 	void Upgrade() override;
 	void DoAttack() override;
 	void Update() override;
@@ -19,8 +18,8 @@ public:
 	void update_upgrades_ui();
 	void CreatePanel() override;
 	void UpdatePanel() override;
-	void UpdateWalkabilityTiles() override;
 	void FreeWalkabilityTiles() override;
+	void OnCollision(Collider selfCol, Collider col) override;
 
 public:
 

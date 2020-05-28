@@ -16,7 +16,6 @@ public:
 	void update_health_ui() override;
 	void CreatePanel() override;
 	void UpdatePanel() override;
-	void UpdateWalkabilityTiles() override;
 	void FreeWalkabilityTiles() override;
 
 public:

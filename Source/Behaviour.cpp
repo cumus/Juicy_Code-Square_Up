@@ -114,6 +114,7 @@ void Behaviour::SetColliders()
 		case TOWER:
 		{
 			bodyColl = new Collider(game_object, { pos.x,pos.y,game_object->GetTransform()->GetLocalScaleX(),game_object->GetTransform()->GetLocalScaleY() }, TRIGGER, PLAYER_TAG, { 0,Map::GetBaseOffset()+10,0,0 }, BODY_COLL_LAYER);
+			attackColl = new Collider(game_object, { pos.x,pos.y,attack_range,attack_range }, TRIGGER, PLAYER_ATTACK_TAG, { 0,Map::GetBaseOffset(),0,0 }, ATTACK_COLL_LAYER);
 			std::pair<float, float> world = Map::F_MapToWorld(pos.x, pos.y);
 			selectionOffset = { 5,-105 };
 			selectionRect = { world.first + selectionOffset.first,world.second + selectionOffset.second,55,160 };

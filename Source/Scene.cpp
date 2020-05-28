@@ -2440,7 +2440,7 @@ void Scene::SetSelection(Gameobject* go, bool call_unselect)
 	{
 		for (std::vector<Gameobject*>::iterator it = App->scene->group.begin(); it != App->scene->group.end(); ++it)
 		{
-			if (!(*it)->GetBehaviour()->GetState() != DESTROYED) Event::Push(ON_UNSELECT, *it);
+			if ((*it)->GetBehaviour()->GetState() != DESTROYED) Event::Push(ON_UNSELECT, *it);
 		}
 		group.clear();
 		groupSelect = false;
@@ -2461,7 +2461,7 @@ void Scene::SetSelection(Gameobject* go, bool call_unselect)
 		else
 			Event::Push(ON_SELECT, go);
 	}
-	else if (selection != nullptr && call_unselect && !selection->GetBehaviour()->GetState() != DESTROYED)
+	else if (selection != nullptr && call_unselect && selection->GetBehaviour()->GetState() != DESTROYED)
 		Event::Push(ON_UNSELECT, selection);
 
 	selection = go;

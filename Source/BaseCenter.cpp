@@ -53,7 +53,13 @@ Base_Center::~Base_Center()
 	if (t)
 	{
 		vec pos = t->GetGlobalPosition();
-		App->pathfinding.SetWalkabilityTile(int(pos.x), int(pos.y), true);
+		for (int i = 0; i < t->GetLocalScaleX(); i++)
+		{
+			for (int a = 0; a < t->GetLocalScaleY(); a++)
+			{
+				App->pathfinding.SetWalkabilityTile(int(pos.x) + i + 2, int(pos.y) + a - 1, false);
+			}
+		}
 	}
 
 	b_map.erase(GetID());
@@ -119,18 +125,6 @@ void Base_Center::Update()
 	}
 
 	mini_life_bar.Update(float(current_life) / float(max_life), current_lvl);
-}
-
-void Base_Center::UpdateWalkabilityTiles()
-{
-	Transform* t = game_object->GetTransform();
-	for (int i = 0; i < t->GetLocalScaleX(); i++)
-	{
-		for (int a = 0; a < t->GetLocalScaleY(); a++)
-		{
-			App->pathfinding.SetWalkabilityTile(int(pos.x) + i + 2, int(pos.y) + a - 1, false);
-		}
-	}
 }
 
 
