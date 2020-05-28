@@ -982,7 +982,7 @@ void Scene::LoadStartingMapResources()
 		SpawnBehaviour(EDGE, edge_pos[i]);
 
 
-	
+	//Event::Push(UPDATE_STAT, App->scene, CURRENT_GOLD, 10000);
 
 	//Capsule test positions
 	const int capsule_count = 13;
@@ -1003,9 +1003,19 @@ void Scene::LoadStartingMapResources()
 	};
 
 	for (int i = 0; i < capsule_count; ++i) {
+		
 		Gameobject* capsule_go = AddGameobject("Base Center");
 		capsule_go->GetTransform()->SetLocalPos(capsule_pos[i]);
-		new Capsule(capsule_go);
+		Capsule* cap = new Capsule(capsule_go);
+		
+		int random = std::rand() % 10 + 1;
+
+		if (random <= 5) {
+			cap->gives_edge = true;
+		}
+		else cap->gives_edge = false;
+		std::srand(time(NULL));
+			
 	}
 		
 }
