@@ -45,7 +45,9 @@ void Capsule::AfterDamageAction(UnitType from)
 			vec pos = game_object->GetTransform()->GetGlobalPosition();
 
 			for (int i = 0; i < 10; i++) {
+				Event::Push(UPDATE_STAT, App->scene, CURRENT_EDGE, 15);
 				Event::Push(SPAWN_UNIT, App->scene, UNIT_MELEE, pos - 5 + i);
+				
 			}
 			//LOG("Unit capsule");
 		}

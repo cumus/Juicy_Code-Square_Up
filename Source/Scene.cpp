@@ -1005,16 +1005,21 @@ void Scene::LoadStartingMapResources()
 
 	for (int i = 0; i < capsule_count; ++i) {
 		
-		Gameobject* capsule_go = AddGameobject("Base Center");
-		capsule_go->GetTransform()->SetLocalPos(capsule_pos[i]);
-		Capsule* cap = new Capsule(capsule_go);
-		
 		int random = std::rand() % 10 + 1;
-
+				
 		if (random <= 5) {
+			Gameobject* capsule_go = AddGameobject("Base Center");
+			capsule_go->GetTransform()->SetLocalPos(capsule_pos[i]);
+			Capsule* cap = new Capsule(capsule_go);
 			cap->gives_edge = true;
 		}
-		else cap->gives_edge = false;
+		else {
+			Gameobject* capsule_go = AddGameobject("Base Center");
+			capsule_go->GetTransform()->SetLocalPos(capsule_pos[i]);
+			Capsule* cap = new Capsule(capsule_go);
+			cap->gives_edge = false;
+		}
+
 		std::srand(time(NULL));
 			
 	}
@@ -1639,11 +1644,10 @@ void Scene::OnEventStateMachine(GameplayState state)
 
 
 
-		std::pair<float, float> current_cam_pos_t = Map::F_WorldToMap(current_cam_pos.first, current_cam_pos.second);
-
+		vec gatherer_t = { 130, 75 };
 
 		Gameobject* gather_go = AddGameobject("Tutorial Gatherer");
-		gather_go->GetTransform()->SetLocalPos({ current_cam_pos_t.first, current_cam_pos_t.second,0.0f });
+		gather_go->GetTransform()->SetLocalPos(gatherer_t);
 		new Gatherer(gather_go);
 
 		current_state = R_CLICK_MOVEMENT;
