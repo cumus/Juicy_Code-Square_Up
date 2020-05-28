@@ -268,7 +268,7 @@ void Scene::RecieveEvent(const Event& e)
 			imgPreview->GetTransform()->SetScale({ 1.75f,1.75f,1.75f });
 			//LOG("Barracks");
 			break;
-		case BASE_CENTER: 
+		case BASE_CENTER:
 			buildingImage->SetSection({ 434, 3, 217, 177 });
 			imgPreview->GetTransform()->SetScale({ 1.9f,1.9f,1.9f });
 			//LOG("Base center");
@@ -280,7 +280,7 @@ void Scene::RecieveEvent(const Event& e)
 			//LOG("Default");
 			break;
 		}
-		
+
 		break;
 	}
 	case UPDATE_STAT:
@@ -362,17 +362,41 @@ void Scene::RecieveEvent(const Event& e)
 		break;
 	}
 	case UPGRADE_GATHERER:
-		if (player_stats[CURRENT_MOB_DROP] >= GATHERER_UPGRADE_COST && gathererLvl < MAX_GATHERER_LVL) gathererLvl += 1;
+	{
+		if (player_stats[CURRENT_MOB_DROP] >= GATHERER_UPGRADE_COST && gathererLvl < MAX_GATHERER_LVL)
+		{
+			gathererLvl += 1;
+			UpdateStat(CURRENT_MOB_DROP, -GATHERER_UPGRADE_COST);
+		}
 		break;
+	}
 	case UPGRADE_MELEE:
-		if (player_stats[CURRENT_MOB_DROP] >= MELEE_UPGRADE_COST && gathererLvl < MAX_MELEE_LVL) meleeLvl += 1;
+	{
+		if (player_stats[CURRENT_MOB_DROP] >= MELEE_UPGRADE_COST && gathererLvl < MAX_MELEE_LVL)
+		{
+			meleeLvl += 1;
+			UpdateStat(CURRENT_MOB_DROP, -MELEE_UPGRADE_COST);
+		}
 		break;
+	}
 	case UPGRADE_RANGED:
-		if (player_stats[CURRENT_MOB_DROP] >= RANGED_UPGRADE_COST && gathererLvl < MAX_RANGED_LVL) rangedLvl += 1;
+	{
+		if (player_stats[CURRENT_MOB_DROP] >= RANGED_UPGRADE_COST && gathererLvl < MAX_RANGED_LVL)
+		{
+			rangedLvl += 1;
+			UpdateStat(CURRENT_MOB_DROP, -RANGED_UPGRADE_COST);
+		}
 		break;
+	}
 	case UPGRADE_SUPER:
-		if (player_stats[CURRENT_MOB_DROP] >= SUPER_UPGRADE_COST && gathererLvl < MAX_SUPER_LVL) superLvl += 1;
+	{
+		if (player_stats[CURRENT_MOB_DROP] >= SUPER_UPGRADE_COST && gathererLvl < MAX_SUPER_LVL)
+		{
+			superLvl += 1;
+			UpdateStat(CURRENT_MOB_DROP, -SUPER_UPGRADE_COST);
+		}
 		break;
+	}
 	/*case NEW_BEHAVIOUR:
 
 		switch (e.type)
@@ -2157,10 +2181,28 @@ Transform* Scene::SpawnBehaviour(int type, vec pos)
 		{
 			behaviour = AddGameobject("Gatherer");
 			behaviour->GetTransform()->SetLocalPos(pos);
-			new Gatherer(behaviour);
+			Gatherer* temp = new Gatherer(behaviour);
 			UpdateStat(CURRENT_GATHERER_UNITS, 1);
 			UpdateStat(TOTAL_GATHERER_UNITS, 1);
 			UpdateStat(CURRENT_EDGE,-GATHERER_COST);
+			switch (gathererLvl)
+			{
+			case 1:
+				temp->UpgradeUnit(5,5,1);
+				break;
+			case 2:
+				temp->UpgradeUnit(5, 5, 2);
+				break;
+			case 3:
+				temp->UpgradeUnit(5, 5, 3);
+				break;
+			case 4:
+				temp->UpgradeUnit(5, 5, 4);
+				break;
+			case 5:
+				temp->UpgradeUnit(5, 5, 5);
+				break;
+			}
 		}
 		else
 		{
@@ -2174,10 +2216,28 @@ Transform* Scene::SpawnBehaviour(int type, vec pos)
 		{
 			behaviour = AddGameobject("Unit melee");
 			behaviour->GetTransform()->SetLocalPos(pos);
-			new MeleeUnit(behaviour);
+			MeleeUnit* temp = new MeleeUnit(behaviour);
 			UpdateStat(CURRENT_MELEE_UNITS, 1);
 			UpdateStat(TOTAL_MELEE_UNITS, 1);
 			UpdateStat(CURRENT_EDGE, -MELEE_COST);
+			switch (meleeLvl)
+			{
+			case 1:
+				temp->UpgradeUnit(5, 5, 1);
+				break;
+			case 2:
+				temp->UpgradeUnit(5, 5, 2);
+				break;
+			case 3:
+				temp->UpgradeUnit(5, 5, 3);
+				break;
+			case 4:
+				temp->UpgradeUnit(5, 5, 4);
+				break;
+			case 5:
+				temp->UpgradeUnit(5, 5, 5);
+				break;
+			}
 		}
 		else
 		{
@@ -2190,10 +2250,28 @@ Transform* Scene::SpawnBehaviour(int type, vec pos)
 		{
 			behaviour = AddGameobject("Ranged unit");
 			behaviour->GetTransform()->SetLocalPos(pos);
-			new RangedUnit(behaviour);
+			RangedUnit* temp = new RangedUnit(behaviour);
 			UpdateStat(CURRENT_RANGED_UNITS, 1);
 			UpdateStat(TOTAL_RANGED_UNITS, 1);
 			UpdateStat(CURRENT_EDGE, -RANGED_COST);
+			switch (rangedLvl)
+			{
+			case 1:
+				temp->UpgradeUnit(5, 5, 1);
+				break;
+			case 2:
+				temp->UpgradeUnit(5, 5, 2);
+				break;
+			case 3:
+				temp->UpgradeUnit(5, 5, 3);
+				break;
+			case 4:
+				temp->UpgradeUnit(5, 5, 4);
+				break;
+			case 5:
+				temp->UpgradeUnit(5, 5, 5);
+				break;
+			}
 		}
 		else
 		{
@@ -2205,10 +2283,28 @@ Transform* Scene::SpawnBehaviour(int type, vec pos)
 		{
 			behaviour = AddGameobject("Super unit");
 			behaviour->GetTransform()->SetLocalPos(pos);
-			new SuperUnit(behaviour);
+			SuperUnit* temp = new SuperUnit(behaviour);
 			UpdateStat(CUERRENT_SUPER_UNITS, 1);
 			UpdateStat(TOTAL_SUPER_UNITS, 1);
 			UpdateStat(CURRENT_EDGE, - SUPER_COST);
+			switch (superLvl)
+			{
+			case 1:
+				temp->UpgradeUnit(5, 5, 1);
+				break;
+			case 2:
+				temp->UpgradeUnit(5, 5, 2);
+				break;
+			case 3:
+				temp->UpgradeUnit(5, 5, 3);
+				break;
+			case 4:
+				temp->UpgradeUnit(5, 5, 4);
+				break;
+			case 5:
+				temp->UpgradeUnit(5, 5, 5);
+				break;
+			}
 		}
 		else
 		{
