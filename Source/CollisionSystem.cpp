@@ -99,10 +99,10 @@ void CollisionSystem::ProcessRemovals()
 		{
 			for (std::vector<Collider*>::iterator it = layerColliders[i].begin(); it != layerColliders[i].end(); ++it)
 			{
-				if (!(*it)->GetGameobject()->GetBehaviour()->IsDestroyed()) cache.push_back(*it); 
+				if ((*it)->GetGameobject()->GetBehaviour()->IsDestroyed() == false) cache.push_back((*it)); 
 			}
-			if (!cache.empty()) layerColliders[i] = cache;
-			cache.clear();
+			layerColliders[i].clear();
+			if (!cache.empty()) { layerColliders[i] = cache; cache.clear(); }			
 		}
 	}
 }
@@ -190,6 +190,7 @@ void CollisionSystem::Resolve()
 void CollisionSystem::Update()
 {
 	collisionTree->Clear();
+	ProcessRemovals();
 	for (int i = 0; i < MAX_COLLISION_LAYERS; i++)
 	{
 		if (!layerColliders[i].empty())

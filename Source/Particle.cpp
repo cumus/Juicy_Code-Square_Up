@@ -15,7 +15,7 @@ Particle::Particle(Gameobject* go,vec p, vec d, float s, ParticleType typ, Compo
 	alive = true;
 
 	animCounter = 0;
-	animationSpeed = 0.3f;
+	animationSpeed = 0.01f;
 	spriteNum = 0;
 	type = typ;
 	direction = { d.x - p.x,d.y - p.y};
