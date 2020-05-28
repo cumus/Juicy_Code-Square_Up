@@ -31,7 +31,6 @@ enum UnitType : int
 	//Structures//
 	BASE_CENTER,
 	TOWER,
-	WALL,
 	BARRACKS,
 	LAB,
 	EDGE,

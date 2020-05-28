@@ -159,10 +159,6 @@ void Tower::CreatePanel()
 	upgrade_btn->tex_id = panel_tex_ID;
 }
 
-void Tower::UpdatePanel()
-{
-
-}
 
 void Tower::create_bar() {
 

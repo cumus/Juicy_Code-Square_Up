@@ -169,6 +169,7 @@
     <ClCompile Include="Gatherer.cpp" />
     <ClCompile Include="HierarchyWindow.cpp" />
     <ClCompile Include="JuicyMath.cpp" />
+    <ClCompile Include="Lab.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Application.cpp" />
     <ClCompile Include="Audio.cpp" />
@@ -239,6 +240,7 @@
     <ClInclude Include="FoWDefs.h" />
     <ClInclude Include="HierarchyWindow.h" />
     <ClInclude Include="JuicyMath.h" />
+    <ClInclude Include="Lab.h" />
     <ClInclude Include="Map.h" />
     <ClInclude Include="MapContainer.h" />
     <ClInclude Include="MeleeUnit.h" />

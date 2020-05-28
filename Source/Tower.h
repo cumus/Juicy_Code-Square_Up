@@ -17,7 +17,6 @@ public:
 	void update_health_ui();
 	void update_upgrades_ui();
 	void CreatePanel() override;
-	void UpdatePanel() override;
 	void FreeWalkabilityTiles() override;
 	void OnCollision(Collider selfCol, Collider col) override;
 

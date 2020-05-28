@@ -25,6 +25,7 @@
 #include "EnemyRangedUnit.h"
 #include "EnemySuperUnit.h"
 #include "EdgeCapsule.h"
+#include "Lab.h"
 #include "JuicyMath.h"
 
 #include "Defs.h"
@@ -2266,7 +2267,6 @@ Transform* Scene::SpawnBehaviour(int type, vec pos)
 		else LOG("Not enough resources! :(");		
 		break;
 	}
-	case WALL: break;
 	case BARRACKS:
 	{			
 		if ((player_stats[CURRENT_EDGE] - BARRACKS_COST) >= 0)
@@ -2292,7 +2292,28 @@ Transform* Scene::SpawnBehaviour(int type, vec pos)
 		else LOG("Not enough resources! :(");
 		break;
 	}
-	case LAB: break;
+	case LAB:
+	{
+		if ((player_stats[CURRENT_EDGE] - 50) >= 0)
+		{
+			std::pair<int, int> thisPos(pos.x, pos.y);
+			if (App->pathfinding.CheckWalkabilityArea(thisPos, vec(4.0f, 4.0f, 1.0f)))
+			{
+				behaviour = AddGameobject("Lab");
+				behaviour->GetTransform()->SetLocalPos(pos);
+				behaviour->GetTransform()->ScaleX(2.0f);
+				behaviour->GetTransform()->ScaleY(2.0f);
+				new Lab(behaviour);
+				UpdateStat(CURRENT_EDGE, -50);
+				//Update paths
+				for (std::map<double, Behaviour*>::iterator it = Behaviour::b_map.begin(); it != Behaviour::b_map.end(); ++it)
+					Event::Push(REPATH, it->second, pos.x - 1, pos.y - 1);
+			}
+			else LOG("Can't place building");
+		}
+		else LOG("Not enough resources! :(");
+		break;
+	}
 	case EDGE:
 	{
 		behaviour = AddGameobject("Edge");

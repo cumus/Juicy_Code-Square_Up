@@ -1,14 +1,14 @@
-#ifndef __BASECENTER_H__
-#define __BASECENTER_H__
+#ifndef __LAB_H__
+#define __LAB_H__
 
 #include "Behaviour.h"
 #include "Canvas.h"
 
-class Base_Center : public BuildingWithQueue
+class Lab : public Behaviour
 {
 public:
-	Base_Center(Gameobject* go);
-	~Base_Center();
+	Lab(Gameobject* go);
+	~Lab();
 
 	void Upgrade() override;
 	void Update() override;
@@ -17,9 +17,6 @@ public:
 	void CreatePanel() override;
 	void FreeWalkabilityTiles() override;
 
-public:
-
-	static Gameobject* baseCenter;
 
 protected:
 
@@ -40,4 +37,4 @@ protected:
 	//C_Text* super_buildNum;
 };
 
-#endif // __BASECENTER_H__
+#endif // __LAB_H__

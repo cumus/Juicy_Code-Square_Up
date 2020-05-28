@@ -171,11 +171,6 @@ void Barracks::CreatePanel()
 	upgrade_btn->tex_id = panel_tex_ID;
 }
 
-void Barracks::UpdatePanel()
-{
-
-}
-
 
 void Barracks::create_bar() {
 

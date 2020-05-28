@@ -199,6 +199,9 @@
     <ClCompile Include="EnemySuperUnit.cpp">
       <Filter>Source\Gameobjects\Components\Behaviours</Filter>
     </ClCompile>
+    <ClCompile Include="Lab.cpp">
+      <Filter>Source\Gameobjects\Components\Behaviours</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="PugiXml\src\pugiconfig.hpp">
@@ -430,6 +433,9 @@
       <Filter>Source\Gameobjects\Components\Behaviours</Filter>
     </ClInclude>
     <ClInclude Include="EnemySuperUnit.h">
+      <Filter>Source\Gameobjects\Components\Behaviours</Filter>
+    </ClInclude>
+    <ClInclude Include="Lab.h">
       <Filter>Source\Gameobjects\Components\Behaviours</Filter>
     </ClInclude>
   </ItemGroup>

@@ -109,7 +109,7 @@ AnimatedSprite::AnimatedSprite(Behaviour* unit) : Sprite(unit->GetGameobject(), 
 		offset = { -70.0f, -134.0f + Map::GetBaseOffset(), 0.3f, 0.3f };
 		break;
 	}
-	case WALL:
+	case LAB:
 	{
 		tex_id = App->tex.Load("Assets/textures/Base_Center.png");
 		animations[NO_UPGRADE].Setup(section = { 0, 0, 166, 534 }, 1);

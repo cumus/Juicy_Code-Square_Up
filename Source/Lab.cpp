@@ -1,4 +1,4 @@
-#include "BaseCenter.h"
+#include "Lab.h"
 #include "Application.h"
 #include "Gameobject.h"
 #include "Render.h"
@@ -12,17 +12,16 @@
 #include "Canvas.h"
 #include "Sprite.h"
 
-Gameobject* Base_Center::baseCenter = nullptr;
 
-Base_Center::Base_Center(Gameobject* go) : BuildingWithQueue(go, BASE_CENTER, NO_UPGRADE, B_BASE_CENTER)
+Lab::Lab(Gameobject* go) : Behaviour(go, LAB, NO_UPGRADE, B_LAB)
 {
 	Transform* t = game_object->GetTransform();
 
-	max_life = 1000;
+	max_life = 200;
 	current_life = max_life;
 	current_lvl = 1;
 	max_lvl = 5;
-	vision_range = 20.0f;
+	vision_range = 10.0f;
 	attack_range = 0;
 	providesVisibility = true;
 
@@ -30,7 +29,7 @@ Base_Center::Base_Center(Gameobject* go) : BuildingWithQueue(go, BASE_CENTER, NO
 	//bar_go->SetInactive();
 	CreatePanel();
 	selectionPanel->SetInactive();
-	
+
 
 	if (t)
 	{
@@ -43,11 +42,10 @@ Base_Center::Base_Center(Gameobject* go) : BuildingWithQueue(go, BASE_CENTER, NO
 			}
 		}
 	}
-	baseCenter = game_object;
 	SetColliders();
 }
 
-Base_Center::~Base_Center()
+Lab::~Lab()
 {
 	Transform* t = game_object->GetTransform();
 	if (t)
@@ -63,13 +61,10 @@ Base_Center::~Base_Center()
 	}
 
 	b_map.erase(GetID());
-
-	if (baseCenter == game_object)
-		baseCenter = nullptr;
 }
 
 
-void Base_Center::FreeWalkabilityTiles()
+void Lab::FreeWalkabilityTiles()
 {
 	Transform* t = game_object->GetTransform();
 	if (t)
@@ -77,14 +72,11 @@ void Base_Center::FreeWalkabilityTiles()
 		vec pos = t->GetGlobalPosition();
 		App->pathfinding.SetWalkabilityTile(int(pos.x), int(pos.y), true);
 	}
-
-	if (baseCenter == game_object)
-		baseCenter = nullptr;
 }
 
-void Base_Center::Update()
+void Lab::Update()
 {
-	if (!build_queue.empty())
+	/*if (!build_queue.empty())
 	{
 		if (!progress_bar->GetGameobject()->IsActive())
 			progress_bar->GetGameobject()->SetActive();
@@ -122,13 +114,13 @@ void Base_Center::Update()
 			section.w = int(float(section.w) * percent);
 			progress_bar->SetSection(section);
 		}
-	}
+	}*/
 
 	mini_life_bar.Update(float(current_life) / float(max_life), current_lvl);
 }
 
 
-void Base_Center::Upgrade()
+void Lab::Upgrade()
 {
 	if (current_lvl < max_lvl) {
 
@@ -151,7 +143,7 @@ void Base_Center::Upgrade()
 	}
 }
 
-void Base_Center::CreatePanel()
+void Lab::CreatePanel()
 {
 	posY_panel = 0.8f;
 	panel_tex_ID = App->tex.Load("Assets/textures/hud-sprites.png");
@@ -172,7 +164,7 @@ void Base_Center::CreatePanel()
 	panel->section = { 163, 343, 202, 114 };
 	panel->tex_id = panel_tex_ID;
 
-	Gameobject* gatherer_btn_go = App->scene->AddGameobject("Gatherer Button", selectionPanel);
+	/*Gameobject* gatherer_btn_go = App->scene->AddGameobject("Gatherer Button", selectionPanel);
 
 	gatherer_btn = new C_Button(gatherer_btn_go, Event(BUILD_GATHERER, this, spawnPoint, 5.0f));//First option from the right
 	gatherer_btn->target = { -0.0535f, -0.007, 1.5f, 1.5f };
@@ -200,36 +192,7 @@ void Base_Center::CreatePanel()
 	capsule_button->section[3] = { 1075, 446, 56, 49 };
 
 
-	capsule_button->tex_id = panel_tex_ID;
-
-	/*
-
-	Gameobject* rangedUnit_btn_go = App->scene->AddGameobject("Ranged Unit Button", selectionPanel);
-
-	rangedUnit_btn = new C_Button(rangedUnit_btn_go, Event(BUILD_RANGED, this, spawnPoint, 5.0f));//Third option from the right
-	rangedUnit_btn->target = { 0.38f, 0.20f, 1.5f, 1.5f };
-	rangedUnit_btn->offset = { 0.0f, 0.0f };
-
-	rangedUnit_btn->section[0] = { 142, 65, 62, 62 };
-	rangedUnit_btn->section[1] = { 142, 195, 62, 62 };
-	rangedUnit_btn->section[2] = { 142, 325, 62, 62 };
-	rangedUnit_btn->section[3] = { 142, 325, 62, 62 };
-
-	rangedUnit_btn->tex_id = panel_tex_ID;
-
-	Gameobject* superUnit_btn_go = App->scene->AddGameobject("Super Unit Button", selectionPanel);
-
-	superUnit_btn = new C_Button(superUnit_btn_go, Event(BUILD_SUPER, this, spawnPoint, 5.0f));//Bottom right
-	superUnit_btn->target = { 0.95f, posY_panel+0.085f, 0.7f, 0.7f };
-	superUnit_btn->offset = { 0.0f, 0.0f };
-
-	superUnit_btn->section[0] = { 207, 65, 62, 62 };
-	superUnit_btn->section[1] = { 207, 195, 62, 62 };
-	superUnit_btn->section[2] = { 207, 325, 62, 62 };
-	superUnit_btn->section[3] = { 207, 325, 62, 62 };
-
-	superUnit_btn->tex_id = panel_tex_ID;
-	*/
+	capsule_button->tex_id = panel_tex_ID;*/
 
 	Gameobject* upgrade_btn_go = App->scene->AddGameobject("Upgrade Button", selectionPanel);
 
@@ -246,7 +209,7 @@ void Base_Center::CreatePanel()
 }
 
 
-void Base_Center::create_bar() {
+void Lab::create_bar() {
 
 	bar_text_id = App->tex.Load("Assets/textures/hud-sprites.png");
 
@@ -289,6 +252,6 @@ void Base_Center::create_bar() {
 
 }
 
-void Base_Center::update_health_ui() {
+void Lab::update_health_ui() {
 	green_health->section.w = 439 * float(current_life) / float(max_life);
 }
