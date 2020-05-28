@@ -160,26 +160,26 @@ AnimatedSprite::AnimatedSprite(Behaviour* unit) : Sprite(unit->GetGameobject(), 
 		break;
 	}
 	case ENEMY_MELEE:
-		tex_id = App->tex.Load("Assets/textures/Enemy_Melee_Temp.png");
-		animations[IDLE].Setup(section = { 2, 2, 418, 295 }, 6, 6.0f);
-		animations[MOVING_N].Setup({ 2, 295, 418, 295 }, 7, 8.0f);
-		animations[MOVING_S].Setup({ 2, 590, 418, 295 }, 7, 8.0f);
-		animations[MOVING_E].Setup({ 2, 885, 418, 295 }, 8, 8.0f);
-		animations[MOVING_W].Setup({ 2, 1180, 418, 295 }, 8, 8.0f);
-		animations[MOVING_NE].Setup({ 2, 1475, 418, 295 }, 8, 8.0f);
-		animations[MOVING_NW].Setup({ 2, 1770, 418, 295 }, 8, 8.0f);
-		animations[MOVING_SE].Setup({ 2, 2065, 418, 295 }, 8, 8.0f);
-		animations[MOVING_SW].Setup({ 2, 2360, 418, 295 }, 8, 8.0f);
-		animations[ATTACKING_N].Setup({ 2, 2655, 418, 295 }, 7, 8.0f);
-		animations[ATTACKING_S].Setup({ 2, 2950, 418, 295 }, 7, 8.0f);
-		animations[ATTACKING_E].Setup({ 2, 3245, 418, 295 }, 7, 8.0f);
-		animations[ATTACKING_W].Setup({ 2, 3540, 418, 295 }, 7, 8.0f);
-		animations[ATTACKING_NE].Setup({ 2, 3835, 418, 295 }, 7, 8.0f);
-		animations[ATTACKING_NW].Setup({ 2, 4130, 418, 295 }, 7, 8.0f);
-		animations[ATTACKING_SE].Setup({ 2, 4425, 418, 295 }, 7, 8.0f);
-		animations[ATTACKING_SW].Setup({ 2, 4720, 418, 295 }, 7, 8.0f);
-		animations[DESTROYED].Setup({ 2, 5015, 418, 295 }, 8, 5.0f);
-		offset = { -168.0f, -280.0f, 0.6f, 0.6f };
+		tex_id = App->tex.Load("Assets/textures/Enemy_Melee_Temp2.png");
+		animations[IDLE].Setup(section = { 0, 0, 464, 365 }, 6, 6.0f);
+		animations[MOVING_N].Setup({ 0, 365, 464, 365 }, 7, 8.0f);
+		animations[MOVING_S].Setup({ 0, 730, 464, 365 }, 7, 8.0f);
+		animations[MOVING_E].Setup({ 0, 1095, 464, 365 }, 8, 8.0f);
+		animations[MOVING_W].Setup({ 0, 1460, 464, 365 }, 8, 8.0f);
+		animations[MOVING_NE].Setup({ 0, 1825, 464, 365 }, 8, 8.0f);
+		animations[MOVING_NW].Setup({ 0, 2190, 464, 365 }, 8, 8.0f);
+		animations[MOVING_SE].Setup({ 0, 2555, 464, 365 }, 8, 8.0f);
+		animations[MOVING_SW].Setup({ 0, 2920, 464, 365 }, 8, 8.0f);
+		animations[ATTACKING_N].Setup({ 0, 3285, 464, 365 }, 6, 10.0f);
+		animations[ATTACKING_S].Setup({ 0, 3650, 464, 365 }, 6, 10.0f);
+		animations[ATTACKING_E].Setup({ 0, 4015, 464, 365 }, 6, 10.0f);
+		animations[ATTACKING_W].Setup({ 0, 4380, 464, 365 }, 6, 10.0f);
+		animations[ATTACKING_NE].Setup({ 0, 4745, 464, 365 }, 6, 10.0f);
+		animations[ATTACKING_NW].Setup({ 0, 5110, 464, 365 }, 6, 10.0f);
+		animations[ATTACKING_SE].Setup({ 0, 5475, 464, 365 }, 6, 10.0f);
+		animations[ATTACKING_SW].Setup({ 0, 5840, 464, 365 }, 6, 10.0f);
+		animations[DESTROYED].Setup({ 0, 6205, 464, 365 }, 8, 5.0f);
+		offset = { -225.0f, -280.f, 0.5f, 0.5f };
 		break;
 	case ENEMY_RANGED:
 		tex_id = App->tex.Load("Assets/textures/Enemy_Ranged_Temp.png");
