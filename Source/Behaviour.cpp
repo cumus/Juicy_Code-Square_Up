@@ -595,6 +595,7 @@ B_Unit::B_Unit(Gameobject* go, UnitType t, UnitState s, ComponentType comp_type)
 	chaseObj = nullptr;
 	chasing = false;
 	moveOrder = false;
+	unitLevel = 0;
 }
 
 void B_Unit::Update()
@@ -783,6 +784,7 @@ void B_Unit::OnCollision(Collider selfCol, Collider col)
 	}
 }
 
+int B_Unit::GetUnitLevel() { return unitLevel; }
 
 void B_Unit::UpdatePath(int x, int y)
 {
@@ -1090,11 +1092,12 @@ void B_Unit::DoAttack()
 	}
 }
 
-void B_Unit::UpgradeUnit(int life, int dmg)
+void B_Unit::UpgradeUnit(int life, int dmg,int lvl)
 {
 	max_life = life;
 	current_life = max_life;
 	damage = dmg;
+	unitLevel = lvl;
 }
 
 void B_Unit::OnRightClick(vec posClick, vec movPos)

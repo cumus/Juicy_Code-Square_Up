@@ -17,6 +17,14 @@
 #define SUPER_COST 50
 #define TOWER_COST 40
 #define BARRACKS_COST 60
+#define MAX_GATHERER_LVL 5
+#define MAX_MELEE_LVL 5
+#define MAX_RANGED_LVL 5
+#define MAX_SUPER_LVL 5
+#define GATHERER_UPGRADE_COST 10
+#define MELEE_UPGRADE_COST 20
+#define RANGED_UPGRADE_COST 30
+#define SUPER_UPGRADE_COST 50
 
 enum SceneType : int
 {
@@ -233,6 +241,12 @@ private:
 	float shakeTimer = 0;
 	float earthquakeTimer = 0;
 
+	//Unit upgrades
+	int gathererLvl = 0;
+	int meleeLvl = 0;
+	int rangedLvl = 0;
+	int superLvl = 0;
+
 
 	//--------STATE MACHINE VARIABLES--------
 
@@ -258,10 +272,6 @@ private:
 	bool first_time_pause_button;
 	bool paused_yet = false;
 	bool endScene = false;
-
-
-
-
 
 	// Music and Sounds Value
 	static int music_value;

@@ -361,6 +361,18 @@ void Scene::RecieveEvent(const Event& e)
 		Event::Push(PLAY_FX, App->audio, int(SELECT), 0);
 		break;
 	}
+	case UPGRADE_GATHERER:
+		if (player_stats[CURRENT_MOB_DROP] >= GATHERER_UPGRADE_COST && gathererLvl < MAX_GATHERER_LVL) gathererLvl += 1;
+		break;
+	case UPGRADE_MELEE:
+		if (player_stats[CURRENT_MOB_DROP] >= MELEE_UPGRADE_COST && gathererLvl < MAX_MELEE_LVL) meleeLvl += 1;
+		break;
+	case UPGRADE_RANGED:
+		if (player_stats[CURRENT_MOB_DROP] >= RANGED_UPGRADE_COST && gathererLvl < MAX_RANGED_LVL) rangedLvl += 1;
+		break;
+	case UPGRADE_SUPER:
+		if (player_stats[CURRENT_MOB_DROP] >= SUPER_UPGRADE_COST && gathererLvl < MAX_SUPER_LVL) superLvl += 1;
+		break;
 	/*case NEW_BEHAVIOUR:
 
 		switch (e.type)
