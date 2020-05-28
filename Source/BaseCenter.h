@@ -33,11 +33,6 @@ protected:
 	C_Button* rangedUnit_btn;
 	C_Button* superUnit_btn;
 	C_Button* upgrade_btn;
-
-	C_Text* gatherer_buildNum;
-	//C_Text* melee_buildNum;
-	//C_Text* ranged_buildNum;
-	//C_Text* super_buildNum;
 };
 
 #endif // __BASECENTER_H__

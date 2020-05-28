@@ -1090,6 +1090,12 @@ void B_Unit::DoAttack()
 	}
 }
 
+void B_Unit::UpgradeUnit(int life, int dmg)
+{
+	max_life = life;
+	current_life = max_life;
+	damage = dmg;
+}
 
 void B_Unit::OnRightClick(vec posClick, vec movPos)
 {		

@@ -15,7 +15,6 @@ public:
 	~Gatherer();
 
 	void CreatePanel() override;
-	void UpdatePanel() override;
 
 public:
 
@@ -27,7 +26,6 @@ public:
 	C_Button* barracks_btn;
 	C_Button* tower_btn;
 	C_Button* labBtn;
-	//C_Button* wall_btn;	
 };
 
 #endif

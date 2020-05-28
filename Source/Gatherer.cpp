@@ -86,18 +86,4 @@ void Gatherer::CreatePanel()
 	labBtn->section[3] = { 1147, 446, 56, 49 };
 
 	labBtn->tex_id = panel_tex_ID;
-
-	/*
-	Gameobject* wall_btn_go = App->scene->AddGameobject("Wall Button", selectionPanel);
-
-	wall_btn = new C_Button(wall_btn_go, Event(PLACE_BUILDING,  App->scene,int(WALL)));//Last option from the right
-	wall_btn->target = { 0.4190f, 0.6075, 1.5f, 1.5f };
-	wall_btn->offset = { 0.0f, 0.0f };
-	wall_btn->section = { 161, 0, 38, 38 };
-	wall_btn->tex_id = panel_tex_ID;*/
-}
-
-void Gatherer::UpdatePanel()
-{
-
 }

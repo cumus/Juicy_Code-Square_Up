@@ -76,46 +76,6 @@ void Lab::FreeWalkabilityTiles()
 
 void Lab::Update()
 {
-	/*if (!build_queue.empty())
-	{
-		if (!progress_bar->GetGameobject()->IsActive())
-			progress_bar->GetGameobject()->SetActive();
-
-		if (!icon->GetGameobject()->IsActive())
-			icon->GetGameobject()->SetActive();
-
-		float percent = build_queue.front().Update();
-		if (percent >= 1.0f)
-		{
-			Event::Push(SPAWN_UNIT, App->scene, build_queue.front().type, build_queue.front().pos);
-			build_queue.front().transform->GetGameobject()->Destroy();
-			build_queue.pop_front();
-
-			if (build_queue.empty())
-				progress_bar->GetGameobject()->SetInactive();
-			icon->GetGameobject()->SetInactive();
-		}
-		else
-		{
-			switch (build_queue.front().type)
-			{
-			case GATHERER:
-				icon->SetSection({ 75, 458, 48, 35 });
-				break;
-			case UNIT_MELEE:
-				icon->SetSection({ 22, 463, 48, 35 });
-				break;
-			case UNIT_RANGED:
-				icon->SetSection({ 22, 463, 48, 35 });
-				break;
-			}
-
-			SDL_Rect section = bar_section;
-			section.w = int(float(section.w) * percent);
-			progress_bar->SetSection(section);
-		}
-	}*/
-
 	mini_life_bar.Update(float(current_life) / float(max_life), current_lvl);
 }
 
@@ -128,8 +88,8 @@ void Lab::Upgrade()
 		max_life += 50;
 		current_lvl += 1;
 		App->audio->PlayFx(B_BUILDED);
-		LOG("LIFE AFTER UPGRADE: %d", max_life);
-		LOG("BC LEVEL: %d", current_lvl);
+		//LOG("LIFE AFTER UPGRADE: %d", max_life);
+		//LOG("BC LEVEL: %d", current_lvl);
 		update_health_ui();
 
 		switch (current_state)
@@ -149,14 +109,13 @@ void Lab::CreatePanel()
 	panel_tex_ID = App->tex.Load("Assets/textures/hud-sprites.png");
 
 	//------------------------- BASE PANEL --------------------------------------
+	selectionPanel = App->scene->AddGameobjectToCanvas("Lab Panel");
 
-	selectionPanel = App->scene->AddGameobjectToCanvas("Main Base Build Panel");
-
-	base_icon = new C_Image(selectionPanel);
-	base_icon->target = { 0.0f, 0.832f, 1.5f, 1.5f };
-	base_icon->offset = { 0.0f, 0.0f };
-	base_icon->section = { 544, 651, 104, 81 };
-	base_icon->tex_id = panel_tex_ID;
+	lab_icon = new C_Image(selectionPanel);
+	lab_icon->target = { 0.0f, 0.832f, 1.5f, 1.5f };
+	lab_icon->offset = { 0.0f, 0.0f };
+	lab_icon->section = { 754, 651, 104, 81 };
+	lab_icon->tex_id = panel_tex_ID;
 
 	panel = new C_Image(selectionPanel);
 	panel->target = { 0.0f, 0.764f, 1.5f, 1.5f };
@@ -164,48 +123,47 @@ void Lab::CreatePanel()
 	panel->section = { 163, 343, 202, 114 };
 	panel->tex_id = panel_tex_ID;
 
-	/*Gameobject* gatherer_btn_go = App->scene->AddGameobject("Gatherer Button", selectionPanel);
+	Gameobject* gUnit = App->scene->AddGameobject("Gatherer Button", selectionPanel);
 
-	gatherer_btn = new C_Button(gatherer_btn_go, Event(BUILD_GATHERER, this, spawnPoint, 5.0f));//First option from the right
+	gatherer_btn = new C_Button(gUnit, Event(UPGRADE_GATHERER, App->scene, int(BARRACKS)));//First option from the right
 	gatherer_btn->target = { -0.0535f, -0.007, 1.5f, 1.5f };
 	gatherer_btn->offset = { 0.0f, 0.0f };
 
-	gatherer_btn->section[0] = { 1075, 223, 56, 49 };
-	gatherer_btn->section[1] = { 1075, 172, 56, 49 };
-	gatherer_btn->section[2] = { 1075, 274, 56, 49 };
-	gatherer_btn->section[3] = { 1075, 274, 56, 49 };
-
+	gatherer_btn->section[0] = { 1147, 223, 56, 49 };
+	gatherer_btn->section[1] = { 1147, 172, 56, 49 };
+	gatherer_btn->section[2] = { 1147, 274, 56, 49 };
+	gatherer_btn->section[3] = { 1147, 274, 56, 49 };
 
 	gatherer_btn->tex_id = panel_tex_ID;
 
-	//-----------------------------CAPSULE BUTTON-------------------------------------------
+	Gameobject* mUnit_btn_go = App->scene->AddGameobject("Melee Button", selectionPanel);
 
-	Gameobject* capsule_btn_go = App->scene->AddGameobject("Capsule Button", selectionPanel);
+	meleeUnit_btn = new C_Button(mUnit_btn_go, Event(UPGRADE_MELEE, App->scene, int(TOWER)));//Second option from the right
+	meleeUnit_btn->target = { 0.18f, -0.024, 1.5f, 1.5f };
+	meleeUnit_btn->offset = { 0.0f, 0.0f };
 
-	capsule_button = new C_Button(capsule_btn_go, Event(BUILD_CAPSULE, this, spawnPoint, 5.0f));//First option from the right
-	capsule_button->target = { 0.18f, -0.024, 1.5f, 1.5f };
-	capsule_button->offset = { 0.0f, 0.0f };
+	meleeUnit_btn->section[0] = { 1075, 395, 56, 49 };
+	meleeUnit_btn->section[1] = { 1075, 344, 56, 49 };
+	meleeUnit_btn->section[2] = { 1075, 446, 56, 49 };
+	meleeUnit_btn->section[3] = { 1075, 446, 56, 49 };
 
-	capsule_button->section[0] = { 1075, 395, 56, 49 };
-	capsule_button->section[1] = { 1075, 344, 56, 49 };
-	capsule_button->section[2] = { 1075, 446, 56, 49 };
-	capsule_button->section[3] = { 1075, 446, 56, 49 };
+	meleeUnit_btn->tex_id = panel_tex_ID;
 
+	Gameobject* rUnit_btn_go = App->scene->AddGameobject("Ranged Button", selectionPanel);
 
-	capsule_button->tex_id = panel_tex_ID;*/
+	rangedUnit_btn = new C_Button(rUnit_btn_go, Event(UPGRADE_RANGED, App->scene, int(LAB)));//Third option from the right
+	rangedUnit_btn->target = { 0.38f, 0.20f, 1.5f, 1.5f };
+	rangedUnit_btn->offset = { 0.0f, 0.0f };
 
-	Gameobject* upgrade_btn_go = App->scene->AddGameobject("Upgrade Button", selectionPanel);
+	rangedUnit_btn->section[0] = { 1147, 395, 56, 49 };
+	rangedUnit_btn->section[1] = { 1147, 344, 56, 49 };
+	rangedUnit_btn->section[2] = { 1147, 446, 56, 49 };
+	rangedUnit_btn->section[3] = { 1147, 446, 56, 49 };
 
-	upgrade_btn = new C_Button(upgrade_btn_go, Event(DO_UPGRADE, this->AsBehaviour()));//Last option from the right
-	upgrade_btn->target = { 0.4190f, 0.6075, 1.5f, 1.5f };
-	upgrade_btn->offset = { 0.0f,0.0f };
+	rangedUnit_btn->tex_id = panel_tex_ID;
 
-	upgrade_btn->section[0] = { 1075, 51, 56, 49 };
-	upgrade_btn->section[1] = { 1075, 0, 56, 49 };
-	upgrade_btn->section[2] = { 1075, 102, 56, 49 };
-	upgrade_btn->section[3] = { 1075, 102, 56, 49 };
-
-	upgrade_btn->tex_id = panel_tex_ID;
+	//TODO:
+	//Super upgrade button
 }
 
 

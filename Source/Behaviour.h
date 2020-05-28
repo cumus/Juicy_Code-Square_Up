@@ -268,6 +268,7 @@ public:
 	void CheckDirection(fPoint actualPos);
 	void ShootRaycast();
 	void DrawRanges();
+	void UpgradeUnit(int life, int damage);
 	void Repath() override;
 	virtual void UnitAttackType() {}
 	void OnCollision(Collider selfCol, Collider col) override;

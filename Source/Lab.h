@@ -23,18 +23,11 @@ protected:
 	float posY_panel;
 	int panel_tex_ID;
 	C_Image* panel;
-	C_Image* base_icon;
+	C_Image* lab_icon;
 	C_Button* gatherer_btn;
-	C_Button* capsule_button;
 	C_Button* meleeUnit_btn;
 	C_Button* rangedUnit_btn;
 	C_Button* superUnit_btn;
-	C_Button* upgrade_btn;
-
-	C_Text* gatherer_buildNum;
-	//C_Text* melee_buildNum;
-	//C_Text* ranged_buildNum;
-	//C_Text* super_buildNum;
 };
 
 #endif // __LAB_H__
