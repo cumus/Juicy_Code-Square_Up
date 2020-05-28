@@ -160,7 +160,7 @@ AnimatedSprite::AnimatedSprite(Behaviour* unit) : Sprite(unit->GetGameobject(), 
 		break;
 	}
 	case ENEMY_MELEE:
-		tex_id = App->tex.Load("Assets/textures/Enemy_Melee_Temp2.png");
+		tex_id = App->tex.Load("Assets/textures/Enemy_Melee_Temp.png");
 		animations[IDLE].Setup(section = { 0, 0, 464, 365 }, 6, 6.0f);
 		animations[MOVING_N].Setup({ 0, 365, 464, 365 }, 7, 8.0f);
 		animations[MOVING_S].Setup({ 0, 730, 464, 365 }, 7, 8.0f);
