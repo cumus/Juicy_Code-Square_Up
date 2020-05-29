@@ -2466,7 +2466,8 @@ void Mission::Update(int num)
 	if (progress >= max) OnComplete();
 }
 
-void Mission::SetPos(RectF target)
+void Mission::SetPos(RectF img,RectF txt)
 {
-	imgRetail->target = target;
+	imgRetail->target = img;
+	text->target = txt;
 }

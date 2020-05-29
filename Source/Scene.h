@@ -117,7 +117,7 @@ struct Mission
 	~Mission();
 	void OnComplete();
 	void Update(int num);
-	void SetPos(RectF target);
+	void SetPos(RectF target,RectF txt);
 
 	Gameobject* mission;
 	C_Image* imgRetail;
