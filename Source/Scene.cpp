@@ -1442,7 +1442,7 @@ void Scene::UpdateSelection()
 					if (float(x) > coll.x && float(x) < coll.x + coll.w && float(y) > coll.y && float(y) < coll.y + coll.h)
 					{
 						SetSelection(it->second->GetGameobject(), true);
-						ShowUnitInfo(it->second);							
+						//ShowUnitInfo(it->second);							
 						break;
 					}					
 				}

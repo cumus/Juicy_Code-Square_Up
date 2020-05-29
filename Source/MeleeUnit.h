@@ -12,6 +12,14 @@ class MeleeUnit : public B_Unit
 public:
 	MeleeUnit(Gameobject* go);
 	~MeleeUnit();
+
+	void CreatePanel() override;
+
+public:
+	float posY_panel;
+	int panel_tex_ID;
+	C_Image* panel;
+	C_Image* melee_icon;
 };
 
 #endif

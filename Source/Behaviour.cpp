@@ -354,6 +354,7 @@ void Behaviour::Selected()
 	if (bar_go != nullptr) bar_go->SetActive();
 	if (creation_bar_go != nullptr) creation_bar_go->SetActive();
 	if (selectionPanel != nullptr) selectionPanel->SetActive();
+	if (unitInfo != nullptr) unitInfo->SetActive();
 }
 
 void Behaviour::UnSelected()
@@ -364,6 +365,7 @@ void Behaviour::UnSelected()
 	//if (bar_go != nullptr) bar_go->SetInactive();
 	if (creation_bar_go != nullptr) creation_bar_go->SetInactive();
 	if (selectionPanel != nullptr) selectionPanel->SetInactive();
+	if (unitInfo != nullptr) unitInfo->SetInactive();
 }
 
 
