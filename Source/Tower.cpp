@@ -165,6 +165,14 @@ void Tower::CreatePanel()
 	upgrade_btn->section[3] = { 1075, 102, 56, 49 };
 
 	upgrade_btn->tex_id = panel_tex_ID;
+
+	//Upgrade
+	Gameobject* prices = App->scene->AddGameobject("Prices", selectionPanel);;
+	C_Image* cost4 = new C_Image(prices);
+	cost4->target = { 0.58f, 0.68f, 0.8f, 0.8f };
+	cost4->offset = { 0, 0 };
+	cost4->section = { 229, 51, 34, 35 };
+	cost4->tex_id = App->tex.Load("Assets/textures/icons_price.png");
 }
 
 

@@ -89,13 +89,13 @@ void Gatherer::CreatePanel()
 	//Tower price
 	Gameobject* prices = App->scene->AddGameobject("Prices", selectionPanel);;
 	C_Image* cost1 = new C_Image(prices);
-	cost1->target = { 0.11f, 0.1f, 0.8f, 0.8f };
+	cost1->target = { 0.33f, 0.08f, 0.8f, 0.8f }; 
 	cost1->offset = { 0, 0 };
 	cost1->section = { 225, 13, 35, 32 };
 	cost1->tex_id = App->tex.Load("Assets/textures/icons_price.png");
 	//Barracks price
 	C_Image* cost2 = new C_Image(prices);
-	cost2->target = { 0.33f, 0.08f, 0.8f, 0.8f };
+	cost2->target = { 0.11f, 0.1f, 0.8f, 0.8f };
 	cost2->offset = { 0, 0 };
 	cost2->section = { 268, 14, 35, 31 };
 	cost2->tex_id = App->tex.Load("Assets/textures/icons_price.png");

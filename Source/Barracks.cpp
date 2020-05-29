@@ -195,6 +195,12 @@ void Barracks::CreatePanel()
 	cost3->offset = { 0, 0 };
 	cost3->section = { 183, 12, 37, 32 };
 	cost3->tex_id = App->tex.Load("Assets/textures/icons_price.png");
+	//Upgrade
+	C_Image* cost4 = new C_Image(prices);
+	cost4->target = { 0.58f, 0.68f, 0.8f, 0.8f };
+	cost4->offset = { 0, 0 };
+	cost4->section = { 188, 52, 35, 33 };
+	cost4->tex_id = App->tex.Load("Assets/textures/icons_price.png");
 }
 
 
