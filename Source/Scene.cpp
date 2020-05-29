@@ -127,14 +127,14 @@ bool Scene::Update()
 		if (introAnim < introFrameTime) introAnim += App->time.GetGameDeltaTime();
 		else
 		{
-			if (introColumn < 12) introColumn++;
+			if (introColumn > 12) introColumn = 0;
 			else
 			{
-				introColumn = 0;
-				if (introRow < 28) introRow++;
-				else introRow = 0;
+				introColumn++;
+				if (introRow > 28) introRow = 0;
+				else introRow++;
 			}
-			logo->section = { introColumn * 270, introRow * 270, 500, 500 };
+			logo->section = { introColumn * 270, introRow * 500, 270, 500 };
 			/*if (introColumn > 99) introColumn = 0;
 			else introColumn++;
 			logo->section = { introColumn * 270, 0, 270, 500 };*/
@@ -496,7 +496,7 @@ void Scene::LoadMainScene()
 void Scene::LoadIntroScene()
 {
 	OPTICK_EVENT();
-	
+
 	App->audio->PlayFx(LOGO);
 
 	scene_change_timer = 10.f;
@@ -507,7 +507,7 @@ void Scene::LoadIntroScene()
 	background->color = { 255, 255, 255, 255 };
 
 	logo = new C_Image(AddGameobjectToCanvas("Team logo"));
-	logo->target = { 0.5f, 0.5f, 1.0f, 1.0f };
+	logo->target = { 0.4f, 0.f, 1.0f, 1.0f };
 	logo->offset = { 0.f, 0.f };
 	logo->section = { 0, 0, 270, 500 };
 	logo->tex_id = App->tex.Load("Assets/textures/intro-sprite.png");
