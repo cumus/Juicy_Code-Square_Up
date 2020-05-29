@@ -127,14 +127,14 @@ bool Scene::Update()
 		if (introAnim < introFrameTime) introAnim += App->time.GetGameDeltaTime();
 		else
 		{
-			if (introColumn < 12) introColumn++;
+			if (introColumn > 9) introColumn = 0;
 			else
 			{
-				introColumn = 0;
-				if (introRow < 28) introRow++;
-				else introRow = 0;
+				introColumn++;
+				if (introRow > 25) introRow = 0;
+				else introRow++;
 			}
-			logo->section = { introColumn * 270, introRow * 270, 500, 500 };
+			logo->section = { introColumn * 270, introRow * 500, 270, 500 };
 			/*if (introColumn > 99) introColumn = 0;
 			else introColumn++;
 			logo->section = { introColumn * 270, 0, 270, 500 };*/
@@ -496,7 +496,7 @@ void Scene::LoadMainScene()
 void Scene::LoadIntroScene()
 {
 	OPTICK_EVENT();
-	
+
 	App->audio->PlayFx(LOGO);
 
 	scene_change_timer = 10.f;
@@ -507,7 +507,7 @@ void Scene::LoadIntroScene()
 	background->color = { 255, 255, 255, 255 };
 
 	logo = new C_Image(AddGameobjectToCanvas("Team logo"));
-	logo->target = { 0.5f, 0.5f, 1.0f, 1.0f };
+	logo->target = { 0.4f, 0.f, 1.0f, 1.0f };
 	logo->offset = { 0.f, 0.f };
 	logo->section = { 0, 0, 270, 500 };
 	logo->tex_id = App->tex.Load("Assets/textures/intro-sprite.png");
@@ -1583,10 +1583,29 @@ void Scene::UpdateStateMachine()
 		break;
 	case GATHER:
 		
-		if (player_stats[CURRENT_EDGE] >= 80 && player_stats[CURRENT_BARRACKS] == 1 && player_stats[CURRENT_TOWERS] == 1) Event::Push(GAMEPLAY, this, WARNING);
-		break;
+		if (gatherEdge == nullptr && buildTower == nullptr && buildBarracks == nullptr) Event::Push(GAMEPLAY, this, WARNING);
+		if (gatherEdge != nullptr) {
+			if (player_stats[CURRENT_EDGE] >= 80) {
+				gatherEdge->OnComplete();
+				gatherEdge = nullptr;
+			}
+		}
+		if (buildTower != nullptr) {
+			if (player_stats[CURRENT_TOWERS] >= 1) {
+				buildTower->OnComplete();
+				buildTower = nullptr;
+			}
+		}
+		if (buildBarracks != nullptr) {
+			if (player_stats[CURRENT_BARRACKS] >= 1) {
+				buildBarracks->OnComplete();
+				buildBarracks = nullptr;
+			}
+		}
+	
 
 		break;
+				
 	case WARNING:		
 		break;
 	
@@ -1670,7 +1689,9 @@ void Scene::OnEventStateMachine(GameplayState state)
 		text_edge->target = { 0.1f, 0.15f, 1.f, 1.f };*/
 		gatherEdge = new Mission("Gather some edge. (80)", CURRENT_EDGE, 0, 80);
 		buildTower = new Mission("Build a Tower.", CURRENT_TOWERS, 0, 1);
-		buildBarracks = new Mission("Build Barracks (Leftmost building).", CURRENT_BARRACKS, 0, 1);
+		buildBarracks = new Mission("Build Barracks.", CURRENT_BARRACKS, 0, 1);
+		buildTower->SetPos({ 0.997f, 0.14f, 0.5f, 0.4f }, { 0.92f, 0.15f, 1.0f, 1.0f });
+		buildBarracks->SetPos({ 0.997f, 0.18f, 0.5f, 0.4f }, { 0.92f, 0.19f, 1.0f, 1.0f });
 		
 
 		/*all_spawners_go = AddGameobject("All Spawners", spawner_go);
@@ -1684,7 +1705,7 @@ void Scene::OnEventStateMachine(GameplayState state)
 	case WARNING:
 	
 		LOG("WARNING STATE");
-		gatherEdge->OnComplete();
+		
 		//edge_img->SetInactive();
 		//text_edge->SetInactive();
 		not_go = AddGameobjectToCanvas("warning_state");
