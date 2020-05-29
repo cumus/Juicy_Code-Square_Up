@@ -1317,6 +1317,7 @@ void Scene::UpdateSelection()
 	{
 	case KEY_DOWN:
 	{
+		group.clear();
 		App->input->GetMousePosition(groupStart.x, groupStart.y);
 		SetSelection(nullptr, true);
 		if (unitLife != nullptr) unitLife->SetInactive();
@@ -1399,7 +1400,7 @@ void Scene::UpdateSelection()
 					if (float(x) > coll.x && float(x) < coll.x + coll.w && float(y) > coll.y && float(y) < coll.y + coll.h)
 					{
 						SetSelection(it->second->GetGameobject(), true);
-						ShowUnitInfo(it->second);						
+						ShowUnitInfo(it->second);							
 						break;
 					}					
 				}
@@ -1438,7 +1439,7 @@ void Scene::UpdateSelection()
 							incX = true;
 						}
 					}
-					if((*it)->GetBehaviour()->GetState() != DESTROYED) Event::Push(ON_RIGHT_CLICK, *it, vec(mouseOnMap.first, mouseOnMap.second, 0.5f), vec(modPos.first, modPos.second, 0.5f));
+					if((*it)->GetBehaviour()->IsDestroyed() == false) Event::Push(ON_RIGHT_CLICK, *it, vec(mouseOnMap.first, mouseOnMap.second, 0.5f), vec(modPos.first, modPos.second, 0.5f));
 					else
 					{
 						if (incX)
@@ -1456,11 +1457,30 @@ void Scene::UpdateSelection()
 			}
 			else//Move one selected
 			{
-				if (selection && selection->GetBehaviour()->GetState() != DESTROYED) Event::Push(ON_RIGHT_CLICK, selection, vec(mouseOnMap.first, mouseOnMap.second, 0.5f), vec(-1, -1, -1));					
+				if (selection && selection->GetBehaviour()->IsDestroyed() == false) Event::Push(ON_RIGHT_CLICK, selection, vec(mouseOnMap.first, mouseOnMap.second, 0.5f), vec(-1, -1, -1));					
 				groupSelect = false;
 				group.clear();
 			}
 		}
+	}
+
+	if (groupSelect && !group.empty())
+	{
+		std::vector<Gameobject*> cache;
+		for (std::vector<Gameobject*>::iterator it = group.begin(); it != group.end(); ++it)
+		{
+			if ((*it)->GetBehaviour()->IsDestroyed() == false) cache.push_back(*it);
+		}
+		if (!cache.empty())
+		{
+			group.clear();
+			group = cache;
+			cache.clear();
+		}
+	}
+	else if (selection)
+	{
+		if (selection->GetBehaviour()->IsDestroyed()) selection = nullptr;
 	}
 }
 
