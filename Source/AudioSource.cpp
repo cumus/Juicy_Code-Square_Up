@@ -28,6 +28,11 @@ bool AudioSource::Play(Audio_FX fx, int loops)
 		App->audio->PlayFx(fx, loops);
 }
 
+void AudioSource::Halt()
+{
+	Event::Push(HALT_FX, App->audio, GetID());
+}
+
 void AudioSource::RecieveEvent(const Event& e)
 {
 	switch (e.type)

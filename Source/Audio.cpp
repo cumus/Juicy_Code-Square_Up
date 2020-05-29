@@ -16,10 +16,11 @@
 #pragma comment( lib, "SDL2_mixer-2.0.4/lib/x64/SDL2_mixer.lib" )
 #endif
 
-bool Audio::SpatialData::channels_paused = true;
-
 Audio::Audio() : Module("audio")
 {
+	fx_volume = music_volume = 1.0f;
+	fade_duration = 1.0f;
+
 	for (int i = 0; i < MAX_FX; ++i) fx[i] = nullptr;
 }
 
@@ -107,40 +108,32 @@ bool Audio::Init()
 
 bool Audio::Update()
 {
-	/*
-
-	TODO: Play/Pause Channels
-
-	void  Mix_Pause(int channel);
-	void  Mix_Resume(int channel);
-	int Mix_Paused(int channel);
-
-
-	
-	/*TODO: Free channels
-
-	if (sources.size() > Mix_Playing(-1) - Mix_Playing(0))
+	if (state == PAUSING)
 	{
-		// Free sources map
-		bool erased = false;
-		for (std::map<double, SpatialData>::iterator it = sources.begin(); it != sources.end(); ++it)
+		if ((fade_timer -= App->time.GetDeltaTime()) <= 0.0f)
 		{
-			if (erased)
-			{
-				erased = false;
-				if (it != sources.begin())
-					--it;
-			}
+			fade_timer = 0.0f;
+			state = PAUSED;
 
-			if (!Mix_Playing(it->second.channel))
-			{
-				Mix_UnregisterAllEffects(it->second.channel);
-				sources.erase(it);
-				erased = true;
-			}
+			for (std::map<double, SpatialData>::iterator it = sources.begin(); it != sources.end(); ++it)
+				it->second.Pause();
 		}
+
+		SetFadeVolume(fade_timer / fade_duration);
 	}
-	*/
+	else if (state == RESUMING)
+	{
+		if ((fade_timer += App->time.GetDeltaTime()) >= fade_duration)
+		{
+			fade_timer = fade_duration;
+			state = NO_FADE;
+
+			for (std::map<double, SpatialData>::iterator it = sources.begin(); it != sources.end(); ++it)
+				it->second.RePlay();
+		}
+
+		SetFadeVolume(fade_timer / fade_duration);
+	}
 
 	return true;
 }
@@ -170,13 +163,21 @@ void Audio::RecieveEvent(const Event& e)
 		PlayFx(Audio_FX(e.data1.AsInt()), e.data2.AsInt());
 		break;
 	}
+	case HALT_FX:
+	{
+		std::map<double, SpatialData>::iterator it = sources.find(e.data1.AsDouble());
+		if (it != sources.end())
+			it->second.Halt();
+
+		break;
+	}
 	case TRANSFORM_MODIFIED:
 	{
 		std::map<double, SpatialData>::iterator it = sources.find(e.data1.AsDouble());
 		if (it != sources.end())
 		{
 			const vec global_pos = e.data2.AsVec();
-			it->second.Update(App->render->GetCameraCenter(), { global_pos.x, global_pos.y });
+			it->second.Update(App->render->GetCameraCenter(), { global_pos.x, global_pos.y }, fx_volume);
 		}
 		break;
 	}
@@ -185,49 +186,33 @@ void Audio::RecieveEvent(const Event& e)
 		std::pair<float, float> cam = App->render->GetCameraCenter();
 		for (std::map<double, SpatialData>::iterator it = sources.begin(); it != sources.end(); ++it)
 		{
-			it->second.Update(cam, it->second.pos);
+			it->second.Update(cam, it->second.pos, fx_volume);
 			//LOG("Distance: %f cam(%f,%f), source(%f,%f)", it->second.distance, cam.first, cam.second, it->second.pos.first, it->second.pos.second);
 		}
 		break;
 	}
 	case SCENE_PLAY:
 	{
-		SpatialData::channels_paused = false;
-		for (std::map<double, SpatialData>::iterator it = sources.begin(); it != sources.end(); ++it)
+		if (state == PAUSING || state == PAUSED)
 		{
-			if (Mix_Paused(it->second.channel))
-				Mix_Resume(it->second.channel);
+			state = RESUMING;
+			fade_timer = 0.f;
 		}
+
 		break;
 	}
 	case SCENE_PAUSE:
 	{
-		SpatialData::channels_paused = true;
-		std::pair<float, float> cam = App->render->GetCameraCenter();
-		for (std::map<double, SpatialData>::iterator it = sources.begin(); it != sources.end(); ++it)
-		{
-			if (Mix_Playing(it->second.channel))
-				Mix_Pause(it->second.channel);
-		}
-		break;
-	}
-	case SCENE_TICK:
-	{
-		SpatialData::channels_paused = false;
-		for (std::map<double, SpatialData>::iterator it = sources.begin(); it != sources.end(); ++it)
-		{
-			if (Mix_Paused(it->second.channel))
-				Mix_Resume(it->second.channel);
-		}
+		state = PAUSING;
+		fade_timer = fade_duration;
+
 		break;
 	}
 	case SCENE_STOP:
 	{
-		SpatialData::channels_paused = true;
 		for (std::map<double, SpatialData>::iterator it = sources.begin(); it != sources.end(); ++it)
-		{
-			Mix_HaltChannel(it->second.channel);
-		}
+			it->second.Halt();
+
 		break;
 	}
 	default:
@@ -371,6 +356,8 @@ bool Audio::PlaySpatialFx(Audio_FX audio_fx, double id, const std::pair<float, f
 			}
 		}
 
+		sources[id].chunk = int(audio_fx);
+
 		// Setup channel spatial properties and play
 		std::pair<float, float> cam = App->render->GetCameraCenter();
 		Mix_SetPosition(target_channel,
@@ -403,6 +390,40 @@ bool Audio::StopFXChannel(double id, int ms, bool fade)
 	return ret;
 }
 
+void Audio::SetMusicVolume(float vol)
+{
+	SDL_assert(vol >= 0.0f && vol <= 1.0f);
+
+	if (music_volume != vol)
+	{
+		music_volume = vol;
+		Mix_VolumeMusic(int(music_volume * 128.0f));
+	}
+}
+
+void Audio::SetFXVolume(float vol)
+{
+	SDL_assert(vol >= 0.0f && vol <= 1.0f);
+
+	if (fx_volume != vol)
+	{
+		fx_volume = vol;
+		int target_vol = int(fx_volume * 128.0f);
+		Mix_Volume(0, target_vol);
+		for (std::map<double, SpatialData>::iterator it = sources.begin(); it != sources.end(); ++it)
+			Mix_Volume(it->second.channel, target_vol);
+	}
+}
+
+inline void Audio::SetFadeVolume(float fade_percent)
+{
+	Mix_VolumeMusic(int(music_volume * ((fade_percent * 112.0f) + 16.0f)));
+
+	int target_vol = int(fade_percent * fx_volume * 128.0f);
+	for (std::map<double, SpatialData>::iterator it = sources.begin(); it != sources.end(); ++it)
+		Mix_Volume(it->second.channel, target_vol);
+}
+
 Audio::SpatialData::SpatialData() :
 	channel(-1),
 	angle(-1.f),
@@ -417,14 +438,40 @@ Audio::SpatialData::SpatialData(const SpatialData& copy) :
 	pos(copy.pos)
 {}
 
-void Audio::SpatialData::Update(const std::pair<float, float> cam, const std::pair<float, float> position)
+inline void Audio::SpatialData::Update(const std::pair<float, float> cam, const std::pair<float, float> position, float fx_volume)
 {
 	Mix_SetPosition(channel,
 		angle = JMath::HorizontalAxisAngle_F(cam, pos = position, -90.0f),
 		distance = JMath::Distance(cam, position));
+	
+	Mix_Volume(channel, (inside_cam = App->render->InsideCam(position.first, position.second)) ? int(fx_volume * 128.0f) : 0);
 
-	if ((inside_cam = App->render->InsideCam(position.first, position.second)) && !channels_paused)
-		Mix_Resume(channel);
-	else
+	LOG("Angle: %f, Dist: %f, Volume: %d, inside_cam = %d", angle, distance, Mix_Volume(channel, -1), inside_cam);
+}
+
+inline void Audio::SpatialData::Pause()
+{
+	if (!halted && !paused)
+	{
+		paused = true;
 		Mix_Pause(channel);
+	}
+}
+
+inline void Audio::SpatialData::RePlay()
+{
+	if (!halted && paused)
+	{
+		paused = false;
+		Mix_Resume(channel);
+	}
+}
+
+inline void Audio::SpatialData::Halt()
+{
+	if (!halted)
+	{
+		halted = true;
+		Mix_HaltChannel(channel);
+	}
 }

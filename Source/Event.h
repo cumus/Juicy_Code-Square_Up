@@ -35,6 +35,7 @@ enum EventType : char
 
 	// Audio
 	PLAY_FX,
+	HALT_FX,
 
 	// Scene
 	SCENE_PLAY,

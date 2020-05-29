@@ -81,6 +81,14 @@ public:
 	bool PlaySpatialFx(Audio_FX audio_fx, double id, const std::pair<float, float> position, int repeat = 0, int ticks = -1, int fade_ms = -1);
 	bool StopFXChannel(double id, int ms = 0, bool fade = false);
 
+	// Volume Controls
+	void SetMusicVolume(float vol);
+	void SetFXVolume(float vol);
+
+private:
+
+	inline void SetFadeVolume(float fade_percent);
+
 private:
 
 	_Mix_Music*	music = nullptr;
@@ -91,19 +99,25 @@ private:
 		SpatialData();
 		SpatialData(const SpatialData& copy);
 
-		void Update(const std::pair<float, float> cam, const std::pair<float, float> position);
+		inline void Update(const std::pair<float, float> cam, const std::pair<float, float> position, float fx_volume);
+		inline void Pause();
+		inline void RePlay();
+		inline void Halt();
 
-		bool inside_cam;
-		int channel;
+
+		bool inside_cam, paused, halted;
+		int channel, chunk, volume;
 		float angle, distance;
 		std::pair<float, float> pos;
-
-		static bool channels_paused;
 	};
 	std::map<double, SpatialData> sources;
 	Mix_Chunk* fx[MAX_FX];
-	
 	int	total_channels = 1;
+
+	// Volume controls
+	enum FadeState : int { NO_FADE, PAUSING, PAUSED, RESUMING } state;
+	float fade_timer, fade_duration;
+	float fx_volume, music_volume;
 
 	// Mixer Codecs
 	bool using_FLAC	= false;

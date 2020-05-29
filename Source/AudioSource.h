@@ -12,6 +12,7 @@ public:
 	~AudioSource();
 
 	bool Play(Audio_FX fx, int loops = 0);
+	void Halt();
 
 	void RecieveEvent(const Event& e) override;
 };
