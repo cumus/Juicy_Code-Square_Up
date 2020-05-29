@@ -128,34 +128,31 @@ void Barracks::CreatePanel()
 
 	meleeUnit_btn->tex_id = panel_tex_ID;
 
-	/*
-
-	Gameobject* superUnit_btn_go = App->scene->AddGameobject("Super Unit Button", selectionPanel);
-
-	superUnit_btn = new C_Button(superUnit_btn_go, Event(BUILD_SUPER, this, spawnPoint, 5.0f)); // Second option from the right
-	superUnit_btn->target = { 0.18f, -0.024, 1.5f, 1.5f };
-	superUnit_btn->offset = { 0.0f, 0.0f };
-
-	superUnit_btn->section[0] = { 207, 65, 62, 62 };
-	superUnit_btn->section[1] = { 207, 195, 62, 62 };
-	superUnit_btn->section[2] = { 207, 325, 62, 62 };
-	superUnit_btn->section[3] = { 207, 325, 62, 62 };
-
-	superUnit_btn->tex_id = panel_tex_ID;
-
 	Gameobject* rangedUnit_btn_go = App->scene->AddGameobject("Ranged Unit Button", selectionPanel);
 
 	rangedUnit_btn = new C_Button(rangedUnit_btn_go, Event(BUILD_RANGED, this, spawnPoint, 5.0f));// Third option from the right
-	rangedUnit_btn->target = { 0.38f, 0.20f, 1.5f, 1.5f };
+	rangedUnit_btn->target = { 0.18f, -0.024, 1.5f, 1.5f };
 	rangedUnit_btn->offset = { 0.0f, 0.0f };
 
-	rangedUnit_btn->section[0] = { 142, 65, 62, 62 };
-	rangedUnit_btn->section[1] = { 142, 195, 62, 62 };
-	rangedUnit_btn->section[2] = { 142, 325, 62, 62 };
-	rangedUnit_btn->section[3] = { 142, 325, 62, 62 };
+	rangedUnit_btn->section[0] = { 1076, 727, 56, 49 };
+	rangedUnit_btn->section[1] = { 1076, 676, 56, 49 };
+	rangedUnit_btn->section[2] = { 1076, 775, 56, 49 };
+	rangedUnit_btn->section[3] = { 1076, 775, 56, 49 };
 
 	rangedUnit_btn->tex_id = panel_tex_ID;
-*/
+	
+	Gameobject* superUnit_btn_go = App->scene->AddGameobject("Super Unit Button", selectionPanel);
+
+	superUnit_btn = new C_Button(superUnit_btn_go, Event(BUILD_SUPER, this, spawnPoint, 5.0f)); // Second option from the right
+	superUnit_btn->target = { 0.38f, 0.20f, 1.5f, 1.5f };
+	superUnit_btn->offset = { 0.0f, 0.0f };
+
+	superUnit_btn->section[0] = { 1147, 727, 56, 49 };
+	superUnit_btn->section[1] = { 1147, 676, 56, 49 };
+	superUnit_btn->section[2] = { 1147, 775, 56, 49 };
+	superUnit_btn->section[3] = { 1147, 775, 56, 49 };
+
+	superUnit_btn->tex_id = panel_tex_ID;
 
 	Gameobject* upgrade_btn_go = App->scene->AddGameobject("Upgrade Button", selectionPanel);
 
