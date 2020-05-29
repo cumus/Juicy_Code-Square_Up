@@ -4,6 +4,8 @@
 #include "Behaviour.h"
 #include "Canvas.h"
 
+#define BASE_UPGRADE_COST 100
+
 class Base_Center : public BuildingWithQueue
 {
 public:

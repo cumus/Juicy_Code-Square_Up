@@ -24,6 +24,8 @@ Lab::Lab(Gameobject* go) : Behaviour(go, LAB, NO_UPGRADE, B_LAB)
 	vision_range = 15.0f;
 	attack_range = 0;
 	providesVisibility = true;
+	spriteState = NO_UPGRADE;
+	current_state = NO_UPGRADE;
 
 	create_bar();
 	//bar_go->SetInactive();
@@ -82,23 +84,30 @@ void Lab::Update()
 
 void Lab::Upgrade()
 {
-	if (current_lvl < max_lvl) {
-
-		current_life += 50;
-		max_life += 50;
-		current_lvl += 1;
-		App->audio->PlayFx(B_BUILDED);
-		//LOG("LIFE AFTER UPGRADE: %d", max_life);
-		//LOG("BC LEVEL: %d", current_lvl);
-		update_health_ui();
-
-		switch (current_state)
+	if (App->scene->GetGearsCount() >= LAB_UPGRADE_COST)
+	{
+		if (current_lvl < max_lvl)
 		{
-		case NO_UPGRADE:
-			current_state = FIRST_UPGRADE;
-			break;
-		case FIRST_UPGRADE: current_state = SECOND_UPGRADE;
-			break;
+			App->scene->UpdateStat(int(CURRENT_MOB_DROP), int(LAB_UPGRADE_COST));
+			current_life += 50;
+			max_life += 50;
+			current_lvl += 1;
+			App->audio->PlayFx(B_BUILDED);
+			//LOG("LIFE AFTER UPGRADE: %d", max_life);
+			//LOG("BC LEVEL: %d", current_lvl);
+			update_health_ui();
+
+			switch (current_state)
+			{
+			case NO_UPGRADE:
+				current_state = FIRST_UPGRADE;
+				spriteState = FIRST_UPGRADE;
+				break;
+			case FIRST_UPGRADE:
+				current_state = SECOND_UPGRADE;
+				spriteState = SECOND_UPGRADE;
+				break;
+			}
 		}
 	}
 }

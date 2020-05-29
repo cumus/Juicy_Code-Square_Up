@@ -4,6 +4,8 @@
 #include "Behaviour.h"
 #include "Canvas.h"
 
+#define LAB_UPGRADE_COST 70
+
 class Lab : public Behaviour
 {
 public:

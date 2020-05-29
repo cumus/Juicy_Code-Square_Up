@@ -24,6 +24,8 @@ Barracks::Barracks(Gameobject* go) : BuildingWithQueue(go, BARRACKS, NO_UPGRADE,
 	max_lvl = 5;
 	providesVisibility = true;
 	vision_range = 15.0f;
+	current_state = NO_UPGRADE;
+	spriteState = NO_UPGRADE;
 
 	//create_bar();
 	//bar_go->SetInactive();
@@ -68,21 +70,28 @@ void Barracks::FreeWalkabilityTiles()
 
 void Barracks::Upgrade()
 {
-	if (current_lvl < max_lvl) {
-
-		current_life += 50;
-		max_life += 50;
-		current_lvl += 1;
-		App->audio->PlayFx(B_BUILDED);
-		LOG("LIFE AFTER UPGRADE: %d", max_life);
-		LOG("BC LEVEL: %d", current_lvl);
-		switch (current_state)
+	if (App->scene->GetGearsCount() >= BARRACKS_UPGRADE_COST)
+	{
+		if (current_lvl < max_lvl)
 		{
-		case NO_UPGRADE:
-			current_state = FIRST_UPGRADE;
-			break;
-		case FIRST_UPGRADE: current_state = SECOND_UPGRADE;
-			break;
+			App->scene->UpdateStat(int(CURRENT_MOB_DROP), int(BARRACKS_UPGRADE_COST));
+			current_life += 50;
+			max_life += 50;
+			current_lvl += 1;
+			App->audio->PlayFx(B_BUILDED);
+			LOG("LIFE AFTER UPGRADE: %d", max_life);
+			LOG("BC LEVEL: %d", current_lvl);
+			switch (current_state)
+			{
+			case NO_UPGRADE:
+				current_state = FIRST_UPGRADE;
+				spriteState = FIRST_UPGRADE;
+				break;
+			case FIRST_UPGRADE:
+				current_state = SECOND_UPGRADE;
+				spriteState = SECOND_UPGRADE;
+				break;
+			}
 		}
 	}
 }

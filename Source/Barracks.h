@@ -4,6 +4,8 @@
 #include "Behaviour.h"
 #include "Canvas.h"
 
+#define BARRACKS_UPGRADE_COST 70
+
 class Barracks : public BuildingWithQueue
 {
 public:
