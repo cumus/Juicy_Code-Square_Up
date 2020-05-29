@@ -134,7 +134,7 @@ void Lab::CreatePanel()
 
 	Gameobject* gUnit = App->scene->AddGameobject("Gatherer Button", selectionPanel);
 
-	gatherer_btn = new C_Button(gUnit, Event(UPGRADE_GATHERER, App->scene, int(GATHERER)));//First option from the right
+	gatherer_btn = new C_Button(gUnit, Event(UPGRADE_GATHERER, App->scene));//First option from the right
 	gatherer_btn->target = { -0.0535f, -0.007, 1.5f, 1.5f };
 	gatherer_btn->offset = { 0.0f, 0.0f };
 
@@ -147,7 +147,7 @@ void Lab::CreatePanel()
 
 	Gameobject* mUnit_btn_go = App->scene->AddGameobject("Melee Button", selectionPanel);
 
-	meleeUnit_btn = new C_Button(mUnit_btn_go, Event(UPGRADE_MELEE, App->scene, int(UNIT_MELEE)));//Second option from the right
+	meleeUnit_btn = new C_Button(mUnit_btn_go, Event(UPGRADE_MELEE, App->scene));//Second option from the right
 	meleeUnit_btn->target = { 0.18f, -0.024, 1.5f, 1.5f };
 	meleeUnit_btn->offset = { 0.0f, 0.0f };
 
@@ -160,7 +160,7 @@ void Lab::CreatePanel()
 
 	Gameobject* rUnit_btn_go = App->scene->AddGameobject("Ranged Button", selectionPanel);
 
-	rangedUnit_btn = new C_Button(rUnit_btn_go, Event(UPGRADE_RANGED, App->scene, int(UNIT_RANGED)));//Third option from the right
+	rangedUnit_btn = new C_Button(rUnit_btn_go, Event(UPGRADE_RANGED, App->scene));//Third option from the right
 	rangedUnit_btn->target = { 0.38f, 0.20f, 1.5f, 1.5f };
 	rangedUnit_btn->offset = { 0.0f, 0.0f };
 
@@ -173,7 +173,7 @@ void Lab::CreatePanel()
 
 	Gameobject* sUnit_btn_go = App->scene->AddGameobject("Super Button", selectionPanel);
 
-	superUnit_btn = new C_Button(sUnit_btn_go, Event(UPGRADE_SUPER, App->scene, int(UNIT_SUPER)));//Last option from the right
+	superUnit_btn = new C_Button(sUnit_btn_go, Event(UPGRADE_SUPER, App->scene));//Last option from the right
 	superUnit_btn->target = { 0.4190f, 0.6075, 1.5f, 1.5f };
 	superUnit_btn->offset = { 0.0f, 0.0f };
 

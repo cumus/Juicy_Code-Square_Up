@@ -395,7 +395,7 @@ void Scene::RecieveEvent(const Event& e)
 	}
 	case UPGRADE_MELEE:
 	{
-		if (player_stats[CURRENT_MOB_DROP] >= MELEE_UPGRADE_COST && gathererLvl < MAX_MELEE_LVL)
+		if (player_stats[CURRENT_MOB_DROP] >= MELEE_UPGRADE_COST && meleeLvl < MAX_MELEE_LVL)
 		{
 			meleeLvl += 1;
 			UpdateStat(CURRENT_MOB_DROP, -MELEE_UPGRADE_COST);
@@ -404,7 +404,7 @@ void Scene::RecieveEvent(const Event& e)
 	}
 	case UPGRADE_RANGED:
 	{
-		if (player_stats[CURRENT_MOB_DROP] >= RANGED_UPGRADE_COST && gathererLvl < MAX_RANGED_LVL)
+		if (player_stats[CURRENT_MOB_DROP] >= RANGED_UPGRADE_COST && rangedLvl < MAX_RANGED_LVL)
 		{
 			rangedLvl += 1;
 			UpdateStat(CURRENT_MOB_DROP, -RANGED_UPGRADE_COST);
@@ -413,7 +413,7 @@ void Scene::RecieveEvent(const Event& e)
 	}
 	case UPGRADE_SUPER:
 	{
-		if (player_stats[CURRENT_MOB_DROP] >= SUPER_UPGRADE_COST && gathererLvl < MAX_SUPER_LVL)
+		if (player_stats[CURRENT_MOB_DROP] >= SUPER_UPGRADE_COST && superLvl < MAX_SUPER_LVL)
 		{
 			superLvl += 1;
 			UpdateStat(CURRENT_MOB_DROP, -SUPER_UPGRADE_COST);
