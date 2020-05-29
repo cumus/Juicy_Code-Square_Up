@@ -77,13 +77,13 @@ void Gatherer::CreatePanel()
 	Gameobject* lab_btn_go = App->scene->AddGameobject("Lab Button", selectionPanel);
 
 	labBtn = new C_Button(lab_btn_go, Event(PLACE_BUILDING, App->scene, int(LAB)));//Third option from the right
-	labBtn->target = { 0.38f, 0.20f, 1.5f, 1.5f };
+	labBtn->target = { 0.4f, 0.22f, 1.5f, 1.5f };
 	labBtn->offset = { 0.0f, 0.0f };
 
-	labBtn->section[0] = { 1147, 395, 56, 49 };
-	labBtn->section[1] = { 1147, 344, 56, 49 };
-	labBtn->section[2] = { 1147, 446, 56, 49 };
-	labBtn->section[3] = { 1147, 446, 56, 49 };
+	labBtn->section[0] = { 503,95,46,46 };
+	labBtn->section[1] = { 503,44,46,46 };
+	labBtn->section[2] = { 503,146,46,46 };
+	labBtn->section[3] = { 503,146,46,46 };
 
 	labBtn->tex_id = panel_tex_ID;
 

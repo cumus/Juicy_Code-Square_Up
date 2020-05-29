@@ -222,13 +222,13 @@ void Base_Center::CreatePanel()
 	Gameobject* capsule_btn_go = App->scene->AddGameobject("Capsule Button", selectionPanel);
 
 	capsule_button = new C_Button(capsule_btn_go, Event(BUILD_CAPSULE, this, spawnPoint, 5.0f));//First option from the right
-	capsule_button->target = { 0.18f, -0.024, 1.5f, 1.5f };
+	capsule_button->target = { 0.21f, 0.005f, 1.5f, 1.5f };
 	capsule_button->offset = { 0.0f, 0.0f };
 
-	capsule_button->section[0] = { 1075, 395, 56, 49 };
-	capsule_button->section[1] = { 1075, 344, 56, 49 };
-	capsule_button->section[2] = { 1075, 446, 56, 49 };
-	capsule_button->section[3] = { 1075, 446, 56, 49 };
+	capsule_button->section[0] = { 503,249,46,46 };
+	capsule_button->section[1] = { 503,198,46,46 };
+	capsule_button->section[2] = { 503,300,46,46 };
+	capsule_button->section[3] = { 503,300,46,46 };
 
 
 	capsule_button->tex_id = panel_tex_ID;
