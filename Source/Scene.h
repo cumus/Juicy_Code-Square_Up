@@ -206,6 +206,7 @@ public:
 	bool groupSelect;
 	std::vector<Gameobject*> group;
 	Gameobject* selection = nullptr;
+	GameplayState current_state;
 
 	//Temporal/////
 	//Enemy spawn
@@ -240,8 +241,7 @@ private:
 	float fade_duration;
 	bool just_triggered_change = false;
 	SceneType current_scene;
-	SceneType next_scene;
-	GameplayState current_state;
+	SceneType next_scene;	
 	float scene_change_timer;
 
 	// Place Mode
