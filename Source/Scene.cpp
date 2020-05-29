@@ -140,6 +140,28 @@ bool Scene::Update()
 		}
 	}
 
+	if (current_scene == MENU && imgMenu != nullptr)
+	{
+		if (menuAnim < menuFrameTime) menuAnim += App->time.GetGameDeltaTime();
+		else
+		{
+			/*if (introColumn < 12) introColumn++;
+			else
+			{
+				introColumn = 0;
+				if (introRow < 28) introRow++;
+				else introRow = 0;
+			}
+			logo->section = { introColumn * 499, introRow * 268, 499, 590 };*/
+			if (menuColumn > 2)
+				menuColumn = 0;
+			else menuColumn++;
+			imgMenu->section = { menuColumn * 546, 0, 546, 813 };
+			menuAnim = 0;
+		}
+	}
+
+
 	if (earthquake)
 	{
 		shakeTimer += App->time.GetGameDeltaTime();
@@ -316,6 +338,7 @@ void Scene::RecieveEvent(const Event& e)
 	case SPAWN_UNIT:
 	{
 		SpawnBehaviour(e.data1.AsInt(), e.data2.AsVec());
+		//audio->Play(SPAWNER_FX);
 		break;
 	}
 	case SET_INACTIVE:
@@ -508,7 +531,7 @@ void Scene::LoadMenuScene()
 	//------------------------- LOGO --------------------------------------
 
 	C_Image* g_logo = new C_Image(AddGameobjectToCanvas("Game logo"));
-	g_logo->target = { 0.05f, 0.05f, 0.6f, 0.6f };
+	g_logo->target = { 0.01f, 0.2f, 0.6f, 0.6f };
 	g_logo->section = { 0, 0, 1070, 207 };
 	g_logo->tex_id = App->tex.Load("Assets/textures/game-logo.png");
 	
@@ -585,11 +608,10 @@ void Scene::LoadMenuScene()
 
 	quit->tex_id = App->tex.Load("Assets/textures/quit.png");
 
-	imgMenu = new C_Image(AddGameobjectToCanvas("Team logo"));
-	imgMenu->target = { 0.5f, 0.5f, 0.5f, 0.5f };
+	imgMenu->target = { 0.75f, 0.6f, 1.0f, 1.0f };
 	imgMenu->offset = { -300.f, -400.f };
-	imgMenu->section = { 0, 0, 499, 268 };
-	imgMenu->tex_id = App->tex.Load("Assets/textures/intro-sprite-long.png");
+	imgMenu->section = { 0, 0, 546, 813 };
+	imgMenu->tex_id = App->tex.Load("Assets/textures/BaseAnim.png");
 	menuAnim = 0;
 	menuFrameTime = 1.0f;
 	menuRow = 0;
@@ -1188,6 +1210,7 @@ void Scene::UpdateBuildingMode()
 			int x, y;
 			App->input->GetMousePosition(x, y);
 			RectF cam = App->render->GetCameraRectF();
+			//audio->PlayFx(B_BUILDED);
 			std::pair<int, int> pos = Map::WorldToTileBase(float(x) + cam.x, float(y) + cam.y);
 			Transform* t = SpawnBehaviour(buildType, vec(pos.first, pos.second));
 		}

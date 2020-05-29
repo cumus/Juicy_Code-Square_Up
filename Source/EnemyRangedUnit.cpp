@@ -1,6 +1,7 @@
 #include "EnemyRangedUnit.h"
 #include "Behaviour.h"
 #include "Application.h"
+#include "AudioSource.h"
 #include "Transform.h"
 #include "Gameobject.h"
 #include "Component.h"
@@ -30,5 +31,5 @@ void EnemyRangedUnit::UnitAttackType()
 {
 	attackPos = atkObj->GetPos();
 	App->particleSys.AddParticle(pos, attackPos, 8.0f, PURPLE_PARTICLE);
-	App->audio->PlayFx(attackFX);
+	audio->Play(attackFX);
 }

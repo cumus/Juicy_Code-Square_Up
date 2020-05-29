@@ -79,7 +79,7 @@ void Barracks::Upgrade()
 			current_life += 50;
 			max_life += 50;
 			current_lvl += 1;
-			App->audio->PlayFx(B_BUILDED);
+			audio->Play(B_BUILDED);
 			LOG("LIFE AFTER UPGRADE: %d", max_life);
 			LOG("BC LEVEL: %d", current_lvl);
 			switch (current_state)

@@ -1,6 +1,7 @@
 #include "SuperUnit.h"
 #include "Behaviour.h"
 #include "Application.h"
+#include "AudioSource.h"
 #include "Transform.h"
 #include "Gameobject.h"
 #include "Component.h"
@@ -35,7 +36,7 @@ void SuperUnit::UnitAttackType()
 {
 	attackPos = atkObj->GetPos();
 	App->particleSys.AddParticle(pos, attackPos, 8.0f, ORANGE_PARTICLE);
-	App->audio->PlayFx(attackFX);
+	audio->Play(attackFX);
 }
 
 void SuperUnit::CreatePanel()

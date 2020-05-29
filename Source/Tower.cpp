@@ -104,7 +104,7 @@ void Tower::Upgrade()
 			current_life += 25;
 			max_life += 25;
 			damage += 2;
-			App->audio->PlayFx(B_BUILDED);
+			audio->Play(B_BUILDED);
 			LOG("LIFE AFTER UPGRADE: %d", max_life);
 			LOG("Tower LEVEL: %d", lvl);
 
