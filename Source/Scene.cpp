@@ -491,6 +491,9 @@ void Scene::LoadMainScene()
 	imgPreview = AddGameobject("Builder image");
 	buildingImage = new Sprite(imgPreview, App->tex.Load("Assets/textures/buildPreview.png"), { 0, 3, 217, 177 }, FRONT_SCENE, { -60.0f,-100.0f,1.0f,1.0f });
 	imgPreview->SetInactive();
+
+	for (int i = 0; i < MAX_PLAYER_STATS; ++i)
+		player_stats[i] = 0;
 }
 
 void Scene::LoadIntroScene()
@@ -1802,9 +1805,6 @@ void Scene::ResetScene()
 	for (int i = 0; i < EDGE_COLLECTED; ++i)
 		hud_texts[i] = nullptr;
 
-	for (int i = 0; i < MAX_PLAYER_STATS; ++i)
-		player_stats[i] = 0;
-
 	pause_background_go = nullptr;
 	groupSelect = false;
 	group.clear();
@@ -2207,6 +2207,29 @@ void Scene::SaveGameNow()
 	scene_node.append_attribute("draw_collisions").set_value(draw_collisions);
 	scene_node.append_attribute("drawSelection").set_value(drawSelection);
 
+	scene_node.append_attribute("CURRENT_EDGE").set_value(player_stats[CURRENT_EDGE]);
+	scene_node.append_attribute("CURRENT_MOB_DROP").set_value(player_stats[CURRENT_MOB_DROP]);
+	scene_node.append_attribute("CURRENT_GOLD").set_value(player_stats[CURRENT_GOLD]);
+	scene_node.append_attribute("CURRENT_MELEE_UNITS").set_value(player_stats[CURRENT_MELEE_UNITS]);
+	scene_node.append_attribute("CURRENT_RANGED_UNITS").set_value(player_stats[CURRENT_RANGED_UNITS]);
+	scene_node.append_attribute("CURRENT_GATHERER_UNITS").set_value(player_stats[CURRENT_GATHERER_UNITS]);
+	scene_node.append_attribute("CUERRENT_SUPER_UNITS").set_value(player_stats[CUERRENT_SUPER_UNITS]);
+	scene_node.append_attribute("CURRENT_BARRACKS").set_value(player_stats[CURRENT_BARRACKS]);
+	scene_node.append_attribute("CURRENT_TOWERS").set_value(player_stats[CURRENT_TOWERS]);
+	scene_node.append_attribute("CURRENT_SPAWNERS").set_value(player_stats[CURRENT_SPAWNERS]);
+	scene_node.append_attribute("TOTAL_MELEE_UNITS").set_value(player_stats[TOTAL_MELEE_UNITS]);
+	scene_node.append_attribute("TOTAL_RANGED_UNITS").set_value(player_stats[TOTAL_RANGED_UNITS]);
+	scene_node.append_attribute("TOTAL_SUPER_UNITS").set_value(player_stats[TOTAL_SUPER_UNITS]);
+	scene_node.append_attribute("TOTAL_GATHERER_UNITS").set_value(player_stats[TOTAL_GATHERER_UNITS]);
+	scene_node.append_attribute("TOTAL_BARRACKS").set_value(player_stats[TOTAL_BARRACKS]);
+	scene_node.append_attribute("TOTAL_TOWERS").set_value(player_stats[TOTAL_TOWERS]);
+	scene_node.append_attribute("EDGE_COLLECTED").set_value(player_stats[EDGE_COLLECTED]);
+	scene_node.append_attribute("MOB_DROP_COLLECTED").set_value(player_stats[MOB_DROP_COLLECTED]);
+	scene_node.append_attribute("GOLD_COLLECTED").set_value(player_stats[GOLD_COLLECTED]);
+	scene_node.append_attribute("UNITS_CREATED").set_value(player_stats[UNITS_CREATED]);
+	scene_node.append_attribute("UNITS_LOST").set_value(player_stats[UNITS_LOST]);
+	scene_node.append_attribute("UNITS_KILLED").set_value(player_stats[UNITS_KILLED]);
+
 	SDL_Rect cam = App->render->GetCameraRect();
 	scene_node.append_attribute("camX").set_value(cam.x);
 	scene_node.append_attribute("camY").set_value(cam.y);
@@ -2233,6 +2256,29 @@ void Scene::LoadGameNow()
 		no_damage = scene_node.attribute("no_damage").as_bool(no_damage);
 		draw_collisions = scene_node.attribute("draw_collisions").as_bool(draw_collisions);
 		drawSelection = scene_node.attribute("drawSelection").as_bool(drawSelection);
+
+		player_stats[CURRENT_EDGE] = scene_node.attribute("CURRENT_EDGE").as_int();
+		player_stats[CURRENT_MOB_DROP] = scene_node.attribute("CURRENT_MOB_DROP").as_int();
+		player_stats[CURRENT_GOLD] = scene_node.attribute("CURRENT_GOLD").as_int();
+		player_stats[CURRENT_MELEE_UNITS] = scene_node.attribute("CURRENT_MELEE_UNITS").as_int();
+		player_stats[CURRENT_RANGED_UNITS] = scene_node.attribute("CURRENT_RANGED_UNITS").as_int();
+		player_stats[CURRENT_GATHERER_UNITS] = scene_node.attribute("CURRENT_GATHERER_UNITS").as_int();
+		player_stats[CUERRENT_SUPER_UNITS] = scene_node.attribute("CUERRENT_SUPER_UNITS").as_int();
+		player_stats[CURRENT_BARRACKS] = scene_node.attribute("CURRENT_BARRACKS").as_int();
+		player_stats[CURRENT_TOWERS] = scene_node.attribute("CURRENT_TOWERS").as_int();
+		player_stats[CURRENT_SPAWNERS] = scene_node.attribute("CURRENT_SPAWNERS").as_int();
+		player_stats[TOTAL_MELEE_UNITS] = scene_node.attribute("TOTAL_MELEE_UNITS").as_int();
+		player_stats[TOTAL_RANGED_UNITS] = scene_node.attribute("TOTAL_RANGED_UNITS").as_int();
+		player_stats[TOTAL_SUPER_UNITS] = scene_node.attribute("TOTAL_SUPER_UNITS").as_int();
+		player_stats[TOTAL_GATHERER_UNITS] = scene_node.attribute("TOTAL_GATHERER_UNITS").as_int();
+		player_stats[TOTAL_BARRACKS] = scene_node.attribute("TOTAL_BARRACKS").as_int();
+		player_stats[TOTAL_TOWERS] = scene_node.attribute("TOTAL_TOWERS").as_int();
+		player_stats[EDGE_COLLECTED] = scene_node.attribute("EDGE_COLLECTED").as_int();
+		player_stats[MOB_DROP_COLLECTED] = scene_node.attribute("MOB_DROP_COLLECTED").as_int();
+		player_stats[GOLD_COLLECTED] = scene_node.attribute("GOLD_COLLECTED").as_int();
+		player_stats[UNITS_LOST] = scene_node.attribute("UNITS_LOST").as_int();
+		player_stats[UNITS_CREATED] = scene_node.attribute("UNITS_CREATED").as_int();
+		player_stats[UNITS_KILLED] = scene_node.attribute("UNITS_KILLED").as_int();
 
 		root.Load(scene_node);
 		Event::Push(MINIMAP_MOVE_CAMERA, App->render, scene_node.attribute("camX").as_float(800.0f), scene_node.attribute("camY").as_float(2900.0f));
