@@ -1011,8 +1011,8 @@ void Scene::LoadStartingMapResources()
 	//Capsule test positions
 	const int capsule_count = 13;
 	vec capsule_pos[capsule_count] =
-	{ { 144.f, 135.f }, //test
-	{ 152.f, 135.f }, //test
+	{ { 111.f, 155.f }, //former test, now regular
+	{ 197.f, 173.f }, //former test, now regular
 	{35.f,156.f},//Edge
 	{62.f,177.f},//Units
 	{116.f,256.f},//Units
