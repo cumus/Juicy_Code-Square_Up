@@ -197,6 +197,7 @@ void Base_Center::CreatePanel()
 	panel_tex_ID = App->tex.Load("Assets/textures/hud-sprites.png");
 
 	//------------------------- BASE PANEL --------------------------------------
+	//App->audio->PlayFx(BASE_CENTER_FX);
 
 	selectionPanel = App->scene->AddGameobjectToCanvas("Main Base Build Panel");
 

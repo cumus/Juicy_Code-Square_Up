@@ -30,4 +30,5 @@ void SuperUnit::UnitAttackType()
 {
 	attackPos = atkObj->GetPos();
 	App->particleSys.AddParticle(pos, attackPos, 8.0f, ORANGE_PARTICLE);
+	App->audio->PlayFx(attackFX);
 }

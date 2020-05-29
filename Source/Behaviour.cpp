@@ -30,7 +30,7 @@ Behaviour::Behaviour(Gameobject* go, UnitType t, UnitState starting_state, Compo
 	current_life = max_life = damage = 10;
 	//attack_range = vision_range = 5.0f;
 	dieDelay = 2.0f;
-	deathFX = EDGE_FX; //temp
+	deathFX = B_DESTROYED; 
 	rayCastTimer = 0;
 	shoot = false;
 	selectionPanel = nullptr;
@@ -590,7 +590,7 @@ B_Unit::B_Unit(Gameobject* go, UnitType t, UnitState s, ComponentType comp_type)
 	attack_range = 3.0f;
 	vision_range = 10.0f;
 	damage = 5;
-	deathFX = UNIT_DIES;
+	deathFX = B_DESTROYED;
 	attackFX = SELECT;
 	vision_range = 5.0f;
 
@@ -1124,7 +1124,7 @@ void B_Unit::UpgradeUnit(int life, int dmg,int lvl)
 
 void B_Unit::OnRightClick(vec posClick, vec movPos)
 {		
-	audio->Play(HAMMER);
+	audio->Play(UNIT_MOVES);
 	chaseObj = nullptr;
 	SDL_Rect cam = App->render->GetCameraRect();
 	int x, y;

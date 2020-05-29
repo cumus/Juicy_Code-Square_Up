@@ -20,7 +20,7 @@ EnemyRangedUnit::EnemyRangedUnit(Gameobject* go) : B_Unit(go, ENEMY_RANGED, IDLE
 	providesVisibility = false;
 	//SFX
 	deathFX = IA_RANGED_DIE_FX;
-	attackFX = IA_RANGED_ATK_FX;
+	attackFX = RANGED_ATK_FX;
 	SetColliders();
 }
 
@@ -30,4 +30,5 @@ void EnemyRangedUnit::UnitAttackType()
 {
 	attackPos = atkObj->GetPos();
 	App->particleSys.AddParticle(pos, attackPos, 8.0f, PURPLE_PARTICLE);
+	App->audio->PlayFx(attackFX);
 }
