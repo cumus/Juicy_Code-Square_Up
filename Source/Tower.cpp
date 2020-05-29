@@ -28,6 +28,7 @@ Tower::Tower(Gameobject* go) : Behaviour(go, TOWER, NO_UPGRADE, B_TOWER)
 	// bar_go->SetInactive();
 	CreatePanel();
 	selectionPanel->SetInactive();
+	unitInfo->SetInactive();
 
 	/*Transform* t = game_object->GetTransform();
 	if (t)
@@ -173,6 +174,18 @@ void Tower::CreatePanel()
 	cost4->offset = { 0, 0 };
 	cost4->section = { 229, 51, 34, 35 };
 	cost4->tex_id = App->tex.Load("Assets/textures/icons_price.png");
+
+	std::stringstream ssLife;
+	std::stringstream ssDamage;
+	ssLife << "Life: ";
+	ssLife << current_life;
+	ssDamage << "Damage: ";
+	ssDamage << damage;
+	unitInfo = App->scene->AddGameobjectToCanvas("Unit info");
+	unitLife = new C_Text(unitInfo, ssLife.str().c_str());//Text line
+	unitLife->target = { 0.165f, 0.94f, 1.0f , 1.0f };
+	unitDamage = new C_Text(unitInfo, ssDamage.str().c_str());//Text line
+	unitDamage->target = { 0.165f, 0.96f, 1.0f , 1.0f };
 }
 
 

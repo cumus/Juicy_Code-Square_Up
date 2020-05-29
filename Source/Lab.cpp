@@ -31,7 +31,7 @@ Lab::Lab(Gameobject* go) : Behaviour(go, LAB, NO_UPGRADE, B_LAB)
 	//bar_go->SetInactive();
 	CreatePanel();
 	selectionPanel->SetInactive();
-
+	unitInfo->SetInactive();
 
 	if (t)
 	{
@@ -209,6 +209,13 @@ void Lab::CreatePanel()
 	cost4->offset = { 0, 0 };
 	cost4->section = { 147, 52, 38, 33 };
 	cost4->tex_id = App->tex.Load("Assets/textures/icons_price.png");
+
+	std::stringstream ssLife;
+	ssLife << "Life: ";
+	ssLife << current_life;
+	unitInfo = App->scene->AddGameobjectToCanvas("Unit info");
+	unitLife = new C_Text(unitInfo, ssLife.str().c_str());//Text line
+	unitLife->target = { 0.165f, 0.94f, 1.0f , 1.0f };
 }
 
 

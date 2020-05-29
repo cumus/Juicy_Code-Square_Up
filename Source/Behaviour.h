@@ -157,6 +157,9 @@ protected:
 	// Complementary components
 	AudioSource* audio;
 	Sprite* selection_highlight;
+	Gameobject* unitInfo = nullptr;
+	C_Text* unitLife = nullptr;
+	C_Text* unitDamage = nullptr;
 
 	// Mini Life Bars
 	struct Lifebar

@@ -13,6 +13,13 @@ public:
 	SuperUnit(Gameobject* go);
 	~SuperUnit();
 	void UnitAttackType() override;
+	void CreatePanel() override;
+
+public:
+	float posY_panel;
+	int panel_tex_ID;
+	C_Image* panel;
+	C_Image* super_icon;
 };
 
 #endif#

@@ -22,6 +22,7 @@ Gatherer::Gatherer(Gameobject* go) : B_Unit(go, GATHERER, IDLE, B_GATHERER)
 
 	CreatePanel();
 	selectionPanel->SetInactive();
+	unitInfo->SetInactive();
 	baseCollOffset = {0,-30};
 	SetColliders();
 }
@@ -34,7 +35,7 @@ void Gatherer::CreatePanel()
 
 	//------------------------- BASE PANEL --------------------------------------
 	selectionPanel = App->scene->AddGameobjectToCanvas("Gatherer Build Panel");
-	
+
 	gatherer_icon = new C_Image(selectionPanel);
 	gatherer_icon->target = { 0.0f, 0.832f, 1.5f, 1.5f };
 	gatherer_icon->offset = { 0.0f, 0.0f };
@@ -89,7 +90,7 @@ void Gatherer::CreatePanel()
 	//Tower price
 	Gameobject* prices = App->scene->AddGameobject("Prices", selectionPanel);;
 	C_Image* cost1 = new C_Image(prices);
-	cost1->target = { 0.33f, 0.08f, 0.8f, 0.8f }; 
+	cost1->target = { 0.33f, 0.08f, 0.8f, 0.8f };
 	cost1->offset = { 0, 0 };
 	cost1->section = { 225, 13, 35, 32 };
 	cost1->tex_id = App->tex.Load("Assets/textures/icons_price.png");
@@ -105,4 +106,16 @@ void Gatherer::CreatePanel()
 	cost3->offset = { 0, 0 };
 	cost3->section = { 268, 14, 35, 31 };
 	cost3->tex_id = App->tex.Load("Assets/textures/icons_price.png");
+
+	std::stringstream ssLife;
+	std::stringstream ssDamage;
+	ssLife << "Life: ";
+	ssLife << current_life;
+	ssDamage << "Damage: ";
+	ssDamage << damage;
+	unitInfo = App->scene->AddGameobjectToCanvas("Unit info");
+	unitLife = new C_Text(unitInfo, ssLife.str().c_str());//Text line
+	unitLife->target = { 0.165f, 0.94f, 1.0f , 1.0f };
+	unitDamage = new C_Text(unitInfo, ssDamage.str().c_str());//Text line
+	unitDamage->target = { 0.165f, 0.96f, 1.0f , 1.0f };
 }

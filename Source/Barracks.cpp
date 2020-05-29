@@ -31,6 +31,7 @@ Barracks::Barracks(Gameobject* go) : BuildingWithQueue(go, BARRACKS, NO_UPGRADE,
 	//bar_go->SetInactive();
 	CreatePanel();
 	selectionPanel->SetInactive();
+	unitInfo->SetInactive();
 
 	if (t)
 	{
@@ -201,6 +202,13 @@ void Barracks::CreatePanel()
 	cost4->offset = { 0, 0 };
 	cost4->section = { 188, 52, 35, 33 };
 	cost4->tex_id = App->tex.Load("Assets/textures/icons_price.png");
+
+	std::stringstream ssLife;
+	ssLife << "Life: ";
+	ssLife << current_life;
+	unitInfo = App->scene->AddGameobjectToCanvas("Unit info");
+	unitLife = new C_Text(unitInfo, ssLife.str().c_str());//Text line
+	unitLife->target = { 0.165f, 0.94f, 1.0f , 1.0f };
 }
 
 
