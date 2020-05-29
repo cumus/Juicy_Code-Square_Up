@@ -127,17 +127,17 @@ bool Scene::Update()
 		if (introAnim < introFrameTime) introAnim += App->time.GetGameDeltaTime();
 		else
 		{
-			/*if (introColumn < 12) introColumn++;
+			if (introColumn < 12) introColumn++;
 			else
 			{
 				introColumn = 0;
 				if (introRow < 28) introRow++;
 				else introRow = 0;
 			}
-			logo->section = { introColumn * 499, introRow * 268, 499, 590 };*/
-			if (introColumn > 20) introColumn = 0;
+			logo->section = { introColumn * 270, introRow * 270, 500, 500 };
+			/*if (introColumn > 99) introColumn = 0;
 			else introColumn++;
-			logo->section = { introColumn * 546, 0, 546, 813 };
+			logo->section = { introColumn * 270, 0, 270, 500 };*/
 			introAnim = 0;
 		}
 	}
@@ -507,10 +507,10 @@ void Scene::LoadIntroScene()
 	background->color = { 255, 255, 255, 255 };
 
 	logo = new C_Image(AddGameobjectToCanvas("Team logo"));
-	logo->target = { 0.5f, 0.5f, 0.5f, 0.5f };
-	logo->offset = { -300.f, -400.f };
-	logo->section = { 0, 0, 120, 65 };
-	logo->tex_id = App->tex.Load("Assets/textures/intro-sprite-long.png");
+	logo->target = { 0.5f, 0.5f, 1.0f, 1.0f };
+	logo->offset = { 0.f, 0.f };
+	logo->section = { 0, 0, 270, 500 };
+	logo->tex_id = App->tex.Load("Assets/textures/intro-sprite.png");
 	introAnim = 0;
 	introFrameTime = 0.1f;
 	introRow = 0;
