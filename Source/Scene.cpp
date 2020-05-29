@@ -926,7 +926,7 @@ void Scene::LoadTutorial()
 {
 	not_go = AddGameobjectToCanvas("lore");
 
-	skip = new C_Button(not_go, Event(GAMEPLAY, this, SPAWNER_STATE));
+	skip = new C_Button(not_go, Event(GAMEPLAY, this, GATHER));
 
 	skip->target = { 0.3f, 0.73f, 0.5f, 0.5f };
 	//skip->offset = { 100.f, -317.f };
@@ -1478,22 +1478,12 @@ void Scene::UpdateStateMachine()
 
 	case WIN:
 
-		if (!endScene)
-		{
-			Event::Push(GAMEPLAY, this, WIN);
-			App->collSystem.Clear();
-			App->particleSys.CleanUp();
-		}
+		if (!endScene) Event::Push(GAMEPLAY, this, WIN);		
 		break;
 
 	case LOSE:
 
-		if (!endScene)
-		{
-			Event::Push(GAMEPLAY, this, LOSE);
-			App->collSystem.Clear();
-			App->particleSys.CleanUp();
-		}
+		if (!endScene) Event::Push(GAMEPLAY, this, LOSE);
 		break;
 
 	default:
@@ -1596,7 +1586,7 @@ void Scene::OnEventStateMachine(GameplayState state)
 
 	case SPAWNER_STATE:
 	
-		//App->dialogSys.CleanUp();
+		App->dialogSys.CleanUp();
 		not_go->SetInactive();
 		LOG("SPAWNER STATE");
 		
@@ -1639,7 +1629,8 @@ void Scene::OnEventStateMachine(GameplayState state)
 		win = true;
 		endScene = true;
 		Event::Push(SCENE_CHANGE, this, END, 2.f);
-
+		App->collSystem.Clear();
+		App->particleSys.CleanUp();
 		break;
 	case LOSE:
 		//Base center destroyed
@@ -1647,7 +1638,8 @@ void Scene::OnEventStateMachine(GameplayState state)
 		win = false;
 		endScene = true;
 		Event::Push(SCENE_CHANGE, this, END, 2.f);
-
+		App->collSystem.Clear();
+		App->particleSys.CleanUp();
 		break;
 	default:
 		break;

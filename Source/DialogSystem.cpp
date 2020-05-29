@@ -280,6 +280,7 @@ void DialogSystem::UpdateScreenUI(Option answer)
 
 
 bool DialogSystem::CleanUp()
-{
+{	
+	dialogGo->Destroy();
 	return true;
 }
