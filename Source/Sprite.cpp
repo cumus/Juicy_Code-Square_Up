@@ -71,8 +71,8 @@ AnimatedSprite::AnimatedSprite(Behaviour* unit) : Sprite(unit->GetGameobject(), 
 	{
 		tex_id = App->tex.Load("Assets/textures/BaseCenter.png");
 		animations[NO_UPGRADE].Setup(section = { 0, 0, 546, 813 }, 4, 4.0f);
-		animations[FIRST_UPGRADE].Setup({ 2812, 0, 562, 813 }, 4, 4.0f);
-		animations[SECOND_UPGRADE].Setup({ 5625, 0, 562, 813 }, 4, 4.0f);
+		animations[FIRST_UPGRADE].Setup({ 2212, 0, 553, 813 }, 4, 4.0f);
+		animations[SECOND_UPGRADE].Setup({ 4424, 0, 553, 813 }, 4, 4.0f);
 		animations[DESTROYED].Setup({ 8956, 0, 562, 813 }, 5, 8.0f);
 		offset = { -60.0f, -780.0f + Map::GetBaseOffset(), 0.15f, 0.15f };
 		break;
