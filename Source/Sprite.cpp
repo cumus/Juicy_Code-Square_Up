@@ -118,8 +118,8 @@ AnimatedSprite::AnimatedSprite(Behaviour* unit) : Sprite(unit->GetGameobject(), 
 	{
 		tex_id = App->tex.Load("Assets/textures/Barracks.png");
 		animations[NO_UPGRADE].Setup(section = { 0, 0, 625, 485 }, 5, 5.0f);
-		animations[FIRST_UPGRADE].Setup({ 3130, 0, 625, 485 }, 5, 5.0f);
-		animations[SECOND_UPGRADE].Setup({ 6260, 0, 625, 485 }, 5, 5.0f);
+		animations[FIRST_UPGRADE].Setup({ 3125, 0, 625, 485 }, 5, 5.0f);
+		animations[SECOND_UPGRADE].Setup({ 6250, 0, 602, 485 }, 5, 5.0f);
 		animations[DESTROYED].Setup({ 9390, 0, 625, 485 }, 5, 8.0f);
 		offset = { 0.0f, -550.0f + Map::GetBaseOffset(), 0.1f, 0.1f };
 		break;
