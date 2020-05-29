@@ -828,6 +828,41 @@ void Scene::LoadEndScene()
 	Gameobject* units_k_text_go = AddGameobject("Text Time", stats_val_go);
 	hud_texts[UNITS_KILLED] = new C_Text(units_k_text_go);
 	hud_texts[UNITS_KILLED]->target = { 0.4f, 0.7f, 2.f, 2.f };*/
+
+	//--------------------------------TEXT----------------------------------------
+	std::stringstream edge_t;
+	std::stringstream unit_c;
+	std::stringstream unit_l;
+	std::stringstream unit_k;
+	/*edge_t << "Total Edge end";
+	unit_c << "Total constructed units";
+	unit_l << "Total lost units";
+	unit_k << "Total killed units";*/
+	edge_t << player_stats[EDGE_COLLECTED];
+	unit_c << player_stats[UNITS_CREATED];
+	unit_l << player_stats[UNITS_LOST];
+	unit_k << player_stats[UNITS_KILLED];
+
+	Gameobject* edge_text_go = AddGameobjectToCanvas("Text Edge");
+	hud_texts[EDGE_COLLECTED] = new C_Text(edge_text_go);
+	hud_texts[EDGE_COLLECTED]->target = { 0.55f, 0.42, 2.f, 2.f };
+	hud_texts[EDGE_COLLECTED]->text->SetText(edge_t.str().c_str());
+	
+	Gameobject* units_c_text_go = AddGameobjectToCanvas("Text Units");
+	hud_texts[UNITS_CREATED] = new C_Text(units_c_text_go);
+	hud_texts[UNITS_CREATED]->target = { 0.55f, 0.54f, 2.f, 2.f };
+	hud_texts[UNITS_CREATED]->text->SetText(unit_c.str().c_str());
+
+	Gameobject* units_l_text_go = AddGameobjectToCanvas("Text Units lost");
+	hud_texts[UNITS_LOST] = new C_Text(units_l_text_go);
+	hud_texts[UNITS_LOST]->target = { 0.55f, 0.66f, 2.f, 2.f };
+	hud_texts[UNITS_LOST]->text->SetText(unit_l.str().c_str());
+
+	Gameobject* units_k_text_go = AddGameobjectToCanvas("Text Units killed");
+	hud_texts[UNITS_KILLED] = new C_Text(units_k_text_go);
+	hud_texts[UNITS_KILLED]->target = { 0.55f, 0.78f, 2.f, 2.f };
+	hud_texts[UNITS_KILLED]->text->SetText(unit_k.str().c_str());
+
 }
 
 void Scene::LoadMainHUD()
@@ -998,7 +1033,7 @@ void Scene::LoadTutorial()
 	Gameobject* gather_go = AddGameobject("Initial Gatherer");
 	gather_go->GetTransform()->SetLocalPos(gatherer_t);
 	new Gatherer(gather_go);
-
+	Event::Push(UPDATE_STAT, App->scene, CURRENT_GATHERER_UNITS, 1);
 }
 	
 void Scene::LoadBaseCenter()
