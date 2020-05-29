@@ -169,12 +169,8 @@ public:
 	int currentSpawns, maxSpawns;
 	float spawnCounter, cooldownSpawn;
 	//////////////
-
-	//State Machine
-	int tutorial_barrack = 0;
-	int tutorial_tower = 0;
-	int t_lvl = 1;
-	bool tutorial_edge = true;
+		
+	
 		
 
 private:
@@ -233,18 +229,7 @@ private:
 
 
 	//--------STATE MACHINE VARIABLES--------
-
-	float distance;
-	float last_distance;
-	float total_distance;
-	bool r_c_comprobation = true;
-	int tutorial_clicks = 0;
-
-	std::pair<float, float> last_cam_pos;
-	std::pair<float, float> current_cam_pos;
-
-	//-------Gameobjects--------
-	Gameobject* edge_t_go;
+		
 	Gameobject* not_go;
 
 	//------Images/Buttons------

@@ -930,7 +930,7 @@ void Scene::LoadTutorial()
 
 	vec gatherer_t = { 130, 75 };
 
-	Gameobject* gather_go = AddGameobject("Tutorial Gatherer");
+	Gameobject* gather_go = AddGameobject("Initial Gatherer");
 	gather_go->GetTransform()->SetLocalPos(gatherer_t);
 	new Gatherer(gather_go);
 
@@ -1454,7 +1454,7 @@ void Scene::UpdateStateMachine()
 		break;
 	case GATHER:
 		
-		if (player_stats[CURRENT_EDGE] >= 100) Event::Push(GAMEPLAY, this, WARNING);
+		if (player_stats[CURRENT_EDGE] >= 70) Event::Push(GAMEPLAY, this, WARNING);
 		break;
 
 		break;
@@ -1659,9 +1659,7 @@ void Scene::ResetScene()
 	maxSpawns = 200;
 	spawnCounter = 0;
 	cooldownSpawn = 5.0f;
-	last_cam_pos = { 0.0f,0.0f };
-	total_distance = 0;
-
+	
 	App->collSystem.Clear();
 	map.CleanUp();
 	App->fogWar.CleanUp();
