@@ -292,7 +292,7 @@ private:
 	C_Button* skip;
 	C_Button* not_inactive;
 	C_Image * not;
-	Gameobject* unitInfo;
+	Gameobject* unitInfo = nullptr;
 	C_Text* unitLife = nullptr;
 	C_Text* unitDamage = nullptr;
 

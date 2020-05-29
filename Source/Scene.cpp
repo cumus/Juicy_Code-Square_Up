@@ -470,13 +470,13 @@ void Scene::LoadMainScene()
 	buildingImage = new Sprite(imgPreview, App->tex.Load("Assets/textures/buildPreview.png"), { 0, 3, 217, 177 }, FRONT_SCENE, { -60.0f,-100.0f,1.0f,1.0f });
 	imgPreview->SetInactive();
 
-	unitInfo = AddGameobject("Selected unit info");
-	unitLife = new C_Text(unitInfo, " 5 ");//Text line
-	unitLife->target = { 0.5f, 0.5f, 2.0f , 2.0f };
-	unitDamage = new C_Text(unitInfo, " 5 ");//Text line
-	unitDamage->target = { 0.5f, 0.5f, 2.0f , 2.0f };
-	//unitLife->SetInactive();
-	//unitDamage->SetInactive();
+	unitInfo = AddGameobjectToCanvas("Selected unit info");
+	unitLife = new C_Text(unitInfo, "");//Text line
+	unitLife->target = { 0.165f, 0.94f, 1.0f , 1.0f };
+	unitDamage = new C_Text(unitInfo, "");//Text line
+	unitDamage->target = { 0.165f, 0.96f, 1.0f , 1.0f };
+	unitLife->SetInactive();
+	unitDamage->SetInactive();
 	//Event::Push(ON_PAUSE, &root);
 }
 
@@ -1491,7 +1491,8 @@ int Scene::GetGearsCount()
 
 void Scene::ShowUnitInfo(Behaviour* unit)
 {
-	std::stringstream ss;
+	std::stringstream ssLife;
+	std::stringstream ssDamage;
 	switch (unit->GetType())
 	{
 	case UNIT_MELEE:		
@@ -1499,18 +1500,21 @@ void Scene::ShowUnitInfo(Behaviour* unit)
 	case UNIT_RANGED:
 	case UNIT_SUPER:
 	case TOWER:
-		ss << unit->current_life;
-		unitLife->text->SetText(ss.str().c_str());
-		ss << unit->damage;
-		unitDamage->text->SetText(ss.str().c_str());
+		ssLife << "Life: ";
+		ssLife << unit->current_life;
+		unitLife->text->SetText(ssLife.str().c_str());
+		ssDamage << "Damage: ";
+		ssDamage << unit->damage;
+		unitDamage->text->SetText(ssDamage.str().c_str());
 		unitLife->SetActive();
 		unitDamage->SetActive();
 		break;
 	case LAB:
 	case BARRACKS:
 	case BASE_CENTER:
-		ss << unit->current_life;
-		unitLife->text->SetText(ss.str().c_str());
+		ssLife << "Life: ";
+		ssLife << unit->current_life;
+		unitLife->text->SetText(ssLife.str().c_str());
 		unitLife->SetActive();
 		break;
 	}
