@@ -45,7 +45,7 @@ Here are some links to our GitHib, Wiki, etc.
 ## Controls
 
 ### God Mode
-* F10: Toggle God mode. 
+* F10: Toggle God mode. Window title will show debug information when activated.
 * F1: Show/Hide Editor Windows.
 * F2: Show/Hide Map Walkability.
 * F3: Toggle Music Playing.
@@ -53,10 +53,10 @@ Here are some links to our GitHib, Wiki, etc.
 * F5: Toggle Collision & Path Drawing.
 * F6: Toggle Zoom Locked.
 
-* Space: Swap map orientation.
+* Space: Save Game.
 * DEL: Remove Selected Gameobject.
 * Mouse Weel: Zoom in/out
-* Arrow Keys: Increase/Decrease Resources.
+* Arrow Keys: Increase/Decrease Resources. Ally units require resources even in god mode.
 
 * Left Alt + 1: Load Map.
 * Left Alt + 2: Load Intro.
@@ -64,9 +64,13 @@ Here are some links to our GitHib, Wiki, etc.
 * Left Alt + 4: Load Main.
 * Left Alt + 5: Load End.
 
-* 1: Create gatherer unit.
-* 2: Create melee allied unit.
-* 6: Create melee enemy unit.
+* 2: Create gatherer unit.
+* 3: Create allied melee unit.
+* 4: Create allied ranged unit.
+* 5: Create allied super unit.
+* 6: Create enemy melee unit.
+* 7: Create enemy ranged unit.
+* 8: Create enemy super unit.
 
 * Left Ctrl + 1: Create Base Center building.
 * Left Ctrl + 2: Create defensive tower building.
@@ -79,11 +83,7 @@ Here are some links to our GitHib, Wiki, etc.
 * S: move the camera down
 * D: move the camera right
 * Shift: Move the camera faster
-
-### Map:
-* 1: Open Base map 1
-* 2: Open sample map 2
-* SPACE: Toggle map orientation
+* Setting mouse on window borders will also move camera in that direction.
 
 ### Editor
 * Left-Click: Select Gameobject
@@ -130,6 +130,18 @@ Here are some links to our GitHib, Wiki, etc.
 * Barracks.
 * AI: Enemies target Base Center.
 
+### Updates from v0.8
+* Added Scene serialization (loading/saving game).
+* Added animated logo.
+* Options Scene with window and audio controls.
+* Music and sound fx fading on pausing game.
+* Added 3rd resource: Capsules.
+* Implemented ranged and super units.
+* Units now respond on damage being dealt.
+* Fog of War for map and minimap.
+* Added King and Queen's dialogues.
+* Added 3 new missions with progress shown in HUD window.
+* Added particle effects: ranged unit projectiles, tower projectiles and Base Center destruction.
 
 ##
 ![University Logo](https://www.citm.upc.edu/templates/new/img/logoCITM.png?1401879059) 
