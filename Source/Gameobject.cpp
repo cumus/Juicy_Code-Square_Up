@@ -343,13 +343,6 @@ void Gameobject::UpdateRemoveQueue()
 
 void Gameobject::Load(pugi::xml_node& node)
 {
-	// Setup Gameobject Values
-	/*pugi::xml_node go_node = node.child("Gameobject");
-	name = go_node.attribute("name").as_string(name.c_str());
-	id = go_node.attribute("id").as_float(id);
-	active = go_node.attribute("active").as_bool(active);
-	isStatic = go_node.attribute("isStatic").as_bool(isStatic);*/
-
 	// Setup Childs
 	for (pugi::xml_node bh_node : node.children("Behaviour"))
 	{
@@ -416,17 +409,11 @@ void Gameobject::Load(pugi::xml_node& node)
 
 void Gameobject::Save(pugi::xml_node& node) const
 {
-	/*/ Serialize Gameobject Values
-	node.append_attribute("name").set_value(name.c_str());
-	node.append_attribute("id").set_value(id);
-	node.append_attribute("active").set_value(active);
-	node.append_attribute("isStatic").set_value(isStatic);*/
-
 	// Serialize Childs
 	for (std::vector<Gameobject*>::const_iterator it = childs.cbegin(); it != childs.cend(); ++it)
 	{
 		const Behaviour* bh = (*it)->behaviour;
-		if (bh != nullptr)
+		if (bh != nullptr && (*it)->active)
 		{
 			pugi::xml_node bh_node = node.append_child("Behaviour");
 			bh_node.append_attribute("name").set_value((*it)->name.c_str());

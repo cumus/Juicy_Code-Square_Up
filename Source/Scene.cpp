@@ -466,15 +466,6 @@ void Scene::LoadMainScene()
 	imgPreview = AddGameobject("Builder image");
 	buildingImage = new Sprite(imgPreview, App->tex.Load("Assets/textures/buildPreview.png"), { 0, 3, 217, 177 }, FRONT_SCENE, { -60.0f,-100.0f,1.0f,1.0f });
 	imgPreview->SetInactive();
-
-	unitInfo = AddGameobjectToCanvas("Selected unit info");
-	unitLife = new C_Text(unitInfo, " ");//Text line
-	unitLife->target = { 0.165f, 0.94f, 1.0f , 1.0f };
-	unitDamage = new C_Text(unitInfo, " ");//Text line
-	unitDamage->target = { 0.165f, 0.96f, 1.0f , 1.0f };
-	unitLife->SetInactive();
-	unitDamage->SetInactive();
-	//Event::Push(ON_PAUSE, &root);
 }
 
 void Scene::LoadIntroScene()
@@ -1128,24 +1119,12 @@ void Scene::LoadStartingMapResources()
 	for (int i = 0; i < capsule_count; ++i) {
 		
 		int random = std::rand() % 10 + 1;
-				
-		if (random <= 5) {
-			Gameobject* capsule_go = AddGameobject("Base Center");
-			capsule_go->GetTransform()->SetLocalPos(capsule_pos[i]);
-			Capsule* cap = new Capsule(capsule_go);
-			cap->gives_edge = true;
-		}
-		else {
-			Gameobject* capsule_go = AddGameobject("Base Center");
-			capsule_go->GetTransform()->SetLocalPos(capsule_pos[i]);
-			Capsule* cap = new Capsule(capsule_go);
-			cap->gives_edge = false;
-		}
-
+		Gameobject* capsule_go = AddGameobject("Capsule");
+		capsule_go->GetTransform()->SetLocalPos(capsule_pos[i]);
+		Capsule* cap = new Capsule(capsule_go);
+		cap->gives_edge = (random <= 5);
 		std::srand(time(NULL));
-			
 	}
-		
 }
 
 void Scene::UpdateFade()
@@ -1362,8 +1341,6 @@ void Scene::UpdateSelection()
 	{
 		App->input->GetMousePosition(groupStart.x, groupStart.y);
 		SetSelection(nullptr, true);
-		if (unitLife != nullptr) unitLife->SetInactive();
-		if (unitDamage != nullptr) unitDamage->SetInactive();
 		break;
 	}
 	case KEY_REPEAT:
@@ -1430,8 +1407,6 @@ void Scene::UpdateSelection()
 			App->input->GetMousePosition(x, y);
 			x += cam.x;
 			y += cam.y;
-			if (unitLife != nullptr) unitLife->SetInactive();
-			if (unitDamage != nullptr) unitDamage->SetInactive();
 			for (std::map<double, Behaviour*>::iterator it = Behaviour::b_map.begin(); it != Behaviour::b_map.end(); ++it)
 			{
 				if (it->second->GetType() == UNIT_MELEE || it->second->GetType() == GATHERER || it->second->GetType() == UNIT_RANGED
@@ -1442,7 +1417,6 @@ void Scene::UpdateSelection()
 					if (float(x) > coll.x && float(x) < coll.x + coll.w && float(y) > coll.y && float(y) < coll.y + coll.h)
 					{
 						SetSelection(it->second->GetGameobject(), true);
-						//ShowUnitInfo(it->second);							
 						break;
 					}					
 				}
@@ -1530,37 +1504,6 @@ void Scene::UpdateSelection()
 int Scene::GetGearsCount()
 {
 	return player_stats[CURRENT_MOB_DROP];
-}
-
-void Scene::ShowUnitInfo(Behaviour* unit)
-{
-	std::stringstream ssLife;
-	std::stringstream ssDamage;
-	switch (unit->GetType())
-	{
-	case UNIT_MELEE:		
-	case GATHERER:
-	case UNIT_RANGED:
-	case UNIT_SUPER:
-	case TOWER:
-		ssLife << "Life: ";
-		ssLife << unit->current_life;
-		unitLife->text->SetText(ssLife.str().c_str());
-		ssDamage << "Damage: ";
-		ssDamage << unit->damage;
-		unitDamage->text->SetText(ssDamage.str().c_str());
-		unitLife->SetActive();
-		unitDamage->SetActive();
-		break;
-	case LAB:
-	case BARRACKS:
-	case BASE_CENTER:
-		ssLife << "Life: ";
-		ssLife << unit->current_life;
-		unitLife->text->SetText(ssLife.str().c_str());
-		unitLife->SetActive();
-		break;
-	}
 }
 
 void Scene::UpdateSpawner()
@@ -1858,6 +1801,14 @@ void Scene::ChangeToScene(SceneType scene)
 bool Scene::OnMainScene() const
 {
 	return current_scene == MAIN;
+}
+
+inline bool Scene::SaveFileExists() const
+{
+	pugi::xml_document doc;
+	bool ret = App->files.LoadXML("Assets/save_file.xml", doc);
+	doc.reset();
+	return ret;
 }
 
 Transform* Scene::SpawnBehaviour(int type, vec pos)
@@ -2203,8 +2154,12 @@ void Scene::SaveGameNow()
 	scene_node.append_attribute("draw_collisions").set_value(draw_collisions);
 	scene_node.append_attribute("drawSelection").set_value(drawSelection);
 
+	SDL_Rect cam = App->render->GetCameraRect();
+	scene_node.append_attribute("camX").set_value(cam.x);
+	scene_node.append_attribute("camY").set_value(cam.y);
+
 	// Dump GO content onto doc
-	root.Save(scene_node.append_child("Hierarchy"));
+	root.Save(scene_node);
 
 	if (!doc.save_file((std::string(App->files.GetBasePath()) + "Assets/save_file.xml").c_str(), "\t", 1u, pugi::encoding_utf8))
 		LOG("Error saving scene");
@@ -2221,13 +2176,13 @@ void Scene::LoadGameNow()
 
 		// Set scene values
 		pugi::xml_node scene_node = doc.child("Scene");
+		god_mode = scene_node.attribute("god_mode").as_bool(god_mode);
+		no_damage = scene_node.attribute("no_damage").as_bool(no_damage);
+		draw_collisions = scene_node.attribute("draw_collisions").as_bool(draw_collisions);
+		drawSelection = scene_node.attribute("drawSelection").as_bool(drawSelection);
 
-		//Event::Push(MINIMAP_MOVE_CAMERA, App->render, 800.0f, 2900.0f);
-
-		// Set Hierarchy
-		pugi::xml_node hierarchy = scene_node.child("Hierarchy");
-		root.Load(hierarchy);
-
+		root.Load(scene_node);
+		Event::Push(MINIMAP_MOVE_CAMERA, App->render, scene_node.attribute("camX").as_float(800.0f), scene_node.attribute("camY").as_float(2900.0f));
 	}
 	else
 		LOG("Error loading scene");

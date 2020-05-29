@@ -68,7 +68,7 @@ void Window::LoadConfig(bool empty_config)
 
 		// Window flags
 		fullscreen = false; // window_node.child("fullscreen").first_attribute().as_bool(fullscreen);
-		fullscreen_desktop = window_node.child("fullscreen_window").first_attribute().as_bool(fullscreen_desktop);
+		fullscreen_desktop = false; // window_node.child("fullscreen_window").first_attribute().as_bool(fullscreen_desktop);
 
 		borderless = window_node.child("borderless").first_attribute().as_bool(borderless);
 		resizable = window_node.child("resizable").first_attribute().as_bool(resizable);
@@ -99,8 +99,8 @@ void Window::SaveConfig() const
 
 	// Resolution
 	pugi::xml_node res = window_node.child("resolution");
-	res.attribute("width").set_value(maximized ? 1080 : rect.w);
-	res.attribute("height").set_value(maximized ? 720 : rect.h);
+	res.attribute("width").set_value(1280);
+	res.attribute("height").set_value(720);
 
 	// Window flags
 	window_node.child("fullscreen").attribute("value").set_value(fullscreen);
