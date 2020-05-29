@@ -509,10 +509,10 @@ void Scene::LoadIntroScene()
 	logo = new C_Image(AddGameobjectToCanvas("Team logo"));
 	logo->target = { 0.5f, 0.5f, 0.5f, 0.5f };
 	logo->offset = { -300.f, -400.f };
-	logo->section = { 0, 0, 499, 268 };
-	logo->tex_id = App->tex.Load("Assets/textures/intro-sprite-long2.png");
+	logo->section = { 0, 0, 120, 65 };
+	logo->tex_id = App->tex.Load("Assets/textures/intro-sprite-long.png");
 	introAnim = 0;
-	introFrameTime = 1.0f;
+	introFrameTime = 0.1f;
 	introRow = 0;
 	introColumn = 0;
 }
@@ -1583,7 +1583,7 @@ void Scene::UpdateStateMachine()
 		break;
 	case GATHER:
 		
-		if (player_stats[CURRENT_EDGE] >= 70) Event::Push(GAMEPLAY, this, WARNING);
+		if (player_stats[CURRENT_EDGE] >= 80 && player_stats[CURRENT_BARRACKS] == 1 && player_stats[CURRENT_TOWERS] == 1) Event::Push(GAMEPLAY, this, WARNING);
 		break;
 
 		break;
@@ -1668,7 +1668,9 @@ void Scene::OnEventStateMachine(GameplayState state)
 		edge_text_go = AddGameobject("Text Edge", edge_go);
 		text_edge = new C_Text(edge_text_go, "Gather some Edge");
 		text_edge->target = { 0.1f, 0.15f, 1.f, 1.f };*/
-		gatherEdge = new Mission("Gather some edge.",CURRENT_EDGE,0,70);
+		gatherEdge = new Mission("Gather some edge. (80)", CURRENT_EDGE, 0, 80);
+		buildTower = new Mission("Build a Tower.", CURRENT_TOWERS, 0, 1);
+		buildBarracks = new Mission("Build Barracks (Leftmost building).", CURRENT_BARRACKS, 0, 1);
 		
 
 		/*all_spawners_go = AddGameobject("All Spawners", spawner_go);
@@ -2462,4 +2464,9 @@ void Mission::Update(int num)
 {
 	progress += num;
 	if (progress >= max) OnComplete();
+}
+
+void Mission::SetPos(RectF target)
+{
+	imgRetail->target = target;
 }

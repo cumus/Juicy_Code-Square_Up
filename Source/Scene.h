@@ -117,6 +117,7 @@ struct Mission
 	~Mission();
 	void OnComplete();
 	void Update(int num);
+	void SetPos(RectF target);
 
 	Gameobject* mission;
 	C_Image* imgRetail;
@@ -289,6 +290,7 @@ private:
 	//Missions
 	Mission* gatherEdge = nullptr;
 	Mission* buildTower = nullptr;
+	Mission* buildBarracks = nullptr;
 
 	//--------STATE MACHINE VARIABLES--------
 		
