@@ -52,7 +52,7 @@ private:
 	bool fullscreen_desktop = false;
 
 	bool borderless			= false;
-	bool resizable			= true;
+	bool resizable			= false;
 
 	bool minimized			= false;
 	bool maximized			= false;
