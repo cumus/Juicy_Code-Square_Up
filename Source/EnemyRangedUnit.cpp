@@ -10,11 +10,11 @@
 EnemyRangedUnit::EnemyRangedUnit(Gameobject* go) : B_Unit(go, ENEMY_RANGED, IDLE, B_RANGED)
 {
 	//Stats
-	max_life = 100;
+	max_life = 35;
 	current_life = max_life;
 	atkTime = 2.0;
 	speed = 3;
-	damage = 15;
+	damage = 10;
 	attack_range = 10.0f;
 	vision_range = 15.0f;
 	providesVisibility = false;

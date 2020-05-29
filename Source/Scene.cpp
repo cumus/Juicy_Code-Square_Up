@@ -98,7 +98,7 @@ bool Scene::Update()
 	if (god_mode)
 			GodMode();
 
-	//UpdateSpawner();
+	UpdateSpawner();
 
 	if (fading != NO_FADE)
 	{
@@ -174,7 +174,7 @@ bool Scene::Update()
 		{
 			if (timeEarthquake == 0)
 			{
-				timeEarthquake = std::rand() % 180 + 120;
+				timeEarthquake = std::rand() % 120 + 60;
 				std::srand(time(NULL));
 			}
 			else
@@ -1666,6 +1666,8 @@ void Scene::OnEventStateMachine(GameplayState state)
 	case WARNING:
 	
 		LOG("WARNING STATE");
+		edge_img->SetInactive();
+		text_edge->SetInactive();
 		not_go = AddGameobjectToCanvas("warning_state");
 		not = new C_Image(not_go);
 		next = new C_Button(not_go, Event(GAMEPLAY, this, SPAWNER_STATE));
@@ -1685,6 +1687,9 @@ void Scene::OnEventStateMachine(GameplayState state)
 
 		next->tex_id = App->tex.Load("Assets/textures/tuto/not-button.png");
 		current_state = WARNING;
+		
+		//edge_go->Destroy();
+		//edge_text_go->SetInactive();
 		break;
 
 	case SPAWNER_STATE:

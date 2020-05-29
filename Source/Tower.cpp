@@ -12,10 +12,10 @@
 
 Tower::Tower(Gameobject* go) : Behaviour(go, TOWER, NO_UPGRADE, B_TOWER)
 {
-	max_life = 50;
+	max_life = 75;
 	current_life = max_life;
-	attack_range = 15.0f;
-	vision_range = 20.0f;
+	attack_range = 13.0f;
+	vision_range = 25.0f;
 	damage = 20;
 	ms_count = 0;
 	atkDelay = 1.5;
