@@ -53,7 +53,7 @@ bool DialogSystem::Update()
 			txt->SetInactive();
 			txt2->SetInactive();
 			txt3->SetInactive();
-
+			space->SetInactive();
 			return false;
 		}
 		else return true;
@@ -148,6 +148,8 @@ void DialogSystem::CreateScreenUI()
 	txt2->target = { 0.31f, 0.84f, 2.0f , 2.0f };
 	txt3 = new C_Text(dialogGo, " ");//Text line
 	txt3->target = { 0.31f, 0.88f, 2.0f , 2.0f };
+	space = new C_Text(dialogGo, " ");//Text line
+	space->target = { 0.31f, 0.95f, 1.0f , 1.0f };
 }
 
 void DialogSystem::UpdateScreenUI(Option answer)
@@ -166,6 +168,7 @@ void DialogSystem::UpdateScreenUI(Option answer)
 		edge->SetInactive();
 		gear->SetInactive();
 		txt2->text->SetText("    SOLDIERS, YOUR MISSION IS IMPORTANT.");
+		space->text->SetText("     [PRESS SPACE]");
 		dStep += 1;
 		break;
 	case 1:

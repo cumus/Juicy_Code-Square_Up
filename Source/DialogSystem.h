@@ -56,6 +56,7 @@ public:
 	C_Text* txt;
 	C_Text* txt2;
 	C_Text* txt3;
+	C_Text* space;
 	bool end;
 	int dStep;
 };
