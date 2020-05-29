@@ -145,6 +145,7 @@ public:
 	static bool DrawCollisions();
 	static int GetStat(int stat);
 	int GetGearsCount();
+	void UpdateStat(int stat, int count);
 
 	// Scene Serialization
 	void SaveGameNow();
@@ -167,7 +168,6 @@ private:
 	void LoadStartingMapResources();
 
 	void UpdateFade();
-	void UpdateStat(int stat, int count);
 	void UpdateBuildingMode();
 	void UpdatePause();
 	void UpdateSelection();

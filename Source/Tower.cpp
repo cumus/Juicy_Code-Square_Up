@@ -22,6 +22,7 @@ Tower::Tower(Gameobject* go) : Behaviour(go, TOWER, NO_UPGRADE, B_TOWER)
 	shoot = false;
 	current_state = NO_UPGRADE;
 	providesVisibility = true;
+	spriteState = NO_UPGRADE;
 
 	// create_bar();
 	// bar_go->SetInactive();
@@ -97,6 +98,7 @@ void Tower::Upgrade()
 	{
 		if (lvl < max_lvl)
 		{
+			App->scene->UpdateStat(int(CURRENT_MOB_DROP),int(TOWER_UPGRADE_COST));
 			lvl += 1;
 			current_life += 25;
 			max_life += 25;
@@ -111,8 +113,11 @@ void Tower::Upgrade()
 			{
 			case NO_UPGRADE:
 				current_state = FIRST_UPGRADE;
+				spriteState = FIRST_UPGRADE;
 				break;
-			case FIRST_UPGRADE: current_state = SECOND_UPGRADE;
+			case FIRST_UPGRADE: 
+				current_state = SECOND_UPGRADE;
+				spriteState = SECOND_UPGRADE;
 				break;
 			}
 		}
