@@ -98,7 +98,7 @@ bool Scene::Update()
 	if (god_mode)
 			GodMode();
 
-	UpdateSpawner();
+	//UpdateSpawner();
 
 	if (fading != NO_FADE)
 	{
@@ -273,6 +273,11 @@ void Scene::RecieveEvent(const Event& e)
 			imgPreview->GetTransform()->SetScale({ 1.9f,1.9f,1.9f });
 			//LOG("Base center");
 			break;
+		case LAB:
+			buildingImage->SetSection({ 658, 7, 164, 173 });
+			imgPreview->GetTransform()->SetScale({ 0.9f,0.9f,0.9f });
+			//LOG("Tower");
+			break;
 		default:
 			buildingImage->SetSection({ 0, 3, 217, 177 });
 			imgPreview->GetTransform()->SetScale({ 0.9f,0.9f,0.9f });
@@ -442,6 +447,11 @@ void Scene::LoadMainScene()
 	current_state = LORE;
 
 	Event::Push(MINIMAP_MOVE_CAMERA, App->render, 800.0f, 2900.0f);
+
+	imgPreview = AddGameobject("Builder image");
+	buildingImage = new Sprite(imgPreview, App->tex.Load("Assets/textures/buildPreview.png"), { 0, 3, 217, 177 }, FRONT_SCENE, { -60.0f,-100.0f,1.0f,1.0f });
+	imgPreview->SetInactive();
+
 	//Event::Push(ON_PAUSE, &root);
 }
 
@@ -1435,8 +1445,8 @@ void Scene::UpdateSpawner()
 			}
 		}
 		spawnCounter = 0;
-		LOG("End ");
-		//std::srand(time(NULL));
+		//LOG("End ");
+		std::srand(time(NULL));
 	}
 	else
 	{

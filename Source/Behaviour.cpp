@@ -1116,9 +1116,9 @@ void B_Unit::DoAttack()
 
 void B_Unit::UpgradeUnit(int life, int dmg,int lvl)
 {
-	max_life = life;
+	max_life += life;
 	current_life = max_life;
-	damage = dmg;
+	damage += dmg;
 	unitLevel = lvl;
 }
 
