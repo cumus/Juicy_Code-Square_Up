@@ -2183,23 +2183,23 @@ Transform* Scene::SpawnBehaviour(int type, vec pos)
 			Gatherer* temp = new Gatherer(behaviour);
 			UpdateStat(CURRENT_GATHERER_UNITS, 1);
 			UpdateStat(TOTAL_GATHERER_UNITS, 1);
-			UpdateStat(CURRENT_EDGE,-GATHERER_COST);
+			UpdateStat(CURRENT_EDGE, -GATHERER_COST);
 			switch (gathererLvl)
 			{
 			case 1:
-				temp->UpgradeUnit(5,5,1);
+				temp->UpgradeUnit(5, 5, 1);
 				break;
 			case 2:
-				temp->UpgradeUnit(5, 5, 2);
+				temp->UpgradeUnit(6, 7, 2);
 				break;
 			case 3:
-				temp->UpgradeUnit(5, 5, 3);
+				temp->UpgradeUnit(7, 9, 3);
 				break;
 			case 4:
-				temp->UpgradeUnit(5, 5, 4);
+				temp->UpgradeUnit(8, 11, 4);
 				break;
 			case 5:
-				temp->UpgradeUnit(5, 5, 5);
+				temp->UpgradeUnit(9, 12, 5);
 				break;
 			}
 		}
@@ -2225,16 +2225,16 @@ Transform* Scene::SpawnBehaviour(int type, vec pos)
 				temp->UpgradeUnit(5, 5, 1);
 				break;
 			case 2:
-				temp->UpgradeUnit(5, 5, 2);
+				temp->UpgradeUnit(7, 7, 2);
 				break;
 			case 3:
-				temp->UpgradeUnit(5, 5, 3);
+				temp->UpgradeUnit(9, 9, 3);
 				break;
 			case 4:
-				temp->UpgradeUnit(5, 5, 4);
+				temp->UpgradeUnit(11, 11, 4);
 				break;
 			case 5:
-				temp->UpgradeUnit(5, 5, 5);
+				temp->UpgradeUnit(13, 13, 5);
 				break;
 			}
 		}
@@ -2244,7 +2244,7 @@ Transform* Scene::SpawnBehaviour(int type, vec pos)
 		}
 		break;
 	}
-	case UNIT_RANGED: 
+	case UNIT_RANGED:
 		if ((player_stats[CURRENT_EDGE] - RANGED_COST) >= 0)
 		{
 			behaviour = AddGameobject("Ranged unit");
@@ -2259,16 +2259,16 @@ Transform* Scene::SpawnBehaviour(int type, vec pos)
 				temp->UpgradeUnit(5, 5, 1);
 				break;
 			case 2:
-				temp->UpgradeUnit(5, 5, 2);
+				temp->UpgradeUnit(7, 5, 2);
 				break;
 			case 3:
-				temp->UpgradeUnit(5, 5, 3);
+				temp->UpgradeUnit(9, 6, 3);
 				break;
 			case 4:
-				temp->UpgradeUnit(5, 5, 4);
+				temp->UpgradeUnit(11, 6, 4);
 				break;
 			case 5:
-				temp->UpgradeUnit(5, 5, 5);
+				temp->UpgradeUnit(13, 7, 5);
 				break;
 			}
 		}
@@ -2276,8 +2276,8 @@ Transform* Scene::SpawnBehaviour(int type, vec pos)
 		{
 			LOG("Not enough resources! :(");
 		}
-		break;		
-	case UNIT_SUPER: 
+		break;
+	case UNIT_SUPER:
 		if ((player_stats[CURRENT_EDGE] - SUPER_COST) >= 0)
 		{
 			behaviour = AddGameobject("Super unit");
@@ -2285,23 +2285,23 @@ Transform* Scene::SpawnBehaviour(int type, vec pos)
 			SuperUnit* temp = new SuperUnit(behaviour);
 			UpdateStat(CUERRENT_SUPER_UNITS, 1);
 			UpdateStat(TOTAL_SUPER_UNITS, 1);
-			UpdateStat(CURRENT_EDGE, - SUPER_COST);
+			UpdateStat(CURRENT_EDGE, -SUPER_COST);
 			switch (superLvl)
 			{
 			case 1:
-				temp->UpgradeUnit(5, 5, 1);
+				temp->UpgradeUnit(7, 7, 1);
 				break;
 			case 2:
-				temp->UpgradeUnit(5, 5, 2);
+				temp->UpgradeUnit(8, 9, 2);
 				break;
 			case 3:
-				temp->UpgradeUnit(5, 5, 3);
+				temp->UpgradeUnit(9, 11, 3);
 				break;
 			case 4:
-				temp->UpgradeUnit(5, 5, 4);
+				temp->UpgradeUnit(10, 13, 4);
 				break;
 			case 5:
-				temp->UpgradeUnit(5, 5, 5);
+				temp->UpgradeUnit(11, 15, 5);
 				break;
 			}
 		}
