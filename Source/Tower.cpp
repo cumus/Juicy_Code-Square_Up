@@ -14,7 +14,7 @@ Tower::Tower(Gameobject* go) : Behaviour(go, TOWER, NO_UPGRADE, B_TOWER)
 {
 	max_life = 50;
 	current_life = max_life;
-	attack_range = 20.0f;
+	attack_range = 15.0f;
 	vision_range = 20.0f;
 	damage = 20;
 	ms_count = 0;
@@ -98,7 +98,7 @@ void Tower::Upgrade()
 	{
 		if (lvl < max_lvl)
 		{
-			App->scene->UpdateStat(int(CURRENT_MOB_DROP),int(TOWER_UPGRADE_COST));
+			App->scene->UpdateStat(int(CURRENT_MOB_DROP),int(-TOWER_UPGRADE_COST));
 			lvl += 1;
 			current_life += 25;
 			max_life += 25;

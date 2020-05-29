@@ -74,7 +74,7 @@ void Barracks::Upgrade()
 	{
 		if (current_lvl < max_lvl)
 		{
-			App->scene->UpdateStat(int(CURRENT_MOB_DROP), int(BARRACKS_UPGRADE_COST));
+			App->scene->UpdateStat(int(CURRENT_MOB_DROP), int(-BARRACKS_UPGRADE_COST));
 			current_life += 50;
 			max_life += 50;
 			current_lvl += 1;
