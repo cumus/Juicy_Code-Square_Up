@@ -2465,3 +2465,8 @@ void Mission::Update(int num)
 	progress += num;
 	if (progress >= max) OnComplete();
 }
+
+void Mission::SetPos(RectF target)
+{
+	imgRetail->target = target;
+}
