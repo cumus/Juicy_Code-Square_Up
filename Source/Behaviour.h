@@ -15,34 +15,6 @@
 #define RAYCAST_TIME 0.1
 #define CREATION_TIME 1.0
 
-enum UnitType : int
-{
-	UNKNOWN,
-	GATHERER,
-	UNIT_MELEE,
-	UNIT_RANGED,
-	UNIT_SUPER,
-
-	ENEMY_MELEE,
-	ENEMY_RANGED,
-	ENEMY_SUPER,
-	ENEMY_SPECIAL,
-
-	//Structures//
-	BASE_CENTER,
-	TOWER,
-	BARRACKS,
-	LAB,
-	EDGE,
-	CAPSULE,
-	SPAWNER,
-
-	//Other//
-	EARTHQUAKE,
-	
-	MAX_UNIT_TYPES
-};
-
 enum UnitState : int
 {
 	IDLE,

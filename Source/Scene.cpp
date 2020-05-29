@@ -125,6 +125,24 @@ bool Scene::Update()
 		}
 	}
 
+	if (current_scene == INTRO && logo != nullptr)
+	{
+		if (introAnim < introFrameTime) introAnim += App->time.GetGameDeltaTime();
+		else
+		{
+			/*if (introColumn < 12) introColumn++;
+			else
+			{
+				introColumn = 0;
+				if (introRow < 28) introRow++;
+				else introRow = 0;
+			}
+			logo->section = { introColumn * 499, introRow * 268, 499, 590 };*/			
+			logo->section = { introColumn * 499,0, 499, 590 };
+			introColumn++;
+		}
+	}
+
 	if (earthquake)
 	{
 		shakeTimer += App->time.GetGameDeltaTime();
@@ -468,11 +486,11 @@ void Scene::LoadIntroScene()
 	for (int i = 0; i < 4; i++)background->section[i] = { 0, 0, 1920, 1080 };
 	background->color = { 255, 255, 255, 255 };
 
-	C_Image* logo = new C_Image(AddGameobjectToCanvas("Team logo"));
+	logo = new C_Image(AddGameobjectToCanvas("Team logo"));
 	logo->target = { 0.5f, 0.5f, 0.5f, 0.5f };
 	logo->offset = { -300.f, -400.f };
-	logo->section = { 0, 0, 499, 590 };
-	logo->tex_id = App->tex.Load("Assets/textures/team-logo2.png");
+	logo->section = { 0, 0, 499, 268 };
+	logo->tex_id = App->tex.Load("Assets/textures/intro-sprite-long.png");
 }
 
 void Scene::LoadMenuScene()
@@ -1367,6 +1385,10 @@ void Scene::UpdateSelection()
 					if (float(x) > coll.x && float(x) < coll.x + coll.w && float(y) > coll.y && float(y) < coll.y + coll.h)
 					{
 						SetSelection(it->second->GetGameobject(), true);
+						if (it->second->GetType() == UNIT_MELEE || it->second->GetType() == GATHERER || it->second->GetType() == UNIT_RANGED || it->second->GetType() == UNIT_SUPER)
+						{
+							ShowUnitInfo(it->second->GetType());
+						}
 						break;
 					}					
 				}
@@ -1429,6 +1451,11 @@ void Scene::UpdateSelection()
 			}
 		}
 	}
+}
+
+void Scene::ShowUnitInfo(UnitType)
+{
+
 }
 
 void Scene::UpdateSpawner()

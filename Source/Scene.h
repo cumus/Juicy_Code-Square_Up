@@ -52,6 +52,34 @@ enum GameplayState : int
 	
 };
 
+enum UnitType : int
+{
+	UNKNOWN,
+	GATHERER,
+	UNIT_MELEE,
+	UNIT_RANGED,
+	UNIT_SUPER,
+
+	ENEMY_MELEE,
+	ENEMY_RANGED,
+	ENEMY_SUPER,
+	ENEMY_SPECIAL,
+
+	//Structures//
+	BASE_CENTER,
+	TOWER,
+	BARRACKS,
+	LAB,
+	EDGE,
+	CAPSULE,
+	SPAWNER,
+
+	//Other//
+	EARTHQUAKE,
+
+	MAX_UNIT_TYPES
+};
+
 enum PlayerStats : int
 {
 	// Stats w/ text
@@ -143,6 +171,7 @@ private:
 	void UpdatePause();
 	void UpdateSelection();
 	void UpdateSpawner();
+	void ShowUnitInfo(UnitType type);
 
 	void UpdateStateMachine();
 	void OnEventStateMachine(GameplayState state);
@@ -227,6 +256,13 @@ private:
 	int rangedLvl = 0;
 	int superLvl = 0;
 
+	//Intro
+	float introAnim = 0;
+	float introFrameTime = 1.0f;
+	int introRow = 0;
+	int introColumn = 0;
+	C_Image* logo = nullptr;
+
 
 	//--------STATE MACHINE VARIABLES--------
 		
@@ -237,6 +273,8 @@ private:
 	C_Button* skip;
 	C_Button* not_inactive;
 	C_Image * not;
+	C_Text* unitLife;
+	C_Text* unitDamage;
 
 	bool first_time_pause_button;
 	bool paused_yet = false;
