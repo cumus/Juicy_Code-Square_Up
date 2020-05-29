@@ -1829,19 +1829,19 @@ Transform* Scene::SpawnBehaviour(int type, vec pos)
 			switch (gathererLvl)
 			{
 			case 1:
-				temp->UpgradeUnit(5, 5, 1);
+				temp->UpgradeUnit(2, 0, 1);
 				break;
 			case 2:
-				temp->UpgradeUnit(6, 7, 2);
+				temp->UpgradeUnit(4, 0, 2);
 				break;
 			case 3:
-				temp->UpgradeUnit(7, 9, 3);
+				temp->UpgradeUnit(6, 0, 3);
 				break;
 			case 4:
-				temp->UpgradeUnit(8, 11, 4);
+				temp->UpgradeUnit(8, 0, 4);
 				break;
 			case 5:
-				temp->UpgradeUnit(9, 12, 5);
+				temp->UpgradeUnit(10, 0, 5);
 				break;
 			}
 		}
@@ -1864,19 +1864,19 @@ Transform* Scene::SpawnBehaviour(int type, vec pos)
 			switch (meleeLvl)
 			{
 			case 1:
-				temp->UpgradeUnit(5, 5, 1);
+				temp->UpgradeUnit(2, 2, 1);
 				break;
 			case 2:
-				temp->UpgradeUnit(7, 7, 2);
+				temp->UpgradeUnit(4, 3, 2);
 				break;
 			case 3:
-				temp->UpgradeUnit(9, 9, 3);
+				temp->UpgradeUnit(6, 4, 3);
 				break;
 			case 4:
-				temp->UpgradeUnit(11, 11, 4);
+				temp->UpgradeUnit(8, 5, 4);
 				break;
 			case 5:
-				temp->UpgradeUnit(13, 13, 5);
+				temp->UpgradeUnit(10, 6, 5);
 				break;
 			}
 		}
@@ -1898,19 +1898,19 @@ Transform* Scene::SpawnBehaviour(int type, vec pos)
 			switch (rangedLvl)
 			{
 			case 1:
-				temp->UpgradeUnit(5, 5, 1);
+				temp->UpgradeUnit(2, 2, 1);
 				break;
 			case 2:
-				temp->UpgradeUnit(7, 5, 2);
+				temp->UpgradeUnit(2, 4, 2);
 				break;
 			case 3:
-				temp->UpgradeUnit(9, 6, 3);
+				temp->UpgradeUnit(3, 6, 3);
 				break;
 			case 4:
-				temp->UpgradeUnit(11, 6, 4);
+				temp->UpgradeUnit(3, 8, 4);
 				break;
 			case 5:
-				temp->UpgradeUnit(13, 7, 5);
+				temp->UpgradeUnit(4, 10, 5);
 				break;
 			}
 		}
@@ -1931,19 +1931,19 @@ Transform* Scene::SpawnBehaviour(int type, vec pos)
 			switch (superLvl)
 			{
 			case 1:
-				temp->UpgradeUnit(7, 7, 1);
+				temp->UpgradeUnit(4, 4, 1);
 				break;
 			case 2:
-				temp->UpgradeUnit(8, 9, 2);
+				temp->UpgradeUnit(6, 5, 2);
 				break;
 			case 3:
-				temp->UpgradeUnit(9, 11, 3);
+				temp->UpgradeUnit(8, 6, 3);
 				break;
 			case 4:
-				temp->UpgradeUnit(10, 13, 4);
+				temp->UpgradeUnit(10, 7, 4);
 				break;
 			case 5:
-				temp->UpgradeUnit(11, 15, 5);
+				temp->UpgradeUnit(12, 8, 5);
 				break;
 			}
 		}
