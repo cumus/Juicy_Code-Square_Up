@@ -1468,8 +1468,7 @@ void Scene::UpdateStateMachine()
 		break;
 
 		break;
-	case WARNING:
-
+	case WARNING:		
 		break;
 	
 	case SPAWNER_STATE:
@@ -1479,12 +1478,22 @@ void Scene::UpdateStateMachine()
 
 	case WIN:
 
-		if(!endScene)Event::Push(GAMEPLAY, this, WIN);
+		if (!endScene)
+		{
+			Event::Push(GAMEPLAY, this, WIN);
+			App->collSystem.Clear();
+			App->particleSys.CleanUp();
+		}
 		break;
 
 	case LOSE:
 
-		if(!endScene)Event::Push(GAMEPLAY, this, LOSE);
+		if (!endScene)
+		{
+			Event::Push(GAMEPLAY, this, LOSE);
+			App->collSystem.Clear();
+			App->particleSys.CleanUp();
+		}
 		break;
 
 	default:
