@@ -127,18 +127,23 @@ bool Scene::Update()
 		if (introAnim < introFrameTime) introAnim += App->time.GetGameDeltaTime();
 		else
 		{
-			if (introColumn > 10) introColumn++;
-			else
+			if (max < 26)
 			{
-				introColumn = 0;
-				if (introRow < 28) introRow++;
-				else introRow = 0;
+				if (introColumn > 10) introColumn++;
+				else
+				{
+					introColumn = 0;
+					if (introRow < 28) introRow++;
+					else introRow = 0;
+				}
+				logo->section = { introColumn * 270, introRow * 500, 270, 500 };
+				max++;
+				//LOG("%d",max);
+				/*if (introColumn > 99) introColumn = 0;
+				else introColumn++;
+				logo->section = { introColumn * 270, 0, 270, 500 };*/
+				introAnim = 0;
 			}
-			logo->section = { introColumn * 270, introRow * 500, 270, 500 };
-			/*if (introColumn > 99) introColumn = 0;
-			else introColumn++;
-			logo->section = { introColumn * 270, 0, 270, 500 };*/
-			introAnim = 0;
 		}
 	}
 

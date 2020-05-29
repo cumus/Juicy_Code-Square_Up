@@ -278,6 +278,7 @@ private:
 	int introRow;
 	int introColumn;
 	C_Image* logo = nullptr;
+	int max = 0;
 
 	//MenuAnim
 	float menuAnim;
