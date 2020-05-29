@@ -15,6 +15,7 @@
 #include "Edge.h"
 #include "EdgeCapsule.h"
 #include "Spawner.h"
+#include "Log.h"
 
 #include "optick-1.3.0.0/include/optick.h"
 
@@ -23,7 +24,7 @@ double Gameobject::go_count = 0;
 Gameobject::Gameobject(const char* n, Gameobject* p) : id(++go_count), name(n), parent(p)
 {
 	transform = new Transform(this);
-
+	LOG(name.c_str());
 	if (parent != nullptr)
 		parent->AddNewChild(this);
 }

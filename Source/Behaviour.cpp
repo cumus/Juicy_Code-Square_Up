@@ -756,7 +756,7 @@ void B_Unit::Update()
 
 		if (atkTimer < atkTime) atkTimer += App->time.GetGameDeltaTime();	
 
-		if (atkObj != nullptr && atkObj->IsDestroyed()) { spriteState = IDLE;  atkObj = nullptr; LOG("IDLE"); }
+		if (atkObj != nullptr && atkObj->IsDestroyed()) { spriteState = IDLE;  atkObj = nullptr; }
 
 		//Raycast
 		//if (shoot) ShootRaycast();

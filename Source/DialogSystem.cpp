@@ -142,11 +142,11 @@ void DialogSystem::CreateScreenUI()
 	gathedge->section = { 426, 419, 335, 168 };
 	gathedge->tex_id = App->tex.Load("Assets/textures/tutomages.png");
 
-	txt = new C_Text(dialogGo, "");//Text line
+	txt = new C_Text(dialogGo, " ");//Text line
 	txt->target = { 0.31f, 0.80f, 2.0f , 2.0f };
-	txt2 = new C_Text(dialogGo, "");//Text line
+	txt2 = new C_Text(dialogGo, " ");//Text line
 	txt2->target = { 0.31f, 0.84f, 2.0f , 2.0f };
-	txt3 = new C_Text(dialogGo, "");//Text line
+	txt3 = new C_Text(dialogGo, " ");//Text line
 	txt3->target = { 0.31f, 0.88f, 2.0f , 2.0f };
 }
 

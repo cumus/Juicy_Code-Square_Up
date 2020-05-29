@@ -468,9 +468,9 @@ void Scene::LoadMainScene()
 	imgPreview->SetInactive();
 
 	unitInfo = AddGameobjectToCanvas("Selected unit info");
-	unitLife = new C_Text(unitInfo, "");//Text line
+	unitLife = new C_Text(unitInfo, " ");//Text line
 	unitLife->target = { 0.165f, 0.94f, 1.0f , 1.0f };
-	unitDamage = new C_Text(unitInfo, "");//Text line
+	unitDamage = new C_Text(unitInfo, " ");//Text line
 	unitDamage->target = { 0.165f, 0.96f, 1.0f , 1.0f };
 	unitLife->SetInactive();
 	unitDamage->SetInactive();
