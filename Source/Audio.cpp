@@ -171,6 +171,17 @@ void Audio::RecieveEvent(const Event& e)
 
 		break;
 	}
+	case SET_FX_VOLUME:
+	{
+		SetFXVolume(e.data1.AsFloat());
+		PlayFx(SELECT);
+		break;
+	}
+	case SET_MUSIC_VOLUME:
+	{
+		SetMusicVolume(e.data1.AsFloat());
+		break;
+	}
 	case TRANSFORM_MODIFIED:
 	{
 		std::map<double, SpatialData>::iterator it = sources.find(e.data1.AsDouble());
@@ -414,6 +425,16 @@ void Audio::SetFXVolume(float vol)
 		for (std::map<double, SpatialData>::iterator it = sources.begin(); it != sources.end(); ++it)
 			Mix_Volume(it->second.channel, target_vol);
 	}
+}
+
+float Audio::GetVolumeFx() const
+{
+	return fx_volume;
+}
+
+float Audio::GetVolumeMusic() const
+{
+	return music_volume;
 }
 
 inline void Audio::SetFadeVolume(float fade_percent)

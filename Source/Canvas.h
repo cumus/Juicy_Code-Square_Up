@@ -124,7 +124,7 @@ class C_Slider_Button : public UI_Component
 {
 public:
 
-	C_Slider_Button(Gameobject* go, float min_x, float max_x, int* value);
+	C_Slider_Button(Gameobject* go, float min_x, float max_x, float value, EventType e, EventListener* lis);
 	~C_Slider_Button();
 
 	void PreUpdate() override;
@@ -133,8 +133,10 @@ public:
 public:
 
 	float min_x, max_x;
+	float value;
 
-	int* value;
+	EventType event_type;
+	EventListener* lis;
 
 	bool trigger_while_pressed = false;
 

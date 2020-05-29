@@ -204,9 +204,9 @@ void C_Button::PostUpdate()
 		App->render->DrawQuad(output, color, true, HUD, false);
 }
 
-C_Slider_Button::C_Slider_Button(Gameobject* go, float min_x, float max_x, int* value) :
+C_Slider_Button::C_Slider_Button(Gameobject* go, float min_x, float max_x, float value, EventType e, EventListener* l) :
 	UI_Component(go, go->GetUIParent(), UI_SLIDER_BUTTON),
-	state(BUTTON_IDLE), min_x(min_x), max_x(max_x), value(value)
+	state(BUTTON_IDLE), min_x(min_x), max_x(max_x), value(value), event_type(e), lis(l)
 {}
 
 C_Slider_Button::~C_Slider_Button()
@@ -300,5 +300,7 @@ void C_Slider_Button::PostUpdate()
 	else
 		App->render->DrawQuad(output, color, true, HUD, false);
 
-	*value = int(((target.x - min_x) / (max_x - min_x)) * 100);
+	float val = (target.x - min_x) / (max_x - min_x);
+	if (val != value)
+		Event::Push(event_type, lis, value = val);
 }

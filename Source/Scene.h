@@ -306,10 +306,6 @@ private:
 	bool first_time_pause_button;
 	bool paused_yet = false;
 	bool endScene = false;
-
-	// Music and Sounds Value
-	static int music_value;
-	static int sfx_value;
 };
 
 #endif // __SCENE_H__

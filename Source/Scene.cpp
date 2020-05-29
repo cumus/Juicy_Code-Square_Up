@@ -41,9 +41,6 @@
 #include <string.h>
 #include <time.h>
 
-int Scene::music_value = 50;
-int Scene::sfx_value = 50;
-
 bool Scene::god_mode = false;
 bool Scene::no_damage = true;
 bool Scene::draw_collisions = false;
@@ -664,8 +661,9 @@ void Scene::LoadOptionsScene()
 	music_slider_bar->section = { 174, 0, 245, 20 };
 	music_slider_bar->tex_id = App->tex.Load("Assets/textures/hud-sprites.png");
 
-	C_Slider_Button* music_slider_button = new C_Slider_Button(music_slider_go, buttons_x + 0.105f, buttons_x + 0.295f, &music_value);
-	music_slider_button->target = { buttons_x + 0.105f + (0.19f * float(music_value) * 0.01f), 0.526f, 1.f, 1.f };
+	float volume = App->audio->GetVolumeMusic();
+	C_Slider_Button* music_slider_button = new C_Slider_Button(music_slider_go, buttons_x + 0.105f, buttons_x + 0.295f, volume, SET_MUSIC_VOLUME, App->audio);
+	music_slider_button->target = { buttons_x + 0.105f + (0.19f * volume), 0.526f, 1.f, 1.f };
 
 	music_slider_button->section[0] = { 174, 21, 45, 45 };
 	music_slider_button->section[1] = { 1081, 933, 45, 45 };
@@ -693,8 +691,8 @@ void Scene::LoadOptionsScene()
 	sfx_slider_bar->section = { 174, 0, 245, 20 };
 	sfx_slider_bar->tex_id = App->tex.Load("Assets/textures/hud-sprites.png");
 
-	C_Slider_Button* sfx_slider_button = new C_Slider_Button(sfx_slider_go, buttons_x + 0.105f, buttons_x + 0.295f, &sfx_value);
-	sfx_slider_button->target = { buttons_x + 0.105f + (0.19f * float(sfx_value) * 0.01f), 0.605f, 1.f, 1.f };
+	C_Slider_Button* sfx_slider_button = new C_Slider_Button(sfx_slider_go, buttons_x + 0.105f, buttons_x + 0.295f, volume = App->audio->GetVolumeFx(), SET_FX_VOLUME, App->audio);
+	sfx_slider_button->target = { buttons_x + 0.105f + (0.19f * volume), 0.605f, 1.f, 1.f };
 
 	sfx_slider_button->section[0] = { 174, 21, 45, 45 };
 	sfx_slider_button->section[1] = { 1081, 933, 45, 45 };

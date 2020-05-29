@@ -82,12 +82,14 @@ public:
 	bool StopFXChannel(double id, int ms = 0, bool fade = false);
 
 	// Volume Controls
-	void SetMusicVolume(float vol);
-	void SetFXVolume(float vol);
+	float GetVolumeFx() const;
+	float GetVolumeMusic() const;
 
 private:
 
 	inline void SetFadeVolume(float fade_percent);
+	void SetMusicVolume(float vol);
+	void SetFXVolume(float vol);
 
 private:
 
