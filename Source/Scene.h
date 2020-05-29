@@ -278,6 +278,13 @@ private:
 	int introColumn;
 	C_Image* logo = nullptr;
 
+	//MenuAnim
+	float menuAnim;
+	float menuFrameTime;
+	int menuRow;
+	int menuColumn;
+	C_Image* imgMenu = nullptr;
+
 
 	//Missions
 	Mission* gatherEdge = nullptr;

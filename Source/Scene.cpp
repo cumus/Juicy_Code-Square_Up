@@ -596,6 +596,16 @@ void Scene::LoadMenuScene()
 	quit->section[3] = { 0, 202, 470, 90 };
 
 	quit->tex_id = App->tex.Load("Assets/textures/quit.png");
+
+	imgMenu = new C_Image(AddGameobjectToCanvas("Team logo"));
+	imgMenu->target = { 0.5f, 0.5f, 0.5f, 0.5f };
+	imgMenu->offset = { -300.f, -400.f };
+	imgMenu->section = { 0, 0, 499, 268 };
+	imgMenu->tex_id = App->tex.Load("Assets/textures/intro-sprite-long.png");
+	menuAnim = 0;
+	menuFrameTime = 1.0f;
+	menuRow = 0;
+	menuColumn = 0;
 }
 
 void Scene::LoadOptionsScene()
