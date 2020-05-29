@@ -4,7 +4,6 @@
 #include "Transform.h"
 #include "Log.h"
 #include "Scene.h"
-
 #include "EnemyMeleeUnit.h"
 
 #include <time.h>
@@ -16,10 +15,10 @@ Spawner::Spawner(Gameobject* go) : Behaviour(go, SPAWNER, NO_UPGRADE, B_SPAWNER)
 	max_life = 50;
 	current_life = max_life;
 	shoot = true; //Control if active or not
-	damage = 5;//number of unit spawns 
+	damage = 3;//number of unit spawns 
 	ms_counter = 0;
 	cooldown = 20.0f;
-	maxSpawns = 100;
+	maxSpawns = 500;
 	currentSpawns = 0;
 	providesVisibility = false;
 
@@ -43,7 +42,7 @@ void Spawner::ChangeValues(int spawns, float cd, int spawnPoints)
 void Spawner::ResetSpawner()
 {
 
-	maxSpawns = 100;
+	maxSpawns = 500;
 	currentSpawns = 0;
 }
 
@@ -85,11 +84,6 @@ void Spawner::Update()
 				//LOG("super");
 				Event::Push(SPAWN_UNIT, App->scene, ENEMY_SUPER, pos);
 			}
-			else //Spawn special
-			{
-				//LOG("Special");
-				Event::Push(SPAWN_UNIT, App->scene, ENEMY_SPECIAL, pos);
-			}
 			currentSpawns++;
 			//LOG("Spawned one");
 		}
@@ -97,6 +91,10 @@ void Spawner::Update()
 		ms_counter = 0;
 		std::srand(time(NULL));
 	}
+
+	if (currentSpawns > 20 && damage < 4) damage = 4;
+	if (currentSpawns > 40 && damage < 5) damage = 5;
+	if (currentSpawns > 60 && damage < 6) damage = 6;
 
 	if (ms_counter < cooldown)
 	{

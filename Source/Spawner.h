@@ -3,10 +3,10 @@
 
 #include "Behaviour.h"
 
-#define MELEE_RATE 30
+#define MELEE_RATE 50
 #define RANGED_RATE 30
-#define SUPER_RATE 30
-#define SPECIAL_RATE 10
+#define SUPER_RATE 20
+
 
 class Spawner : public Behaviour
 {
@@ -18,9 +18,6 @@ public:
 	void ToggleSpawn(bool toggle) { shoot = toggle; }
 	void ResetSpawner();
 	void ChangeValues(int spawns,float cooldown, int spawnPoints);
-	
-
-	
 
 private:
 	float ms_counter,cooldown;
