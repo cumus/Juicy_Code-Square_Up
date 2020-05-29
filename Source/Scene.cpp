@@ -127,11 +127,11 @@ bool Scene::Update()
 		if (introAnim < introFrameTime) introAnim += App->time.GetGameDeltaTime();
 		else
 		{
-			if (introColumn > 12) introColumn = 0;
+			if (introColumn > 9) introColumn = 0;
 			else
 			{
 				introColumn++;
-				if (introRow > 28) introRow = 0;
+				if (introRow > 25) introRow = 0;
 				else introRow++;
 			}
 			logo->section = { introColumn * 270, introRow * 500, 270, 500 };
