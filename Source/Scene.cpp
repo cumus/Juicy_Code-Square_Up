@@ -509,10 +509,10 @@ void Scene::LoadIntroScene()
 	logo = new C_Image(AddGameobjectToCanvas("Team logo"));
 	logo->target = { 0.5f, 0.5f, 0.5f, 0.5f };
 	logo->offset = { -300.f, -400.f };
-	logo->section = { 0, 0, 499, 268 };
-	logo->tex_id = App->tex.Load("Assets/textures/intro-sprite-long2.png");
+	logo->section = { 0, 0, 120, 65 };
+	logo->tex_id = App->tex.Load("Assets/textures/intro-sprite-long.png");
 	introAnim = 0;
-	introFrameTime = 1.0f;
+	introFrameTime = 0.1f;
 	introRow = 0;
 	introColumn = 0;
 }
