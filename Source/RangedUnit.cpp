@@ -15,8 +15,8 @@ RangedUnit::RangedUnit(Gameobject* go) : B_Unit(go, UNIT_RANGED, IDLE, B_RANGED)
 	atkTime = 2.0;
 	speed = 3;
 	damage = 15;
-	attack_range = 10.0f;
-	vision_range = 15.0f;
+	attack_range = 13.0f;
+	vision_range = 20.0f;
 	providesVisibility = true;
 	//SFX
 	deathFX = RANGED_DIE_FX;

@@ -773,6 +773,24 @@ void Scene::LoadEndScene()
 	units_k->target = { info_pos, 0.76f, 0.6f, 0.65f };
 	units_k->section = { 0, 0, 693, 100 };
 	units_k->tex_id = App->tex.Load(win ? "Assets/textures/wunits_k.png" : "Assets/textures/lunits_k.png");
+
+
+	//--------------------------------TEXT----------------------------------------
+	/*Gameobject* edge_text_go = AddGameobject("Text Time", stats_val_go);
+	hud_texts[EDGE_COLLECTED] = new C_Text(edge_text_go);
+	hud_texts[EDGE_COLLECTED]->target = { 0.4f, 0.6f, 2.f, 2.f };
+
+	Gameobject* units_c_text_go = AddGameobject("Text Time", stats_val_go);
+	hud_texts[UNITS_CREATED] = new C_Text(units_c_text_go);
+	hud_texts[UNITS_CREATED]->target = { 0.4f, 0.7f, 2.f, 2.f };
+
+	Gameobject* units_l_text_go = AddGameobject("Text Time", stats_val_go);
+	hud_texts[UNITS_LOST] = new C_Text(units_l_text_go);
+	hud_texts[UNITS_LOST]->target = { 0.4f, 0.8f, 2.f, 2.f };
+
+	Gameobject* units_k_text_go = AddGameobject("Text Time", stats_val_go);
+	hud_texts[UNITS_KILLED] = new C_Text(units_k_text_go);
+	hud_texts[UNITS_KILLED]->target = { 0.4f, 0.7f, 2.f, 2.f };*/
 }
 
 void Scene::LoadMainHUD()
@@ -1516,7 +1534,7 @@ void Scene::OnEventStateMachine(GameplayState state)
 		//------------------STATE MACHINE CASES-----------------------
 	case GATHER:
 		
-
+		App->dialogSys.CleanUp();
 		not_go->SetInactive();
 		LOG("GATHER STATE");
 		not_go = AddGameobjectToCanvas("gather_state");
@@ -1586,7 +1604,7 @@ void Scene::OnEventStateMachine(GameplayState state)
 
 	case SPAWNER_STATE:
 	
-		App->dialogSys.CleanUp();
+		
 		not_go->SetInactive();
 		LOG("SPAWNER STATE");
 		
