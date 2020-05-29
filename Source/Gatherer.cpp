@@ -35,7 +35,7 @@ void Gatherer::CreatePanel()
 
 	//------------------------- BASE PANEL --------------------------------------
 	selectionPanel = App->scene->AddGameobjectToCanvas("Gatherer Build Panel");
-
+	
 	gatherer_icon = new C_Image(selectionPanel);
 	gatherer_icon->target = { 0.0f, 0.832f, 1.5f, 1.5f };
 	gatherer_icon->offset = { 0.0f, 0.0f };
@@ -87,10 +87,23 @@ void Gatherer::CreatePanel()
 
 	labBtn->tex_id = panel_tex_ID;
 
-	C_Image* cost1 = new C_Image(selectionPanel);
-	cost1->target = { 0.175f, 0.6f, 0.2f, 0.2f };
+	//Tower price
+	Gameobject* prices = App->scene->AddGameobject("Prices", selectionPanel);;
+	C_Image* cost1 = new C_Image(prices);
+	cost1->target = { 0.11f, 0.1f, 0.8f, 0.8f };
 	cost1->offset = { 0, 0 };
-	cost1->section = { 7, 3, 793, 1447 };
-	cost1->tex_id = App->tex.Load("Assets/textures/queen.png");
-
+	cost1->section = { 225, 13, 35, 32 };
+	cost1->tex_id = App->tex.Load("Assets/textures/icons_price.png");
+	//Barracks price
+	C_Image* cost2 = new C_Image(prices);
+	cost2->target = { 0.33f, 0.08f, 0.8f, 0.8f };
+	cost2->offset = { 0, 0 };
+	cost2->section = { 268, 14, 35, 31 };
+	cost2->tex_id = App->tex.Load("Assets/textures/icons_price.png");
+	//Lab price
+	C_Image* cost3 = new C_Image(prices);
+	cost3->target = { 0.52f, 0.29f, 0.8f, 0.8f };
+	cost3->offset = { 0, 0 };
+	cost3->section = { 268, 14, 35, 31 };
+	cost3->tex_id = App->tex.Load("Assets/textures/icons_price.png");
 }

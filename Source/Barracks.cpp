@@ -169,6 +169,26 @@ void Barracks::CreatePanel()
 	upgrade_btn->section[3] = { 1075, 102, 56, 49 };
 
 	upgrade_btn->tex_id = panel_tex_ID;
+
+	//Melee price
+	Gameobject* prices = App->scene->AddGameobject("Prices", selectionPanel);;
+	C_Image* cost1 = new C_Image(prices);
+	cost1->target = { 0.11f, 0.1f, 0.8f, 0.8f };
+	cost1->offset = { 0, 0 };
+	cost1->section = { 101, 13, 32, 31 };
+	cost1->tex_id = App->tex.Load("Assets/textures/icons_price.png");
+	//Ranged price
+	C_Image* cost2 = new C_Image(prices);
+	cost2->target = { 0.33f, 0.08f, 0.8f, 0.8f };
+	cost2->offset = { 0, 0 };
+	cost2->section = { 142, 13, 39, 31 };
+	cost2->tex_id = App->tex.Load("Assets/textures/icons_price.png");
+	//Super price
+	C_Image* cost3 = new C_Image(prices);
+	cost3->target = { 0.52f, 0.29f, 0.8f, 0.8f };
+	cost3->offset = { 0, 0 };
+	cost3->section = { 183, 12, 37, 32 };
+	cost3->tex_id = App->tex.Load("Assets/textures/icons_price.png");
 }
 
 
