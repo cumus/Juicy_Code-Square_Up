@@ -1275,22 +1275,22 @@ void Scene::UpdatePause()
 
 			fullscreen->tex_id = App->tex.Load("Assets/textures/fullscreen.png");
 
-			/*//------------------------- SAVE --------------------------------------
+			//------------------------- SAVE --------------------------------------
 
 			Gameobject* save_go = AddGameobject("save button", pause_background_go);
 
-			C_Button* save = new C_Button(save_go, Event(SCENE_CHANGE, this, MAIN));
-			save->target = { 0.51f, 0.3f, 0.3f, 0.3f };
-			save->offset = { -525.f, 200.f };
-			for (int i = 0; i < 4; i++)save->section[i] = { 0, 0, 1070, 207 };
-			save->tex_id = App->tex.Load("textures/button.png");
+			C_Button* save = new C_Button(save_go, Event(REQUEST_SAVE, App));
+			save->target = { 0.51f, 0.3f, 0.6f, 0.6f };
+			save->offset = { -250.f, 220.0f };
 
-			C_Button* save_fx = new C_Button(save_go, Event(PLAY_FX, App->audio, int(SELECT), 0));
-			save_fx->target = { 0.51f, 0.3f, 0.3f, 0.3f };
-			save_fx->offset = { -525.f, 200.f };
-			for (int i = 0; i < 4; i++)save_fx->section[i] = { 0, 0, 1070, 207 };
+			save->section[0] = { 0, 0, 470, 90 };
+			save->section[1] = { 0, 101, 470, 90 };
+			save->section[2] = { 0, 202, 470, 90 };
+			save->section[3] = { 0, 202, 470, 90 };
 
-			//------------------------- LOAD --------------------------------------
+			save->tex_id = App->tex.Load("Assets/textures/new-game.png");
+
+			/*//------------------------- LOAD --------------------------------------
 
 			Gameobject* load_go = AddGameobject("load Button", pause_background_go);
 
@@ -1326,7 +1326,7 @@ void Scene::UpdatePause()
 
 			C_Button* main_menu = new C_Button(main_menu_go, Event(BUTTON_EVENT, this, SCENE_CHANGE, MENU));
 			main_menu->target = { 0.51f, 0.3f, 0.6f, 0.6f };
-			main_menu->offset = { -250.f, 220.f };
+			main_menu->offset = { -250.f, 370.f };
 
 			main_menu->section[0] = { 0, 0, 470, 90 };
 			main_menu->section[1] = { 0, 101, 470, 90 };
@@ -2358,7 +2358,7 @@ void Scene::GodMode()
 	}
 
 	// SPACE: Swap map orientation
-	if (App->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN) Event::Push(REQUEST_SAVE, App); // Map::SwapMapType();
+	//if (App->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN) Event::Push(REQUEST_SAVE, App); // Map::SwapMapType();
 
 	// DEL: Remove Selected Gameobject/s
 	if (App->input->GetKey(SDL_SCANCODE_DELETE) == KEY_DOWN)

@@ -57,6 +57,7 @@ enum EventType : char
 	BUTTON_EVENT,
 	PAUSE,
 	OPTIONS,
+	SAVE_SCENE,
 
 	//// Scene states
 	//NEXT_STATE,
