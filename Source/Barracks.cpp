@@ -145,8 +145,8 @@ void Barracks::CreatePanel()
 
 	rangedUnit_btn->section[0] = { 1076, 727, 56, 49 };
 	rangedUnit_btn->section[1] = { 1076, 676, 56, 49 };
-	rangedUnit_btn->section[2] = { 1076, 775, 56, 49 };
-	rangedUnit_btn->section[3] = { 1076, 775, 56, 49 };
+	rangedUnit_btn->section[2] = { 1076, 778, 56, 49 };
+	rangedUnit_btn->section[3] = { 1076, 778, 56, 49 };
 
 	rangedUnit_btn->tex_id = panel_tex_ID;
 	
@@ -158,8 +158,8 @@ void Barracks::CreatePanel()
 
 	superUnit_btn->section[0] = { 1147, 727, 56, 49 };
 	superUnit_btn->section[1] = { 1147, 676, 56, 49 };
-	superUnit_btn->section[2] = { 1147, 775, 56, 49 };
-	superUnit_btn->section[3] = { 1147, 775, 56, 49 };
+	superUnit_btn->section[2] = { 1147, 778, 56, 49 };
+	superUnit_btn->section[3] = { 1147, 778, 56, 49 };
 
 	superUnit_btn->tex_id = panel_tex_ID;
 

@@ -361,7 +361,7 @@ void Behaviour::UnSelected()
 	// Selection mark
 	selection_highlight->SetInactive();
 
-	if (bar_go != nullptr) bar_go->SetInactive();
+	//if (bar_go != nullptr) bar_go->SetInactive();
 	if (creation_bar_go != nullptr) creation_bar_go->SetInactive();
 	if (selectionPanel != nullptr) selectionPanel->SetInactive();
 }

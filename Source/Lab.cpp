@@ -27,7 +27,7 @@ Lab::Lab(Gameobject* go) : Behaviour(go, LAB, NO_UPGRADE, B_LAB)
 	spriteState = NO_UPGRADE;
 	current_state = NO_UPGRADE;
 
-	create_bar();
+	//create_bar();
 	//bar_go->SetInactive();
 	CreatePanel();
 	selectionPanel->SetInactive();
