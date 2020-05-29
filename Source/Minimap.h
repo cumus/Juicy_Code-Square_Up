@@ -35,6 +35,7 @@ private:
 	// Textures
 	int fow_texture;
 	int hud_texture;
+	int border_texture;
 
 	enum MinimapTexture : int
 	{
