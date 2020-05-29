@@ -434,6 +434,8 @@ void Behaviour::OnKill(const UnitType type)
 	}
 	case UNIT_SUPER:
 	{
+		Event::Push(UPDATE_STAT, App->scene, CUERRENT_SUPER_UNITS, -1);
+		Event::Push(UPDATE_STAT, App->scene, UNITS_LOST, 1);
 		//App->collSystem.DeleteCollider(*bodyColl);
 		//App->collSystem.DeleteCollider(*attackColl);
 		break;

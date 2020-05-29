@@ -254,7 +254,7 @@ private:
 	Gameobject* pause_background_go = nullptr;
 
 	// Player
-	C_Text* hud_texts[EDGE_COLLECTED];
+	C_Text* hud_texts[MAX_PLAYER_STATS];
 	static int player_stats[MAX_PLAYER_STATS];
 	bool win = false;
 	//int time = 0;

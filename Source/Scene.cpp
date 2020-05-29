@@ -992,9 +992,9 @@ void Scene::LoadMainHUD()
 	hud_texts[CURRENT_MOB_DROP] = new C_Text(mobdrop_value_go, "0");
 	hud_texts[CURRENT_MOB_DROP]->target = { 0.83f, 0.25f, 1.f, 1.f };
 
-	//--------------------------------MOBDROP--------------------------------------
+	//--------------------------------GOLD--------------------------------------
 
-	Gameobject* gold_go = AddGameobject("Text Edge", right_bar_go);
+	Gameobject* gold_go = AddGameobject("Text gold", right_bar_go);
 	C_Image* image_gold = new C_Image(edge_go);
 	image_gold->target = { 0.45f, 0.15f, 0.9f, 0.9f };
 	image_gold->section = { 198, 305, 32, 28 };
@@ -1855,6 +1855,7 @@ Transform* Scene::SpawnBehaviour(int type, vec pos)
 			Gatherer* temp = new Gatherer(behaviour);
 			UpdateStat(CURRENT_GATHERER_UNITS, 1);
 			UpdateStat(TOTAL_GATHERER_UNITS, 1);
+			UpdateStat(UNITS_CREATED, 1);
 			UpdateStat(CURRENT_EDGE, -GATHERER_COST);
 			switch (gathererLvl)
 			{
@@ -1890,6 +1891,7 @@ Transform* Scene::SpawnBehaviour(int type, vec pos)
 			MeleeUnit* temp = new MeleeUnit(behaviour);
 			UpdateStat(CURRENT_MELEE_UNITS, 1);
 			UpdateStat(TOTAL_MELEE_UNITS, 1);
+			UpdateStat(UNITS_CREATED, 1);
 			UpdateStat(CURRENT_EDGE, -MELEE_COST);
 			switch (meleeLvl)
 			{
@@ -1924,6 +1926,7 @@ Transform* Scene::SpawnBehaviour(int type, vec pos)
 			RangedUnit* temp = new RangedUnit(behaviour);
 			UpdateStat(CURRENT_RANGED_UNITS, 1);
 			UpdateStat(TOTAL_RANGED_UNITS, 1);
+			UpdateStat(UNITS_CREATED, 1);
 			UpdateStat(CURRENT_EDGE, -RANGED_COST);
 			switch (rangedLvl)
 			{
@@ -1957,6 +1960,7 @@ Transform* Scene::SpawnBehaviour(int type, vec pos)
 			SuperUnit* temp = new SuperUnit(behaviour);
 			UpdateStat(CUERRENT_SUPER_UNITS, 1);
 			UpdateStat(TOTAL_SUPER_UNITS, 1);
+			UpdateStat(UNITS_CREATED, 1);
 			UpdateStat(CURRENT_EDGE, -SUPER_COST);
 			switch (superLvl)
 			{
