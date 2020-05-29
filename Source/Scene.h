@@ -289,6 +289,7 @@ private:
 	//Missions
 	Mission* gatherEdge = nullptr;
 	Mission* buildTower = nullptr;
+	Mission* buildBarracks = nullptr;
 
 	//--------STATE MACHINE VARIABLES--------
 		
