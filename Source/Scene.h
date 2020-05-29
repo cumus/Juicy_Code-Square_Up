@@ -47,9 +47,7 @@ enum GameplayState : int
 	SPAWNER_STATE,
 
 	WIN,
-	LOSE,
-
-	
+	LOSE,	
 };
 
 enum UnitType : int
@@ -111,6 +109,22 @@ enum PlayerStats : int
 	UNITS_KILLED,
 
 	MAX_PLAYER_STATS
+};
+
+struct Mission 
+{
+	Mission(const char* name, PlayerStats type, int reward,int m);
+	~Mission();
+	void OnComplete();
+	void Update(int num);
+
+	Gameobject* mission;
+	C_Image* imgRetail;
+	C_Text* text;
+	int reward;
+	int progress;
+	int max;
+	PlayerStats rewardType;
 };
 
 struct SDL_Texture;
@@ -264,6 +278,10 @@ private:
 	int introColumn;
 	C_Image* logo = nullptr;
 
+
+	//Missions
+	Mission* gatherEdge = nullptr;
+	Mission* buildTower = nullptr;
 
 	//--------STATE MACHINE VARIABLES--------
 		

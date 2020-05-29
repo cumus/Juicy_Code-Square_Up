@@ -1642,7 +1642,7 @@ void Scene::OnEventStateMachine(GameplayState state)
 		not_inactive->tex_id = App->tex.Load("Assets/textures/tuto/not-button.png");
 			
 		//Edge Counter
-		edge_go = AddGameobjectToCanvas("Spawner Count");
+		/*edge_go = AddGameobjectToCanvas("Spawner Count");
 		edge_img = new C_Image(edge_go);
 		edge_img->target = { 1.0f, 0.1f, 0.8f , 0.4f };
 		edge_img->offset = { -232.f, 0.f };
@@ -1651,8 +1651,8 @@ void Scene::OnEventStateMachine(GameplayState state)
 
 		edge_text_go = AddGameobject("Text Edge", edge_go);
 		text_edge = new C_Text(edge_text_go, "Gather some Edge");
-		text_edge->target = { 0.1f, 0.15f, 1.f, 1.f };
-
+		text_edge->target = { 0.1f, 0.15f, 1.f, 1.f };*/
+		gatherEdge = new Mission("Gather some edge.",CURRENT_EDGE,0,70);
 		
 
 		/*all_spawners_go = AddGameobject("All Spawners", spawner_go);
@@ -1666,8 +1666,9 @@ void Scene::OnEventStateMachine(GameplayState state)
 	case WARNING:
 	
 		LOG("WARNING STATE");
-		edge_img->SetInactive();
-		text_edge->SetInactive();
+		gatherEdge->OnComplete();
+		//edge_img->SetInactive();
+		//text_edge->SetInactive();
 		not_go = AddGameobjectToCanvas("warning_state");
 		not = new C_Image(not_go);
 		next = new C_Button(not_go, Event(GAMEPLAY, this, SPAWNER_STATE));
@@ -2393,4 +2394,40 @@ void Scene::ToggleGodMode()
 
 	god_mode = !god_mode;
 	App->fogWar.debugMode = !App->fogWar.debugMode;
+}
+
+//Mission struct
+
+Mission::Mission(const char* name,PlayerStats t, int r,int m)
+{
+	rewardType = t;
+	reward = r;
+	max = m;
+	progress = 0;
+	mission = App->scene->AddGameobjectToCanvas("Mission");
+	imgRetail = new C_Image(mission);
+	imgRetail->target = { 1.0f, 0.1f, 0.8f , 0.4f };
+	imgRetail->offset = { -232.f, 0.f };
+	imgRetail->section = { 712, 915, 232, 77 };
+	imgRetail->tex_id = App->tex.Load("Assets/textures/hud-sprites.png");
+
+	text = new C_Text(mission, name);
+	text->target = { 0.87f, 0.11f, 1.f, 1.f };
+}
+
+Mission::~Mission()
+{
+	mission->Destroy();
+}
+
+void Mission::OnComplete()
+{
+	App->scene->UpdateStat(int(rewardType),reward);
+	this->~Mission();
+}
+
+void Mission::Update(int num)
+{
+	progress += num;
+	if (progress >= max) OnComplete();
 }
