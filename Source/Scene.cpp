@@ -134,9 +134,11 @@ bool Scene::Update()
 				if (introRow < 28) introRow++;
 				else introRow = 0;
 			}
-			logo->section = { introColumn * 499, introRow * 268, 499, 590 };*/			
-			logo->section = { introColumn * 499,0, 499, 590 };
-			introColumn++;
+			logo->section = { introColumn * 499, introRow * 268, 499, 590 };*/
+			if (introColumn > 20) introColumn = 0;
+			else introColumn++;
+			logo->section = { introColumn * 546, 0, 546, 813 };
+			introAnim = 0;
 		}
 	}
 
@@ -508,7 +510,7 @@ void Scene::LoadIntroScene()
 	logo->target = { 0.5f, 0.5f, 0.5f, 0.5f };
 	logo->offset = { -300.f, -400.f };
 	logo->section = { 0, 0, 499, 268 };
-	logo->tex_id = App->tex.Load("Assets/textures/intro-sprite-long.png");
+	logo->tex_id = App->tex.Load("Assets/textures/intro-sprite-long2.png");
 	introAnim = 0;
 	introFrameTime = 1.0f;
 	introRow = 0;
@@ -608,12 +610,13 @@ void Scene::LoadMenuScene()
 
 	quit->tex_id = App->tex.Load("Assets/textures/quit.png");
 
+	imgMenu = new C_Image(AddGameobjectToCanvas("Menu image"));
 	imgMenu->target = { 0.75f, 0.6f, 1.0f, 1.0f };
 	imgMenu->offset = { -300.f, -400.f };
 	imgMenu->section = { 0, 0, 546, 813 };
 	imgMenu->tex_id = App->tex.Load("Assets/textures/BaseAnim.png");
 	menuAnim = 0;
-	menuFrameTime = 1.0f;
+	menuFrameTime = 0.1f;
 	menuRow = 0;
 	menuColumn = 0;
 }
