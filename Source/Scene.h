@@ -171,7 +171,7 @@ private:
 	void UpdatePause();
 	void UpdateSelection();
 	void UpdateSpawner();
-	void ShowUnitInfo(UnitType type);
+	void ShowUnitInfo(Behaviour* unit);
 
 	void UpdateStateMachine();
 	void OnEventStateMachine(GameplayState state);
@@ -273,8 +273,9 @@ private:
 	C_Button* skip;
 	C_Button* not_inactive;
 	C_Image * not;
-	C_Text* unitLife;
-	C_Text* unitDamage;
+	Gameobject* unitInfo;
+	C_Text* unitLife = nullptr;
+	C_Text* unitDamage = nullptr;
 
 	bool first_time_pause_button;
 	bool paused_yet = false;

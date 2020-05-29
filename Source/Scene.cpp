@@ -470,6 +470,13 @@ void Scene::LoadMainScene()
 	buildingImage = new Sprite(imgPreview, App->tex.Load("Assets/textures/buildPreview.png"), { 0, 3, 217, 177 }, FRONT_SCENE, { -60.0f,-100.0f,1.0f,1.0f });
 	imgPreview->SetInactive();
 
+	unitInfo = AddGameobject("Selected unit imfo");
+	unitLife = new C_Text(unitInfo, "");//Text line
+	unitLife->target = { 0.31f, 0.80f, 2.0f , 2.0f };
+	unitDamage = new C_Text(unitInfo, "");//Text line
+	unitDamage->target = { 0.31f, 0.84f, 2.0f , 2.0f };
+	unitLife->SetInactive();
+	unitDamage->SetInactive();
 	//Event::Push(ON_PAUSE, &root);
 }
 
@@ -982,7 +989,6 @@ void Scene::LoadTutorial()
 
 }
 	
-
 void Scene::LoadBaseCenter()
 {
 	std::pair<int, int> position = Map::WorldToTileBase(float(1400.0f), float(3250.0f));
@@ -1302,6 +1308,8 @@ void Scene::UpdatePause()
 
 void Scene::UpdateSelection()
 {
+	if(unitLife != nullptr) unitLife->SetInactive();
+	if (unitDamage != nullptr) unitDamage->SetInactive();
 	//GROUP SELECTION//
 	switch (App->input->GetMouseButtonDown(0))
 	{
@@ -1385,10 +1393,7 @@ void Scene::UpdateSelection()
 					if (float(x) > coll.x && float(x) < coll.x + coll.w && float(y) > coll.y && float(y) < coll.y + coll.h)
 					{
 						SetSelection(it->second->GetGameobject(), true);
-						if (it->second->GetType() == UNIT_MELEE || it->second->GetType() == GATHERER || it->second->GetType() == UNIT_RANGED || it->second->GetType() == UNIT_SUPER)
-						{
-							ShowUnitInfo(it->second->GetType());
-						}
+						ShowUnitInfo(it->second);						
 						break;
 					}					
 				}
@@ -1453,9 +1458,31 @@ void Scene::UpdateSelection()
 	}
 }
 
-void Scene::ShowUnitInfo(UnitType)
+void Scene::ShowUnitInfo(Behaviour* unit)
 {
-
+	std::stringstream ss;
+	switch (unit->GetType())
+	{
+	case UNIT_MELEE:		
+	case GATHERER:
+	case UNIT_RANGED:
+	case UNIT_SUPER:
+	case TOWER:
+		ss << unit->current_life;
+		unitLife->text->SetText(ss.str().c_str());
+		ss << unit->damage;
+		unitDamage->text->SetText(ss.str().c_str());
+		unitLife->SetActive();
+		unitDamage->SetActive();
+		break;
+	case LAB:
+	case BARRACKS:
+	case BASE_CENTER:
+		ss << unit->current_life;
+		unitLife->text->SetText(ss.str().c_str());
+		unitLife->SetActive();
+		break;
+	}
 }
 
 void Scene::UpdateSpawner()
