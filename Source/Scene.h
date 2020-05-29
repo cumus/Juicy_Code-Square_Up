@@ -144,6 +144,7 @@ public:
 	static bool DamageAllowed();
 	static bool DrawCollisions();
 	static int GetStat(int stat);
+	int GetGearsCount();
 
 	// Scene Serialization
 	void SaveGameNow();

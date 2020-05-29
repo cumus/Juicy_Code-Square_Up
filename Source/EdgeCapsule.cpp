@@ -9,7 +9,7 @@ Capsule::Capsule(Gameobject* go) : Behaviour(go, CAPSULE, POSE, B_CAPSULE)
 	max_life = 100;
 	current_life = max_life;
 	damage = 0;
-	dieDelay = 5.0f;
+	dieDelay = 2.0f;
 	spriteState = POSE;
 	current_state = POSE;
 	providesVisibility = false;

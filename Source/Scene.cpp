@@ -1317,7 +1317,6 @@ void Scene::UpdateSelection()
 	{
 	case KEY_DOWN:
 	{
-		group.clear();
 		App->input->GetMousePosition(groupStart.x, groupStart.y);
 		SetSelection(nullptr, true);
 		if (unitLife != nullptr) unitLife->SetInactive();
@@ -1470,6 +1469,7 @@ void Scene::UpdateSelection()
 		for (std::vector<Gameobject*>::iterator it = group.begin(); it != group.end(); ++it)
 		{
 			if ((*it)->GetBehaviour()->IsDestroyed() == false) cache.push_back(*it);
+			else  Event::Push(ON_UNSELECT, *it);
 		}
 		if (!cache.empty())
 		{
@@ -1480,8 +1480,13 @@ void Scene::UpdateSelection()
 	}
 	else if (selection)
 	{
-		if (selection->GetBehaviour()->IsDestroyed()) selection = nullptr;
+		if (selection->GetBehaviour()->IsDestroyed()) { Event::Push(ON_UNSELECT, selection); selection = nullptr; }
 	}
+}
+
+int Scene::GetGearsCount()
+{
+	return player_stats[CURRENT_MOB_DROP];
 }
 
 void Scene::ShowUnitInfo(Behaviour* unit)
