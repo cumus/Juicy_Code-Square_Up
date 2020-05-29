@@ -86,4 +86,11 @@ void Gatherer::CreatePanel()
 	labBtn->section[3] = { 1147, 446, 56, 49 };
 
 	labBtn->tex_id = panel_tex_ID;
+
+	C_Image* cost1 = new C_Image(selectionPanel);
+	cost1->target = { 0.175f, 0.6f, 0.2f, 0.2f };
+	cost1->offset = { 0, 0 };
+	cost1->section = { 7, 3, 793, 1447 };
+	cost1->tex_id = App->tex.Load("Assets/textures/queen.png");
+
 }

@@ -14,9 +14,9 @@
 #define GATHERER_COST 10
 #define MELEE_COST 15
 #define RANGED_COST 20
-#define SUPER_COST 50
-#define TOWER_COST 40
-#define BARRACKS_COST 60
+#define SUPER_COST 40
+#define TOWER_COST 30
+#define BARRACKS_COST 50
 #define MAX_GATHERER_LVL 5
 #define MAX_MELEE_LVL 5
 #define MAX_RANGED_LVL 5
