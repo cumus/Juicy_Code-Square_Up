@@ -17,23 +17,27 @@ Minimap::Minimap(Gameobject* go) : UI_Component(go, go->GetUIParent(), UI_MINIMA
 {
 	minimap = this;
 	mouse_moving = false;
+	minimap_timer = 0.0f;
+	minimap_redraw = 1.0f;
 
-	// Setup Minimap
-	//back = new Sprite(go, App->tex.Load("Assets/textures/minimap.png"), { 0, 0, 1338, 668 }, BACK_SCENE, { 0, -50, 1.f, 1.f });
+	// Load Map Data
 	map_scale = 0.5f;
 	map_size = Map::GetMapSize_I();
     tile_size = Map::GetTileSize_I();
 	total_size = { int(float(map_size.first * tile_size.first) * map_scale), int(float(map_size.second * tile_size.second) * map_scale) };
-	minimap_texture = App->render->GetMinimap(total_size.first, total_size.second, map_scale, false);
 
 	// Set UI_Component values
 	target = { 1.f, 1.f, 0.035f, 0.035f };
 	offset = { -total_size.first, -total_size.second };
 
+	// Setup FoW Texture
+	fow_texture = App->render->GetMinimap(total_size.first, total_size.second, map_scale);
+	sections[FOW] = { 0, 0, total_size.first, total_size.second };
+
 	// Set Border & Sections
-	sections[MINIMAP] = { 0, 0, total_size.first, total_size.second };
+	hud_texture = App->tex.Load("Assets/textures/minimap.png");
+	sections[MINIMAP] = { 0, 0, 1338, 668 };
 	sections[BACKGROUND] = { 585, 656, 384, 214 };
-	hud_texture = App->tex.Load("Assets/textures/Iconos_square_up.png");
 
 	// Load Icons
 	sections[ICON_ALLIED_UNIT]	= { 494, 866, 5, 5 };
@@ -51,26 +55,37 @@ Minimap::~Minimap()
 		minimap = nullptr;
 }
 
+void Minimap::Update()
+{
+	if ((minimap_timer += App->time.GetGameDeltaTime()) > minimap_redraw)
+	{
+		minimap_timer = 0.0f;
+		Event::Push(MINIMAP_UPDATE_TEXTURE, App->render);
+	}
+}
+
 void Minimap::PostUpdate()
 {
-	ComputeOutputRect(float(sections[MINIMAP].w), float(sections[MINIMAP].h));
+	ComputeOutputRect(float(sections[FOW].w), float(sections[FOW].h));
 
 	// Minimap
-	//App->render->RenderMinimap();
-	App->render->DrawQuad(output, { 0, 0, 0, 255 }, true, HUD, false);
 	std::pair<float, float> scale = { float(output.w) / float(sections[MINIMAP].w), float(output.h) / float(sections[MINIMAP].h) };
-	App->render->Blit_Scale(minimap_texture, output.x, output.y, scale.first, scale.second, nullptr, HUD, false);
+	App->render->Blit_Scale(hud_texture, output.x, output.y, scale.first, scale.second, nullptr, HUD, false);
+
+	// FoW
+	scale = { float(output.w) / float(sections[FOW].w), float(output.h) / float(sections[FOW].h) };
+	App->render->Blit_Scale(fow_texture, output.x, output.y, scale.first, scale.second, nullptr, HUD, false);
 
 	scale.first *= map_scale;
 	scale.second *= map_scale;
 
-	// Border
+	/*/ Border
 	App->render->Blit_Scale(
 		hud_texture,
 		output.x, output.y,
 		float(output.w) / float(sections[BACKGROUND].w),
 		float(output.h) / float(sections[BACKGROUND].h),
-		&sections[BACKGROUND], HUD, false);
+		&sections[BACKGROUND], HUD, false);*/
 
 	// Draw Camera Rect
 	RectF cam = App->render->GetCameraRectF();

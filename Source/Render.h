@@ -87,7 +87,7 @@ public:
 
 	// Set background color
 	void SetBackgroundColor(SDL_Color color);
-	bool RenderMinimap();
+	bool RenderMinimapFoW();
 
 	void MoveCamera(float x, float y);
 

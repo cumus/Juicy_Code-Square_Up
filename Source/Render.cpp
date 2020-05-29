@@ -308,7 +308,7 @@ void Render::RecieveEvent(const Event& e)
 	}
 	case MINIMAP_UPDATE_TEXTURE:
 	{
-		RenderMinimap();
+		RenderMinimapFoW();
 		break;
 	}
 	case MINIMAP_MOVE_CAMERA:
@@ -378,38 +378,36 @@ bool Render::SetDrawColor(SDL_Color color)
 	return ret;
 }
 
-bool Render::RenderMinimap()
+bool Render::RenderMinimapFoW()
 {
 	bool ret = false;
 	TextureData data;
-
 
 	if (App->tex.GetTextureData(minimap_texture, data))
 	{
 		int minimap_half_width = int(float(data.width) * 0.5f);
 		if (SDL_SetRenderTarget(renderer, data.texture) == 0)
 		{
+			SetDrawColor({ 255, 255, 255, 0 });
 			SDL_RenderClear(renderer);
-			std::vector<std::pair<SDL_Rect, SDL_Rect>> rects;
-			Map::SetMapScale(minimap_scale);
-			SDL_Texture* tex = Map::GetMapC()->GetFullMap(rects);
-			if (ret = (tex && !rects.empty()))
-			{
-				for (std::vector<std::pair<SDL_Rect, SDL_Rect>>::const_iterator it = rects.cbegin(); it != rects.cend() && ret; ++it)
-				{
-					SDL_Rect r = it->second;					
-					std::pair<int, int> x = Map::I_WorldToMap(r.x,r.y);
-					if (FogOfWarManager::fogMap[x.first][x.second])
-					{
-						r.x += minimap_half_width;
+			SetDrawColor({ 0, 0, 0, 150 });
 
-						if (!(ret = SDL_RenderCopy(renderer, tex, &it->first, &r) == 0))
-							LOG("Cannot blit to minimap texture. SDL_RenderCopy error: %s", SDL_GetError());
+			Map::SetMapScale(minimap_scale);
+			std::pair<int, int> map_size = Map::GetMapSize_I();
+			std::pair<int, int> tile_size = Map::GetTileSize_I();
+
+			for (int x = 0; x < map_size.first; ++x)
+			{
+				for (int y = 0; y < map_size.second; ++y)
+				{
+					if (!FogOfWarManager::fogMap[x][y])
+					{
+						std::pair<int, int> pos = Map::I_MapToWorld(x, y);
+						SDL_Rect rect = { pos.first + minimap_half_width, pos.second, tile_size.first, tile_size.second };
+						SDL_RenderFillRect(renderer, &rect);
 					}
 				}
 			}
-			else
-				LOG("Map error drawing minimap");
 
 			Map::SetMapScale(zoom);
 			SDL_SetRenderTarget(renderer, nullptr);
@@ -437,12 +435,11 @@ int Render::GetMinimap(int width, int height, float scale, bool trigger_event)
 {
 	if (minimap_texture < 0)
 	{
-		// Setup Minimap
 		minimap_scale = scale;
 		minimap_texture = App->tex.CreateEmptyTexture(renderer, width, height);
 	}
 
-	//trigger_event ? Event::Push(MINIMAP_UPDATE_TEXTURE, this) : RenderMinimap();
+	trigger_event ? Event::Push(MINIMAP_UPDATE_TEXTURE, this) : RenderMinimapFoW();
 
 	return minimap_texture;
 }

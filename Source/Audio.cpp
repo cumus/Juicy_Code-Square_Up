@@ -185,10 +185,8 @@ void Audio::RecieveEvent(const Event& e)
 	{
 		std::pair<float, float> cam = App->render->GetCameraCenter();
 		for (std::map<double, SpatialData>::iterator it = sources.begin(); it != sources.end(); ++it)
-		{
 			it->second.Update(cam, it->second.pos, fx_volume);
-			//LOG("Distance: %f cam(%f,%f), source(%f,%f)", it->second.distance, cam.first, cam.second, it->second.pos.first, it->second.pos.second);
-		}
+
 		break;
 	}
 	case SCENE_PLAY:
@@ -445,8 +443,6 @@ inline void Audio::SpatialData::Update(const std::pair<float, float> cam, const 
 		distance = JMath::Distance(cam, position));
 	
 	Mix_Volume(channel, (inside_cam = App->render->InsideCam(position.first, position.second)) ? int(fx_volume * 128.0f) : 0);
-
-	LOG("Angle: %f, Dist: %f, Volume: %d, inside_cam = %d", angle, distance, Mix_Volume(channel, -1), inside_cam);
 }
 
 inline void Audio::SpatialData::Pause()

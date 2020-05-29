@@ -6,7 +6,6 @@
 #include <map>
 
 class Transform;
-class Sprite;
 
 class Minimap : public UI_Component
 {
@@ -15,6 +14,7 @@ public:
 	Minimap(Gameobject* go);
 	~Minimap();
 
+	void Update() override;
 	void PostUpdate() override;
 
 	static bool AddUnit(double id, int type, Transform* unit);
@@ -23,19 +23,23 @@ public:
 private:
 
 	static Minimap* minimap;
-
-	Sprite* back;
-	int minimap_texture;
-	int hud_texture;
-	float map_scale;
 	bool mouse_moving;
+
+	// Map Data
+	float map_scale;
 	std::pair<int, int> map_size;
 	std::pair<int, int> tile_size;
 	std::pair<int, int> total_size;
+	float minimap_timer, minimap_redraw;
+
+	// Textures
+	int fow_texture;
+	int hud_texture;
 
 	enum MinimapTexture : int
 	{
 		MINIMAP,
+		FOW,
 		BACKGROUND,
 		ICON_ALLIED_UNIT,
 		ICON_ENEMY_UNIT,
