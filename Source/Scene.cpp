@@ -470,13 +470,13 @@ void Scene::LoadMainScene()
 	buildingImage = new Sprite(imgPreview, App->tex.Load("Assets/textures/buildPreview.png"), { 0, 3, 217, 177 }, FRONT_SCENE, { -60.0f,-100.0f,1.0f,1.0f });
 	imgPreview->SetInactive();
 
-	unitInfo = AddGameobject("Selected unit imfo");
-	unitLife = new C_Text(unitInfo, "");//Text line
-	unitLife->target = { 0.31f, 0.80f, 2.0f , 2.0f };
-	unitDamage = new C_Text(unitInfo, "");//Text line
-	unitDamage->target = { 0.31f, 0.84f, 2.0f , 2.0f };
-	unitLife->SetInactive();
-	unitDamage->SetInactive();
+	unitInfo = AddGameobject("Selected unit info");
+	unitLife = new C_Text(unitInfo, " 5 ");//Text line
+	unitLife->target = { 0.5f, 0.5f, 2.0f , 2.0f };
+	unitDamage = new C_Text(unitInfo, " 5 ");//Text line
+	unitDamage->target = { 0.5f, 0.5f, 2.0f , 2.0f };
+	//unitLife->SetInactive();
+	//unitDamage->SetInactive();
 	//Event::Push(ON_PAUSE, &root);
 }
 
@@ -498,6 +498,10 @@ void Scene::LoadIntroScene()
 	logo->offset = { -300.f, -400.f };
 	logo->section = { 0, 0, 499, 268 };
 	logo->tex_id = App->tex.Load("Assets/textures/intro-sprite-long.png");
+	introAnim = 0;
+	introFrameTime = 1.0f;
+	introRow = 0;
+	introColumn = 0;
 }
 
 void Scene::LoadMenuScene()
@@ -1308,8 +1312,6 @@ void Scene::UpdatePause()
 
 void Scene::UpdateSelection()
 {
-	if(unitLife != nullptr) unitLife->SetInactive();
-	if (unitDamage != nullptr) unitDamage->SetInactive();
 	//GROUP SELECTION//
 	switch (App->input->GetMouseButtonDown(0))
 	{
@@ -1317,6 +1319,8 @@ void Scene::UpdateSelection()
 	{
 		App->input->GetMousePosition(groupStart.x, groupStart.y);
 		SetSelection(nullptr, true);
+		if (unitLife != nullptr) unitLife->SetInactive();
+		if (unitDamage != nullptr) unitDamage->SetInactive();
 		break;
 	}
 	case KEY_REPEAT:
@@ -1383,6 +1387,8 @@ void Scene::UpdateSelection()
 			App->input->GetMousePosition(x, y);
 			x += cam.x;
 			y += cam.y;
+			if (unitLife != nullptr) unitLife->SetInactive();
+			if (unitDamage != nullptr) unitDamage->SetInactive();
 			for (std::map<double, Behaviour*>::iterator it = Behaviour::b_map.begin(); it != Behaviour::b_map.end(); ++it)
 			{
 				if (it->second->GetType() == UNIT_MELEE || it->second->GetType() == GATHERER || it->second->GetType() == UNIT_RANGED

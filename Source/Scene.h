@@ -257,10 +257,10 @@ private:
 	int superLvl = 0;
 
 	//Intro
-	float introAnim = 0;
-	float introFrameTime = 1.0f;
-	int introRow = 0;
-	int introColumn = 0;
+	float introAnim;
+	float introFrameTime;
+	int introRow;
+	int introColumn;
 	C_Image* logo = nullptr;
 
 
