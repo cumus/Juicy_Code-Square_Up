@@ -131,6 +131,7 @@ Here are some links to our GitHib, Wiki, etc.
 * AI: Enemies target Base Center.
 
 ### Updates from v0.8
+* Mouse camera movement.
 * Added Scene serialization (loading/saving game).
 * Added animated logo.
 * Options Scene with window and audio controls.
@@ -139,9 +140,16 @@ Here are some links to our GitHib, Wiki, etc.
 * Implemented ranged and super units.
 * Units now respond on damage being dealt.
 * Fog of War for map and minimap.
-* Added King and Queen's dialogues.
+* Fixed minimap rendering issues.
+* Added Coronel's and Queen's dialogues.
 * Added 3 new missions with progress shown in HUD window.
 * Added particle effects: ranged unit projectiles, tower projectiles and Base Center destruction.
+* Implemented Scene Quadtree and Collision System.
+* Fixed Unit selection.
+* Improved Unit and Building selection panel.
+* Fixed Spatial Audio playback issues.
+* Fixed building's unit creation bars.
+* Asyncronous sprite animations
 
 ##
 ![University Logo](https://www.citm.upc.edu/templates/new/img/logoCITM.png?1401879059) 
