@@ -102,13 +102,6 @@ AnimatedSprite::AnimatedSprite(Behaviour* unit) : Sprite(unit->GetGameobject(), 
 		offset = { 2.0f, -360.0f + Map::GetBaseOffset(), 0.5f, 0.5f };
 		break;
 	}
-	case MOBDROP:
-	{
-		tex_id = App->tex.Load("Assets/textures/Mob_Drop.png");
-		animations[STAY].Setup(section = { 0, 0, 179, 180 }, 4, 8.0f);
-		offset = { -70.0f, -134.0f + Map::GetBaseOffset(), 0.3f, 0.3f };
-		break;
-	}
 	case LAB:
 	{
 		tex_id = App->tex.Load("Assets/textures/lab.png");

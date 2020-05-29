@@ -40,32 +40,16 @@ enum SceneType : int
 enum GameplayState : int
 {
 	LORE,
-	CAM_MOVEMENT,
-	R_CLICK_MOVEMENT,
-
-	EDGE_STATE,
-	RESOURCES,
 	
-	BUILD,
-	UPGRADE,
-
-	GATHERER_STATE,
-	MELEE,
-	MELEE_ATK,
-	ENEMY,
-	ENEMY_ATK,
-
-	TOWER_STATE,
-	TOWER_ATK,
-	BASE_CENTER_STATE,
-	BARRACKS_STATE,
-
+	GATHER,
+	WARNING,
+	
 	SPAWNER_STATE,
 
 	WIN,
 	LOSE,
 
-	MOBDROP
+	
 };
 
 enum PlayerStats : int
