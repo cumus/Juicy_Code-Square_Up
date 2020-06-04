@@ -3,6 +3,11 @@
 
 ![](https://github.com/PolGannau/Juicy-Code-Games_Project-2/blob/master/WikiResources/Home%20page%20picts/team%20logo1%20sin%20fondo.png)
 
+
+LA PAGINA WEB MOLA QUE TE CAGAS
+
+
+
 We are Juicy Code Games, we are working on an RTS called SQUARE UP, in this GitHub repository we will be daily updating our work in the game in progress. We hope you enjoy our work and our game.
 
 ## Team members
