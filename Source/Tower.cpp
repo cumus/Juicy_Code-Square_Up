@@ -1,6 +1,5 @@
 #include "Tower.h"
 #include "Application.h"
-#include "Render.h"
 #include "Gameobject.h"
 #include "Audio.h"
 #include "AudioSource.h"
@@ -8,12 +7,13 @@
 #include "Log.h"
 #include "MapContainer.h"
 #include "Scene.h"
+#include "Sprite.h"
 #include "Canvas.h"
 
 Tower::Tower(Gameobject* go) : Behaviour(go, TOWER, NO_UPGRADE, B_TOWER)
 {
 	max_life = 75;
-	current_life = max_life;
+	current_life = 1;
 	attack_range = 13.0f;
 	vision_range = 25.0f;
 	damage = 20;
@@ -23,7 +23,7 @@ Tower::Tower(Gameobject* go) : Behaviour(go, TOWER, NO_UPGRADE, B_TOWER)
 	current_state = NO_UPGRADE;
 	providesVisibility = true;
 	spriteState = NO_UPGRADE;
-
+	//characteR->SetColor({ 0, 0, 0, 0 });
 	// create_bar();
 	// bar_go->SetInactive();
 	CreatePanel();
@@ -37,6 +37,7 @@ Tower::Tower(Gameobject* go) : Behaviour(go, TOWER, NO_UPGRADE, B_TOWER)
 		App->pathfinding.SetWalkabilityTile(int(pos.x), int(pos.y), false);
 	}*/
 	SetColliders();
+	mini_life_bar.Show();
 }
 
 Tower::~Tower()
@@ -70,7 +71,26 @@ void Tower::OnCollision(Collider selfCol, Collider col)
 
 void Tower::Update()
 {
-	if (current_state != DESTROYED)
+	if (!active)
+	{
+		//LOG("Building");
+		buildProgress += 0.5f;
+		current_life = int(buildProgress);
+		//int alpha = 255 * (current_life / max_life);
+		//if (alpha < 255) characteR->SetColor({ 0,0,0,Uint8(alpha) });
+		//else characteR->SetColor({ 0,0,0,255 });
+		//LOG("Building  alpha: %d", alpha);
+		if (current_life >= max_life)
+		{
+			current_life = max_life;
+			//characteR->SetColor({ 0,0,0,255 });
+			active = true;
+			mini_life_bar.Hide();
+		}
+		mini_life_bar.Update(float(current_life) / float(max_life), current_lvl);
+	}
+
+	if (current_state != DESTROYED && active)
 	{		
 		if (objective != nullptr && objective->GetState() != DESTROYED)
 			if (ms_count >= atkDelay) DoAttack();
@@ -105,8 +125,8 @@ void Tower::Upgrade()
 			max_life += 25;
 			damage += 2;
 			audio->Play(B_BUILDED);
-			LOG("LIFE AFTER UPGRADE: %d", max_life);
-			LOG("Tower LEVEL: %d", lvl);
+			//LOG("LIFE AFTER UPGRADE: %d", max_life);
+			//LOG("Tower LEVEL: %d", lvl);
 
 			update_upgrades_ui();
 			update_health_ui();

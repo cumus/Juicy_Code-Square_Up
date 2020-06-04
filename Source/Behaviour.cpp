@@ -43,6 +43,8 @@ Behaviour::Behaviour(Gameobject* go, UnitType t, UnitState starting_state, Compo
 	attackCollOffset = { 0,0 };
 	selectionRect = {0,0,64,64};
 	game_object->SetStatic(true);
+	active = false;
+	buildProgress = 0;
 
 	audio = new AudioSource(game_object);
 	characteR = new AnimatedSprite(this);
@@ -345,16 +347,19 @@ void Behaviour::Save(pugi::xml_node& node) const
 
 void Behaviour::Selected()
 {
-	// Selection mark
-	selection_highlight->SetActive();
+	if (active)
+	{
+		// Selection mark
+		selection_highlight->SetActive();
 
-	// Audio Fx
-	audio->Play(SELECT);
+		// Audio Fx
+		audio->Play(SELECT);
 
-	if (bar_go != nullptr) bar_go->SetActive();
-	if (creation_bar_go != nullptr) creation_bar_go->SetActive();
-	if (selectionPanel != nullptr) selectionPanel->SetActive();
-	if (unitInfo != nullptr) unitInfo->SetActive();
+		if (bar_go != nullptr) bar_go->SetActive();
+		if (creation_bar_go != nullptr) creation_bar_go->SetActive();
+		if (selectionPanel != nullptr) selectionPanel->SetActive();
+		if (unitInfo != nullptr) unitInfo->SetActive();
+	}
 }
 
 void Behaviour::UnSelected()
@@ -395,6 +400,8 @@ void Behaviour::OnDamage(int d, UnitType from)
 				update_health_ui();
 				AfterDamageAction(from);
 			}
+
+			if (!active) buildProgress = current_life;
 		}
 	}
 }
@@ -622,6 +629,7 @@ B_Unit::B_Unit(Gameobject* go, UnitType t, UnitState s, ComponentType comp_type)
 	chasing = false;
 	moveOrder = false;
 	unitLevel = 0;
+	active = true;
 }
 
 void B_Unit::Update()

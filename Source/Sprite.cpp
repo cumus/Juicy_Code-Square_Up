@@ -63,6 +63,12 @@ void Sprite::SetSection(const SDL_Rect s)
 	section = s;
 }
 
+void Sprite::SetColor(const SDL_Color clr)
+{
+	color = clr;
+}
+
+
 AnimatedSprite::AnimatedSprite(Behaviour* unit) : Sprite(unit->GetGameobject(), ANIM_SPRITE)
 {
 	switch (unit->GetType())

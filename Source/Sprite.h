@@ -19,6 +19,7 @@ public:
 	void PostUpdate() override;
 
 	void SetSection(const SDL_Rect section);
+	void SetColor(const SDL_Color color);
 
 public:
 	RectF offset;

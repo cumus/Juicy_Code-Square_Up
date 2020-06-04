@@ -1,15 +1,12 @@
 #include "Barracks.h"
 #include "Application.h"
 #include "Gameobject.h"
-#include "Render.h"
-#include "Audio.h"
 #include "AudioSource.h"
 #include "Transform.h"
-#include "Input.h"
 #include "SDL/include/SDL_scancode.h"
 #include "Scene.h"
 #include "Canvas.h"
-#include "Barracks.h"
+#include "Sprite.h"
 #include "Log.h"
 
 
@@ -18,7 +15,7 @@ Barracks::Barracks(Gameobject* go) : BuildingWithQueue(go, BARRACKS, NO_UPGRADE,
 	Transform* t = game_object->GetTransform();
 
 	max_life = 350;
-	current_life = max_life;
+	current_life = 1;
 	buildQueue = 0;
 	current_lvl = 1;
 	max_lvl = 5;
@@ -26,7 +23,7 @@ Barracks::Barracks(Gameobject* go) : BuildingWithQueue(go, BARRACKS, NO_UPGRADE,
 	vision_range = 15.0f;
 	current_state = NO_UPGRADE;
 	spriteState = NO_UPGRADE;
-
+	//characteR->SetColor({ 0, 0, 0, 0 });
 	//create_bar();
 	//bar_go->SetInactive();
 	CreatePanel();
@@ -46,6 +43,7 @@ Barracks::Barracks(Gameobject* go) : BuildingWithQueue(go, BARRACKS, NO_UPGRADE,
 		}
 	}
 	SetColliders();
+	mini_life_bar.Show();
 }
 
 Barracks::~Barracks()
@@ -68,6 +66,26 @@ void Barracks::FreeWalkabilityTiles()
 	}
 }
 
+void Barracks::Update()
+{
+	if (!active)
+	{
+		buildProgress += 1.0f;
+		current_life = int(buildProgress);
+		//Uint8 alpha = 255 * (current_life / max_life);
+		//if(alpha<255) characteR->SetColor({ 0,0,0,alpha });
+		//else characteR->SetColor({ 0,0,0,255 });
+		//LOG("Building  alpha: %d", alpha);
+		if (current_life >= max_life)
+		{
+			current_life = max_life;
+			//characteR->SetColor({ 0,0,0,255 });
+			active = true;
+			mini_life_bar.Hide();
+		}
+		mini_life_bar.Update(float(current_life) / float(max_life), current_lvl);
+	}
+}
 
 void Barracks::Upgrade()
 {
@@ -80,8 +98,8 @@ void Barracks::Upgrade()
 			max_life += 50;
 			current_lvl += 1;
 			audio->Play(B_BUILDED);
-			LOG("LIFE AFTER UPGRADE: %d", max_life);
-			LOG("BC LEVEL: %d", current_lvl);
+			//LOG("LIFE AFTER UPGRADE: %d", max_life);
+			//LOG("BC LEVEL: %d", current_lvl);
 			switch (current_state)
 			{
 			case NO_UPGRADE:

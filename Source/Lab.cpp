@@ -18,7 +18,7 @@ Lab::Lab(Gameobject* go) : Behaviour(go, LAB, NO_UPGRADE, B_LAB)
 	Transform* t = game_object->GetTransform();
 
 	max_life = 200;
-	current_life = max_life;
+	current_life = 1;
 	current_lvl = 1;
 	max_lvl = 5;
 	vision_range = 15.0f;
@@ -26,7 +26,7 @@ Lab::Lab(Gameobject* go) : Behaviour(go, LAB, NO_UPGRADE, B_LAB)
 	providesVisibility = true;
 	spriteState = NO_UPGRADE;
 	current_state = NO_UPGRADE;
-
+	//characteR->SetColor({ 0, 0, 0, 0 });
 	//create_bar();
 	//bar_go->SetInactive();
 	CreatePanel();
@@ -45,6 +45,7 @@ Lab::Lab(Gameobject* go) : Behaviour(go, LAB, NO_UPGRADE, B_LAB)
 		}
 	}
 	SetColliders();
+	mini_life_bar.Show();
 }
 
 Lab::~Lab()
@@ -78,7 +79,25 @@ void Lab::FreeWalkabilityTiles()
 
 void Lab::Update()
 {
-	mini_life_bar.Update(float(current_life) / float(max_life), current_lvl);
+	if (!active)
+	{
+		//LOG("Building");
+		buildProgress += 1.0f;
+		current_life = int(buildProgress);
+		//int alpha = 255 * (current_life / max_life);
+		//if (alpha < 255) characteR->SetColor({ 0,0,0,Uint8(alpha) });
+		//else characteR->SetColor({ 0,0,0,255 });
+		//LOG("Building  alpha: %d", alpha);
+		if (current_life >= max_life)
+		{
+			current_life = max_life;
+			//characteR->SetColor({ 0,0,0,255 });
+			active = true;
+			mini_life_bar.Hide();
+		}
+		mini_life_bar.Update(float(current_life) / float(max_life), current_lvl);
+	}	
+	//mini_life_bar.Update(float(current_life) / float(max_life), current_lvl);
 }
 
 

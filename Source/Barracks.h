@@ -13,7 +13,7 @@ public:
 	~Barracks();
 
 	void Upgrade() override;
-
+	void Update() override;
 	void create_bar() override;
 	void CreatePanel() override;
 	void FreeWalkabilityTiles() override;

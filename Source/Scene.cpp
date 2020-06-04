@@ -295,7 +295,13 @@ void Scene::RecieveEvent(const Event& e)
 		break; }
 	case PLACE_BUILDING:
 	{
-		imgPreview->SetActive();
+		if(imgPreview != nullptr) imgPreview->SetActive();
+		else
+		{
+			imgPreview = AddGameobject("Builder image");
+			buildingImage = new Sprite(imgPreview, App->tex.Load("Assets/textures/buildPreview.png"), { 0, 3, 217, 177 }, FRONT_SCENE, { -60.0f,-100.0f,1.0f,1.0f });
+			imgPreview->SetActive();
+		}
 		placing_building = true;
 		buildType = e.data1.AsInt();
 		switch (buildType)
@@ -2245,6 +2251,10 @@ void Scene::LoadGameNow()
 
 		root.Load(scene_node);
 		Event::Push(MINIMAP_MOVE_CAMERA, App->render, scene_node.attribute("camX").as_float(800.0f), scene_node.attribute("camY").as_float(2900.0f));
+
+		imgPreview = AddGameobject("Builder image");
+		buildingImage = new Sprite(imgPreview, App->tex.Load("Assets/textures/buildPreview.png"), { 0, 3, 217, 177 }, FRONT_SCENE, { -60.0f,-100.0f,1.0f,1.0f });
+		imgPreview->SetInactive();
 	}
 	else
 		LOG("Error loading scene");

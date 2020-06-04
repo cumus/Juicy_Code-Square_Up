@@ -147,8 +147,9 @@ protected:
 	UnitType type;
 	float attack_range, vision_range,dieDelay;
 	float rayCastTimer;
-	bool shoot,drawRanges;
+	bool shoot,drawRanges,active;
 	Audio_FX deathFX;
+	float buildProgress;
 	std::pair<float, float> visionRange;
 	std::pair<float, float> atkRange;
 	Behaviour* objective;
