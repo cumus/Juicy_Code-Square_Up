@@ -1733,7 +1733,6 @@ void Scene::OnEventStateMachine(GameplayState state)
 			while(spawnPointsOccuped[rand] == true);
 			SpawnBehaviour(SPAWNER, spawnPoints[rand]);
 			spawnPointsOccuped[rand] = true;
-			//LOG("Spawner");
 		}
 		std::srand(time(NULL));
 		current_state = SPAWNER_STATE;

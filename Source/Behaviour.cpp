@@ -680,12 +680,7 @@ void B_Unit::Update()
 				if (chaseObj != nullptr)//CHASE
 				{
 					//LOG("In vision");
-					if (chaseObj->IsDestroyed())
-					{
-						chaseObj = nullptr;
-						chasing = false;
-					}
-					else if (!chasing)
+					if (!chasing)
 					{
 						//LOG("Start player chase");
 						vec pos = chaseObj->GetPos();
@@ -779,6 +774,13 @@ void B_Unit::Update()
 		if (atkTimer < atkTime) atkTimer += App->time.GetGameDeltaTime();	
 
 		if (atkObj != nullptr && atkObj->IsDestroyed()) { spriteState = IDLE;  atkObj = nullptr; }
+		if (chaseObj != nullptr && chaseObj->IsDestroyed())
+		{
+			chaseObj = nullptr;
+			chasing = false;
+			goingBase = false;
+			spriteState = IDLE;
+		}
 
 		//Check position for non walkable
 		if (App->pathfinding.ValidTile(int(pos.x), int(pos.y)) == false)
