@@ -630,6 +630,7 @@ B_Unit::B_Unit(Gameobject* go, UnitType t, UnitState s, ComponentType comp_type)
 	moveOrder = false;
 	unitLevel = 0;
 	active = true;
+	foundPoint = false;
 }
 
 void B_Unit::Update()
@@ -700,6 +701,12 @@ void B_Unit::Update()
 						//LOG("Move to base");	
 					}
 				}
+
+				if (chaseObj->IsDestroyed())
+				{
+					chaseObj = nullptr;
+					chasing = false;
+				}
 			}
 
 			if (moveOrder)
@@ -759,7 +766,7 @@ void B_Unit::Update()
 					move = false;
 					chasing = false;
 					spriteState = IDLE;
-					if (chaseObj != nullptr && chaseObj->IsDestroyed()) chaseObj = nullptr;
+					if (chaseObj != nullptr && chaseObj->IsDestroyed()) chaseObj = nullptr; 			
 				}
 			}
 		}	
@@ -773,8 +780,83 @@ void B_Unit::Update()
 
 		if (atkObj != nullptr && atkObj->IsDestroyed()) { spriteState = IDLE;  atkObj = nullptr; }
 
-		//Raycast
-		//if (shoot) ShootRaycast();
+		//Check position for non walkable
+		if (App->pathfinding.ValidTile(int(pos.x), int(pos.y)) == false)
+		{
+			if (!foundPoint)
+			{
+				bool free = false;
+				int distance = 1;
+				int maxIterations = 100;
+				iPoint startPoint = { int(pos.x),int(pos.y) };
+				do
+				{
+					if (App->pathfinding.ValidTile(startPoint.x + distance, startPoint.y))
+					{
+						free = true;
+						startPoint = { int(pos.x) + (distance+2), int(pos.y) };
+					}
+					else if (App->pathfinding.ValidTile(startPoint.x - distance, startPoint.y))
+					{
+						free = true;
+						startPoint = { int(pos.x) - (distance + 2), int(pos.y) };
+					}
+					else if (App->pathfinding.ValidTile(startPoint.x, startPoint.y + distance))
+					{
+						free = true;
+						startPoint = { int(pos.x), int(pos.y) + (distance + 2) };
+					}
+					else if (App->pathfinding.ValidTile(startPoint.x, startPoint.y - distance))
+					{
+						free = true;
+						startPoint = { int(pos.x), int(pos.y) - (distance + 2) };
+					}
+					else if (App->pathfinding.ValidTile(startPoint.x + distance, startPoint.y + distance))
+					{
+						free = true;
+						startPoint = { int(pos.x) + (distance + 2), int(pos.y) + (distance + 2) };
+					}
+					else if (App->pathfinding.ValidTile(startPoint.x - distance, startPoint.y + distance))
+					{
+						free = true;
+						startPoint = { int(pos.x) - (distance + 2),int(pos.y) + (distance + 2) };
+					}
+					else if (App->pathfinding.ValidTile(startPoint.x + distance, startPoint.y - distance))
+					{
+						free = true;
+						startPoint = { int(pos.x) + (distance + 2), int(pos.y) - (distance + 2) };
+					}
+					else if (App->pathfinding.ValidTile(startPoint.x - distance, startPoint.y - distance))
+					{
+						free = true;
+						startPoint = { int(pos.x) - (distance + 2), int(pos.y) - (distance +2) };
+					}
+					distance++;
+				} while (!free && distance < maxIterations);
+
+				if (free)
+				{
+					foundPoint = true;
+					freePos = { float(startPoint.x),float(startPoint.y) };
+					direction = { freePos.x - pos.x,freePos.y - pos.y };
+					float normal = sqrt(pow(direction.x, 2) + pow(direction.y, 2));
+					direction = { direction.x / normal,direction.y / normal };
+				}
+			}
+			else
+			{
+				float d = (abs(pos.x - freePos.x)) + (abs(pos.y - freePos.y));
+				if (d > 0.5f)
+				{
+					game_object->GetTransform()->MoveX(direction.x * 5 * App->time.GetGameDeltaTime());//Move X
+					game_object->GetTransform()->MoveY(direction.y * 5 * App->time.GetGameDeltaTime());//Move Y
+				}
+				else
+				{
+					foundPoint = false;
+				}
+			}
+		}
 			
 		//Draw vision and attack range
 		if (drawRanges) DrawRanges();

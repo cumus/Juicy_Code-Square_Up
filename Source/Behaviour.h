@@ -278,6 +278,11 @@ protected:
 	Behaviour* atkObj;
 	Behaviour* chaseObj;
 	bool moveOrder;
+
+	//Away walkability
+	vec direction;
+	vec freePos;
+	bool foundPoint;
 };
 
 #endif // __BEHAVIOUR_H_
