@@ -95,8 +95,6 @@ bool Scene::Update()
 	if (god_mode)
 			GodMode();
 
-	UpdateSpawner();
-
 	if (fading != NO_FADE)
 	{
 		UpdateFade();
@@ -1546,47 +1544,6 @@ int Scene::GetGearsCount()
 	return player_stats[CURRENT_MOB_DROP];
 }
 
-void Scene::UpdateSpawner()
-{
-	//////TEMPORAL/////
-	if (activateSpawn && spawnCounter >= cooldownSpawn)
-	{
-		for (int a = 0; a < spawnPoints.size(); a++)
-		{
-			vec pos = spawnPoints[a];
-			bool incX = false;
-			for (int i = 0; i < 5; i++)
-			{
-				if (incX)
-				{
-					pos.x++;
-					incX = false;
-				}
-				else
-				{
-					pos.y++;
-					incX = true;
-				}
-
-				int random = std::rand() % 100 + 1;
-				if (random < MELEE_RATE) Event::Push(SPAWN_UNIT, this, ENEMY_MELEE, pos);
-				else if (random < (MELEE_RATE + RANGED_RATE)) Event::Push(SPAWN_UNIT, this, ENEMY_RANGED, pos);
-				else if (random < (MELEE_RATE + RANGED_RATE + SUPER_RATE)) Event::Push(SPAWN_UNIT, this, ENEMY_SUPER, pos);
-				else  Event::Push(SPAWN_UNIT, this, ENEMY_SPECIAL, pos);
-				currentSpawns++;
-				LOG("Spawned one");
-			}
-		}
-		spawnCounter = 0;
-		//LOG("End ");
-		std::srand(time(NULL));
-	}
-	else
-	{
-		spawnCounter += App->time.GetGameDeltaTime();
-	}
-	///////////////////
-}
 
 void Scene::UpdateStateMachine()
 {
@@ -1825,11 +1782,6 @@ void Scene::ResetScene()
 	spawnPoints.push_back(vec(30, 20, 0.5));
 	spawnPoints.push_back(vec(20, 30, 0.5));
 
-	currentSpawns = 0;
-	maxSpawns = 200;
-	spawnCounter = 0;
-	cooldownSpawn = 5.0f;
-	
 	App->collSystem.Clear();
 	map.CleanUp();
 	App->fogWar.CleanUp();

@@ -186,7 +186,6 @@ private:
 	void UpdateBuildingMode();
 	void UpdatePause();
 	void UpdateSelection();
-	void UpdateSpawner();
 
 	void UpdateStateMachine();
 	void OnEventStateMachine(GameplayState state);
@@ -210,10 +209,6 @@ public:
 
 	//Enemy spawn
 	std::vector<vec> spawnPoints;
-	bool activateSpawn = false;
-	int currentSpawns, maxSpawns;
-	float spawnCounter, cooldownSpawn;		
-	
 		
 
 private:

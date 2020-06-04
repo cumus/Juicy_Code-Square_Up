@@ -626,6 +626,9 @@ B_Unit::B_Unit(Gameobject* go, UnitType t, UnitState s, ComponentType comp_type)
 
 void B_Unit::Update()
 {	
+	if (providesVisibility) GetTilesInsideRadius();
+	else CheckFoWMap();
+
 	if (current_state != DESTROYED)
 	{
 		if (moveOrder) atkObj = nullptr;
