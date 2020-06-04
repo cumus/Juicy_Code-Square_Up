@@ -63,20 +63,6 @@ bool Scene::Start()
 bool Scene::PreUpdate()
 {
 	root.PreUpdate();
-
-	//Fog of war
-	//if (fogLoaded) App->fogWar.Update();
-	/*if (Behaviour::enemiesInSight.empty() != false)
-	{
-		cacheEnemies = Behaviour::enemiesInSight;
-		Behaviour::enemiesInSight.clear();
-		//LOG("Not empty");
-		for (std::vector<double>::const_iterator it = cacheEnemies.cbegin(); it != cacheEnemies.cend(); ++it)
-		{
-			Behaviour* go = Behaviour::b_map[*it]->GetGameobject()->GetBehaviour();
-			if (go->GetState() != DESTROYED) { Event::Push(SHOW_SPRITE, go); LOG("Sent event"); }
-		}
-	}*/
 	return true;
 }
 
@@ -136,10 +122,6 @@ bool Scene::Update()
 				}
 				logo->section = { introColumn * 270, introRow * 500, 270, 500 };
 				max++;
-				//LOG("%d",max);
-				/*if (introColumn > 99) introColumn = 0;
-				else introColumn++;
-				logo->section = { introColumn * 270, 0, 270, 500 };*/
 				introAnim = 0;
 			}
 		}
@@ -150,14 +132,6 @@ bool Scene::Update()
 		if (menuAnim < menuFrameTime) menuAnim += App->time.GetGameDeltaTime();
 		else
 		{
-			/*if (introColumn < 12) introColumn++;
-			else
-			{
-				introColumn = 0;
-				if (introRow < 28) introRow++;
-				else introRow = 0;
-			}
-			logo->section = { introColumn * 499, introRow * 268, 499, 590 };*/
 			if (menuColumn > 2)
 				menuColumn = 0;
 			else menuColumn++;
@@ -178,7 +152,6 @@ bool Scene::Update()
 			int dirY = std::rand() % 10 + 1;
 			if (dirX <= 5) randomX = -randomX;
 			if (dirY <= 5) randomY = -randomY;
-			//LOG("Random X:%d/Y:%d",randomX,randomY);
 			App->render->MoveCamera(randomX, randomY);
 		}
 		else
@@ -198,7 +171,7 @@ bool Scene::Update()
 		{
 			if (timeEarthquake == 0)
 			{
-				timeEarthquake = std::rand() % 120 + 60;
+				timeEarthquake = std::rand() % 180 + 150;
 				std::srand(time(NULL));
 			}
 			else
@@ -1741,10 +1714,28 @@ void Scene::OnEventStateMachine(GameplayState state)
 
 		//----------------------------------------------------------------		
 
-		SpawnBehaviour(SPAWNER, vec(230.f, 160.f));
-		SpawnBehaviour(SPAWNER, vec(55.f, 200.f));
-		SpawnBehaviour(SPAWNER, vec(155.f, 300.f));
+		spawnPointsOccuped[0] = false;
+		spawnPointsOccuped[1] = false;
+		spawnPointsOccuped[2] = false;
+		spawnPointsOccuped[3] = false;
+		spawnPointsOccuped[4] = false;
 
+		spawnPoints[0] = { 230.f,160.f };
+		spawnPoints[1] = { 55.f,200.f };
+		spawnPoints[2] = { 155.f,300.f };
+		spawnPoints[3] = { 230.f,160.f };
+		spawnPoints[4] = { 55.f,200.f };
+
+		int rand;
+		for (int i = 0; i < 3; i++)
+		{
+			do rand = std::rand() % 5 + 0;
+			while(spawnPointsOccuped[rand] == true);
+			SpawnBehaviour(SPAWNER, spawnPoints[rand]);
+			spawnPointsOccuped[rand] = true;
+			//LOG("Spawner");
+		}
+		std::srand(time(NULL));
 		current_state = SPAWNER_STATE;
 		break;
 
@@ -1783,12 +1774,8 @@ void Scene::ResetScene()
 	groupSelect = false;
 	group.clear();
 
-	spawnPoints.clear();
-	spawnPoints.push_back(vec(20, 20, 0.5));
-	spawnPoints.push_back(vec(30, 20, 0.5));
-	spawnPoints.push_back(vec(20, 30, 0.5));
-
 	App->collSystem.Clear();
+	App->particleSys.CleanUp();
 	map.CleanUp();
 	App->fogWar.CleanUp();
 	App->audio->UnloadFx();

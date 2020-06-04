@@ -208,7 +208,8 @@ public:
 	GameplayState current_state;
 
 	//Enemy spawn
-	std::vector<vec> spawnPoints;
+	vec spawnPoints[5];
+	bool spawnPointsOccuped[5];
 		
 
 private:

@@ -680,15 +680,19 @@ void B_Unit::Update()
 				if (chaseObj != nullptr)//CHASE
 				{
 					//LOG("In vision");
-					if (!chasing)
+					if (chaseObj->IsDestroyed())
+					{
+						chaseObj = nullptr;
+						chasing = false;
+					}
+					else if (!chasing)
 					{
 						//LOG("Start player chase");
 						vec pos = chaseObj->GetPos();
 						Event::Push(UPDATE_PATH, this->AsBehaviour(), int(pos.x), int(pos.y));
 						chasing = true;
-						//move = true;
 						goingBase = false;
-					}
+					}					
 				}
 				else
 				{
@@ -702,11 +706,7 @@ void B_Unit::Update()
 					}
 				}
 
-				if (chaseObj->IsDestroyed())
-				{
-					chaseObj = nullptr;
-					chasing = false;
-				}
+				
 			}
 
 			if (moveOrder)
