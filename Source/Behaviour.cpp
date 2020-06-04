@@ -158,10 +158,10 @@ void Behaviour::SetColliders()
 		}
 		case SPAWNER:
 		{			
-			bodyColl = new Collider(game_object, { pos.x,pos.y,game_object->GetTransform()->GetLocalScaleX(),game_object->GetTransform()->GetLocalScaleY() }, TRIGGER, ENEMY_TAG, { 0,Map::GetBaseOffset(),0,0 }, BODY_COLL_LAYER);
+			bodyColl = new Collider(game_object, { pos.x,pos.y,game_object->GetTransform()->GetLocalScaleX()*3,game_object->GetTransform()->GetLocalScaleY()*3 }, TRIGGER, ENEMY_TAG, { 0,Map::GetBaseOffset(),0,0 }, BODY_COLL_LAYER);
 			std::pair<float, float> world = Map::F_MapToWorld(pos.x, pos.y);
-			selectionOffset = { -30,0 };
-			selectionRect = { world.first + selectionOffset.first,world.second + selectionOffset.second,100,50 };
+			selectionOffset = { -70,-70.0f };
+			selectionRect = { world.first + selectionOffset.first,world.second + selectionOffset.second,200,150 };
 			break;
 		}
 	}

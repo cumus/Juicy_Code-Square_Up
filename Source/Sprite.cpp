@@ -135,7 +135,7 @@ AnimatedSprite::AnimatedSprite(Behaviour* unit) : Sprite(unit->GetGameobject(), 
 		tex_id = App->tex.Load("Assets/textures/SpawnEnemy.png");
 		animations[NO_UPGRADE].Setup(section = { 0, 0, 560, 397 }, 4, 5.0f);
 		animations[DESTROYED].Setup({ 0, 0, 560, 397 }, 4, 5.0f);
-		offset = { -205.f, -100.f, 0.5f, 0.5f };
+		offset = { -205.f, -300.0f, 0.4f, 0.4f };
 		break;
 	}
 	case UNIT_MELEE:

@@ -24,7 +24,7 @@ double Gameobject::go_count = 0;
 Gameobject::Gameobject(const char* n, Gameobject* p) : id(++go_count), name(n), parent(p)
 {
 	transform = new Transform(this);
-	LOG(name.c_str());
+	//LOG(name.c_str());
 	if (parent != nullptr)
 		parent->AddNewChild(this);
 }
