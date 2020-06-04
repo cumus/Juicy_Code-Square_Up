@@ -208,14 +208,11 @@ public:
 	Gameobject* selection = nullptr;
 	GameplayState current_state;
 
-	//Temporal/////
 	//Enemy spawn
 	std::vector<vec> spawnPoints;
 	bool activateSpawn = false;
 	int currentSpawns, maxSpawns;
-	float spawnCounter, cooldownSpawn;
-	//////////////
-		
+	float spawnCounter, cooldownSpawn;		
 	
 		
 

@@ -1224,6 +1224,12 @@ void Scene::UpdateBuildingMode()
 			//audio->PlayFx(B_BUILDED);
 			std::pair<int, int> pos = Map::WorldToTileBase(float(x) + cam.x, float(y) + cam.y);
 			Transform* t = SpawnBehaviour(buildType, vec(pos.first, pos.second));
+			if (t)
+			{
+				placing_building = false;
+				buildType = -1;
+				imgPreview->SetInactive();
+			}
 		}
 	}
 	else
