@@ -27,7 +27,7 @@ Base_Center::Base_Center(Gameobject* go) : BuildingWithQueue(go, BASE_CENTER, NO
 	providesVisibility = true;
 	spriteState = NO_UPGRADE;
 	current_state = NO_UPGRADE;
-
+	active = true;
 	create_bar();
 	//bar_go->SetInactive();
 	CreatePanel();
