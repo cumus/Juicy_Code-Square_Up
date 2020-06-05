@@ -46,6 +46,9 @@ enum GameplayState : int
 	
 	SPAWNER_STATE,
 
+	WIN_BUTTON,
+	LOSE_BUTTON,
+
 	WIN,
 	LOSE,	
 };

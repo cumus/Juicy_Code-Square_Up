@@ -723,10 +723,11 @@ void Scene::LoadEndScene()
 	background->section = { 0, 0, 1280, 720 };
 	background->tex_id = App->tex.Load(win ? "Assets/textures/back-win.png" : "Assets/textures/back-lose.png");
 
-	C_Button* background_btn = new C_Button(background_go, Event(BUTTON_EVENT, this, SCENE_CHANGE, MENU));
-	background_btn->target = { 1.f, 1.f, 1.f, 1.f };
-	background_btn->offset = { -1920.f, -1080.f };
-	for (int i = 0; i < 4; i++)background_btn->section[i] = { 0, 0, 1920, 1080 };
+	C_Button* main_screen_button = new C_Button(background_go, Event(BUTTON_EVENT, this, SCENE_CHANGE, MENU));
+	main_screen_button->target = { 1.f, 1.f, 1.f, 1.f };
+	main_screen_button->offset = { -1920.f, -1080.f };
+	//main_screen_button->tex_id = App->tex.Load(win ? "Assets/textures/back-win.png" : "Assets/textures/back-lose.png");
+	for (int i = 0; i < 4; i++)main_screen_button->section[i] = { 0, 0, 1920, 1080 };
 
 	//------------------------- WIN/LOSE --------------------------------------
 	if (win)
@@ -1012,7 +1013,7 @@ void Scene::LoadTutorial()
 	skip->section[2] = { 0, 88, 309, 37 };
 	skip->section[3] = { 0, 88, 309, 37 };
 
-	skip->tex_id = App->tex.Load("Assets/textures/tuto/not-button.png");
+	skip->tex_id = App->tex.Load("Assets/textures/tuto/skip-button.png");
 
 	vec gatherer_t = { 130, 75 };
 
@@ -1546,7 +1547,13 @@ void Scene::UpdateStateMachine()
 	
 	case SPAWNER_STATE:
 
-		if (player_stats[CURRENT_SPAWNERS] == 0) Event::Push(GAMEPLAY, this, WIN);
+		if (player_stats[CURRENT_SPAWNERS] == 0) Event::Push(GAMEPLAY, this, WIN_BUTTON);
+		break;
+
+	case WIN_BUTTON:
+		break;
+
+	case LOSE_BUTTON:
 		break;
 
 	case WIN:
@@ -1722,7 +1729,52 @@ void Scene::OnEventStateMachine(GameplayState state)
 		std::srand(time(NULL));
 		current_state = SPAWNER_STATE;
 		break;
+	case WIN_BUTTON:
+		not_go = AddGameobjectToCanvas("warning_state");
+		not = new C_Image(not_go);
+		next = new C_Button(not_go, Event(GAMEPLAY, this, WIN));
 
+		not->target = { 0.3f, 0.3f, 0.6f, 0.6f };
+		//not->offset = { -183.f, -1044.f };
+		not->section = { 0, 0, 983, 644 };
+		not->tex_id = App->tex.Load("Assets/textures/tuto/lure-queen-not.png");
+
+		next->target = { 0.605f, 0.795f, 0.6f, 0.6f };
+		//not_inactive->offset = { 500.f, -317.f };
+
+		next->section[0] = { 0, 0, 309, 37 };
+		next->section[1] = { 0, 44, 309, 37 };
+		next->section[2] = { 0, 88, 309, 37 };
+		next->section[3] = { 0, 88, 309, 37 };
+
+		next->tex_id = App->tex.Load("Assets/textures/tuto/not-button.png");
+
+		current_state = WIN_BUTTON;
+
+		break;
+	case LOSE_BUTTON:
+		not_go = AddGameobjectToCanvas("warning_state");
+		not = new C_Image(not_go);
+		next = new C_Button(not_go, Event(GAMEPLAY, this, LOSE));
+
+		not->target = { 0.3f, 0.3f, 0.6f, 0.6f };
+		//not->offset = { -183.f, -1044.f };
+		not->section = { 0, 0, 983, 644 };
+		not->tex_id = App->tex.Load("Assets/textures/tuto/lure-queen-not.png");
+
+		next->target = { 0.605f, 0.795f, 0.6f, 0.6f };
+		//not_inactive->offset = { 500.f, -317.f };
+
+		next->section[0] = { 0, 0, 309, 37 };
+		next->section[1] = { 0, 44, 309, 37 };
+		next->section[2] = { 0, 88, 309, 37 };
+		next->section[3] = { 0, 88, 309, 37 };
+
+		next->tex_id = App->tex.Load("Assets/textures/tuto/not-button.png");
+
+		current_state = LOSE_BUTTON;
+
+		break;
 	case WIN:
 		//Kill 200 units
 		current_state = WIN;

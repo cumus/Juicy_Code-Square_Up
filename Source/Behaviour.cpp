@@ -517,7 +517,7 @@ void Behaviour::OnKill(const UnitType type)
 	}
 	case BASE_CENTER:
 	{
-		Event::Push(GAMEPLAY, App->scene, LOSE);
+		Event::Push(GAMEPLAY, App->scene, LOSE_BUTTON);
 		//App->collSystem.DeleteCollider(*bodyColl);
 		break;
 	}
