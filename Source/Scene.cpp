@@ -565,27 +565,12 @@ void Scene::LoadMenuScene()
 
 	options->tex_id = App->tex.Load("Assets/textures/options.png");
 
-	//------------------------- FULLSCREEN --------------------------------------
-
-	Gameobject* fullscreen_go = AddGameobjectToCanvas("Fullscreen Button");
-
-	C_Button* fullscreen = new C_Button(fullscreen_go, Event(BUTTON_EVENT, this, TOGGLE_FULLSCREEN));
-	fullscreen->target = { buttons_x, 0.680f, .55f, .55f };
-	//fullscreen->offset = { 30.f, -157.f };
-
-	fullscreen->section[0] = { 0, 0, 470, 90 };
-	fullscreen->section[1] = { 0, 101, 470, 90 };
-	fullscreen->section[2] = { 0, 202, 470, 90 };
-	fullscreen->section[3] = { 0, 202, 470, 90 };
-
-	fullscreen->tex_id = App->tex.Load("Assets/textures/fullscreen.png");
-
 	//------------------------- QUIT --------------------------------------
 
 	Gameobject* quit_go = AddGameobjectToCanvas("Quit Button");
 
 	C_Button* quit = new C_Button(quit_go, Event(BUTTON_EVENT, this, REQUEST_QUIT));
-	quit->target = { buttons_x, 0.758f, .55f, .55f };
+	quit->target = { buttons_x, 0.680f, .55f, .55f };
 	//quit->offset = { 30.f, -55.f };
 
 	quit->section[0] = { 0, 0, 470, 90 };
