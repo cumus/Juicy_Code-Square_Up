@@ -28,6 +28,7 @@ enum Layer : int
 	HUD,
 	EDITOR,
 	FADE,
+	CURSOR,
 	MAX_LAYERS
 };
 
@@ -101,6 +102,9 @@ private:
 	SDL_Rect		viewport;
 	SDL_Color		background;
 	SDL_Color		draw_color;
+
+	//Cursor
+	int cursorID;
 
 	// Camera
 	RectF cam;

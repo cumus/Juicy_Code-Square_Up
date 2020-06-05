@@ -90,6 +90,9 @@ bool Render::Init()
 	else
 		LOG("Could not create the renderer! SDL_Error: %s\n", SDL_GetError());
 
+	SDL_ShowCursor(0);
+	cursorID = App->tex.Load("Assets/textures/tempMouse.png");
+
 	return ret;
 }
 
@@ -249,6 +252,11 @@ bool Render::PostUpdate()
 	for (int i = 0; i < MAX_LAYERS; ++i)
 		for (std::map<int, std::vector<RenderData>>::iterator it = layers[i].begin(); it != layers[i].end(); ++it)
 			it->second.clear();
+
+	SDL_Rect r = { 0,0,32,32 };
+	int x, y;
+	App->input->GetMousePosition(x,y);
+	Blit(cursorID, x+cam.x, y+cam.y, &r , CURSOR);
 
 	// Update Screen
 	SDL_RenderPresent(renderer);
@@ -530,59 +538,6 @@ bool Render::Blit(int texture_id, int x, int y, const SDL_Rect* section, Layer l
 
 	return ret;
 }
-
-/*bool Render::BlitParticle(SDL_Texture* texture, int x, int y, const SDL_Rect* section, const SDL_Rect* rectSize, SDL_Color color, SDL_BlendMode blendMode, float speed, double angle, int pivot_x, int pivot_y,Layer layer) const
-{
-	bool ret = true;
-	int scale = 1;//App->win->GetScale();
-
-	SDL_Rect rect;
-	rect.x = (int)(cam.x * speed) + x * scale;
-	rect.y = (int)(cam.y * speed) + y * scale;
-
-	if (rectSize != NULL)
-	{
-		rect.w = rectSize->w;
-		rect.h = rectSize->h;
-	}
-	else if (section != NULL)
-	{
-		rect.w = section->w;
-		rect.h = section->h;
-	}
-	else
-		SDL_QueryTexture(texture, NULL, NULL, &rect.w, &rect.h);
-
-	int px = rect.w / 2;
-	int py = rect.h / 2;
-
-	rect.w *= scale;
-	rect.h *= scale;
-
-	SDL_Point* p = NULL;
-	SDL_Point pivot;
-	pivot.x = px;
-	pivot.y = py;
-	p = &pivot;
-
-	if (SDL_SetTextureColorMod(texture, color.r, color.g, color.b) != 0)
-		LOG("Cannot set texture color mode. SDL_SetTextureColorMod error: %s", SDL_GetError());
-
-	if (SDL_SetTextureAlphaMod(texture, color.a) != 0)
-		LOG("Cannot set texture alpha mode. SDL_SetTextureAlphaMod error: %s", SDL_GetError());
-
-	if (SDL_SetTextureBlendMode(texture, blendMode) != 0)
-		LOG("Cannot set texture blend mode. SDL_SetTextureBlendMode error: %s", SDL_GetError());
-
-
-	if (SDL_RenderCopyEx(renderer, texture, section, &rect, angle, NULL, SDL_FLIP_NONE) != 0)
-	{
-		LOG("Cannot blit to screen. SDL_RenderCopy error: %s", SDL_GetError());
-		ret = false;
-	}
-
-	return ret;
-}*/
 
 bool Render::Blit_Scale(int texture_id, int x, int y, float scale_x, float scale_y, const SDL_Rect* section, Layer layer, bool use_cam)
 {
