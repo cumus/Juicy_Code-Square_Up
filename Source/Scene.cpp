@@ -135,7 +135,7 @@ bool Scene::Update()
 			if (menuColumn > 2)
 				menuColumn = 0;
 			else menuColumn++;
-			imgMenu->section = { menuColumn * 546, 0, 546, 813 };
+			imgMenu->section = { menuColumn * 526, 0, 526, 813 };
 			menuAnim = 0;
 		}
 	}
@@ -583,7 +583,7 @@ void Scene::LoadMenuScene()
 	imgMenu = new C_Image(AddGameobjectToCanvas("Menu image"));
 	imgMenu->target = { 0.75f, 0.6f, 1.0f, 1.0f };
 	imgMenu->offset = { -300.f, -400.f };
-	imgMenu->section = { 0, 0, 546, 813 };
+	//imgMenu->section = { 0, 0, 530, 813 };
 	imgMenu->tex_id = App->tex.Load("Assets/textures/BaseAnim.png");
 	menuAnim = 0;
 	menuFrameTime = 0.1f;
@@ -1278,24 +1278,24 @@ void Scene::UpdatePause()
 			save->section[2] = { 0, 202, 470, 90 };
 			save->section[3] = { 0, 202, 470, 90 };
 
-			save->tex_id = App->tex.Load("Assets/textures/new-game.png");
+			save->tex_id = App->tex.Load("Assets/textures/save.png");
 
-			/*//------------------------- LOAD --------------------------------------
+			//------------------------- LOAD --------------------------------------
 
 			Gameobject* load_go = AddGameobject("load Button", pause_background_go);
 
-			C_Button* load = new C_Button(load_go, Event(SCENE_CHANGE, this, MAIN));
-			load->target = { 0.51f, 0.3f, 0.3f, 0.3f };
-			load->offset = { -525.f, 500.f };
-			for (int i = 0; i < 4; i++)load->section[i] = { 0, 0, 1070, 207 };
-			load->tex_id = App->tex.Load("textures/button.png");
+			C_Button* load = new C_Button(load_go, Event(REQUEST_LOAD, App));
+			load->target = { 0.51f, 0.3f, 0.6f, 0.6f };
+			load->offset = { -250.f, 370.0f };
 
-			C_Button* load_fx = new C_Button(load_go, Event(PLAY_FX, App->audio, int(SELECT), 0));
-			load_fx->target = { 0.51f, 0.3f, 0.3f, 0.3f };
-			load_fx->offset = { -525.f, 500.f };
-			for (int i = 0; i < 4; i++)load_fx->section[i] = { 0, 0, 1070, 207 };
+			load->section[0] = { 0, 0, 470, 90 };
+			load->section[1] = { 0, 101, 470, 90 };
+			load->section[2] = { 0, 202, 470, 90 };
+			load->section[3] = { 0, 202, 470, 90 };
+			load->tex_id = App->tex.Load("Assets/textures/load.png");
 
-			//------------------------- OPTIONS --------------------------------------
+
+			/*//------------------------- OPTIONS --------------------------------------
 
 			Gameobject* options_go = AddGameobject("options Button", pause_background_go);
 
@@ -1316,7 +1316,7 @@ void Scene::UpdatePause()
 
 			C_Button* main_menu = new C_Button(main_menu_go, Event(BUTTON_EVENT, this, SCENE_CHANGE, MENU));
 			main_menu->target = { 0.51f, 0.3f, 0.6f, 0.6f };
-			main_menu->offset = { -250.f, 370.f };
+			main_menu->offset = { -250.f, 520.f };
 
 			main_menu->section[0] = { 0, 0, 470, 90 };
 			main_menu->section[1] = { 0, 101, 470, 90 };
