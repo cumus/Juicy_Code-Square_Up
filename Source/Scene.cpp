@@ -722,12 +722,7 @@ void Scene::LoadEndScene()
 	background->offset = { -1280.f, -720.f };
 	background->section = { 0, 0, 1280, 720 };
 	background->tex_id = App->tex.Load(win ? "Assets/textures/back-win.png" : "Assets/textures/back-lose.png");
-
-	C_Button* main_screen_button = new C_Button(background_go, Event(BUTTON_EVENT, this, SCENE_CHANGE, MENU));
-	main_screen_button->target = { 1.f, 1.f, 1.f, 1.f };
-	main_screen_button->offset = { -1920.f, -1080.f };
-	//main_screen_button->tex_id = App->tex.Load(win ? "Assets/textures/back-win.png" : "Assets/textures/back-lose.png");
-	for (int i = 0; i < 4; i++)main_screen_button->section[i] = { 0, 0, 1920, 1080 };
+		
 
 	//------------------------- WIN/LOSE --------------------------------------
 	if (win)
@@ -741,6 +736,15 @@ void Scene::LoadEndScene()
 		win->target = { 0.285f, 0.12f, 0.8f, 0.8f };
 		win->section = { 0, 0, 693, 100 };
 		win->tex_id = App->tex.Load("Assets/textures/youwin.png");
+
+		C_Button* main_screen_button = new C_Button(background_go, Event(BUTTON_EVENT, this, SCENE_CHANGE, MENU));
+		main_screen_button->target = { 0.37f, 0.88f, 0.7f, 0.7f };
+		main_screen_button->tex_id = App->tex.Load("Assets/textures/wcontinue.png");
+		
+		main_screen_button->section[0] = { 0, 0, 470, 90 };
+		main_screen_button->section[1] = { 0, 101, 470, 90 };
+		main_screen_button->section[2] = { 0, 202, 470, 90 };
+		main_screen_button->section[3] = { 0, 303, 470, 90 };
 	}
 	else
 	{
@@ -753,6 +757,15 @@ void Scene::LoadEndScene()
 		lose->target = { 0.285f, 0.12f, 0.8f, 0.8f };
 		lose->section = { 0, 0, 693, 100 };
 		lose->tex_id = App->tex.Load("Assets/textures/youlose.png");
+
+		C_Button* main_screen_button = new C_Button(background_go, Event(BUTTON_EVENT, this, SCENE_CHANGE, MENU));
+		main_screen_button->target = { 0.37f, 0.88f, 0.7f, 0.7f };
+		main_screen_button->tex_id = App->tex.Load("Assets/textures/lcontinue.png");
+
+		main_screen_button->section[0] = { 0, 0, 470, 90 };
+		main_screen_button->section[1] = { 0, 101, 470, 90 };
+		main_screen_button->section[2] = { 0, 202, 470, 90 };
+		main_screen_button->section[3] = { 0, 303, 470, 90 };
 	}
 
 	/*//------------------------- BACK --------------------------------------
