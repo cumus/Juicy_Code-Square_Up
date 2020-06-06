@@ -1761,12 +1761,12 @@ void Scene::OnEventStateMachine(GameplayState state)
 		not = new C_Image(not_go);
 		next = new C_Button(not_go, Event(GAMEPLAY, this, WIN));
 
-		not->target = { 0.3f, 0.15f, 0.6f, 0.6f };
+		not->target = { 0.27f, 0.15f, 0.6f, 0.6f };
 		//not->offset = { -183.f, -1044.f };
 		not->section = { 0, 0, 983, 644 };
 		not->tex_id = App->tex.Load("Assets/textures/victory.png");
 
-		next->target = { 0.605f, 0.645f, 0.6f, 0.6f };
+		next->target = { 0.575f, 0.645f, 0.6f, 0.6f };
 		//not_inactive->offset = { 500.f, -317.f };
 
 		next->section[0] = { 0, 0, 309, 37 };
@@ -1784,12 +1784,12 @@ void Scene::OnEventStateMachine(GameplayState state)
 		not = new C_Image(not_go);
 		next = new C_Button(not_go, Event(GAMEPLAY, this, LOSE));
 
-		not->target = { 0.3f, 0.15f, 0.6f, 0.6f };
+		not->target = { 0.27f, 0.15f, 0.6f, 0.6f };
 		//not->offset = { -183.f, -1044.f };
 		not->section = { 0, 0, 983, 644 };
 		not->tex_id = App->tex.Load("Assets/textures/defeat.png");
 
-		next->target = { 0.605f, 0.645f, 0.6f, 0.6f };
+		next->target = { 0.575f, 0.645f, 0.6f, 0.6f };
 		//not_inactive->offset = { 500.f, -317.f };
 
 		next->section[0] = { 0, 0, 309, 37 };
