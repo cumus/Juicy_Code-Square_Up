@@ -183,7 +183,7 @@ bool Window::Init()
 	else
 		LOG("SDL_VIDEO could not initialize! SDL_Error: %s\n", SDL_GetError());
 
-	SDL_Surface* surface = IMG_Load_RW(App->files.LoadRWops("Assets/textures/tempIcon.png"), 1);
+	SDL_Surface* surface = IMG_Load_RW(App->files.LoadRWops("Assets/textures/Icon.png"), 1);
 	SDL_SetWindowIcon(window, surface);
 
 	return ret;
