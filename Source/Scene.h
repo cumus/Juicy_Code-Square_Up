@@ -283,6 +283,12 @@ private:
 	int menuColumn;
 	C_Image* imgMenu = nullptr;
 
+	//End Anim
+	float endAnim;
+	float endAnimFrameTime;
+	int endAnimRow;
+	C_Image* endAnimImg = nullptr;
+	int endAnimColumn;
 
 	//Missions
 	Mission* gatherEdge = nullptr;
