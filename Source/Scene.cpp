@@ -1656,29 +1656,14 @@ void Scene::OnEventStateMachine(GameplayState state)
 		not_inactive->tex_id = App->tex.Load("Assets/textures/tuto/not-button.png");
 			
 		//Edge Counter
-		/*edge_go = AddGameobjectToCanvas("Spawner Count");
-		edge_img = new C_Image(edge_go);
-		edge_img->target = { 1.0f, 0.1f, 0.8f , 0.4f };
-		edge_img->offset = { -232.f, 0.f };
-		edge_img->section = { 712, 915, 232, 77 };
-		edge_img->tex_id = App->tex.Load("Assets/textures/hud-sprites.png");
-
-		edge_text_go = AddGameobject("Text Edge", edge_go);
-		text_edge = new C_Text(edge_text_go, "Gather some Edge");
-		text_edge->target = { 0.1f, 0.15f, 1.f, 1.f };*/
 		gatherEdge = new Mission("Gather some edge. (80)", CURRENT_EDGE, 0, 80);
 		buildTower = new Mission("Build a Tower.", CURRENT_TOWERS, 0, 1);
 		buildBarracks = new Mission("Build Barracks.", CURRENT_BARRACKS, 0, 1);
 		buildTower->SetPos({ 0.997f, 0.14f, 0.5f, 0.4f }, { 0.92f, 0.15f, 1.0f, 1.0f });
 		buildBarracks->SetPos({ 0.997f, 0.18f, 0.5f, 0.4f }, { 0.92f, 0.19f, 1.0f, 1.0f });
 		
-
-		/*all_spawners_go = AddGameobject("All Spawners", spawner_go);
-		all_spawners = new C_Text(all_spawners_go, "/ 3");
-		all_spawners->target = { 0.73f, 0.15f, 1.f, 1.f };*/
-		
-
 		current_state = GATHER;
+		
 		break;
 
 	case WARNING:
@@ -1776,12 +1761,12 @@ void Scene::OnEventStateMachine(GameplayState state)
 		not = new C_Image(not_go);
 		next = new C_Button(not_go, Event(GAMEPLAY, this, WIN));
 
-		not->target = { 0.3f, 0.3f, 0.6f, 0.6f };
+		not->target = { 0.3f, 0.15f, 0.6f, 0.6f };
 		//not->offset = { -183.f, -1044.f };
 		not->section = { 0, 0, 983, 644 };
-		not->tex_id = App->tex.Load("Assets/textures/tuto/lure-queen-not.png");
+		not->tex_id = App->tex.Load("Assets/textures/victory.png");
 
-		next->target = { 0.605f, 0.795f, 0.6f, 0.6f };
+		next->target = { 0.605f, 0.645f, 0.6f, 0.6f };
 		//not_inactive->offset = { 500.f, -317.f };
 
 		next->section[0] = { 0, 0, 309, 37 };
@@ -1790,7 +1775,7 @@ void Scene::OnEventStateMachine(GameplayState state)
 		next->section[3] = { 0, 88, 309, 37 };
 
 		next->tex_id = App->tex.Load("Assets/textures/tuto/not-button.png");
-
+		
 		current_state = WIN_BUTTON;
 
 		break;
@@ -1799,12 +1784,12 @@ void Scene::OnEventStateMachine(GameplayState state)
 		not = new C_Image(not_go);
 		next = new C_Button(not_go, Event(GAMEPLAY, this, LOSE));
 
-		not->target = { 0.3f, 0.3f, 0.6f, 0.6f };
+		not->target = { 0.3f, 0.15f, 0.6f, 0.6f };
 		//not->offset = { -183.f, -1044.f };
 		not->section = { 0, 0, 983, 644 };
-		not->tex_id = App->tex.Load("Assets/textures/tuto/lure-queen-not.png");
+		not->tex_id = App->tex.Load("Assets/textures/defeat.png");
 
-		next->target = { 0.605f, 0.795f, 0.6f, 0.6f };
+		next->target = { 0.605f, 0.645f, 0.6f, 0.6f };
 		//not_inactive->offset = { 500.f, -317.f };
 
 		next->section[0] = { 0, 0, 309, 37 };
