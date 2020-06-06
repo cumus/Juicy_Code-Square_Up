@@ -1522,7 +1522,6 @@ int Scene::GetGearsCount()
 	return player_stats[CURRENT_MOB_DROP];
 }
 
-
 void Scene::UpdateStateMachine()
 {
 	switch (current_state)
@@ -1724,20 +1723,25 @@ void Scene::OnEventStateMachine(GameplayState state)
 		spawnPointsOccuped[2] = false;
 		spawnPointsOccuped[3] = false;
 		spawnPointsOccuped[4] = false;
+		spawnPointsOccuped[5] = false;
+		spawnPointsOccuped[6] = false;
 
-		spawnPoints[0] = { 230.f,160.f };
-		spawnPoints[1] = { 55.f,200.f };
-		spawnPoints[2] = { 155.f,300.f };
-		spawnPoints[3] = { 230.f,160.f };
-		spawnPoints[4] = { 55.f,200.f };
+		spawnPoints[0] = { 230.0f,160.0f };
+		spawnPoints[1] = { 55.0f,200.0f };
+		spawnPoints[2] = { 155.0f,300.0f };
+		spawnPoints[3] = { 235.0f,227.0f };
+		spawnPoints[4] = { 108.0f,201.0f };
+		spawnPoints[5] = { 252.0f,79.0f };
+		spawnPoints[6] = { 270.0f,183.0f };
 
 		int rand;
 		for (int i = 0; i < 3; i++)
 		{
-			do rand = std::rand() % 5 + 0;
-			while(spawnPointsOccuped[rand] == true);
-			SpawnBehaviour(SPAWNER, spawnPoints[rand]);
-			spawnPointsOccuped[rand] = true;
+			do rand = std::rand() % 7 + 1;
+			while(spawnPointsOccuped[rand-1] == true);
+			SpawnBehaviour(SPAWNER, spawnPoints[rand-1]);
+			spawnPointsOccuped[rand-1] = true;
+			//LOG("Random = %d",rand-1);
 		}
 		std::srand(time(NULL));
 		current_state = SPAWNER_STATE;
@@ -2180,7 +2184,7 @@ Transform* Scene::SpawnBehaviour(int type, vec pos)
 	if (behaviour)
 	{		
 		ret = behaviour->GetTransform();
-		//ret->SetLocalPos(pos);
+		LOG("SpawnPos X = %f/Y = %f",pos.x,pos.y);
 	}
 
 	return ret;
@@ -2356,7 +2360,6 @@ void Scene::SetSelection(Gameobject* go, bool call_unselect)
 
 	selection = go;
 }
-
 
 void Scene::GodMode()
 {

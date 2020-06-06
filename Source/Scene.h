@@ -211,8 +211,8 @@ public:
 	GameplayState current_state;
 
 	//Enemy spawn
-	vec spawnPoints[5];
-	bool spawnPointsOccuped[5];
+	vec spawnPoints[7];
+	bool spawnPointsOccuped[7];
 		
 
 private:
