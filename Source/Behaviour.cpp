@@ -253,9 +253,9 @@ Collider* Behaviour::GetBodyCollider()
 
 void Behaviour::CheckFoWMap(bool debug)
 {
-	bool visible = FogOfWarManager::fogMap[int(pos.x)][int(pos.y)];
-	if (!visible && !debug) { DesactivateSprites(); visible = false; }
-	else{ ActivateSprites(); visible = true; }
+	visible = FogOfWarManager::fogMap[int(pos.x)][int(pos.y)];
+	if (!visible && !debug) { DesactivateSprites();}
+	else{ ActivateSprites(); }
 }
 
 void Behaviour::GetTilesInsideRadius()
@@ -862,6 +862,12 @@ void B_Unit::Update()
 			
 		//Draw vision and attack range
 		if (drawRanges) DrawRanges();
+
+		if (visible)
+		{
+			if (current_life < max_life) mini_life_bar.Show();
+		}
+		else  mini_life_bar.Hide();
 	}
 }
 
