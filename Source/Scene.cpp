@@ -145,10 +145,10 @@ bool Scene::Update()
 		if (endAnim < endAnimFrameTime) endAnim += App->time.GetGameDeltaTime();
 		else
 		{
-			if (endAnimColumn > 5)
+			if (endAnimColumn > 4)
 				endAnimColumn = 0;
 			else endAnimColumn++;
-			endAnimImg->section = { endAnimColumn * 0, 0, 199, 169 };
+			endAnimImg->section = { endAnimColumn * 198, 0, 198, 169 };
 			endAnim = 0;
 		}
 	}
@@ -783,12 +783,12 @@ void Scene::LoadEndScene()
 	//------------------------UNIT ANIMATIONS--------------------------------
 
 	endAnimImg = new C_Image(AddGameobjectToCanvas("Right Animation"));
-	endAnimImg->target = { 0.05f, 0.5f, 2.0f, 2.0f };
+	endAnimImg->target = { 0.05f, 0.55f, 2.3f, 2.3f };
 	endAnimImg->offset = { 0.f, 0.f };
 	endAnimImg->section = { 0, 0, 199, 169 };
 	endAnimImg->tex_id = App->tex.Load(win ? "Assets/textures/anim_melee.png" : "Assets/textures/anim_enemy_melee.png");
 	endAnim = 0;
-	endAnimFrameTime = 0.5f;
+	endAnimFrameTime = 0.1f;
 	endAnimRow = 0;
 	endAnimColumn = 0;
 
