@@ -91,7 +91,7 @@ bool Render::Init()
 		LOG("Could not create the renderer! SDL_Error: %s\n", SDL_GetError());
 
 	SDL_ShowCursor(0);
-	cursorID = App->tex.Load("Assets/textures/tempMouse.png");
+	cursorID = App->tex.Load("Assets/textures/Mouse.png");
 
 	return ret;
 }
