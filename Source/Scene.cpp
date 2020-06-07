@@ -284,7 +284,7 @@ void Scene::RecieveEvent(const Event& e)
 		else
 		{
 			imgPreview = AddGameobject("Builder image");
-			buildingImage = new Sprite(imgPreview, App->tex.Load("Assets/textures/buildPreview.png"), { 0, 3, 217, 177 }, FRONT_SCENE, { -60.0f,-100.0f,1.0f,1.0f });
+			buildingImage = new Sprite(imgPreview, App->tex.Load("textures/buildPreview.png"), { 0, 3, 217, 177 }, FRONT_SCENE, { -60.0f,-100.0f,1.0f,1.0f });
 			imgPreview->SetActive();
 		}
 		placing_building = true;
@@ -469,8 +469,8 @@ void Scene::LoadMainScene()
 {
 	OPTICK_EVENT();
 
-	map.Load("Assets/maps/iso.tmx");
-	App->audio->PlayMusic("Assets/audio/Music/alexander-nakarada-buzzkiller.ogg");
+	map.Load("maps/iso.tmx");
+	App->audio->PlayMusic("audio/Music/alexander-nakarada-buzzkiller.ogg");
 	App->fogWar.Init();
 
 	LoadMainHUD();
@@ -483,7 +483,7 @@ void Scene::LoadMainScene()
 	Event::Push(MINIMAP_MOVE_CAMERA, App->render, 800.0f, 2900.0f);
 
 	imgPreview = AddGameobject("Builder image");
-	buildingImage = new Sprite(imgPreview, App->tex.Load("Assets/textures/buildPreview.png"), { 0, 3, 217, 177 }, FRONT_SCENE, { -60.0f,-100.0f,1.0f,1.0f });
+	buildingImage = new Sprite(imgPreview, App->tex.Load("textures/buildPreview.png"), { 0, 3, 217, 177 }, FRONT_SCENE, { -60.0f,-100.0f,1.0f,1.0f });
 	imgPreview->SetInactive();
 
 	for (int i = 0; i < MAX_PLAYER_STATS; ++i)
@@ -507,7 +507,7 @@ void Scene::LoadIntroScene()
 	logo->target = { 0.4f, 0.f, 1.0f, 1.0f };
 	logo->offset = { 0.f, 0.f };
 	logo->section = { 0, 0, 270, 500 };
-	logo->tex_id = App->tex.Load("Assets/textures/intro-sprite.png");
+	logo->tex_id = App->tex.Load("textures/intro-sprite.png");
 	introAnim = 0;
 	introFrameTime = 0.1f;
 	introRow = 0;
@@ -518,21 +518,21 @@ void Scene::LoadMenuScene()
 {
 	OPTICK_EVENT();
 
-	App->audio->PlayMusic("Assets/audio/Music/alexander-nakarada-curiosity.ogg") && App->audio->PlayFx(TITLE);
+	App->audio->PlayMusic("audio/Music/alexander-nakarada-curiosity.ogg") && App->audio->PlayFx(TITLE);
 
 	//------------------------- BACKGROUND --------------------------------------
 
 	C_Image* background = new C_Image(AddGameobjectToCanvas("Background"));
 	background->target = { 0.f, 0.f, 1.f, 1.f };
 	background->section = { 0, 0, 1280, 720 };
-	background->tex_id = App->tex.Load("Assets/textures/background.png");
+	background->tex_id = App->tex.Load("textures/background.png");
 
 	//------------------------- LOGO --------------------------------------
 
 	C_Image* g_logo = new C_Image(AddGameobjectToCanvas("Game logo"));
 	g_logo->target = { 0.01f, 0.2f, 0.6f, 0.6f };
 	g_logo->section = { 0, 0, 1070, 207 };
-	g_logo->tex_id = App->tex.Load("Assets/textures/game-logo.png");
+	g_logo->tex_id = App->tex.Load("textures/game-logo.png");
 	
 	//------------------------- START --------------------------------------
 	float buttons_x = 0.01f;
@@ -547,7 +547,7 @@ void Scene::LoadMenuScene()
 	start->section[2] = { 0, 202, 470, 90 };
 	start->section[3] = { 0, 202, 470, 90 };
 
-	start->tex_id = App->tex.Load("Assets/textures/new-game.png");
+	start->tex_id = App->tex.Load("textures/new-game.png");
 
 	//------------------------- RESUME --------------------------------------
 
@@ -561,7 +561,7 @@ void Scene::LoadMenuScene()
 	resume->section[2] = { 0, 202, 470, 90 };
 	resume->section[3] = { 0, 202, 470, 90 };
 
-	resume->tex_id = App->tex.Load("Assets/textures/resume.png");
+	resume->tex_id = App->tex.Load("textures/resume.png");
 
 	//------------------------ OPTIONS ------------------------------------
 
@@ -575,7 +575,7 @@ void Scene::LoadMenuScene()
 	options->section[2] = { 0, 202, 470, 90 };
 	options->section[3] = { 0, 202, 470, 90 };
 
-	options->tex_id = App->tex.Load("Assets/textures/options.png");
+	options->tex_id = App->tex.Load("textures/options.png");
 
 	//------------------------- QUIT --------------------------------------
 
@@ -590,13 +590,13 @@ void Scene::LoadMenuScene()
 	quit->section[2] = { 0, 202, 470, 90 };
 	quit->section[3] = { 0, 202, 470, 90 };
 
-	quit->tex_id = App->tex.Load("Assets/textures/quit.png");
+	quit->tex_id = App->tex.Load("textures/quit.png");
 
 	imgMenu = new C_Image(AddGameobjectToCanvas("Menu image"));
 	imgMenu->target = { 0.75f, 0.6f, 1.0f, 1.0f };
 	imgMenu->offset = { -300.f, -400.f };
 	//imgMenu->section = { 0, 0, 530, 813 };
-	imgMenu->tex_id = App->tex.Load("Assets/textures/BaseAnim.png");
+	imgMenu->tex_id = App->tex.Load("textures/BaseAnim.png");
 	menuAnim = 0;
 	menuFrameTime = 0.1f;
 	menuRow = 0;
@@ -607,7 +607,7 @@ void Scene::LoadOptionsScene()
 {
 	OPTICK_EVENT();
 
-	App->audio->PlayMusic("Assets/audio/Music/alexander-nakarada-early-probe-eats-the-dust.ogg");
+	App->audio->PlayMusic("audio/Music/alexander-nakarada-early-probe-eats-the-dust.ogg");
 
 	float buttons_x = 0.01f;
 
@@ -616,14 +616,14 @@ void Scene::LoadOptionsScene()
 	C_Image* background = new C_Image(AddGameobjectToCanvas("Background"));
 	background->target = { 0.f, 0.f, 1.f, 1.f };
 	background->section = { 0, 0, 1280, 720 };
-	background->tex_id = App->tex.Load("Assets/textures/background2.png");
+	background->tex_id = App->tex.Load("textures/background2.png");
 
 	//---------------------- OPTIONS MENU TITLE ---------------------------------
 
 	C_Image* options_title = new C_Image(AddGameobjectToCanvas("Options Menu Title"));
 	options_title->target = { buttons_x + 0.02f, 0.25f, 1.3f, 1.3f };
 	options_title->section = { 0, 0, 159, 49 };
-	options_title->tex_id = App->tex.Load("Assets/textures/options_title.png");
+	options_title->tex_id = App->tex.Load("textures/options_title.png");
 
 	//------------------------- FULLSCREEN --------------------------------------
 
@@ -637,19 +637,19 @@ void Scene::LoadOptionsScene()
 	fullscreen->section[2] = { 0, 202, 470, 90 };
 	fullscreen->section[3] = { 0, 202, 470, 90 };
 
-	fullscreen->tex_id = App->tex.Load("Assets/textures/fullscreen.png");
+	fullscreen->tex_id = App->tex.Load("textures/fullscreen.png");
 
 	//------------------------- MUSIC VOLUME SETTINGS --------------------------------------
 
 	C_Image* music_background = new C_Image(AddGameobjectToCanvas("SFX Background"));
 	music_background->target = { buttons_x, 0.523f, 0.25f, 0.25f };
 	music_background->section = { 0, 0, 1762, 205 };
-	music_background->tex_id = App->tex.Load("Assets/textures/button3.png");
+	music_background->tex_id = App->tex.Load("textures/button3.png");
 
 	C_Image* music_volume = new C_Image(AddGameobjectToCanvas("Music Volume"));
 	music_volume->target = { buttons_x + 0.02f, 0.545f, 0.4f, 0.4f };
 	music_volume->section = { 0, 0, 274, 38 };
-	music_volume->tex_id = App->tex.Load("Assets/textures/music-volume.png");
+	music_volume->tex_id = App->tex.Load("textures/music-volume.png");
 
 	Gameobject* music_slider_go = AddGameobjectToCanvas("Music Slider");
 
@@ -657,7 +657,7 @@ void Scene::LoadOptionsScene()
 
 	music_slider_bar->target = { buttons_x + 0.12f, 0.545f, 1.f, 1.f };
 	music_slider_bar->section = { 174, 0, 245, 20 };
-	music_slider_bar->tex_id = App->tex.Load("Assets/textures/hud-sprites.png");
+	music_slider_bar->tex_id = App->tex.Load("textures/hud-sprites.png");
 
 	float volume = App->audio->GetVolumeMusic();
 	C_Slider_Button* music_slider_button = new C_Slider_Button(music_slider_go, buttons_x + 0.105f, buttons_x + 0.295f, volume, SET_MUSIC_VOLUME, App->audio);
@@ -667,19 +667,19 @@ void Scene::LoadOptionsScene()
 	music_slider_button->section[1] = { 1081, 933, 45, 45 };
 	music_slider_button->section[2] = { 1152, 933, 45, 45 };
 	music_slider_button->section[3] = { 1152, 933, 45, 45 };
-	music_slider_button->tex_id = App->tex.Load("Assets/textures/hud-sprites.png");
+	music_slider_button->tex_id = App->tex.Load("textures/hud-sprites.png");
 
 	//------------------------- SFX VOLUME SETTINGS --------------------------------------
 
 	C_Image* sfx_background = new C_Image(AddGameobjectToCanvas("SFX Background"));
 	sfx_background->target = { buttons_x, 0.602f, 0.25f, 0.25f };
 	sfx_background->section = { 0, 0, 1762, 205 };
-	sfx_background->tex_id = App->tex.Load("Assets/textures/button3.png");
+	sfx_background->tex_id = App->tex.Load("textures/button3.png");
 
 	C_Image* sfx_volume = new C_Image(AddGameobjectToCanvas("SFX Volume"));
 	sfx_volume->target = { buttons_x + 0.025f, 0.624f, 0.4f, 0.4f };
 	sfx_volume->section = { 0, 0, 223, 38 };
-	sfx_volume->tex_id = App->tex.Load("Assets/textures/sfx-volume.png");
+	sfx_volume->tex_id = App->tex.Load("textures/sfx-volume.png");
 
 	Gameobject* sfx_slider_go = AddGameobjectToCanvas("SFX Slider");
 
@@ -687,7 +687,7 @@ void Scene::LoadOptionsScene()
 
 	sfx_slider_bar->target = { buttons_x + 0.12f, 0.624f, 1.f, 1.f };
 	sfx_slider_bar->section = { 174, 0, 245, 20 };
-	sfx_slider_bar->tex_id = App->tex.Load("Assets/textures/hud-sprites.png");
+	sfx_slider_bar->tex_id = App->tex.Load("textures/hud-sprites.png");
 
 	C_Slider_Button* sfx_slider_button = new C_Slider_Button(sfx_slider_go, buttons_x + 0.105f, buttons_x + 0.295f, volume = App->audio->GetVolumeFx(), SET_FX_VOLUME, App->audio);
 	sfx_slider_button->target = { buttons_x + 0.105f + (0.19f * volume), 0.605f, 1.f, 1.f };
@@ -696,7 +696,7 @@ void Scene::LoadOptionsScene()
 	sfx_slider_button->section[1] = { 1081, 933, 45, 45 };
 	sfx_slider_button->section[2] = { 1152, 933, 45, 45 };
 	sfx_slider_button->section[3] = { 1152, 933, 45, 45 };
-	sfx_slider_button->tex_id = App->tex.Load("Assets/textures/hud-sprites.png");
+	sfx_slider_button->tex_id = App->tex.Load("textures/hud-sprites.png");
 
 
 	//------------------------- MAIN MENU BUTTON --------------------------------------
@@ -711,7 +711,7 @@ void Scene::LoadOptionsScene()
 	main_menu->section[2] = { 0, 202, 470, 90 };
 	main_menu->section[3] = { 0, 202, 470, 90 };
 
-	main_menu->tex_id = App->tex.Load("Assets/textures/main-menu.png");
+	main_menu->tex_id = App->tex.Load("textures/main-menu.png");
 
 }
 
@@ -722,8 +722,8 @@ void Scene::LoadEndScene()
 	float info_pos = 0.34f;
 
 	App->audio->PlayMusic(win ?
-		"Assets/audio/Music/alexander-nakarada-early-probe-eats-the-dust.ogg" :
-		"Assets/audio/Music/alexander-nakarada-inter7ude.ogg");
+		"audio/Music/alexander-nakarada-early-probe-eats-the-dust.ogg" :
+		"audio/Music/alexander-nakarada-inter7ude.ogg");
 
 	//------------------------- BACKGROUND --------------------------------------
 
@@ -733,7 +733,7 @@ void Scene::LoadEndScene()
 	background->target = { 1.f, 1.f, 1.f, 1.f };
 	background->offset = { -1280.f, -720.f };
 	background->section = { 0, 0, 1280, 720 };
-	background->tex_id = App->tex.Load(win ? "Assets/textures/back-win.png" : "Assets/textures/back-lose.png");
+	background->tex_id = App->tex.Load(win ? "textures/back-win.png" : "textures/back-lose.png");
 		
 
 	//------------------------- WIN/LOSE --------------------------------------
@@ -742,16 +742,16 @@ void Scene::LoadEndScene()
 		C_Image* background = new C_Image(background_go);
 		background->target = { 0.f, 0.f, 1.f, 1.f };
 		background->section = { 0, 0, 1280, 720 };
-		background->tex_id = App->tex.Load("Assets/textures/back-win.png");
+		background->tex_id = App->tex.Load("textures/back-win.png");
 
 		C_Image* win = new C_Image(AddGameobjectToCanvas("Background"));
 		win->target = { 0.285f, 0.12f, 0.8f, 0.8f };
 		win->section = { 0, 0, 693, 100 };
-		win->tex_id = App->tex.Load("Assets/textures/youwin.png");
+		win->tex_id = App->tex.Load("textures/youwin.png");
 
 		C_Button* main_screen_button = new C_Button(background_go, Event(BUTTON_EVENT, this, SCENE_CHANGE, MENU));
 		main_screen_button->target = { 0.37f, 0.88f, 0.7f, 0.7f };
-		main_screen_button->tex_id = App->tex.Load("Assets/textures/wcontinue.png");
+		main_screen_button->tex_id = App->tex.Load("textures/wcontinue.png");
 		
 		main_screen_button->section[0] = { 0, 0, 470, 90 };
 		main_screen_button->section[1] = { 0, 101, 470, 90 };
@@ -763,16 +763,16 @@ void Scene::LoadEndScene()
 		C_Image* background = new C_Image(background_go);
 		background->target = { 0.f, 0.f, 1.f, 1.f };
 		background->section = { 0, 0, 1280, 720 };
-		background->tex_id = App->tex.Load("Assets/textures/back-lose.png");
+		background->tex_id = App->tex.Load("textures/back-lose.png");
 
 		C_Image* lose = new C_Image(AddGameobjectToCanvas("Background"));
 		lose->target = { 0.285f, 0.12f, 0.8f, 0.8f };
 		lose->section = { 0, 0, 693, 100 };
-		lose->tex_id = App->tex.Load("Assets/textures/youlose.png");
+		lose->tex_id = App->tex.Load("textures/youlose.png");
 
 		C_Button* main_screen_button = new C_Button(background_go, Event(BUTTON_EVENT, this, SCENE_CHANGE, MENU));
 		main_screen_button->target = { 0.37f, 0.88f, 0.7f, 0.7f };
-		main_screen_button->tex_id = App->tex.Load("Assets/textures/lcontinue.png");
+		main_screen_button->tex_id = App->tex.Load("textures/lcontinue.png");
 
 		main_screen_button->section[0] = { 0, 0, 470, 90 };
 		main_screen_button->section[1] = { 0, 101, 470, 90 };
@@ -786,7 +786,7 @@ void Scene::LoadEndScene()
 	endAnimImg->target = { 0.05f, 0.55f, 2.3f, 2.3f };
 	endAnimImg->offset = { 0.f, 0.f };
 	endAnimImg->section = { 0, 0, 199, 169 };
-	endAnimImg->tex_id = App->tex.Load(win ? "Assets/textures/anim_melee.png" : "Assets/textures/anim_enemy_melee.png");
+	endAnimImg->tex_id = App->tex.Load(win ? "textures/anim_melee.png" : "textures/anim_enemy_melee.png");
 	endAnim = 0;
 	endAnimFrameTime = 0.1f;
 	endAnimRow = 0;
@@ -799,42 +799,42 @@ void Scene::LoadEndScene()
 	back->target = { 0.68f, 0.9f, 0.6f, 0.65f };
 	back->offset = { -783.f, -735.f };
 	back->section = { 0, 0, 783, 735 };
-	back->tex_id = App->tex.Load("Assets/textures/back.png");*/
+	back->tex_id = App->tex.Load("textures/back.png");*/
 
 	//------------------------- TIME --------------------------------------
 
 	C_Image* time = new C_Image(AddGameobjectToCanvas("Time"));
 	time->target = { info_pos, 0.28f, 0.6f, 0.65f };
 	time->section = { 0, 0, 693, 100 };
-	time->tex_id = App->tex.Load(win ? "Assets/textures/wtime.png" : "Assets/textures/ltime.png");
+	time->tex_id = App->tex.Load(win ? "textures/wtime.png" : "textures/ltime.png");
 
 	//------------------------- EDGE --------------------------------------
 
 	C_Image* edge = new C_Image(AddGameobjectToCanvas("edge"));
 	edge->target = { info_pos, 0.40f, 0.6f, 0.65f };
 	edge->section = { 0, 0, 693, 100 };
-	edge->tex_id = App->tex.Load(win ? "Assets/textures/wedge.png" : "Assets/textures/ledge.png");
+	edge->tex_id = App->tex.Load(win ? "textures/wedge.png" : "textures/ledge.png");
 
 	//------------------------- UNITS CREATED --------------------------------------
 
 	C_Image* units_c = new C_Image(AddGameobjectToCanvas("created"));
 	units_c->target = { info_pos, 0.52f, 0.6f, 0.65f };
 	units_c->section = { 0, 0, 693, 100 };
-	units_c->tex_id = App->tex.Load(win ? "Assets/textures/wunits_c.png" : "Assets/textures/lunits_c.png");
+	units_c->tex_id = App->tex.Load(win ? "textures/wunits_c.png" : "textures/lunits_c.png");
 
 	//------------------------- UNITS LOST --------------------------------------
 
 	C_Image* units_l = new C_Image(AddGameobjectToCanvas("lost"));
 	units_l->target = { info_pos, 0.64f, 0.6f, 0.65f };
 	units_l->section = { 0, 0, 693, 100 };
-	units_l->tex_id = App->tex.Load(win ? "Assets/textures/wunits_l.png" : "Assets/textures/lunits_l.png");
+	units_l->tex_id = App->tex.Load(win ? "textures/wunits_l.png" : "textures/lunits_l.png");
 
 	//------------------------- UNITS KILLED --------------------------------------
 
 	C_Image* units_k = new C_Image(AddGameobjectToCanvas("killed"));
 	units_k->target = { info_pos, 0.76f, 0.6f, 0.65f };
 	units_k->section = { 0, 0, 693, 100 };
-	units_k->tex_id = App->tex.Load(win ? "Assets/textures/wunits_k.png" : "Assets/textures/lunits_k.png");
+	units_k->tex_id = App->tex.Load(win ? "textures/wunits_k.png" : "textures/lunits_k.png");
 
 
 	//--------------------------------TEXT----------------------------------------
@@ -892,7 +892,7 @@ void Scene::LoadEndScene()
 
 void Scene::LoadMainHUD()
 {
-	int icons_text_id = App->tex.Load("Assets/textures/hud-sprites.png");
+	int icons_text_id = App->tex.Load("textures/hud-sprites.png");
 
 	//-----------------------------------------------------------------------------
 	//----------------------------LEFT BAR-----------------------------------------
@@ -1051,7 +1051,7 @@ void Scene::LoadTutorial()
 	skip->section[2] = { 0, 88, 309, 37 };
 	skip->section[3] = { 0, 88, 309, 37 };
 
-	skip->tex_id = App->tex.Load("Assets/textures/tuto/skip-button.png");
+	skip->tex_id = App->tex.Load("textures/tuto/skip-button.png");
 
 	vec gatherer_t = { 130, 75 };
 
@@ -1258,7 +1258,7 @@ void Scene::UpdatePause()
 			background->target = { 0.66f, 0.95f, 0.6f, 0.6f };
 			background->offset = { -640.f, -985.f };
 			background->section = { 0, 0, 640, 985 };
-			background->tex_id = App->tex.Load("Assets/textures/pause-bg.png");
+			background->tex_id = App->tex.Load("textures/pause-bg.png");
 
 			//------------------------- RESUME -----------------------------------------
 
@@ -1273,7 +1273,7 @@ void Scene::UpdatePause()
 			resume->section[2] = { 0, 202, 470, 90 };
 			resume->section[3] = { 0, 202, 470, 90 };
 
-			resume->tex_id = App->tex.Load("Assets/textures/resume.png");
+			resume->tex_id = App->tex.Load("textures/resume.png");
 
 			//------------------------- FULLSCREEN -----------------------------------------
 
@@ -1288,7 +1288,7 @@ void Scene::UpdatePause()
 			fullscreen->section[2] = { 0, 202, 470, 90 };
 			fullscreen->section[3] = { 0, 202, 470, 90 };
 
-			fullscreen->tex_id = App->tex.Load("Assets/textures/fullscreen.png");
+			fullscreen->tex_id = App->tex.Load("textures/fullscreen.png");
 
 			//------------------------- SAVE --------------------------------------
 
@@ -1303,7 +1303,7 @@ void Scene::UpdatePause()
 			save->section[2] = { 0, 202, 470, 90 };
 			save->section[3] = { 0, 202, 470, 90 };
 
-			save->tex_id = App->tex.Load("Assets/textures/save.png");
+			save->tex_id = App->tex.Load("textures/save.png");
 
 			//------------------------- LOAD --------------------------------------
 
@@ -1317,7 +1317,7 @@ void Scene::UpdatePause()
 			load->section[1] = { 0, 101, 470, 90 };
 			load->section[2] = { 0, 202, 470, 90 };
 			load->section[3] = { 0, 202, 470, 90 };
-			load->tex_id = App->tex.Load("Assets/textures/load.png");
+			load->tex_id = App->tex.Load("textures/load.png");
 
 
 			/*//------------------------- OPTIONS --------------------------------------
@@ -1348,7 +1348,7 @@ void Scene::UpdatePause()
 			main_menu->section[2] = { 0, 202, 470, 90 };
 			main_menu->section[3] = { 0, 202, 470, 90 };
 
-			main_menu->tex_id = App->tex.Load("Assets/textures/main-menu.png");
+			main_menu->tex_id = App->tex.Load("textures/main-menu.png");
 
 			first_time_pause_button = false;
 			paused_yet = false;
@@ -1643,7 +1643,7 @@ void Scene::OnEventStateMachine(GameplayState state)
 		not->target = { 0.3f, 0.3f, 0.6f, 0.6f };
 		//not->offset = { -183.f, -1044.f };
 		not->section = { 0, 0, 983, 644 };
-		not->tex_id = App->tex.Load("Assets/textures/tuto/cam-not.png");
+		not->tex_id = App->tex.Load("textures/tuto/cam-not.png");
 
 		not_inactive->target = { 0.605f, 0.795f, 0.6f, 0.6f };
 		//not_inactive->offset = { 500.f, -317.f };
@@ -1653,7 +1653,7 @@ void Scene::OnEventStateMachine(GameplayState state)
 		not_inactive->section[2] = { 0, 88, 309, 37 };
 		not_inactive->section[3] = { 0, 88, 309, 37 };
 
-		not_inactive->tex_id = App->tex.Load("Assets/textures/tuto/not-button.png");
+		not_inactive->tex_id = App->tex.Load("textures/tuto/not-button.png");
 			
 		//Edge Counter
 		gatherEdge = new Mission("Gather some edge. (80)", CURRENT_EDGE, 0, 80);
@@ -1679,7 +1679,7 @@ void Scene::OnEventStateMachine(GameplayState state)
 		not->target = { 0.3f, 0.3f, 0.6f, 0.6f };
 		//not->offset = { -183.f, -1044.f };
 		not->section = { 0, 0, 983, 644 };
-		not->tex_id = App->tex.Load("Assets/textures/tuto/lure-queen-not.png");
+		not->tex_id = App->tex.Load("textures/tuto/lure-queen-not.png");
 
 		next->target = { 0.605f, 0.795f, 0.6f, 0.6f };
 		//not_inactive->offset = { 500.f, -317.f };
@@ -1689,7 +1689,7 @@ void Scene::OnEventStateMachine(GameplayState state)
 		next->section[2] = { 0, 88, 309, 37 };
 		next->section[3] = { 0, 88, 309, 37 };
 
-		next->tex_id = App->tex.Load("Assets/textures/tuto/not-button.png");
+		next->tex_id = App->tex.Load("textures/tuto/not-button.png");
 		current_state = WARNING;
 		
 		//edge_go->Destroy();
@@ -1708,7 +1708,7 @@ void Scene::OnEventStateMachine(GameplayState state)
 		spawn_img->target = { 1.0f, 0.1f, 0.8f , 1.f };
 		spawn_img->offset = { -232.f, 0.f };
 		spawn_img->section = { 712, 915, 232, 77 };
-		spawn_img->tex_id = App->tex.Load("Assets/textures/hud-sprites.png");
+		spawn_img->tex_id = App->tex.Load("textures/hud-sprites.png");
 
 		spawner_text_go = AddGameobject("Text Spawners", spawner_go);
 		text_spawner = new C_Text(spawner_text_go, "Spawners");
@@ -1764,7 +1764,7 @@ void Scene::OnEventStateMachine(GameplayState state)
 		not->target = { 0.27f, 0.15f, 0.6f, 0.6f };
 		//not->offset = { -183.f, -1044.f };
 		not->section = { 0, 0, 983, 644 };
-		not->tex_id = App->tex.Load("Assets/textures/victory.png");
+		not->tex_id = App->tex.Load("textures/victory.png");
 
 		next->target = { 0.575f, 0.645f, 0.6f, 0.6f };
 		//not_inactive->offset = { 500.f, -317.f };
@@ -1774,7 +1774,7 @@ void Scene::OnEventStateMachine(GameplayState state)
 		next->section[2] = { 0, 88, 309, 37 };
 		next->section[3] = { 0, 88, 309, 37 };
 
-		next->tex_id = App->tex.Load("Assets/textures/tuto/not-button.png");
+		next->tex_id = App->tex.Load("textures/tuto/not-button.png");
 		
 		current_state = WIN_BUTTON;
 
@@ -1787,7 +1787,7 @@ void Scene::OnEventStateMachine(GameplayState state)
 		not->target = { 0.27f, 0.15f, 0.6f, 0.6f };
 		//not->offset = { -183.f, -1044.f };
 		not->section = { 0, 0, 983, 644 };
-		not->tex_id = App->tex.Load("Assets/textures/defeat.png");
+		not->tex_id = App->tex.Load("textures/defeat.png");
 
 		next->target = { 0.575f, 0.645f, 0.6f, 0.6f };
 		//not_inactive->offset = { 500.f, -317.f };
@@ -1797,7 +1797,7 @@ void Scene::OnEventStateMachine(GameplayState state)
 		next->section[2] = { 0, 88, 309, 37 };
 		next->section[3] = { 0, 88, 309, 37 };
 
-		next->tex_id = App->tex.Load("Assets/textures/tuto/not-button.png");
+		next->tex_id = App->tex.Load("textures/tuto/not-button.png");
 
 		current_state = LOSE_BUTTON;
 
@@ -1833,7 +1833,6 @@ void Scene::ResetScene()
 	for (int i = 0; i < EDGE_COLLECTED; ++i)
 		hud_texts[i] = nullptr;
 
-	pause_background_go = nullptr;
 	groupSelect = false;
 	group.clear();
 
@@ -1874,7 +1873,7 @@ bool Scene::OnMainScene() const
 inline bool Scene::SaveFileExists() const
 {
 	pugi::xml_document doc;
-	bool ret = App->files.LoadXML("Assets/save_file.xml", doc);
+	bool ret = App->files.LoadXML("save_file.xml", doc);
 	doc.reset();
 	return ret;
 }
@@ -2256,16 +2255,16 @@ void Scene::SaveGameNow()
 	// Dump GO content onto doc
 	root.Save(scene_node);
 
-	if (!doc.save_file((std::string(App->files.GetBasePath()) + "Assets/save_file.xml").c_str(), "\t", 1u, pugi::encoding_utf8))
+	if (!doc.save_file((std::string(App->files.GetBasePath()) + "save_file.xml").c_str(), "\t", 1u, pugi::encoding_utf8))
 		LOG("Error saving scene");
 }
 
 void Scene::LoadGameNow()
 {
 	pugi::xml_document doc;
-	if (App->files.LoadXML("Assets/save_file.xml", doc))
+	if (App->files.LoadXML("save_file.xml", doc))
 	{
-		map.Load("Assets/maps/iso.tmx");
+		map.Load("maps/iso.tmx");
 		LoadMainHUD();
 		App->fogWar.Init();
 
@@ -2303,7 +2302,7 @@ void Scene::LoadGameNow()
 		Event::Push(MINIMAP_MOVE_CAMERA, App->render, scene_node.attribute("camX").as_float(800.0f), scene_node.attribute("camY").as_float(2900.0f));
 
 		imgPreview = AddGameobject("Builder image");
-		buildingImage = new Sprite(imgPreview, App->tex.Load("Assets/textures/buildPreview.png"), { 0, 3, 217, 177 }, FRONT_SCENE, { -60.0f,-100.0f,1.0f,1.0f });
+		buildingImage = new Sprite(imgPreview, App->tex.Load("textures/buildPreview.png"), { 0, 3, 217, 177 }, FRONT_SCENE, { -60.0f,-100.0f,1.0f,1.0f });
 		imgPreview->SetInactive();
 	}
 	else
@@ -2532,7 +2531,7 @@ Mission::Mission(const char* name,PlayerStats t, int r,int m)
 	imgRetail->target = { 1.0f, 0.1f, 0.8f , 0.4f };
 	imgRetail->offset = { -232.f, 0.f };
 	imgRetail->section = { 712, 915, 232, 77 };
-	imgRetail->tex_id = App->tex.Load("Assets/textures/hud-sprites.png");
+	imgRetail->tex_id = App->tex.Load("textures/hud-sprites.png");
 
 	text = new C_Text(mission, name);
 	text->target = { 0.87f, 0.11f, 1.f, 1.f };

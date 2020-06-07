@@ -118,14 +118,14 @@ void Barracks::Upgrade()
 void Barracks::CreatePanel()
 {
 	posY_panel = 0.81f;
-	panel_tex_ID = App->tex.Load("Assets/textures/hud-sprites.png");
+	panel_tex_ID = App->tex.Load("textures/hud-sprites.png");
 
 	//------------------------- BASE PANEL --------------------------------------
 
 	selectionPanel = App->scene->AddGameobjectToCanvas("Barracks Build Panel");
 
 	posY_panel = 0.81f;
-	panel_tex_ID = App->tex.Load("Assets/textures/hud-sprites.png");
+	panel_tex_ID = App->tex.Load("textures/hud-sprites.png");
 
 	//------------------------- BASE PANEL --------------------------------------
 
@@ -201,25 +201,25 @@ void Barracks::CreatePanel()
 	cost1->target = { 0.11f, 0.1f, 0.8f, 0.8f };
 	cost1->offset = { 0, 0 };
 	cost1->section = { 101, 13, 32, 31 };
-	cost1->tex_id = App->tex.Load("Assets/textures/icons_price.png");
+	cost1->tex_id = App->tex.Load("textures/icons_price.png");
 	//Ranged price
 	C_Image* cost2 = new C_Image(prices);
 	cost2->target = { 0.33f, 0.08f, 0.8f, 0.8f };
 	cost2->offset = { 0, 0 };
 	cost2->section = { 142, 13, 39, 31 };
-	cost2->tex_id = App->tex.Load("Assets/textures/icons_price.png");
+	cost2->tex_id = App->tex.Load("textures/icons_price.png");
 	//Super price
 	C_Image* cost3 = new C_Image(prices);
 	cost3->target = { 0.52f, 0.29f, 0.8f, 0.8f };
 	cost3->offset = { 0, 0 };
 	cost3->section = { 183, 12, 37, 32 };
-	cost3->tex_id = App->tex.Load("Assets/textures/icons_price.png");
+	cost3->tex_id = App->tex.Load("textures/icons_price.png");
 	//Upgrade
 	C_Image* cost4 = new C_Image(prices);
 	cost4->target = { 0.58f, 0.68f, 0.8f, 0.8f };
 	cost4->offset = { 0, 0 };
 	cost4->section = { 188, 52, 35, 33 };
-	cost4->tex_id = App->tex.Load("Assets/textures/icons_price.png");
+	cost4->tex_id = App->tex.Load("textures/icons_price.png");
 
 	std::stringstream ssLife;
 	ssLife << "Life: ";
@@ -234,7 +234,7 @@ void Barracks::create_bar() {
 
 	pos_y_HUD = 0.17;
 
-	bar_text_id = App->tex.Load("Assets/textures/Iconos_square_up.png");
+	bar_text_id = App->tex.Load("textures/Iconos_square_up.png");
 
 	//------------------------- BASE BAR --------------------------------------
 

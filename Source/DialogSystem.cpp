@@ -68,79 +68,79 @@ void DialogSystem::CreateScreenUI()
 	portrait->target = { 0.165f, 0.63f, 0.37, 0.45f };
 	portrait->offset = { 0, 0 };
 	portrait->section = { 562, 0, 500, 600 };
-	portrait->tex_id = App->tex.Load("Assets/textures/hud-sprites.png");*/
+	portrait->tex_id = App->tex.Load("textures/hud-sprites.png");*/
 
 	queen = new C_Image(dialogGo);
 	queen->target = { 0.175f, 0.6f, 0.2f, 0.2f };
 	queen->offset = { 0, 0 };
 	queen->section = { 7, 3, 793, 1447 };
-	queen->tex_id = App->tex.Load("Assets/textures/queen.png");
+	queen->tex_id = App->tex.Load("textures/queen.png");
 
 	soldier = new C_Image(dialogGo);
 	soldier->target = { 0.175f, 0.66f, 0.2f, 0.2f };
 	soldier->offset = { 0, 0 };
 	soldier->section = { 6, 2, 788, 1245 };
-	soldier->tex_id = App->tex.Load("Assets/textures/soldier.png");
+	soldier->tex_id = App->tex.Load("textures/soldier.png");
 
 	retail = new C_Image(dialogGo);
 	retail->target = { 0.3f, 0.75f, 2.5f, 2.5f };
 	retail->offset = { 0, 0 };
 	retail->section = { 712, 915, 232, 77 };
-	retail->tex_id = App->tex.Load("Assets/textures/hud-sprites.png");
+	retail->tex_id = App->tex.Load("textures/hud-sprites.png");
 	
 	units = new C_Image(dialogGo);
 	units->target = { 0.5f, 0.7f, 0.6f, 0.6f };
 	units->offset = { 0, 0 };
 	units->section = { 0, 9, 452, 160 };
-	units->tex_id = App->tex.Load("Assets/textures/tutomages.png");
+	units->tex_id = App->tex.Load("textures/tutomages.png");
 
 	buildings = new C_Image(dialogGo);
 	buildings->target = { 0.5f, 0.7f, 0.5f, 0.5f };
 	buildings->offset = { 0, 0 };
 	buildings->section = { 24, 191, 592, 184 };
-	buildings->tex_id = App->tex.Load("Assets/textures/tutomages.png");
+	buildings->tex_id = App->tex.Load("textures/tutomages.png");
 
 	resources = new C_Image(dialogGo);
 	resources->target = { 0.57f, 0.8f, 0.6f, 0.6f };
 	resources->offset = { 0, 0 };
 	resources->section = { 556, 36, 301, 145 };
-	resources->tex_id = App->tex.Load("Assets/textures/tutomages.png");
+	resources->tex_id = App->tex.Load("textures/tutomages.png");
 
 	capsule = new C_Image(dialogGo);
 	capsule->target = { 0.67f, 0.774f, 0.7f, 0.7f };
 	capsule->offset = { 0, 0 };
 	capsule->section = { 34, 633, 66, 226 };
-	capsule->tex_id = App->tex.Load("Assets/textures/tutomages.png");
+	capsule->tex_id = App->tex.Load("textures/tutomages.png");
 
 	gold = new C_Image(dialogGo);
 	gold->target = { 0.6f, 0.89f, 0.7f, 0.7f };
 	gold->offset = { 0, 0 };
 	gold->section = { 561, 742, 55, 90 };
-	gold->tex_id = App->tex.Load("Assets/textures/tutomages.png");
+	gold->tex_id = App->tex.Load("textures/tutomages.png");
 
 	edge = new C_Image(dialogGo);
 	edge->target = { 0.6f, 0.85f, 0.7f, 0.7f };
 	edge->offset = { 0, 0 };
 	edge->section = { 171, 713, 217, 134 };
-	edge->tex_id = App->tex.Load("Assets/textures/tutomages.png");
+	edge->tex_id = App->tex.Load("textures/tutomages.png");
 
 	gear = new C_Image(dialogGo);
 	gear->target = { 0.6f, 0.89f, 0.7f, 0.7f };
 	gear->offset = { 0, 0 };
 	gear->section = {427, 745, 93, 87};
-	gear->tex_id = App->tex.Load("Assets/textures/tutomages.png");
+	gear->tex_id = App->tex.Load("textures/tutomages.png");
 
 	enemies = new C_Image(dialogGo);
 	enemies->target = { 0.45f, 0.87f, 0.7f, 0.7f };
 	enemies->offset = { 0, 0 };
 	enemies->section = { 109, 435, 239, 145 };
-	enemies->tex_id = App->tex.Load("Assets/textures/tutomages.png");
+	enemies->tex_id = App->tex.Load("textures/tutomages.png");
 
 	gathedge = new C_Image(dialogGo);
 	gathedge->target = { 0.43f, 0.87f, 0.6f, 0.6f };
 	gathedge->offset = { 0, 0 };
 	gathedge->section = { 426, 419, 335, 168 };
-	gathedge->tex_id = App->tex.Load("Assets/textures/tutomages.png");
+	gathedge->tex_id = App->tex.Load("textures/tutomages.png");
 
 	txt = new C_Text(dialogGo, " ");//Text line
 	txt->target = { 0.31f, 0.80f, 2.0f , 2.0f };

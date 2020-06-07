@@ -35,8 +35,17 @@ bool FileManager::Init(const char* argv0)
 
 	if (ret)
 	{
-		base_path = path;
 		ret = AddDirectory(path, NULL);
+
+		if (ret)
+		{
+			base_path = path;
+			std::string assets_path = base_path + "Assets.zip";
+			if (!(ret = AddDirectory(assets_path.c_str(), NULL)))
+				LOG("Error mounting Assets.zip at: %s", assets_path.c_str());
+		}
+		else
+			LOG("Error mounting base path: %s", path);
 	}
 	else
 		LOG("Error Initializing PhysFS: %s", PHYSFS_getLastError());
@@ -74,7 +83,7 @@ pugi::xml_node& FileManager::ConfigNode()
 
 bool FileManager::SaveConfig() const
 {
-	bool ret = config.save_file((base_path + "Assets/config.xml").c_str(), "\t", 1u, pugi::encoding_utf8);
+	bool ret = config.save_file((base_path + "config.xml").c_str(), "\t", 1u, pugi::encoding_utf8);
 
 	if (!ret)
 		LOG("Error saving new config.xml file.");
@@ -86,7 +95,7 @@ bool FileManager::LoadConfig()
 {
 	config.reset();
 
-	bool ret = LoadXML("Assets/config.xml", config);
+	bool ret = LoadXML("config.xml", config);
 
 	if(!ret)
 		config.append_child("config");

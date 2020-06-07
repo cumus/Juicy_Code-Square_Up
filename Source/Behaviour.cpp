@@ -49,7 +49,7 @@ Behaviour::Behaviour(Gameobject* go, UnitType t, UnitState starting_state, Compo
 	audio = new AudioSource(game_object);
 	characteR = new AnimatedSprite(this);
 
-	selection_highlight = new Sprite(go, App->tex.Load("Assets/textures/selectionMark.png"), { 0, 0, 64, 64 }, BACK_SCENE, { 0, -50, 1.f, 1.f });
+	selection_highlight = new Sprite(go, App->tex.Load("textures/selectionMark.png"), { 0, 0, 64, 64 }, BACK_SCENE, { 0, -50, 1.f, 1.f });
 	selection_highlight->SetInactive();
 
 	mini_life_bar.Create(go);
@@ -1325,7 +1325,7 @@ void B_Unit::OnRightClick(vec posClick, vec movPos)
  
 void Behaviour::Lifebar::Create(Gameobject* parent)
 {
-	int hud_id = App->tex.Load("Assets/textures/Iconos_square_up.png");
+	int hud_id = App->tex.Load("textures/Iconos_square_up.png");
 	go = new Gameobject("life_bar", parent);
 	new Sprite(go, hud_id, { 275, 698, 30, 4 }, FRONT_SCENE, { 2.f, -35.f, 2.f, 2.f }, { 255, 0, 0, 255 });
 	green_bar = new Sprite(new Gameobject("GreenBar", go), hud_id, life_starting_section = { 276, 703, 28, 5 }, FRONT_SCENE, { 3.f, -34.f, 2.f, 2.f }, { 0, 255, 0, 255 });
@@ -1384,7 +1384,7 @@ float BuildingWithQueue::QueuedUnit::Update()
 BuildingWithQueue::BuildingWithQueue(Gameobject* go, UnitType type, UnitState starting_state, ComponentType comp_type) : Behaviour(go, type, starting_state, comp_type)
 {
 	spawnPoint = game_object->GetTransform()->GetLocalPos();
-	int texture_id = App->tex.Load("Assets/textures/Iconos_square_up.png");
+	int texture_id = App->tex.Load("textures/Iconos_square_up.png");
 	Gameobject* back_bar = App->scene->AddGameobject("Creation Bar", game_object);
 	new Sprite(back_bar, texture_id, { 41, 698, 216, 16 }, FRONT_SCENE, { 0.f, 13.f, 0.29f, 0.2f });
 	progress_bar = new Sprite(back_bar, texture_id, bar_section = { 41, 721, 216, 16 }, FRONT_SCENE, { 0.f, 13.f, 0.29f, 0.2f });

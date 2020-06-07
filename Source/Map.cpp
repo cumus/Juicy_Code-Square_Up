@@ -498,7 +498,7 @@ bool Map::ParseTilesets(pugi::xml_node& node)
 		pugi::xml_node image_node = tileset_node.child("image");
 		if (image_node)
 		{
-			std::string tex_path = "Assets/maps/";
+			std::string tex_path = "maps/";
 			tex_path += image_node.attribute("source").as_string();
 			tileset.texture_id = App->tex.Load(tex_path.c_str());
 

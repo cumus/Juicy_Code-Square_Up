@@ -35,8 +35,8 @@ bool FogOfWarManager::Init()
 		debugMode = false;
 		foWMapNeedsRefresh = false;
 
-		smoothTexID = App->tex.Load("Assets/textures/fogTiles60.png");
-		debugTexID = App->tex.Load("Assets/textures/fogTilesDebug.png");
+		smoothTexID = App->tex.Load("textures/fogTiles60.png");
+		debugTexID = App->tex.Load("textures/fogTiles.png");
 
 		if (smoothTexID == -1 || debugTexID == -1) ret = false;
 

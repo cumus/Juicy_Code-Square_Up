@@ -234,7 +234,7 @@ void Application::RecieveEvent(const Event & e)
 		break;
 	case REQUEST_SAVE:
 		LOG("App save event");
-		if(scene->current_state == SPAWNER_STATE) want_to_save = true;
+		want_to_save = true;
 		break;
 	case REQUEST_QUIT:
 		LOG("App quit event requested");

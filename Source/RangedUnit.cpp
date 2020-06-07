@@ -41,7 +41,7 @@ void RangedUnit::UnitAttackType()
 
 void RangedUnit::CreatePanel()
 {
-	panel_tex_ID = App->tex.Load("Assets/textures/hud-sprites.png");
+	panel_tex_ID = App->tex.Load("textures/hud-sprites.png");
 
 	//------------------------- BASE PANEL --------------------------------------
 	selectionPanel = App->scene->AddGameobjectToCanvas("Ranged info Panel");

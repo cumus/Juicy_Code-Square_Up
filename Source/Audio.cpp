@@ -287,23 +287,23 @@ bool Audio::LoadFx(Audio_FX audio_fx)
 
 	switch (audio_fx)
 	{
-	case LOGO: audio_path += "Assets/audio/Effects/Intro/soda-open-and-pour-left-right.wav"; break;///////////// USING
-	//case HAMMER: audio_path += "Assets/audio/Effects/Buildings/Nails/HamerNail13Hits.wav"; break;
-	case TITLE: audio_path += "Assets/audio/Effects/UI/Menu/Menu_Select.wav"; break;///////////// USING
-	case SELECT: audio_path += "Assets/audio/Effects/UI/Menu/Flashpoint001a.wav"; break;///////////// USING
-	case B_DESTROYED: audio_path += "Assets/audio/Effects/Attack_sounds/Laser_05.wav"; break;///////////// USING
-	case B_BUILDED: audio_path += "Assets/audio/Effects/Buildings/Nails/HamerNail4Hits.wav"; break;///////////// USING
-	case UNIT_DIES: audio_path += "Assets/audio/Effects/Buildings/Destroyed/PowerDown.wav"; break;///////////// USING
-	case UNIT_MOVES: audio_path += "Assets/audio/Effects/Footsteps/footsteps.wav"; break;///////////// USING
-	case EDGE_FX: audio_path += "Assets/audio/Effects/Buildings/Destroyed/minimize_006.ogg"; break;///////////// USING
-	//case B_SELECT: audio_path += "Assets/audio/Effects/Buildings/Select/Select.wav"; break;
-	case SPAWNER_FX: audio_path += "Assets/audio/Effects/Allies/Spawn/Spawn.wav"; break;///////////// USING
-	//case UI_BTON_CLICK: audio_path += "Assets/audio/Effects/UI/Ingame/itempick1.wav"; break;
-	//case ALARM: audio_path += "Assets/audio/Effects/Notification/Scifi_Alarm16.wav"; break;
-	//case BASE_CENTER_FX: audio_path += "Assets/audio/Effects/Buildings/Scanner1.ogg"; break;
-	case RANGED_ATK_FX: audio_path += "Assets/audio/Effects/Attack_sounds/Laser_09.wav"; break;///////////// USING
-	case SUPER_ATK_FX: audio_path += "Assets/audio/Effects/Attack_sounds/Laser_05.wav"; break;///////////// USING
-	case MELEE_ATK_FX: audio_path += "Assets/audio/Effects/Attack_sounds/Laser_05.wav"; break;///////////// USING
+	case LOGO: audio_path += "audio/Effects/Intro/soda-open-and-pour-left-right.wav"; break;///////////// USING
+	//case HAMMER: audio_path += "audio/Effects/Buildings/Nails/HamerNail13Hits.wav"; break;
+	case TITLE: audio_path += "audio/Effects/UI/Menu/Menu_Select.wav"; break;///////////// USING
+	case SELECT: audio_path += "audio/Effects/UI/Menu/Flashpoint001a.wav"; break;///////////// USING
+	case B_DESTROYED: audio_path += "audio/Effects/Attack_sounds/Laser_05.wav"; break;///////////// USING
+	case B_BUILDED: audio_path += "audio/Effects/Buildings/Nails/HamerNail4Hits.wav"; break;///////////// USING
+	case UNIT_DIES: audio_path += "audio/Effects/Buildings/Destroyed/PowerDown.wav"; break;///////////// USING
+	case UNIT_MOVES: audio_path += "audio/Effects/Footsteps/footsteps.wav"; break;///////////// USING
+	case EDGE_FX: audio_path += "audio/Effects/Buildings/Destroyed/minimize_006.ogg"; break;///////////// USING
+	//case B_SELECT: audio_path += "audio/Effects/Buildings/Select/Select.wav"; break;
+	case SPAWNER_FX: audio_path += "audio/Effects/Allies/Spawn/Spawn.wav"; break;///////////// USING
+	//case UI_BTON_CLICK: audio_path += "audio/Effects/UI/Ingame/itempick1.wav"; break;
+	//case ALARM: audio_path += "audio/Effects/Notification/Scifi_Alarm16.wav"; break;
+	//case BASE_CENTER_FX: audio_path += "audio/Effects/Buildings/Scanner1.ogg"; break;
+	case RANGED_ATK_FX: audio_path += "audio/Effects/Attack_sounds/Laser_09.wav"; break;///////////// USING
+	case SUPER_ATK_FX: audio_path += "audio/Effects/Attack_sounds/Laser_05.wav"; break;///////////// USING
+	case MELEE_ATK_FX: audio_path += "audio/Effects/Attack_sounds/Laser_05.wav"; break;///////////// USING
 	default: break;
 	}
 

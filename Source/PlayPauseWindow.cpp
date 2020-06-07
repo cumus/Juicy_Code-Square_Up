@@ -20,7 +20,7 @@ PlayPauseWindow::~PlayPauseWindow()
 bool PlayPauseWindow::Init()
 {
 	color.a = 80;
-	icons_texture = App->tex.Load("Assets/textures/icons.png");
+	icons_texture = App->tex.Load("textures/icons.png");
 
 	if (icons_texture >= 0)
 	{

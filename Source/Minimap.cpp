@@ -35,9 +35,9 @@ Minimap::Minimap(Gameobject* go) : UI_Component(go, go->GetUIParent(), UI_MINIMA
 	sections[FOW] = { 0, 0, total_size.first, total_size.second };
 
 	// Set Border & Sections
-	hud_texture = App->tex.Load("Assets/textures/minimap.png");
+	hud_texture = App->tex.Load("textures/minimap.png");
 	sections[MINIMAP] = { 0, 0, 1338, 668 };
-	border_texture = App->tex.Load("Assets/textures/hud-sprites.png");
+	border_texture = App->tex.Load("textures/hud-sprites.png");
 	sections[BACKGROUND] = { 647, 733, 360, 181 };
 
 	// Load Icons

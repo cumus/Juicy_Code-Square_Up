@@ -26,17 +26,17 @@ Particle::Particle(Gameobject* go,vec p, vec d, float s, ParticleType typ, Compo
 	switch (type)
 	{
 		case ORANGE_PARTICLE:
-			texID = App->tex.Load("Assets/textures/particle_shot.png");
+			texID = App->tex.Load("textures/particle_shot.png");
 			img = new Sprite(go, texID, { 0, 0, 30, 30 }, FRONT_SCENE, {0.0f,0.0f,1.0f,1.0f});
 			animationSprites = 8;
 			break;
 		case PURPLE_PARTICLE:
-			texID = App->tex.Load("Assets/textures/particle_shot.png");
+			texID = App->tex.Load("textures/particle_shot.png");
 			img = new Sprite(go, texID, { 0, 31, 30, 30 }, FRONT_SCENE, { 0.0f,0.0f,1.0f,1.0f });
 			animationSprites = 8;
 			break;
 		case ENERGY_BALL_PARTICLE:
-			texID = App->tex.Load("Assets/textures/energyBall.png");
+			texID = App->tex.Load("textures/energyBall.png");
 			img = new Sprite(go, texID, { 0, 0, 60, 60 }, FRONT_SCENE, { 0.0f,0.0f,1.0f,1.0f });
 			animationSprites = 16;
 			break;

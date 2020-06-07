@@ -38,7 +38,6 @@ public:
 private:
 
 	std::string base_path;
-	std::string pref_dir;
 };
 
 #endif // __FILE_MANAGER_H__
