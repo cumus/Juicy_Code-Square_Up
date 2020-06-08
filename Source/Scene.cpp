@@ -76,7 +76,7 @@ bool Scene::Update()
 	UpdateStateMachine();
 
 	if (App->input->GetKey(SDL_SCANCODE_F10) == KEY_DOWN)
-			god_mode = !god_mode;
+		ToggleGodMode();
 
 	if (god_mode)
 			GodMode();
@@ -2509,13 +2509,10 @@ void Scene::GodMode()
 void Scene::ToggleGodMode()
 {
 	if (god_mode)
-	{
 		App->win->SetTitle("Square Up");
-		App->audio->PlayFx(UNIT_DIES);
-	}
 
 	god_mode = !god_mode;
-	App->fogWar.debugMode = !App->fogWar.debugMode;
+	//App->fogWar.debugMode = !App->fogWar.debugMode;
 }
 
 //Mission struct

@@ -46,6 +46,7 @@ Lab::Lab(Gameobject* go) : Behaviour(go, LAB, NO_UPGRADE, B_LAB)
 	}
 	SetColliders();
 	mini_life_bar.Show();
+	characteR->StartBuildEffect(15.0f);
 }
 
 Lab::~Lab()
@@ -81,9 +82,7 @@ void Lab::Update()
 {
 	if (!active)
 	{
-		//LOG("Building");
-		buildProgress += 1.0f;
-		current_life = int(buildProgress);
+		current_life = int(float(max_life) * characteR->GetBuildEffectProgress());
 		//int alpha = 255 * (current_life / max_life);
 		//if (alpha < 255) characteR->SetColor({ 0,0,0,Uint8(alpha) });
 		//else characteR->SetColor({ 0,0,0,255 });

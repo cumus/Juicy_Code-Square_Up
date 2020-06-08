@@ -25,6 +25,7 @@ struct TextureData
 	int height;
 	std::string source;
 	SDL_Texture* texture;
+	bool reloaded;
 };
 
 class TextureManager
@@ -40,7 +41,7 @@ public:
 	bool Init();
 	void CleanUp();
 
-	int Load(const char* path);
+	int Load(const char* path, bool reload = false, short r = 255, short g = 255, short b = 255, short a = 255);
 	int LoadSurface(SDL_Surface* surface);
 	TextureData* CreateEmpty();
 	int CreateEmptyTexture(SDL_Renderer* renderer, int width, int height, const char* source = "undefined");

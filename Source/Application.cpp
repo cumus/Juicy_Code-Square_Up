@@ -216,6 +216,9 @@ bool Application::CleanUp()
 
 	if (ret)
 	{
+		fogWar.CleanUp();
+		collSystem.Clear();
+		particleSys.CleanUp();
 		tex.CleanUp();
 
 		ret = (fonts.CleanUp() && files.CleanUp());

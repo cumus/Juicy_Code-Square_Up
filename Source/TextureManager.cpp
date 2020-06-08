@@ -21,7 +21,8 @@ TextureData::TextureData() :
 	width(0),
 	height(0),
 	source("none"),
-	texture(nullptr)
+	texture(nullptr),
+	reloaded(false)
 {}
 
 TextureData::TextureData(const TextureData& copy) :
@@ -29,7 +30,8 @@ TextureData::TextureData(const TextureData& copy) :
 	width(copy.width),
 	height(copy.height),
 	source(copy.source),
-	texture(copy.texture)
+	texture(copy.texture),
+	reloaded(copy.reloaded)
 {}
 
 TextureData::~TextureData()
@@ -135,19 +137,15 @@ void TextureManager::CleanUp()
 }
 
 // Load texture from file path
-int TextureManager::Load(const char* path)
+int TextureManager::Load(const char* path, bool reload, short r, short g, short b, short a)
 {
 	OPTICK_EVENT();
 
 	int ret = -1;
-	for (std::map<int, TextureData>::const_iterator it = textures.cbegin(); it != textures.cend(); ++it)
-	{
-		if (it->second.source == path)
-		{
-			ret = it->second.id;
-			LOG("Texture already loaded: %s", it->second.source);
-		}
-	}
+	if (!reload)
+		for (std::map<int, TextureData>::const_iterator it = textures.cbegin(); it != textures.cend(); ++it)
+			if (!it->second.reloaded && it->second.source == path)
+				ret = it->second.id;
 
 	if (ret < 0)
 	{
@@ -159,10 +157,17 @@ int TextureManager::Load(const char* path)
 
 			if (texture)
 			{
+				if (r != 255 && g != 255 && b != 255)
+					SDL_SetTextureColorMod(texture, r, g, b);
+
+				if (a != 255)
+					SDL_SetTextureAlphaMod(texture, a);
+
 				TextureData data;
 				SDL_QueryTexture(texture, 0, 0, &data.width, &data.height);
 				data.source = path;
 				data.texture = texture;
+				data.reloaded = reload;
 				textures.insert({ ret = data.id, data });
 
 				LOG("Loaded surface with path: %s", path);

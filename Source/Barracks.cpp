@@ -44,6 +44,7 @@ Barracks::Barracks(Gameobject* go) : BuildingWithQueue(go, BARRACKS, NO_UPGRADE,
 	}
 	SetColliders();
 	mini_life_bar.Show();
+	characteR->StartBuildEffect(10.0f);
 }
 
 Barracks::~Barracks()
@@ -70,8 +71,7 @@ void Barracks::Update()
 {
 	if (!active)
 	{
-		buildProgress += 1.0f;
-		current_life = int(buildProgress);
+		current_life = int(float(max_life) * characteR->GetBuildEffectProgress());
 		//Uint8 alpha = 255 * (current_life / max_life);
 		//if(alpha<255) characteR->SetColor({ 0,0,0,alpha });
 		//else characteR->SetColor({ 0,0,0,255 });

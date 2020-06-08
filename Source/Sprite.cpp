@@ -42,19 +42,44 @@ void Sprite::PostUpdate()
 		map_pos.second += ((offset.y * offset.h) + Map::GetBaseOffset()) * scale.y;
 
 		if (tex_id >= 0)
-			App->render->Blit_Scale(tex_id,
-				int(map_pos.first),
-				int(map_pos.second),
-				scale.x * offset.w,
-				scale.y * offset.h,
-				&section, layer);
+		{
+			if (build_progress < 1.0f)
+			{
+				App->render->Blit_Scale(tainted_tex_id,
+					int(map_pos.first),
+					int(map_pos.second),
+					scale.x * offset.w,
+					scale.y * offset.h,
+					&section, BACK_SCENE);
+
+				int height = int(float(section.h) * build_progress);
+				SDL_Rect target = { section.x, section.y + section.h - height, section.w, height };
+				App->render->Blit_Scale(tex_id,
+					int(map_pos.first),
+					int(map_pos.second) + (scale.y * offset.h * (section.h - height)),
+					scale.x * offset.w,
+					scale.y * offset.h,
+					&target, layer);
+			}
+			else
+			{
+				App->render->Blit_Scale(tex_id,
+					int(map_pos.first),
+					int(map_pos.second),
+					scale.x * offset.w,
+					scale.y * offset.h,
+					&section, layer);
+			}
+		}
 		else
+		{
 			App->render->DrawQuad({
 			int(map_pos.first),
 			int(map_pos.second),
 			int(float(section.w) * scale.x * offset.w),
 			int(float(section.h) * scale.y * offset.h) },
 			color, layer);
+		}
 	}
 }
 
@@ -66,6 +91,11 @@ void Sprite::SetSection(const SDL_Rect s)
 void Sprite::SetColor(const SDL_Color clr)
 {
 	color = clr;
+}
+
+float Sprite::GetBuildEffectProgress() const
+{
+	return build_progress >= 1.0f ? 1.0f : build_progress;
 }
 
 
@@ -357,6 +387,22 @@ AnimatedSprite::~AnimatedSprite()
 
 void AnimatedSprite::Update()
 {
+	if (build_total_time > 1.0f)
+	{
+		build_timer += App->time.GetGameDeltaTime();
+
+		if (build_timer >= build_total_time)
+		{
+			build_timer = build_total_time = frame_timer = 0.0f;
+			build_progress = 2.0f;
+			App->tex.Remove(tainted_tex_id);
+		}
+		else
+		{
+			build_progress = build_timer / build_total_time;
+		}
+	}
+	
 	if (current_state != *unit_state)
 	{
 		section = animations[current_state = *unit_state].Reset(current_state < ATTACKING);
@@ -368,10 +414,14 @@ void AnimatedSprite::Update()
 
 		if (animations[current_state].Update(frame_timer))
 			section.x = animations[current_state].GetSectionOffset();
-	}		
+	}
+}
 
-	/*RectF abc = { float(section.x)/3814.0f,float(section.y)/5179.0f,float(section.w)/3814.0f,float(section.h)/5179.0f };
-	App->render->DrawQuadNormCoords(abc);*/
+void AnimatedSprite::StartBuildEffect(float duration)
+{
+	build_total_time = duration;
+	build_timer = build_progress = 0.0f;
+	tainted_tex_id = App->tex.Load(App->tex.GetDataPtr(tex_id)->source.c_str(), true, 255, 255, 255, 50);
 }
 
 Anim::Anim() : 

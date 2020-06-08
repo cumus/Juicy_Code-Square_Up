@@ -38,6 +38,8 @@ Tower::Tower(Gameobject* go) : Behaviour(go, TOWER, NO_UPGRADE, B_TOWER)
 	}*/
 	SetColliders();
 	mini_life_bar.Show();
+
+	characteR->StartBuildEffect(5.0f);
 }
 
 Tower::~Tower()
@@ -74,8 +76,7 @@ void Tower::Update()
 	if (!active)
 	{
 		//LOG("Building");
-		buildProgress += 0.5f;
-		current_life = int(buildProgress);
+		current_life = int(float(max_life) * characteR->GetBuildEffectProgress());
 		//int alpha = 255 * (current_life / max_life);
 		//if (alpha < 255) characteR->SetColor({ 0,0,0,Uint8(alpha) });
 		//else characteR->SetColor({ 0,0,0,255 });
@@ -89,6 +90,7 @@ void Tower::Update()
 		}
 		mini_life_bar.Update(float(current_life) / float(max_life), current_lvl);
 	}
+
 
 	if (current_state != DESTROYED && active)
 	{		

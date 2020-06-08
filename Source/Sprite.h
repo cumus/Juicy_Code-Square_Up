@@ -20,16 +20,20 @@ public:
 
 	void SetSection(const SDL_Rect section);
 	void SetColor(const SDL_Color color);
+	float GetBuildEffectProgress() const;
 
 public:
+
 	RectF offset;
 
 protected:
 
 	int tex_id = -1;
+	int tainted_tex_id = -1;
 	SDL_Rect section;
 	Layer layer = SCENE;
 	SDL_Color color;
+	float build_progress = 1.0f;
 };
 
 class Anim
@@ -61,6 +65,7 @@ public:
 	~AnimatedSprite();
 
 	void Update() override;
+	void StartBuildEffect(float duration);
 
 private:
 
@@ -71,6 +76,10 @@ private:
 	UnitState* unit_state;
 
 	std::map<UnitState, Anim> animations;
+
+	// Build effect
+	float build_total_time = 0.0f;
+	float build_timer = 0.0f;
 };
 
 #endif // __SPRITE_H__
