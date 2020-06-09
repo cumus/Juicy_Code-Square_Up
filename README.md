@@ -1,5 +1,5 @@
 # Juicy Code Games
-![](https://github.com/cumus/Juicy-Code-Games_Project-2/blob/master/WikiResources/Home%20page%20picts/team%20logo1%20sin%20fondo.png)
+![](https://raw.githubusercontent.com/cumus/Juicy-Code-Games_Project-2/master/WikiResources/Home%20page%20picts/team%20logo1%20sin%20fondo.png)
 
 
 We are Juicy Code Games, and we are working on an RTS called SQUARE UP!.
@@ -14,7 +14,7 @@ In this game you are calmly settled on your home planet, Orberus, when, suddentl
 
 ## Team members
 
-![Team Members](https://github.com/cumus/Juicy-Code-Games_Project-2/blob/master/WikiResources/Home%20page%20picts/IMG_5071.JPG)
+![Team Members](https://raw.githubusercontent.com/cumus/Juicy-Code-Games_Project-2/master/WikiResources/Home%20page%20picts/IMG_5071.JPG)
 _`Team Members`_
 
 * Team Leader
