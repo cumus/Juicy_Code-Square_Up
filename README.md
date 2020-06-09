@@ -1,6 +1,4 @@
-# Juicy Code Games
 ![](https://raw.githubusercontent.com/cumus/Juicy-Code-Games_Project-2/master/Build/Assets/textures/team-logo2.png)
-
 
 We are Juicy Code Games, and we are working on an RTS called SQUARE UP!.
 
