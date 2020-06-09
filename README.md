@@ -2,7 +2,7 @@
 ![](https://github.com/cumus/Juicy-Code-Games_Project-2/blob/master/WikiResources/Home%20page%20picts/team%20logo1%20sin%20fondo.png)
 
 
-We are Juicy Code Games, we are working on an RTS called SQUARE UP.
+We are Juicy Code Games, and we are working on an RTS called SQUARE UP!.
 
 ## Square Up
 
@@ -43,6 +43,8 @@ _`Team Members`_
 
 ## Links
 Here are some links to our GitHub, Wiki, etc.
+
+* Gold Download [Gold Release](https://github.com/cumus/Juicy-Code-Games_Project-2/releases/download/v0.8/JuicyCode-SquareUp_v0.8.zip)
 
 * Repository [Github](https://github.com/PolGannau/Juicy-Code-Games_Project-2)
 * Game Research [Wiki](https://github.com/cumus/Juicy-Code-Games_Project-2/wiki)
