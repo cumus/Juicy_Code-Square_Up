@@ -45,9 +45,21 @@ As told before the game you are going to play is Square Up, this game is an RTS.
 ## Links
 Here are some links to our GitHib, Wiki, etc.
 * Repository [Github](https://github.com/PolGannau/Juicy-Code-Games_Project-2)
-* Webpage: [Webpage](https://polgannau.github.io/Juicy-Code-Games_Project-2/)
+* Game Research [Wiki](https://github.com/cumus/Juicy-Code-Games_Project-2/wiki)
 * Tutor: [Marc Garrigó](https://github.com/markitus18)
 * University: [CITM UPC](https://www.citm.upc.edu/)
 * License: [GNU General Public License v3.0](https://github.com/PolGannau/Juicy-Code-Games_Project-2/blob/master/LICENSE)
+
+## Social media
+
+Facebook: [@juicycodegames](https://www.facebook.com/Juicy-Code-110251897235394/)
+
+Twitter [@juicycodegames](https://twitter.com/JuicyCodeGames)
+
+Instagram [@juicycodegames](https://www.instagram.com/juicycodegames/)
+
+Youtube [@juicycodegames](https://www.youtube.com/channel/UCvtOzr0YiLtN2cmBA6WdB9Q?view_as=subscriber)
+
+For a more detailed info feel free to contact us via e-mail at: JuicyCodeStudio@gmail.com
 
 ![University Logo](https://www.citm.upc.edu/templates/new/img/logoCITM.png?1401879059) 
