@@ -6,6 +6,10 @@
 
 We are Juicy Code Games, we are working on an RTS called SQUARE UP.
 
+## Square Up
+
+In this game you are calmly settled on your home planet, Orberus, when, suddently, the Kilian race attempts to invade your planet. You'll have to fight the enemy before they destroy your base center, to avoid that, you'll have to build a base and fight against the evil. Good luck!
+
 ## Trailer
 
 
@@ -38,9 +42,6 @@ _`Team Members`_
   
 * QA Leader
   * Pol Gannau: [PolGannau](https://github.com/PolGannau)
-  
-## Square Up
-As told before the game you are going to play is Square Up, this game is an RTS. In this game you are calmly on your home planet, Orberus, when, suddently, the Kilian race attempts to invade your planet. You have fight this enemy before, but now their queen, Pentalia, is here! Try to defend your home building a base and fighting against the evil. Good luck!
 
 ## Links
 Here are some links to our GitHub, Wiki, etc.
