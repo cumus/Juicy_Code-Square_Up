@@ -62,4 +62,4 @@ Youtube [@juicycodegames](https://www.youtube.com/channel/UCvtOzr0YiLtN2cmBA6WdB
 
 For a more detailed info feel free to contact us via e-mail at: JuicyCodeStudio@gmail.com
 
-![University Logo](https://www.citm.upc.edu/templates/new/img/logoCITM.png?1401879059) 
+![University Logo](https://raw.githubusercontent.com/cumus/Juicy-Code-Games_Project-2/gh-pages/WikiResources/Home%20page%20picts/logocitm.png) 
