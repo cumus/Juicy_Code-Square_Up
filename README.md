@@ -1,6 +1,4 @@
 # Juicy Code Games
-[![Build status](https://ci.appveyor.com/api/projects/status/jpka2pcwthvf5oqg?svg=true)](https://ci.appveyor.com/project/cumus/juicy-code-games-project-2)
-
 ![](https://github.com/cumus/Juicy-Code-Games_Project-2/blob/master/WikiResources/Home%20page%20picts/team%20logo1%20sin%20fondo.png)
 
 
