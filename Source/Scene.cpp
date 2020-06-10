@@ -153,6 +153,19 @@ bool Scene::Update()
 		}
 	}
 
+	if (current_scene == END && endAnimImg2 != nullptr)
+	{
+		if (endAnim2 < endAnimFrameTime2) endAnim2 += App->time.GetGameDeltaTime();
+		else
+		{
+			if (endAnimColumn2 > 4)
+				endAnimColumn2 = 0;
+			else endAnimColumn2++;
+			endAnimImg2->section = { endAnimColumn2 * 165, 0, 165, 169 };
+			endAnim2 = 0;
+		}
+	}
+
 	if (earthquake)
 	{
 		shakeTimer += App->time.GetGameDeltaTime();
@@ -792,6 +805,15 @@ void Scene::LoadEndScene()
 	endAnimRow = 0;
 	endAnimColumn = 0;
 
+	endAnimImg2 = new C_Image(AddGameobjectToCanvas("Right Animation"));
+	endAnimImg2->target = { 0.8f, 0.55f, 2.3f, 2.3f };
+	endAnimImg2->offset = { 0.f, 0.f };
+	endAnimImg2->section = { 0, 0, 199, 169 };
+	endAnimImg2->tex_id = App->tex.Load(win ? "textures/ranged_anim_melee.png" : "textures/ranged_enemy_anim_end.png");
+	endAnim2 = 0;
+	endAnimFrameTime2 = 0.1f;
+	endAnimRow2 = 0;
+	endAnimColumn2 = 0;
 
 	/*//------------------------- BACK --------------------------------------
 

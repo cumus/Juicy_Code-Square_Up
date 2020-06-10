@@ -290,6 +290,13 @@ private:
 	C_Image* endAnimImg = nullptr;
 	int endAnimColumn;
 
+	//End Anim 2
+	float endAnim2;
+	float endAnimFrameTime2;
+	int endAnimRow2;
+	C_Image* endAnimImg2 = nullptr;
+	int endAnimColumn2;
+
 	//Missions
 	Mission* gatherEdge = nullptr;
 	Mission* buildTower = nullptr;
