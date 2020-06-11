@@ -148,7 +148,7 @@ bool Scene::Update()
 			if (endAnimColumn > 4)
 				endAnimColumn = 0;
 			else endAnimColumn++;
-			endAnimImg->section = { endAnimColumn * 198, 0, 198, 169 };
+			endAnimImg->section = { endAnimColumn * 200, 0, 200, 169 };
 			endAnim = 0;
 		}
 	}
@@ -796,20 +796,22 @@ void Scene::LoadEndScene()
 	//------------------------UNIT ANIMATIONS--------------------------------
 
 	endAnimImg = new C_Image(AddGameobjectToCanvas("Right Animation"));
-	endAnimImg->target = { 0.05f, 0.55f, 2.3f, 2.3f };
+	endAnimImg->target = { 0.1f, 0.55f, 1.f, 1.f };
 	endAnimImg->offset = { 0.f, 0.f };
-	endAnimImg->section = { 0, 0, 199, 169 };
+	endAnimImg->section = { 0, 0, 200, 169 };
 	endAnimImg->tex_id = App->tex.Load(win ? "textures/anim_melee.png" : "textures/anim_enemy_melee.png");
+	//endAnimImg->tex_id = App->tex.Load(win ? "textures/anim_enemy_melee.png" : "textures/anim_melee.png"); // win lose sprites SWITCHED
 	endAnim = 0;
 	endAnimFrameTime = 0.1f;
 	endAnimRow = 0;
 	endAnimColumn = 0;
 
 	endAnimImg2 = new C_Image(AddGameobjectToCanvas("Right Animation"));
-	endAnimImg2->target = { 0.8f, 0.55f, 2.3f, 2.3f };
+	endAnimImg2->target = { 0.8f, 0.55f, 1.f, 1.f };
 	endAnimImg2->offset = { 0.f, 0.f };
-	endAnimImg2->section = { 0, 0, 199, 169 };
-	endAnimImg2->tex_id = App->tex.Load(win ? "textures/ranged_anim_melee.png" : "textures/ranged_enemy_anim_end.png");
+	endAnimImg2->section = { 0, 0, 165, 169 };
+	endAnimImg2->tex_id = App->tex.Load(win ? "textures/ranged_anim_end.png" : "textures/ranged_enemy_anim_end.png");
+	//endAnimImg2->tex_id = App->tex.Load(win ? "textures/ranged_enemy_anim_end.png" : "textures/ranged_anim_end.png"); //win lose sprites SWITCHED
 	endAnim2 = 0;
 	endAnimFrameTime2 = 0.1f;
 	endAnimRow2 = 0;
