@@ -32,13 +32,14 @@ Minimap::Minimap(Gameobject* go) : UI_Component(go, go->GetUIParent(), UI_MINIMA
 
 	// Setup FoW Texture
 	fow_texture = App->render->GetMinimap(total_size.first, total_size.second, map_scale);
+	Event::Push(MINIMAP_UPDATE_TEXTURE, App->render, 1.f);
 	sections[FOW] = { 0, 0, total_size.first, total_size.second };
 
 	// Set Border & Sections
 	hud_texture = App->tex.Load("textures/minimap.png");
 	sections[MINIMAP] = { 0, 0, 1338, 668 };
 	border_texture = App->tex.Load("textures/hud-sprites.png");
-	sections[BACKGROUND] = { 647, 733, 360, 181 };
+	sections[BORDER] = { 647, 733, 360, 181 };
 
 	// Load Icons
 	sections[ICON_ALLIED_UNIT]	= { 325, 81, 5, 5 };
@@ -58,11 +59,7 @@ Minimap::~Minimap()
 
 void Minimap::Update()
 {
-	if ((minimap_timer += App->time.GetGameDeltaTime()) > minimap_redraw)
-	{
-		minimap_timer = 0.0f;
-		Event::Push(MINIMAP_UPDATE_TEXTURE, App->render);
-	}
+	Event::Push(MINIMAP_UPDATE_TEXTURE, App->render, 0.1f);
 }
 
 void Minimap::PostUpdate()
@@ -84,9 +81,9 @@ void Minimap::PostUpdate()
 	App->render->Blit_Scale(
 		border_texture,
 		output.x, output.y,
-		float(output.w) / float(sections[BACKGROUND].w),
-		float(output.h) / float(sections[BACKGROUND].h),
-		&sections[BACKGROUND], HUD, false);
+		float(output.w) / float(sections[BORDER].w),
+		float(output.h) / float(sections[BORDER].h),
+		&sections[BORDER], HUD, false);
 
 	// Draw Camera Rect
 	RectF cam = App->render->GetCameraRectF();
@@ -115,51 +112,59 @@ void Minimap::PostUpdate()
 	}
 
 	// Draw Units
-	for (std::map<double, std::pair<MinimapTexture, Transform*>>::const_iterator it = units.cbegin(); it != units.cend(); ++it)
+	for (std::map<double, Behaviour*>::const_iterator unit = Behaviour::b_map.cbegin(); unit != Behaviour::b_map.cend(); unit++)
 	{
-		SDL_Rect icon_section = sections[it->second.first];
-		std::pair<float, float> world_pos = Map::F_MapToWorld(it->second.second->GetGlobalPosition());
+		MinimapTexture index;
+		if (GetSectionIndex(unit->second->GetType(), index))
+		{
+			if (Behaviour::IsHidden(unit->second->GetID()) || draw_units_always)
+			{
+				std::pair<float, float> world_pos = Map::F_MapToWorld(unit->second->GetGameobject()->GetTransform()->GetGlobalPosition());
 
-		App->render->Blit(
-			border_texture,
-			output.x + int((float(output.w * 0.5f) + (scale.first * world_pos.first) - (float(icon_section.w) * 0.5f))),
-			output.y + int((scale.second * world_pos.second) - (float(icon_section.h) * 0.5f)),
-			&icon_section, HUD, false);
+				App->render->Blit(
+					border_texture,
+					output.x + int((float(output.w * 0.5f) + (scale.first * world_pos.first) - (float(sections[index].w) * 0.5f))),
+					output.y + int((scale.second * world_pos.second) - (float(sections[index].h) * 0.5f)),
+					&sections[index], HUD, false);
+			}
+		}
 	}
 }
 
-bool Minimap::AddUnit(double id, int type, Transform* unit)
+Minimap* Minimap::Get()
 {
-	bool ret = false;
-	if (minimap)
-	{
-		if (!Behaviour::IsHidden(id))
-		{
-			MinimapTexture icon;
-			if (type <= UNIT_SUPER) icon = ICON_ALLIED_UNIT;
-			else if (type <= ENEMY_SPECIAL) icon = ICON_ENEMY_UNIT;
-			else
-			{
-				switch (UnitType(type))
-				{
-				case BASE_CENTER: { icon = ICON_BASE_CENTER; break; }
-				case TOWER: { icon = ICON_TOWER; break; }
-				case BARRACKS: { icon = ICON_BARRACKS; break; }
-				case EDGE: { icon = ICON_EDGE; break; }
-				case SPAWNER: { icon = ICON_SPAWNER; break; }
-				}
-			}
+	return minimap;
+}
 
-			minimap->units.insert({ id, { icon, unit } });
-			ret = true;
+void Minimap::SwapTexture(int id)
+{
+	if (minimap != nullptr)
+		minimap->fow_texture = id;
+}
+
+inline bool Minimap::GetSectionIndex(int type, MinimapTexture& index)
+{
+	index = MAX_MINIMAP_TEXTURES;
+
+	if (type > UNKNOWN && type < ENEMY_MELEE)
+		index = ICON_ALLIED_UNIT;
+	else if (type < BASE_CENTER)
+		index = ICON_ENEMY_UNIT;
+	else
+	{
+		switch (UnitType(type))
+		{
+		case BASE_CENTER:	index = ICON_BASE_CENTER; break;
+		case TOWER:			index = ICON_TOWER; break;
+		case BARRACKS:		index = ICON_BARRACKS; break;
+		case LAB:			index = ICON_BARRACKS; break;
+		case EDGE:			index = ICON_EDGE; break;
+		case CAPSULE:		index = ICON_BASE_CENTER; break;
+		case SPAWNER:		index = ICON_SPAWNER; break;
+		default:
+			break;
 		}
 	}
 
-	return ret;
-}
-
-void Minimap::RemoveUnit(double id)
-{
-	if (minimap)
-		minimap->units.erase(id);
+	return index != MAX_MINIMAP_TEXTURES;
 }

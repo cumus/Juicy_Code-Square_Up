@@ -56,14 +56,11 @@ Behaviour::Behaviour(Gameobject* go, UnitType t, UnitState starting_state, Compo
 	mini_life_bar.Hide();
 
 	b_map.insert({ GetID(), this });
-
-	Minimap::AddUnit(GetID(), t, game_object->GetTransform());
 }
 
 Behaviour::~Behaviour()
 {
 	b_map.erase(GetID());
-	Minimap::RemoveUnit(GetID());
 }
 
 bool Behaviour::IsDestroyed()

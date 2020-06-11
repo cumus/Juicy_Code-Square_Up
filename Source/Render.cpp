@@ -6,6 +6,7 @@
 #include "Map.h"
 #include "TextureManager.h"
 #include "TimeManager.h"
+#include "Minimap.h"
 #include "JuicyMath.h"
 #include "Defs.h"
 #include "Log.h"
@@ -311,12 +312,11 @@ void Render::RecieveEvent(const Event& e)
 		cam.w = float(e.data1.AsInt());
 		cam.h = float(e.data2.AsInt());
 		SetupViewPort(16.0f / 9.0f);
-		Event::Push(MINIMAP_UPDATE_TEXTURE, this);
 		break;
 	}
 	case MINIMAP_UPDATE_TEXTURE:
 	{
-		RenderMinimapFoW();
+		RenderMinimapFoW(e.data1.AsFloat());
 		break;
 	}
 	case MINIMAP_MOVE_CAMERA:
@@ -386,45 +386,68 @@ bool Render::SetDrawColor(SDL_Color color)
 	return ret;
 }
 
-bool Render::RenderMinimapFoW()
+bool Render::RenderMinimapFoW(float progress)
 {
 	bool ret = false;
 	TextureData data;
 
-	if (App->tex.GetTextureData(minimap_texture, data))
+	if (App->tex.GetTextureData(minimap_texture[!current_texture], data))
 	{
-		int minimap_half_width = int(float(data.width) * 0.5f);
 		if (SDL_SetRenderTarget(renderer, data.texture) == 0)
 		{
-			SetDrawColor({ 255, 255, 255, 0 });
-			SDL_RenderClear(renderer);
-			SetDrawColor({ 0, 0, 0, 150 });
+			if (needs_clear)
+			{
+				SetDrawColor({ 255, 255, 255, 0 });
+				SDL_RenderClear(renderer);
+				needs_clear = false;
+			}
 
+			int minimap_half_width = int(float(data.width) * 0.5f);
 			Map::SetMapScale(minimap_scale);
 			std::pair<int, int> map_size = Map::GetMapSize_I();
 			std::pair<int, int> tile_size = Map::GetTileSize_I();
 
-			for (int x = 0; x < map_size.first; ++x)
+			SetDrawColor({ 0, 0, 0, 150 });
+
+			int rows_to_render = int(float(map_size.first) * progress);
+
+			if (last_row + rows_to_render >= map_size.first)
+			{
+				rows_to_render = map_size.first - last_row;
+				needs_clear = true;
+			}
+
+			for (int x = 0; x < rows_to_render; ++x)
 			{
 				for (int y = 0; y < map_size.second; ++y)
 				{
-					if (!FogOfWarManager::fogMap[x][y])
+					if (!FogOfWarManager::fogMap[x + last_row][y])
 					{
-						std::pair<int, int> pos = Map::I_MapToWorld(x, y);
+						std::pair<int, int> pos = Map::I_MapToWorld(x + last_row, y);
 						SDL_Rect rect = { pos.first + minimap_half_width, pos.second, tile_size.first, tile_size.second };
 						SDL_RenderFillRect(renderer, &rect);
 					}
 				}
 			}
 
+			if (needs_clear)
+			{
+				last_row = 0;
+				Minimap::SwapTexture(minimap_texture[current_texture = !current_texture]);
+			}
+			else
+				last_row += rows_to_render;
+
 			Map::SetMapScale(zoom);
 			SDL_SetRenderTarget(renderer, nullptr);
+
+			ret = true;
 		}
 		else
 			LOG("Error setting minimap render target. SDL_SetRenderTarget error: %s", SDL_GetError());
 	}
 	else
-		LOG("Error retrieving minimap texture (id = %d)", minimap_texture);
+		LOG("Error retrieving minimap texture (id = %d)", minimap_texture[!current_texture]);
 
 	return ret;
 }
@@ -439,17 +462,20 @@ inline void Render::AddToLayer(Layer layer, const RenderData& data)
 	layers[layer][pos].push_back(data);
 }
 
-int Render::GetMinimap(int width, int height, float scale, bool trigger_event)
+int Render::GetMinimap(int width, int height, float scale)
 {
-	if (minimap_texture < 0)
+	if (minimap_texture[0] < 0 || minimap_texture[1] < 0)
 	{
 		minimap_scale = scale;
-		minimap_texture = App->tex.CreateEmptyTexture(renderer, width, height);
+		minimap_texture[0] = App->tex.CreateEmptyTexture(renderer, width, height);
+		minimap_texture[1] = App->tex.CreateEmptyTexture(renderer, width, height);
 	}
 
-	trigger_event ? Event::Push(MINIMAP_UPDATE_TEXTURE, this) : RenderMinimapFoW();
+	last_row = 0;
+	current_texture = false;
+	needs_clear = true;
 
-	return minimap_texture;
+	return minimap_texture[1];
 }
 
 void Render::SetupViewPort(float aspect_ratio)

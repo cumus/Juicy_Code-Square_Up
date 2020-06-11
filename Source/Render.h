@@ -62,7 +62,7 @@ public:
 	iPoint ConvertIsoTo2D(iPoint point);
 
 	// Minimap
-	int GetMinimap(int width, int height, float scale, bool trigger_event = true);
+	int GetMinimap(int width, int height, float scale);
 
 	// Viewport
 	void SetupViewPort(float aspect_ratio);
@@ -88,7 +88,7 @@ public:
 
 	// Set background color
 	void SetBackgroundColor(SDL_Color color);
-	bool RenderMinimapFoW();
+	bool RenderMinimapFoW(float progress);
 
 	void MoveCamera(float x, float y);
 
@@ -150,8 +150,11 @@ private:
 	std::map<int, std::vector<RenderData>> layers[MAX_LAYERS];
 
 	// Minimap
-	int minimap_texture = -1;
 	float minimap_scale = 1.0f;
+	int minimap_texture[2] = { -1, -1 };
+	int last_row = 0;
+	bool current_texture = false;
+	bool needs_clear = true;
 
 	// Config
 	bool accelerated = true;

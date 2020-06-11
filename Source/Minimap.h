@@ -7,6 +7,21 @@
 
 class Transform;
 
+enum MinimapTexture : int
+{
+	MINIMAP,
+	FOW,
+	BORDER,
+	ICON_ALLIED_UNIT,
+	ICON_ENEMY_UNIT,
+	ICON_BASE_CENTER,
+	ICON_TOWER,
+	ICON_BARRACKS,
+	ICON_EDGE,
+	ICON_SPAWNER,
+	MAX_MINIMAP_TEXTURES
+};
+
 class Minimap : public UI_Component
 {
 public:
@@ -17,8 +32,16 @@ public:
 	void Update() override;
 	void PostUpdate() override;
 
-	static bool AddUnit(double id, int type, Transform* unit);
-	static void RemoveUnit(double id);
+	static Minimap* Get();
+	static void SwapTexture(int id);
+
+private:
+
+	inline bool GetSectionIndex(int type, MinimapTexture &index);
+
+public:
+
+	bool draw_units_always = false;
 
 private:
 
@@ -37,23 +60,7 @@ private:
 	int hud_texture;
 	int border_texture;
 
-	enum MinimapTexture : int
-	{
-		MINIMAP,
-		FOW,
-		BACKGROUND,
-		ICON_ALLIED_UNIT,
-		ICON_ENEMY_UNIT,
-		ICON_BASE_CENTER,
-		ICON_TOWER,
-		ICON_BARRACKS,
-		ICON_EDGE,
-		ICON_SPAWNER,
-		MAX_MINIMAP_TEXTURES
-	};
 	SDL_Rect sections[MAX_MINIMAP_TEXTURES];
-
-	std::map<double, std::pair<MinimapTexture,Transform*>> units;
 };
 
 #endif // !__MINIMAP_H__

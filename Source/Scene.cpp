@@ -2536,6 +2536,10 @@ void Scene::ToggleGodMode()
 		App->win->SetTitle("Square Up");
 
 	god_mode = !god_mode;
+
+	Minimap* m = Minimap::Get();
+	if (m)
+		m->draw_units_always = god_mode;
 	//App->fogWar.debugMode = !App->fogWar.debugMode;
 }
 
