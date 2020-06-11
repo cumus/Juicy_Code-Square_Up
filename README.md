@@ -82,6 +82,59 @@ resuming the scene.
 #### Game Designer
   * Jan Adell: [JanAdell](https://github.com/JanAdell)
   
+ My name is Jan Adell and I was Lead Game Designer in Juicy Code’s Square Up project.
+My workload has been divided in two groups mainly, these being Specific Design work,
+where the concept for the game was developed and the game balance was made, and
+General work, consisting of tasks pertaining to other areas, such as programming or art.
+
+Specific work:
+
+* Game Design Document assembly:
+
+  * Game Pillar definition.
+ 
+  * Basic idea analysis.
+ 
+  * Gameplay features.
+ 
+  * Campaign and quest definition.
+ 
+  * Enemy and ally unit and building definition.
+ 
+  * Map rough design and gameplay flow.
+ 
+  * Proofreading and correcting of the Setting and Story documents.
+ 
+  * Proofreading and correcting of any document pertaining to the design specific
+parts of the project’s wiki.
+
+* Game Balance:
+
+  * Unit stat balancing.
+ 
+  * Building stat balancing.
+ 
+  * Edge, Gears and Gold currency/resource gain tweaking.
+ 
+  * Economy systems utilization.
+ 
+  * Unit and building price definition and balance.
+ 
+General Work:
+
+* Basic unit behaviour implementation
+* Walkability system implementation
+* Gears and Gold currencies implementation
+* Capsule implementation
+* Starting dialogue implementation
+* Tutorial implementation and polish
+* Scene preparation with all needed elements
+* State machine implementation
+* Final HUD implementation and polish
+* Transition and pop-up notifications implementation (End Screen or tutorial related)
+* Win/Lose screen polish
+* Feedback elements polish (mainly pop-up buttons and tooltips on buildables)
+  
 #### Art Leader
   * Gerard Berenguer: [GerardBP77](https://github.com/GerardBP77)
   
