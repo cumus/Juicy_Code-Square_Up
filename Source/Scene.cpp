@@ -230,7 +230,7 @@ bool Scene::PostUpdate()
 		if (scene_change_timer <= 0.f)
 		{
 			scene_change_timer = -1.0f;
-			Event::Push(SCENE_CHANGE, this, next_scene, 2.f);
+			Event::Push(SCENE_CHANGE, this, next_scene, 1.5f);
 		}
 	}
 
@@ -367,7 +367,7 @@ void Scene::RecieveEvent(const Event& e)
 		{
 		case::SCENE_CHANGE:
 		{
-			Event::Push(SCENE_CHANGE, this, e.data2.AsInt(), 2.0f);
+			Event::Push(SCENE_CHANGE, this, e.data2.AsInt(), 0.8f);
 			break;
 		}
 		case::TOGGLE_FULLSCREEN:
@@ -384,16 +384,10 @@ void Scene::RecieveEvent(const Event& e)
 		}
 		case::PAUSE:
 		{
-			if (first_time_pause_button)
-			{
-				paused_yet = true;
-			}
-			else
-			{
-				Event::Push(SCENE_PAUSE, App);
-				pause_background_go->SetActive();
-				paused_scene = true;
-			}
+			Event::Push(SCENE_PAUSE, App);
+			pause_background_go->SetActive();
+			paused_scene = true;
+
 			break;
 		}
 		case::REQUEST_QUIT:
@@ -512,7 +506,7 @@ void Scene::LoadIntroScene()
 	scene_change_timer = 10.f;
 	next_scene = MENU;
 
-	C_Button* background = new C_Button(AddGameobjectToCanvas("Background"), Event(SCENE_CHANGE, this, MENU, 2.f));
+	C_Button* background = new C_Button(AddGameobjectToCanvas("Background"), Event(SCENE_CHANGE, this, MENU, 0.5f));
 	for (int i = 0; i < 4; i++)background->section[i] = { 0, 0, 1920, 1080 };
 	background->color = { 255, 255, 255, 255 };
 
@@ -1059,6 +1053,112 @@ void Scene::LoadMainHUD()
 	//-----------------------------------------------------------------------------
 
 	new Minimap(AddGameobjectToCanvas("Minimap"));
+
+	//-----------------------------------------------------------------------------
+	//-------------------------------PAUSE MENU---------------------------------------
+	//-----------------------------------------------------------------------------
+
+	//------------------------- BACKGROUND -----------------------------------
+
+	pause_background_go = AddGameobjectToCanvas("Background");
+
+	C_Image* background = new C_Image(pause_background_go);
+	background->target = { 0.66f, 0.95f, 0.6f, 0.6f };
+	background->offset = { -640.f, -985.f };
+	background->section = { 0, 0, 640, 985 };
+	background->tex_id = App->tex.Load("textures/pause-bg.png");
+
+	//------------------------- RESUME -----------------------------------------
+
+	Gameobject* resume_go = AddGameobject("resume Button", pause_background_go);
+
+	C_Button* resume = new C_Button(resume_go, Event(BUTTON_EVENT, this, RESUME));
+	resume->target = { 0.51f, 0.3f, 0.6f, 0.6f };
+	resume->offset = { -250.f, -80.f };
+
+	resume->section[0] = { 0, 0, 470, 90 };
+	resume->section[1] = { 0, 101, 470, 90 };
+	resume->section[2] = { 0, 202, 470, 90 };
+	resume->section[3] = { 0, 202, 470, 90 };
+
+	resume->tex_id = App->tex.Load("textures/resume.png");
+
+	//------------------------- FULLSCREEN -----------------------------------------
+
+	Gameobject* fullscreen_go = AddGameobject("resume Button", pause_background_go);
+
+	C_Button* fullscreen = new C_Button(fullscreen_go, Event(BUTTON_EVENT, this, TOGGLE_FULLSCREEN));
+	fullscreen->target = { 0.51f, 0.3f, 0.6f, 0.6f };
+	fullscreen->offset = { -250.f, 70.f };
+
+	fullscreen->section[0] = { 0, 0, 470, 90 };
+	fullscreen->section[1] = { 0, 101, 470, 90 };
+	fullscreen->section[2] = { 0, 202, 470, 90 };
+	fullscreen->section[3] = { 0, 202, 470, 90 };
+
+	fullscreen->tex_id = App->tex.Load("textures/fullscreen.png");
+
+	//------------------------- SAVE --------------------------------------
+
+	Gameobject* save_go = AddGameobject("save button", pause_background_go);
+
+	C_Button* save = new C_Button(save_go, Event(REQUEST_SAVE, App));
+	save->target = { 0.51f, 0.3f, 0.6f, 0.6f };
+	save->offset = { -250.f, 220.0f };
+
+	save->section[0] = { 0, 0, 470, 90 };
+	save->section[1] = { 0, 101, 470, 90 };
+	save->section[2] = { 0, 202, 470, 90 };
+	save->section[3] = { 0, 202, 470, 90 };
+
+	save->tex_id = App->tex.Load("textures/save.png");
+
+	//------------------------- LOAD --------------------------------------
+
+	Gameobject* load_go = AddGameobject("load Button", pause_background_go);
+
+	C_Button* load = new C_Button(load_go, Event(REQUEST_LOAD, App));
+	load->target = { 0.51f, 0.3f, 0.6f, 0.6f };
+	load->offset = { -250.f, 370.0f };
+
+	load->section[0] = { 0, 0, 470, 90 };
+	load->section[1] = { 0, 101, 470, 90 };
+	load->section[2] = { 0, 202, 470, 90 };
+	load->section[3] = { 0, 202, 470, 90 };
+	load->tex_id = App->tex.Load("textures/load.png");
+
+
+	/*//------------------------- OPTIONS --------------------------------------
+
+	Gameobject* options_go = AddGameobject("options Button", pause_background_go);
+
+	C_Button* options = new C_Button(options_go, Event(SCENE_CHANGE, this, MAIN));
+	options->target = { 0.51f, 0.3f, 0.3f, 0.3f };
+	options->offset = { -525.f, 800.f };
+	for (int i = 0; i < 4; i++)options->section[i] = { 0, 0, 1070, 207 };
+	options->tex_id = App->tex.Load("textures/button.png");
+
+	C_Button* options_fx = new C_Button(options_go, Event(PLAY_FX, App->audio, int(SELECT), 0));
+	options_fx->target = { 0.51f, 0.3f, 0.3f, 0.3f };
+	options_fx->offset = { -525.f, 800.f };
+	for (int i = 0; i < 4; i++)options_fx->section[i] = { 0, 0, 1070, 207 };*/
+
+	//------------------------- MAIN MENU --------------------------------------
+
+	Gameobject* main_menu_go = AddGameobject("main menu Button", pause_background_go);
+
+	C_Button* main_menu = new C_Button(main_menu_go, Event(BUTTON_EVENT, this, SCENE_CHANGE, MENU));
+	main_menu->target = { 0.51f, 0.3f, 0.6f, 0.6f };
+	main_menu->offset = { -250.f, 520.f };
+
+	main_menu->section[0] = { 0, 0, 470, 90 };
+	main_menu->section[1] = { 0, 101, 470, 90 };
+	main_menu->section[2] = { 0, 202, 470, 90 };
+	main_menu->section[3] = { 0, 202, 470, 90 };
+
+	main_menu->tex_id = App->tex.Load("textures/main-menu.png");
+
+	pause_background_go->SetInactive();
 }
 
 void Scene::LoadTutorial()
@@ -1272,112 +1372,6 @@ void Scene::UpdatePause()
 	//Pause Game
 	if (OnMainScene() && App->input->GetKey(SDL_SCANCODE_ESCAPE) == KEY_DOWN)
 	{
-		if (!pause_background_go)
-		{
-			//------------------------- BACKGROUND -----------------------------------
-
-			pause_background_go = AddGameobjectToCanvas("Background");
-
-			C_Image* background = new C_Image(pause_background_go);
-			background->target = { 0.66f, 0.95f, 0.6f, 0.6f };
-			background->offset = { -640.f, -985.f };
-			background->section = { 0, 0, 640, 985 };
-			background->tex_id = App->tex.Load("textures/pause-bg.png");
-
-			//------------------------- RESUME -----------------------------------------
-
-			Gameobject* resume_go = AddGameobject("resume Button", pause_background_go);
-
-			C_Button* resume = new C_Button(resume_go, Event(BUTTON_EVENT, this, RESUME));
-			resume->target = { 0.51f, 0.3f, 0.6f, 0.6f };
-			resume->offset = { -250.f, -80.f };
-
-			resume->section[0] = { 0, 0, 470, 90 };
-			resume->section[1] = { 0, 101, 470, 90 };
-			resume->section[2] = { 0, 202, 470, 90 };
-			resume->section[3] = { 0, 202, 470, 90 };
-
-			resume->tex_id = App->tex.Load("textures/resume.png");
-
-			//------------------------- FULLSCREEN -----------------------------------------
-
-			Gameobject* fullscreen_go = AddGameobject("resume Button", pause_background_go);
-
-			C_Button* fullscreen = new C_Button(fullscreen_go, Event(BUTTON_EVENT, this, TOGGLE_FULLSCREEN));
-			fullscreen->target = { 0.51f, 0.3f, 0.6f, 0.6f };
-			fullscreen->offset = { -250.f, 70.f };
-
-			fullscreen->section[0] = { 0, 0, 470, 90 };
-			fullscreen->section[1] = { 0, 101, 470, 90 };
-			fullscreen->section[2] = { 0, 202, 470, 90 };
-			fullscreen->section[3] = { 0, 202, 470, 90 };
-
-			fullscreen->tex_id = App->tex.Load("textures/fullscreen.png");
-
-			//------------------------- SAVE --------------------------------------
-
-			Gameobject* save_go = AddGameobject("save button", pause_background_go);
-
-			C_Button* save = new C_Button(save_go, Event(REQUEST_SAVE, App));
-			save->target = { 0.51f, 0.3f, 0.6f, 0.6f };
-			save->offset = { -250.f, 220.0f };
-
-			save->section[0] = { 0, 0, 470, 90 };
-			save->section[1] = { 0, 101, 470, 90 };
-			save->section[2] = { 0, 202, 470, 90 };
-			save->section[3] = { 0, 202, 470, 90 };
-
-			save->tex_id = App->tex.Load("textures/save.png");
-
-			//------------------------- LOAD --------------------------------------
-
-			Gameobject* load_go = AddGameobject("load Button", pause_background_go);
-
-			C_Button* load = new C_Button(load_go, Event(REQUEST_LOAD, App));
-			load->target = { 0.51f, 0.3f, 0.6f, 0.6f };
-			load->offset = { -250.f, 370.0f };
-
-			load->section[0] = { 0, 0, 470, 90 };
-			load->section[1] = { 0, 101, 470, 90 };
-			load->section[2] = { 0, 202, 470, 90 };
-			load->section[3] = { 0, 202, 470, 90 };
-			load->tex_id = App->tex.Load("textures/load.png");
-
-
-			/*//------------------------- OPTIONS --------------------------------------
-
-			Gameobject* options_go = AddGameobject("options Button", pause_background_go);
-
-			C_Button* options = new C_Button(options_go, Event(SCENE_CHANGE, this, MAIN));
-			options->target = { 0.51f, 0.3f, 0.3f, 0.3f };
-			options->offset = { -525.f, 800.f };
-			for (int i = 0; i < 4; i++)options->section[i] = { 0, 0, 1070, 207 };
-			options->tex_id = App->tex.Load("textures/button.png");
-
-			C_Button* options_fx = new C_Button(options_go, Event(PLAY_FX, App->audio, int(SELECT), 0));
-			options_fx->target = { 0.51f, 0.3f, 0.3f, 0.3f };
-			options_fx->offset = { -525.f, 800.f };
-			for (int i = 0; i < 4; i++)options_fx->section[i] = { 0, 0, 1070, 207 };*/
-
-			//------------------------- MAIN MENU --------------------------------------
-
-			Gameobject* main_menu_go = AddGameobject("main menu Button", pause_background_go);
-
-			C_Button* main_menu = new C_Button(main_menu_go, Event(BUTTON_EVENT, this, SCENE_CHANGE, MENU));
-			main_menu->target = { 0.51f, 0.3f, 0.6f, 0.6f };
-			main_menu->offset = { -250.f, 520.f };
-
-			main_menu->section[0] = { 0, 0, 470, 90 };
-			main_menu->section[1] = { 0, 101, 470, 90 };
-			main_menu->section[2] = { 0, 202, 470, 90 };
-			main_menu->section[3] = { 0, 202, 470, 90 };
-
-			main_menu->tex_id = App->tex.Load("textures/main-menu.png");
-
-			first_time_pause_button = false;
-			paused_yet = false;
-		}
-
 		if (paused_scene)
 		{
 			App->time.StartGameTimer();
