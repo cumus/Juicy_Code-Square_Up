@@ -213,6 +213,9 @@ public:
 	vec spawnPoints[7];
 	bool spawnPointsOccuped[7];
 	int difficultyLvl = 0;
+
+	//Pause
+	bool paused_scene = false;
 		
 
 private:
@@ -248,7 +251,6 @@ private:
 	int buildType = -1;
 
 	// Pause
-	bool paused_scene = false;
 	Gameobject* pause_background_go = nullptr;
 	C_Button* save = nullptr;
 	C_Button* load = nullptr;

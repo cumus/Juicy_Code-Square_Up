@@ -66,11 +66,17 @@ void Tower::Update()
 	{
 		//LOG("Building");
 		current_life = int(float(max_life) * characteR->GetBuildEffectProgress());
+		
 		if (current_life >= max_life)
 		{
 			current_life = max_life;
 			active = true;
 			mini_life_bar.Hide();
+
+			std::stringstream ssLife;
+			ssLife << "Life: ";
+			ssLife << current_life;
+			unitLife->text->SetText(ssLife.str().c_str());
 		}
 		mini_life_bar.Update(float(current_life) / float(max_life), current_lvl);
 	}

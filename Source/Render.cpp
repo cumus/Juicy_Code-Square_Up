@@ -10,6 +10,7 @@
 #include "JuicyMath.h"
 #include "Defs.h"
 #include "Log.h"
+#include "Scene.h"
 
 #include "optick-1.3.0.0/include/optick.h"
 #include "SDL2_image-2.0.5/include/SDL_image.h"
@@ -154,12 +155,15 @@ bool Render::Update()
 	if (App->input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT) {cam.y -= moveSpeed; moved = true;}
 	if (App->input->GetKey(SDL_SCANCODE_S) == KEY_REPEAT) {cam.y += moveSpeed; moved = true;}
 	//MOUSE CAMERA MOVEMENT
-	x += cam.x;
-	y += cam.y;
-	if(x <= (cam.x + 10)) { cam.x -= moveSpeed; moved = true; } //LEFT
-	if (x >= (cam.x + cam.w - 10 )) { cam.x += moveSpeed; moved = true; } //RIGHT
-	if (y <= (cam.y + 10)) { cam.y -= moveSpeed; moved = true; } //UP
-	if (y >= (cam.y + cam.h - 10)) { cam.y += moveSpeed; moved = true; } //DOWN
+	if (!App->scene->paused_scene)
+	{
+		x += cam.x;
+		y += cam.y;
+		if (x <= (cam.x + 10)) { cam.x -= moveSpeed; moved = true; } //LEFT
+		if (x >= (cam.x + cam.w - 10)) { cam.x += moveSpeed; moved = true; } //RIGHT
+		if (y <= (cam.y + 10)) { cam.y -= moveSpeed; moved = true; } //UP
+		if (y >= (cam.y + cam.h - 10)) { cam.y += moveSpeed; moved = true; } //DOWN
+	}
 
 	if (moved) Event::Push(CAMERA_MOVED, App->audio);
 	return true;

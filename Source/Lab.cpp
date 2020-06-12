@@ -83,16 +83,17 @@ void Lab::Update()
 	if (!active)
 	{
 		current_life = int(float(max_life) * characteR->GetBuildEffectProgress());
-		//int alpha = 255 * (current_life / max_life);
-		//if (alpha < 255) characteR->SetColor({ 0,0,0,Uint8(alpha) });
-		//else characteR->SetColor({ 0,0,0,255 });
-		//LOG("Building  alpha: %d", alpha);
+
 		if (current_life >= max_life)
 		{
 			current_life = max_life;
-			//characteR->SetColor({ 0,0,0,255 });
 			active = true;
 			mini_life_bar.Hide();
+
+			std::stringstream ssLife;
+			ssLife << "Life: ";
+			ssLife << current_life;
+			unitLife->text->SetText(ssLife.str().c_str());
 		}
 		mini_life_bar.Update(float(current_life) / float(max_life), current_lvl);
 	}	

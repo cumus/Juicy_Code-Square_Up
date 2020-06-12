@@ -511,6 +511,8 @@ void Scene::LoadMainScene()
 		load->clikable = false;
 	}
 
+	paused_scene = false;
+
 	for (int i = 0; i < MAX_PLAYER_STATS; ++i)
 		player_stats[i] = 0;
 }
@@ -2390,6 +2392,7 @@ void Scene::LoadGameNow()
 	{
 		pugi::xml_document doc;
 		App->files.LoadXML("save_file.xml", doc);
+		if (current_scene == MAIN || current_scene == MAIN_FROM_SAFE) ResetScene();
 		map.Load("maps/iso.tmx");
 		LoadMainHUD();
 		App->fogWar.Init();
@@ -2430,6 +2433,15 @@ void Scene::LoadGameNow()
 		imgPreview = AddGameobject("Builder image");
 		buildingImage = new Sprite(imgPreview, App->tex.Load("textures/buildPreview.png"), { 0, 3, 217, 177 }, FRONT_SCENE, { -60.0f,-100.0f,1.0f,1.0f });
 		imgPreview->SetInactive();
+
+		if (paused_scene) 
+		{
+			paused_scene = false;
+			App->time.StartGameTimer();
+			Event::Push(SCENE_PLAY, App->audio);
+			Event::Push(ON_PLAY, &root);
+			pause_background_go->SetInactive();
+		}
 	}
 	else
 		LOG("Error loading scene");
