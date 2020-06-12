@@ -9,6 +9,8 @@
 #include "SDL/include/SDL.h"
 #include "optick-1.3.0.0/include/optick.h"
 
+#define MAX_OWN_EVENTS_MS 6
+
 Input::Input() : Module("input")
 {
 	memset(keyboard, KEY_IDLE, sizeof(KeyState) * MAX_KEYS);
@@ -169,7 +171,11 @@ bool Input::PreUpdate()
 	}
 
 	// Own Events
-	Event::PumpAll();
+	Timer timer;
+	while (MAX_OWN_EVENTS_MS > timer.ReadI() && Event::RemainingEvents() > 0)
+		Event::Pump();
+
+	//Event::PumpAll();
 
 	return true;
 }

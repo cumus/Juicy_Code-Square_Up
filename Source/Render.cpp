@@ -473,13 +473,21 @@ int Render::GetMinimap(int width, int height, float scale)
 		minimap_scale = scale;
 		minimap_texture[0] = App->tex.CreateEmptyTexture(renderer, width, height);
 		minimap_texture[1] = App->tex.CreateEmptyTexture(renderer, width, height);
+
+		TextureData data;
+		if (App->tex.GetTextureData(minimap_texture[0], data) && SDL_SetRenderTarget(renderer, data.texture) == 0)
+		{
+			SetDrawColor({ 255, 255, 255, 0 });
+			SDL_RenderClear(renderer);
+			SDL_SetRenderTarget(renderer, nullptr);
+		}
 	}
 
 	last_row = 0;
-	current_texture = false;
+	current_texture = true;
 	needs_clear = true;
 
-	return minimap_texture[1];
+	return minimap_texture[0];
 }
 
 void Render::SetupViewPort(float aspect_ratio)
