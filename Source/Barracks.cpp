@@ -87,6 +87,77 @@ void Barracks::Update()
 		}
 		mini_life_bar.Update(float(current_life) / float(max_life), current_lvl);
 	}
+	else
+	{
+		if (!build_queue.empty())
+		{
+			//LOG("Not empty");
+			bool able_to_build = true;
+
+			switch (build_queue.front().type)
+			{
+			case GATHERER:
+				if (App->scene->GetStat(CURRENT_EDGE) <= GATHERER_COST)
+				{
+					able_to_build = false;
+				}
+				break;
+			case UNIT_MELEE:
+				if (App->scene->GetStat(CURRENT_EDGE) <= MELEE_COST)
+				{
+					able_to_build = false;
+				}
+				break;
+			case UNIT_RANGED:
+				if (App->scene->GetStat(CURRENT_EDGE) <= RANGED_COST)
+				{
+					able_to_build = false;
+				}
+				break;
+			}
+
+			if (!progress_bar->GetGameobject()->IsActive())
+				progress_bar->GetGameobject()->SetActive();
+
+			if (!icon->GetGameobject()->IsActive())
+				icon->GetGameobject()->SetActive();
+
+			float percent;
+			if (able_to_build)
+				percent = build_queue.front().Update();
+			else
+				percent = 1.0f;
+			if (percent >= 1.0f)
+			{
+				Event::Push(SPAWN_UNIT, App->scene, build_queue.front().type, build_queue.front().pos);
+
+				build_queue.front().transform->GetGameobject()->Destroy();
+				build_queue.pop_front();
+
+				if (build_queue.empty())
+					progress_bar->GetGameobject()->SetInactive();
+				icon->GetGameobject()->SetInactive();
+			}
+			else
+			{
+				switch (build_queue.front().type)
+				{
+				case GATHERER:
+					icon->SetSection({ 75, 458, 48, 35 });
+					break;
+				case UNIT_MELEE:
+					icon->SetSection({ 22, 463, 48, 35 });
+					break;
+				case UNIT_RANGED:
+					icon->SetSection({ 22, 463, 48, 35 });
+					break;
+				}
+				SDL_Rect section = bar_section;
+				section.w = int(float(section.w) * percent);
+				progress_bar->SetSection(section);
+			}
+		}
+	}
 }
 
 void Barracks::Upgrade()

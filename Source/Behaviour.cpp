@@ -1386,6 +1386,7 @@ void BuildingWithQueue::Update()
 
 	if (!build_queue.empty())
 	{
+		//LOG("Not empty");
 		bool able_to_build = true;
 
 		switch (build_queue.front().type)
@@ -1461,6 +1462,7 @@ void BuildingWithQueue::AddUnitToQueue(UnitType type, vec pos, float time)
 	{
 		if (App->scene->GetStat(CURRENT_EDGE) >= GATHERER_COST)
 		{
+			//LOG("Add unit Gatherer");
 			QueuedUnit unit(type, game_object, pos, time);
 			unit.transform->SetY(build_queue.size());
 			build_queue.push_back(unit);
@@ -1468,9 +1470,10 @@ void BuildingWithQueue::AddUnitToQueue(UnitType type, vec pos, float time)
 		break;
 	}
 	case UNIT_MELEE:
-	{
+	{		
 		if (App->scene->GetStat(CURRENT_EDGE) >= MELEE_COST)
 		{
+			//LOG("Add unit melee");
 			QueuedUnit unit(type, game_object, pos, time);
 			unit.transform->SetY(build_queue.size());
 			build_queue.push_back(unit);
@@ -1481,6 +1484,7 @@ void BuildingWithQueue::AddUnitToQueue(UnitType type, vec pos, float time)
 	{
 		if (App->scene->GetStat(CURRENT_EDGE) >= RANGED_COST)
 		{
+			//LOG("Add unit ranged");
 			QueuedUnit unit(type, game_object, pos, time);
 			unit.transform->SetY(build_queue.size());
 			build_queue.push_back(unit);
@@ -1488,9 +1492,10 @@ void BuildingWithQueue::AddUnitToQueue(UnitType type, vec pos, float time)
 		break;
 	}
 	case UNIT_SUPER:
-	{
+	{		
 		if (App->scene->GetStat(CURRENT_EDGE) >= SUPER_COST)
 		{
+			//LOG("Add unit super");
 			QueuedUnit unit(type, game_object, pos, time);
 			unit.transform->SetY(build_queue.size());
 			build_queue.push_back(unit);

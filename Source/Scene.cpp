@@ -1953,6 +1953,7 @@ Transform* Scene::SpawnBehaviour(int type, vec pos)
 		//LOG("Edge %d", player_stats[CURRENT_EDGE]);
 		if ((player_stats[CURRENT_EDGE] - GATHERER_COST) >= 0)
 		{
+			LOG("Sapwn Gatherer");
 			behaviour = AddGameobject("Gatherer");
 			behaviour->GetTransform()->SetLocalPos(pos);
 			Gatherer* temp = new Gatherer(behaviour);
@@ -1989,6 +1990,7 @@ Transform* Scene::SpawnBehaviour(int type, vec pos)
 	{
 		if ((player_stats[CURRENT_EDGE] - MELEE_COST) >= 0)
 		{
+			LOG("Sapwn Melee");
 			behaviour = AddGameobject("Unit melee");
 			behaviour->GetTransform()->SetLocalPos(pos);
 			MeleeUnit* temp = new MeleeUnit(behaviour);
@@ -2024,6 +2026,7 @@ Transform* Scene::SpawnBehaviour(int type, vec pos)
 	case UNIT_RANGED:
 		if ((player_stats[CURRENT_EDGE] - RANGED_COST) >= 0)
 		{
+			LOG("Sapwn Ranged");
 			behaviour = AddGameobject("Ranged unit");
 			behaviour->GetTransform()->SetLocalPos(pos);
 			RangedUnit* temp = new RangedUnit(behaviour);
@@ -2058,6 +2061,7 @@ Transform* Scene::SpawnBehaviour(int type, vec pos)
 	case UNIT_SUPER:
 		if ((player_stats[CURRENT_EDGE] - SUPER_COST) >= 0)
 		{
+			LOG("Sapwn Super");
 			behaviour = AddGameobject("Super unit");
 			behaviour->GetTransform()->SetLocalPos(pos);
 			SuperUnit* temp = new SuperUnit(behaviour);
@@ -2091,6 +2095,7 @@ Transform* Scene::SpawnBehaviour(int type, vec pos)
 		break;
 	case ENEMY_MELEE:
 	{
+		LOG("Sapwn Enemy Melee");
 		behaviour = AddGameobject("Enemy Melee");
 		behaviour->GetTransform()->SetLocalPos(pos);
 		EnemyMeleeUnit* temp = new EnemyMeleeUnit(behaviour);
@@ -2117,6 +2122,7 @@ Transform* Scene::SpawnBehaviour(int type, vec pos)
 	}
 	case ENEMY_RANGED:
 	{
+		LOG("Sapwn Enemy Ranged");
 		behaviour = AddGameobject("Enemy Ranged");
 		behaviour->GetTransform()->SetLocalPos(pos);
 		EnemyRangedUnit* temp = new EnemyRangedUnit(behaviour);
@@ -2143,6 +2149,7 @@ Transform* Scene::SpawnBehaviour(int type, vec pos)
 	}
 	case ENEMY_SUPER:
 	{
+		LOG("Sapwn Enemy Super");
 		behaviour = AddGameobject("Enemy Super");
 		behaviour->GetTransform()->SetLocalPos(pos);
 		EnemySuperUnit* temp = new EnemySuperUnit(behaviour);
@@ -2169,6 +2176,7 @@ Transform* Scene::SpawnBehaviour(int type, vec pos)
 	}
 	case BASE_CENTER:
 	{		
+		LOG("Sapwn Base center");
 		if ((player_stats[CURRENT_EDGE] - 20) >= 0)
 		{
 			std::pair<int, int> thisPos(pos.x,pos.y);
@@ -2191,6 +2199,7 @@ Transform* Scene::SpawnBehaviour(int type, vec pos)
 	}
 	case TOWER:
 	{
+		LOG("Sapwn Tower");
 		if ((player_stats[CURRENT_EDGE] - TOWER_COST) >= 0)
 		{
 			std::pair<int, int> thisPos(pos.x, pos.y);
@@ -2215,6 +2224,7 @@ Transform* Scene::SpawnBehaviour(int type, vec pos)
 	}
 	case BARRACKS:
 	{			
+		LOG("Spawn Barracks");
 		if ((player_stats[CURRENT_EDGE] - BARRACKS_COST) >= 0)
 		{
 			std::pair<int, int> thisPos(pos.x, pos.y);
@@ -2240,6 +2250,7 @@ Transform* Scene::SpawnBehaviour(int type, vec pos)
 	}
 	case LAB:
 	{
+		LOG("Spawn Lab");
 		if ((player_stats[CURRENT_EDGE] - 50) >= 0)
 		{
 			std::pair<int, int> thisPos(pos.x, pos.y);
@@ -2262,6 +2273,7 @@ Transform* Scene::SpawnBehaviour(int type, vec pos)
 	}
 	case EDGE:
 	{
+		//LOG("Sapwn Edge");
 		behaviour = AddGameobject("Edge");
 		behaviour->GetTransform()->SetLocalPos(pos);
 		new Edge(behaviour);
@@ -2269,6 +2281,7 @@ Transform* Scene::SpawnBehaviour(int type, vec pos)
 	}
 	case CAPSULE:
 	{
+		LOG("Spawn Capsule");
 		LOG("current gold %d", CURRENT_GOLD);
 		if ((player_stats[CURRENT_GOLD] - 10) >= 0)
 		{

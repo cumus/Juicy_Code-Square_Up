@@ -148,7 +148,9 @@ void C_Text::PostUpdate()
 C_Button::C_Button(Gameobject* go, const Event& e) :
 	UI_Component(go, go->GetUIParent(), UI_BUTTON),
 	event_triggered(e), state(BUTTON_IDLE)
-{}
+{
+	clikable = true;
+}
 
 C_Button::~C_Button()
 {
