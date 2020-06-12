@@ -493,6 +493,24 @@ void Scene::LoadMainScene()
 	buildingImage = new Sprite(imgPreview, App->tex.Load("textures/buildPreview.png"), { 0, 3, 217, 177 }, FRONT_SCENE, { -60.0f,-100.0f,1.0f,1.0f });
 	imgPreview->SetInactive();
 
+	if (save != nullptr)
+	{
+		save->section[0] = { 0, 302, 470, 90 };
+		save->section[1] = { 0, 302, 470, 90 };
+		save->section[2] = { 0, 302, 470, 90 };
+		save->section[3] = { 0, 302, 470, 90 };
+		save->clikable = false;
+	}	
+
+	if (!gotSaveGame && load != nullptr)
+	{
+		load->section[0] = { 0, 302, 470, 90 };
+		load->section[1] = { 0, 302, 470, 90 };
+		load->section[2] = { 0, 302, 470, 90 };
+		load->section[3] = { 0, 302, 470, 90 };
+		load->clikable = false;
+	}
+
 	for (int i = 0; i < MAX_PLAYER_STATS; ++i)
 		player_stats[i] = 0;
 }
@@ -1692,21 +1710,6 @@ void Scene::OnEventStateMachine(GameplayState state)
 		buildBarracks = new Mission("Build Barracks.", CURRENT_BARRACKS, 0, 1);
 		buildTower->SetPos({ 0.997f, 0.14f, 0.5f, 0.4f }, { 0.92f, 0.15f, 1.0f, 1.0f });
 		buildBarracks->SetPos({ 0.997f, 0.18f, 0.5f, 0.4f }, { 0.92f, 0.19f, 1.0f, 1.0f });
-		
-		save->section[0] = { 0, 302, 470, 90 };
-		save->section[1] = { 0, 302, 470, 90 };
-		save->section[2] = { 0, 302, 470, 90 };
-		save->section[3] = { 0, 302, 470, 90 };
-		save->clikable = false;
-
-		if (!gotSaveGame)
-		{
-			load->section[0] = { 0, 302, 470, 90 };
-			load->section[1] = { 0, 302, 470, 90 };
-			load->section[2] = { 0, 302, 470, 90 };
-			load->section[3] = { 0, 302, 470, 90 };
-			load->clikable = false;
-		}		
 		current_state = GATHER;
 		
 		break;
