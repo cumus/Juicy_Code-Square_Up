@@ -283,31 +283,32 @@ bool Audio::LoadFx(Audio_FX audio_fx)
 	OPTICK_EVENT();
 
 	bool ret;
-	std::string audio_path = App->files.GetBasePath();
+	std::string audio_path = "audio/Effects/";
 
 	switch (audio_fx)
 	{
-	case LOGO: audio_path += "audio/Effects/Intro/soda-open-and-pour-left-right.wav"; break;///////////// USING
+	case LOGO: audio_path += "Intro/soda-open-and-pour-left-right.wav"; break;///////////// USING
 	//case HAMMER: audio_path += "audio/Effects/Buildings/Nails/HamerNail13Hits.wav"; break;
-	case TITLE: audio_path += "audio/Effects/UI/Menu/Menu_Select.wav"; break;///////////// USING
-	case SELECT: audio_path += "audio/Effects/UI/Menu/Flashpoint001a.wav"; break;///////////// USING
-	case B_DESTROYED: audio_path += "audio/Effects/Attack_sounds/Laser_05.wav"; break;///////////// USING
-	case B_BUILDED: audio_path += "audio/Effects/Buildings/Nails/HamerNail4Hits.wav"; break;///////////// USING
-	case UNIT_DIES: audio_path += "audio/Effects/Buildings/Destroyed/PowerDown.wav"; break;///////////// USING
-	case UNIT_MOVES: audio_path += "audio/Effects/Footsteps/footsteps.wav"; break;///////////// USING
-	case EDGE_FX: audio_path += "audio/Effects/Buildings/Destroyed/minimize_006.ogg"; break;///////////// USING
-	//case B_SELECT: audio_path += "audio/Effects/Buildings/Select/Select.wav"; break;
-	case SPAWNER_FX: audio_path += "audio/Effects/Allies/Spawn/Spawn.wav"; break;///////////// USING
-	//case UI_BTON_CLICK: audio_path += "audio/Effects/UI/Ingame/itempick1.wav"; break;
-	//case ALARM: audio_path += "audio/Effects/Notification/Scifi_Alarm16.wav"; break;
-	//case BASE_CENTER_FX: audio_path += "audio/Effects/Buildings/Scanner1.ogg"; break;
-	case RANGED_ATK_FX: audio_path += "audio/Effects/Attack_sounds/Laser_09.wav"; break;///////////// USING
-	case SUPER_ATK_FX: audio_path += "audio/Effects/Attack_sounds/Laser_05.wav"; break;///////////// USING
-	case MELEE_ATK_FX: audio_path += "audio/Effects/Attack_sounds/Laser_05.wav"; break;///////////// USING
+	case TITLE: audio_path += "UI/Menu/Menu_Select.wav"; break;///////////// USING
+	case SELECT: audio_path += "UI/Menu/Flashpoint001a.wav"; break;///////////// USING
+	case B_DESTROYED: audio_path += "Attack_sounds/Laser_05.wav"; break;///////////// USING
+	case B_BUILDED: audio_path += "Buildings/Nails/HamerNail4Hits.wav"; break;///////////// USING
+	case UNIT_DIES: audio_path += "Buildings/Destroyed/PowerDown.wav"; break;///////////// USING
+	case UNIT_MOVES: audio_path += "Footsteps/footsteps.wav"; break;///////////// USING
+	case EDGE_FX: audio_path += "Buildings/Destroyed/minimize_006.ogg"; break;///////////// USING
+	//case B_SELECT: audio_path += "/Buildings/Select/Select.wav"; break;
+	case SPAWNER_FX: audio_path += "Allies/Spawn/Spawn.wav"; break;///////////// USING
+	//case UI_BTON_CLICK: audio_path += "UI/Ingame/itempick1.wav"; break;
+	//case ALARM: audio_path += "Notification/Scifi_Alarm16.wav"; break;
+	//case BASE_CENTER_FX: audio_path += "Buildings/Scanner1.ogg"; break;
+	case RANGED_ATK_FX: audio_path += "Attack_sounds/Laser_09.wav"; break;///////////// USING
+	case SUPER_ATK_FX: audio_path += "Attack_sounds/Laser_05.wav"; break;///////////// USING
+	case MELEE_ATK_FX: audio_path += "Attack_sounds/Laser_05.wav"; break;///////////// USING
 	default: break;
 	}
 
-	fx[audio_fx] = Mix_LoadWAV(audio_path.c_str());
+	fx[audio_fx] = Mix_LoadWAV_RW(App->files.LoadRWops(audio_path.c_str()), 1);
+		//Mix_LoadWAV(audio_path.c_str());
 
 	if (!(ret = (fx[audio_fx] != nullptr)))
 		LOG("Cannot load %s. Mix_GetError(): %s", audio_path.c_str(), Mix_GetError());
