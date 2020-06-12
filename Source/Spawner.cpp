@@ -15,7 +15,7 @@ Spawner::Spawner(Gameobject* go) : Behaviour(go, SPAWNER, NO_UPGRADE, B_SPAWNER)
 	max_life = 50;
 	current_life = max_life;
 	shoot = true; //Control if active or not
-	damage = 3;//number of unit spawns 
+	damage = 1;//number of unit spawns 
 	ms_counter = 0;
 	cooldown = 20.0f;
 	maxSpawns = 500;
@@ -92,8 +92,8 @@ void Spawner::Update()
 		std::srand(time(NULL));
 	}
 
-	if (currentSpawns > 2 && damage < 2) damage = 2;
-	if (currentSpawns > 5 && damage < 3) { damage = 3; App->scene->difficultyLvl = 1; }
+	if (currentSpawns > 3 && damage < 2) damage = 2;
+	if (currentSpawns > 8 && damage < 3) { damage = 3; App->scene->difficultyLvl = 1; }
 	if (currentSpawns > 20 && damage < 4) { damage = 4; App->scene->difficultyLvl = 3; }
 	if (currentSpawns > 40 && damage < 5) { damage = 5; App->scene->difficultyLvl = 4; }
 	if (currentSpawns > 60 && damage < 6) { damage = 6; App->scene->difficultyLvl = 5; }

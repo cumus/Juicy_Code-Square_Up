@@ -253,13 +253,15 @@ void DialogSystem::UpdateScreenUI(Option answer)
 		capsule->SetInactive();
 		txt3->SetInactive();
 		txt->text->SetText(" AND BE CAREFUL, WE'VE DETECTED SOME ");
-		txt2->text->SetText(" SEISMIC ACTIVITY IN YOUR AREA!");
+		txt2->text->SetText(" SEISMIC ACTIVITY IN YOUR AREA,");
+		txt3->text->SetText(" PREPARE FOR EARTHQUAKES!! ");
 		dStep += 1;
 		break;
 	case 13:
 		enemies->SetActive();
 		txt->text->SetText(" DEFEND YOUR BASE CENTER AND");
 		txt2->text->SetText(" DESTROY THE ENEMY PORTALS TO SUCCEED.");
+		txt3->SetInactive();
 		dStep += 1;
 		break;
 	case 14:
