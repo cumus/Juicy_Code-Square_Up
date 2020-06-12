@@ -9,8 +9,8 @@ public:
 	Capsule(Gameobject* go);
 	~Capsule();
 	
-	
 	void AfterDamageAction(UnitType from) override;
+	void FreeWalkabilityTiles() override;
 	void Update() override;
 
 public:

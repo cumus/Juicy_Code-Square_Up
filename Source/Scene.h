@@ -64,7 +64,6 @@ enum UnitType : int
 	ENEMY_MELEE,
 	ENEMY_RANGED,
 	ENEMY_SUPER,
-	ENEMY_SPECIAL,
 
 	//Structures//
 	BASE_CENTER,
@@ -213,6 +212,7 @@ public:
 	//Enemy spawn
 	vec spawnPoints[7];
 	bool spawnPointsOccuped[7];
+	int difficultyLvl = 0;
 		
 
 private:

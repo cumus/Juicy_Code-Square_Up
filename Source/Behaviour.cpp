@@ -92,16 +92,6 @@ void Behaviour::SetColliders()
 		case ENEMY_MELEE:
 		case ENEMY_RANGED:
 		case ENEMY_SUPER:
-		case ENEMY_SPECIAL:
-		{
-			bodyColl = new Collider(game_object, { pos.x,pos.y,game_object->GetTransform()->GetLocalScaleX(),game_object->GetTransform()->GetLocalScaleY() }, NON_TRIGGER, ENEMY_TAG, { 0,Map::GetBaseOffset(),0,0 }, BODY_COLL_LAYER);
-			visionColl = new Collider(game_object, { pos.x,pos.y,vision_range,vision_range }, TRIGGER, ENEMY_VISION_TAG, { 0,Map::GetBaseOffset(),0,0 }, VISION_COLL_LAYER);
-			attackColl = new Collider(game_object, { pos.x,pos.y,attack_range,attack_range }, TRIGGER, ENEMY_ATTACK_TAG, { 0,Map::GetBaseOffset(),0,0 }, ATTACK_COLL_LAYER);
-			std::pair<float, float> world = Map::F_MapToWorld(pos.x, pos.y);
-			selectionOffset = { 10,-50 };
-			selectionRect = { world.first + selectionOffset.first,world.second + selectionOffset.second,50,90 };
-			break;
-		}
 		case BASE_CENTER:
 		{
 			bodyColl = new Collider(game_object, { pos.x,pos.y,game_object->GetTransform()->GetLocalScaleX(),game_object->GetTransform()->GetLocalScaleY() }, TRIGGER, PLAYER_TAG, { 90,Map::GetBaseOffset() + 65,0,0 }, BODY_COLL_LAYER);
@@ -112,7 +102,7 @@ void Behaviour::SetColliders()
 		}
 		case TOWER:
 		{
-			bodyColl = new Collider(game_object, { pos.x,pos.y,game_object->GetTransform()->GetLocalScaleX(),game_object->GetTransform()->GetLocalScaleY() }, TRIGGER, PLAYER_TAG, { 0,Map::GetBaseOffset()+10,0,0 }, BODY_COLL_LAYER);
+			bodyColl = new Collider(game_object, { pos.x,pos.y,game_object->GetTransform()->GetLocalScaleX() * 1.5f,game_object->GetTransform()->GetLocalScaleY() * 1.5f }, TRIGGER, PLAYER_TAG, { 0,Map::GetBaseOffset()+10,0,0 }, BODY_COLL_LAYER);
 			attackColl = new Collider(game_object, { pos.x,pos.y,attack_range,attack_range }, TRIGGER, PLAYER_ATTACK_TAG, { 0,Map::GetBaseOffset(),0,0 }, ATTACK_COLL_LAYER);
 			std::pair<float, float> world = Map::F_MapToWorld(pos.x, pos.y);
 			selectionOffset = { 5,-105 };
@@ -139,7 +129,7 @@ void Behaviour::SetColliders()
 		}
 		case EDGE:
 		{
-			bodyColl = new Collider(game_object, { pos.x,pos.y,game_object->GetTransform()->GetLocalScaleX(),game_object->GetTransform()->GetLocalScaleY() }, NON_TRIGGER, ENEMY_TAG, { 0,Map::GetBaseOffset(),0,0 }, BODY_COLL_LAYER);
+			bodyColl = new Collider(game_object, { pos.x,pos.y,game_object->GetTransform()->GetLocalScaleX() * 1.5f,game_object->GetTransform()->GetLocalScaleY() * 1.5f }, NON_TRIGGER, ENEMY_TAG, { 0,Map::GetBaseOffset(),0,0 }, BODY_COLL_LAYER);
 			std::pair<float, float> world = Map::F_MapToWorld(pos.x, pos.y);
 			selectionOffset = { 0,20 };
 			selectionRect = { world.first + selectionOffset.first,world.second + selectionOffset.second,65,35 };
@@ -482,21 +472,6 @@ void Behaviour::OnKill(const UnitType type)
 		//App->collSystem.DeleteCollider(*visionColl);
 		break;
 	}
-	case ENEMY_SPECIAL:
-	{
-		Event::Push(UPDATE_STAT, App->scene, CURRENT_MOB_DROP, 15);
-		Event::Push(UPDATE_STAT, App->scene, MOB_DROP_COLLECTED, 15);
-		Event::Push(UPDATE_STAT, App->scene, UNITS_KILLED, 1);
-		if (App->scene->GetStat(UNITS_KILLED) % 10 == 0) {
-			Event::Push(UPDATE_STAT, App->scene, CURRENT_GOLD, 1);
-			Event::Push(UPDATE_STAT, App->scene, GOLD_COLLECTED, 1);
-			LOG("total gold value %d", App->scene->GetStat(CURRENT_GOLD));
-		}
-		//App->collSystem.DeleteCollider(*bodyColl);
-		//App->collSystem.DeleteCollider(*attackColl);
-		//App->collSystem.DeleteCollider(*visionColl);
-		break;
-	}
 	case ENEMY_SUPER:
 	{
 		Event::Push(UPDATE_STAT, App->scene, CURRENT_MOB_DROP, 20);
@@ -641,7 +616,7 @@ void B_Unit::Update()
 		if (atkObj != nullptr) //ATTACK
 		{
 			//LOG("In range");
-			if (type == ENEMY_MELEE || type == ENEMY_RANGED || type == ENEMY_SUPER || type == ENEMY_SPECIAL)//IA
+			if (type == ENEMY_MELEE || type == ENEMY_RANGED || type == ENEMY_SUPER)//IA
 			{
 				if (atkTimer > atkTime)
 				{
@@ -672,7 +647,7 @@ void B_Unit::Update()
 		else//CHECK IF MOVES
 		{
 			//LOG("Not in range");
-			if (type == ENEMY_MELEE || type == ENEMY_RANGED || type == ENEMY_SUPER || type == ENEMY_SPECIAL) //IA
+			if (type == ENEMY_MELEE || type == ENEMY_RANGED || type == ENEMY_SUPER) //IA
 			{
 				if (chaseObj != nullptr)//CHASE
 				{
@@ -1256,7 +1231,7 @@ void B_Unit::OnRightClick(vec posClick, vec movPos)
 		else
 		{
 			if (it->second->GetType() == ENEMY_MELEE || it->second->GetType() == ENEMY_RANGED || it->second->GetType() == ENEMY_SUPER
-				|| it->second->GetType() == ENEMY_SPECIAL || it->second->GetType() == SPAWNER)
+				|| it->second->GetType() == SPAWNER)
 			{
 				RectF coll = (*it).second->GetSelectionRect();
 				if (float(x) > coll.x && float(x) < coll.x + coll.w && float(y) > coll.y && float(y) < coll.y + coll.h)

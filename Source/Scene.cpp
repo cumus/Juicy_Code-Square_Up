@@ -2049,24 +2049,80 @@ Transform* Scene::SpawnBehaviour(int type, vec pos)
 	{
 		behaviour = AddGameobject("Enemy Melee");
 		behaviour->GetTransform()->SetLocalPos(pos);
-		new EnemyMeleeUnit(behaviour);
+		EnemyMeleeUnit* temp = new EnemyMeleeUnit(behaviour);
+
+		switch (difficultyLvl)
+		{
+			case 1:
+				temp->UpgradeUnit(2, 0, 1);
+				break;
+			case 2:
+				temp->UpgradeUnit(4, 1, 2);
+				break;
+			case 3:
+				temp->UpgradeUnit(8, 2, 3);
+				break;
+			case 4:
+				temp->UpgradeUnit(16, 4, 4);
+				break;
+			case 5:
+				temp->UpgradeUnit(32, 8, 5);
+				break;
+		}
 		break;
 	}
-	case ENEMY_RANGED: 
+	case ENEMY_RANGED:
+	{
 		behaviour = AddGameobject("Enemy Ranged");
 		behaviour->GetTransform()->SetLocalPos(pos);
-		new EnemyRangedUnit(behaviour); ///Temporal
+		EnemyRangedUnit* temp = new EnemyRangedUnit(behaviour);
+
+		switch (difficultyLvl)
+		{
+			case 1:
+				temp->UpgradeUnit(2, 2, 1);
+				break;
+			case 2:
+				temp->UpgradeUnit(2, 4, 2);
+				break;
+			case 3:
+				temp->UpgradeUnit(4, 6, 3);
+				break;
+			case 4:
+				temp->UpgradeUnit(8, 10, 4);
+				break;
+			case 5:
+				temp->UpgradeUnit(16, 14, 5);
+				break;
+		}
 		break;
-	case ENEMY_SUPER: 
+	}
+	case ENEMY_SUPER:
+	{
 		behaviour = AddGameobject("Enemy Super");
 		behaviour->GetTransform()->SetLocalPos(pos);
-		new EnemySuperUnit(behaviour); ///Temporal
+		EnemySuperUnit* temp = new EnemySuperUnit(behaviour);
+
+		switch (difficultyLvl)
+		{
+			case 1:
+				temp->UpgradeUnit(4, 4, 1);
+				break;
+			case 2:
+				temp->UpgradeUnit(6, 5, 2);
+				break;
+			case 3:
+				temp->UpgradeUnit(10, 8, 3);
+				break;
+			case 4:
+				temp->UpgradeUnit(14, 10, 4);
+				break;
+			case 5:
+				temp->UpgradeUnit(20, 15, 5);
+				break;
+		}
 		break;
-	case ENEMY_SPECIAL: 
-		behaviour = AddGameobject("Enemy Melee");
-		behaviour->GetTransform()->SetLocalPos(pos);
-		new EnemySuperUnit(behaviour); ///Temporal
-		break;
+	}
 	case BASE_CENTER:
 	{		
 		if ((player_stats[CURRENT_EDGE] - 20) >= 0)
@@ -2205,13 +2261,12 @@ Transform* Scene::SpawnBehaviour(int type, vec pos)
 		UpdateStat(CURRENT_SPAWNERS, 1);
 		break;
 	}
-	default: break;
 	}
 
 	if (behaviour)
 	{		
 		ret = behaviour->GetTransform();
-		LOG("SpawnPos X = %f/Y = %f",pos.x,pos.y);
+		//LOG("SpawnPos X = %f/Y = %f",pos.x,pos.y);
 	}
 
 	return ret;

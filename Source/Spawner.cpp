@@ -92,9 +92,11 @@ void Spawner::Update()
 		std::srand(time(NULL));
 	}
 
-	if (currentSpawns > 20 && damage < 4) damage = 4;
-	if (currentSpawns > 40 && damage < 5) damage = 5;
-	if (currentSpawns > 60 && damage < 6) damage = 6;
+	if (currentSpawns > 2 && damage < 2) damage = 2;
+	if (currentSpawns > 5 && damage < 3) { damage = 3; App->scene->difficultyLvl = 1; }
+	if (currentSpawns > 20 && damage < 4) { damage = 4; App->scene->difficultyLvl = 3; }
+	if (currentSpawns > 40 && damage < 5) { damage = 5; App->scene->difficultyLvl = 4; }
+	if (currentSpawns > 60 && damage < 6) { damage = 6; App->scene->difficultyLvl = 5; }
 
 	if (ms_counter < cooldown)
 	{

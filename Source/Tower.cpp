@@ -23,19 +23,13 @@ Tower::Tower(Gameobject* go) : Behaviour(go, TOWER, NO_UPGRADE, B_TOWER)
 	current_state = NO_UPGRADE;
 	providesVisibility = true;
 	spriteState = NO_UPGRADE;
-	//characteR->SetColor({ 0, 0, 0, 0 });
 	// create_bar();
 	// bar_go->SetInactive();
 	CreatePanel();
 	selectionPanel->SetInactive();
 	unitInfo->SetInactive();
 
-	/*Transform* t = game_object->GetTransform();
-	if (t)
-	{
-		vec pos = t->GetGlobalPosition();
-		App->pathfinding.SetWalkabilityTile(int(pos.x), int(pos.y), false);
-	}*/
+	App->pathfinding.SetWalkabilityTile(int(pos.x), int(pos.y), false);
 	SetColliders();
 	mini_life_bar.Show();
 
@@ -47,12 +41,7 @@ Tower::~Tower()
 
 void Tower::FreeWalkabilityTiles()
 {
-	/*Transform* t = game_object->GetTransform();
-	if (t)
-	{
-		vec pos = t->GetGlobalPosition();
-		App->pathfinding.SetWalkabilityTile(int(pos.x), int(pos.y), true);
-	}*/
+	App->pathfinding.SetWalkabilityTile(int(pos.x), int(pos.y), true);
 }
 
 void Tower::OnCollision(Collider selfCol, Collider col)
@@ -77,14 +66,9 @@ void Tower::Update()
 	{
 		//LOG("Building");
 		current_life = int(float(max_life) * characteR->GetBuildEffectProgress());
-		//int alpha = 255 * (current_life / max_life);
-		//if (alpha < 255) characteR->SetColor({ 0,0,0,Uint8(alpha) });
-		//else characteR->SetColor({ 0,0,0,255 });
-		//LOG("Building  alpha: %d", alpha);
 		if (current_life >= max_life)
 		{
 			current_life = max_life;
-			//characteR->SetColor({ 0,0,0,255 });
 			active = true;
 			mini_life_bar.Hide();
 		}

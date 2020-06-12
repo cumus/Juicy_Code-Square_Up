@@ -15,6 +15,7 @@ Capsule::Capsule(Gameobject* go) : Behaviour(go, CAPSULE, POSE, B_CAPSULE)
 	providesVisibility = false;
 	gives_edge = true;
 
+	App->pathfinding.SetWalkabilityTile(int(pos.x), int(pos.y), false);
 	SetColliders();
 }
 
@@ -26,6 +27,11 @@ Capsule::~Capsule()
 void Capsule::Update()
 {
 	CheckFoWMap();
+}
+
+void Capsule::FreeWalkabilityTiles()
+{
+	App->pathfinding.SetWalkabilityTile(int(pos.x), int(pos.y), true);
 }
 
 void Capsule::AfterDamageAction(UnitType from)
