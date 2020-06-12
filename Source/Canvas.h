@@ -99,7 +99,7 @@ public:
 
 	Event event_triggered;
 	bool trigger_while_pressed = false;
-
+	bool clikable = true;
 	int tex_id = -1;
 
 	enum ButtonStates : int

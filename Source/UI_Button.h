@@ -14,7 +14,6 @@ public:
 	UI_Button* ToUiButton() override;
 
 public:
-
 	SDL_Color color;
 };
 

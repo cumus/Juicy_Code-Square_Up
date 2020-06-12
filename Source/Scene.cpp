@@ -557,16 +557,29 @@ void Scene::LoadMenuScene()
 	start->tex_id = App->tex.Load("textures/new-game.png");
 
 	//------------------------- RESUME --------------------------------------
+	pugi::xml_document doc;
+	if (App->files.LoadXML("save_file.xml", doc)) gotSaveGame = true;
 
 	Gameobject* resume_go = AddGameobjectToCanvas("Resume Button");
 
 	C_Button* resume = new C_Button(resume_go, Event(BUTTON_EVENT, this, SCENE_CHANGE, MAIN_FROM_SAFE));
 	resume->target = { buttons_x, 0.526f, .55f, .55f };
-
-	resume->section[0] = { 0, 0, 470, 90 };
-	resume->section[1] = { 0, 101, 470, 90 };
-	resume->section[2] = { 0, 202, 470, 90 };
-	resume->section[3] = { 0, 202, 470, 90 };
+	if (gotSaveGame)
+	{
+		resume->section[0] = { 0, 0, 470, 90 };
+		resume->section[1] = { 0, 101, 470, 90 };
+		resume->section[2] = { 0, 202, 470, 90 };
+		resume->section[3] = { 0, 202, 470, 90 };
+		resume->clikable = true;
+	}
+	else
+	{
+		resume->section[0] = { 0, 302, 470, 90 };
+		resume->section[1] = { 0, 302, 470, 90 };
+		resume->section[2] = { 0, 302, 470, 90 };
+		resume->section[3] = { 0, 302, 470, 90 };
+		resume->clikable = false;
+	}
 
 	resume->tex_id = App->tex.Load("textures/resume.png");
 
@@ -1085,7 +1098,7 @@ void Scene::LoadMainHUD()
 
 	//------------------------- FULLSCREEN -----------------------------------------
 
-	Gameobject* fullscreen_go = AddGameobject("resume Button", pause_background_go);
+	Gameobject* fullscreen_go = AddGameobject("Fullscreen Button", pause_background_go);
 
 	C_Button* fullscreen = new C_Button(fullscreen_go, Event(BUTTON_EVENT, this, TOGGLE_FULLSCREEN));
 	fullscreen->target = { 0.51f, 0.3f, 0.6f, 0.6f };
@@ -1102,7 +1115,7 @@ void Scene::LoadMainHUD()
 
 	Gameobject* save_go = AddGameobject("save button", pause_background_go);
 
-	C_Button* save = new C_Button(save_go, Event(REQUEST_SAVE, App));
+	save = new C_Button(save_go, Event(REQUEST_SAVE, App));
 	save->target = { 0.51f, 0.3f, 0.6f, 0.6f };
 	save->offset = { -250.f, 220.0f };
 
@@ -1113,11 +1126,12 @@ void Scene::LoadMainHUD()
 
 	save->tex_id = App->tex.Load("textures/save.png");
 
+
 	//------------------------- LOAD --------------------------------------
 
 	Gameobject* load_go = AddGameobject("load Button", pause_background_go);
 
-	C_Button* load = new C_Button(load_go, Event(REQUEST_LOAD, App));
+	load = new C_Button(load_go, Event(REQUEST_LOAD, App));
 	load->target = { 0.51f, 0.3f, 0.6f, 0.6f };
 	load->offset = { -250.f, 370.0f };
 
@@ -1650,7 +1664,6 @@ void Scene::OnEventStateMachine(GameplayState state)
 	{
 		//------------------STATE MACHINE CASES-----------------------
 	case GATHER:
-		
 		App->dialogSys.CleanUp();
 		not_go->SetInactive();
 		LOG("GATHER STATE");
@@ -1680,6 +1693,20 @@ void Scene::OnEventStateMachine(GameplayState state)
 		buildTower->SetPos({ 0.997f, 0.14f, 0.5f, 0.4f }, { 0.92f, 0.15f, 1.0f, 1.0f });
 		buildBarracks->SetPos({ 0.997f, 0.18f, 0.5f, 0.4f }, { 0.92f, 0.19f, 1.0f, 1.0f });
 		
+		save->section[0] = { 0, 302, 470, 90 };
+		save->section[1] = { 0, 302, 470, 90 };
+		save->section[2] = { 0, 302, 470, 90 };
+		save->section[3] = { 0, 302, 470, 90 };
+		save->clikable = false;
+
+		if (!gotSaveGame)
+		{
+			load->section[0] = { 0, 302, 470, 90 };
+			load->section[1] = { 0, 302, 470, 90 };
+			load->section[2] = { 0, 302, 470, 90 };
+			load->section[3] = { 0, 302, 470, 90 };
+			load->clikable = false;
+		}		
 		current_state = GATHER;
 		
 		break;
@@ -1772,6 +1799,18 @@ void Scene::OnEventStateMachine(GameplayState state)
 			//LOG("Random = %d",rand-1);
 		}
 		std::srand(time(NULL));
+
+		save->section[0] = { 0, 0, 470, 90 };
+		save->section[1] = { 0, 101, 470, 90 };
+		save->section[2] = { 0, 202, 470, 90 };
+		save->section[3] = { 0, 202, 470, 90 };
+		save->clikable = true;
+
+		/*load->section[0] = { 0, 0, 470, 90 };
+		load->section[1] = { 0, 101, 470, 90 };
+		load->section[2] = { 0, 202, 470, 90 };
+		load->section[3] = { 0, 202, 470, 90 };*/
+
 		current_state = SPAWNER_STATE;
 		break;
 	case WIN_BUTTON:
@@ -2328,15 +2367,26 @@ void Scene::SaveGameNow()
 	// Dump GO content onto doc
 	root.Save(scene_node);
 
+	gotSaveGame = true;
+	if (load != nullptr)
+	{
+		load->section[0] = { 0, 0, 470, 90 };
+		load->section[1] = { 0, 101, 470, 90 };
+		load->section[2] = { 0, 202, 470, 90 };
+		load->section[3] = { 0, 202, 470, 90 };
+		load->clikable = true;
+	}
+
 	if (!doc.save_file((std::string(App->files.GetBasePath()) + "save_file.xml").c_str(), "\t", 1u, pugi::encoding_utf8))
 		LOG("Error saving scene");
 }
 
 void Scene::LoadGameNow()
 {
-	pugi::xml_document doc;
-	if (App->files.LoadXML("save_file.xml", doc))
+	if (gotSaveGame)
 	{
+		pugi::xml_document doc;
+		App->files.LoadXML("save_file.xml", doc);
 		map.Load("maps/iso.tmx");
 		LoadMainHUD();
 		App->fogWar.Init();

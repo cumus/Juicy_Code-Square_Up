@@ -225,6 +225,7 @@ private:
 	static bool no_damage;
 	static bool draw_collisions;
 	bool drawSelection = false;
+	bool gotSaveGame = false;
 
 	// Scene Transitions
 	enum Fade : int
@@ -249,6 +250,8 @@ private:
 	// Pause
 	bool paused_scene = false;
 	Gameobject* pause_background_go = nullptr;
+	C_Button* save = nullptr;
+	C_Button* load = nullptr;
 
 	// Player
 	C_Text* hud_texts[MAX_PLAYER_STATS];

@@ -182,7 +182,7 @@ void C_Button::PreUpdate()
 		case KEY_UP:
 		{
 			state = BUTTON_HOVERED;
-			Event::Push(event_triggered);
+			if(clikable) Event::Push(event_triggered);
 			break;
 		}
 		}
