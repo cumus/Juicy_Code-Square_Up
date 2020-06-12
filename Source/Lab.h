@@ -9,7 +9,7 @@
 class Lab : public Behaviour
 {
 public:
-	Lab(Gameobject* go);
+	Lab(Gameobject* go, bool build_new = true);
 	~Lab();
 
 	void Upgrade() override;

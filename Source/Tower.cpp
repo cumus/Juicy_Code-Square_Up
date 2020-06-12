@@ -10,7 +10,7 @@
 #include "Sprite.h"
 #include "Canvas.h"
 
-Tower::Tower(Gameobject* go) : Behaviour(go, TOWER, NO_UPGRADE, B_TOWER)
+Tower::Tower(Gameobject* go, bool build_new) : Behaviour(go, TOWER, NO_UPGRADE, B_TOWER)
 {
 	max_life = 75;
 	current_life = 1;
@@ -33,7 +33,8 @@ Tower::Tower(Gameobject* go) : Behaviour(go, TOWER, NO_UPGRADE, B_TOWER)
 	SetColliders();
 	mini_life_bar.Show();
 
-	characteR->StartBuildEffect(5.0f);
+	if (build_new)
+		characteR->StartBuildEffect(5.0f);
 }
 
 Tower::~Tower()

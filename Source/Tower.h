@@ -9,7 +9,7 @@
 class Tower : public Behaviour
 {
 public:
-	Tower(Gameobject* go);
+	Tower(Gameobject* go, bool build_new = true);
 	~Tower();
 
 	void Upgrade() override;

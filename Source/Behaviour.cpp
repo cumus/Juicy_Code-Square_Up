@@ -333,6 +333,7 @@ void Behaviour::GetTilesInsideRadius()
 void Behaviour::Load(pugi::xml_node& node)
 {
 	current_life = node.attribute("current_life").as_int();
+	active = true;
 }
 
 void Behaviour::Save(pugi::xml_node& node) const

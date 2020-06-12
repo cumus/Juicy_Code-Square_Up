@@ -66,6 +66,8 @@ bool FogOfWarManager::CleanUp()
 		smoothTexID = -1;
 	}
 
+	initiated = false;
+
 	return ret;
 }
 

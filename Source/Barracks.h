@@ -9,7 +9,7 @@
 class Barracks : public BuildingWithQueue
 {
 public:
-	Barracks(Gameobject* go);
+	Barracks(Gameobject* go, bool build_new = true);
 	~Barracks();
 
 	void Upgrade() override;

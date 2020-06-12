@@ -12,6 +12,7 @@
 #include "BaseCenter.h"
 #include "Tower.h"
 #include "Barracks.h"
+#include "Lab.h"
 #include "Edge.h"
 #include "EdgeCapsule.h"
 #include "Spawner.h"
@@ -378,12 +379,17 @@ void Gameobject::Load(pugi::xml_node& node)
 		}
 		case TOWER:
 		{
-			(new Tower(go))->Load(bh_node);
+			(new Tower(go, false))->Load(bh_node);
 			break;
 		}
 		case BARRACKS:
 		{
-			(new Barracks(go))->Load(bh_node);
+			(new Barracks(go, false))->Load(bh_node);
+			break;
+		}
+		case LAB:
+		{
+			(new Lab(go, false))->Load(bh_node);
 			break;
 		}
 		case EDGE:

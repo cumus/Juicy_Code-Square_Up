@@ -9,7 +9,7 @@
 #include "Sprite.h"
 #include "Log.h"
 
-Barracks::Barracks(Gameobject* go) : BuildingWithQueue(go, BARRACKS, NO_UPGRADE, B_BARRACKS)
+Barracks::Barracks(Gameobject* go, bool build_new) : BuildingWithQueue(go, BARRACKS, NO_UPGRADE, B_BARRACKS)
 {
 	Transform* t = game_object->GetTransform();
 
@@ -43,7 +43,9 @@ Barracks::Barracks(Gameobject* go) : BuildingWithQueue(go, BARRACKS, NO_UPGRADE,
 	}
 	SetColliders();
 	mini_life_bar.Show();
-	characteR->StartBuildEffect(10.0f);
+
+	if (build_new)
+		characteR->StartBuildEffect(10.0f);
 }
 
 Barracks::~Barracks()

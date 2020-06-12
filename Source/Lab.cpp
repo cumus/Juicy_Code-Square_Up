@@ -13,7 +13,7 @@
 #include "Sprite.h"
 
 
-Lab::Lab(Gameobject* go) : Behaviour(go, LAB, NO_UPGRADE, B_LAB)
+Lab::Lab(Gameobject* go, bool build_new) : Behaviour(go, LAB, NO_UPGRADE, B_LAB)
 {
 	Transform* t = game_object->GetTransform();
 
@@ -46,7 +46,9 @@ Lab::Lab(Gameobject* go) : Behaviour(go, LAB, NO_UPGRADE, B_LAB)
 	}
 	SetColliders();
 	mini_life_bar.Show();
-	characteR->StartBuildEffect(15.0f);
+
+	if (build_new)
+		characteR->StartBuildEffect(15.0f);
 }
 
 Lab::~Lab()
