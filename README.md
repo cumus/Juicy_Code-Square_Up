@@ -1,4 +1,4 @@
-![](https://raw.githubusercontent.com/cumus/Juicy-Code-Games_Project-2/master/Build/Assets/textures/team-logo2.png)
+
 
 We are Juicy Code Games, and we are working on an RTS called SQUARE UP!.
 
@@ -63,5 +63,7 @@ Instagram [@juicycodegames](https://www.instagram.com/juicycodegames/)
 Youtube [@juicycodegames](https://www.youtube.com/channel/UCvtOzr0YiLtN2cmBA6WdB9Q?view_as=subscriber)
 
 For a more detailed info feel free to contact us via e-mail at: JuicyCodeStudio@gmail.com
+
+![](https://raw.githubusercontent.com/cumus/Juicy-Code-Games_Project-2/master/Build/Assets/textures/team-logo2.png)
 
 ![University Logo](https://raw.githubusercontent.com/cumus/Juicy-Code-Games_Project-2/gh-pages/WikiResources/Home%20page%20picts/logocitm.png) 
