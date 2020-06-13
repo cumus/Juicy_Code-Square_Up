@@ -1,3 +1,5 @@
+![](https://raw.githubusercontent.com/cumus/Juicy_Code-Square_Up/gh-pages/WikiResources/Home%20page%20picts/logo1%20lit.png)
+
 ## Trailer
 
 We are Juicy Code Games, and we are working on an RTS called SQUARE UP!.
