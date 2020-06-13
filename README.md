@@ -3,6 +3,7 @@
   <nav>
    <li class="fork">
 <a href="https://github.com/cumus/Juicy_Code-Square_Up/blob/gh-pages/Cv's/Adri_Web.pdf">Team</a>
+<a href="https://github.com/cumus/Juicy_Code-Square_Up">Github</a>
     </li>
   </nav>
  </div>
