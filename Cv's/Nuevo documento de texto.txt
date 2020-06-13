@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+
+<html lang="en-US" style=""><head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+<!-- Begin Jekyll SEO tag v2.6.1 -->
+<title>Juicy_Code-Square_Up | Website Resources</title>
+<meta name="generator" content="Jekyll v3.8.7">
+<meta property="og:title" content="Juicy_Code-Square_Up">
+<meta property="og:locale" content="en_US">
+<meta name="description" content="Website Resources">
+<meta property="og:description" content="Website Resources">
+<link rel="canonical" href="https://cumus.github.io/Juicy_Code-Square_Up/">
+<meta property="og:url" content="https://cumus.github.io/Juicy_Code-Square_Up/">
+<meta property="og:site_name" content="Juicy_Code-Square_Up">
+<script type="application/ld+json">
+{"@type":"WebSite","url":"https://cumus.github.io/Juicy_Code-Square_Up/","headline":"Juicy_Code-Square_Up","name":"Juicy_Code-Square_Up","description":"Website Resources","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+    <link rel="stylesheet" href="/Juicy_Code-Square_Up/assets/css/style.css?v=3af8ba581d3ee20daa20557afda21fedc569d843">
+    <script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+    <script src="/Juicy_Code-Square_Up/assets/js/respond.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <!--[if lt IE 8]>
+    <link rel="stylesheet" href="/Juicy_Code-Square_Up/assets/css/ie.css">
+    <![endif]-->
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  </head>
+  <body>
+      <div id="header">
+        <nav>
+          <li class="fork"><a href="https://github.com/cumus/Juicy_Code-Square_Up">View On GitHub</a></li>
+          
+        </nav>
+      </div><!-- end header -->
+
+    <div class="wrapper">
+
+      <section>
+        <div id="title">
+          <h1>Juicy_Code-Square_Up</h1>
+          <hr>
+          <span class="credits left">Project maintained by <a href="https://github.com/cumus">cumus</a></span>
+          <span class="credits right">Hosted on GitHub Pages — Theme by <a href="https://twitter.com/michigangraham">mattgraham</a></span>
+        </div>
+
+        
+ <div id="header">
+  <nav>
+   <li class="fork">
+    <a href="https://cumus.github.io/Juicy_Code-Square_Up/">Home</a>
+    <a href="https://github.com/cumus/Juicy_Code-Square_Up">Github</a>
+    <a href="https://cumus.github.io/Juicy_Code-Square_Up/Cv's/index.html">Team</a>
+    </li>
+  </nav>
+ </div>
+
+<p><img src="https://raw.githubusercontent.com/cumus/Juicy_Code-Square_Up/gh-pages/WikiResources/Home%20page%20picts/logo1%20lit.png" alt=""></p>
+
+<h2 id="team-leader">Game Designer</h2>
+<ul>
+  <li>Jan Adell: <a href="https://github.com/JanAdell">JanAdell</a></li>
+</ul>
+    
+    <p>My name is Jan Adell and I was Lead Game Designer in Juicy Code’s Square Up project.
+My workload has been divided in two groups mainly, these being Specific Design work,
+where the concept for the game was developed and the game balance was made, and
+General work, consisting of tasks pertaining to other areas, such as programming or art.
+
+</p>
+    
+    <p>Specific work:</p>
+    
+  <li>
+    <p>Game Design Document assembly:
+</p>
+  </li>
+<ul>
+  <li>
+    <p>Game Pillar definition.
+</p>
+  </li>
+  <li>
+    <p>Basic idea analysis.
+</p>
+  </li>
+  <li>
+    <p>Gameplay features.
+</p>
+  </li>
+  <li>
+    <p>Campaign and quest definition.</p>
+  </li>
+  <li>
+    <p>Enemy and ally unit and building definition.</p>
+  </li>
+  <li>
+    <p>Map rough design and gameplay flow.</p>
+  </li>
+  <li>
+    <p>Proofreading and correcting of the Setting and Story documents.</p>
+  </li>
+  <li>
+    <p>Proofreading and correcting of any document pertaining to the design specific
+parts of the project’s wiki.</p>
+  </li>
+</ul>
+  <li>
+    <p>Game Balance:</p>
+	</li>
+	<ul>
+      <li>
+        <p>Unit stat balancing.</p>
+      </li>
+      <li>
+        <p>Building stat balancing.</p>
+      </li>
+<li>
+        <p>Edge, Gears and Gold currency/resource gain tweaking.</p>
+      </li>
+<li>
+        <p>Economy systems utilization.</p>
+      </li>
+<li>
+        <p>Unit and building price definition and balance.</p>
+      </li>
+   </ul>
+        <p>General Work:
+</p>
+    
+      <li>
+        <p>Worked on animations out of the animation module, animating manually, game logo for
+example.
+</p>
+  </li>
+  <li>
+    <p>Basic unit behaviour implementation.
+</p>
+  </li>
+  <li>
+    <p>Walkability system implementation.</p>
+  </li>
+<li>
+    <p>Gears and Gold currencies implementation.
+</p>
+  </li>
+<li>
+    <p>Capsule implementation.
+</p>
+  </li>
+<li>
+    <p>Starting dialogue implementation.
+</p>
+  </li>
+<li>
+    <p>Tutorial implementation and polish.</p>
+  </li>
+<li>
+    <p>Scene preparation with all needed elements.</p>
+  </li>
+<li>
+    <p>State machine implementation.</p>
+  </li>
+<li>
+    <p>Final HUD implementation and polish.</p>
+  </li>
+<li>
+    <p>Transition and pop-up notifications implementation (End Screen or tutorial related).</p>
+  </li>
+<li>
+    <p>Win/Lose screen polish.</p>
+  </li>
+<li>
+    <p>Feedback elements polish (mainly pop-up buttons and tooltips on buildables).</p>
+  </li>
+
+<h2 id="social-media">Social media</h2>
+
+<p>Facebook: <a href="https://www.facebook.com/Juicy-Code-110251897235394/">@juicycodegames</a></p>
+
+<p>Twitter <a href="https://twitter.com/JuicyCodeGames">@juicycodegames</a></p>
+
+<p>Instagram <a href="https://www.instagram.com/juicycodegames/">@juicycodegames</a></p>
+
+<p>Youtube <a href="https://www.youtube.com/channel/UCvtOzr0YiLtN2cmBA6WdB9Q?view_as=subscriber">@juicycodegames</a></p>
+
+<p>For a more detailed info feel free to contact us via e-mail at: JuicyCodeStudio@gmail.com</p>
+
+<p><img src="https://raw.githubusercontent.com/cumus/Juicy-Code-Games_Project-2/master/Build/Assets/textures/team-logo2.png" alt=""></p>
+
+<p><img src="https://raw.githubusercontent.com/cumus/Juicy-Code-Games_Project-2/gh-pages/WikiResources/Home%20page%20picts/logocitm.png" alt="University Logo"></p>
+
+          <a href="https://cumus.github.io/Juicy_Code-Square_Up/">Home</a>
+      </section>
+
+    </div>
+  
+     
+
+  
+
+</body></html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
