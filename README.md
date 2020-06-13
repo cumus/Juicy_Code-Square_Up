@@ -7,6 +7,7 @@
   </nav>
  </div>
 </body>
+
 ![](https://raw.githubusercontent.com/cumus/Juicy_Code-Square_Up/gh-pages/WikiResources/Home%20page%20picts/logo1%20lit.png)
 
 ## Trailer
