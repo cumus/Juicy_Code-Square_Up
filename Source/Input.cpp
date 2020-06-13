@@ -171,11 +171,11 @@ bool Input::PreUpdate()
 	}
 
 	// Own Events
-	Timer timer;
-	while (MAX_OWN_EVENTS_MS > timer.ReadI() && Event::RemainingEvents() > 0)
-		Event::Pump();
+	//Timer timer;
+	//while (MAX_OWN_EVENTS_MS > timer.ReadI() && Event::RemainingEvents() > 0)
+		//Event::Pump();
 
-	//Event::PumpAll();
+	Event::PumpAll();
 
 	return true;
 }

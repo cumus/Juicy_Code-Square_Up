@@ -79,9 +79,14 @@ void Gameobject::Update()
 		if ((*component)->IsActive())
 			(*component)->Update();
 
-	for (std::vector<Gameobject*>::iterator child = childs.begin(); child != childs.end(); ++child)
-		if ((*child)->active)
-			(*child)->Update();
+	//if (childs.capacity() != childs.size()) childs.shrink_to_fit();
+	/*for (std::vector<Gameobject*>::iterator child = childs.begin(); child != childs.end(); ++child)
+		if ((*child) != nullptr && (*child)->active)
+			(*child)->Update();*/
+
+	for (int i = 0; i < childs.size(); ++i)
+		if (childs[i] != nullptr && childs[i]->active)
+			childs[i]->Update();
 }
 
 void Gameobject::PostUpdate()
@@ -340,6 +345,7 @@ void Gameobject::UpdateRemoveQueue()
 
 		go_to_remove.pop();
 	}
+	//childs.shrink_to_fit();
 }
 
 void Gameobject::Load(pugi::xml_node& node)

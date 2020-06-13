@@ -919,7 +919,13 @@ void Scene::LoadEndScene()
 	unit_c << "Total constructed units";
 	unit_l << "Total lost units";
 	unit_k << "Total killed units";*/
-	time_t << game_time_counter << " s";
+
+	char tmp_string2[3];
+
+	// Construct the string from variable arguments
+	sprintf_s(tmp_string2, 3, "%.2f", game_time_counter);
+
+	time_t << tmp_string2 << " s";
 	edge_t << player_stats[EDGE_COLLECTED];
 	unit_c << player_stats[UNITS_CREATED];
 	unit_l << player_stats[UNITS_LOST];
