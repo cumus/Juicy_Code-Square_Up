@@ -18,7 +18,7 @@ Our gold release is down below, so check it out!
 _`Team Members`_
 
 #### Team Leader
-  * Ruben Sardón: [cumus](https://github.com/cumus)
+  * [Ruben Sardón](https://github.com/cumus/Juicy-Code-Games_Project-2/blob/gh-pages/Cv's/web_-_ruben.pdf): [cumus](https://github.com/cumus)
   
   I’m Rubén Sardón and was the team lead for Juicy Code’s Square Up. As part of my
 responsibilities I was in charge of scheduling and documenting meetings, organizing tasks
@@ -82,7 +82,7 @@ resuming the scene.
   * Victor Bosch: [victorbr2](https://github.com/victorbr2)
   
 #### Game Designer
-  * Jan Adell: [JanAdell](https://github.com/JanAdell)
+  * [Jan Adell](https://github.com/cumus/Juicy-Code-Games_Project-2/blob/gh-pages/Cv's/jan_web.pdf): [JanAdell](https://github.com/JanAdell)
   
  My name is Jan Adell and I was Lead Game Designer in Juicy Code’s Square Up project.
 My workload has been divided in two groups mainly, these being Specific Design work,
@@ -141,10 +141,10 @@ General Work:
   * Gerard Berenguer: [GerardBP77](https://github.com/GerardBP77)
   
 #### Audio Leader
-  * Oscar Reguera: [oscarrep](https://github.com/oscarrep)
+  * [Oscar Reguera](https://github.com/cumus/Juicy-Code-Games_Project-2/blob/gh-pages/Cv's/oscar-web.pdf): [oscarrep](https://github.com/oscarrep)
   
 #### UI Leader
-  * Xavier Trillo: [xatrilu](https://github.com/xatrilu)
+  * [Xavier Trillo](https://github.com/cumus/Juicy-Code-Games_Project-2/blob/gh-pages/Cv's/Xavi_web.pdf): [xatrilu](https://github.com/xatrilu)
   
 #### QA Leader
   * Pol Gannau: [PolGannau](https://github.com/PolGannau)
