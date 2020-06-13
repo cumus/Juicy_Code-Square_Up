@@ -74,7 +74,9 @@ spatial effect for each individual audio channel.
 resuming the scene.
   
 #### Team Manager
-  * Adrià Ávila: [Avilgor](https://github.com/Avilgor)
+  * [Adrià Ávila](https://github.com/cumus/Juicy-Code-Games_Project-2/blob/gh-pages/Cv's/Adri_Web.pdf): [Avilgor](https://github.com/Avilgor) 
+  
+ 
   
 #### Code Leader
   * Victor Bosch: [victorbr2](https://github.com/victorbr2)
