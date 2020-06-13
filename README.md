@@ -35,9 +35,6 @@ _`Team Members`_
   
 #### UI Leader
   * [Xavier Trillo](https://github.com/cumus/Juicy-Code-Games_Project-2/blob/gh-pages/Cv's/Xavi_web.pdf): [xatrilu](https://github.com/xatrilu)
-  
-#### QA Leader
-  * Pol Gannau: [PolGannau](https://github.com/PolGannau)
 
 ## Links
 Here are some links to our GitHub, Wiki, etc.
