@@ -106,8 +106,9 @@ void Minimap::PostUpdate()
 
 			if (mouse_moving)
 			{
-				LOG("POS x:%f/Y:%f", ((float(x - output.x) - (float(output.w) * 0.5f)) / scale.first) - (cam.w / 2.0f), (float(y - output.y) / scale.second) - (cam.h / 2.0f));
-				//std::pair<int, int> pos = Map::F_WorldToMap((float(x - output.x) - (float(output.w) * 0.5f) / scale.first) - (cam.w / 2.0f), (float(y - output.y) / scale.second) - (cam.h / 2.0f));
+				//LOG("POS x:%f/Y:%f", ((float(x - output.x) - (float(output.w) * 0.5f)) / scale.first) - (cam.w / 2.0f), (float(y - output.y) / scale.second) - (cam.h / 2.0f));
+				//std::pair<int, int> pos = Map::WorldToTileBase((float(x - output.x) - (float(output.w) * 0.5f) / scale.first) - (cam.w / 2.0f), (float(y - output.y) / scale.second) - (cam.h / 2.0f));
+				//LOG("POS X:%d/Y:%d",pos.first,pos.second);
 				//if (pos.first >= 0 && pos.second >= 0 && pos.first < map_size.first && pos.second < map_size.second)
 				//{
 					Event::Push(MINIMAP_MOVE_CAMERA, App->render,
