@@ -20,7 +20,7 @@ We are Juicy Code Games, and we are working on an RTS called SQUARE UP!.
 
 In this game you are calmly settled on your home planet, Orberus, when, suddently, the Kilian race attempts to invade your planet to expand their power across the universe. You'll have to fight the enemy forces before they destroy your base center, to avoid that, you'll have to build a base and fight against the evil. Good luck!
 
-Our gold release:
+You can find our gold release here!
 
 * Gold Download [Gold Release](https://github.com/cumus/Juicy-Code-Games_Project-2/releases/download/v0.8/JuicyCode-SquareUp_v0.8.zip)
 
