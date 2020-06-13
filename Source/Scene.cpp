@@ -93,7 +93,7 @@ bool Scene::Update()
 	{
 		UpdatePause();
 
-		if (!paused_scene && !C_Canvas::MouseOnUI() && !App->editor->MouseOnEditor())
+		if (!paused_scene && !C_Canvas::MouseOnUI() && App->editor ? !App->editor->MouseOnEditor() : true)
 			UpdateSelection();
 	}
 
@@ -350,12 +350,12 @@ void Scene::RecieveEvent(const Event& e)
 	case SPAWN_UNIT:
 	{
 		SpawnBehaviour(e.data1.AsInt(), e.data2.AsVec());
-		//audio->Play(SPAWNER_FX);
 		break;
 	}
-	case SET_INACTIVE:
+	case SKIP_TUTORIAL:
 	{
-		not_go->SetInactive();
+		not_go->Destroy();
+		not_go = nullptr;
 		break;
 	}
 	case RESUME:
@@ -1330,8 +1330,7 @@ void Scene::LoadStartingMapResources()
 		int random = std::rand() % 10 + 1;
 		Gameobject* capsule_go = AddGameobject("Capsule");
 		capsule_go->GetTransform()->SetLocalPos(capsule_pos[i]);
-		Capsule* cap = new Capsule(capsule_go);
-		cap->gives_edge = (random <= 5);
+		(new Capsule(capsule_go))->gives_edge = (random <= 5);
 		std::srand(time(NULL));
 	}
 }
@@ -1625,23 +1624,25 @@ void Scene::UpdateStateMachine()
 		break;
 	case GATHER:
 		
-		if (gatherEdge == nullptr && buildTower == nullptr && buildBarracks == nullptr) Event::Push(GAMEPLAY, this, WARNING);
+		if (!gatherEdge && !buildTower && !buildBarracks) 
+			Event::Push(GAMEPLAY, this, WARNING);
+
 		if (gatherEdge != nullptr) {
 			if (player_stats[CURRENT_EDGE] >= 80) {
 				gatherEdge->OnComplete();
-				gatherEdge = nullptr;
+				DEL(gatherEdge);
 			}
 		}
 		if (buildTower != nullptr) {
 			if (player_stats[CURRENT_TOWERS] >= 1) {
 				buildTower->OnComplete();
-				buildTower = nullptr;
+				DEL(buildTower);
 			}
 		}
 		if (buildBarracks != nullptr) {
 			if (player_stats[CURRENT_BARRACKS] >= 1) {
 				buildBarracks->OnComplete();
-				buildBarracks = nullptr;
+				DEL(buildBarracks);
 			}
 		}
 	
@@ -1702,11 +1703,13 @@ void Scene::OnEventStateMachine(GameplayState state)
 		//------------------STATE MACHINE CASES-----------------------
 	case GATHER:
 		App->dialogSys.CleanUp();
-		not_go->SetInactive();
-		LOG("GATHER STATE");
+
+		if (not_go)
+			not_go->Destroy();
+
 		not_go = AddGameobjectToCanvas("gather_state");
 		not = new C_Image(not_go);
-		not_inactive = new C_Button(not_go, Event(SET_INACTIVE, this, MAIN));
+		not_inactive = new C_Button(not_go, Event(SKIP_TUTORIAL, this, MAIN));
 
 		not->target = { 0.3f, 0.3f, 0.6f, 0.6f };
 		//not->offset = { -183.f, -1044.f };
@@ -1736,9 +1739,10 @@ void Scene::OnEventStateMachine(GameplayState state)
 	case WARNING:
 	
 		LOG("WARNING STATE");
-		
-		//edge_img->SetInactive();
-		//text_edge->SetInactive();
+
+		if (not_go)
+			not_go->Destroy();
+
 		not_go = AddGameobjectToCanvas("warning_state");
 		not = new C_Image(not_go);
 		next = new C_Button(not_go, Event(GAMEPLAY, this, SPAWNER_STATE));
@@ -1764,10 +1768,11 @@ void Scene::OnEventStateMachine(GameplayState state)
 		break;
 
 	case SPAWNER_STATE:
-	
-		
-		not_go->SetInactive();
+
 		LOG("SPAWNER STATE");
+
+		if (not_go)
+			not_go->Destroy();
 		
 		//Spawner counter
 		spawner_go = AddGameobjectToCanvas("Spawner Count");
@@ -1836,6 +1841,10 @@ void Scene::OnEventStateMachine(GameplayState state)
 		current_state = SPAWNER_STATE;
 		break;
 	case WIN_BUTTON:
+
+		if (not_go)
+			not_go->Destroy();
+
 		not_go = AddGameobjectToCanvas("warning_state");
 		not = new C_Image(not_go);
 		next = new C_Button(not_go, Event(GAMEPLAY, this, WIN));
@@ -1862,7 +1871,12 @@ void Scene::OnEventStateMachine(GameplayState state)
 		current_state = WIN_BUTTON;
 
 		break;
+
 	case LOSE_BUTTON:
+
+		if (not_go)
+			not_go->Destroy();
+
 		not_go = AddGameobjectToCanvas("warning_state");
 		not = new C_Image(not_go);
 		next = new C_Button(not_go, Event(GAMEPLAY, this, LOSE));
@@ -2315,13 +2329,8 @@ Transform* Scene::SpawnBehaviour(int type, vec pos)
 			{
 				behaviour = AddGameobject("Capsule");
 				behaviour->GetTransform()->SetLocalPos(pos);
-				Capsule* cap = new Capsule(behaviour);
 				int random = std::rand() % 10 + 1;
-
-				if (random <= 5) {
-					cap->gives_edge = true;
-				}
-				else cap->gives_edge = false;
+				(new Capsule(behaviour))->gives_edge = random <= 5;
 				std::srand(time(NULL));
 
 				UpdateStat(CURRENT_GOLD, -10);
@@ -2574,7 +2583,7 @@ void Scene::GodMode()
 	}
 
 	// F1: Show/Hide Editor Windows
-	if (App->input->GetKey(SDL_SCANCODE_F1) == KEY_DOWN)
+	if (App->input->GetKey(SDL_SCANCODE_F1) == KEY_DOWN && App->editor)
 		App->editor->ToggleEditorVisibility();
 
 	// F2: Show/Hide Map Walkability
@@ -2722,7 +2731,6 @@ Mission::~Mission()
 void Mission::OnComplete()
 {
 	App->scene->UpdateStat(int(rewardType),reward);
-	this->~Mission();
 }
 
 void Mission::Update(int num)

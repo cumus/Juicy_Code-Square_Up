@@ -64,12 +64,6 @@ void DialogSystem::CreateScreenUI()
 {
 	dialogGo = App->scene->AddGameobjectToCanvas("Dialog");
 
-	/*portrait = new C_Image(dialogGo);
-	portrait->target = { 0.165f, 0.63f, 0.37, 0.45f };
-	portrait->offset = { 0, 0 };
-	portrait->section = { 562, 0, 500, 600 };
-	portrait->tex_id = App->tex.Load("textures/hud-sprites.png");*/
-
 	queen = new C_Image(dialogGo);
 	queen->target = { 0.175f, 0.6f, 0.2f, 0.2f };
 	queen->offset = { 0, 0 };

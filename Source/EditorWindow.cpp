@@ -26,7 +26,10 @@ EditorWindow::EditorWindow(const RectF window_area, SDL_Color color) : rect(wind
 }
 
 EditorWindow::~EditorWindow()
-{}
+{
+	if (!elements.empty())
+		CleanUp();
+}
 
 void EditorWindow::CleanUp()
 {

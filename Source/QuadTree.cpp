@@ -43,7 +43,7 @@ void Quadtree::Clear()
 		if (children[i] != nullptr)
 		{
 			children[i]->Clear();			
-			children[i] = nullptr;
+			DEL(children[i]);
 		}
 	}
 }

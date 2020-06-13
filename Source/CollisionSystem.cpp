@@ -179,17 +179,15 @@ void CollisionSystem::Update()
 		{
 			for (std::vector<Collider*>::iterator it = layerColliders[i].begin(); it != layerColliders[i].end(); ++it)
 			{
-				if ((*it)->GetGameobject()->GetBehaviour()->GetState() != DESTROYED)
+				if ((*it)->IsActive() && (*it)->GetGameobject()->GetBehaviour()->GetState() != DESTROYED)
 				{
-					if ((*it)->IsActive())
-					{
-						(*it)->SetPosition();
-						collisionTree->Insert(*it);
-					}
+					(*it)->SetPosition();
+					collisionTree->Insert(*it);
 				}
 			}
 		}
 	}
+
 	Resolve();
 
 	if (debug)

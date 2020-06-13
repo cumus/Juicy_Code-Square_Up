@@ -50,15 +50,7 @@ void ParticleSystem::Update()
 
 void ParticleSystem::CleanUp()
 {
-	if (!particles.empty())
-	{
-		for (std::vector<Particle*>::iterator it = particles.begin(); it != particles.end(); ++it)
-		{
-			(*it)->GetGameobject()->Destroy();
-		}
-		particles.clear();
-	}
-	
+	particles.clear();
 	aliveCache.clear();
 	deathCache.clear();
 }
@@ -67,11 +59,9 @@ void ParticleSystem::AddParticle(vec p, vec dest, float speed, ParticleType t)
 {
 	if (particles.size() < MAX_PARTICLES)
 	{
-		//LOG("Create new particle");
 		Gameobject* part = App->scene->AddGameobject("Particle");
 		part->GetTransform()->SetLocalPos(p);
-		Particle* particle = new Particle(part, p, dest, speed, t);
-		particles.push_back(particle);
+		particles.push_back(new Particle(part, p, dest, speed, t));
 		//particlesID++;
 	}
 }

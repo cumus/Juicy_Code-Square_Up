@@ -108,7 +108,7 @@ enum EventType : char
 	CHECK_FOW,
 
 	NEW_BEHAVIOUR,
-	SET_INACTIVE,
+	SKIP_TUTORIAL,
 
 	//Collisions
 	ON_COLLISION,

@@ -653,6 +653,9 @@ void PathfindingManager::Merge(std::vector<PathNode>& vec, int l, int m, int r)
 		j++;
 		k++;
 	}
+
+	DEL_ARRAY(L);
+	DEL_ARRAY(R);
 }
 
 #pragma endregion
