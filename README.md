@@ -30,25 +30,25 @@ You can find our gold release here!
 _`Team Members`_
 
 #### Team Leader
-  * [Ruben Sardón](https://github.com/cumus/Juicy-Code-Games_Project-2/blob/gh-pages/Cv's/web_-_ruben.pdf): [cumus](https://github.com/cumus)
+  * Ruben Sardón: [cumus](https://github.com/cumus)
     
 #### Team Manager
-  * [Adrià Ávila](https://github.com/cumus/Juicy-Code-Games_Project-2/blob/gh-pages/Cv's/Adri_Web.pdf): [Avilgor](https://github.com/Avilgor) 
+  * Adrià Ávila: [Avilgor](https://github.com/Avilgor) 
   
 #### Code Leader
   * Victor Bosch: [victorbr2](https://github.com/victorbr2)
   
 #### Game Designer
-  * [Jan Adell](https://github.com/cumus/Juicy-Code-Games_Project-2/blob/gh-pages/Cv's/jan_web.pdf): [JanAdell](https://github.com/JanAdell)
+  * Jan Adell: [JanAdell](https://github.com/JanAdell)
   
 #### Art Leader
   * Gerard Berenguer: [GerardBP77](https://github.com/GerardBP77)
   
 #### Audio Leader
-  * [Oscar Reguera](https://github.com/cumus/Juicy-Code-Games_Project-2/blob/gh-pages/Cv's/oscar-web.pdf): [oscarrep](https://github.com/oscarrep)
+  * Oscar Reguera: [oscarrep](https://github.com/oscarrep)
   
 #### UI Leader
-  * [Xavier Trillo](https://github.com/cumus/Juicy-Code-Games_Project-2/blob/gh-pages/Cv's/Xavi_web.pdf): [xatrilu](https://github.com/xatrilu)
+  * Xavier Trillo: [xatrilu](https://github.com/xatrilu)
 
 ## Links
 Here are some links to our GitHub, Wiki, etc.
