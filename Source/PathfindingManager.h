@@ -151,7 +151,7 @@ private:
 	MapLayer map;
 	iPoint nullPoint = iPoint({ -1,-1 });
 	std::vector<std::vector<bool> > walkabilityMap;
-	std::vector<std::pair<int, int> > walkabilityBuildingCheck;
+	//std::vector<std::pair<int, int> > walkabilityBuildingCheck;
 	std::map<double, std::vector<iPoint>> storedPaths; //Stores all generated paths by units
 	std::map<double, UncompletedPath> toDoPaths; //Stores pending path for each id
 };

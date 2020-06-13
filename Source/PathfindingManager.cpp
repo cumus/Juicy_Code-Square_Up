@@ -89,14 +89,14 @@ int PathfindingManager::IteratePaths(int extra_ms)
 		}
 	}
 
-	if (!walkabilityBuildingCheck.empty())
+	/*if (!walkabilityBuildingCheck.empty())
 	{
 		SDL_Rect rect = { 0, 0, 64, 64 };
 		for (std::vector<std::pair<int,int> >::iterator it = walkabilityBuildingCheck.begin(); it != walkabilityBuildingCheck.end(); ++it)
 		{
 			App->render->Blit(debugTextureID, (*it).first, (*it).second, &rect, FRONT_SCENE);
 		}
-	}
+	}*/
 
 	if (debugWalk)
 	{
