@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+
+<html lang="en-US" style=""><head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+<!-- Begin Jekyll SEO tag v2.6.1 -->
+<title>Juicy_Code-Square_Up | Website Resources</title>
+<meta name="generator" content="Jekyll v3.8.7">
+<meta property="og:title" content="Juicy_Code-Square_Up">
+<meta property="og:locale" content="en_US">
+<meta name="description" content="Website Resources">
+<meta property="og:description" content="Website Resources">
+<link rel="canonical" href="https://cumus.github.io/Juicy_Code-Square_Up/">
+<meta property="og:url" content="https://cumus.github.io/Juicy_Code-Square_Up/">
+<meta property="og:site_name" content="Juicy_Code-Square_Up">
+<script type="application/ld+json">
+{"@type":"WebSite","url":"https://cumus.github.io/Juicy_Code-Square_Up/","headline":"Juicy_Code-Square_Up","name":"Juicy_Code-Square_Up","description":"Website Resources","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+    <link rel="stylesheet" href="/Juicy_Code-Square_Up/assets/css/style.css?v=3af8ba581d3ee20daa20557afda21fedc569d843">
+    <script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+    <script src="/Juicy_Code-Square_Up/assets/js/respond.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <!--[if lt IE 8]>
+    <link rel="stylesheet" href="/Juicy_Code-Square_Up/assets/css/ie.css">
+    <![endif]-->
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  </head>
+  <body>
+      <div id="header">
+        <nav>
+          <li class="fork"><a href="https://github.com/cumus/Juicy_Code-Square_Up">View On GitHub</a></li>
+          
+        </nav>
+      </div><!-- end header -->
+
+    <div class="wrapper">
+
+      <section>
+        <div id="title">
+          <h1>Juicy_Code-Square_Up</h1>
+          <hr>
+          <span class="credits left">Project maintained by <a href="https://github.com/cumus">cumus</a></span>
+          <span class="credits right">Hosted on GitHub Pages — Theme by <a href="https://twitter.com/michigangraham">mattgraham</a></span>
+        </div>
+
+        
+ <div id="header">
+  <nav>
+   <li class="fork">
+    <a href="https://cumus.github.io/Juicy_Code-Square_Up/">Home</a>
+    <a href="https://github.com/cumus/Juicy_Code-Square_Up">Github</a>
+    <a href="https://cumus.github.io/Juicy_Code-Square_Up/Cv's/index.html">Team</a>
+    </li>
+  </nav>
+ </div>
+
+<p><img src="https://raw.githubusercontent.com/cumus/Juicy_Code-Square_Up/gh-pages/WikiResources/Home%20page%20picts/logo1%20lit.png" alt=""></p>
+
+<h2 id="team-leader">UI Leader</h2>
+<ul>
+  <li>Xavier Trillo: <a href="https://github.com/xatrilu">xatrilu</a></li>
+</ul>
+    
+    <p>My name is Xavier Trillo and I was in charge of the UI of our game. Throughout
+the development of this project, I was responsible behind the ideas and
+decisions related to how the UI was going to work and I was in charge to make
+sure they were implemented into our game accordingly. Related to the game, I
+developed front-end features of the game related to the UI. More specifically, I
+worked in most of the UI elements seen in the HUD and in the options menu, as
+well as making sure they worked as intended.
+</p>
+    
+    <p>Work log:</p>
+    
+  <li>
+    <p>Implemented most of the HUD sprites in the game while giving them
+functionality or/and animations. These include:
+</p>
+  </li>
+<ul>
+  <li>
+    <p>The Bars for Resources Counters, all of which are updated if the player
+gets more resources or uses them.</p>
+  </li>
+  <li>
+    <p>The Bars for Ally Unities Counters, all of which are updated if new ally
+unities are created or if they die.
+</p>
+  </li>
+  <li>
+    <p>The Main Base Static Healthbar, which is updated if the base receives
+damage.
+</p>
+  </li>
+<ul>
+  <li>
+    <p>The Creation Bars that appear when the player wants to build a new
+ally unit and are updated while the unities are being built.</p>
+  </li>
+  <li>
+    <p>The Radial Creation panel for the gatherer and each building, alongside
+their respective icons and buttons to create buildings or units.</p>
+  </li>
+</ul>
+  <li>
+    <p>Added a scene for the options menu with the following features:</p>
+  </li>
+<ul>
+  <li>
+    <p>Background music.</p>
+  </li>
+  <li>
+    <p>Options menu title.</p>
+  </li>
+  <li>
+    <p>Fullscreen and Return to Main Menu buttons with audio effects,
+animations and their respective functionality.
+</p>
+	</li>
+	
+      <li>
+        <p>Music and SFX volume sliders with audio with audio effects, animations
+and their functionality.</p>
+      </li>
+      </ul>
+
+
+<h2 id="social-media">Social media</h2>
+
+<p>Facebook: <a href="https://www.facebook.com/Juicy-Code-110251897235394/">@juicycodegames</a></p>
+
+<p>Twitter <a href="https://twitter.com/JuicyCodeGames">@juicycodegames</a></p>
+
+<p>Instagram <a href="https://www.instagram.com/juicycodegames/">@juicycodegames</a></p>
+
+<p>Youtube <a href="https://www.youtube.com/channel/UCvtOzr0YiLtN2cmBA6WdB9Q?view_as=subscriber">@juicycodegames</a></p>
+
+<p>For a more detailed info feel free to contact us via e-mail at: JuicyCodeStudio@gmail.com</p>
+
+<p><img src="https://raw.githubusercontent.com/cumus/Juicy-Code-Games_Project-2/master/Build/Assets/textures/team-logo2.png" alt=""></p>
+
+<p><img src="https://raw.githubusercontent.com/cumus/Juicy-Code-Games_Project-2/gh-pages/WikiResources/Home%20page%20picts/logocitm.png" alt="University Logo"></p>
+
+          <a href="https://cumus.github.io/Juicy_Code-Square_Up/">Home</a>
+      </section>
+
+    </div>
+  
+     
+
+  
+
+</body></html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
