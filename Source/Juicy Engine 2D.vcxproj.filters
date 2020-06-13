@@ -181,9 +181,6 @@
     <ClCompile Include="Particle.cpp">
       <Filter>Source\Independent Managers</Filter>
     </ClCompile>
-    <ClCompile Include="ParticlePool.cpp">
-      <Filter>Source\Independent Managers</Filter>
-    </ClCompile>
     <ClCompile Include="DialogSystem.cpp">
       <Filter>Source\Independent Managers</Filter>
     </ClCompile>
@@ -415,9 +412,6 @@
       <Filter>Source\Gameobjects\Components</Filter>
     </ClInclude>
     <ClInclude Include="Particle.h">
-      <Filter>Source\Independent Managers</Filter>
-    </ClInclude>
-    <ClInclude Include="ParticlePool.h">
       <Filter>Source\Independent Managers</Filter>
     </ClInclude>
     <ClInclude Include="DialogSystem.h">

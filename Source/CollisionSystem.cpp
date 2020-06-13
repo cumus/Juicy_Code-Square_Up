@@ -125,24 +125,6 @@ void CollisionSystem::ProcessRemovals(double id)
 	}
 }
 
-void CollisionSystem::DeleteCollider(Collider coll)
-{
-	std::vector<Collider*> cache;
-	for (int i = 0; i < MAX_COLLISION_LAYERS; i++)
-	{
-		if (!layerColliders[i].empty())
-		{
-			for (std::vector<Collider*>::iterator it = layerColliders[i].begin(); it != layerColliders[i].end(); ++it)
-			{
-				if ((*it)->GetID() != coll.GetID()) cache.push_back(*it);
-				else (*it)->SetInactive();
-			}
-			if (!cache.empty()) layerColliders[i] = cache;
-			cache.clear();
-		}
-	}
-}
-
 void CollisionSystem::Resolve()
 {
 	for (int i = 0; i < MAX_COLLISION_LAYERS; i++)

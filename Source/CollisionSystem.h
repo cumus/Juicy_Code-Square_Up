@@ -22,7 +22,6 @@ public:
 	void Add(std::vector<Gameobject*>& objects);
 	void ProcessRemovals();
 	void ProcessRemovals(double id);
-	void DeleteCollider(Collider coll);
 	void Update();
 	void SetLayerCollision(CollisionLayer one, CollisionLayer two, bool collide);
 	void SetDebug();

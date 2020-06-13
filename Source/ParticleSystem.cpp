@@ -58,6 +58,11 @@ void ParticleSystem::CleanUp()
 		}
 		particles.clear();
 	}
+
+	for (std::vector<Particle*>::iterator it = aliveCache.begin(); it != aliveCache.end(); ++it) delete *it;
+	
+	for (std::vector<Particle*>::iterator it = deathCache.begin(); it != deathCache.end(); ++it) delete* it;
+	
 	aliveCache.clear();
 	deathCache.clear();
 }

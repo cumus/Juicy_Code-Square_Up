@@ -424,32 +424,24 @@ void Behaviour::OnKill(const UnitType type)
 	{
 		Event::Push(UPDATE_STAT, App->scene, CURRENT_MELEE_UNITS, -1);
 		Event::Push(UPDATE_STAT, App->scene, UNITS_LOST, 1);
-		//App->collSystem.DeleteCollider(*bodyColl);
-		//App->collSystem.DeleteCollider(*attackColl);
 		break;
 	}
 	case UNIT_RANGED:
 	{
 		Event::Push(UPDATE_STAT, App->scene, CURRENT_RANGED_UNITS, -1);
 		Event::Push(UPDATE_STAT, App->scene, UNITS_LOST, 1);
-		//App->collSystem.DeleteCollider(*bodyColl);
-		//App->collSystem.DeleteCollider(*attackColl);
 		break;
 	}
 	case UNIT_SUPER:
 	{
 		Event::Push(UPDATE_STAT, App->scene, CUERRENT_SUPER_UNITS, -1);
 		Event::Push(UPDATE_STAT, App->scene, UNITS_LOST, 1);
-		//App->collSystem.DeleteCollider(*bodyColl);
-		//App->collSystem.DeleteCollider(*attackColl);
 		break;
 	}
 	case GATHERER:
 	{
 		Event::Push(UPDATE_STAT, App->scene, CURRENT_GATHERER_UNITS, -1);
 		Event::Push(UPDATE_STAT, App->scene, UNITS_LOST, 1);
-		//App->collSystem.DeleteCollider(*bodyColl);
-		//App->collSystem.DeleteCollider(*attackColl);
 		break;
 	}
 	case ENEMY_MELEE:
@@ -460,11 +452,8 @@ void Behaviour::OnKill(const UnitType type)
 		if (App->scene->GetStat(UNITS_KILLED) % 10 == 0) {
 			Event::Push(UPDATE_STAT, App->scene, CURRENT_GOLD, 1);
 			Event::Push(UPDATE_STAT, App->scene, GOLD_COLLECTED, 1);
-			LOG("total gold value %d", App->scene->GetStat(CURRENT_GOLD));
+			//LOG("total gold value %d", App->scene->GetStat(CURRENT_GOLD));
 		}
-		//App->collSystem.DeleteCollider(*bodyColl);
-		//App->collSystem.DeleteCollider(*attackColl);
-		//App->collSystem.DeleteCollider(*visionColl);
 		break;
 	}
 	case ENEMY_RANGED:
@@ -475,11 +464,8 @@ void Behaviour::OnKill(const UnitType type)
 		if (App->scene->GetStat(UNITS_KILLED) % 10 == 0) {
 			Event::Push(UPDATE_STAT, App->scene, CURRENT_GOLD, 1);
 			Event::Push(UPDATE_STAT, App->scene, GOLD_COLLECTED, 1);
-			LOG("total gold value %d", App->scene->GetStat(CURRENT_GOLD));
+			//LOG("total gold value %d", App->scene->GetStat(CURRENT_GOLD));
 		}
-		//App->collSystem.DeleteCollider(*bodyColl);
-		//App->collSystem.DeleteCollider(*attackColl);
-		//App->collSystem.DeleteCollider(*visionColl);
 		break;
 	}
 	case ENEMY_SUPER:
@@ -490,43 +476,34 @@ void Behaviour::OnKill(const UnitType type)
 		if (App->scene->GetStat(UNITS_KILLED) % 10 == 0) {
 			Event::Push(UPDATE_STAT, App->scene, CURRENT_GOLD, 1);
 			Event::Push(UPDATE_STAT, App->scene, GOLD_COLLECTED, 1);
-			LOG("total gold value %d", App->scene->GetStat(CURRENT_GOLD));
+			//LOG("total gold value %d", App->scene->GetStat(CURRENT_GOLD));
 		}
-		//App->collSystem.DeleteCollider(*bodyColl);
-		//App->collSystem.DeleteCollider(*attackColl);
-		//App->collSystem.DeleteCollider(*visionColl);
 		break;
 	}
 	case BASE_CENTER:
 	{
 		Event::Push(GAMEPLAY, App->scene, LOSE_BUTTON);
-		//App->collSystem.DeleteCollider(*bodyColl);
 		break;
 	}
 	case SPAWNER:
 	{
 		Event::Push(UPDATE_STAT, App->scene, CURRENT_SPAWNERS, -1);
-		//App->collSystem.DeleteCollider(*bodyColl);
 		break;
 	}
 	case EDGE:
 	{
-		//App->collSystem.DeleteCollider(*bodyColl);
 		break;
 	}
 	case CAPSULE:
 	{
-		//App->collSystem.DeleteCollider(*bodyColl);
 		break;
 	}
 	case BARRACKS:
 	{
-		//App->collSystem.DeleteCollider(*bodyColl);
 		break;
 	}
 	case TOWER:
 	{
-		App->collSystem.DeleteCollider(*bodyColl);
 		break;
 	}
 	}
