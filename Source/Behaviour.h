@@ -283,6 +283,7 @@ protected:
 	vec direction;
 	vec freePos;
 	bool foundPoint;
+	float nonMovingCounter;
 };
 
 #endif // __BEHAVIOUR_H_

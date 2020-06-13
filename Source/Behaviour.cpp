@@ -590,6 +590,7 @@ B_Unit::B_Unit(Gameobject* go, UnitType t, UnitState s, ComponentType comp_type)
 	unitLevel = 0;
 	active = true;
 	foundPoint = false;
+	nonMovingCounter = 0.0f;
 }
 
 void B_Unit::Update()
@@ -679,6 +680,7 @@ void B_Unit::Update()
 			if (move && PathfindingManager::unitWalkability[nextTile.x][nextTile.y] == GetID())
 			{
 				calculating_path = false;
+				nonMovingCounter = 0.0f;
 				//LOG("move");
 				fPoint actualPos = { pos.x, pos.y };
 
@@ -720,8 +722,13 @@ void B_Unit::Update()
 					move = false;
 					chasing = false;
 					spriteState = IDLE;
-					if (chaseObj != nullptr && chaseObj->IsDestroyed()) chaseObj = nullptr; 			
+					if (chaseObj != nullptr && chaseObj->IsDestroyed()) chaseObj = nullptr;
 				}
+			}
+			else
+			{		
+				if(nonMovingCounter > 1.0f) spriteState = IDLE;
+				else nonMovingCounter += App->time.GetGameDeltaTime();
 			}
 		}	
 
