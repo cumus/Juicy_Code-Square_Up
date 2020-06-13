@@ -89,6 +89,15 @@ int PathfindingManager::IteratePaths(int extra_ms)
 		}
 	}
 
+	if (!walkabilityBuildingCheck.empty())
+	{
+		SDL_Rect rect = { 0, 0, 64, 64 };
+		for (std::vector<std::pair<int,int> >::iterator it = walkabilityBuildingCheck.begin(); it != walkabilityBuildingCheck.end(); ++it)
+		{
+			App->render->Blit(debugTextureID, (*it).first, (*it).second, &rect, FRONT_SCENE);
+		}
+	}
+
 	if (debugWalk)
 	{
 		std::vector<iPoint> currentPath;
@@ -409,16 +418,25 @@ void PathfindingManager::SetWalkabilityTile(int x, int y, bool state)
 //Utility: Check tile area
 bool PathfindingManager::CheckWalkabilityArea(std::pair<int, int> pos, vec scale)
 {
-	//LOG("Pos x: %d / Pos y: %d",pos.first,pos.second);
-	//LOG("Scale x:%f / Scale y:%f",scale.x,scale.y);
-	if (pos.first >= 0 && pos.second >= 0)
+	if (pos.first >= 0 && pos.second >= 0 && pos.first < map.width && pos.second < map.height)
 	{
-		for (int a = pos.first; a < scale.x + pos.first; a++)
+		if (scale.x > 1 && scale.y > 1)
 		{
-			for (int b = pos.second; b < scale.y + pos.second; b++)
+			for (int a = 0; a < scale.x; a++)
 			{
-				if (!ValidTile(a, b)) return false;
+				for (int b = 0; b < scale.y; b++)
+				{
+					//std::pair<int, int> render_pos = Map::I_MapToWorld((pos.first + a) + (scale.x / 2), (pos.second + b) - (scale.y / 4));
+					//walkabilityBuildingCheck.push_back(render_pos);
+					if (!ValidTile((pos.first + a) + (scale.x / 2), (pos.second + b) - (scale.y / 4))) return false;
+				}
 			}
+		}
+		else
+		{
+			//std::pair<int, int> render_pos = Map::I_MapToWorld(pos.first, pos.second);
+			//walkabilityBuildingCheck.push_back(render_pos);
+			if (!ValidTile(pos.first,pos.second)) return false;
 		}
 		return true;
 	}
