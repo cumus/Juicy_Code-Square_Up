@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+
+<html lang="en-US" style=""><head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+<!-- Begin Jekyll SEO tag v2.6.1 -->
+<title>Juicy_Code-Square_Up | Website Resources</title>
+<meta name="generator" content="Jekyll v3.8.7">
+<meta property="og:title" content="Juicy_Code-Square_Up">
+<meta property="og:locale" content="en_US">
+<meta name="description" content="Website Resources">
+<meta property="og:description" content="Website Resources">
+<link rel="canonical" href="https://cumus.github.io/Juicy_Code-Square_Up/">
+<meta property="og:url" content="https://cumus.github.io/Juicy_Code-Square_Up/">
+<meta property="og:site_name" content="Juicy_Code-Square_Up">
+<script type="application/ld+json">
+{"@type":"WebSite","url":"https://cumus.github.io/Juicy_Code-Square_Up/","headline":"Juicy_Code-Square_Up","name":"Juicy_Code-Square_Up","description":"Website Resources","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+    <link rel="stylesheet" href="/Juicy_Code-Square_Up/assets/css/style.css?v=3af8ba581d3ee20daa20557afda21fedc569d843">
+    <script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+    <script src="/Juicy_Code-Square_Up/assets/js/respond.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <!--[if lt IE 8]>
+    <link rel="stylesheet" href="/Juicy_Code-Square_Up/assets/css/ie.css">
+    <![endif]-->
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  </head>
+  <body>
+      <div id="header">
+        <nav>
+          <li class="fork"><a href="https://github.com/cumus/Juicy_Code-Square_Up">View On GitHub</a></li>
+          
+        </nav>
+      </div><!-- end header -->
+
+    <div class="wrapper">
+
+      <section>
+        <div id="title">
+          <h1>Juicy_Code-Square_Up</h1>
+          <hr>
+          <span class="credits left">Project maintained by <a href="https://github.com/cumus">cumus</a></span>
+          <span class="credits right">Hosted on GitHub Pages — Theme by <a href="https://twitter.com/michigangraham">mattgraham</a></span>
+        </div>
+
+        
+ <div id="header">
+  <nav>
+   <li class="fork">
+    <a href="https://cumus.github.io/Juicy_Code-Square_Up/">Home</a>
+    <a href="https://github.com/cumus/Juicy_Code-Square_Up">Github</a>
+    <a href="https://cumus.github.io/Juicy_Code-Square_Up/Cv's/index.html">Team</a>
+    </li>
+  </nav>
+ </div>
+
+<p><img src="https://raw.githubusercontent.com/cumus/Juicy_Code-Square_Up/gh-pages/WikiResources/Home%20page%20picts/logo1%20lit.png" alt=""></p>
+
+<h2 id="team-leader">Team Manager</h2>
+<ul>
+  <li>Adrià Ávila: <a href="https://github.com/Avilgor">Avilgor</a></li>
+</ul>
+    
+    <p>I'm Adria Avila and I was in charge of team management. I registered team members
+assistance to meetings and a Gantt diagram with the tasks to do and it's
+approximate finish date and updating it as work increased. Apart from that, I also suggested
+to increase or reduce the amount of work depending on last
+team's work log. Related to the game, I developed back-end features of the game but not
+entirely about the engine itself.
+</p>
+    
+    <p>Work log:</p>
+    
+  <li>
+    <p>Did units and buildings behaviors based on core functions and variables for all of them and
+a modified heritage for units.
+</p>
+  </li>
+  <li>
+    <p>All units special features like movement, attack, chase... using colliders for detection and
+pathfinding for movement.
+</p>
+  </li>
+  <li>
+    <p>Created all game units with distinctives values for each one, only needed to inherit from
+behaviour class and set unit key values.
+</p>
+  </li>
+  <li>
+    <p>Pathfinding module using A* to make paths. It works with lasts frames milliseconds for
+performance optimization. It stores not finished paths for later iterations.
+</p>
+  </li>
+  <li>
+    <p>Fog of war module which stores and update tiles visibility with units vision range.</p>
+  </li>
+  <li>
+    <p>Quadtree for collision detection optimization.
+</p>
+  </li>
+  <li>
+    <p>Collision system that creates colliders and iterates colliders for update and deletion. It has
+multiple collision layers to help reduce and/or avoid collisions.
+There are rigid and trigger colliders with rectangular shape.
+</p>
+  </li>
+  <li>
+    <p>Basic particle system that instaciates particles, calls particles updates and checks for
+deletes. Particles are limited to 3 types and always moving towards setted
+destination on creation.
+</p>
+  </li>
+  <li>
+    <p>Basic dialog system with multiple dialog steps and input reading.
+</p>
+  </li>
+  <li>
+    <p>Did all the IA for enemies and movement of all units. It works with colliders for detection and
+for not unit overlapping on movement, giving it a more
+ordered look</p>
+	</li>
+      <li>
+        <p>Selection of all selectable units works with rectangles setted in behaviour. It is working son
+solo selection and group selection, it controls if movement is for
+one selected unit or the group.
+</p>
+      </li>
+      <li>
+        <p>Added earthquake feature that happens in a random range of seconds (2-3 min each).</p>
+      </li>
+   
+        <p>What I participated in:
+</p>
+    
+      <li>
+        <p>Worked on animations out of the animation module, animating manually, game logo for
+example.
+</p>
+  </li>
+  <li>
+    <p>Worked on minor optimizations for minimap.
+</p>
+  </li>
+  <li>
+    <p>Some HUD additions, like information panels for units.</p>
+  </li>
+<li>
+    <p>Adjusting offsets of multiple sprites.
+</p>
+  </li>
+<li>
+    <p>Some render functions for special uses.
+</p>
+  </li>
+<li>
+    <p>Minor changes to some scene management features.
+</p>
+  </li>
+
+    <p>Helped taking decision and posibles features and changes to help balancing the game.
+</p>
+  </li>
+
+<h2 id="social-media">Social media</h2>
+
+<p>Facebook: <a href="https://www.facebook.com/Juicy-Code-110251897235394/">@juicycodegames</a></p>
+
+<p>Twitter <a href="https://twitter.com/JuicyCodeGames">@juicycodegames</a></p>
+
+<p>Instagram <a href="https://www.instagram.com/juicycodegames/">@juicycodegames</a></p>
+
+<p>Youtube <a href="https://www.youtube.com/channel/UCvtOzr0YiLtN2cmBA6WdB9Q?view_as=subscriber">@juicycodegames</a></p>
+
+<p>For a more detailed info feel free to contact us via e-mail at: JuicyCodeStudio@gmail.com</p>
+
+<p><img src="https://raw.githubusercontent.com/cumus/Juicy-Code-Games_Project-2/master/Build/Assets/textures/team-logo2.png" alt=""></p>
+
+<p><img src="https://raw.githubusercontent.com/cumus/Juicy-Code-Games_Project-2/gh-pages/WikiResources/Home%20page%20picts/logocitm.png" alt="University Logo"></p>
+
+          <a href="https://cumus.github.io/Juicy_Code-Square_Up/">Home</a>
+      </section>
+
+    </div>
+  
+     
+
+  
+
+</body></html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
