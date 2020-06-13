@@ -97,6 +97,9 @@ bool Scene::Update()
 			UpdateSelection();
 	}
 
+	if (!paused_scene && (current_state == GATHER || current_state == WARNING || current_state == SPAWNER_STATE)) game_time_counter += App->time.GetGameDeltaTime();
+		
+
 	if (drawSelection)
 	{
 		for (std::map<double, Behaviour*>::iterator it = Behaviour::b_map.begin(); it != Behaviour::b_map.end(); ++it)
@@ -512,6 +515,7 @@ void Scene::LoadMainScene()
 	}
 
 	paused_scene = false;
+	game_time_counter = 0;
 
 	for (int i = 0; i < MAX_PLAYER_STATS; ++i)
 		player_stats[i] = 0;
@@ -906,6 +910,7 @@ void Scene::LoadEndScene()
 	hud_texts[UNITS_KILLED]->target = { 0.4f, 0.7f, 2.f, 2.f };*/
 
 	//--------------------------------TEXT----------------------------------------
+	std::stringstream time_t;
 	std::stringstream edge_t;
 	std::stringstream unit_c;
 	std::stringstream unit_l;
@@ -914,10 +919,16 @@ void Scene::LoadEndScene()
 	unit_c << "Total constructed units";
 	unit_l << "Total lost units";
 	unit_k << "Total killed units";*/
+	time_t << game_time_counter << " s";
 	edge_t << player_stats[EDGE_COLLECTED];
 	unit_c << player_stats[UNITS_CREATED];
 	unit_l << player_stats[UNITS_LOST];
 	unit_k << player_stats[UNITS_KILLED];
+
+	Gameobject* time_text_go = AddGameobjectToCanvas("Text Time");
+	hud_texts[GAME_TIMER] = new C_Text(time_text_go);
+	hud_texts[GAME_TIMER]->target = { 0.55f, 0.3, 2.f, 2.f };
+	hud_texts[GAME_TIMER]->text->SetText(time_t.str().c_str());
 
 	Gameobject* edge_text_go = AddGameobjectToCanvas("Text Edge");
 	hud_texts[EDGE_COLLECTED] = new C_Text(edge_text_go);

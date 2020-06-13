@@ -251,6 +251,7 @@ void DialogSystem::UpdateScreenUI(Option answer)
 		queen->SetInactive();
 		soldier->SetActive();
 		capsule->SetInactive();
+		txt3->SetActive();
 		txt->text->SetText(" AND BE CAREFUL, WE'VE DETECTED SOME ");
 		txt2->text->SetText(" SEISMIC ACTIVITY IN YOUR AREA,");
 		txt3->text->SetText(" PREPARE FOR EARTHQUAKES!! ");

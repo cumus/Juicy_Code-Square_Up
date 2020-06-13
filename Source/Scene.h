@@ -109,6 +109,7 @@ enum PlayerStats : int
 	UNITS_CREATED,
 	UNITS_LOST,
 	UNITS_KILLED,
+	GAME_TIMER,
 
 	MAX_PLAYER_STATS
 };
@@ -229,6 +230,7 @@ private:
 	static bool draw_collisions;
 	bool drawSelection = false;
 	bool gotSaveGame = false;
+	float game_time_counter = 0;
 
 	// Scene Transitions
 	enum Fade : int
