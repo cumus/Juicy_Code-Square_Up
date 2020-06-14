@@ -157,7 +157,7 @@ AnimatedSprite::AnimatedSprite(Behaviour* unit) : Sprite(unit->GetGameobject(), 
 		animations[FIRST_UPGRADE].Setup({ 592, 0, 148, 158 }, 4, 4.0f);
 		animations[SECOND_UPGRADE].Setup({ 1184, 0, 148, 158 }, 4, 4.0f);
 		animations[DESTROYED].Setup({ 2106, 0, 130, 188 }, 5, 8.0f);
-		offset = { 10.0f, -180.0f + Map::GetBaseOffset(), 0.3f, 0.3f };
+		offset = { 27.0f, -200.0f + Map::GetBaseOffset(), 0.3f, 0.3f };
 		break;
 	}
 	case SPAWNER:
