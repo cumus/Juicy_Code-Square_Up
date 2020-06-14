@@ -142,12 +142,12 @@ AnimatedSprite::AnimatedSprite(Behaviour* unit) : Sprite(unit->GetGameobject(), 
 	}
 	case LAB:
 	{
-		tex_id = App->tex.Load("textures/lab.png"); //Lab
-		animations[NO_UPGRADE].Setup(section = { 0, 0, 462, 488 }, 18, 5.0f);
+		tex_id = App->tex.Load("textures/Buildings.png"); //Lab
+		animations[NO_UPGRADE].Setup(section = { 0, 655, 135, 144 }, 18, 5.0f);
 		animations[FIRST_UPGRADE].Setup({ 0, 532, 462, 488 }, 18, 5.0f);
 		animations[SECOND_UPGRADE].Setup({ 0, 1037, 462, 488 }, 18, 5.0f);
 		animations[DESTROYED].Setup({ 8316, 0, 462, 488 }, 18, 8.0f);
-		offset = { 0.0f, -500.0f, 0.13f, 0.13f };
+		offset = { 20.0f, -150.0f, 0.4f, 0.4f };
 		break;
 	}
 	case BARRACKS:
