@@ -105,27 +105,27 @@ AnimatedSprite::AnimatedSprite(Behaviour* unit) : Sprite(unit->GetGameobject(), 
 	{
 	case BASE_CENTER:
 	{
-		tex_id = App->tex.Load("textures/BaseCenter.png");
-		animations[NO_UPGRADE].Setup(section = { 0, 0, 546, 813 }, 4, 4.0f);
-		animations[FIRST_UPGRADE].Setup({ 2212, 0, 553, 813 }, 4, 4.0f);
-		animations[SECOND_UPGRADE].Setup({ 4424, 0, 553, 813 }, 4, 4.0f);
-		animations[DESTROYED].Setup({ 8956, 0, 562, 813 }, 5, 8.0f);
-		offset = { -60.0f, -780.0f + Map::GetBaseOffset(), 0.15f, 0.15f };
+		tex_id = App->tex.Load("textures/Buildings.png"); //BaseCenter
+		animations[NO_UPGRADE].Setup(section = { 0, 0, 155, 233 }, 4, 4.0f);
+		animations[FIRST_UPGRADE].Setup({ 646, 0, 158, 234 }, 4, 4.0f);
+		animations[SECOND_UPGRADE].Setup({ 1290, 0, 165, 239 }, 4, 4.0f);
+		animations[DESTROYED].Setup({ 2106, 0, 130, 188 }, 5, 8.0f);
+		offset = { -15.0f, -250.0f + Map::GetBaseOffset(), 0.5f, 0.5f };
 		break;
 	}
 	case TOWER:
 	{
-		tex_id = App->tex.Load("textures/Tower.png");
-		animations[NO_UPGRADE].Setup(section = { 0, 0, 424, 709 }, 1, 4.0f);
-		animations[FIRST_UPGRADE].Setup({ 2496, 0, 424, 709 }, 4, 4.0f);
-		animations[SECOND_UPGRADE].Setup({ 4989, 0, 501, 709 }, 4, 4.0f);
-		animations[DESTROYED].Setup({ 0, 0, 502, 747 }, 5, 4.0f);
+		tex_id = App->tex.Load("textures/Buildings.png"); //Tower
+		animations[NO_UPGRADE].Setup(section = { 0, 247, 179, 156 }, 1, 4.0f);
+		animations[FIRST_UPGRADE].Setup({ 913, 0, 179, 156 }, 4, 4.0f);
+		animations[SECOND_UPGRADE].Setup({ 1827, 0, 179, 156 }, 4, 4.0f);
+		animations[DESTROYED].Setup({ 2106, 0, 130, 188 }, 5, 8.0f);
 		offset = { -100.0f, -670.0f + Map::GetBaseOffset(), 0.3f, 0.3f };
 		break;
 	}
 	case EDGE:
 	{
-		tex_id = App->tex.Load("textures/Edge.png");
+		tex_id = App->tex.Load("textures/Edge.png"); 
 		animations[NO_UPGRADE].Setup(section = { 0, 0, 217, 134 }, 1);
 		animations[DESTROYED].Setup({ 0, 0, 0, 0 }, 1);
 		offset = { 0, -115.0f + Map::GetBaseOffset(), 0.3f, 0.3f };
@@ -142,7 +142,7 @@ AnimatedSprite::AnimatedSprite(Behaviour* unit) : Sprite(unit->GetGameobject(), 
 	}
 	case LAB:
 	{
-		tex_id = App->tex.Load("textures/lab.png");
+		tex_id = App->tex.Load("textures/lab.png"); //Lab
 		animations[NO_UPGRADE].Setup(section = { 0, 0, 462, 488 }, 18, 5.0f);
 		animations[FIRST_UPGRADE].Setup({ 0, 532, 462, 488 }, 18, 5.0f);
 		animations[SECOND_UPGRADE].Setup({ 0, 1037, 462, 488 }, 18, 5.0f);
@@ -152,17 +152,17 @@ AnimatedSprite::AnimatedSprite(Behaviour* unit) : Sprite(unit->GetGameobject(), 
 	}
 	case BARRACKS:
 	{
-		tex_id = App->tex.Load("textures/Barracks.png");
-		animations[NO_UPGRADE].Setup(section = { 0, 0, 625, 485 }, 5, 5.0f);
-		animations[FIRST_UPGRADE].Setup({ 3125, 0, 625, 485 }, 5, 5.0f);
-		animations[SECOND_UPGRADE].Setup({ 6250, 0, 602, 485 }, 5, 5.0f);
-		animations[DESTROYED].Setup({ 9390, 0, 625, 485 }, 5, 8.0f);
-		offset = { 0.0f, -550.0f + Map::GetBaseOffset(), 0.1f, 0.1f };
+		tex_id = App->tex.Load("textures/Buildings.png"); //Barraks
+		animations[NO_UPGRADE].Setup(section = { 0, 247, 179, 156 }, 1, 4.0f);
+		animations[FIRST_UPGRADE].Setup({ 913, 0, 179, 156 }, 4, 4.0f);
+		animations[SECOND_UPGRADE].Setup({ 1827, 0, 179, 156 }, 4, 4.0f);
+		animations[DESTROYED].Setup({ 2106, 0, 130, 188 }, 5, 8.0f);
+		offset = { -100.0f, -670.0f + Map::GetBaseOffset(), 0.3f, 0.3f };
 		break;
 	}
 	case SPAWNER:
 	{
-		tex_id = App->tex.Load("textures/SpawnEnemy.png");
+		tex_id = App->tex.Load("textures/Buildings.png"); //Spawn enemy
 		animations[NO_UPGRADE].Setup(section = { 0, 0, 560, 397 }, 4, 5.0f);
 		animations[DESTROYED].Setup({ 0, 0, 560, 397 }, 4, 5.0f);
 		offset = { -205.f, -300.0f, 0.4f, 0.4f };
@@ -171,7 +171,7 @@ AnimatedSprite::AnimatedSprite(Behaviour* unit) : Sprite(unit->GetGameobject(), 
 	case UNIT_MELEE:
 	{
 		tex_id = App->tex.Load("textures/Unit_Melee.png");
-		animations[IDLE].Setup(section = { 1, 1, 140, 99 }, 1, 6.0f);
+		animations[IDLE].Setup(section = { 1, 1, 140, 99 }, 6, 6.0f);
 		animations[MOVING_N].Setup({ 1, 99, 140, 99 }, 7, 8.0f);
 		animations[MOVING_S].Setup({ 1, 198, 140, 99 }, 7, 8.0f);
 		animations[MOVING_E].Setup({ 1, 297, 140, 99 }, 8, 8.0f);
@@ -189,96 +189,53 @@ AnimatedSprite::AnimatedSprite(Behaviour* unit) : Sprite(unit->GetGameobject(), 
 		animations[ATTACKING_SE].Setup({ 1, 1485, 140, 99 }, 7, 8.0f);
 		animations[ATTACKING_SW].Setup({ 1, 1584, 140, 99 }, 7, 8.0f);
 		animations[DESTROYED].Setup({ 1, 1683, 140, 99 }, 8, 5.0f);
-		offset = { -70.0f, -80.0f, 0.5f, 0.5f };
+		offset = { -53.0f, -95.0f, 1.5f, 1.5f };
 		break;
 	}
-	/*case ENEMY_MELEE:
-		tex_id = App->tex.Load("textures/Enemy_Melee_Temp.png");
-		animations[IDLE].Setup(section = { 0, 0, 464, 365 }, 6, 6.0f);
-		animations[MOVING_N].Setup({ 0, 365, 464, 365 }, 7, 8.0f);
-		animations[MOVING_S].Setup({ 0, 730, 464, 365 }, 7, 8.0f);
-		animations[MOVING_E].Setup({ 0, 1095, 464, 365 }, 8, 8.0f);
-		animations[MOVING_W].Setup({ 0, 1460, 464, 365 }, 8, 8.0f);
-		animations[MOVING_NE].Setup({ 0, 1825, 464, 365 }, 8, 8.0f);
-		animations[MOVING_NW].Setup({ 0, 2190, 464, 365 }, 8, 8.0f);
-		animations[MOVING_SE].Setup({ 0, 2555, 464, 365 }, 8, 8.0f);
-		animations[MOVING_SW].Setup({ 0, 2920, 464, 365 }, 8, 8.0f);
-		animations[ATTACKING_N].Setup({ 0, 3285, 464, 365 }, 6, 10.0f);
-		animations[ATTACKING_S].Setup({ 0, 3650, 464, 365 }, 6, 10.0f);
-		animations[ATTACKING_E].Setup({ 0, 4015, 464, 365 }, 6, 10.0f);
-		animations[ATTACKING_W].Setup({ 0, 4380, 464, 365 }, 6, 10.0f);
-		animations[ATTACKING_NE].Setup({ 0, 4745, 464, 365 }, 6, 10.0f);
-		animations[ATTACKING_NW].Setup({ 0, 5110, 464, 365 }, 6, 10.0f);
-		animations[ATTACKING_SE].Setup({ 0, 5475, 464, 365 }, 6, 10.0f);
-		animations[ATTACKING_SW].Setup({ 0, 5840, 464, 365 }, 6, 10.0f);
-		animations[DESTROYED].Setup({ 0, 6205, 464, 365 }, 8, 5.0f);
-		offset = { -215.0f, -350.f, 0.5f, 0.5f };
-		break;*/
+	
 		case ENEMY_MELEE:
 		tex_id = App->tex.Load("textures/Enemy_Melee.png");
-		animations[IDLE].Setup(section = { 2, 2, 418, 295 }, 6, 6.0f);
-		animations[MOVING_N].Setup({ 2, 295, 418, 295 }, 6, 6.0f);
-		animations[MOVING_S].Setup({ 2, 590, 418, 295 }, 6, 6.0f);
-		animations[MOVING_E].Setup({ 2, 885, 418, 295 }, 6, 6.0f);
-		animations[MOVING_W].Setup({ 2, 1180, 418, 295 }, 6, 6.0f);
-		animations[MOVING_NE].Setup({ 2, 1475, 418, 295 }, 6, 6.0f);
-		animations[MOVING_NW].Setup({ 2, 1770, 418, 295 }, 6, 6.0f);
-		animations[MOVING_SE].Setup({ 2, 2065, 418, 295 }, 6, 6.0f);
-		animations[MOVING_SW].Setup({ 2, 2360, 418, 295 }, 6, 6.0f);
-		animations[ATTACKING_N].Setup({ 2, 2655, 418, 295 }, 6, 8.0f);
-		animations[ATTACKING_S].Setup({ 2, 2950, 418, 295 }, 6, 8.0f);
-		animations[ATTACKING_E].Setup({ 2, 3245, 418, 295 }, 6, 8.0f);
-		animations[ATTACKING_W].Setup({ 2, 3540, 418, 295 }, 6, 8.0f);
-		animations[ATTACKING_NE].Setup({ 2, 3835, 418, 295 }, 6, 8.0f);
-		animations[ATTACKING_NW].Setup({ 2, 4130, 418, 295 }, 6, 8.0f);
-		animations[ATTACKING_SE].Setup({ 2, 4425, 418, 295 }, 6, 8.0f);
-		animations[ATTACKING_SW].Setup({ 2, 4720, 418, 295 }, 6, 8.0f);
-		animations[DESTROYED].Setup({ 2, 5015, 418, 295 }, 8, 5.0f);
-		offset = { -130.0f, -230.0f, 0.6f, 0.6f };
+		animations[IDLE].Setup(section = { 1, 1, 140, 99 }, 6, 6.0f);
+		animations[MOVING_N].Setup({ 1, 99, 140, 99 }, 7, 8.0f);
+		animations[MOVING_S].Setup({ 1, 198, 140, 99 }, 7, 8.0f);
+		animations[MOVING_E].Setup({ 1, 297, 140, 99 }, 8, 8.0f);
+		animations[MOVING_W].Setup({ 1, 396, 140, 99 }, 8, 8.0f);
+		animations[MOVING_NE].Setup({ 1, 495, 140, 99 }, 8, 8.0f);
+		animations[MOVING_NW].Setup({ 1, 594, 140, 99 }, 8, 8.0f);
+		animations[MOVING_SE].Setup({ 1, 693, 140, 99 }, 8, 8.0f);
+		animations[MOVING_SW].Setup({ 1, 792, 140, 99 }, 8, 8.0f);
+		animations[ATTACKING_N].Setup({ 1, 891, 140, 99 }, 7, 8.0f);
+		animations[ATTACKING_S].Setup({ 1, 990, 140, 99 }, 7, 8.0f);
+		animations[ATTACKING_E].Setup({ 1, 1089, 140, 99 }, 7, 8.0f);
+		animations[ATTACKING_W].Setup({ 1, 1188, 140, 99 }, 7, 8.0f);
+		animations[ATTACKING_NE].Setup({ 1, 1287, 140, 99 }, 7, 8.0f);
+		animations[ATTACKING_NW].Setup({ 1, 1386, 140, 99 }, 7, 8.0f);
+		animations[ATTACKING_SE].Setup({ 1, 1485, 140, 99 }, 7, 8.0f);
+		animations[ATTACKING_SW].Setup({ 1, 1584, 140, 99 }, 7, 8.0f);
+		animations[DESTROYED].Setup({ 1, 1683, 140, 99 }, 8, 5.0f);
+		offset = { -53.0f, -95.0f, 1.5f, 1.5f };
 			break;
-	/*case ENEMY_RANGED:
-		tex_id = App->tex.Load("textures/Enemy_Ranged_Temp.png");
-		animations[IDLE].Setup(section = { 0, 0, 464, 365 }, 6, 6.0f);
-		animations[MOVING_N].Setup({ 0, 365, 464, 365 }, 7, 8.0f);
-		animations[MOVING_S].Setup({ 0, 730, 464, 365 }, 7, 8.0f);
-		animations[MOVING_E].Setup({ 0, 1095, 464, 365 }, 8, 8.0f);
-		animations[MOVING_W].Setup({ 0, 1460, 464, 365 }, 8, 8.0f);
-		animations[MOVING_NE].Setup({ 0, 1825, 464, 365 }, 8, 8.0f);
-		animations[MOVING_NW].Setup({ 0, 2190, 464, 365 }, 8, 8.0f);
-		animations[MOVING_SE].Setup({ 0, 2555, 464, 365 }, 8, 8.0f);
-		animations[MOVING_SW].Setup({ 0, 2920, 464, 365 }, 8, 8.0f);
-		animations[ATTACKING_N].Setup({ 0, 3285, 464, 365 }, 6, 10.0f);
-		animations[ATTACKING_S].Setup({ 0, 3650, 464, 365 }, 6, 10.0f);
-		animations[ATTACKING_E].Setup({ 0, 4015, 464, 365 }, 6, 10.0f);
-		animations[ATTACKING_W].Setup({ 0, 4380, 464, 365 }, 6, 10.0f);
-		animations[ATTACKING_NE].Setup({ 0, 4745, 464, 365 }, 6, 10.0f);
-		animations[ATTACKING_NW].Setup({ 0, 5110, 464, 365 }, 6, 10.0f);
-		animations[ATTACKING_SE].Setup({ 0, 5475, 464, 365 }, 6, 10.0f);
-		animations[ATTACKING_SW].Setup({ 0, 5840, 464, 365 }, 6, 10.0f);
-		animations[DESTROYED].Setup({ 0, 6205, 464, 365 }, 8, 5.0f);
-		offset = { -225.0f, -280.f, 0.5f, 0.5f };
-		break;*/
+	
 	case ENEMY_RANGED:
-		tex_id = App->tex.Load("textures/Enemy_Ranged.png");
-		animations[IDLE].Setup(section = { 2, 2, 418, 295 }, 6, 6.0f);
-		animations[MOVING_N].Setup({ 2, 295, 418, 295 }, 6, 6.0f);
-		animations[MOVING_S].Setup({ 2, 590, 418, 295 }, 6, 6.0f);
-		animations[MOVING_E].Setup({ 2, 885, 418, 295 }, 6, 6.0f);
-		animations[MOVING_W].Setup({ 2, 1180, 418, 295 }, 6, 6.0f);
-		animations[MOVING_NE].Setup({ 2, 1475, 418, 295 }, 6, 6.0f);
-		animations[MOVING_NW].Setup({ 2, 1770, 418, 295 }, 6, 6.0f);
-		animations[MOVING_SE].Setup({ 2, 2065, 418, 295 }, 6, 6.0f);
-		animations[MOVING_SW].Setup({ 2, 2360, 418, 295 }, 6, 6.0f);
-		animations[ATTACKING_N].Setup({ 2, 2655, 418, 295 }, 6, 8.0f);
-		animations[ATTACKING_S].Setup({ 2, 2950, 418, 295 }, 6, 8.0f);
-		animations[ATTACKING_E].Setup({ 2, 3245, 418, 295 }, 6, 8.0f);
-		animations[ATTACKING_W].Setup({ 2, 3540, 418, 295 }, 6, 8.0f);
-		animations[ATTACKING_NE].Setup({ 2, 3835, 418, 295 }, 6, 8.0f);
-		animations[ATTACKING_NW].Setup({ 2, 4130, 418, 295 }, 6, 8.0f);
-		animations[ATTACKING_SE].Setup({ 2, 4425, 418, 295 }, 6, 8.0f);
-		animations[ATTACKING_SW].Setup({ 2, 4720, 418, 295 }, 6, 8.0f);
-		animations[DESTROYED].Setup({ 2, 5015, 418, 295 }, 8, 5.0f);
-		offset = { -130.0f, -200.0f, 0.6f, 0.6f };
+		animations[IDLE].Setup(section = { 1, 1, 140, 99 }, 6, 6.0f);
+		animations[MOVING_N].Setup({ 1, 99, 140, 99 }, 7, 8.0f);
+		animations[MOVING_S].Setup({ 1, 198, 140, 99 }, 7, 8.0f);
+		animations[MOVING_E].Setup({ 1, 297, 140, 99 }, 8, 8.0f);
+		animations[MOVING_W].Setup({ 1, 396, 140, 99 }, 8, 8.0f);
+		animations[MOVING_NE].Setup({ 1, 495, 140, 99 }, 8, 8.0f);
+		animations[MOVING_NW].Setup({ 1, 594, 140, 99 }, 8, 8.0f);
+		animations[MOVING_SE].Setup({ 1, 693, 140, 99 }, 8, 8.0f);
+		animations[MOVING_SW].Setup({ 1, 792, 140, 99 }, 8, 8.0f);
+		animations[ATTACKING_N].Setup({ 1, 891, 140, 99 }, 7, 8.0f);
+		animations[ATTACKING_S].Setup({ 1, 990, 140, 99 }, 7, 8.0f);
+		animations[ATTACKING_E].Setup({ 1, 1089, 140, 99 }, 7, 8.0f);
+		animations[ATTACKING_W].Setup({ 1, 1188, 140, 99 }, 7, 8.0f);
+		animations[ATTACKING_NE].Setup({ 1, 1287, 140, 99 }, 7, 8.0f);
+		animations[ATTACKING_NW].Setup({ 1, 1386, 140, 99 }, 7, 8.0f);
+		animations[ATTACKING_SE].Setup({ 1, 1485, 140, 99 }, 7, 8.0f);
+		animations[ATTACKING_SW].Setup({ 1, 1584, 140, 99 }, 7, 8.0f);
+		animations[DESTROYED].Setup({ 1, 1683, 140, 99 }, 8, 5.0f);
+		offset = { -53.0f, -95.0f, 1.5f, 1.5f };
 			break;
 	case ENEMY_SUPER:
 		tex_id = App->tex.Load("textures/Enemy_Super_Temp.png");
@@ -304,25 +261,25 @@ AnimatedSprite::AnimatedSprite(Behaviour* unit) : Sprite(unit->GetGameobject(), 
 		break;
 	case GATHERER:
 		tex_id = App->tex.Load("textures/Unit_Gatherer.png");
-		animations[IDLE].Setup(section = { 3, 2, 418, 295 }, 5, 6.0f);
-		animations[MOVING_N].Setup({ 2, 295, 418, 295 }, 7, 8.0f);
-		animations[MOVING_S].Setup({ 2, 590, 418, 295 }, 7, 8.0f);
-		animations[MOVING_E].Setup({ 2, 885, 418, 295 }, 8, 8.0f);
-		animations[MOVING_W].Setup({ 2, 1180, 418, 295 }, 8, 8.0f);
-		animations[MOVING_NE].Setup({ 2, 1475, 418, 295 }, 8, 8.0f);
-		animations[MOVING_NW].Setup({ 2, 1770, 418, 295 }, 8, 8.0f);
-		animations[MOVING_SE].Setup({ 2, 2065, 418, 295 }, 8, 8.0f);
-		animations[MOVING_SW].Setup({ 2, 2360, 418, 295 }, 8, 8.0f);
-		animations[ATTACKING_N].Setup({ 2, 2655, 418, 295 }, 7, 8.0f);
-		animations[ATTACKING_S].Setup({ 2, 2950, 418, 295 }, 7, 8.0f);
-		animations[ATTACKING_E].Setup({ 2, 3245, 418, 295 }, 7, 8.0f);
-		animations[ATTACKING_W].Setup({ 2, 3540, 418, 295 }, 7, 8.0f);
-		animations[ATTACKING_NE].Setup({ 2, 3835, 418, 295 }, 7, 8.0f);
-		animations[ATTACKING_NW].Setup({ 2, 4130, 418, 295 }, 7, 8.0f);
-		animations[ATTACKING_SE].Setup({ 2, 4425, 418, 295 }, 7, 8.0f);
-		animations[ATTACKING_SW].Setup({ 2, 4720, 418, 295 }, 7, 8.0f);
-		animations[DESTROYED].Setup({ 2, 5015, 418, 295 }, 8, 5.0f);
-		offset = { -168.0f, -280.0f, 0.6f, 0.6f };
+		animations[IDLE].Setup(section = { 1, 1, 140, 99 }, 5, 5.0f);
+		animations[MOVING_N].Setup({ 1, 99, 140, 99 }, 7, 8.0f);
+		animations[MOVING_S].Setup({ 1, 198, 140, 99 }, 7, 8.0f);
+		animations[MOVING_E].Setup({ 1, 297, 140, 99 }, 8, 8.0f);
+		animations[MOVING_W].Setup({ 1, 396, 140, 99 }, 8, 8.0f);
+		animations[MOVING_NE].Setup({ 1, 495, 140, 99 }, 8, 8.0f);
+		animations[MOVING_NW].Setup({ 1, 594, 140, 99 }, 8, 8.0f);
+		animations[MOVING_SE].Setup({ 1, 693, 140, 99 }, 8, 8.0f);
+		animations[MOVING_SW].Setup({ 1, 792, 140, 99 }, 8, 8.0f);
+		animations[ATTACKING_N].Setup({ 1, 891, 140, 99 }, 7, 8.0f);
+		animations[ATTACKING_S].Setup({ 1, 990, 140, 99 }, 7, 8.0f);
+		animations[ATTACKING_E].Setup({ 1, 1089, 140, 99 }, 7, 8.0f);
+		animations[ATTACKING_W].Setup({ 1, 1188, 140, 99 }, 7, 8.0f);
+		animations[ATTACKING_NE].Setup({ 1, 1287, 140, 99 }, 7, 8.0f);
+		animations[ATTACKING_NW].Setup({ 1, 1386, 140, 99 }, 7, 8.0f);
+		animations[ATTACKING_SE].Setup({ 1, 1485, 140, 99 }, 7, 8.0f);
+		animations[ATTACKING_SW].Setup({ 1, 1584, 140, 99 }, 7, 8.0f);
+		animations[DESTROYED].Setup({ 1, 1683, 140, 99 }, 8, 5.0f);
+		offset = { -53.0f, -95.0f, 1.5f, 1.5f };
 		break;
 	case UNIT_RANGED:
 		tex_id = App->tex.Load("textures/Unit_Ranged.png");
