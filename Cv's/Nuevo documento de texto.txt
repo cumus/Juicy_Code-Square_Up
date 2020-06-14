@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+
+<html lang="en-US" style=""><head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+<!-- Begin Jekyll SEO tag v2.6.1 -->
+<title>Juicy_Code-Square_Up | Website Resources</title>
+<meta name="generator" content="Jekyll v3.8.7">
+<meta property="og:title" content="Juicy_Code-Square_Up">
+<meta property="og:locale" content="en_US">
+<meta name="description" content="Website Resources">
+<meta property="og:description" content="Website Resources">
+<link rel="canonical" href="https://cumus.github.io/Juicy_Code-Square_Up/">
+<meta property="og:url" content="https://cumus.github.io/Juicy_Code-Square_Up/">
+<meta property="og:site_name" content="Juicy_Code-Square_Up">
+<script type="application/ld+json">
+{"@type":"WebSite","url":"https://cumus.github.io/Juicy_Code-Square_Up/","headline":"Juicy_Code-Square_Up","name":"Juicy_Code-Square_Up","description":"Website Resources","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+    <link rel="stylesheet" href="/Juicy_Code-Square_Up/assets/css/style.css?v=3af8ba581d3ee20daa20557afda21fedc569d843">
+    <script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+    <script src="/Juicy_Code-Square_Up/assets/js/respond.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <!--[if lt IE 8]>
+    <link rel="stylesheet" href="/Juicy_Code-Square_Up/assets/css/ie.css">
+    <![endif]-->
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  </head>
+  <body>
+      <div id="header">
+        <nav>
+          <li class="fork"><a href="https://github.com/cumus/Juicy_Code-Square_Up">View On GitHub</a></li>
+          
+        </nav>
+      </div><!-- end header -->
+
+    <div class="wrapper">
+
+      <section>
+        
+ <div id="header">
+  <nav>
+   <li class="fork">
+    <a href="https://cumus.github.io/Juicy_Code-Square_Up/">Home</a>
+    <a href="https://github.com/cumus/Juicy_Code-Square_Up">Github</a>
+    <a href="https://cumus.github.io/Juicy_Code-Square_Up/Cv's/index.html">Team</a>
+    </li>
+  </nav>
+ </div>
+
+<p><img src="https://raw.githubusercontent.com/cumus/Juicy_Code-Square_Up/gh-pages/WikiResources/Home%20page%20picts/logo1%20lit.png" alt=""></p>
+
+<h2 id="team-leader">Code Leader</h2>
+<ul>
+  <li>Victor Bosch: <a href="https://github.com/victorbr2">victorbr2</a></li>
+</ul>
+    <ul>
+    <p>I'm Victor Bosch and I've been working for the last few months on a project for Juicy Code. I was assigned as the code lead for the project
+	, but due to my lack of knowledge of the area, the team and I decided to delegate the charge to someone else, I still did some coding, but my work was centered in the art area.</p>
+    
+    <p>Work log:</p>
+    
+  <li>
+    <p>Defining game pillars and several game design ideas for the game.</p>
+  </li>
+  <li>
+    <p>Raw version of the behaviour component.</p>
+  </li>
+  <li>
+    <p>Implementing an early state of the buildings (Base Center, and Towers) of the game.</p>
+  </li>
+  <li>
+    <p>Added the first tutorial for the game with its own states to guide the player throughout the gameplay.</p>
+  </li>
+  <li>
+    <p>Search for some game sounds and implemented into the game.</p>
+  </li>
+  <li>
+    <p>Designed main HUD, and created the basis for the following HUD and UI designs.</p>
+  </li>
+  <li>
+    <p>Designed and created the Boss in the game, although it was finally not implemented into the game.</p>
+  </li>
+  <li>
+    <p>Setting the structure of the game trailer and recording clips for it.</p>
+  </li>
+  <li>
+    <p>Management and creation of the webpage of the game.</p>
+  </li>
+      </ul>
+
+<h2 id="social-media">Social media</h2>
+
+<p>Facebook: <a href="https://www.facebook.com/Juicy-Code-110251897235394/">@juicycodegames</a></p>
+
+<p>Twitter <a href="https://twitter.com/JuicyCodeGames">@juicycodegames</a></p>
+
+<p>Instagram <a href="https://www.instagram.com/juicycodegames/">@juicycodegames</a></p>
+
+<p>Youtube <a href="https://www.youtube.com/channel/UCvtOzr0YiLtN2cmBA6WdB9Q?view_as=subscriber">@juicycodegames</a></p>
+
+<p>For a more detailed info feel free to contact us via e-mail at: JuicyCodeStudio@gmail.com</p>
+
+<p><img src="https://raw.githubusercontent.com/cumus/Juicy-Code-Games_Project-2/master/Build/Assets/textures/team-logo2.png" alt=""></p>
+
+<p><img src="https://raw.githubusercontent.com/cumus/Juicy-Code-Games_Project-2/gh-pages/WikiResources/Home%20page%20picts/logocitm.png" alt="University Logo"></p>
+
+          <a href="https://cumus.github.io/Juicy_Code-Square_Up/">Home</a>
+      </section>
+
+    </div>
+  
+     
+
+  
+
+</body></html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
