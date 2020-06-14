@@ -106,8 +106,8 @@ AnimatedSprite::AnimatedSprite(Behaviour* unit) : Sprite(unit->GetGameobject(), 
 	case BASE_CENTER:
 	{
 		tex_id = App->tex.Load("textures/Buildings.png"); //BaseCenter
-		animations[NO_UPGRADE].Setup(section = { 0, 0, 155, 233 }, 1, 4.0f);
-		animations[FIRST_UPGRADE].Setup({ 646, 0, 158, 234 }, 4, 4.0f);
+		animations[NO_UPGRADE].Setup(section = { 0, 0, 155, 233 }, 4, 4.0f);
+		animations[FIRST_UPGRADE].Setup({ 620, 0, 163, 234 }, 4, 4.0f);
 		animations[SECOND_UPGRADE].Setup({ 1290, 0, 165, 239 }, 4, 4.0f);
 		animations[DESTROYED].Setup({ 2106, 0, 130, 188 }, 5, 8.0f);
 		offset = { -15.0f, -250.0f + Map::GetBaseOffset(), 0.5f, 0.5f };
@@ -153,9 +153,9 @@ AnimatedSprite::AnimatedSprite(Behaviour* unit) : Sprite(unit->GetGameobject(), 
 	case BARRACKS:
 	{
 		tex_id = App->tex.Load("textures/Buildings.png"); //Barraks
-		animations[NO_UPGRADE].Setup(section = { 0, 247, 179, 156 }, 1, 4.0f);
-		animations[FIRST_UPGRADE].Setup({ 913, 0, 179, 156 }, 4, 4.0f);
-		animations[SECOND_UPGRADE].Setup({ 1827, 0, 179, 156 }, 4, 4.0f);
+		animations[NO_UPGRADE].Setup(section = { 0, 247, 185, 156 }, 5, 4.0f);
+		animations[FIRST_UPGRADE].Setup({ 919, 0, 185, 156 }, 4, 4.0f);
+		animations[SECOND_UPGRADE].Setup({ 1833, 0, 179, 156 }, 4, 4.0f);
 		animations[DESTROYED].Setup({ 2106, 0, 130, 188 }, 5, 8.0f);
 		offset = { 10.0f, -180.0f + Map::GetBaseOffset(), 0.3f, 0.3f };
 		break;
