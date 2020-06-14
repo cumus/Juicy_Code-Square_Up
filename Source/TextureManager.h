@@ -43,7 +43,7 @@ public:
 
 	int Load(const char* path, bool reload = false, short r = 255, short g = 255, short b = 255, short a = 255);
 	int LoadSurface(SDL_Surface* surface);
-	TextureData* CreateEmpty();
+	TextureData* CreateEmpty(const char* source);
 	int CreateEmptyTexture(SDL_Renderer* renderer, int width, int height, const char* source = "undefined");
 
 	bool Remove(int id);
@@ -52,6 +52,8 @@ public:
 	SDL_Texture* GetTexture(int id) const;
 	TextureData* GetDataPtr(int id);
 	void SetTextureAlpha(int id, int alpha);
+
+	void LogAllTextureData() const;
 
 private:
 

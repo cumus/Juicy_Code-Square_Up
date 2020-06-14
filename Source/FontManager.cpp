@@ -114,7 +114,7 @@ FontData::FontData(const FontData& copy) : id(copy.id), size(copy.size), source(
 RenderedText::RenderedText(const char* content, int font_id, SDL_Color color, unsigned int wrap_length) :
 	text(content), wrap_length(wrap_length), color(color), texture(nullptr)
 {
-	texture = App->tex.CreateEmpty();
+	texture = App->tex.CreateEmpty("Text Image Resource");
 	needs_redraw = true;
 	BlitTexture();
 }

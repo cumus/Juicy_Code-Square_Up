@@ -519,6 +519,8 @@ void Scene::LoadMainScene()
 
 	for (int i = 0; i < MAX_PLAYER_STATS; ++i)
 		player_stats[i] = 0;
+
+	App->StressTest();
 }
 
 void Scene::LoadIntroScene()
@@ -848,14 +850,6 @@ void Scene::LoadEndScene()
 	endAnimRow2 = 0;
 	endAnimColumn2 = 0;
 
-	/*//------------------------- BACK --------------------------------------
-
-	C_Image* back = new C_Image(AddGameobjectToCanvas("Background"));
-	back->target = { 0.68f, 0.9f, 0.6f, 0.65f };
-	back->offset = { -783.f, -735.f };
-	back->section = { 0, 0, 783, 735 };
-	back->tex_id = App->tex.Load("textures/back.png");*/
-
 	//------------------------- TIME --------------------------------------
 
 	C_Image* time = new C_Image(AddGameobjectToCanvas("Time"));
@@ -1177,22 +1171,6 @@ void Scene::LoadMainHUD()
 	load->section[2] = { 0, 202, 470, 90 };
 	load->section[3] = { 0, 202, 470, 90 };
 	load->tex_id = App->tex.Load("textures/load.png");
-
-
-	/*//------------------------- OPTIONS --------------------------------------
-
-	Gameobject* options_go = AddGameobject("options Button", pause_background_go);
-
-	C_Button* options = new C_Button(options_go, Event(SCENE_CHANGE, this, MAIN));
-	options->target = { 0.51f, 0.3f, 0.3f, 0.3f };
-	options->offset = { -525.f, 800.f };
-	for (int i = 0; i < 4; i++)options->section[i] = { 0, 0, 1070, 207 };
-	options->tex_id = App->tex.Load("textures/button.png");
-
-	C_Button* options_fx = new C_Button(options_go, Event(PLAY_FX, App->audio, int(SELECT), 0));
-	options_fx->target = { 0.51f, 0.3f, 0.3f, 0.3f };
-	options_fx->offset = { -525.f, 800.f };
-	for (int i = 0; i < 4; i++)options_fx->section[i] = { 0, 0, 1070, 207 };*/
 
 	//------------------------- MAIN MENU --------------------------------------
 

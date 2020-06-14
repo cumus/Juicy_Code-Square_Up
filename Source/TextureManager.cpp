@@ -204,9 +204,10 @@ int TextureManager::LoadSurface(SDL_Surface* surface)
 	return ret;
 }
 
-TextureData* TextureManager::CreateEmpty()
+TextureData* TextureManager::CreateEmpty(const char* source)
 {
 	TextureData data;
+	data.source = source;
 	return &textures.insert({ data.id, data }).first->second;
 }
 
@@ -261,6 +262,12 @@ void TextureManager::SetTextureAlpha(int id, int alpha)
 	TextureData data;
 	GetTextureData(id, data);
 	SDL_SetTextureAlphaMod(data.texture,alpha);
+}
+
+void TextureManager::LogAllTextureData() const
+{
+	for (std::map<int, TextureData>::const_iterator it = textures.cbegin(); it != textures.cend(); ++it)
+		LOG("Texture: id(%d), %dx%d - %s", it->second.id, it->second.width, it->second.height, it->second.source.c_str());
 }
 
 SDL_Texture * TextureManager::GetTexture(int id) const

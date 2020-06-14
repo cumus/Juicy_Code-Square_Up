@@ -67,6 +67,8 @@ public:
 
 	void SetTitleAndOrg(const char* title, const char* org);
 
+	void StressTest();
+
 private:
 
 	void PrepareUpdate();

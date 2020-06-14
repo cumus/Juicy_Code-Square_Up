@@ -128,7 +128,6 @@ int Application::Update()
 		if (!(no_error = (*it)->PreUpdate()))
 			LOG("Module %s encuntered an error during PreUpdate!", (*it)->GetName());
 
-
 	OPTICK_CATEGORY("Update Application", Optick::Category::GameLogic);
 	for (it = modules.begin(); it != modules.end() && no_error; ++it)
 		if (!(no_error = (*it)->Update()))
@@ -356,4 +355,88 @@ void Application::SaveConfig() const
 
 	// Save changes
 	files.SaveConfig();
+}
+
+void Application::StressTest()
+{
+	// HUD
+	tex.Load("textures/intro-sprite.png");
+	tex.Load("textures/game-logo.png");
+	tex.Load("textures/hud-sprites.png");
+	tex.Load("textures/icons_price.png");
+	tex.Load("textures/Iconos_square_up.png");
+	tex.Load("textures/selectionMark.png");
+	tex.Load("textures/icons.png");
+	tex.Load("textures/Mouse.png");
+	tex.Load("textures/background.png");
+	tex.Load("textures/game-logo.png");
+	tex.Load("textures/new-game.png");
+	tex.Load("textures/resume.png");
+	tex.Load("textures/options.png");
+	tex.Load("textures/quit.png");
+	tex.Load("textures/BaseAnim.png");
+	tex.Load("textures/background2.png");
+	tex.Load("textures/options_title.png");
+	tex.Load("textures/fullscreen.png");
+	tex.Load("textures/button3.png");
+	tex.Load("textures/music-volume.png");
+	tex.Load("textures/sfx-volume.png");
+	tex.Load("textures/main-menu.png");
+	tex.Load("textures/back-win.png");
+	tex.Load("textures/youwin.png");
+	tex.Load("textures/wcontinue.png");
+	tex.Load("textures/back-lose.png");
+	tex.Load("textures/youlose.png");
+	tex.Load("textures/lcontinue.png");
+	tex.Load("textures/pause-bg.png");
+	tex.Load("textures/save.png");
+	tex.Load("textures/load.png");
+	tex.Load("textures/victory.png");
+	tex.Load("textures/defeat.png");
+
+	// Pathfinding
+	App->tex.Load("textures/meta.png");
+
+	// Dialogue & Tutorial
+	tex.Load("textures/queen.png");
+	tex.Load("textures/soldier.png");
+	tex.Load("textures/tutomages.png");
+	tex.Load("textures/tuto/skip-button.png");
+	tex.Load("textures/tuto/cam-not.png");
+	tex.Load("textures/tuto/not-button.png");
+	tex.Load("textures/tuto/lure-queen-not.png");
+
+	// FoW
+	tex.Load("textures/fogTiles60.png");
+	tex.Load("textures/fogTiles.png");
+
+	// Map
+	tex.Load("maps/isometric_grass_and_water.png");
+	tex.Load("maps/Tileset_Map.png");
+
+	// Minimap
+	tex.Load("textures/minimap.png");
+
+	// Particles
+	tex.Load("textures/particle_shot.png");
+	tex.Load("textures/energyBall.png");
+
+	// Buildmode
+	tex.Load("textures/buildPreview.png");
+
+	// Units
+	tex.Load("textures/BaseCenter.png");
+	tex.Load("textures/Tower.png");
+	tex.Load("textures/Edge.png");
+	tex.Load("textures/Capsule2.png");
+	tex.Load("textures/lab.png");
+	tex.Load("textures/Barracks.png");
+	tex.Load("textures/SpawnEnemy.png");
+	tex.Load("textures/Unit_Melee.png");
+	tex.Load("textures/Enemy_Melee.png");
+	tex.Load("textures/Enemy_Ranged.png");
+	tex.Load("textures/Enemy_Super_Temp.png");
+	tex.Load("textures/Unit_Gatherer.png");
+	tex.Load("textures/Unit_Ranged.png");
+	tex.Load("textures/Unit_Super.png");
 }
