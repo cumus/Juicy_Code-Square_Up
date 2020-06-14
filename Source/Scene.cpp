@@ -519,8 +519,6 @@ void Scene::LoadMainScene()
 
 	for (int i = 0; i < MAX_PLAYER_STATS; ++i)
 		player_stats[i] = 0;
-
-	App->StressTest();
 }
 
 void Scene::LoadIntroScene()
