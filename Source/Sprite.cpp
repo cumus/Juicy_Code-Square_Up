@@ -106,7 +106,7 @@ AnimatedSprite::AnimatedSprite(Behaviour* unit) : Sprite(unit->GetGameobject(), 
 	case BASE_CENTER:
 	{
 		tex_id = App->tex.Load("textures/Buildings.png"); //BaseCenter
-		animations[NO_UPGRADE].Setup(section = { 0, 0, 155, 233 }, 4, 4.0f);
+		animations[NO_UPGRADE].Setup(section = { 0, 0, 155, 233 }, 1, 4.0f);
 		animations[FIRST_UPGRADE].Setup({ 646, 0, 158, 234 }, 4, 4.0f);
 		animations[SECOND_UPGRADE].Setup({ 1290, 0, 165, 239 }, 4, 4.0f);
 		animations[DESTROYED].Setup({ 2106, 0, 130, 188 }, 5, 8.0f);
@@ -116,11 +116,11 @@ AnimatedSprite::AnimatedSprite(Behaviour* unit) : Sprite(unit->GetGameobject(), 
 	case TOWER:
 	{
 		tex_id = App->tex.Load("textures/Buildings.png"); //Tower
-		animations[NO_UPGRADE].Setup(section = { 0, 247, 179, 156 }, 1, 4.0f);
-		animations[FIRST_UPGRADE].Setup({ 913, 0, 179, 156 }, 4, 4.0f);
-		animations[SECOND_UPGRADE].Setup({ 1827, 0, 179, 156 }, 4, 4.0f);
+		animations[NO_UPGRADE].Setup(section = { 38, 471, 57, 147 }, 1, 4.0f);
+		animations[FIRST_UPGRADE].Setup({ 734, 444, 125, 174 }, 4, 4.0f);
+		animations[SECOND_UPGRADE].Setup({ 1465, 411, 144, 208 }, 4, 4.0f);
 		animations[DESTROYED].Setup({ 2106, 0, 130, 188 }, 5, 8.0f);
-		offset = { -100.0f, -670.0f + Map::GetBaseOffset(), 0.3f, 0.3f };
+		offset = { 6.0f, -160.0f + Map::GetBaseOffset(), 1.0f, 1.0f };
 		break;
 	}
 	case EDGE:
@@ -157,7 +157,7 @@ AnimatedSprite::AnimatedSprite(Behaviour* unit) : Sprite(unit->GetGameobject(), 
 		animations[FIRST_UPGRADE].Setup({ 913, 0, 179, 156 }, 4, 4.0f);
 		animations[SECOND_UPGRADE].Setup({ 1827, 0, 179, 156 }, 4, 4.0f);
 		animations[DESTROYED].Setup({ 2106, 0, 130, 188 }, 5, 8.0f);
-		offset = { -100.0f, -670.0f + Map::GetBaseOffset(), 0.3f, 0.3f };
+		offset = { 10.0f, -180.0f + Map::GetBaseOffset(), 0.3f, 0.3f };
 		break;
 	}
 	case SPAWNER:
@@ -189,7 +189,7 @@ AnimatedSprite::AnimatedSprite(Behaviour* unit) : Sprite(unit->GetGameobject(), 
 		animations[ATTACKING_SE].Setup({ 1, 1485, 140, 99 }, 7, 8.0f);
 		animations[ATTACKING_SW].Setup({ 1, 1584, 140, 99 }, 7, 8.0f);
 		animations[DESTROYED].Setup({ 1, 1683, 140, 99 }, 8, 5.0f);
-		offset = { -53.0f, -95.0f, 1.5f, 1.5f };
+		offset = { -50.0f, -95.0f, 1.3f, 1.3f };
 		break;
 	}
 	
@@ -213,7 +213,7 @@ AnimatedSprite::AnimatedSprite(Behaviour* unit) : Sprite(unit->GetGameobject(), 
 		animations[ATTACKING_SE].Setup({ 1, 1485, 140, 99 }, 7, 8.0f);
 		animations[ATTACKING_SW].Setup({ 1, 1584, 140, 99 }, 7, 8.0f);
 		animations[DESTROYED].Setup({ 1, 1683, 140, 99 }, 8, 5.0f);
-		offset = { -53.0f, -95.0f, 1.5f, 1.5f };
+		offset = { -50.0f, -95.0f, 1.3f, 1.3f };
 			break;
 	
 	case ENEMY_RANGED:
@@ -235,7 +235,7 @@ AnimatedSprite::AnimatedSprite(Behaviour* unit) : Sprite(unit->GetGameobject(), 
 		animations[ATTACKING_SE].Setup({ 1, 1485, 140, 99 }, 7, 8.0f);
 		animations[ATTACKING_SW].Setup({ 1, 1584, 140, 99 }, 7, 8.0f);
 		animations[DESTROYED].Setup({ 1, 1683, 140, 99 }, 8, 5.0f);
-		offset = { -53.0f, -95.0f, 1.5f, 1.5f };
+		offset = { -50.0f, -95.0f, 1.3f, 1.3f };
 			break;
 	case ENEMY_SUPER:
 		tex_id = App->tex.Load("textures/Enemy_Super_Temp.png");
@@ -279,7 +279,7 @@ AnimatedSprite::AnimatedSprite(Behaviour* unit) : Sprite(unit->GetGameobject(), 
 		animations[ATTACKING_SE].Setup({ 1, 1485, 140, 99 }, 7, 8.0f);
 		animations[ATTACKING_SW].Setup({ 1, 1584, 140, 99 }, 7, 8.0f);
 		animations[DESTROYED].Setup({ 1, 1683, 140, 99 }, 8, 5.0f);
-		offset = { -53.0f, -95.0f, 1.5f, 1.5f };
+		offset = { -50.0f, -95.0f, 1.3f, 1.3f };
 		break;
 	case UNIT_RANGED:
 		tex_id = App->tex.Load("textures/Unit_Ranged.png");
