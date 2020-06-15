@@ -162,7 +162,7 @@ void Lab::Upgrade()
 void Lab::CreatePanel()
 {
 	posY_panel = 0.8f;
-	panel_tex_ID = App->tex.Load("textures/hud-sprites.png");
+	panel_tex_ID = App->tex.Load("textures/Hud_Sprites.png");
 
 	//------------------------- BASE PANEL --------------------------------------
 
@@ -358,28 +358,28 @@ void Lab::CreatePanel()
 	cost1->target = { 0.11f, 0.1f, 0.8f, 0.8f };
 	cost1->offset = { 0, 0 };
 	cost1->section = { 17, 50, 32, 32 };
-	cost1->tex_id = App->tex.Load("textures/icons_price.png");
+	cost1->tex_id = App->tex.Load("textures/Icons_Price.png");
 
 	//Melee price
 	C_Image* cost2 = new C_Image(prices);
 	cost2->target = { 0.33f, 0.08f, 0.8f, 0.8f };
 	cost2->offset = { 0, 0 };
 	cost2->section = { 60, 51, 36, 33 };
-	cost2->tex_id = App->tex.Load("textures/icons_price.png");
+	cost2->tex_id = App->tex.Load("textures/Icons_Price.png");
 
 	//Ranged price
 	C_Image* cost3 = new C_Image(prices);
 	cost3->target = { 0.59f, 0.29f, 0.8f, 0.8f };
 	cost3->offset = { 0, 0 };
 	cost3->section = { 104, 52, 33, 33 };
-	cost3->tex_id = App->tex.Load("textures/icons_price.png");
+	cost3->tex_id = App->tex.Load("textures/Icons_Price.png");
 
 	//Super price
 	C_Image* cost4 = new C_Image(prices);
 	cost4->target = { 0.58f, 0.68f, 0.8f, 0.8f };
 	cost4->offset = { 0, 0 };
 	cost4->section = { 147, 52, 38, 33 };
-	cost4->tex_id = App->tex.Load("textures/icons_price.png");
+	cost4->tex_id = App->tex.Load("textures/Icons_Price.png");
 
 	std::stringstream ssLife;
 	ssLife << "Life: ";
@@ -392,7 +392,7 @@ void Lab::CreatePanel()
 
 void Lab::create_bar() {
 
-	bar_text_id = App->tex.Load("textures/hud-sprites.png");
+	bar_text_id = App->tex.Load("textures/Hud_Sprites.png");
 
 	//------------------------- BASE BAR --------------------------------------
 

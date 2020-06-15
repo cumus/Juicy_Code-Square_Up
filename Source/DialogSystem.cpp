@@ -74,7 +74,7 @@ void DialogSystem::CreateScreenUI()
 	retail->target = { 0.3f, 0.75f, 2.5f, 2.5f };
 	retail->offset = { 0, 0 };
 	retail->section = { 712, 915, 232, 77 };
-	retail->tex_id = App->tex.Load("textures/hud-sprites.png");
+	retail->tex_id = App->tex.Load("textures/Hud_Sprites.png");
 	
 	units = new C_Image(dialogGo);
 	units->target = { 0.5f, 0.7f, 0.6f, 0.6f };
