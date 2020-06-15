@@ -41,7 +41,7 @@ void SuperUnit::UnitAttackType()
 
 void SuperUnit::CreatePanel()
 {
-	panel_tex_ID = App->tex.Load("textures/hud-sprites.png");
+	panel_tex_ID = App->tex.Load("textures/Hud_Sprites.png");
 
 	//------------------------- BASE PANEL --------------------------------------
 	selectionPanel = App->scene->AddGameobjectToCanvas("Super info Panel");

@@ -292,7 +292,7 @@ void Gatherer::Update()
 
 void Gatherer::CreatePanel()
 {
-	panel_tex_ID = App->tex.Load("textures/hud-sprites.png");
+	panel_tex_ID = App->tex.Load("textures/Hud_Sprites.png");
 
 	//------------------------- BASE PANEL --------------------------------------
 
@@ -462,21 +462,21 @@ void Gatherer::CreatePanel()
 	cost1->target = { 0.33f, 0.08f, 0.8f, 0.8f };
 	cost1->offset = { 0, 0 };
 	cost1->section = { 225, 13, 35, 32 };
-	cost1->tex_id = App->tex.Load("textures/icons_price.png");
+	cost1->tex_id = App->tex.Load("textures/Icons_Price.png");
 
 	//Barracks price
 	C_Image* cost2 = new C_Image(prices);
 	cost2->target = { 0.11f, 0.1f, 0.8f, 0.8f };
 	cost2->offset = { 0, 0 };
 	cost2->section = { 268, 14, 35, 31 };
-	cost2->tex_id = App->tex.Load("textures/icons_price.png");
+	cost2->tex_id = App->tex.Load("textures/Icons_Price.png");
 
 	//Lab price
 	C_Image* cost3 = new C_Image(prices);
 	cost3->target = { 0.59f, 0.29f, 0.8f, 0.8f };
 	cost3->offset = { 0, 0 };
 	cost3->section = { 268, 14, 35, 31 };
-	cost3->tex_id = App->tex.Load("textures/icons_price.png");
+	cost3->tex_id = App->tex.Load("textures/Icons_Price.png");
 
 	std::stringstream ssLife;
 	std::stringstream ssDamage;

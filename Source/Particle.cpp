@@ -36,7 +36,7 @@ Particle::Particle(Gameobject* go,vec p, vec d, float s, ParticleType typ, Compo
 			animationSprites = 8;
 			break;
 		case ENERGY_BALL_PARTICLE:
-			texID = App->tex.Load("textures/energyBall.png");
+			texID = App->tex.Load("textures/Energy_Ball.png");
 			img = new Sprite(go, texID, { 0, 0, 60, 60 }, FRONT_SCENE, { 0.0f,0.0f,1.0f,1.0f });
 			animationSprites = 16;
 			break;

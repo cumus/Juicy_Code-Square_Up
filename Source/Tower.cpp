@@ -150,7 +150,7 @@ void Tower::DoAttack()
 void Tower::CreatePanel()
 {
 	posY_panel = 0.8f;
-	panel_tex_ID = App->tex.Load("textures/hud-sprites.png");
+	panel_tex_ID = App->tex.Load("textures/Hud_Sprites.png");
 
 	//------------------------- TOWER PANEL --------------------------------------
 
@@ -217,7 +217,7 @@ void Tower::CreatePanel()
 	cost4->target = { 0.58f, 0.68f, 0.8f, 0.8f };
 	cost4->offset = { 0, 0 };
 	cost4->section = { 229, 51, 34, 35 };
-	cost4->tex_id = App->tex.Load("textures/icons_price.png");
+	cost4->tex_id = App->tex.Load("textures/Icons_Price.png");
 
 	std::stringstream ssLife;
 	std::stringstream ssDamage;

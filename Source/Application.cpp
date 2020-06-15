@@ -356,16 +356,16 @@ void Application::SaveConfig() const
 void Application::StressTest()
 {
 	// HUD
-	tex.Load("textures/intro-sprite.png");
-	tex.Load("textures/game-logo.png");
-	tex.Load("textures/hud-sprites.png");
-	tex.Load("textures/icons_price.png");
+	tex.Load("textures/Intro_Sprite.png");
+	tex.Load("textures/Game_logo.png");
+	tex.Load("textures/Hud_Sprites.png");
+	tex.Load("textures/Icons_Price.png");
 	tex.Load("textures/Iconos_square_up.png");
 	tex.Load("textures/selectionMark.png");
 	tex.Load("textures/icons.png");
 	tex.Load("textures/Mouse.png");
 	tex.Load("textures/background.png");
-	tex.Load("textures/game-logo.png");
+	tex.Load("textures/Game_logo.png");
 	tex.Load("textures/new-game.png");
 	tex.Load("textures/resume.png");
 	tex.Load("textures/options.png");
@@ -415,7 +415,7 @@ void Application::StressTest()
 
 	// Particles
 	tex.Load("textures/particle_shot.png");
-	tex.Load("textures/energyBall.png");
+	tex.Load("textures/Energy_Ball.png");
 
 	// Buildmode
 	tex.Load("textures/buildPreview.png");

@@ -1269,7 +1269,7 @@ float BuildingWithQueue::QueuedUnit::Update()
 BuildingWithQueue::BuildingWithQueue(Gameobject* go, UnitType type, UnitState starting_state, ComponentType comp_type) : Behaviour(go, type, starting_state, comp_type)
 {
 	spawnPoint = game_object->GetTransform()->GetLocalPos();
-	int texture_id = App->tex.Load("textures/hud-sprites.png");
+	int texture_id = App->tex.Load("textures/Hud_Sprites.png");
 	Gameobject* back_bar = App->scene->AddGameobject("Creation Bar", game_object);
 	new Sprite(back_bar, texture_id, { 276, 256, 216, 16 }, FRONT_SCENE, { 0.f, 13.f, 0.29f, 0.2f });
 	progress_bar = new Sprite(back_bar, texture_id, bar_section = { 276, 273, 216, 16 }, FRONT_SCENE, { 0.f, 13.f, 0.29f, 0.2f });

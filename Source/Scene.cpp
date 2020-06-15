@@ -500,7 +500,7 @@ void Scene::LoadIntroScene()
 	logo->target = { 0.4f, 0.f, 1.0f, 1.0f };
 	logo->offset = { 0.f, 0.f };
 	logo->section = { 0, 0, 270, 500 };
-	logo->tex_id = App->tex.Load("textures/intro-sprite.png");
+	logo->tex_id = App->tex.Load("textures/Intro_Sprite.png");
 	introAnim = 0;
 	introFrameTime = 0.1f;
 	introRow = 0;
@@ -525,7 +525,7 @@ void Scene::LoadMenuScene()
 	C_Image* g_logo = new C_Image(AddGameobjectToCanvas("Game logo"));
 	g_logo->target = { 0.01f, 0.2f, 0.6f, 0.6f };
 	g_logo->section = { 0, 0, 1070, 207 };
-	g_logo->tex_id = App->tex.Load("textures/game-logo.png");
+	g_logo->tex_id = App->tex.Load("textures/Game_logo.png");
 	
 	//------------------------- START --------------------------------------
 
@@ -665,7 +665,7 @@ void Scene::LoadOptionsScene()
 
 	music_slider_bar->target = { buttons_x + 0.12f, 0.545f, 1.f, 1.f };
 	music_slider_bar->section = { 174, 0, 245, 20 };
-	music_slider_bar->tex_id = App->tex.Load("textures/hud-sprites.png");
+	music_slider_bar->tex_id = App->tex.Load("textures/Hud_Sprites.png");
 
 	float volume = App->audio->GetVolumeMusic();
 	C_Slider_Button* music_slider_button = new C_Slider_Button(music_slider_go, buttons_x + 0.105f, buttons_x + 0.295f, volume, SET_MUSIC_VOLUME, App->audio);
@@ -675,7 +675,7 @@ void Scene::LoadOptionsScene()
 	music_slider_button->section[1] = { 1081, 933, 45, 45 };
 	music_slider_button->section[2] = { 1152, 933, 45, 45 };
 	music_slider_button->section[3] = { 1152, 933, 45, 45 };
-	music_slider_button->tex_id = App->tex.Load("textures/hud-sprites.png");
+	music_slider_button->tex_id = App->tex.Load("textures/Hud_Sprites.png");
 
 	//------------------------- SFX VOLUME SETTINGS --------------------------------------
 
@@ -695,7 +695,7 @@ void Scene::LoadOptionsScene()
 
 	sfx_slider_bar->target = { buttons_x + 0.12f, 0.624f, 1.f, 1.f };
 	sfx_slider_bar->section = { 174, 0, 245, 20 };
-	sfx_slider_bar->tex_id = App->tex.Load("textures/hud-sprites.png");
+	sfx_slider_bar->tex_id = App->tex.Load("textures/Hud_Sprites.png");
 
 	C_Slider_Button* sfx_slider_button = new C_Slider_Button(sfx_slider_go, buttons_x + 0.105f, buttons_x + 0.295f, volume = App->audio->GetVolumeFx(), SET_FX_VOLUME, App->audio);
 	sfx_slider_button->target = { buttons_x + 0.105f + (0.19f * volume), 0.605f, 1.f, 1.f };
@@ -704,7 +704,7 @@ void Scene::LoadOptionsScene()
 	sfx_slider_button->section[1] = { 1081, 933, 45, 45 };
 	sfx_slider_button->section[2] = { 1152, 933, 45, 45 };
 	sfx_slider_button->section[3] = { 1152, 933, 45, 45 };
-	sfx_slider_button->tex_id = App->tex.Load("textures/hud-sprites.png");
+	sfx_slider_button->tex_id = App->tex.Load("textures/Hud_Sprites.png");
 
 	//------------------------- MAIN MENU BUTTON --------------------------------------
 
@@ -890,7 +890,7 @@ void Scene::LoadEndScene()
 
 void Scene::LoadMainHUD()
 {
-	int icons_text_id = App->tex.Load("textures/hud-sprites.png");
+	int icons_text_id = App->tex.Load("textures/Hud_Sprites.png");
 
 	//----------------------------LEFT BAR-----------------------------------------
 
@@ -1665,7 +1665,7 @@ void Scene::OnEventStateMachine(GameplayState state)
 		spawn_img->target = { 1.0f, 0.1f, 0.8f , 1.f };
 		spawn_img->offset = { -232.f, 0.f };
 		spawn_img->section = { 712, 915, 232, 77 };
-		spawn_img->tex_id = App->tex.Load("textures/hud-sprites.png");
+		spawn_img->tex_id = App->tex.Load("textures/Hud_Sprites.png");
 
 		spawner_text_go = AddGameobject("Text Spawners", spawner_go);
 		text_spawner = new C_Text(spawner_text_go, "Spawners");
@@ -2571,7 +2571,7 @@ Mission::Mission(const char* name,PlayerStats t, int r,int m)
 	imgRetail->target = { 1.0f, 0.1f, 0.8f , 0.4f };
 	imgRetail->offset = { -232.f, 0.f };
 	imgRetail->section = { 712, 915, 232, 77 };
-	imgRetail->tex_id = App->tex.Load("textures/hud-sprites.png");
+	imgRetail->tex_id = App->tex.Load("textures/Hud_Sprites.png");
 
 	text = new C_Text(mission, name);
 	text->target = { 0.87f, 0.11f, 1.f, 1.f };
