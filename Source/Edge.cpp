@@ -5,7 +5,7 @@
 
 Edge::Edge(Gameobject* go) : Behaviour(go, EDGE, NO_UPGRADE, B_EDGE)
 {
-	max_life = 500;
+	max_life = 300;
 	current_life = max_life;
 	damage = 0;
 	dieDelay = 3.0f;
@@ -29,7 +29,14 @@ void Edge::FreeWalkabilityTiles()
 
 void Edge::AfterDamageAction(UnitType from)
 {
-	Event::Push(UPDATE_STAT, App->scene, CURRENT_EDGE, 10);
-	Event::Push(UPDATE_STAT, App->scene, EDGE_COLLECTED, 10);
+	if (current_life < max_life / 2)
+	{
+		Event::Push(UPDATE_STAT, App->scene, CURRENT_EDGE, 4);
+		Event::Push(UPDATE_STAT, App->scene, EDGE_COLLECTED, 4);
+	}
+	else
+	{
+		Event::Push(UPDATE_STAT, App->scene, CURRENT_EDGE, 7);
+		Event::Push(UPDATE_STAT, App->scene, EDGE_COLLECTED, 7);
+	}
 }
-

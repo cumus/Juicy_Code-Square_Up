@@ -125,7 +125,7 @@ AnimatedSprite::AnimatedSprite(Behaviour* unit) : Sprite(unit->GetGameobject(), 
 	}
 	case EDGE:
 	{
-		tex_id = App->tex.Load("textures/Edge.png"); 
+		tex_id = App->tex.Load("textures/Edge.png");
 		animations[NO_UPGRADE].Setup(section = { 0, 0, 217, 134 }, 1);
 		animations[DESTROYED].Setup({ 0, 0, 0, 0 }, 1);
 		offset = { 0, -115.0f + Map::GetBaseOffset(), 0.3f, 0.3f };
@@ -192,30 +192,30 @@ AnimatedSprite::AnimatedSprite(Behaviour* unit) : Sprite(unit->GetGameobject(), 
 		offset = { -50.0f, -95.0f, 1.3f, 1.3f };
 		break;
 	}
-	
-		case ENEMY_MELEE:
+
+	case ENEMY_MELEE:
 		tex_id = App->tex.Load("textures/Enemy_Melee.png");
-		animations[IDLE].Setup(section = { 1, 1, 140, 99 }, 6, 6.0f);
-		animations[MOVING_N].Setup({ 1, 99, 140, 99 }, 6, 8.0f);
-		animations[MOVING_S].Setup({ 1, 198, 140, 99 }, 6, 8.0f);
-		animations[MOVING_E].Setup({ 1, 297, 140, 99 }, 6, 8.0f);
-		animations[MOVING_W].Setup({ 1, 396, 140, 99 }, 6, 8.0f);
-		animations[MOVING_NE].Setup({ 1, 495, 140, 99 }, 6, 8.0f);
-		animations[MOVING_NW].Setup({ 1, 594, 140, 99 }, 6, 8.0f);
-		animations[MOVING_SW].Setup({ 1, 693, 140, 99 }, 6, 8.0f);
-		animations[MOVING_SE].Setup({ 1, 792, 140, 99 }, 6, 8.0f);
-		animations[ATTACKING_N].Setup({ 1, 891, 140, 99 }, 6, 8.0f);
-		animations[ATTACKING_S].Setup({ 1, 990, 140, 99 }, 6, 8.0f);
-		animations[ATTACKING_E].Setup({ 1, 1089, 140, 99 }, 6, 8.0f);
-		animations[ATTACKING_W].Setup({ 1, 1188, 140, 99 }, 6, 8.0f);
-		animations[ATTACKING_NE].Setup({ 1, 1287, 140, 99 }, 6, 8.0f);
-		animations[ATTACKING_NW].Setup({ 1, 1386, 140, 99 }, 6, 8.0f);
-		animations[ATTACKING_SW].Setup({ 1, 1485, 140, 99 }, 6, 8.0f);
-		animations[ATTACKING_SE].Setup({ 1, 1584, 140, 99 }, 6, 8.0f);
-		animations[DESTROYED].Setup({ 1, 1683, 140, 99 }, 8, 5.0f);
+		animations[IDLE].Setup(section = { 16, 5, 140, 99 }, 6, 6.0f);
+		animations[MOVING_N].Setup({ 16, 198, 140, 99 }, 6, 8.0f);
+		animations[MOVING_S].Setup({ 16, 372, 140, 99 }, 6, 8.0f);
+		animations[MOVING_E].Setup({ 16, 541, 140, 99 }, 6, 8.0f);
+		animations[MOVING_W].Setup({ 16, 716, 140, 99 }, 6, 8.0f);
+		animations[MOVING_NE].Setup({ 16, 891, 140, 99 }, 6, 8.0f);
+		animations[MOVING_NW].Setup({ 17, 1064, 140, 99 }, 6, 8.0f);
+		animations[MOVING_SW].Setup({ 15, 1242, 140, 99 }, 6, 8.0f);
+		animations[MOVING_SE].Setup({ 16, 1419, 140, 99 }, 6, 8.0f);
+		animations[ATTACKING_N].Setup({ 16, 1590, 140, 99 }, 6, 8.0f);
+		animations[ATTACKING_S].Setup({ 16, 1763, 140, 99 }, 6, 8.0f);
+		animations[ATTACKING_E].Setup({ 16, 1937, 140, 99 }, 6, 8.0f);
+		animations[ATTACKING_W].Setup({ 0, 2107, 140, 99 }, 6, 8.0f);
+		animations[ATTACKING_NE].Setup({ 16, 2285, 140, 99 }, 6, 8.0f);
+		animations[ATTACKING_NW].Setup({ 16, 2455, 140, 99 }, 6, 8.0f);
+		animations[ATTACKING_SW].Setup({ 16, 2631, 140, 99 }, 6, 8.0f);
+		animations[ATTACKING_SE].Setup({ 16, 2803, 140, 99 }, 6, 8.0f);
+		animations[DESTROYED].Setup({ 16, 3001, 140, 99 }, 8, 5.0f);
 		offset = { -45.0f, -70.0f, 1.3f, 1.3f };
-			break;
-	
+		break;
+
 	case ENEMY_RANGED:
 		tex_id = App->tex.Load("textures/Enemy_Ranged_rz.png");
 		animations[IDLE].Setup(section = { 0, 0, 130, 193 }, 6, 6.0f);
@@ -237,28 +237,28 @@ AnimatedSprite::AnimatedSprite(Behaviour* unit) : Sprite(unit->GetGameobject(), 
 		animations[ATTACKING_SE].Setup({ 0, 3088, 130, 180 }, 6, 8.0f);
 		animations[DESTROYED].Setup({ 0, 3281, 130, 193 }, 6, 5.0f);
 		offset = { -45.0f, -70.0f, 0.5f, 0.5f };
-			break;
+		break;
 	case ENEMY_SUPER:
 		tex_id = App->tex.Load("textures/Enemy_Super_Temp.png");
-		animations[IDLE].Setup(section = { 1, 1, 125, 99 }, 6, 6.0f);
-		animations[MOVING_N].Setup({ 1, 99, 125, 99 }, 7, 8.0f);
-		animations[MOVING_S].Setup({ 1, 198, 125, 99 }, 7, 8.0f);
-		animations[MOVING_E].Setup({ 1, 297, 125, 99 }, 8, 8.0f);
-		animations[MOVING_W].Setup({ 1, 396, 125, 99 }, 8, 8.0f);
-		animations[MOVING_NE].Setup({ 1, 495, 125, 99 }, 8, 8.0f);
-		animations[MOVING_NW].Setup({ 1, 594, 125, 99 }, 8, 8.0f);
-		animations[MOVING_SE].Setup({ 1, 693, 125, 99 }, 8, 8.0f);
-		animations[MOVING_SW].Setup({ 1, 792, 125, 99 }, 8, 8.0f);
-		animations[ATTACKING_N].Setup({ 1, 891, 125, 99 }, 6, 8.0f);
-		animations[ATTACKING_S].Setup({ 1, 990, 125, 99 }, 6, 8.0f);
-		animations[ATTACKING_E].Setup({ 1, 1089, 125, 99 }, 6, 8.0f);
-		animations[ATTACKING_W].Setup({ 1, 1188, 125, 99 }, 6, 8.0f);
-		animations[ATTACKING_NE].Setup({ 1, 1287, 125, 99 }, 6, 8.0f);
-		animations[ATTACKING_NW].Setup({ 1, 1386, 125, 99 }, 6, 8.0f);
-		animations[ATTACKING_SE].Setup({ 1, 1485, 125, 99 }, 6, 8.0f);
-		animations[ATTACKING_SW].Setup({ 1, 1584, 125, 99 }, 6, 8.0f);
-		animations[DESTROYED].Setup({ 1, 1683, 125, 99 }, 8, 5.0f);
-		offset = { -45.0f, -75.0f, 1.3f, 1.3f };
+		animations[IDLE].Setup(section = { 0, 1, 216, 170 }, 6, 6.0f);
+		animations[MOVING_N].Setup({ 0, 226, 216, 170 }, 7, 8.0f);
+		animations[MOVING_S].Setup({ 0, 395, 216, 170 }, 7, 8.0f);
+		animations[MOVING_E].Setup({ 0, 554, 216, 170 }, 8, 8.0f);
+		animations[MOVING_W].Setup({ 0, 724, 216, 170 }, 8, 8.0f);
+		animations[MOVING_NE].Setup({ 0, 905, 216, 170 }, 8, 8.0f);
+		animations[MOVING_NW].Setup({ 0, 1078, 216, 170 }, 8, 8.0f);
+		animations[MOVING_SE].Setup({ 0, 1250, 216, 170 }, 8, 8.0f);
+		animations[MOVING_SW].Setup({ 0, 1419, 216, 170 }, 8, 8.0f);
+		animations[ATTACKING_N].Setup({ 0, 1619, 216, 170 }, 6, 8.0f);
+		animations[ATTACKING_S].Setup({ 0, 1779, 216, 170 }, 6, 8.0f);
+		animations[ATTACKING_E].Setup({ 0, 1944, 248, 170 }, 6, 8.0f);
+		animations[ATTACKING_W].Setup({ 0, 2118, 248, 170 }, 6, 8.0f);
+		animations[ATTACKING_NE].Setup({ 0, 2294, 216, 168 }, 6, 8.0f);
+		animations[ATTACKING_NW].Setup({ 0, 2470, 216, 168 }, 6, 8.0f);
+		animations[ATTACKING_SE].Setup({ 0, 2638, 216, 170 }, 6, 8.0f);
+		animations[ATTACKING_SW].Setup({ 0, 2811, 216, 170 }, 6, 8.0f);
+		animations[DESTROYED].Setup({ 0, 3005, 216, 170 }, 8, 5.0f);
+		offset = { -45.0f, -75.0f, 0.5f, 0.5f };
 		break;
 	case GATHERER:
 		tex_id = App->tex.Load("textures/Unit_Gatherer.png");
@@ -302,7 +302,7 @@ AnimatedSprite::AnimatedSprite(Behaviour* unit) : Sprite(unit->GetGameobject(), 
 		animations[ATTACKING_SE].Setup({ 1, 1485, 125, 99 }, 7, 8.0f);
 		animations[ATTACKING_SW].Setup({ 1, 1584, 125, 99 }, 7, 8.0f);
 		animations[DESTROYED].Setup({ 1, 1683, 125, 99 }, 8, 5.0f);
-		offset = { -45.0f, -75.0f, 1.3f, 1.3f };
+		offset = { -50.0f, -75.0f, 1.3f, 1.3f };
 		break;
 	case UNIT_SUPER:
 		tex_id = App->tex.Load("textures/Unit_Super.png");
@@ -324,7 +324,7 @@ AnimatedSprite::AnimatedSprite(Behaviour* unit) : Sprite(unit->GetGameobject(), 
 		animations[ATTACKING_SE].Setup({ 1, 1485, 125, 99 }, 7, 8.0f);
 		animations[ATTACKING_SW].Setup({ 1, 1584, 125, 99 }, 7, 8.0f);
 		animations[DESTROYED].Setup({ 1, 1683, 125, 99 }, 8, 5.0f);
-		offset = { -45.0f, -75.0f, 1.3f, 1.3f };
+		offset = { -50.0f, -75.0f, 1.3f, 1.3f };
 		break;
 	default:
 		break;
