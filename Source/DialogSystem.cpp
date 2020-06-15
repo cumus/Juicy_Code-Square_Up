@@ -213,6 +213,7 @@ void DialogSystem::UpdateScreenUI(Option answer)
 	case 9:
 		edge->SetInactive();
 		gear->SetActive();
+		txt3->SetActive();
 		txt->text->SetText(" Gears can be obtained by killing enemies,");
 		txt2->text->SetText(" and can be used to upgrade both buildings");
 		txt3->text->SetText(" and units.");
@@ -221,7 +222,6 @@ void DialogSystem::UpdateScreenUI(Option answer)
 	case 10:
 		gear->SetInactive();
 		gold->SetActive();
-		txt3->SetInactive();
 		txt->text->SetText(" Enemies might drop gold somethimes, which");
 		txt2->text->SetText(" you can use to purchase support capsules");
 		txt3->text->SetText(" from yout base center.");

@@ -452,7 +452,7 @@ void Scene::LoadMainScene()
 	App->dialogSys.Start();
 	current_state = LORE;
 
-	Event::Push(MINIMAP_MOVE_CAMERA, App->render, 0.0f, 4400.0f);
+	Event::Push(MINIMAP_MOVE_CAMERA, App->render, -200.0f, 4300.0f);
 
 	imgPreview = AddGameobject("Builder image");
 	buildingImage = new Sprite(imgPreview, App->tex.Load("textures/buildPreview.png"), { 0, 3, 217, 177 }, FRONT_SCENE, { -60.0f,-100.0f,1.0f,1.0f });
