@@ -83,8 +83,8 @@ void Behaviour::SetColliders()
 			bodyColl = new Collider(game_object, { pos.x,pos.y,game_object->GetTransform()->GetLocalScaleX(),game_object->GetTransform()->GetLocalScaleY() }, NON_TRIGGER, PLAYER_TAG, { 0,Map::GetBaseOffset(),0,0 }, BODY_COLL_LAYER);
 			attackColl = new Collider(game_object, { pos.x,pos.y,attack_range,attack_range }, TRIGGER, PLAYER_ATTACK_TAG, { 0,Map::GetBaseOffset(),0,0 }, ATTACK_COLL_LAYER);
 			std::pair<float, float> world = Map::F_MapToWorld(pos.x, pos.y);
-			selectionOffset = { 10,-50 };
-			selectionRect = { world.first + selectionOffset.first,world.second + selectionOffset.second,50,90 };
+			selectionOffset = { 10,-30 };
+			selectionRect = { world.first + selectionOffset.first,world.second + selectionOffset.second,40,70 };
 			break;
 		}
 		case ENEMY_MELEE:
@@ -95,8 +95,8 @@ void Behaviour::SetColliders()
 			visionColl = new Collider(game_object, { pos.x,pos.y,vision_range,vision_range }, TRIGGER, ENEMY_VISION_TAG, { 0,Map::GetBaseOffset(),0,0 }, VISION_COLL_LAYER);
 			attackColl = new Collider(game_object, { pos.x,pos.y,attack_range,attack_range }, TRIGGER, ENEMY_ATTACK_TAG, { 0,Map::GetBaseOffset(),0,0 }, ATTACK_COLL_LAYER);
 			std::pair<float, float> world = Map::F_MapToWorld(pos.x, pos.y);
-			selectionOffset = { 10,-50 };
-			selectionRect = { world.first + selectionOffset.first,world.second + selectionOffset.second,50,90 };
+			selectionOffset = { 10,-30 };
+			selectionRect = { world.first + selectionOffset.first,world.second + selectionOffset.second,40,70 };
 			break;
 		}
 		case BASE_CENTER:
@@ -1043,20 +1043,6 @@ void B_Unit::OnDestroy()
 				PathfindingManager::unitWalkability[it->x][it->y] = 0;
 		}
 		tilesVisited.clear();
-	}
-}
-
-void B_Unit::ShootRaycast()
-{
-	rayCastTimer += App->time.GetGameDeltaTime();
-	if (rayCastTimer < RAYCAST_TIME)
-	{
-		App->render->DrawLine(shootPos, atkObjPos, { 34,191,255,255 }, FRONT_SCENE, true);
-	}
-	else
-	{
-		shoot = false;
-		rayCastTimer = 0;
 	}
 }
 

@@ -237,7 +237,6 @@ public:
 	void CheckPathTiles();
 	void ChangeState();
 	void CheckDirection(fPoint actualPos);
-	void ShootRaycast();
 	void DrawRanges();
 	void UpgradeUnit(int life, int damage, int lvl);
 	void Repath() override;
