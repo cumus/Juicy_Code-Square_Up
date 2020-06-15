@@ -164,7 +164,11 @@ Here are some links to our GitHib, Wiki, etc.
 * Polished title, win and lose scene
 * Polished pause menu
 * Added balancing changes
-* Adjusted texture resolutions to fit target maximum memory usage 512mb
+* Adjusted texture resolutions to fit target maximum memory usage of 512mb
+
+### Updates from v1.0
+* Added audio tracks
+* Trailer + Website
 
 ##
 ![University Logo](https://www.citm.upc.edu/templates/new/img/logoCITM.png?1401879059) 
