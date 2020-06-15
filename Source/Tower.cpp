@@ -16,7 +16,7 @@ Tower::Tower(Gameobject* go, bool build_new) : Behaviour(go, TOWER, NO_UPGRADE, 
 	current_life = 1;
 	attack_range = 13.0f;
 	vision_range = 25.0f;
-	damage = 20;
+	damage = 25;
 	ms_count = 0;
 	atkDelay = 1.5;
 	shoot = false;
