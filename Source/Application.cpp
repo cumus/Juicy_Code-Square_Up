@@ -424,7 +424,7 @@ void Application::StressTest()
 	tex.Load("textures/BaseCenter.png");
 	tex.Load("textures/Tower.png");
 	tex.Load("textures/Edge.png");
-	tex.Load("textures/Capsule2.png");
+	tex.Load("textures/Capsule.png");
 	tex.Load("textures/lab.png");
 	tex.Load("textures/Barracks.png");
 	tex.Load("textures/SpawnEnemy.png");

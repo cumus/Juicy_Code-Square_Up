@@ -133,7 +133,7 @@ AnimatedSprite::AnimatedSprite(Behaviour* unit) : Sprite(unit->GetGameobject(), 
 	}
 	case CAPSULE:
 	{
-		tex_id = App->tex.Load("textures/Capsule2.png");
+		tex_id = App->tex.Load("textures/Capsule.png");
 		animations[FLY].Setup(section = { 0, 0, 105, 518 }, 18, 8.0f);
 		animations[POSE].Setup({ 0, 519, 104, 360 }, 1);
 		animations[OPEN].Setup({ 0, 519, 104, 360 }, 10, 4.0f);
