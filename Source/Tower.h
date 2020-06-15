@@ -4,7 +4,7 @@
 #include "Behaviour.h"
 #include "Canvas.h"
 
-#define TOWER_UPGRADE_COST 70
+#define TOWER_UPGRADE_COST 25
 
 class Tower : public Behaviour
 {

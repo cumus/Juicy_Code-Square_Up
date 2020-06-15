@@ -31,12 +31,12 @@ void Edge::AfterDamageAction(UnitType from)
 {
 	if (current_life < max_life / 2)
 	{
-		Event::Push(UPDATE_STAT, App->scene, CURRENT_EDGE, 4);
-		Event::Push(UPDATE_STAT, App->scene, EDGE_COLLECTED, 4);
+		Event::Push(UPDATE_STAT, App->scene, CURRENT_EDGE, 5);
+		Event::Push(UPDATE_STAT, App->scene, EDGE_COLLECTED, 5);
 	}
 	else
 	{
-		Event::Push(UPDATE_STAT, App->scene, CURRENT_EDGE, 7);
-		Event::Push(UPDATE_STAT, App->scene, EDGE_COLLECTED, 7);
+		Event::Push(UPDATE_STAT, App->scene, CURRENT_EDGE, 10);
+		Event::Push(UPDATE_STAT, App->scene, EDGE_COLLECTED, 10);
 	}
 }

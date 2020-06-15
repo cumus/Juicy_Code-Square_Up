@@ -22,7 +22,7 @@ Base_Center::Base_Center(Gameobject* go) : BuildingWithQueue(go, BASE_CENTER, NO
 	current_life = max_life;
 	current_lvl = 1;
 	max_lvl = 5;
-	vision_range = 20.0f;
+	vision_range = 50.0f;
 	attack_range = 0;
 	providesVisibility = true;
 	spriteState = NO_UPGRADE;

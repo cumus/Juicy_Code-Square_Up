@@ -11,7 +11,7 @@
 EnemyMeleeUnit::EnemyMeleeUnit(Gameobject* go) : B_Unit(go, ENEMY_MELEE, IDLE, B_ENEMY_MELEE)
 {
 	//Stats
-	current_life = 75;
+	current_life = 50;
 	max_life = current_life;
 	atkTime = 1.25f;
 	speed = 3.0f;

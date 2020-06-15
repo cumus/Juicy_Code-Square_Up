@@ -250,9 +250,9 @@ bool Gameobject::RemoveChild(Gameobject* child)
 
 	if (child != nullptr)
 	{
-		for (std::vector<Gameobject*>::const_iterator it = childs.cbegin(); it != childs.cend(); ++it)
+		for (int i = 0; i < childs.size(); ++i)
 		{
-			if (child == *it)
+			if (child == childs[i])
 			{
 				Event::Push(ON_DESTROY, child);
 				go_to_remove.push(child->id);

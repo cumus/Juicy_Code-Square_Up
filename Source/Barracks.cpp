@@ -372,7 +372,7 @@ void Barracks::CreatePanel()
 
 	std::stringstream super_range;
 	super_range << "Range: ";
-	super_range << 13;
+	super_range << 16;
 
 	C_Text* super_tooltip_range = new C_Text(super_tooltip, super_range.str().c_str());
 	super_tooltip_range->target = { 1.1075f, -0.314f, 1.0f , 1.0f };

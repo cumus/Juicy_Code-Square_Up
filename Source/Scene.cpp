@@ -452,7 +452,7 @@ void Scene::LoadMainScene()
 	App->dialogSys.Start();
 	current_state = LORE;
 
-	Event::Push(MINIMAP_MOVE_CAMERA, App->render, 800.0f, 2900.0f);
+	Event::Push(MINIMAP_MOVE_CAMERA, App->render, 0.0f, 4400.0f);
 
 	imgPreview = AddGameobject("Builder image");
 	buildingImage = new Sprite(imgPreview, App->tex.Load("textures/buildPreview.png"), { 0, 3, 217, 177 }, FRONT_SCENE, { -60.0f,-100.0f,1.0f,1.0f });
@@ -1125,7 +1125,7 @@ void Scene::LoadTutorial()
 	skip->section[3] = { 0, 88, 309, 37 };
 	skip->tex_id = App->tex.Load("textures/tuto/skip-button.png");
 
-	vec gatherer_t = { 130, 75 };
+	vec gatherer_t = { 153, 135 };
 	Gameobject* gather_go = AddGameobject("Initial Gatherer");
 	gather_go->GetTransform()->SetLocalPos(gatherer_t);
 	new Gatherer(gather_go);
@@ -1134,7 +1134,7 @@ void Scene::LoadTutorial()
 	
 void Scene::LoadBaseCenter()
 {
-	std::pair<int, int> position = Map::WorldToTileBase(float(1400.0f), float(3250.0f));
+	std::pair<int, int> position = Map::WorldToTileBase(float(300.0f), float(4600.0f));
 	if (App->pathfinding.CheckWalkabilityArea(position, vec(1.0f)))
 	{
 		Gameobject* base_go = AddGameobject("Base Center");
@@ -1616,7 +1616,7 @@ void Scene::OnEventStateMachine(GameplayState state)
 		not_inactive->tex_id = App->tex.Load("textures/tuto/not-button.png");
 			
 		//Edge Counter
-		gatherEdge = new Mission("Gather some edge. (80)", CURRENT_EDGE, 0, 80);
+		gatherEdge = new Mission("Gather some edge. (80)", EDGE_COLLECTED, 0, 80);
 		buildTower = new Mission("Build a Tower.", CURRENT_TOWERS, 0, 1);
 		buildBarracks = new Mission("Build Barracks.", CURRENT_BARRACKS, 0, 1);
 		buildTower->SetPos({ 0.997f, 0.14f, 0.5f, 0.4f }, { 0.92f, 0.15f, 1.0f, 1.0f });

@@ -366,7 +366,7 @@ void Gatherer::CreatePanel()
 
 	std::stringstream tower_life;
 	tower_life << "Life: ";
-	tower_life << 75;
+	tower_life << 100;
 
 	C_Text* tower_tooltip_life = new C_Text(tower_tooltip, tower_life.str().c_str());
 	tower_tooltip_life->target = { 0.6135f, -0.53f, 1.0f , 1.0f };

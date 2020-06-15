@@ -16,7 +16,7 @@ EnemyRangedUnit::EnemyRangedUnit(Gameobject* go) : B_Unit(go, ENEMY_RANGED, IDLE
 	atkTime = 2.0;
 	speed = 3;
 	damage = 10;
-	attack_range = 10.0f;
+	attack_range = 11.0f;
 	vision_range = 15.0f;
 	providesVisibility = false;
 

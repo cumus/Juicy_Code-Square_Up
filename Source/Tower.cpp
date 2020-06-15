@@ -12,7 +12,7 @@
 
 Tower::Tower(Gameobject* go, bool build_new) : Behaviour(go, TOWER, NO_UPGRADE, B_TOWER)
 {
-	max_life = 75;
+	max_life = 100;
 	current_life = 1;
 	attack_range = 13.0f;
 	vision_range = 25.0f;

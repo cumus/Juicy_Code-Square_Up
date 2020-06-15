@@ -10,7 +10,7 @@
 EnemySuperUnit::EnemySuperUnit(Gameobject* go) : B_Unit(go, ENEMY_SUPER, IDLE, B_RANGED)
 {
 	//Stats
-	max_life = 100;
+	max_life = 75;
 	current_life = max_life;
 	atkTime = 2.0;
 	speed = 3;

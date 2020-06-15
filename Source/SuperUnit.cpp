@@ -16,7 +16,7 @@ SuperUnit::SuperUnit(Gameobject* go) : B_Unit(go, UNIT_SUPER, IDLE, B_RANGED)
 	atkTime = 2.0;
 	speed = 3;
 	damage = 15;
-	attack_range = 15.0f;
+	attack_range = 16.0f;
 	vision_range = 23.0f;
 	providesVisibility = true;
 
