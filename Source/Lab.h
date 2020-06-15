@@ -29,6 +29,10 @@ protected:
 	C_Button* meleeUnit_btn;
 	C_Button* rangedUnit_btn;
 	C_Button* superUnit_btn;
+	Gameobject* gatherer_tooltip;
+	Gameobject* melee_tooltip;
+	Gameobject* ranged_tooltip;
+	Gameobject* super_tooltip;
 };
 
 #endif // __LAB_H__

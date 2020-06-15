@@ -39,6 +39,7 @@ protected:
 	float atkDelay;
 	Audio_FX attackFX;
 	float ms_count;
+	Gameobject* upgrade_tooltip;
 };
 
 #endif // __TOWER_H__

@@ -35,6 +35,7 @@ protected:
 	Gameobject* melee_tooltip;
 	Gameobject* ranged_tooltip;
 	Gameobject* super_tooltip;
+	Gameobject* upgrade_tooltip;
 };
 
 #endif // __BARRACKS_H__

@@ -33,6 +33,8 @@ Base_Center::Base_Center(Gameobject* go) : BuildingWithQueue(go, BASE_CENTER, NO
 	selectionPanel->SetInactive();
 	unitInfo->SetInactive();
 	gatherer_tooltip->SetInactive();
+	capsule_tooltip->SetInactive();
+	upgrade_tooltip->SetInactive();
 
 	if (t)
 	{
@@ -130,8 +132,8 @@ void Base_Center::Update()
 		{
 			switch (build_queue.front().type)
 			{
-			case GATHERER: icon->SetSection({ 121, 292, 48, 35 }); break;
-			case UNIT_MELEE: icon->SetSection({ 121, 256, 43, 35 }); break;
+			case GATHERER: icon->SetSection({ 121, 292, 43, 35 }); break;
+			case UNIT_MELEE: icon->SetSection({ 121, 256, 48, 35 }); break;
 			case UNIT_RANGED: icon->SetSection({ 231, 310, 35, 33 }); break;
 			case UNIT_SUPER: icon->SetSection({ 121, 335, 35, 33 }); break;
 			}
@@ -150,6 +152,20 @@ void Base_Center::Update()
 
 	else if (gatherer_btn->state != 1 && gatherer_tooltip->IsActive() == true)
 		gatherer_tooltip->SetInactive();
+
+	// Capsule Tooltip Check
+	if (capsule_button->state == 1 && capsule_tooltip->IsActive() == false)
+		capsule_tooltip->SetActive();
+
+	else if (capsule_button->state != 1 && capsule_tooltip->IsActive() == true)
+		capsule_tooltip->SetInactive();
+
+	// Upgrade Tooltip Check
+	if (upgrade_btn->state == 1 && upgrade_tooltip->IsActive() == false)
+		upgrade_tooltip->SetActive();
+
+	else if (upgrade_btn->state != 1 && upgrade_tooltip->IsActive() == true)
+		upgrade_tooltip->SetInactive();
 }
 
 void Base_Center::Upgrade()
@@ -259,6 +275,28 @@ void Base_Center::CreatePanel()
 
 	gatherer_btn->tex_id = panel_tex_ID;
 
+	//------------------------- CAPSULE TOOLTIP --------------------------------------
+
+	capsule_tooltip = App->scene->AddGameobject("Capsule Tooltip", selectionPanel);
+
+	C_Image* capsule_tooltip_bg = new C_Image(capsule_tooltip);
+	capsule_tooltip_bg->target = { 0.3885f, -0.63, 2.7f, 2.5f };
+	capsule_tooltip_bg->offset = { 0.0f, 0.0f };
+	capsule_tooltip_bg->section = { 514, 772, 87, 40 };
+	capsule_tooltip_bg->tex_id = panel_tex_ID;
+
+	std::stringstream capsule_description;
+	capsule_description << "Capsule:";
+
+	C_Text* capsule_tooltip_description = new C_Text(capsule_tooltip, capsule_description.str().c_str());
+	capsule_tooltip_description->target = { 0.5135f, -0.43f, 1.0f , 1.0f };
+
+	std::stringstream capsule_info;
+	capsule_info << "Spawn a capsule with ally units";
+
+	C_Text* capsule_tooltip_info = new C_Text(capsule_tooltip, capsule_info.str().c_str());
+	capsule_tooltip_info->target = { 0.5135f, -0.33f, 1.0f , 1.0f };
+
 	//-----------------------------CAPSULE BUTTON-------------------------------------------
 
 	Gameobject* capsule_btn_go = App->scene->AddGameobject("Capsule Button", selectionPanel);
@@ -273,6 +311,28 @@ void Base_Center::CreatePanel()
 	capsule_button->section[3] = { 503,300,46,46 };
 
 	capsule_button->tex_id = panel_tex_ID;
+
+	//-----------------------------UPGRADE TOOLTIP-------------------------------------------
+
+	upgrade_tooltip = App->scene->AddGameobject("Upgrade Tooltip", selectionPanel);
+
+	C_Image* upgrade_tooltip_bg = new C_Image(upgrade_tooltip);
+	upgrade_tooltip_bg->target = { 0.5885f, -0.0015, 4.1f, 2.5f };
+	upgrade_tooltip_bg->offset = { 0.0f, 0.0f };
+	upgrade_tooltip_bg->section = { 514, 772, 87, 40 };
+	upgrade_tooltip_bg->tex_id = panel_tex_ID;
+
+	std::stringstream upgrade_description;
+	upgrade_description << "Upgrade:";
+
+	C_Text* upgrade_tooltip_description = new C_Text(upgrade_tooltip, upgrade_description.str().c_str());
+	upgrade_tooltip_description->target = { 0.7535f, 0.2085f, 1.0f , 1.0f };
+
+	std::stringstream upgrade_info;
+	upgrade_info << "Upgrade the base center to resist more enemy hits";
+
+	C_Text* upgrade_tooltip_info = new C_Text(upgrade_tooltip, upgrade_info.str().c_str());
+	upgrade_tooltip_info->target = { 0.7535f, 0.3085f, 1.0f , 1.0f };
 
 	//-----------------------------UPGRADE BUTTON-------------------------------------------
 

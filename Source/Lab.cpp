@@ -30,6 +30,10 @@ Lab::Lab(Gameobject* go, bool build_new) : Behaviour(go, LAB, NO_UPGRADE, B_LAB)
 	CreatePanel();
 	selectionPanel->SetInactive();
 	unitInfo->SetInactive();
+	gatherer_tooltip->SetInactive();
+	melee_tooltip->SetInactive();
+	ranged_tooltip->SetInactive();
+	super_tooltip->SetInactive();
 
 	if (t)
 	{
@@ -94,6 +98,36 @@ void Lab::Update()
 
 		mini_life_bar.Update(float(current_life) / float(max_life), current_lvl);
 	}
+
+	// Gatherer Tooltip Check
+	if (gatherer_btn->state == 1 && gatherer_tooltip->IsActive() == false)
+		gatherer_tooltip->SetActive();
+	else if (gatherer_btn->state != 1 && gatherer_tooltip->IsActive() == true)
+		gatherer_tooltip->SetInactive();
+
+
+	// Melee Tooltip Check
+	if (meleeUnit_btn->state == 1 && melee_tooltip->IsActive() == false)
+		melee_tooltip->SetActive();
+	else if (meleeUnit_btn->state != 1 && melee_tooltip->IsActive() == true)
+		melee_tooltip->SetInactive();
+
+	
+
+	// Ranged Tooltip Check
+	if (rangedUnit_btn->state == 1 && ranged_tooltip->IsActive() == false)
+		ranged_tooltip->SetActive();
+	else if (rangedUnit_btn->state != 1 && ranged_tooltip->IsActive() == true)
+		ranged_tooltip->SetInactive();
+
+	
+
+	// Super Tooltip Check
+	if (superUnit_btn->state == 1 && super_tooltip->IsActive() == false)
+		super_tooltip->SetActive();
+	else if (superUnit_btn->state != 1 && super_tooltip->IsActive() == true)
+		super_tooltip->SetInactive();
+
 }
 
 
@@ -146,6 +180,36 @@ void Lab::CreatePanel()
 	panel->section = { 208, 1034, 202, 114 };
 	panel->tex_id = panel_tex_ID;
 
+	//-----------------------------GATHERER TOOLTIP-------------------------------------------
+
+	gatherer_tooltip = App->scene->AddGameobject("Gatherer Tooltip", selectionPanel);
+
+	C_Image* gatherer_tooltip_bg = new C_Image(gatherer_tooltip);
+	gatherer_tooltip_bg->target = { 0.155f, -0.607f, 4.1f, 2.5f };
+	gatherer_tooltip_bg->offset = { 0.0f, 0.0f };
+	gatherer_tooltip_bg->section = { 514, 772, 87, 40 };
+	gatherer_tooltip_bg->tex_id = panel_tex_ID;
+
+	std::stringstream gatherer_description;
+	gatherer_description << "Upgrade Gatherer:";
+
+	C_Text* gatherer_tooltip_description = new C_Text(gatherer_tooltip, gatherer_description.str().c_str());
+	gatherer_tooltip_description->target = { 0.32f, -0.447f, 1.0f , 1.0f };
+
+	std::stringstream gatherer_info;
+	gatherer_info << "Upgrade the gatherer unit to resist more enemy hits,";
+
+	C_Text* gatherer_tooltip_info = new C_Text(gatherer_tooltip, gatherer_info.str().c_str());
+	gatherer_tooltip_info->target = { 0.32f, -0.347f, 1.0f , 1.0f };
+
+	std::stringstream gatherer_info_2;
+	gatherer_info_2 << "deal more damage and have more range";
+
+	C_Text* gatherer_tooltip_info_2 = new C_Text(gatherer_tooltip, gatherer_info_2.str().c_str());
+	gatherer_tooltip_info_2->target = { 0.32f, -0.247f, 1.0f , 1.0f };
+
+	//-----------------------------GATHERER BUTTON-------------------------------------------
+
 	Gameobject* gUnit = App->scene->AddGameobject("Gatherer Button", selectionPanel);
 
 	gatherer_btn = new C_Button(gUnit, Event(UPGRADE_GATHERER, App->scene));//First option from the right
@@ -158,6 +222,36 @@ void Lab::CreatePanel()
 	gatherer_btn->section[3] = { 1075, 274, 52, 48 };
 
 	gatherer_btn->tex_id = panel_tex_ID;
+
+	//-----------------------------MELEE UNIT TOOLTIP-------------------------------------------
+
+	melee_tooltip = App->scene->AddGameobject("Melee Tooltip", selectionPanel);
+
+	C_Image* melee_tooltip_bg = new C_Image(melee_tooltip);
+	melee_tooltip_bg->target = { 0.3885f, -0.63f, 4.1f, 2.5f };
+	melee_tooltip_bg->offset = { 0.0f, 0.0f };
+	melee_tooltip_bg->section = { 514, 772, 87, 40 };
+	melee_tooltip_bg->tex_id = panel_tex_ID;
+
+	std::stringstream melee_description;
+	melee_description << "Upgrade Melee Unit:";
+
+	C_Text* melee_tooltip_description = new C_Text(melee_tooltip, melee_description.str().c_str());
+	melee_tooltip_description->target = { 0.5535f, -0.47f, 1.0f , 1.0f };
+
+	std::stringstream melee_info;
+	melee_info << "Upgrade the melee unit to resist more enemy hits,";
+
+	C_Text* melee_tooltip_info = new C_Text(melee_tooltip, melee_info.str().c_str());
+	melee_tooltip_info->target = { 0.5535f, -0.37f, 1.0f , 1.0f };
+
+	std::stringstream melee_info_2;
+	melee_info_2 << "deal more damage and have more range";
+
+	C_Text* melee_tooltip_info_2 = new C_Text(melee_tooltip, melee_info_2.str().c_str());
+	melee_tooltip_info_2->target = { 0.5535f, -0.27f, 1.0f , 1.0f };
+
+	//-----------------------------MELEE UNIT BUTTON-------------------------------------------
 
 	Gameobject* mUnit_btn_go = App->scene->AddGameobject("Melee Button", selectionPanel);
 
@@ -172,6 +266,36 @@ void Lab::CreatePanel()
 
 	meleeUnit_btn->tex_id = panel_tex_ID;
 
+	//-----------------------------RANGED UNIT TOOLTIP-------------------------------------------
+
+	ranged_tooltip = App->scene->AddGameobject("Ranged Tooltip", selectionPanel);
+
+	C_Image* ranged_tooltip_bg = new C_Image(ranged_tooltip);
+	ranged_tooltip_bg->target = { 0.5885f, -0.414, 4.1f, 2.5f };
+	ranged_tooltip_bg->offset = { 0.0f, 0.0f };
+	ranged_tooltip_bg->section = { 514, 772, 87, 40 };
+	ranged_tooltip_bg->tex_id = panel_tex_ID;
+
+	std::stringstream ranged_description;
+	ranged_description << "Upgrade Ranged Unit:";
+
+	C_Text* ranged_tooltip_description = new C_Text(ranged_tooltip, ranged_description.str().c_str());
+	ranged_tooltip_description->target = { 0.7535f, -0.254f, 1.0f , 1.0f };
+
+	std::stringstream ranged_info;
+	ranged_info << "Upgrade the ranged unit to resist more enemy hits,";
+
+	C_Text* ranged_tooltip_info = new C_Text(ranged_tooltip, ranged_info.str().c_str());
+	ranged_tooltip_info->target = { 0.7535f, -0.154f, 1.0f , 1.0f };
+
+	std::stringstream ranged_info_2;
+	ranged_info_2 << "deal more damage and have more range";
+
+	C_Text* ranged_tooltip_info_2 = new C_Text(ranged_tooltip, ranged_info_2.str().c_str());
+	ranged_tooltip_info_2->target = { 0.7535f, -0.054f, 1.0f , 1.0f };
+
+	//-----------------------------RANGED UNIT BUTTON-------------------------------------------
+
 	Gameobject* rUnit_btn_go = App->scene->AddGameobject("Ranged Button", selectionPanel);
 
 	rangedUnit_btn = new C_Button(rUnit_btn_go, Event(UPGRADE_RANGED, App->scene));//Third option from the right
@@ -184,6 +308,36 @@ void Lab::CreatePanel()
 	rangedUnit_btn->section[3] = { 1081, 781, 46, 46 };
 
 	rangedUnit_btn->tex_id = panel_tex_ID;
+
+	//-----------------------------SUPER UNIT TOOLTIP-------------------------------------------
+
+	super_tooltip = App->scene->AddGameobject("Super Tooltip", selectionPanel);
+
+	C_Image* super_tooltip_bg = new C_Image(super_tooltip);
+	super_tooltip_bg->target = { 0.5885f, -0.0015, 4.1f, 2.5f };
+	super_tooltip_bg->offset = { 0.0f, 0.0f };
+	super_tooltip_bg->section = { 514, 772, 87, 40 };
+	super_tooltip_bg->tex_id = panel_tex_ID;
+
+	std::stringstream super_description;
+	super_description << "Upgrade Super Unit:";
+
+	C_Text* super_tooltip_description = new C_Text(super_tooltip, super_description.str().c_str());
+	super_tooltip_description->target = { 0.7535f, 0.1585f, 1.0f , 1.0f };
+
+	std::stringstream super_info;
+	super_info << "Upgrade the super unit to resist more enemy hits,";
+
+	C_Text* super_tooltip_info = new C_Text(super_tooltip, super_info.str().c_str());
+	super_tooltip_info->target = { 0.7535f, 0.2585f, 1.0f , 1.0f };
+
+	std::stringstream super_info_2;
+	super_info_2 << "deal more damage and have more rangedx";
+
+	C_Text* super_tooltip_info_2 = new C_Text(super_tooltip, super_info_2.str().c_str());
+	super_tooltip_info_2->target = { 0.7535f, 0.3585f, 1.0f , 1.0f };
+
+	//-----------------------------SUPER UNIT BUTTON-------------------------------------------
 
 	Gameobject* sUnit_btn_go = App->scene->AddGameobject("Super Button", selectionPanel);
 

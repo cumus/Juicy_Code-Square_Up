@@ -36,6 +36,8 @@ protected:
 	C_Button* superUnit_btn;
 	C_Button* upgrade_btn;
 	Gameobject* gatherer_tooltip;
+	Gameobject* capsule_tooltip;
+	Gameobject* upgrade_tooltip;
 };
 
 #endif // __BASECENTER_H__

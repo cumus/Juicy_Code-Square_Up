@@ -315,7 +315,7 @@ void Gatherer::CreatePanel()
 	barrack_tooltip = App->scene->AddGameobject("Barrack Tooltip", selectionPanel);
 
 	C_Image* barrack_tooltip_bg = new C_Image(barrack_tooltip);
-	barrack_tooltip_bg->target = { 0.155f, -0.607, 2.5f, 2.5f };
+	barrack_tooltip_bg->target = { 0.155f, -0.607f, 2.5f, 2.5f };
 	barrack_tooltip_bg->offset = { 0.0f, 0.0f };
 	barrack_tooltip_bg->section = { 456, 417, 87, 40 };
 	barrack_tooltip_bg->tex_id = panel_tex_ID;
@@ -359,7 +359,7 @@ void Gatherer::CreatePanel()
 	tower_tooltip = App->scene->AddGameobject("Tower Tooltip", selectionPanel);
 
 	C_Image* tower_tooltip_bg = new C_Image(tower_tooltip);
-	tower_tooltip_bg->target = { 0.3885f, -0.63, 2.5f, 2.5f };
+	tower_tooltip_bg->target = { 0.3885f, -0.63f, 2.5f, 2.5f };
 	tower_tooltip_bg->offset = { 0.0f, 0.0f };
 	tower_tooltip_bg->section = { 422, 376, 121, 40 };
 	tower_tooltip_bg->tex_id = panel_tex_ID;
@@ -417,7 +417,7 @@ void Gatherer::CreatePanel()
 	lab_tooltip = App->scene->AddGameobject("Lab Tooltip", selectionPanel);
 
 	C_Image* lab_tooltip_bg = new C_Image(lab_tooltip);
-	lab_tooltip_bg->target = { 0.5885f, -0.414, 2.5f, 2.5f };
+	lab_tooltip_bg->target = { 0.5885f, -0.414f, 2.5f, 2.5f };
 	lab_tooltip_bg->offset = { 0.0f, 0.0f };
 	lab_tooltip_bg->section = { 456, 417, 87, 40 };
 	lab_tooltip_bg->tex_id = panel_tex_ID;

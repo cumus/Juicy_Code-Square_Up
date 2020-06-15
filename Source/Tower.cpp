@@ -27,6 +27,7 @@ Tower::Tower(Gameobject* go, bool build_new) : Behaviour(go, TOWER, NO_UPGRADE, 
 	CreatePanel();
 	selectionPanel->SetInactive();
 	unitInfo->SetInactive();
+	upgrade_tooltip->SetInactive();
 
 	App->pathfinding.SetWalkabilityTile(int(pos.x), int(pos.y), false);
 	SetColliders();
@@ -99,6 +100,13 @@ void Tower::Update()
 		}
 		objective = nullptr;
 	}
+
+	// Upgrade Tooltip Check
+	if (upgrade_btn->state == 1 && upgrade_tooltip->IsActive() == false)
+		upgrade_tooltip->SetActive();
+
+	else if (upgrade_btn->state != 1 && upgrade_tooltip->IsActive() == true)
+		upgrade_tooltip->SetInactive();
 }
 
 void Tower::Upgrade()
@@ -159,6 +167,36 @@ void Tower::CreatePanel()
 	panel->tex_id = panel_tex_ID;
 
 	Gameobject* upgrade_btn_go = App->scene->AddGameobject("Upgrade Button", selectionPanel);
+
+	//-----------------------------UPGRADE TOOLTIP-------------------------------------------
+
+	upgrade_tooltip = App->scene->AddGameobject("Upgrade Tooltip", selectionPanel);
+
+	C_Image* upgrade_tooltip_bg = new C_Image(upgrade_tooltip);
+	upgrade_tooltip_bg->target = { 0.5885f, -0.0015, 4.1f, 2.5f };
+	upgrade_tooltip_bg->offset = { 0.0f, 0.0f };
+	upgrade_tooltip_bg->section = { 514, 772, 87, 40 };
+	upgrade_tooltip_bg->tex_id = panel_tex_ID;
+
+	std::stringstream upgrade_description;
+	upgrade_description << "Upgrade:";
+
+	C_Text* upgrade_tooltip_description = new C_Text(upgrade_tooltip, upgrade_description.str().c_str());
+	upgrade_tooltip_description->target = { 0.7535f, 0.1585f, 1.0f , 1.0f };
+
+	std::stringstream upgrade_info;
+	upgrade_info << "Upgrade the tower to resist more enemy hits";
+
+	C_Text* upgrade_tooltip_info = new C_Text(upgrade_tooltip, upgrade_info.str().c_str());
+	upgrade_tooltip_info->target = { 0.7535f, 0.2585f, 1.0f , 1.0f };
+
+	std::stringstream upgrade_info_2;
+	upgrade_info_2 << "and deal more damage";
+
+	C_Text* upgrade_tooltip_info_2 = new C_Text(upgrade_tooltip, upgrade_info_2.str().c_str());
+	upgrade_tooltip_info_2->target = { 0.7535f, 0.3585f, 1.0f , 1.0f };
+
+	//-----------------------------UPGRADE BUTTON-------------------------------------------
 
 	upgrade_btn = new C_Button(upgrade_btn_go, Event(DO_UPGRADE, this->AsBehaviour()));//Last option from the right
 	upgrade_btn->target = { 0.45f, 0.6325, 1.5f, 1.5f };

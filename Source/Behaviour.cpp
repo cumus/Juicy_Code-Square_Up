@@ -1342,7 +1342,7 @@ void BuildingWithQueue::Update()
 		{
 			switch (build_queue.front().type)
 			{
-			case GATHERER: icon->SetSection({ 121, 292, 48, 35 }); break;
+			case GATHERER: icon->SetSection({ 121, 292, 43, 35 }); break;
 			case UNIT_MELEE: icon->SetSection({ 121, 256, 48, 35 }); break;
 			case UNIT_RANGED: icon->SetSection({ 231, 310, 35, 33 }); break;
 			case UNIT_SUPER: icon->SetSection({ 121, 335, 35, 33 }); break;

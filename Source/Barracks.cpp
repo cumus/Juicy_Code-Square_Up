@@ -30,6 +30,7 @@ Barracks::Barracks(Gameobject* go, bool build_new) : BuildingWithQueue(go, BARRA
 	melee_tooltip->SetInactive();
 	ranged_tooltip->SetInactive();
 	super_tooltip->SetInactive();
+	upgrade_tooltip->SetInactive();
 
 	if (t)
 	{
@@ -144,7 +145,7 @@ void Barracks::Update()
 			{
 				switch (build_queue.front().type)
 				{
-				case GATHERER: icon->SetSection({ 121, 292, 48, 35 }); break;
+				case GATHERER: icon->SetSection({ 121, 292, 43, 35 }); break;
 				case UNIT_MELEE: icon->SetSection({ 121, 256, 48, 35 }); break;
 				case UNIT_RANGED: icon->SetSection({ 231, 310, 35, 33 }); break;
 				case UNIT_SUPER: icon->SetSection({ 121, 335, 35, 33 }); break;
@@ -174,6 +175,13 @@ void Barracks::Update()
 		super_tooltip->SetActive();
 	else if (superUnit_btn->state != 1 && super_tooltip->IsActive() == true)
 		super_tooltip->SetInactive();
+
+	// Upgrade Tooltip Check
+	if (upgrade_btn->state == 1 && upgrade_tooltip->IsActive() == false)
+		upgrade_tooltip->SetActive();
+
+	else if (upgrade_btn->state != 1 && upgrade_tooltip->IsActive() == true)
+		upgrade_tooltip->SetInactive();
 }
 
 void Barracks::Upgrade()
@@ -400,6 +408,28 @@ void Barracks::CreatePanel()
 	superUnit_btn->section[2] = { 1153, 781, 46, 46 };
 	superUnit_btn->section[3] = { 1153, 781, 46, 46 };
 	superUnit_btn->tex_id = panel_tex_ID;
+
+	//-----------------------------UPGRADE TOOLTIP-------------------------------------------
+
+	upgrade_tooltip = App->scene->AddGameobject("Upgrade Tooltip", selectionPanel);
+
+	C_Image* upgrade_tooltip_bg = new C_Image(upgrade_tooltip);
+	upgrade_tooltip_bg->target = { 0.5885f, -0.0015, 4.1f, 2.5f };
+	upgrade_tooltip_bg->offset = { 0.0f, 0.0f };
+	upgrade_tooltip_bg->section = { 514, 772, 87, 40 };
+	upgrade_tooltip_bg->tex_id = panel_tex_ID;
+
+	std::stringstream upgrade_description;
+	upgrade_description << "Upgrade:";
+
+	C_Text* upgrade_tooltip_description = new C_Text(upgrade_tooltip, upgrade_description.str().c_str());
+	upgrade_tooltip_description->target = { 0.7535f, 0.2085f, 1.0f , 1.0f };
+
+	std::stringstream upgrade_info;
+	upgrade_info << "Upgrade the barrack to resist more enemy hits";
+
+	C_Text* upgrade_tooltip_info = new C_Text(upgrade_tooltip, upgrade_info.str().c_str());
+	upgrade_tooltip_info->target = { 0.7535f, 0.3085f, 1.0f , 1.0f };
 
 	//------------------------- UPGRADE BUTTON --------------------------------------
 
