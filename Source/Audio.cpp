@@ -287,28 +287,37 @@ bool Audio::LoadFx(Audio_FX audio_fx)
 
 	switch (audio_fx)
 	{
-	case LOGO: audio_path += "Intro/soda-open-and-pour-left-right.wav"; break;///////////// USING
-	//case HAMMER: audio_path += "audio/Effects/Buildings/Nails/HamerNail13Hits.wav"; break;
-	case TITLE: audio_path += "UI/Menu/Menu_Select.wav"; break;///////////// USING
-	case SELECT: audio_path += "UI/Menu/Flashpoint001a.wav"; break;///////////// USING
-	case B_DESTROYED: audio_path += "Attack_sounds/Laser_05.wav"; break;///////////// USING
-	case B_BUILDED: audio_path += "Buildings/Nails/HamerNail4Hits.wav"; break;///////////// USING
-	case UNIT_DIES: audio_path += "Buildings/Destroyed/PowerDown.wav"; break;///////////// USING
-	case UNIT_MOVES: audio_path += "Footsteps/footsteps.wav"; break;///////////// USING
-	case EDGE_FX: audio_path += "Buildings/Destroyed/minimize_006.ogg"; break;///////////// USING
-	//case B_SELECT: audio_path += "/Buildings/Select/Select.wav"; break;
-	case SPAWNER_FX: audio_path += "Allies/Spawn/Spawn.wav"; break;///////////// USING
-	//case UI_BTON_CLICK: audio_path += "UI/Ingame/itempick1.wav"; break;
-	//case ALARM: audio_path += "Notification/Scifi_Alarm16.wav"; break;
-	//case BASE_CENTER_FX: audio_path += "Buildings/Scanner1.ogg"; break;
-	case RANGED_ATK_FX: audio_path += "Attack_sounds/Laser_09.wav"; break;///////////// USING
-	case SUPER_ATK_FX: audio_path += "Attack_sounds/Laser_05.wav"; break;///////////// USING
-	case MELEE_ATK_FX: audio_path += "Attack_sounds/Laser_05.wav"; break;///////////// USING
+	case LOGO: audio_path += "Intro/soda-open-and-pour-left-right.wav"; break;
+	case SELECT: audio_path += "UI/Menu/Flashpoint001a.wav"; break;
+	case TITLE: audio_path += "UI/Menu/Menu_Select.wav"; break;
+
+	case EDGE_FX: audio_path += "Buildings/Destroyed/minimize_006.ogg"; break;
+	case B_DESTROYED: audio_path += "Attack_sounds/Laser_05.wav"; break;
+	case B_BUILDED: audio_path += "Buildings/Nails/HamerNail4Hits.wav"; break;
+
+	case UNIT_DIES: audio_path += "Buildings/Destroyed/PowerDown.wav"; break;
+	case UNIT_MOVES: audio_path += "Footsteps/footsteps.wav"; break;
+
+	case GATHERER_ATK_FX: audio_path += ""; break;
+	case MELEE_ATK_FX: audio_path += "Attack_sounds/Laser_05.wav"; break;
+	case RANGED_ATK_FX: audio_path += "Attack_sounds/Laser_09.wav"; break;
+	case SUPER_ATK_FX: audio_path += "Attack_sounds/Laser_05.wav"; break;
+
+	case GATHERER_DIE_FX: audio_path += ""; break;
+	case MELEE_DIE_FX: audio_path += ""; break;
+	case RANGED_DIE_FX: audio_path += ""; break;
+	case SUPER_DIE_FX: audio_path += ""; break;
+
+	case IA_MELEE_ATK_FX: audio_path += ""; break;
+	case IA_SUPER_ATK_FX: audio_path += ""; break;
+
+	case IA_MELEE_DIE_FX: audio_path += ""; break;
+	case IA_RANGED_DIE_FX: audio_path += ""; break;
+	case IA_SUPER_DIE_FX: audio_path += ""; break;
 	default: break;
 	}
 
 	fx[audio_fx] = Mix_LoadWAV_RW(App->files.LoadRWops(audio_path.c_str()), 1);
-		//Mix_LoadWAV(audio_path.c_str());
 
 	if (!(ret = (fx[audio_fx] != nullptr)))
 		LOG("Cannot load %s. Mix_GetError(): %s", audio_path.c_str(), Mix_GetError());
