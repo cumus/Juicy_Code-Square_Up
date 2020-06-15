@@ -93,7 +93,7 @@ bool Scene::Update()
 	{
 		UpdatePause();
 
-		if (!paused_scene && !C_Canvas::MouseOnUI() && App->editor ? !App->editor->MouseOnEditor() : true)
+		if (!paused_scene && !C_Canvas::MouseOnUI() && App->editor ? !App->editor->MouseOnEditor() : false)
 			UpdateSelection();
 	}
 
