@@ -440,7 +440,6 @@ void Scene::RecieveEvent(const Event& e)
 void Scene::LoadMainScene()
 {
 	OPTICK_EVENT();
-	App->StressTest();
 	map.Load("maps/iso.tmx");
 	App->audio->PlayMusic("audio/Music/alexander-nakarada-buzzkiller.ogg");
 	App->fogWar.Init();
