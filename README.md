@@ -1,7 +1,7 @@
 # Juicy Code Games
 [![Build status](https://ci.appveyor.com/api/projects/status/jpka2pcwthvf5oqg?svg=true)](https://ci.appveyor.com/project/PolGannau/juicy-code-games-project-2)
 
-![](https://github.com/PolGannau/Juicy-Code-Games_Project-2/blob/master/WikiResources/Home%20page%20picts/team%20logo1%20sin%20fondo.png)
+![](https://github.com/cumus/Juicy_Code-Square_Up/blob/master/WikiResources/Home%20page%20picts/team%20logo1%20sin%20fondo.png)
 
 We are Juicy Code Games, we are working on an RTS called SQUARE UP, in this GitHub repository we will be daily updating our work in the game in progress. We hope you enjoy our work and our game.
 
@@ -35,11 +35,11 @@ As told before the game you are going to play is Square Up, this game is an RTS.
 
 ## Links
 Here are some links to our GitHib, Wiki, etc.
-* Repository [Github](https://github.com/PolGannau/Juicy-Code-Games_Project-2)
-* Webpage: [Webpage](https://polgannau.github.io/Juicy-Code-Games_Project-2/)
+* Repository [Github](https://github.com/cumus/Juicy_Code-Square_Up)
+* Webpage: [Webpage](https://cumus.github.io/Juicy_Code-Square_Up/)
 * Tutor: [Marc Garrigó](https://github.com/markitus18)
 * University: [CITM UPC](https://www.citm.upc.edu/)
-* License: [GNU General Public License v3.0](https://github.com/PolGannau/Juicy-Code-Games_Project-2/blob/master/LICENSE)
+* License: [GNU General Public License v3.0](https://github.com/cumus/Juicy_Code-Square_Up/blob/master/LICENSE)
 
 
 ## Controls
