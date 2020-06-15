@@ -524,7 +524,7 @@ void Scene::LoadMenuScene()
 	C_Image* g_logo = new C_Image(AddGameobjectToCanvas("Game logo"));
 	g_logo->target = { 0.01f, 0.2f, 0.6f, 0.6f };
 	g_logo->section = { 0, 0, 1070, 207 };
-	g_logo->tex_id = App->tex.Load("textures/Game_logo.png");
+	g_logo->tex_id = App->tex.Load("textures/Game_Logo.png");
 	
 	//------------------------- START --------------------------------------
 
