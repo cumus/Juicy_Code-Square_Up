@@ -907,17 +907,12 @@ void Scene::LoadEndScene()
 	std::stringstream unit_c;
 	std::stringstream unit_l;
 	std::stringstream unit_k;
-	/*edge_t << "Total Edge end";
-	unit_c << "Total constructed units";
-	unit_l << "Total lost units";
-	unit_k << "Total killed units";*/
 
-	char tmp_string2[3];
+	if (game_time_counter >= 60.0f)
+		time_t << int(game_time_counter) / 60 << " m " << int(game_time_counter) % 60 << " s ";
+	else
+		time_t << int(game_time_counter) << " s";
 
-	// Construct the string from variable arguments
-	sprintf_s(tmp_string2, 3, "%.2f", game_time_counter);
-
-	time_t << tmp_string2 << " s";
 	edge_t << player_stats[EDGE_COLLECTED];
 	unit_c << player_stats[UNITS_CREATED];
 	unit_l << player_stats[UNITS_LOST];
@@ -2620,9 +2615,9 @@ void Scene::GodMode()
 			groupSelect = false;
 			group.clear();
 			App->audio->PlayFx(UNIT_DIES);
+			selection = nullptr;
 		}
-		
-		if (selection)
+		else if (selection)
 		{
 			selection->GetBehaviour()->OnKill(selection->GetBehaviour()->GetType());
 			SetSelection();
