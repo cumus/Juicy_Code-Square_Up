@@ -194,8 +194,6 @@ private:
 
 public:
 
-	int id_mouse_tex;
-
 	// Selection
 	iPoint groupStart,mouseExtend;
 	bool groupSelect;

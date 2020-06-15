@@ -115,22 +115,6 @@ void Map::Draw() const
 
 	if (type == MAPTYPE_ORTHOGONAL)
 	{
-#ifdef DEBUG
-		for (int y = up_left.second; y <= down_right.second; ++y)
-		{
-			for (int x = up_left.first; x <= down_right.first; ++x)
-			{
-				std::pair<int, int> pos = I_MapToWorld(x, y);
-
-				// Draw debug spite at render_pos
-				if (y == up_left.second || y == down_right.second || x == up_left.first || x == down_right.first) // blue border
-					App->render->DrawQuad({ pos.first + 3, pos.second + 3, tile_width - 6, tile_height - 6 }, { 0, 100, 250, 200 }, true, BACKGROUND);
-				else // white default
-					App->render->DrawQuad({ pos.first + 1, pos.second + 1, tile_width - 2, tile_height - 2 }, { 250, 250, 250, 60 }, true, BACKGROUND);
-			}
-		}
-#endif // DEBUG
-
 		for (std::vector<MapLayer>::const_iterator it = layers.begin(); it != layers.end(); ++it)
 		{
 			if (it->drawable)
@@ -151,16 +135,6 @@ void Map::Draw() const
 				}
 			}
 		}
-
-		// Draw mouse tile debug
-		std::pair<int, int> mouse = I_WorldToMap(mouse_x, mouse_y);
-		std::pair<int, int> mouse_tile_pos = I_MapToWorld(mouse.first, mouse.second);
-
-		// Frist tileset size - green
-		App->render->DrawQuad({ mouse_tile_pos.first, mouse_tile_pos.second, tilesets.front().tile_width, tilesets.front().tile_height }, { 0, 100, 0, 180 }, true, DEBUG_MAP);
-
-		// Map tile size - blue
-		App->render->DrawQuad({ mouse_tile_pos.first, mouse_tile_pos.second, tile_width, tile_height }, { 0, 0, 100, 80 }, true, DEBUG_MAP);
 	}
 	else if (type == MAPTYPE_ISOMETRIC)
 	{
@@ -187,14 +161,6 @@ void Map::Draw() const
 								// Draw tileset spite at render_pos
 								App->render->Blit(tex_id, render_pos.first, render_pos.second, &section, MAP);
 							}
-#ifdef DEBUG
-							else if (it == layers.begin())
-							{
-								// Draw debug spite at empty position
-								SDL_Rect rect = { 64, 0, 64, 64 };
-								App->render->Blit(App->scene->id_mouse_tex, render_pos.first, render_pos.second, &rect, BACKGROUND);
-							}
-#endif // DEBUG
 						}
 					}
 				}
@@ -217,14 +183,6 @@ void Map::Draw() const
 				}
 			}
 		}
-
-		// draw mouse tile debug
-		std::pair<int, int> tile_base = WorldToTileBase(float(mouse_x), float(mouse_y));
-		std::pair<int, int> mouse_tile_pos = I_MapToWorld(tile_base.first, tile_base.second);
-		SDL_Rect rect = { 0, 0, 64, 64 };
-
-		// Tile base rhombus
-		App->render->Blit(App->scene->id_mouse_tex, mouse_tile_pos.first, mouse_tile_pos.second, &rect);
 	}
 }
 
