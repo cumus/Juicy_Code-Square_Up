@@ -291,7 +291,7 @@ bool Audio::LoadFx(Audio_FX audio_fx)
 	case SELECT: audio_path += "UI/Menu/Flashpoint001a.wav"; break;
 	case TITLE: audio_path += "UI/Menu/Menu_Select.wav"; break;
 
-	case EDGE_FX: audio_path += "Buildings/Destroyed/minimize_006.ogg"; break;
+	case EDGE_FX: audio_path += "Buildings/Destroyed/Minimize.ogg"; break;
 	case B_DESTROYED: audio_path += "Attack_sounds/Laser_05.wav"; break;
 	case B_BUILDED: audio_path += "Buildings/Nails/HamerNail4Hits.wav"; break;
 
@@ -299,21 +299,24 @@ bool Audio::LoadFx(Audio_FX audio_fx)
 	case UNIT_MOVES: audio_path += "Footsteps/footsteps.wav"; break;
 
 	case GATHERER_ATK_FX: audio_path += ""; break;
-	case MELEE_ATK_FX: audio_path += "Attack_sounds/Laser_05.wav"; break;
+	case MELEE_ATK_FX: audio_path += "Attack_sounds/Laser_02.wav"; break;
 	case RANGED_ATK_FX: audio_path += "Attack_sounds/Laser_09.wav"; break;
 	case SUPER_ATK_FX: audio_path += "Attack_sounds/Laser_05.wav"; break;
 
-	case GATHERER_DIE_FX: audio_path += ""; break;
-	case MELEE_DIE_FX: audio_path += ""; break;
-	case RANGED_DIE_FX: audio_path += ""; break;
-	case SUPER_DIE_FX: audio_path += ""; break;
+	case GATHERER_DIE_FX: audio_path += "Buildings/Destroyed/Minimize.ogg"; break;
+	case MELEE_DIE_FX: audio_path += "Buildings/Destroyed/Minimize.ogg"; break;
+	case RANGED_DIE_FX: audio_path += "Buildings/Destroyed/Minimize.ogg"; break;
+	case SUPER_DIE_FX: audio_path += "Buildings/Destroyed/Minimize.ogg"; break;
 
-	case IA_MELEE_ATK_FX: audio_path += ""; break;
-	case IA_SUPER_ATK_FX: audio_path += ""; break;
+	case IA_MELEE_ATK_FX: audio_path += "Attack_sounds/Laser_02.wav"; break;
+	case IA_RANGED_ATK_FX: audio_path += "Attack_sounds/Laser_09.wav"; break;
+	case IA_SUPER_ATK_FX: audio_path += "Attack_sounds/Laser_05.wav"; break;
 
-	case IA_MELEE_DIE_FX: audio_path += ""; break;
-	case IA_RANGED_DIE_FX: audio_path += ""; break;
-	case IA_SUPER_DIE_FX: audio_path += ""; break;
+	case IA_MELEE_DIE_FX: audio_path += "Buildings/Destroyed/Minimize.ogg"; break;
+	case IA_RANGED_DIE_FX: audio_path += "Buildings/Destroyed/Minimize.ogg"; break;
+	case IA_SUPER_DIE_FX: audio_path += "Buildings/Destroyed/Minimize.ogg"; break;
+
+	case TOWER_ATK: audio_path += "Attack_sounds/Laser_04.wav"; break;
 	default: break;
 	}
 

@@ -23,6 +23,7 @@ Tower::Tower(Gameobject* go, bool build_new) : Behaviour(go, TOWER, NO_UPGRADE, 
 	current_state = NO_UPGRADE;
 	providesVisibility = true;
 	spriteState = NO_UPGRADE;
+	attackFX = IA_MELEE_ATK_FX;
 
 	CreatePanel();
 	selectionPanel->SetInactive();
@@ -143,6 +144,7 @@ void Tower::DoAttack()
 	Event::Push(DAMAGE, objective, damage,GetType());
 	ms_count = 0;
 	objective = nullptr;
+	audio->Play(attackFX);
 }
 
 void Tower::CreatePanel()

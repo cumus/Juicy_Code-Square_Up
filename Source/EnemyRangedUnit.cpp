@@ -22,7 +22,7 @@ EnemyRangedUnit::EnemyRangedUnit(Gameobject* go) : B_Unit(go, ENEMY_RANGED, IDLE
 
 	//SFX
 	deathFX = IA_RANGED_DIE_FX;
-	attackFX = RANGED_ATK_FX;
+	attackFX = IA_RANGED_ATK_FX;
 	SetColliders();
 }
 
