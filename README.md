@@ -151,5 +151,20 @@ Here are some links to our GitHib, Wiki, etc.
 * Fixed building's unit creation bars.
 * Asyncronous sprite animations
 
+### Updates from v0.9
+* Added building construction effect
+* Added custom icons
+* Added tooltip
+* Set asset loading from single zip file
+* Changed spawning locations
+* Added Minimap double buffer for Fog of War
+* Increased scene transition speed
+* Polished AI
+* Polished UI
+* Polished title, win and lose scene
+* Polished pause menu
+* Added balancing changes
+* Adjusted texture resolutions to fit target maximum memory usage 512mb
+
 ##
 ![University Logo](https://www.citm.upc.edu/templates/new/img/logoCITM.png?1401879059) 
