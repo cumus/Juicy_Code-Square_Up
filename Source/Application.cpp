@@ -435,4 +435,8 @@ void Application::StressTest()
 	tex.Load("textures/Unit_Gatherer.png");
 	tex.Load("textures/Unit_Ranged.png");
 	tex.Load("textures/Unit_Super.png");
+
+	// Audios
+	for (int i = 0; i <= 20; ++i)
+		audio->LoadFx(Audio_FX(i));
 }
