@@ -16,31 +16,20 @@
 std::vector<std::vector<float> >PathfindingManager::unitWalkability;
 
 PathfindingManager::PathfindingManager()
-{
-}
+{}
 
-// Destructor
 PathfindingManager::~PathfindingManager()
-{
-}
+{}
 
 bool PathfindingManager::Init()
 {
-	bool ret = true;
-	if (ret)
-	{
-		debugTextureID = App->tex.Load("textures/meta.png");
-		LOG("Pathfinding manager initialized!");
-	}
-	else
-		LOG("Pathfinding initialization failed!");
-	return ret;
+	debugTextureID = App->tex.Load("textures/meta.png");
+
+	return debugTextureID >= 0;
 }
 
-// Called before quitting
 bool PathfindingManager::CleanUp()
 {
-	LOG("Freeing pathfinding library");
 	return true;
 }
 
@@ -63,11 +52,13 @@ int PathfindingManager::IteratePaths(int extra_ms)
 			{
 				currentPath = it->second;
 				if (!it->second.empty())
+				{
 					for (std::vector<iPoint>::const_iterator it = currentPath.cbegin(); it != currentPath.cend(); ++it)
 					{
 						std::pair<int, int> render_pos = Map::I_MapToWorld(it->x, it->y);
 						App->render->Blit(debugTextureID, render_pos.first, render_pos.second, &rect, FRONT_SCENE);
 					}
+				}
 			}
 		}
 	}
@@ -89,15 +80,6 @@ int PathfindingManager::IteratePaths(int extra_ms)
 		}
 	}
 
-	/*if (!walkabilityBuildingCheck.empty())
-	{
-		SDL_Rect rect = { 0, 0, 64, 64 };
-		for (std::vector<std::pair<int,int> >::iterator it = walkabilityBuildingCheck.begin(); it != walkabilityBuildingCheck.end(); ++it)
-		{
-			App->render->Blit(debugTextureID, (*it).first, (*it).second, &rect, FRONT_SCENE);
-		}
-	}*/
-
 	if (debugWalk)
 	{
 		std::vector<iPoint> currentPath;
@@ -111,14 +93,17 @@ int PathfindingManager::IteratePaths(int extra_ms)
 				int y = 0;
 				while (y < map.height)
 				{
-					if (walkabilityMap[x][y] == false)
+					if (!walkabilityMap[x][y])
 					{				
 						std::pair<int, int> render_pos = Map::I_MapToWorld(x,y);
 						App->render->Blit(debugTextureID, render_pos.first, render_pos.second, &rect, FRONT_SCENE);
 					}
+
 					y++;
 				}		
+
 				x++;
+
 			} while (x<map.width);					
 		}
 	}
@@ -126,13 +111,16 @@ int PathfindingManager::IteratePaths(int extra_ms)
 	return extra_ms;
 }
 
-UncompletedPath::UncompletedPath() : ID(0)
+UncompletedPath::UncompletedPath()
+	: ID(0)
 {}
 
-UncompletedPath::UncompletedPath(int id, iPoint final, std::vector<PathNode> open,std::vector<PathNode> closed) : ID(id),end(final),closedList(closed),openList(open)
+UncompletedPath::UncompletedPath(int id, iPoint final, std::vector<PathNode> open,std::vector<PathNode> closed)
+	: ID(id),end(final),closedList(closed),openList(open)
 {}
 
-UncompletedPath::UncompletedPath(const UncompletedPath& path) : ID(path.ID),end(path.end),closedList(path.closedList),openList(path.openList),length(path.length),localStart(path.localStart)
+UncompletedPath::UncompletedPath(const UncompletedPath& path) :
+	ID(path.ID),end(path.end),closedList(path.closedList),openList(path.openList),length(path.length),localStart(path.localStart)
 {}
 
 
@@ -160,18 +148,15 @@ void PathfindingManager::ClearAllPaths()
 //Utility: Prints unit path
 void PathfindingManager::DebugShowUnitPath(double ID)
 {
-	if (debugOne) debugOne = false;
-	else debugOne = true;
+	debugOne = !debugOne;
 	unitDebugID = ID;
 }
 
 //Utility: Prints all paths
 void PathfindingManager::DebugShowPaths() 
 {
-	if (debugAll) debugAll = false;
-	else debugAll = true;	
+	debugAll = !debugAll;
 }
-
 
 void PathfindingManager::DebugWalkability()
 {
@@ -184,8 +169,10 @@ void PathfindingManager::UpdateStoredPaths(double ID, std::vector<iPoint> path)
 	std::map<double, std::vector<iPoint>>::iterator it;
 	it = storedPaths.find(ID);
 
-	if (it != storedPaths.end()) storedPaths[ID] = path;
-	else storedPaths.insert(std::pair<double, std::vector<iPoint>>(ID, path));
+	if (it != storedPaths.end())
+		storedPaths[ID] = path;
+	else
+		storedPaths.insert(std::pair<double, std::vector<iPoint>>(ID, path));
 }
 
 //Utility: Updates already pending path
@@ -194,8 +181,10 @@ void PathfindingManager::UpdatePendingPaths(double ID, UncompletedPath info)
 	std::map<double, UncompletedPath>::iterator it;
 	it = toDoPaths.find(ID);
 
-	if (it != toDoPaths.end()) toDoPaths[ID] = info;
-	else toDoPaths.insert(std::pair<double, UncompletedPath>(ID, info));
+	if (it != toDoPaths.end())
+		toDoPaths[ID] = info;
+	else
+		toDoPaths.insert(std::pair<double, UncompletedPath>(ID, info));
 }
 
 //Utility: Delete one stored path
@@ -203,7 +192,9 @@ void PathfindingManager::DeletePath(double ID)
 {
 	std::map<double, std::vector<iPoint>>::iterator it;
 	it = storedPaths.find(ID);
-	if (it != storedPaths.end()) storedPaths.erase(it);
+
+	if (it != storedPaths.end())
+		storedPaths.erase(it);
 }
 
 //Utility: Delete one stored path
@@ -211,7 +202,9 @@ void PathfindingManager::DeletePendingPath(double ID)
 {
 	std::map<double, UncompletedPath>::iterator it;
 	it = toDoPaths.find(ID);
-	if (it != toDoPaths.end()) toDoPaths.erase(it);
+
+	if (it != toDoPaths.end())
+		toDoPaths.erase(it);
 }
 
 //Utility: Return one path found by ID
@@ -219,10 +212,9 @@ std::vector<iPoint>* PathfindingManager::GetPath(double ID)
 {
 	std::vector<iPoint>* vec = nullptr;
 	std::map<double, std::vector<iPoint>>::iterator it = storedPaths.find(ID);
+
 	if (it != storedPaths.end())
-	{
 		vec = &it->second;
-	}
 	
 	return vec;
 }
@@ -231,10 +223,9 @@ UncompletedPath* PathfindingManager::GetToDoPath(double ID)
 {
 	UncompletedPath* vec = nullptr;
 	std::map<double, UncompletedPath>::iterator it = toDoPaths.find(ID);
+
 	if (it != toDoPaths.end())
-	{
 		vec = &it->second;
-	}
 
 	return vec;
 }
@@ -247,6 +238,7 @@ iPoint PathfindingManager::CheckEqualNeighbours(iPoint posA, iPoint posB)
 
 	std::vector<PathNode> adjacentCells;
 	iPoint cell;
+
 	////POINT A/////
 
 	// north
@@ -323,21 +315,17 @@ iPoint PathfindingManager::CheckEqualNeighbours(iPoint posA, iPoint posB)
 		{
 			for (std::vector<iPoint>::const_iterator itB = tilesB.cbegin(); itB != tilesB.cend(); ++itB)
 			{
-				if (*itB != posA)
+				if (*itB != posA && *itA == *itB)
 				{
-					//LOG("Tile different");
-					if (*itA == *itB)
-					{
-						//LOG("Equal found");
-						exit = true;
-						ret = *itA;
-						//LOG("Ret X:%d/Y:%d", itA->x, itA->y);
-						break;
-					}
+					exit = true;
+					ret = *itA;
+					break;
 				}
 			}
 		}
-		if (exit) break;
+
+		if (exit)
+			break;
 	}
 
 	return ret;
@@ -360,6 +348,7 @@ void PathfindingManager::SetWalkabilityLayer(const MapLayer& layer)
 	{
 		walkabilityMap[x] = vec;
 		unitWalkability[x] = vec2;
+
 		for (int y = 0; y< map.height; y++)
 		{
 			iPoint point(x,y);
@@ -372,19 +361,17 @@ void PathfindingManager::SetWalkabilityLayer(const MapLayer& layer)
 // Utility: return true if pos is inside the map boundaries
 bool PathfindingManager::CheckBoundaries(iPoint& pos)
 {
-	bool ret = false;
-	if ((pos.x >= 0 && pos.x <= map.width) && (pos.y >= 0 && pos.y <= map.height)) ret = true;
-	return ret;
+	return (pos.x >= 0 && pos.x <= map.width) && (pos.y >= 0 && pos.y <= map.height);
 }
 
 // Utility: returns true if the tile is walkable
 bool PathfindingManager::IsWalkable(iPoint& pos)
 {
 	bool ret = false;
+
 	if (CheckBoundaries(pos))
-	{
 		ret = GetTileAt(pos);
-	}
+
 	return ret;
 }
 
@@ -408,11 +395,9 @@ void PathfindingManager::SetWalkabilityTile(int x, int y, bool state)
 {
 	//LOG("Coord X:%d/Y:%d",x,y);
 	if (x >= 0 && y >= 0 && x < map.width && y < map.height)
-	{
 		walkabilityMap[x][y] = state;
-		//unitWalkability[x][y] = state;
-	}
-	else LOG("Not valid coordinates!");
+	else
+		LOG("Not valid coordinates!");
 }
 
 //Utility: Check tile area
@@ -438,9 +423,11 @@ bool PathfindingManager::CheckWalkabilityArea(std::pair<int, int> pos, vec scale
 			//walkabilityBuildingCheck.push_back(render_pos);
 			if (!ValidTile(pos.first,pos.second)) return false;
 		}
+
 		return true;
 	}
-	else return false;
+	else
+		return false;
 }
 
 //Utility: Returns boolean if found item
@@ -448,7 +435,8 @@ bool PathfindingManager::FindItemInVector(std::vector<PathNode> vec, PathNode no
 {
 	for (std::vector<PathNode>::const_iterator it = vec.cbegin(); it != vec.cend(); ++it)
 	{
-		if (it->pos == node.pos) return true;
+		if (it->pos == node.pos)
+			return true;
 	}
 	return false;
 }
@@ -472,8 +460,10 @@ PathNode PathfindingManager::GetItemInVector(std::vector<PathNode> vec, iPoint n
 	PathNode item;
 	for (std::vector<PathNode>::iterator it = vec.begin(); it != vec.end(); it++)
 	{
-		if (it->pos == nodePos) return item = *it;
+		if (it->pos == nodePos)
+			return item = *it;
 	}
+
 	return item;
 }
 
@@ -486,58 +476,42 @@ std::vector<PathNode> PathNode::FindWalkableAdjacents()
 	// north
 	cell.create(pos.x, pos.y + 1);
 	if (App->pathfinding.ValidTile(cell.x, cell.y))
-	{
 		list.push_back(PathNode(cell, this->pos));
-	}
 
 	// south
 	cell.create(pos.x, pos.y - 1);
 	if (App->pathfinding.ValidTile(cell.x, cell.y))
-	{
 		list.push_back(PathNode(cell, this->pos));
-	}
 
 	// east
 	cell.create(pos.x + 1, pos.y);
 	if (App->pathfinding.ValidTile(cell.x, cell.y))
-	{
 		list.push_back(PathNode(cell, this->pos));
-	}
 
 	// west
 	cell.create(pos.x - 1, pos.y);
 	if (App->pathfinding.ValidTile(cell.x, cell.y))
-	{
 		list.push_back(PathNode(cell, this->pos));
-	}
 
 	// north-east
 	cell.create(pos.x+1, pos.y + 1);
-	if (App->pathfinding.ValidTile(cell.x, cell.y))
-	{
-		if(App->pathfinding.ValidTile(cell.x, cell.y-1) && App->pathfinding.ValidTile(cell.x-1, cell.y)) list.push_back(PathNode(cell, this->pos));
-	}
+	if (App->pathfinding.ValidTile(cell.x, cell.y) && App->pathfinding.ValidTile(cell.x, cell.y-1) && App->pathfinding.ValidTile(cell.x-1, cell.y))
+		list.push_back(PathNode(cell, this->pos));
 
 	// north-west
 	cell.create(pos.x-1, pos.y + 1);
-	if (App->pathfinding.ValidTile(cell.x, cell.y))
-	{
-		if (App->pathfinding.ValidTile(cell.x+1, cell.y) && App->pathfinding.ValidTile(cell.x, cell.y-1)) list.push_back(PathNode(cell, this->pos));
-	}
+	if (App->pathfinding.ValidTile(cell.x, cell.y) && App->pathfinding.ValidTile(cell.x+1, cell.y) && App->pathfinding.ValidTile(cell.x, cell.y-1))
+		list.push_back(PathNode(cell, this->pos));
 
 	// sud-east
 	cell.create(pos.x + 1, pos.y-1);
-	if (App->pathfinding.ValidTile(cell.x,cell.y))
-	{
-		if (App->pathfinding.ValidTile(cell.x, cell.y + 1) && App->pathfinding.ValidTile(cell.x - 1, cell.y)) list.push_back(PathNode(cell, this->pos));
-	}
+	if (App->pathfinding.ValidTile(cell.x,cell.y) && App->pathfinding.ValidTile(cell.x, cell.y + 1) && App->pathfinding.ValidTile(cell.x - 1, cell.y))
+		list.push_back(PathNode(cell, this->pos));
 
 	// sud-west
 	cell.create(pos.x - 1, pos.y-1);
-	if (App->pathfinding.ValidTile(cell.x,cell.y))
-	{
-		if (App->pathfinding.ValidTile(cell.x, cell.y + 1) && App->pathfinding.ValidTile(cell.x + 1, cell.y)) list.push_back(PathNode(cell, this->pos));
-	}
+	if (App->pathfinding.ValidTile(cell.x,cell.y) && App->pathfinding.ValidTile(cell.x, cell.y + 1) && App->pathfinding.ValidTile(cell.x + 1, cell.y))
+		list.push_back(PathNode(cell, this->pos));
 
 	return list;
 }
@@ -550,7 +524,6 @@ void PathNode::CalculateF(iPoint destination)
 	h = start.DistanceTo(end);
 	score = g + h;
 }
-
 
 #pragma endregion
 
@@ -586,6 +559,7 @@ void PathfindingManager::VectorQuicksort(std::vector<PathNode>& vec,int L, int R
 				VectorQuicksort(vec, i, R);
 			if (j > L)
 				VectorQuicksort(vec, L, j);
+
 			return;
 		}
 	}
@@ -618,15 +592,16 @@ void PathfindingManager::Merge(std::vector<PathNode>& vec, int l, int m, int r)
 	PathNode* L = new PathNode[n1];
 	PathNode* R = new PathNode[n2];
 
-
 	for (i = 0; i < n1; i++)
 		L[i] = vec[l + i];
+
 	for (j = 0; j < n2; j++)
 		R[j] = vec[m + 1 + j];
 
 	i = 0;
 	j = 0;
 	k = l;
+
 	while (i < n1 && j < n2)
 	{
 		if (L[i].score <= R[j].score)
@@ -660,7 +635,6 @@ void PathfindingManager::Merge(std::vector<PathNode>& vec, int l, int m, int r)
 
 #pragma endregion
 
-
 // Main function to request a path from A to B
 std::vector<iPoint> * PathfindingManager::CreatePath(iPoint origin, iPoint destination, double ID)
 {
@@ -670,7 +644,6 @@ std::vector<iPoint> * PathfindingManager::CreatePath(iPoint origin, iPoint desti
 	
 	if (!ValidTile(goPoint.x, goPoint.y))
 	{
-		//LOG("No valid");
 		bool found = false;
 		do
 		{
@@ -680,15 +653,14 @@ std::vector<iPoint> * PathfindingManager::CreatePath(iPoint origin, iPoint desti
 			if (goPoint.y > origin.y) goPoint.y--;
 			else goPoint.y++;
 
-			//LOG("Tile check X:%d/Y:%d", goPoint.x, goPoint.y);
+			if (ValidTile(goPoint.x, goPoint.y))
+				break;
 
-			if (ValidTile(goPoint.x, goPoint.y)) break;
 		} while (goPoint.x != origin.x && goPoint.y != origin.y);
 	}
 
 	if (ValidTile(goPoint.x, goPoint.y))
 	{
-		//LOG("Do path");
 		PathNode originNode(origin, nullPoint);
 		originNode.g = 0;
 		originNode.CalculateF(goPoint);
@@ -698,7 +670,6 @@ std::vector<iPoint> * PathfindingManager::CreatePath(iPoint origin, iPoint desti
 		UncompletedPath path(ID, goPoint, open, closed);
 		path.localStart = origin;
 		UpdatePendingPaths(ID, path);
-		//LOG("Path added to queue");
 
 		UpdateStoredPaths(ID, finalPath);
 		pathPointer = GetPath(ID);
@@ -726,11 +697,11 @@ int PathfindingManager::ContinuePath(UncompletedPath pathToDo, int working_ms)
 	while (!path.openList.empty() && timer.ReadI() < working_ms)
 	{	
 		VectorQuicksort(path.openList, 0, path.openList.size() - 1);
-		//VectorMergesort(path.openList,path.openList.size());
 		checkNode = path.openList.front();	
 		path.openList.erase(path.openList.begin());
 		path.closedList.push_back(checkNode); //Save node to evaluated list				
 		path.length++;
+
 		if (checkNode.pos == path.end)
 		{
 			pathEnd = true;
@@ -762,8 +733,8 @@ int PathfindingManager::ContinuePath(UncompletedPath pathToDo, int working_ms)
 					}
 				}
 			}
-			
 		}
+
 		adjacentCells.clear();
 	}
 
@@ -771,23 +742,24 @@ int PathfindingManager::ContinuePath(UncompletedPath pathToDo, int working_ms)
 	{
 		std::vector<iPoint> finalPath;
 		PathNode iteratorNode = path.closedList.back(); //Build path
+
 		while (iteratorNode.parentPos != nullPoint)
 		{
 			finalPath.push_back(iteratorNode.pos);			
 			iteratorNode = GetItemInVector(path.closedList, iteratorNode.parentPos);
 		}
+
 		std::reverse(finalPath.begin(), finalPath.end());
+
 		for (std::vector<iPoint>::iterator it = finalPath.begin(); it != finalPath.end(); it++) //Save new path positions
-		{			
 			pathPointer->push_back(*it);
-		}
-		//LOG("Pending deleted");
-		//LOG("Path length:%d", pathPointer->size());
+
 		DeletePendingPath(path.ID);
 	}
 	else
 	{
 		UpdatePendingPaths(path.ID, path);
 	}
+
 	return working_ms - timer.ReadI();
 }

@@ -53,9 +53,6 @@ void Transform::Save(pugi::xml_node& node) const
 	node.append_attribute("sz").set_value(scale.z);
 }
 
-void Transform::PreUpdate()
-{}
-
 void Transform::Update()
 {
 	OPTICK_EVENT();
@@ -246,7 +243,7 @@ void Transform::ResetAABB()
 
 	float y_offset = Map::GetBaseOffset();
 	for (int i = 0; i < 8; ++i)
-		points[i].second += y_offset;// *0.5f;
+		points[i].second += y_offset;
 }
 
 bool Transform::Intersects(std::pair<float, float> p) const

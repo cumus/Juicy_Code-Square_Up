@@ -15,7 +15,6 @@ struct FoWDataStruct
 	unsigned short tileShroudBits; //same as above but for shroud
 };
 
-
 class FogOfWarManager
 {
 public:
@@ -42,7 +41,6 @@ public:
 	bool CheckFoWTileBoundaries(iPoint mapPos);
 	//Returns true if the tile is visible (there's no FOG in it) otherwise returns false
 	bool CheckTileVisibility(iPoint mapPos);
-
 
 public:
 

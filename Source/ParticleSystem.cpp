@@ -31,17 +31,16 @@ void ParticleSystem::Update()
 				(*it)->Update();
 				aliveCache.push_back(*it);
 			}
-			else deathCache.push_back(*it);			
+			else
+				deathCache.push_back(*it);			
 		}
 	}
 
 	if (!deathCache.empty())
 	{
 		for (std::vector<Particle*>::iterator it = deathCache.begin(); it != deathCache.end(); ++it)
-		{
 			(*it)->GetGameobject()->Destroy();
-			//LOG("Destroy particle");
-		}
+
 		deathCache.clear();
 	}
 	particles = aliveCache;
@@ -62,6 +61,5 @@ void ParticleSystem::AddParticle(vec p, vec dest, float speed, ParticleType t)
 		Gameobject* part = App->scene->AddGameobject("Particle");
 		part->GetTransform()->SetLocalPos(p);
 		particles.push_back(new Particle(part, p, dest, speed, t));
-		//particlesID++;
 	}
 }

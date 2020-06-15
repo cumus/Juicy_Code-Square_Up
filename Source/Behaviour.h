@@ -57,12 +57,9 @@ enum UnitState : int
 	STAY
 };
 
-
-
 class Sprite;
 class AnimatedSprite;
 class AudioSource;
-
 
 class Behaviour : public Component
 {
@@ -107,14 +104,12 @@ public:
 	static bool IsHidden(double id) { return b_map[id]->visible; }
 	void SetColliders();
 
-
 	UnitType GetType() const { return type; }
 	UnitState* GetStatePtr() { return &current_state; }
 	UnitState GetState() { return current_state; }
 	UnitState GetSpriteState() { return spriteState; }
 	UnitState* GetSpriteStatePtr() { return &spriteState; }
 
-	//void QuickSort();
 	unsigned int GetBehavioursInRange(vec pos, float dist, std::map<float, Behaviour*>& res) const;
 
 protected:
@@ -250,8 +245,8 @@ public:
 	void OnCollision(Collider selfCol, Collider col) override;
 	int GetUnitLevel();
 
-
 protected:
+
 	int unitLevel;
 	float speed;
 	int damage;

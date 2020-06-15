@@ -60,7 +60,6 @@ public:
 	bool PlayMusic(const char* path, float fade_time = 2.0f);
 	void StopMusic(float fade_time);
 	bool MusicIsPlaying();
-	// void ClearMusic(float fade_time);
 
 	// FX
 	bool LoadFx(Audio_FX audio_fx);
@@ -100,6 +99,7 @@ private:
 		float angle, distance;
 		std::pair<float, float> pos;
 	};
+
 	std::map<double, SpatialData> sources;
 	Mix_Chunk* fx[MAX_FX];
 	int	total_channels = 1;

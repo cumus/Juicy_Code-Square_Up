@@ -157,7 +157,6 @@
     <ClCompile Include="EdgeCapsule.cpp" />
     <ClCompile Include="Editor.cpp" />
     <ClCompile Include="EditorWindow.cpp" />
-    <ClCompile Include="Emiter.cpp" />
     <ClCompile Include="EnemyMeleeUnit.cpp" />
     <ClCompile Include="EnemyRangedUnit.cpp" />
     <ClCompile Include="EnemySuperUnit.cpp" />
@@ -225,7 +224,6 @@
     <ClInclude Include="EdgeCapsule.h" />
     <ClInclude Include="Editor.h" />
     <ClInclude Include="EditorWindow.h" />
-    <ClInclude Include="Emiter.h" />
     <ClInclude Include="EnemyMeleeUnit.h" />
     <ClInclude Include="EnemyRangedUnit.h" />
     <ClInclude Include="EnemySuperUnit.h" />

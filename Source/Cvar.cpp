@@ -15,7 +15,6 @@ Cvar::Cvar(const Cvar & copy) : type(copy.type)
 	case FLOAT: value.float_v = copy.value.float_v; break;
 	case CHAR_P: value.char_p_v = copy.value.char_p_v; break;
 	case VEC: value.vec_v = copy.value.vec_v; break;
-	//case COLLIDER: value.coll_v = copy.value.coll_v; break;
 	}
 }
 
@@ -36,8 +35,6 @@ Cvar::Cvar(float float_v) : type(FLOAT) { value.float_v = float_v; }
 Cvar::Cvar(const char * char_p_v) : type(CHAR_P) { value.char_p_v = char_p_v; }
 
 Cvar::Cvar(vec vec_v) : type(VEC) { value.vec_v = vec_v; }
-
-//Cvar::Cvar(Collider coll_v) : type(COLLIDER) { value.coll_v = coll_v; }
 
 Cvar::Cvar(std::vector<int>& vector_i_v) : type(VECTOR_INT) { (value.vector_i_v = vector_i_v).shrink_to_fit(); }
 
@@ -160,19 +157,6 @@ bool Cvar::SetValue(vec vec_v, bool force_type)
 	return ret;
 }
 
-/*bool Cvar::SetValue(Collider coll_v, bool force_type)
-{
-	bool ret = false;
-
-	if (force_type)
-		type = COLLIDER;
-
-	if (ret = (type == COLLIDER))
-		value.coll_v = coll_v;
-
-	return ret;
-}*/
-
 bool Cvar::SetValue(std::vector<int>& vector_i_v, bool force_type)
 {
 	bool ret = false;
@@ -218,8 +202,6 @@ float Cvar::AsFloat() const { return value.float_v; }
 const char * Cvar::AsCharP() const { return value.char_p_v; }
 
 vec Cvar::AsVec() const { return value.vec_v; }
-
-//Collider Cvar::AsCollider() const { return value.coll_v; }
 
 const std::vector<int> Cvar::AsIntVector() const { return value.vector_i_v; }
 const std::vector<float> Cvar::AsFloatVector() const { return value.vector_f_v; }

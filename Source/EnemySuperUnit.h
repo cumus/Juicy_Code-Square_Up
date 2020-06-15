@@ -12,6 +12,7 @@ class EnemySuperUnit : public B_Unit
 public:
 	EnemySuperUnit(Gameobject* go);
 	~EnemySuperUnit();
+
 	void UnitAttackType() override;
 };
 

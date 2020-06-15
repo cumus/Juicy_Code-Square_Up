@@ -87,7 +87,6 @@ public:
 	Editor*		editor;
 	Render*		render;
 
-
 	// Independent Managers
 	FileManager		files;
 	TimeManager		time;
@@ -98,7 +97,6 @@ public:
 	CollisionSystem collSystem;
 	DialogSystem   dialogSys;
 	ParticleSystem particleSys;
-
 
 private:
 

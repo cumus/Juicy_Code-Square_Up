@@ -6,9 +6,7 @@
 #include "Log.h"
 
 DialogSystem::DialogSystem()
-{
-
-}
+{}
 
 DialogSystem::~DialogSystem()
 {}
@@ -28,36 +26,32 @@ bool DialogSystem::Update()
 	if (!end)
 	{	
 		if (App->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN)
-		{
 			UpdateScreenUI();
-		}		
+
 		return true;
 	}
-	else
+	else if (App->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN)
 	{
-		if (App->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN)
-		{
-			queen->SetInactive();
-			soldier->SetInactive();
-			retail->SetInactive();
-			//portrait->SetInactive();
-			units->SetInactive();
-			buildings->SetInactive();
-			resources->SetInactive();
-			capsule->SetInactive();
-			enemies->SetInactive();
-			gathedge->SetInactive();
-			gold->SetInactive();
-			edge->SetInactive();
-			gear->SetInactive();
-			txt->SetInactive();
-			txt2->SetInactive();
-			txt3->SetInactive();
-			space->SetInactive();
-			return false;
-		}
-		else return true;
+		queen->SetInactive();
+		soldier->SetInactive();
+		retail->SetInactive();
+		units->SetInactive();
+		buildings->SetInactive();
+		resources->SetInactive();
+		capsule->SetInactive();
+		enemies->SetInactive();
+		gathedge->SetInactive();
+		gold->SetInactive();
+		edge->SetInactive();
+		gear->SetInactive();
+		txt->SetInactive();
+		txt2->SetInactive();
+		txt3->SetInactive();
+		space->SetInactive();
+		return false;
 	}
+	else
+		return true;
 }
 
 void DialogSystem::CreateScreenUI()

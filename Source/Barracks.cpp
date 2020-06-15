@@ -23,16 +23,13 @@ Barracks::Barracks(Gameobject* go, bool build_new) : BuildingWithQueue(go, BARRA
 	vision_range = 15.0f;
 	current_state = NO_UPGRADE;
 	spriteState = NO_UPGRADE;
-	//characteR->SetColor({ 0, 0, 0, 0 });
-	//create_bar();
-	//bar_go->SetInactive();
+
 	CreatePanel();
 	selectionPanel->SetInactive();
 	unitInfo->SetInactive();
 	melee_tooltip->SetInactive();
 	ranged_tooltip->SetInactive();
 	super_tooltip->SetInactive();
-
 
 	if (t)
 	{
@@ -46,6 +43,7 @@ Barracks::Barracks(Gameobject* go, bool build_new) : BuildingWithQueue(go, BARRA
 			}
 		}
 	}
+
 	SetColliders();
 	mini_life_bar.Show();
 
@@ -96,7 +94,6 @@ void Barracks::Update()
 	{
 		if (!build_queue.empty())
 		{
-			//LOG("Not empty");
 			bool able_to_build = true;
 
 			switch (build_queue.front().type)
@@ -157,6 +154,7 @@ void Barracks::Update()
 					icon->SetSection({ 22, 463, 48, 35 });
 					break;
 				}
+
 				SDL_Rect section = bar_section;
 				section.w = int(float(section.w) * percent);
 				progress_bar->SetSection(section);
@@ -165,37 +163,22 @@ void Barracks::Update()
 	}
 
 	// Melee Tooltip Check
-
 	if (meleeUnit_btn->state == 1 && melee_tooltip->IsActive() == false)
 		melee_tooltip->SetActive();
-
 	else if (meleeUnit_btn->state != 1 && melee_tooltip->IsActive() == true)
 		melee_tooltip->SetInactive();
 
-	else
-		;
-
 	// Ranged Tooltip Check
-
 	if (rangedUnit_btn->state == 1 && ranged_tooltip->IsActive() == false)
 		ranged_tooltip->SetActive();
-
 	else if (rangedUnit_btn->state != 1 && ranged_tooltip->IsActive() == true)
 		ranged_tooltip->SetInactive();
 
-	else
-		;
-
 	// Super Tooltip Check
-
 	if (superUnit_btn->state == 1 && super_tooltip->IsActive() == false)
 		super_tooltip->SetActive();
-
 	else if (superUnit_btn->state != 1 && super_tooltip->IsActive() == true)
 		super_tooltip->SetInactive();
-
-	else
-		;
 }
 
 void Barracks::Upgrade()
@@ -209,8 +192,7 @@ void Barracks::Upgrade()
 			max_life += 50;
 			current_lvl += 1;
 			audio->Play(B_BUILDED);
-			//LOG("LIFE AFTER UPGRADE: %d", max_life);
-			//LOG("BC LEVEL: %d", current_lvl);
+
 			switch (current_state)
 			{
 			case NO_UPGRADE:
@@ -350,12 +332,10 @@ void Barracks::CreatePanel()
 	rangedUnit_btn = new C_Button(rangedUnit_btn_go, Event(BUILD_RANGED, this, spawnPoint, 5.0f));// Third option from the right
 	rangedUnit_btn->target = { 0.21f, 0.004f, 1.5f, 1.5f };
 	rangedUnit_btn->offset = { 0.0f, 0.0f };
-
 	rangedUnit_btn->section[0] = { 1082, 730, 46, 46 };
 	rangedUnit_btn->section[1] = { 1082, 679, 46, 46 };
 	rangedUnit_btn->section[2] = { 1082, 781, 46, 46 };
 	rangedUnit_btn->section[3] = { 1028, 781, 46, 46 };
-
 	rangedUnit_btn->tex_id = panel_tex_ID;
 
 	//------------------------- SUPER TOOLTIP --------------------------------------
@@ -402,12 +382,10 @@ void Barracks::CreatePanel()
 	superUnit_btn = new C_Button(superUnit_btn_go, Event(BUILD_SUPER, this, spawnPoint, 5.0f)); // Second option from the right
 	superUnit_btn->target = { 0.45f, 0.22f, 1.5f, 1.5f };
 	superUnit_btn->offset = { 0.0f, 0.0f };
-
 	superUnit_btn->section[0] = { 1153, 730, 46, 46 };
 	superUnit_btn->section[1] = { 1153, 679, 46, 46 };
 	superUnit_btn->section[2] = { 1153, 781, 46, 46 };
 	superUnit_btn->section[3] = { 1153, 781, 46, 46 };
-
 	superUnit_btn->tex_id = panel_tex_ID;
 
 	//------------------------- UPGRADE BUTTON --------------------------------------
@@ -417,13 +395,10 @@ void Barracks::CreatePanel()
 	upgrade_btn = new C_Button(upgrade_btn_go, Event(DO_UPGRADE, this->AsBehaviour()));//Last option from the right
 	upgrade_btn->target = { 0.45f, 0.6325, 1.5f, 1.5f };
 	upgrade_btn->offset = { 0.0f,0.0f };
-
 	upgrade_btn->section[0] = { 1081, 54, 46, 46 };
 	upgrade_btn->section[1] = { 1081, 3, 46, 46 };
 	upgrade_btn->section[2] = { 1081, 105, 46, 46 };
 	upgrade_btn->section[3] = { 1081, 105, 46, 46 };
-
-
 	upgrade_btn->tex_id = panel_tex_ID;
 
 	//Melee price
@@ -433,18 +408,21 @@ void Barracks::CreatePanel()
 	cost1->offset = { 0, 0 };
 	cost1->section = { 101, 13, 32, 31 };
 	cost1->tex_id = App->tex.Load("textures/icons_price.png");
+
 	//Ranged price
 	C_Image* cost2 = new C_Image(prices);
 	cost2->target = { 0.33f, 0.08f, 0.8f, 0.8f };
 	cost2->offset = { 0, 0 };
 	cost2->section = { 142, 13, 39, 31 };
 	cost2->tex_id = App->tex.Load("textures/icons_price.png");
+
 	//Super price
 	C_Image* cost3 = new C_Image(prices);
 	cost3->target = { 0.59f, 0.29f, 0.8f, 0.8f };
 	cost3->offset = { 0, 0 };
 	cost3->section = { 183, 12, 37, 32 };
 	cost3->tex_id = App->tex.Load("textures/icons_price.png");
+
 	//Upgrade
 	C_Image* cost4 = new C_Image(prices);
 	cost4->target = { 0.58f, 0.68f, 0.8f, 0.8f };
@@ -461,8 +439,8 @@ void Barracks::CreatePanel()
 }
 
 
-void Barracks::create_bar() {
-
+void Barracks::create_bar()
+{
 	pos_y_HUD = 0.17;
 
 	bar_text_id = App->tex.Load("textures/Iconos_square_up.png");
@@ -521,5 +499,4 @@ void Barracks::create_bar() {
 	upgrades->offset = { -33.0f, -33.0f };
 	upgrades->section = { 16, 806, 33, 33 };
 	upgrades->tex_id = bar_text_id;
-
 }

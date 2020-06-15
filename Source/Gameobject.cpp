@@ -25,7 +25,6 @@ double Gameobject::go_count = 0;
 Gameobject::Gameobject(const char* n, Gameobject* p) : id(++go_count), name(n), parent(p)
 {
 	transform = new Transform(this);
-	//LOG(name.c_str());
 	if (parent != nullptr)
 		parent->AddNewChild(this);
 }
@@ -76,11 +75,6 @@ void Gameobject::Update()
 	for (std::vector<Component*>::iterator component = components.begin(); component != components.end(); ++component)
 		if ((*component)->IsActive())
 			(*component)->Update();
-
-	//if (childs.capacity() != childs.size()) childs.shrink_to_fit();
-	/*for (std::vector<Gameobject*>::iterator child = childs.begin(); child != childs.end(); ++child)
-		if ((*child) != nullptr && (*child)->active)
-			(*child)->Update();*/
 
 	for (int i = 0; i < childs.size(); ++i)
 		if (childs[i] != nullptr && childs[i]->active)
@@ -256,7 +250,7 @@ bool Gameobject::RemoveChild(Gameobject* child)
 
 	if (child != nullptr)
 	{
-		for (std::vector<Gameobject*>::const_iterator it = childs.begin(); it != childs.end(); ++it)
+		for (std::vector<Gameobject*>::const_iterator it = childs.cbegin(); it != childs.cend(); ++it)
 		{
 			if (child == *it)
 			{
@@ -296,11 +290,9 @@ bool Gameobject::Destroy(float ms)
 {
 	bool ret = true;
 	toDestroy = true;
-	//App->collSystem.ProcessRemovals(GetID());
+
 	if ((death_timer = ms) <= 0.f)
-	{
 		ret = (parent != nullptr && parent->RemoveChild(this));
-	}
 
 	return ret;
 }
@@ -343,7 +335,6 @@ void Gameobject::UpdateRemoveQueue()
 
 		go_to_remove.pop();
 	}
-	//childs.shrink_to_fit();
 }
 
 void Gameobject::Load(pugi::xml_node& node)

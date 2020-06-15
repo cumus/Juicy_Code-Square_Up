@@ -26,12 +26,6 @@ bool Input::Init()
 
 	bool ret = (SDL_InitSubSystem(SDL_INIT_EVENTS) == 0);
 
-	/*/ Unused SDL Input Systems
-	SDL_INIT_JOYSTICK (implies SDL_INIT_EVENTS)
-	SDL_INIT_HAPTIC
-	SDL_INIT_GAMECONTROLLER (implies SDL_INIT_JOYSTICK)
-	SDL_INIT_SENSOR*/
-
 	if(ret)
 		LOG("SDL_EVENTS initialized.");
 	else
@@ -186,16 +180,6 @@ bool Input::CleanUp()
 	SDL_QuitSubSystem(SDL_INIT_EVENTS);
 	return true;
 }
-
-/*KeyState Input::GetKey(int id) const
-{
-	return keyboard[id];
-}
-
-KeyState Input::GetMouseButtonDown(int id) const
-{
-	return mouse_buttons[id - 1];
-}*/
 
 void Input::GetMousePosition(int& x, int& y) const
 {

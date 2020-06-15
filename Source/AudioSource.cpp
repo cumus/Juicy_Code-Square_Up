@@ -16,7 +16,6 @@ AudioSource::AudioSource(Gameobject* go) :
 
 AudioSource::~AudioSource()
 {
-	//LOG("Deleting Audio Source");
 	App->audio->StopFXChannel(GetID());
 }
 

@@ -28,7 +28,6 @@ Behaviour::Behaviour(Gameobject* go, UnitType t, UnitState starting_state, Compo
 	spriteState(starting_state)
 {
 	current_life = max_life = damage = 10;
-	//attack_range = vision_range = 5.0f;
 	dieDelay = 2.0f;
 	deathFX = B_DESTROYED; 
 	rayCastTimer = 0;
@@ -71,7 +70,6 @@ bool Behaviour::IsDestroyed()
 
 void Behaviour::SetColliders()
 {
-	//LOG("Set colliders");
 	//Colliders
 	pos = game_object->GetTransform()->GetGlobalPosition();
 	vec s = game_object->GetTransform()->GetLocalScale();
@@ -184,7 +182,6 @@ void Behaviour::RecieveEvent(const Event& e)
 	case ON_DESTROY: OnDestroy(); break;
 	case ON_RIGHT_CLICK: OnRightClick(e.data1.AsVec(), e.data2.AsVec()); break;
 	case DAMAGE: OnDamage(e.data1.AsInt(), UnitType(e.data2.AsInt())); break;
-	//case IMPULSE: OnGetImpulse(e.data1.AsFloat(), e.data2.AsFloat()); break;
 	case BUILD_GATHERER:
 	{
 		AddUnitToQueue(GATHERER, e.data1.AsVec(), e.data2.AsFloat());
@@ -233,13 +230,11 @@ void Behaviour::PreUpdate()
 void Behaviour::ActivateSprites()
 {
 	characteR->SetActive();
-	//LOG("Show sprite");
 }
 
 void Behaviour::DesactivateSprites()
 {
 	characteR->SetInactive();
-	//LOG("Hide sprite");
 }
 
 Collider* Behaviour::GetBodyCollider() 
@@ -375,7 +370,6 @@ void Behaviour::OnDamage(int d, UnitType from)
 {	
 	if (current_state != DESTROYED && Scene::DamageAllowed())
 	{
-		//LOG("Got damage: %d", d);
 		if (current_life > 0)
 		{
 			current_life -= d;
@@ -392,8 +386,6 @@ void Behaviour::OnDamage(int d, UnitType from)
 			else
 			{
 				mini_life_bar.Update(float(current_life) / float(max_life), current_lvl);
-
-				//LOG("Life: %d", current_life);
 				update_health_ui();
 				AfterDamageAction(from);
 			}
@@ -452,7 +444,6 @@ void Behaviour::OnKill(const UnitType type)
 		if (App->scene->GetStat(UNITS_KILLED) % 10 == 0) {
 			Event::Push(UPDATE_STAT, App->scene, CURRENT_GOLD, 1);
 			Event::Push(UPDATE_STAT, App->scene, GOLD_COLLECTED, 1);
-			//LOG("total gold value %d", App->scene->GetStat(CURRENT_GOLD));
 		}
 		break;
 	}
@@ -464,7 +455,6 @@ void Behaviour::OnKill(const UnitType type)
 		if (App->scene->GetStat(UNITS_KILLED) % 10 == 0) {
 			Event::Push(UPDATE_STAT, App->scene, CURRENT_GOLD, 1);
 			Event::Push(UPDATE_STAT, App->scene, GOLD_COLLECTED, 1);
-			//LOG("total gold value %d", App->scene->GetStat(CURRENT_GOLD));
 		}
 		break;
 	}
@@ -476,7 +466,6 @@ void Behaviour::OnKill(const UnitType type)
 		if (App->scene->GetStat(UNITS_KILLED) % 10 == 0) {
 			Event::Push(UPDATE_STAT, App->scene, CURRENT_GOLD, 1);
 			Event::Push(UPDATE_STAT, App->scene, GOLD_COLLECTED, 1);
-			//LOG("total gold value %d", App->scene->GetStat(CURRENT_GOLD));
 		}
 		break;
 	}
@@ -564,7 +553,6 @@ B_Unit::B_Unit(Gameobject* go, UnitType t, UnitState s, ComponentType comp_type)
 	attackFX = SELECT;
 	vision_range = 5.0f;
 
-	//Needed
 	path = nullptr;
 	next = false;
 	move = false;
@@ -603,7 +591,6 @@ void B_Unit::Update()
 		if (moveOrder) atkObj = nullptr;
 		if (atkObj != nullptr) //ATTACK
 		{
-			//LOG("In range");
 			if (type == ENEMY_MELEE || type == ENEMY_RANGED || type == ENEMY_SUPER)//IA
 			{
 				if (atkTimer > atkTime)
@@ -612,7 +599,6 @@ void B_Unit::Update()
 					{
 						DoAttack();
 						Event::Push(DAMAGE, atkObj, damage,GetType());
-						//LOG("Do attack");
 					}
 					else atkObj = nullptr;
 					atkTimer = 0;
@@ -634,15 +620,12 @@ void B_Unit::Update()
 		}
 		else//CHECK IF MOVES
 		{
-			//LOG("Not in range");
 			if (type == ENEMY_MELEE || type == ENEMY_RANGED || type == ENEMY_SUPER) //IA
 			{
 				if (chaseObj != nullptr)//CHASE
 				{
-					//LOG("In vision");
 					if (!chasing)
 					{
-						//LOG("Start player chase");
 						vec pos = chaseObj->GetPos();
 						Event::Push(UPDATE_PATH, this->AsBehaviour(), int(pos.x), int(pos.y));
 						chasing = true;
@@ -653,29 +636,22 @@ void B_Unit::Update()
 				{
 					if (Base_Center::baseCenter != nullptr && !goingBase && !chasing)//GO TO BASE
 					{
-						//LOG("Path to base");
 						goingBase = true;
 						vec centerPos = Base_Center::baseCenter->GetTransform()->GetGlobalPosition();
 						Event::Push(UPDATE_PATH, this->AsBehaviour(), int(centerPos.x+2), int(centerPos.y+2));
-						//LOG("Move to base");	
 					}
 				}
-
-				
 			}
 
-			if (moveOrder)
+			if (moveOrder && (chaseObj != nullptr && !chaseObj->IsDestroyed() && !chasing))
 			{
-				if (chaseObj != nullptr && !chaseObj->IsDestroyed() && !chasing)
-				{
-					vec goToPos = chaseObj->GetPos();
-					Event::Push(UPDATE_PATH, this->AsBehaviour(), int(goToPos.x), int(goToPos.y));
-					chasing = true;
-				}
+				vec goToPos = chaseObj->GetPos();
+				Event::Push(UPDATE_PATH, this->AsBehaviour(), int(goToPos.x), int(goToPos.y));
+				chasing = true;
 			}
 
-
-			if (path != nullptr && !path->empty()) CheckPathTiles();
+			if (path != nullptr && !path->empty())
+				CheckPathTiles();
 
 			if (move && PathfindingManager::unitWalkability[nextTile.x][nextTile.y] == GetID())
 			{
@@ -686,24 +662,18 @@ void B_Unit::Update()
 
 				iPoint tilePos = { int(pos.x), int(pos.y) };
 				if (nextTile.x > tilePos.x)
-				{
 					dirX = 1;
-				}
 				else if (nextTile.x < tilePos.x)
-				{
 					dirX = -1;
-				}
-				else dirX = 0;
+				else
+					dirX = 0;
 
 				if (nextTile.y > tilePos.y)
-				{
 					dirY = 1;
-				}
 				else if (nextTile.y < tilePos.y)
-				{
 					dirY = -1;
-				}
-				else dirY = 0;
+				else
+					dirY = 0;
 
 				game_object->GetTransform()->MoveX(dirX * speed * App->time.GetGameDeltaTime());//Move x
 				game_object->GetTransform()->MoveY(dirY * speed * App->time.GetGameDeltaTime());//Move y
@@ -831,9 +801,11 @@ void B_Unit::Update()
 
 		if (visible)
 		{
-			if (current_life < max_life) mini_life_bar.Show();
+			if (current_life < max_life)
+				mini_life_bar.Show();
 		}
-		else  mini_life_bar.Hide();
+		else 
+			mini_life_bar.Hide();
 	}
 }
 
@@ -843,37 +815,23 @@ void B_Unit::OnCollision(Collider selfCol, Collider col)
 	{
 		if (selfCol.GetColliderTag() == PLAYER_ATTACK_TAG)
 		{
-			//LOG("Atk");
 			if (col.GetColliderTag() == ENEMY_TAG)
 			{
 				if (GetType() != GATHERER)
 				{
-					if(col.parentGo->GetBehaviour()->GetType() != EDGE && col.parentGo->GetBehaviour()->GetType() != CAPSULE) atkObj = col.parentGo->GetBehaviour();
+					if(col.parentGo->GetBehaviour()->GetType() != EDGE && col.parentGo->GetBehaviour()->GetType() != CAPSULE)
+						atkObj = col.parentGo->GetBehaviour();
 				}
-				else atkObj = col.parentGo->GetBehaviour();
-				//LOG("Eenmy unit in attack range");				
+				else
+					atkObj = col.parentGo->GetBehaviour();			
 			}
 		}
 
-		if (selfCol.GetColliderTag() == ENEMY_ATTACK_TAG)
-		{
-			//LOG("Atk");
-			if (col.GetColliderTag() == PLAYER_TAG)
-			{
-				//LOG("Player unit in attack range");
-				atkObj = col.parentGo->GetBehaviour();
-			}
-		}
+		if (selfCol.GetColliderTag() == ENEMY_ATTACK_TAG && col.GetColliderTag() == PLAYER_TAG)
+			atkObj = col.parentGo->GetBehaviour();
 
-		if (selfCol.GetColliderTag() == ENEMY_VISION_TAG)
-		{
-			//LOG("Enemy vision");
-			if (col.GetColliderTag() == PLAYER_TAG)
-			{
-				//LOG("Player unit in vision");
-				if (chaseObj == nullptr) chaseObj = col.parentGo->GetBehaviour();
-			}
-		}
+		if (selfCol.GetColliderTag() == ENEMY_VISION_TAG && col.GetColliderTag() == PLAYER_TAG && chaseObj == nullptr)
+			chaseObj = col.parentGo->GetBehaviour();
 	}
 }
 
@@ -895,11 +853,9 @@ void B_Unit::UpdatePath(int x, int y)
 			for (std::vector<iPoint>::const_iterator it = tilesVisited.cbegin(); it != tilesVisited.cend(); ++it)
 			{
 				if (PathfindingManager::unitWalkability[it->x][it->y] != 0.0f)
-				{
 					PathfindingManager::unitWalkability[it->x][it->y] = 0.0f;
-					//LOG("Clear tiles");
-				}
 			}
+
 			tilesVisited.clear();
 		}
 	}
@@ -920,11 +876,9 @@ void B_Unit::Repath()
 			for (std::vector<iPoint>::const_iterator it = tilesVisited.cbegin(); it != tilesVisited.cend(); ++it)
 			{
 				if (PathfindingManager::unitWalkability[it->x][it->y] != 0.0f)
-				{
 					PathfindingManager::unitWalkability[it->x][it->y] = 0.0f;
-					//LOG("Clear tiles");
-				}
 			}
+
 			tilesVisited.clear();
 		}
 	}
@@ -934,36 +888,26 @@ void B_Unit::CheckPathTiles()
 {
 	if (!next)
 	{
-		if (PathfindingManager::unitWalkability[nextTile.x][nextTile.y] != 0.0f) PathfindingManager::unitWalkability[nextTile.x][nextTile.y] == 0;
+		if (PathfindingManager::unitWalkability[nextTile.x][nextTile.y] != 0.0f)
+			PathfindingManager::unitWalkability[nextTile.x][nextTile.y] == 0;
+
 		nextTile = path->front();
 		next = true;
 		move = true;
 		gotTile = false;
-		//LOG("Next tile");
 	}
-	else
+	else if (PathfindingManager::unitWalkability[nextTile.x][nextTile.y] == 0.0f)
 	{
-		if (PathfindingManager::unitWalkability[nextTile.x][nextTile.y] == 0.0f)
-		{
-			PathfindingManager::unitWalkability[nextTile.x][nextTile.y] = GetID();
-			//LOG("ID: %f",GetID());
-			tilesVisited.push_back(nextTile);
-			gotTile = true;
-			//LOG("Tile found");
-		}
-		else if (!gotTile)
-		{
+		PathfindingManager::unitWalkability[nextTile.x][nextTile.y] = GetID();
+		tilesVisited.push_back(nextTile);
+		gotTile = true;
+	}
+	else if (!gotTile)
+	{
+		iPoint cell = App->pathfinding.CheckEqualNeighbours(iPoint(int(pos.x), int(pos.y)), nextTile);
 
-			//LOG("Pos X:%d/Y:%d", int(pos.x), int(pos.y));
-			//LOG("Tile X:%d/Y:%d", nextTile.x, nextTile.y);
-			iPoint cell = App->pathfinding.CheckEqualNeighbours(iPoint(int(pos.x), int(pos.y)), nextTile);
-			//LOG("Cell X:%d/Y:%d", cell.x, cell.y);
-			if (cell.x != -1 && cell.y != -1)
-			{
-				//LOG("Tile ok");
-				nextTile = cell;
-			}
-		}
+		if (cell.x != -1 && cell.y != -1)
+			nextTile = cell;
 	}
 }
 
@@ -1002,10 +946,6 @@ void B_Unit::ChangeState()
 	{
 		spriteState = MOVING_NW;
 	}
-	/*else if (dirX == 0 && dirY == 0)
-	{
-		current_state = IDLE;
-	}*/
 }
 
 void B_Unit::CheckDirection(fPoint actualPos)
@@ -1017,7 +957,6 @@ void B_Unit::CheckDirection(fPoint actualPos)
 			if (!path->empty()) path->erase(path->begin());
 			next = false;
 			PathfindingManager::unitWalkability[nextTile.x][nextTile.y] = 0.0f;
-			//LOG("Arrive");
 		}
 	}
 	else if (dirX == -1 && dirY == -1)
@@ -1027,7 +966,6 @@ void B_Unit::CheckDirection(fPoint actualPos)
 			if (!path->empty()) path->erase(path->begin());
 			next = false;
 			PathfindingManager::unitWalkability[nextTile.x][nextTile.y] = 0.0f;
-			//LOG("Arrive");
 		}
 	}
 	else if (dirX == -1 && dirY == 1)
@@ -1037,7 +975,6 @@ void B_Unit::CheckDirection(fPoint actualPos)
 			if (!path->empty()) path->erase(path->begin());
 			next = false;
 			PathfindingManager::unitWalkability[nextTile.x][nextTile.y] = 0.0f;
-			//LOG("Arrive");
 		}
 	}
 	else if (dirX == 1 && dirY == -1)
@@ -1047,7 +984,6 @@ void B_Unit::CheckDirection(fPoint actualPos)
 			if (!path->empty()) path->erase(path->begin());
 			next = false;
 			PathfindingManager::unitWalkability[nextTile.x][nextTile.y] = 0.0f;
-			//LOG("Arrive");
 		}
 	}
 	else if (dirX == 0 && dirY == -1)
@@ -1057,7 +993,6 @@ void B_Unit::CheckDirection(fPoint actualPos)
 			if (!path->empty()) path->erase(path->begin());
 			next = false;
 			PathfindingManager::unitWalkability[nextTile.x][nextTile.y] = 0.0f;
-			//LOG("Arrive");
 		}
 	}
 	else if (dirX == 0 && dirY == 1)
@@ -1067,7 +1002,6 @@ void B_Unit::CheckDirection(fPoint actualPos)
 			if (!path->empty()) path->erase(path->begin());
 			next = false;
 			PathfindingManager::unitWalkability[nextTile.x][nextTile.y] = 0.0f;
-			//LOG("Arrive");
 		}
 	}
 	else if (dirX == 1 && dirY == 0)
@@ -1077,7 +1011,6 @@ void B_Unit::CheckDirection(fPoint actualPos)
 			if (!path->empty()) path->erase(path->begin());
 			next = false;
 			PathfindingManager::unitWalkability[nextTile.x][nextTile.y] = 0.0f;
-			//LOG("Arrive");
 		}
 	}
 	else if (dirX == -1 && dirY == 0)
@@ -1087,7 +1020,6 @@ void B_Unit::CheckDirection(fPoint actualPos)
 			if (!path->empty()) path->erase(path->begin());
 			next = false;
 			PathfindingManager::unitWalkability[nextTile.x][nextTile.y] = 0.0f;
-			//LOG("Arrive");
 		}
 	}
 	else if (dirX == 0 && dirY == 0)
@@ -1095,7 +1027,6 @@ void B_Unit::CheckDirection(fPoint actualPos)
 		if(!path->empty()) path->erase(path->begin());
 		next = false;
 		PathfindingManager::unitWalkability[nextTile.x][nextTile.y] = 0.0f;
-		//LOG("Arrive");
 	}
 
 	if (path->empty()) new_state = IDLE;
@@ -1109,9 +1040,7 @@ void B_Unit::OnDestroy()
 		for (std::vector<iPoint>::const_iterator it = tilesVisited.cbegin(); it != tilesVisited.cend(); ++it)
 		{
 			if (PathfindingManager::unitWalkability[it->x][it->y] != 0)
-			{
 				PathfindingManager::unitWalkability[it->x][it->y] = 0;
-			}
 		}
 		tilesVisited.clear();
 	}
@@ -1212,7 +1141,6 @@ void B_Unit::OnRightClick(vec posClick, vec movPos)
 				RectF coll = (*it).second->GetSelectionRect();
 				if (float(x) > coll.x && float(x) < coll.x + coll.w && float(y) > coll.y && float(y) < coll.y + coll.h)
 				{
-					//LOG("Selected unit");
 					chaseObj = (*it).second;
 					next = false;
 					move = false;
@@ -1230,7 +1158,6 @@ void B_Unit::OnRightClick(vec posClick, vec movPos)
 				RectF coll = (*it).second->GetSelectionRect();
 				if (float(x) > coll.x && float(x) < coll.x + coll.w && float(y) > coll.y && float(y) < coll.y + coll.h)
 				{
-					//LOG("Selected unit");
 					chaseObj = (*it).second;
 					next = false;
 					move = false;
@@ -1239,18 +1166,16 @@ void B_Unit::OnRightClick(vec posClick, vec movPos)
 					break;
 				}
 			}
-		}	
-			
-		//path = App->pathfinding.CreatePath({ int(pos.x), int(pos.y) }, { int(posClick.x-1), int(posClick.y-1) }, GetID());
+		}
+
 		if (!tilesVisited.empty())//Clean path tiles
 		{
 			for (std::vector<iPoint>::const_iterator it = tilesVisited.cbegin(); it != tilesVisited.cend(); ++it)
 			{
 				if (PathfindingManager::unitWalkability[it->x][it->y] != 0)
-				{
 					PathfindingManager::unitWalkability[it->x][it->y] = 0;
-				}
 			}
+
 			tilesVisited.clear();
 		}
 	}
@@ -1285,8 +1210,7 @@ void B_Unit::OnRightClick(vec posClick, vec movPos)
 			}
 			tilesVisited.clear();
 		}
-	}
-	//App->particleSys.AddParticle(pos, { posClick.x,posClick.y}, 9.0f, ORANGE_PARTICLE);	 
+	}	 
 }
  
 void Behaviour::Lifebar::Create(Gameobject* parent)
@@ -1329,10 +1253,8 @@ BuildingWithQueue::QueuedUnit::QueuedUnit(UnitType type, Gameobject* go, vec pos
 {
 	if (go)
 	{
-
 		Gameobject* icon = App->scene->AddGameobject("Queued Unit", go);
 		transform = icon->GetTransform();
-		
 	}
 	else
 		transform = nullptr;
@@ -1370,7 +1292,6 @@ void BuildingWithQueue::Update()
 
 	if (!build_queue.empty())
 	{
-		//LOG("Not empty");
 		bool able_to_build = true;
 
 		switch (build_queue.front().type)
@@ -1421,19 +1342,14 @@ void BuildingWithQueue::Update()
 		{
 			switch (build_queue.front().type)
 			{
-			case GATHERER:
-				icon->SetSection({ 75, 458, 48, 35 });
-				break;
-			case UNIT_MELEE:
-				icon->SetSection({ 22, 463, 48, 35 });
-				break;
-			case UNIT_RANGED:
-				icon->SetSection({ 22, 463, 48, 35 });
-				break;
+			case GATHERER: icon->SetSection({ 75, 458, 48, 35 }); break;
+			case UNIT_MELEE: icon->SetSection({ 22, 463, 48, 35 }); break;
+			case UNIT_RANGED: icon->SetSection({ 22, 463, 48, 35 }); break;
 			}
-				SDL_Rect section = bar_section;
-				section.w = int(float(section.w) * percent);
-				progress_bar->SetSection(section);
+
+			SDL_Rect section = bar_section;
+			section.w = int(float(section.w) * percent);
+			progress_bar->SetSection(section);
 		}
 	}
 }
@@ -1446,7 +1362,6 @@ void BuildingWithQueue::AddUnitToQueue(UnitType type, vec pos, float time)
 	{
 		if (App->scene->GetStat(CURRENT_EDGE) >= GATHERER_COST)
 		{
-			//LOG("Add unit Gatherer");
 			QueuedUnit unit(type, game_object, pos, time);
 			unit.transform->SetY(build_queue.size());
 			build_queue.push_back(unit);
@@ -1457,7 +1372,6 @@ void BuildingWithQueue::AddUnitToQueue(UnitType type, vec pos, float time)
 	{		
 		if (App->scene->GetStat(CURRENT_EDGE) >= MELEE_COST)
 		{
-			//LOG("Add unit melee");
 			QueuedUnit unit(type, game_object, pos, time);
 			unit.transform->SetY(build_queue.size());
 			build_queue.push_back(unit);
@@ -1468,7 +1382,6 @@ void BuildingWithQueue::AddUnitToQueue(UnitType type, vec pos, float time)
 	{
 		if (App->scene->GetStat(CURRENT_EDGE) >= RANGED_COST)
 		{
-			//LOG("Add unit ranged");
 			QueuedUnit unit(type, game_object, pos, time);
 			unit.transform->SetY(build_queue.size());
 			build_queue.push_back(unit);
@@ -1479,7 +1392,6 @@ void BuildingWithQueue::AddUnitToQueue(UnitType type, vec pos, float time)
 	{		
 		if (App->scene->GetStat(CURRENT_EDGE) >= SUPER_COST)
 		{
-			//LOG("Add unit super");
 			QueuedUnit unit(type, game_object, pos, time);
 			unit.transform->SetY(build_queue.size());
 			build_queue.push_back(unit);

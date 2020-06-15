@@ -40,15 +40,11 @@ enum SceneType : int
 enum GameplayState : int
 {
 	LORE,
-	
 	GATHER,
 	WARNING,
-	
 	SPAWNER_STATE,
-
 	WIN_BUTTON,
 	LOSE_BUTTON,
-
 	WIN,
 	LOSE,	
 };
@@ -65,7 +61,6 @@ enum UnitType : int
 	ENEMY_RANGED,
 	ENEMY_SUPER,
 
-	//Structures//
 	BASE_CENTER,
 	TOWER,
 	BARRACKS,
@@ -73,8 +68,6 @@ enum UnitType : int
 	EDGE,
 	CAPSULE,
 	SPAWNER,
-
-	//Other//
 	EARTHQUAKE,
 
 	MAX_UNIT_TYPES

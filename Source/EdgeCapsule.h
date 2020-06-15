@@ -14,6 +14,7 @@ public:
 	void Update() override;
 
 public:
+
 	bool gives_edge;
 };
 

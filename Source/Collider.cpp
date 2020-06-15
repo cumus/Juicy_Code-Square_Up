@@ -11,7 +11,6 @@
 #include "Point.h"
 #include "JuicyMath.h"
 
-
 Collider::Collider(Gameobject* go, RectF coll, ColliderType t, ColliderTag tg, RectF off ,CollisionLayer lay, ComponentType ty) : Component(ty, go)
 {
     tileSize = Map::GetTileSize_F();
@@ -87,14 +86,9 @@ void Collider::ResolveOverlap(Manifold& m)
     if (collType != TRIGGER)
     {
         Transform* t = game_object->GetTransform();
-        //LOG("Xdif: %f/Ydif:%f",xDif,yDif);
-        //LOG("Move res %f",res); 
-
-        //LOG("Move res %f", res);
         std::pair<float, float> mov = Map::F_WorldToMap(m.overX,m.overY);
-        t->MoveX(-mov.first * App->time.GetGameDeltaTime());//Move x      
 
-        //LOG("Move res %f", res);
+        t->MoveX(-mov.first * App->time.GetGameDeltaTime());//Move x      
         t->MoveY(-mov.second * App->time.GetGameDeltaTime());//Move y
 
         float tempX = parentGo->GetTransform()->GetGlobalPosition().x;
@@ -105,8 +99,6 @@ void Collider::ResolveOverlap(Manifold& m)
             t->MoveX(mov.first * App->time.GetGameDeltaTime());//Move x back
             t->MoveY(mov.second * App->time.GetGameDeltaTime());//Move y back
         }
-        
-        //LOG("New pos X:%f/Y:%f",pos.x,pos.y);
     }  
 }
 

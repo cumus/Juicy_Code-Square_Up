@@ -141,8 +141,6 @@ int Application::Update()
 		if (!(no_error = (*it)->PostUpdate()))
 			LOG("Module %s encuntered an error during PostUpdate!", (*it)->GetName());
 
-	//collSystem.ProcessRemovals();
-
 	if (!no_error)
 		return -1; // error
 
@@ -180,8 +178,7 @@ void Application::FinishUpdate()
 
 	int extra_ms = time.ManageFrameTimers();
 
-	// uncapped fps
-	if (extra_ms < 0)
+	if (extra_ms < 0) // uncapped fps
 	{
 		pathfinding.IteratePaths(1);
 
@@ -205,7 +202,6 @@ void Application::FinishUpdate()
 	}
 }
 
-// Called before quitting
 bool Application::CleanUp()
 {
 	bool ret = true;

@@ -47,5 +47,4 @@ namespace JMath
 	float RandomRangeF(float max = 1.0f, float min = 0.0f);
 };
 
-
 #endif // __JUICY_MATH_H__

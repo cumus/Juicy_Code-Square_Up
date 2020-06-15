@@ -28,7 +28,8 @@ std::pair<float, float> Map::size_f = { 0.0f, 0.0f };
 
 Map::Map()
 {
-	if (map == nullptr) map = this;
+	if (map == nullptr)
+		map = this;
 }
 
 Map::~Map()
@@ -36,7 +37,8 @@ Map::~Map()
 	if (loaded)
 		CleanUp();
 
-	if (map == this) map = nullptr;
+	if (map == this)
+		map = nullptr;
 }
 
 bool Map::Load(const char* file)
@@ -214,7 +216,6 @@ void Map::Draw() const
 					}
 				}
 			}
-
 		}
 
 		// draw mouse tile debug

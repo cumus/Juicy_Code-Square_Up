@@ -23,8 +23,7 @@ Tower::Tower(Gameobject* go, bool build_new) : Behaviour(go, TOWER, NO_UPGRADE, 
 	current_state = NO_UPGRADE;
 	providesVisibility = true;
 	spriteState = NO_UPGRADE;
-	// create_bar();
-	// bar_go->SetInactive();
+
 	CreatePanel();
 	selectionPanel->SetInactive();
 	unitInfo->SetInactive();
@@ -47,25 +46,20 @@ void Tower::FreeWalkabilityTiles()
 
 void Tower::OnCollision(Collider selfCol, Collider col)
 {
-	if (current_state != DESTROYED)
+	if (current_state != DESTROYED
+		&& selfCol.GetColliderTag() == PLAYER_ATTACK_TAG
+		&& col.GetColliderTag() == ENEMY_TAG
+		&& col.parentGo->GetBehaviour()->GetType() != EDGE
+		&& col.parentGo->GetBehaviour()->GetType() != CAPSULE)
 	{
-		if (selfCol.GetColliderTag() == PLAYER_ATTACK_TAG)
-		{
-			//LOG("Atk");
-			if (col.GetColliderTag() == ENEMY_TAG)
-			{				
-				if (col.parentGo->GetBehaviour()->GetType() != EDGE && col.parentGo->GetBehaviour()->GetType() != CAPSULE) objective = col.parentGo->GetBehaviour();
-				//LOG("Eenmy unit in attack range");				
-			}
-		}
-	}	
+		objective = col.parentGo->GetBehaviour();
+	}
 }
 
 void Tower::Update()
 {
 	if (!active)
 	{
-		//LOG("Building");
 		current_life = int(float(max_life) * characteR->GetBuildEffectProgress());
 		
 		if (current_life >= max_life)
@@ -79,6 +73,7 @@ void Tower::Update()
 			ssLife << current_life;
 			unitLife->text->SetText(ssLife.str().c_str());
 		}
+
 		mini_life_bar.Update(float(current_life) / float(max_life), current_lvl);
 	}
 
@@ -118,11 +113,7 @@ void Tower::Upgrade()
 			max_life += 25;
 			damage += 2;
 			audio->Play(B_BUILDED);
-			//LOG("LIFE AFTER UPGRADE: %d", max_life);
-			//LOG("Tower LEVEL: %d", lvl);
 
-			update_upgrades_ui();
-			update_health_ui();
 			switch (current_state)
 			{
 			case NO_UPGRADE:
@@ -180,7 +171,6 @@ void Tower::CreatePanel()
 
 	upgrade_btn->tex_id = panel_tex_ID;
 
-
 	//Upgrade
 	Gameobject* prices = App->scene->AddGameobject("Prices", selectionPanel);;
 	C_Image* cost4 = new C_Image(prices);
@@ -202,10 +192,9 @@ void Tower::CreatePanel()
 	unitDamage->target = { 0.165f, 0.96f, 1.0f , 1.0f };
 }
 
-
 void Tower::create_bar() {
 
-	pos_y_HUD = 0.17 + 0.1 * 4;// App->scene->building_bars_created;
+	pos_y_HUD = 0.17 + 0.1 * 4;
 
 	bar_text_id = App->tex.Load("textures/Iconos_square_up.png");
 
@@ -264,16 +253,4 @@ void Tower::create_bar() {
 	upgrades->offset = { -33.0f, -33.0f };
 	upgrades->section = { 16, 806, 33, 33 };
 	upgrades->tex_id = bar_text_id;
-
-}
-
-void Tower::update_health_ui() {
-
-//	health->target = { (0.345f - (0.345f - 0.058f) * (1.0f - float(current_life) / float(max_life))), pos_y_HUD - 0.018f, 1.68f * (float(current_life) / float(max_life)), 0.75f };
-}
-
-void Tower::update_upgrades_ui() {
-
-//	upgrades->section = { 16 + 36 * (App->scene->t_lvl - 1), 806, 33, 33 };
-
 }

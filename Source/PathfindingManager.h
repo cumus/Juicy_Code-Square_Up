@@ -9,9 +9,7 @@
 #include <vector>
 #include <map>
 
-
 #define MAX_PATH_CALCULATIONS 40
-
 
 // ---------------------------------------------------------------------
 // Pathnode: Helper struct to represent a node in the path creation
@@ -140,10 +138,12 @@ public:
 	iPoint CheckEqualNeighbours(iPoint posA, iPoint posB);
 
 public:
+
 	int debugTextureID;
 	static std::vector<std::vector<float> > unitWalkability;
 
 private:
+
 	bool debugAll = false;
 	bool debugOne = false;
 	bool debugWalk = false;

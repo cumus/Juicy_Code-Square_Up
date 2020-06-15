@@ -18,13 +18,15 @@ EnemySuperUnit::EnemySuperUnit(Gameobject* go) : B_Unit(go, ENEMY_SUPER, IDLE, B
 	attack_range = 10.0f;
 	vision_range = 15.0f;
 	providesVisibility = false;
+
 	//SFX
 	deathFX = IA_SUPER_DIE_FX;
 	attackFX = IA_SUPER_ATK_FX;
 	SetColliders();
 }
 
-EnemySuperUnit::~EnemySuperUnit() {}
+EnemySuperUnit::~EnemySuperUnit()
+{}
 
 void EnemySuperUnit::UnitAttackType()
 {

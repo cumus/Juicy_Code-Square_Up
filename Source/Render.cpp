@@ -130,7 +130,6 @@ bool Render::Update()
 			else if (wheel_motion != 0)
 			{
 				// Get Tile at mouse
-				
 				std::pair<int, int> mouse_tile = Map::WorldToTileBase(cam.x + float(x), cam.y + float(y));
 				std::pair<float, float> mouse_tile_f = { float(mouse_tile.first), float(mouse_tile.second) };
 
@@ -154,6 +153,7 @@ bool Render::Update()
 	if (App->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT) {cam.x += moveSpeed; moved = true;}
 	if (App->input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT) {cam.y -= moveSpeed; moved = true;}
 	if (App->input->GetKey(SDL_SCANCODE_S) == KEY_REPEAT) {cam.y += moveSpeed; moved = true;}
+
 	//MOUSE CAMERA MOVEMENT
 	if (!App->scene->paused_scene)
 	{
@@ -192,16 +192,16 @@ bool Render::PostUpdate()
 				case RenderData::TEXTURE_FULL:
 				{
 					if (data->texture != nullptr)
-						if (!(ret = SDL_RenderCopy(renderer, data->texture, nullptr, &data->rect) == 0)) {}
-					//LOG("Cannot blit texture to screen. SDL_RenderCopy error: %s", SDL_GetError());
+						if (!(ret = SDL_RenderCopy(renderer, data->texture, nullptr, &data->rect) == 0))
+							LOG("Cannot blit texture to screen. SDL_RenderCopy error: %s", SDL_GetError());
 
 					break;
 				}
 				case RenderData::TEXTURE_SECTION:
 				{
 					if (data->texture != nullptr)
-						if (!(ret = SDL_RenderCopy(renderer, data->texture, &data->extra.section, &data->rect) == 0)) {}
-					//LOG("Cannot blit texture section to screen. SDL_RenderCopy error: %s", SDL_GetError());
+						if (!(ret = SDL_RenderCopy(renderer, data->texture, &data->extra.section, &data->rect) == 0))
+							LOG("Cannot blit texture section to screen. SDL_RenderCopy error: %s", SDL_GetError());
 
 					break;
 				}
@@ -571,8 +571,8 @@ bool Render::Blit(int texture_id, int x, int y, const SDL_Rect* section, Layer l
 
 		AddToLayer(layer, data);
 	}
-	//else
-		//LOG("Cannot blit to screen. Invalid id %d", texture_id);
+	else
+		LOG("Cannot blit to screen. Invalid id %d", texture_id);
 
 	return ret;
 }
@@ -619,7 +619,7 @@ bool Render::Blit_Scale(int texture_id, int x, int y, float scale_x, float scale
 		AddToLayer(layer, data);
 	}
 	else
-		//LOG("Cannot blit to screen. Invalid id %d", texture_id);
+		LOG("Cannot blit to screen. Invalid id %d", texture_id);
 
 	return ret;
 }
@@ -643,8 +643,8 @@ bool Render::BlitNorm(int texture_id, RectF rect, const SDL_Rect* section, Layer
 
 		AddToLayer(layer, data);
 	}
-	//else
-		//LOG("Cannot blit to screen. Invalid id %d", texture_id);
+	else
+		LOG("Cannot blit to screen. Invalid id %d", texture_id);
 
 	return ret;
 }

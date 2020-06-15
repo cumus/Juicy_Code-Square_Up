@@ -187,9 +187,11 @@ bool Scene::Update()
 			shakeTimer = 0;
 			earthquake = false;
 			timeEarthquake = 0;
+
 			for (std::map<double, Behaviour*>::iterator it = Behaviour::b_map.begin(); it != Behaviour::b_map.end(); ++it)
 			{
-				if((*it).second->GetType() != EDGE && (*it).second->GetType() != SPAWNER) Event::Push(DAMAGE, (*it).second, 5, EARTHQUAKE);
+				if((*it).second->GetType() != EDGE && (*it).second->GetType() != SPAWNER)
+					Event::Push(DAMAGE, (*it).second, 5, EARTHQUAKE);
 			}
 		}
 	}
@@ -237,14 +239,6 @@ bool Scene::PostUpdate()
 		}
 	}
 
-	//Fog of war
-	/*for (std::vector<double>::const_iterator it = cacheEnemies.cbegin(); it != cacheEnemies.cend(); ++it)
-	{
-		//Behaviour* go = Behaviour::b_map[*it]->GetGameobject()->GetBehaviour();
-		//if (go->GetState() != DESTROYED) Event::Push(HIDE_SPRITE, go);
-		cacheEnemies.clear();
-	}*/
-
 	return true;
 }
 
@@ -260,10 +254,8 @@ void Scene::RecieveEvent(const Event& e)
 	switch (e.type)
 	{
 	case SCENE_PLAY:
-	{
 		Event::Push(ON_PLAY, &root);
 		break;
-	}
 	case SCENE_PAUSE:
 		Event::Push(ON_PAUSE, &root);
 		break;
@@ -310,28 +302,22 @@ void Scene::RecieveEvent(const Event& e)
 		case TOWER:
 			buildingImage->SetSection({ 0, 3, 217, 177 });
 			imgPreview->GetTransform()->SetScale({ 0.9f,0.9f,0.9f });
-			//LOG("Tower");
 			break;
 		case BARRACKS:
 			buildingImage->SetSection({ 217, 3, 217, 177 });
 			imgPreview->GetTransform()->SetScale({ 1.75f,1.75f,1.75f });
-			//LOG("Barracks");
 			break;
 		case BASE_CENTER:
 			buildingImage->SetSection({ 434, 3, 217, 177 });
 			imgPreview->GetTransform()->SetScale({ 1.9f,1.9f,1.9f });
-			//LOG("Base center");
 			break;
 		case LAB:
 			buildingImage->SetSection({ 658, 7, 164, 173 });
 			imgPreview->GetTransform()->SetScale({ 0.9f,0.9f,0.9f });
-			//LOG("Tower");
 			break;
 		default:
 			buildingImage->SetSection({ 0, 3, 217, 177 });
 			imgPreview->GetTransform()->SetScale({ 0.9f,0.9f,0.9f });
-
-			//LOG("Default");
 			break;
 		}
 
@@ -446,30 +432,6 @@ void Scene::RecieveEvent(const Event& e)
 		}
 		break;
 	}
-	/*case NEW_BEHAVIOUR:
-
-		switch (e.type)
-		{
-		case UNIT_MELEE:
-			App->scene->current_melee_units += 1;
-			App->scene->melee_units_created += 1;
-			break;
-		case UNIT_RANGED:
-			App->scene->current_ranged_units += 1;
-			App->scene->ranged_units_created += 1;
-			break;
-		case GATHERER:
-			App->scene->current_gatherer_units += 1;
-			App->scene->gatherer_units_created += 1;
-			break;
-		case BARRACKS:
-			App->scene->tutorial_barrack += 1;
-			break;
-		case TOWER:
-			App->scene->tutorial_tower += 1;
-			break;
-		}
-		break;*/
 	default:
 		break;
 	}
@@ -566,6 +528,7 @@ void Scene::LoadMenuScene()
 	g_logo->tex_id = App->tex.Load("textures/game-logo.png");
 	
 	//------------------------- START --------------------------------------
+
 	float buttons_x = 0.01f;
 
 	Gameobject* start_go = AddGameobjectToCanvas("Start Button");
@@ -581,6 +544,7 @@ void Scene::LoadMenuScene()
 	start->tex_id = App->tex.Load("textures/new-game.png");
 
 	//------------------------- RESUME --------------------------------------
+
 	pugi::xml_document doc;
 	if (App->files.LoadXML("save_file.xml", doc)) gotSaveGame = true;
 
@@ -742,7 +706,6 @@ void Scene::LoadOptionsScene()
 	sfx_slider_button->section[3] = { 1152, 933, 45, 45 };
 	sfx_slider_button->tex_id = App->tex.Load("textures/hud-sprites.png");
 
-
 	//------------------------- MAIN MENU BUTTON --------------------------------------
 
 	Gameobject* main_menu_go = AddGameobjectToCanvas("Main Menu Button");
@@ -831,7 +794,6 @@ void Scene::LoadEndScene()
 	endAnimImg->offset = { 0.f, 0.f };
 	endAnimImg->section = { 0, 0, 200, 169 };
 	endAnimImg->tex_id = App->tex.Load(win ? "textures/anim_melee.png" : "textures/anim_enemy_melee.png");
-	//endAnimImg->tex_id = App->tex.Load(win ? "textures/anim_enemy_melee.png" : "textures/anim_melee.png"); // win lose sprites SWITCHED
 	endAnim = 0;
 	endAnimFrameTime = 0.1f;
 	endAnimRow = 0;
@@ -842,7 +804,6 @@ void Scene::LoadEndScene()
 	endAnimImg2->offset = { 0.f, 0.f };
 	endAnimImg2->section = { 0, 0, 165, 169 };
 	endAnimImg2->tex_id = App->tex.Load(win ? "textures/ranged_anim_end.png" : "textures/ranged_enemy_anim_end.png");
-	//endAnimImg2->tex_id = App->tex.Load(win ? "textures/ranged_enemy_anim_end.png" : "textures/ranged_anim_end.png"); //win lose sprites SWITCHED
 	endAnim2 = 0;
 	endAnimFrameTime2 = 0.1f;
 	endAnimRow2 = 0;
@@ -882,24 +843,6 @@ void Scene::LoadEndScene()
 	units_k->target = { info_pos, 0.76f, 0.6f, 0.65f };
 	units_k->section = { 0, 0, 693, 100 };
 	units_k->tex_id = App->tex.Load(win ? "textures/wunits_k.png" : "textures/lunits_k.png");
-
-
-	//--------------------------------TEXT----------------------------------------
-	/*Gameobject* edge_text_go = AddGameobject("Text Time", stats_val_go);
-	hud_texts[EDGE_COLLECTED] = new C_Text(edge_text_go);
-	hud_texts[EDGE_COLLECTED]->target = { 0.4f, 0.6f, 2.f, 2.f };
-
-	Gameobject* units_c_text_go = AddGameobject("Text Time", stats_val_go);
-	hud_texts[UNITS_CREATED] = new C_Text(units_c_text_go);
-	hud_texts[UNITS_CREATED]->target = { 0.4f, 0.7f, 2.f, 2.f };
-
-	Gameobject* units_l_text_go = AddGameobject("Text Time", stats_val_go);
-	hud_texts[UNITS_LOST] = new C_Text(units_l_text_go);
-	hud_texts[UNITS_LOST]->target = { 0.4f, 0.8f, 2.f, 2.f };
-
-	Gameobject* units_k_text_go = AddGameobject("Text Time", stats_val_go);
-	hud_texts[UNITS_KILLED] = new C_Text(units_k_text_go);
-	hud_texts[UNITS_KILLED]->target = { 0.4f, 0.7f, 2.f, 2.f };*/
 
 	//--------------------------------TEXT----------------------------------------
 	std::stringstream time_t;
@@ -949,9 +892,7 @@ void Scene::LoadMainHUD()
 {
 	int icons_text_id = App->tex.Load("textures/hud-sprites.png");
 
-	//-----------------------------------------------------------------------------
 	//----------------------------LEFT BAR-----------------------------------------
-	//-----------------------------------------------------------------------------
 
 	Gameobject* left_bar_go = AddGameobjectToCanvas("Left bar");
 
@@ -1021,9 +962,7 @@ void Scene::LoadMainHUD()
 	hud_texts[CUERRENT_SUPER_UNITS] = new C_Text(turret_counter_go, "0");
 	hud_texts[CUERRENT_SUPER_UNITS]->target = { 0.79f, 0.15f, 1.25f, 1.25f };
 
-	//-----------------------------------------------------------------------------
 	//------------------------------RIGHT BAR--------------------------------------
-	//-----------------------------------------------------------------------------
 
 	Gameobject* right_bar_go = AddGameobjectToCanvas("Right bar");
 	C_Image* right_bar_box = new C_Image(right_bar_go);
@@ -1068,9 +1007,7 @@ void Scene::LoadMainHUD()
 	hud_texts[CURRENT_GOLD] = new C_Text(gold_value_go, "0");
 	hud_texts[CURRENT_GOLD]->target = { 0.55f, 0.25f, 1.f, 1.f };
 
-	//-----------------------------------------------------------------------------
 	//------------------------------PAUSE BUTTON-----------------------------------
-	//-----------------------------------------------------------------------------
 
 	Gameobject* pause_button_go = AddGameobjectToCanvas("Pause button");
 
@@ -1085,15 +1022,9 @@ void Scene::LoadMainHUD()
 
 	pause_button->tex_id = icons_text_id;
 
-	//-----------------------------------------------------------------------------
 	//-------------------------------MINIMAP---------------------------------------
-	//-----------------------------------------------------------------------------
 
 	new Minimap(AddGameobjectToCanvas("Minimap"));
-
-	//-----------------------------------------------------------------------------
-	//-------------------------------PAUSE MENU---------------------------------------
-	//-----------------------------------------------------------------------------
 
 	//------------------------- BACKGROUND -----------------------------------
 
@@ -1150,7 +1081,6 @@ void Scene::LoadMainHUD()
 
 	save->tex_id = App->tex.Load("textures/save.png");
 
-
 	//------------------------- LOAD --------------------------------------
 
 	Gameobject* load_go = AddGameobject("load Button", pause_background_go);
@@ -1188,19 +1118,14 @@ void Scene::LoadTutorial()
 	not_go = AddGameobjectToCanvas("lore");
 
 	skip = new C_Button(not_go, Event(GAMEPLAY, this, GATHER));
-
 	skip->target = { 0.3f, 0.73f, 0.5f, 0.5f };
-	//skip->offset = { 100.f, -317.f };
-
 	skip->section[0] = { 0, 0, 309, 37 };
 	skip->section[1] = { 0, 44, 309, 37 };
 	skip->section[2] = { 0, 88, 309, 37 };
 	skip->section[3] = { 0, 88, 309, 37 };
-
 	skip->tex_id = App->tex.Load("textures/tuto/skip-button.png");
 
 	vec gatherer_t = { 130, 75 };
-
 	Gameobject* gather_go = AddGameobject("Initial Gatherer");
 	gather_go->GetTransform()->SetLocalPos(gatherer_t);
 	new Gatherer(gather_go);
@@ -1216,7 +1141,6 @@ void Scene::LoadBaseCenter()
 		base_go->GetTransform()->SetLocalPos({ float(position.first), float(position.second), 0.0f });
 		base_go->GetTransform()->ScaleX(4.0f);
 		base_go->GetTransform()->ScaleY(4.0f);
-		//App->audio->PlayFx(B_BUILDED);
 		new Base_Center(base_go);
 		std::pair<int, int> baseCenterPos = {
 			base_go->GetTransform()->GetGlobalPosition().x,
@@ -1274,9 +1198,6 @@ void Scene::LoadStartingMapResources()
 
 	for (int i = 0; i < edge_count; ++i)
 		SpawnBehaviour(EDGE, edge_pos[i]);
-
-
-	//Event::Push(UPDATE_STAT, App->scene, CURRENT_GOLD, 10000);
 
 	//Capsule test positions
 	const int capsule_count = 13;
@@ -1367,7 +1288,6 @@ void Scene::UpdateBuildingMode()
 			int x, y;
 			App->input->GetMousePosition(x, y);
 			RectF cam = App->render->GetCameraRectF();
-			//audio->PlayFx(B_BUILDED);
 			std::pair<int, int> pos = Map::WorldToTileBase(float(x) + cam.x, float(y) + cam.y);
 			Transform* t = SpawnBehaviour(buildType, vec(pos.first, pos.second));
 			if (t)
@@ -1683,12 +1603,10 @@ void Scene::OnEventStateMachine(GameplayState state)
 		not_inactive = new C_Button(not_go, Event(SKIP_TUTORIAL, this, MAIN));
 
 		not->target = { 0.3f, 0.3f, 0.6f, 0.6f };
-		//not->offset = { -183.f, -1044.f };
 		not->section = { 0, 0, 983, 644 };
 		not->tex_id = App->tex.Load("textures/tuto/cam-not.png");
 
 		not_inactive->target = { 0.605f, 0.795f, 0.6f, 0.6f };
-		//not_inactive->offset = { 500.f, -317.f };
 
 		not_inactive->section[0] = { 0, 0, 309, 37 };
 		not_inactive->section[1] = { 0, 44, 309, 37 };
@@ -1719,12 +1637,10 @@ void Scene::OnEventStateMachine(GameplayState state)
 		next = new C_Button(not_go, Event(GAMEPLAY, this, SPAWNER_STATE));
 
 		not->target = { 0.3f, 0.3f, 0.6f, 0.6f };
-		//not->offset = { -183.f, -1044.f };
 		not->section = { 0, 0, 983, 644 };
 		not->tex_id = App->tex.Load("textures/tuto/lure-queen-not.png");
 
 		next->target = { 0.605f, 0.795f, 0.6f, 0.6f };
-		//not_inactive->offset = { 500.f, -317.f };
 
 		next->section[0] = { 0, 0, 309, 37 };
 		next->section[1] = { 0, 44, 309, 37 };
@@ -1733,9 +1649,7 @@ void Scene::OnEventStateMachine(GameplayState state)
 
 		next->tex_id = App->tex.Load("textures/tuto/not-button.png");
 		current_state = WARNING;
-		
-		//edge_go->Destroy();
-		//edge_text_go->SetInactive();
+
 		break;
 
 	case SPAWNER_STATE:
@@ -1794,7 +1708,6 @@ void Scene::OnEventStateMachine(GameplayState state)
 			while(spawnPointsOccuped[rand-1] == true);
 			SpawnBehaviour(SPAWNER, spawnPoints[rand-1]);
 			spawnPointsOccuped[rand-1] = true;
-			//LOG("Random = %d",rand-1);
 		}
 		std::srand(time(NULL));
 
@@ -1803,11 +1716,6 @@ void Scene::OnEventStateMachine(GameplayState state)
 		save->section[2] = { 0, 202, 470, 90 };
 		save->section[3] = { 0, 202, 470, 90 };
 		save->clikable = true;
-
-		/*load->section[0] = { 0, 0, 470, 90 };
-		load->section[1] = { 0, 101, 470, 90 };
-		load->section[2] = { 0, 202, 470, 90 };
-		load->section[3] = { 0, 202, 470, 90 };*/
 
 		current_state = SPAWNER_STATE;
 		break;
@@ -1853,12 +1761,10 @@ void Scene::OnEventStateMachine(GameplayState state)
 		next = new C_Button(not_go, Event(GAMEPLAY, this, LOSE));
 
 		not->target = { 0.27f, 0.15f, 0.6f, 0.6f };
-		//not->offset = { -183.f, -1044.f };
 		not->section = { 0, 0, 983, 644 };
 		not->tex_id = App->tex.Load("textures/defeat.png");
 
 		next->target = { 0.575f, 0.645f, 0.6f, 0.6f };
-		//not_inactive->offset = { 500.f, -317.f };
 
 		next->section[0] = { 0, 0, 309, 37 };
 		next->section[1] = { 0, 44, 309, 37 };
@@ -1952,7 +1858,6 @@ inline bool Scene::SaveFileExists() const
 
 Transform* Scene::SpawnBehaviour(int type, vec pos)
 {
-	//LOG("Spawn");
 	Transform* ret = nullptr;
 	Gameobject* behaviour = nullptr;
 
@@ -1960,10 +1865,8 @@ Transform* Scene::SpawnBehaviour(int type, vec pos)
 	{
 	case GATHERER:
 	{
-		//LOG("Edge %d", player_stats[CURRENT_EDGE]);
 		if ((player_stats[CURRENT_EDGE] - GATHERER_COST) >= 0)
 		{
-			//LOG("Sapwn Gatherer");
 			behaviour = AddGameobject("Gatherer");
 			behaviour->GetTransform()->SetLocalPos(pos);
 			Gatherer* temp = new Gatherer(behaviour);
@@ -2000,7 +1903,6 @@ Transform* Scene::SpawnBehaviour(int type, vec pos)
 	{
 		if ((player_stats[CURRENT_EDGE] - MELEE_COST) >= 0)
 		{
-			//LOG("Sapwn Melee");
 			behaviour = AddGameobject("Unit melee");
 			behaviour->GetTransform()->SetLocalPos(pos);
 			MeleeUnit* temp = new MeleeUnit(behaviour);
@@ -2036,7 +1938,6 @@ Transform* Scene::SpawnBehaviour(int type, vec pos)
 	case UNIT_RANGED:
 		if ((player_stats[CURRENT_EDGE] - RANGED_COST) >= 0)
 		{
-			//LOG("Sapwn Ranged");
 			behaviour = AddGameobject("Ranged unit");
 			behaviour->GetTransform()->SetLocalPos(pos);
 			RangedUnit* temp = new RangedUnit(behaviour);
@@ -2071,7 +1972,6 @@ Transform* Scene::SpawnBehaviour(int type, vec pos)
 	case UNIT_SUPER:
 		if ((player_stats[CURRENT_EDGE] - SUPER_COST) >= 0)
 		{
-			//LOG("Sapwn Super");
 			behaviour = AddGameobject("Super unit");
 			behaviour->GetTransform()->SetLocalPos(pos);
 			SuperUnit* temp = new SuperUnit(behaviour);
@@ -2105,7 +2005,6 @@ Transform* Scene::SpawnBehaviour(int type, vec pos)
 		break;
 	case ENEMY_MELEE:
 	{
-		//LOG("Sapwn Enemy Melee");
 		behaviour = AddGameobject("Enemy Melee");
 		behaviour->GetTransform()->SetLocalPos(pos);
 		EnemyMeleeUnit* temp = new EnemyMeleeUnit(behaviour);
@@ -2132,7 +2031,6 @@ Transform* Scene::SpawnBehaviour(int type, vec pos)
 	}
 	case ENEMY_RANGED:
 	{
-		//LOG("Sapwn Enemy Ranged");
 		behaviour = AddGameobject("Enemy Ranged");
 		behaviour->GetTransform()->SetLocalPos(pos);
 		EnemyRangedUnit* temp = new EnemyRangedUnit(behaviour);
@@ -2159,7 +2057,6 @@ Transform* Scene::SpawnBehaviour(int type, vec pos)
 	}
 	case ENEMY_SUPER:
 	{
-		//LOG("Sapwn Enemy Super");
 		behaviour = AddGameobject("Enemy Super");
 		behaviour->GetTransform()->SetLocalPos(pos);
 		EnemySuperUnit* temp = new EnemySuperUnit(behaviour);
@@ -2185,8 +2082,7 @@ Transform* Scene::SpawnBehaviour(int type, vec pos)
 		break;
 	}
 	case BASE_CENTER:
-	{		
-		//LOG("Sapwn Base center");
+	{
 		if ((player_stats[CURRENT_EDGE] - 20) >= 0)
 		{
 			std::pair<int, int> thisPos(pos.x,pos.y);
@@ -2198,6 +2094,7 @@ Transform* Scene::SpawnBehaviour(int type, vec pos)
 				behaviour->GetTransform()->ScaleY(4.0f);
 				new Base_Center(behaviour);
 				UpdateStat(CURRENT_EDGE, -20);
+
 				//Update paths
 				for (std::map<double, Behaviour*>::iterator it = Behaviour::b_map.begin(); it != Behaviour::b_map.end(); ++it)
 					Event::Push(REPATH, it->second, pos.x - 1, pos.y - 1);
@@ -2209,7 +2106,6 @@ Transform* Scene::SpawnBehaviour(int type, vec pos)
 	}
 	case TOWER:
 	{
-		//LOG("Sapwn Tower");
 		if ((player_stats[CURRENT_EDGE] - TOWER_COST) >= 0)
 		{
 			std::pair<int, int> thisPos(pos.x, pos.y);
@@ -2223,6 +2119,7 @@ Transform* Scene::SpawnBehaviour(int type, vec pos)
 				UpdateStat(CURRENT_TOWERS, 1);
 				UpdateStat(TOTAL_TOWERS, 1);
 				UpdateStat(CURRENT_EDGE, -TOWER_COST);
+
 				//Update paths
 				for (std::map<double, Behaviour*>::iterator it = Behaviour::b_map.begin(); it != Behaviour::b_map.end(); ++it)
 					Event::Push(REPATH, it->second, pos.x - 1, pos.y - 1);
@@ -2233,8 +2130,7 @@ Transform* Scene::SpawnBehaviour(int type, vec pos)
 		break;
 	}
 	case BARRACKS:
-	{			
-		//LOG("Spawn Barracks");
+	{
 		if ((player_stats[CURRENT_EDGE] - BARRACKS_COST) >= 0)
 		{
 			std::pair<int, int> thisPos(pos.x, pos.y);
@@ -2260,7 +2156,6 @@ Transform* Scene::SpawnBehaviour(int type, vec pos)
 	}
 	case LAB:
 	{
-		//LOG("Spawn Lab");
 		if ((player_stats[CURRENT_EDGE] - 50) >= 0)
 		{
 			std::pair<int, int> thisPos(pos.x, pos.y);
@@ -2272,6 +2167,7 @@ Transform* Scene::SpawnBehaviour(int type, vec pos)
 				behaviour->GetTransform()->ScaleY(4.0f);
 				new Lab(behaviour);
 				UpdateStat(CURRENT_EDGE, -50);
+
 				//Update paths
 				for (std::map<double, Behaviour*>::iterator it = Behaviour::b_map.begin(); it != Behaviour::b_map.end(); ++it)
 					Event::Push(REPATH, it->second, pos.x - 1, pos.y - 1);
@@ -2283,7 +2179,6 @@ Transform* Scene::SpawnBehaviour(int type, vec pos)
 	}
 	case EDGE:
 	{
-		//LOG("Sapwn Edge");
 		behaviour = AddGameobject("Edge");
 		behaviour->GetTransform()->SetLocalPos(pos);
 		new Edge(behaviour);
@@ -2291,8 +2186,6 @@ Transform* Scene::SpawnBehaviour(int type, vec pos)
 	}
 	case CAPSULE:
 	{
-		//LOG("Spawn Capsule");
-		//LOG("current gold %d", CURRENT_GOLD);
 		if ((player_stats[CURRENT_GOLD] - 10) >= 0)
 		{
 			std::pair<int, int> thisPos(pos.x, pos.y);
@@ -2303,8 +2196,8 @@ Transform* Scene::SpawnBehaviour(int type, vec pos)
 				int random = std::rand() % 10 + 1;
 				(new Capsule(behaviour))->gives_edge = random <= 5;
 				std::srand(time(NULL));
-
 				UpdateStat(CURRENT_GOLD, -10);
+
 				//Update paths
 				for (std::map<double, Behaviour*>::iterator it = Behaviour::b_map.begin(); it != Behaviour::b_map.end(); ++it)
 					Event::Push(REPATH, it->second, pos.x - 1, pos.y - 1);
@@ -2326,10 +2219,7 @@ Transform* Scene::SpawnBehaviour(int type, vec pos)
 	}
 
 	if (behaviour)
-	{		
 		ret = behaviour->GetTransform();
-		//LOG("SpawnPos X = %f/Y = %f",pos.x,pos.y);
-	}
 
 	return ret;
 }
@@ -2563,7 +2453,6 @@ void Scene::GodMode()
 		//map.draw_walkability = !map.draw_walkability;
 		App->pathfinding.DebugWalkability();
 	}
-		
 
 	// F3: Toggle Music Playing
 	if (App->input->GetKey(SDL_SCANCODE_F3) == KEY_DOWN)
@@ -2600,9 +2489,6 @@ void Scene::GodMode()
 		for (std::map<double, Behaviour*>::iterator it = Behaviour::b_map.begin(); it != Behaviour::b_map.end(); ++it)
 			Event::Push(DRAW_RANGE, it->second);
 	}
-
-	// SPACE: Swap map orientation
-	//if (App->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN) Event::Push(REQUEST_SAVE, App); // Map::SwapMapType();
 
 	// DEL: Remove Selected Gameobject/s
 	if (App->input->GetKey(SDL_SCANCODE_DELETE) == KEY_DOWN)
@@ -2672,10 +2558,7 @@ void Scene::ToggleGodMode()
 	Minimap* m = Minimap::Get();
 	if (m)
 		m->draw_units_always = god_mode;
-	//App->fogWar.debugMode = !App->fogWar.debugMode;
 }
-
-//Mission struct
 
 Mission::Mission(const char* name,PlayerStats t, int r,int m)
 {
@@ -2696,7 +2579,8 @@ Mission::Mission(const char* name,PlayerStats t, int r,int m)
 
 Mission::~Mission()
 {
-	mission->Destroy();
+	if (mission)
+		mission->Destroy();
 }
 
 void Mission::OnComplete()
@@ -2707,7 +2591,9 @@ void Mission::OnComplete()
 void Mission::Update(int num)
 {
 	progress += num;
-	if (progress >= max) OnComplete();
+
+	if (progress >= max)
+		OnComplete();
 }
 
 void Mission::SetPos(RectF img,RectF txt)

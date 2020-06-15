@@ -191,11 +191,14 @@ bool Window::Init()
 
 bool Window::Update()
 {
-	/*int w, h;
-	SDL_GetWindowSize(window, &w, &h);
+	if (resizable)
+	{
+		int w, h;
+		SDL_GetWindowSize(window, &w, &h);
 
-	if (w != rect.w || h != rect.h)
-		Event::Push(WINDOW_SIZE_CHANGED, this, w, h);*/
+		if (w != rect.w || h != rect.h)
+			Event::Push(WINDOW_SIZE_CHANGED, this, w, h);
+	}
 
 	return true;
 }

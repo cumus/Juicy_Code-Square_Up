@@ -22,6 +22,7 @@ public:
 	void AddParticle(vec pos,vec dest,float speed, ParticleType t);
 
 private:
+
 	std::vector<Particle*> particles;
 	std::vector<Particle*> aliveCache;
 	std::vector<Particle*> deathCache;

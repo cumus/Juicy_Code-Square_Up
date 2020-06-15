@@ -21,15 +21,12 @@ Spawner::Spawner(Gameobject* go) : Behaviour(go, SPAWNER, NO_UPGRADE, B_SPAWNER)
 	maxSpawns = 500;
 	currentSpawns = 0;
 	providesVisibility = false;
-
 	
 	SetColliders();
 }
 
 Spawner::~Spawner()
 {}
-
-
 
 void Spawner::ChangeValues(int spawns, float cd, int spawnPoints)
 {
@@ -38,10 +35,8 @@ void Spawner::ChangeValues(int spawns, float cd, int spawnPoints)
 	maxSpawns = spawns;
 }
 
-
 void Spawner::ResetSpawner()
 {
-
 	maxSpawns = 500;
 	currentSpawns = 0;
 }
@@ -51,9 +46,9 @@ void Spawner::Update()
 	CheckFoWMap();
 	if (shoot && ms_counter > cooldown && currentSpawns < maxSpawns)
 	{
-		//LOG("Spawn time");
 		vec pos = game_object->GetTransform()->GetGlobalPosition();
 		bool incX = false;
+
 		for (int i = 0; i < damage; i++)
 		{		
 			if (incX)
@@ -68,24 +63,14 @@ void Spawner::Update()
 			}
 
 			int random = std::rand() % 100 + 1;
-			//LOG("Random %d", random);
 			if (random < MELEE_RATE) //Spawn melee
-			{
-				//LOG("melee");
 				Event::Push(SPAWN_UNIT, App->scene, ENEMY_MELEE, pos);
-			}
 			else if (random < (MELEE_RATE+RANGED_RATE)) //Spawn ranged
-			{
-				//LOG("ranged");
 				Event::Push(SPAWN_UNIT, App->scene, ENEMY_RANGED, pos);
-			}
 			else if (random < (MELEE_RATE + RANGED_RATE+SUPER_RATE)) //Spawn super
-			{
-				//LOG("super");
 				Event::Push(SPAWN_UNIT, App->scene, ENEMY_SUPER, pos);
-			}
+
 			currentSpawns++;
-			//LOG("Spawned one");
 		}
 
 		ms_counter = 0;
@@ -99,7 +84,5 @@ void Spawner::Update()
 	if (currentSpawns > 60 && damage < 6) { damage = 6; App->scene->difficultyLvl = 5; }
 
 	if (ms_counter < cooldown)
-	{
 		ms_counter += App->time.GetGameDeltaTime();
-	}
 }

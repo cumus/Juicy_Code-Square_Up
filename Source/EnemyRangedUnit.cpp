@@ -19,13 +19,15 @@ EnemyRangedUnit::EnemyRangedUnit(Gameobject* go) : B_Unit(go, ENEMY_RANGED, IDLE
 	attack_range = 10.0f;
 	vision_range = 15.0f;
 	providesVisibility = false;
+
 	//SFX
 	deathFX = IA_RANGED_DIE_FX;
 	attackFX = RANGED_ATK_FX;
 	SetColliders();
 }
 
-EnemyRangedUnit::~EnemyRangedUnit() {}
+EnemyRangedUnit::~EnemyRangedUnit()
+{}
 
 void EnemyRangedUnit::UnitAttackType()
 {

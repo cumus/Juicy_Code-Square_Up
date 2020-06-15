@@ -106,17 +106,10 @@ void Minimap::PostUpdate()
 
 			if (mouse_moving)
 			{
-				//LOG("POS x:%f/Y:%f", ((float(x - output.x) - (float(output.w) * 0.5f)) / scale.first) - (cam.w / 2.0f), (float(y - output.y) / scale.second) - (cam.h / 2.0f));
-				//std::pair<int, int> pos = Map::WorldToTileBase((float(x - output.x) - (float(output.w) * 0.5f) / scale.first) - (cam.w / 2.0f), (float(y - output.y) / scale.second) - (cam.h / 2.0f));
-				//LOG("POS X:%d/Y:%d",pos.first,pos.second);
-				//if (pos.first >= 0 && pos.second >= 0 && pos.first < map_size.first && pos.second < map_size.second)
-				//{
-					Event::Push(MINIMAP_MOVE_CAMERA, App->render,
+				Event::Push(MINIMAP_MOVE_CAMERA, App->render,
 						((float(x - output.x) - (float(output.w) * 0.5f)) / scale.first) - (cam.w / 2.0f),
 						(float(y - output.y) / scale.second) - (cam.h / 2.0f));
-				//}
 			}
-				
 		}
 	}
 
@@ -168,7 +161,7 @@ inline bool Minimap::GetSectionIndex(int type, MinimapTexture& index)
 		case BARRACKS:		index = ICON_BARRACKS; break;
 		case LAB:			index = ICON_BARRACKS; break;
 		case EDGE:			index = ICON_EDGE; break;
-		case CAPSULE:		index = ICON_BASE_CENTER; break;
+		case CAPSULE:		index = ICON_EDGE; break;
 		case SPAWNER:		index = ICON_SPAWNER; break;
 		default:
 			break;

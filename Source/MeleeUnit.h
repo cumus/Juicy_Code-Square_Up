@@ -16,6 +16,7 @@ public:
 	void CreatePanel() override;
 
 public:
+
 	float posY_panel;
 	int panel_tex_ID;
 	C_Image* panel;

@@ -29,9 +29,11 @@ public:
 	Quadtree* GetQuadTree();
 
 private:
+
 	void Resolve();
 
 private:
+
 	bool collisionLayers[MAX_COLLISION_LAYERS][MAX_COLLISION_LAYERS]; //Store layers collisions
 	std::vector<Collider*> layerColliders[MAX_COLLISION_LAYERS];
 	Quadtree* collisionTree;

@@ -20,9 +20,7 @@ Capsule::Capsule(Gameobject* go) : Behaviour(go, CAPSULE, POSE, B_CAPSULE)
 }
 
 Capsule::~Capsule()
-{
-	
-}
+{}
 
 void Capsule::Update()
 {
@@ -44,18 +42,17 @@ void Capsule::AfterDamageAction(UnitType from)
 		{
 			Event::Push(UPDATE_STAT, App->scene, CURRENT_EDGE, 100);
 			Event::Push(UPDATE_STAT, App->scene, EDGE_COLLECTED, 100);
-			//LOG("Edge capsule");
 		}
 		else 
 		{
 			vec pos = game_object->GetTransform()->GetGlobalPosition();
 
-			for (int i = 0; i < 10; i++) {
+			for (int i = 0; i < 10; i++)
+			{
 				Event::Push(UPDATE_STAT, App->scene, CURRENT_EDGE, 15);
 				Event::Push(SPAWN_UNIT, App->scene, UNIT_MELEE, pos - 5 + i);
 				
 			}
-			//LOG("Unit capsule");
 		}
 	}
 }

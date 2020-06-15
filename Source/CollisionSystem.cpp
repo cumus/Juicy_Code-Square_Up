@@ -14,12 +14,9 @@
 CollisionSystem::CollisionSystem()
 {
 	for (int i = 0; i < MAX_COLLISION_LAYERS; i++)
-	{
 		for (int a = 0; a < MAX_COLLISION_LAYERS; a++)
-		{
 			collisionLayers[i][a] = false;
-		}
-	}
+
 	//Self layer collisions
 	collisionLayers[SCENE_COLL_LAYER][SCENE_COLL_LAYER] = true;
 	collisionLayers[DEFAULT_COLL_LAYER][DEFAULT_COLL_LAYER] = true;
@@ -44,10 +41,9 @@ CollisionSystem::~CollisionSystem()
 void CollisionSystem::Clear()
 {
 	collisionTree->Clear();
+
 	for (int i = 0; i < MAX_COLLISION_LAYERS; i++)
-	{
 		layerColliders[i].clear();
-	}
 }
 
 Quadtree* CollisionSystem::GetQuadTree() { return collisionTree; }
@@ -138,27 +134,19 @@ void CollisionSystem::Resolve()
 				std::vector<Collider*> collisions = collisionTree->Search(*(*it));
 				if (!collisions.empty())
 				{
-					//LOG("Got collisions: %d",collisions.size());
 					for (std::vector<Collider*>::iterator itColls = collisions.begin(); itColls != collisions.end(); ++itColls)//For each posible detection in quad tree
 					{
-						if ((*it)->GetID() != (*itColls)->GetID() && (*it)->GetGoID() != (*itColls)->GetGoID())
+						if (((*it)->GetID() != (*itColls)->GetID() && (*it)->GetGoID() != (*itColls)->GetGoID())
+							&& (collisionLayers[(*it)->GetCollLayer()][(*itColls)->GetCollLayer()]))
 						{
-							//LOG("Check if collides");
-							if (collisionLayers[(*it)->GetCollLayer()][(*itColls)->GetCollLayer()])
+							Manifold m = (*it)->Intersects(*itColls);
+							if (m.colliding)
 							{
-								Manifold m = (*it)->Intersects(*itColls);
-								if (m.colliding)
-								{
-									//LOG("Collides");
-									Event::Push(ON_COLLISION, (*it)->parentGo, (*it)->GetID(), (*itColls)->GetID());
-									Event::Push(ON_COLLISION, (*itColls)->parentGo, (*itColls)->GetID(), (*it)->GetID());
+								Event::Push(ON_COLLISION, (*it)->parentGo, (*it)->GetID(), (*itColls)->GetID());
+								Event::Push(ON_COLLISION, (*itColls)->parentGo, (*itColls)->GetID(), (*it)->GetID());
 
-									if ((*it)->GetCollType() != TRIGGER && (*itColls)->GetCollType() != TRIGGER)
-									{									
-										(*it)->ResolveOverlap(m);
-										//LOG("Resolve overlap");
-									}
-								}
+								if ((*it)->GetCollType() != TRIGGER && (*itColls)->GetCollType() != TRIGGER)
+									(*it)->ResolveOverlap(m);
 							}
 						}
 					}

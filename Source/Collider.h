@@ -49,13 +49,11 @@ struct Manifold
 	float overX, overY;
 };
 
-
 class Collider : public Component
 {
 public:
 	Collider(Gameobject* game_object, RectF coll, ColliderType t = NON_TRIGGER, ColliderTag tag = DEFAULT_TAG, RectF offset = {0,0,0,0},CollisionLayer layer = SCENE_COLL_LAYER, ComponentType type = COLLIDER);
 	~Collider();
-
 	
 	Manifold Intersects(Collider* other);
 	void ResolveOverlap(Manifold& m);
@@ -75,11 +73,12 @@ public:
 	double GetGoID();
 	void SetPointsOffset(std::pair<float,float> top,std::pair<float,float> bot,std::pair<float,float> right,std::pair<float,float> left);
 
-
 public:
+
 	Gameobject* parentGo;
 
 private:
+
 	RectF boundary;
 	RectF offset;
 	CollisionLayer layer;

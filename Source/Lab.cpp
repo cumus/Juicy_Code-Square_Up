@@ -26,9 +26,7 @@ Lab::Lab(Gameobject* go, bool build_new) : Behaviour(go, LAB, NO_UPGRADE, B_LAB)
 	providesVisibility = true;
 	spriteState = NO_UPGRADE;
 	current_state = NO_UPGRADE;
-	//characteR->SetColor({ 0, 0, 0, 0 });
-	//create_bar();
-	//bar_go->SetInactive();
+
 	CreatePanel();
 	selectionPanel->SetInactive();
 	unitInfo->SetInactive();
@@ -58,12 +56,8 @@ Lab::~Lab()
 	{
 		vec pos = t->GetGlobalPosition();
 		for (int i = 0; i < t->GetLocalScaleX(); i++)
-		{
 			for (int a = 0; a < t->GetLocalScaleY(); a++)
-			{
 				App->pathfinding.SetWalkabilityTile(int(pos.x) + i + 2, int(pos.y) + a - 1, false);
-			}
-		}
 	}
 
 	b_map.erase(GetID());
@@ -97,9 +91,9 @@ void Lab::Update()
 			ssLife << current_life;
 			unitLife->text->SetText(ssLife.str().c_str());
 		}
+
 		mini_life_bar.Update(float(current_life) / float(max_life), current_lvl);
-	}	
-	//mini_life_bar.Update(float(current_life) / float(max_life), current_lvl);
+	}
 }
 
 
@@ -114,9 +108,7 @@ void Lab::Upgrade()
 			max_life += 50;
 			current_lvl += 1;
 			audio->Play(B_BUILDED);
-			//LOG("LIFE AFTER UPGRADE: %d", max_life);
-			//LOG("BC LEVEL: %d", current_lvl);
-			update_health_ui();
+			green_health->section.w = 439 * float(current_life) / float(max_life);
 
 			switch (current_state)
 			{
@@ -139,6 +131,7 @@ void Lab::CreatePanel()
 	panel_tex_ID = App->tex.Load("textures/hud-sprites.png");
 
 	//------------------------- BASE PANEL --------------------------------------
+
 	selectionPanel = App->scene->AddGameobjectToCanvas("Lab Panel");
 
 	lab_icon = new C_Image(selectionPanel);
@@ -212,18 +205,21 @@ void Lab::CreatePanel()
 	cost1->offset = { 0, 0 };
 	cost1->section = { 17, 50, 32, 32 };
 	cost1->tex_id = App->tex.Load("textures/icons_price.png");
+
 	//Melee price
 	C_Image* cost2 = new C_Image(prices);
 	cost2->target = { 0.33f, 0.08f, 0.8f, 0.8f };
 	cost2->offset = { 0, 0 };
 	cost2->section = { 60, 51, 36, 33 };
 	cost2->tex_id = App->tex.Load("textures/icons_price.png");
+
 	//Ranged price
 	C_Image* cost3 = new C_Image(prices);
 	cost3->target = { 0.59f, 0.29f, 0.8f, 0.8f };
 	cost3->offset = { 0, 0 };
 	cost3->section = { 104, 52, 33, 33 };
 	cost3->tex_id = App->tex.Load("textures/icons_price.png");
+
 	//Super price
 	C_Image* cost4 = new C_Image(prices);
 	cost4->target = { 0.58f, 0.68f, 0.8f, 0.8f };
@@ -272,17 +268,4 @@ void Lab::create_bar() {
 	green_health->target = { 0.018f, 0.06f, 1.f, 0.9f };
 	green_health->section = { 0, 817, 439, 38 };
 	green_health->tex_id = bar_text_id;
-
-	//------------------------- BASE UPGRADES ---------------------------------
-
-	/*upgrades = new C_Image(bar_go);
-	upgrades->target = { 0.44f, pos_y_HUD - 0.02f, 1.3f, 1.3f };
-	upgrades->offset = { -33.0f, -33.0f };
-	upgrades->section = { 16, 806, 33, 33 };
-	upgrades->tex_id = bar_text_id;*/
-
-}
-
-void Lab::update_health_ui() {
-	green_health->section.w = 439 * float(current_life) / float(max_life);
 }

@@ -41,10 +41,11 @@ void Gatherer::Update()
 
 	if (current_state != DESTROYED)
 	{
-		if (moveOrder) atkObj = nullptr;
+		if (moveOrder)
+			atkObj = nullptr;
+
 		if (atkObj != nullptr) //ATTACK
 		{
-			//LOG("In range");
 			if (type == ENEMY_MELEE || type == ENEMY_RANGED || type == ENEMY_SUPER)//IA
 			{
 				if (atkTimer > atkTime)
@@ -53,98 +54,80 @@ void Gatherer::Update()
 					{
 						DoAttack();
 						Event::Push(DAMAGE, atkObj, damage, GetType());
-						//LOG("Do attack");
 					}
-					else atkObj = nullptr;
+					else
+						atkObj = nullptr;
+
 					atkTimer = 0;
 				}
 			}
-			else//PLAYER
+			else if (atkTimer > atkTime) //PLAYER
 			{
-				if (atkTimer > atkTime)
+				if (!atkObj->IsDestroyed()) //ATTACK
 				{
-					if (!atkObj->IsDestroyed()) //ATTACK
-					{
-						DoAttack();
-						Event::Push(DAMAGE, atkObj, damage, GetType());
-					}
-					else atkObj = nullptr;
-					atkTimer = 0;
+					DoAttack();
+					Event::Push(DAMAGE, atkObj, damage, GetType());
 				}
+				else
+					atkObj = nullptr;
+
+				atkTimer = 0;
 			}
 		}
 		else//CHECK IF MOVES
 		{
-			//LOG("Not in range");
 			if (type == ENEMY_MELEE || type == ENEMY_RANGED || type == ENEMY_SUPER) //IA
 			{
 				if (chaseObj != nullptr)//CHASE
 				{
-					//LOG("In vision");
 					if (!chasing)
 					{
-						//LOG("Start player chase");
 						vec pos = chaseObj->GetPos();
 						Event::Push(UPDATE_PATH, this->AsBehaviour(), int(pos.x), int(pos.y));
 						chasing = true;
 						goingBase = false;
 					}
 				}
-				else
+				else if (Base_Center::baseCenter != nullptr && !goingBase && !chasing)//GO TO BASE
 				{
-					if (Base_Center::baseCenter != nullptr && !goingBase && !chasing)//GO TO BASE
-					{
-						//LOG("Path to base");
-						goingBase = true;
-						vec centerPos = Base_Center::baseCenter->GetTransform()->GetGlobalPosition();
-						Event::Push(UPDATE_PATH, this->AsBehaviour(), int(centerPos.x + 2), int(centerPos.y + 2));
-						//LOG("Move to base");	
-					}
+					goingBase = true;
+					vec centerPos = Base_Center::baseCenter->GetTransform()->GetGlobalPosition();
+					Event::Push(UPDATE_PATH, this->AsBehaviour(), int(centerPos.x + 2), int(centerPos.y + 2));
 				}
 
 
 			}
 
-			if (moveOrder)
+			if (moveOrder && (chaseObj != nullptr && !chaseObj->IsDestroyed() && !chasing))
 			{
-				if (chaseObj != nullptr && !chaseObj->IsDestroyed() && !chasing)
-				{
-					vec goToPos = chaseObj->GetPos();
-					Event::Push(UPDATE_PATH, this->AsBehaviour(), int(goToPos.x), int(goToPos.y));
-					chasing = true;
-				}
+				vec goToPos = chaseObj->GetPos();
+				Event::Push(UPDATE_PATH, this->AsBehaviour(), int(goToPos.x), int(goToPos.y));
+				chasing = true;
 			}
 
-
-			if (path != nullptr && !path->empty()) CheckPathTiles();
+			if (path != nullptr && !path->empty())
+				CheckPathTiles();
 
 			if (move && PathfindingManager::unitWalkability[nextTile.x][nextTile.y] == GetID())
 			{
 				calculating_path = false;
 				nonMovingCounter = 0.0f;
-				//LOG("move");
 				fPoint actualPos = { pos.x, pos.y };
-
 				iPoint tilePos = { int(pos.x), int(pos.y) };
+
 				if (nextTile.x > tilePos.x)
-				{
 					dirX = 1;
-				}
 				else if (nextTile.x < tilePos.x)
-				{
 					dirX = -1;
-				}
-				else dirX = 0;
+				else
+					dirX = 0;
 
 				if (nextTile.y > tilePos.y)
-				{
 					dirY = 1;
-				}
 				else if (nextTile.y < tilePos.y)
-				{
 					dirY = -1;
-				}
-				else dirY = 0;
+				else
+					dirY = 0;
 
 				game_object->GetTransform()->MoveX(dirX * speed * App->time.GetGameDeltaTime());//Move x
 				game_object->GetTransform()->MoveY(dirY * speed * App->time.GetGameDeltaTime());//Move y
@@ -157,20 +140,22 @@ void Gatherer::Update()
 
 				ChangeState();
 				CheckDirection(actualPos);
+
 				if (path->empty())
 				{
 					moveOrder = false;
 					move = false;
 					chasing = false;
 					spriteState = IDLE;
-					if (chaseObj != nullptr && chaseObj->IsDestroyed()) chaseObj = nullptr;
+
+					if (chaseObj != nullptr && chaseObj->IsDestroyed())
+						chaseObj = nullptr;
 				}
 			}
+			else if (nonMovingCounter > 1.0f)
+				spriteState = IDLE;
 			else
-			{
-				if (nonMovingCounter > 1.0f) spriteState = IDLE;
-				else nonMovingCounter += App->time.GetGameDeltaTime();
-			}
+				nonMovingCounter += App->time.GetGameDeltaTime();
 		}
 
 		//Move selection rect
@@ -178,9 +163,15 @@ void Gatherer::Update()
 		selectionRect.x = world.first + selectionOffset.first;
 		selectionRect.y = world.second + selectionOffset.second;
 
-		if (atkTimer < atkTime) atkTimer += App->time.GetGameDeltaTime();
+		if (atkTimer < atkTime)
+			atkTimer += App->time.GetGameDeltaTime();
 
-		if (atkObj != nullptr && atkObj->IsDestroyed()) { spriteState = IDLE;  atkObj = nullptr; }
+		if (atkObj != nullptr && atkObj->IsDestroyed())
+		{
+			spriteState = IDLE;
+			atkObj = nullptr;
+		}
+
 		if (chaseObj != nullptr && chaseObj->IsDestroyed())
 		{
 			chaseObj = nullptr;
@@ -241,6 +232,7 @@ void Gatherer::Update()
 						startPoint = { int(pos.x) - (distance + 2), int(pos.y) - (distance + 2) };
 					}
 					distance++;
+
 				} while (!free && distance < maxIterations);
 
 				if (free)
@@ -272,44 +264,30 @@ void Gatherer::Update()
 
 		if (visible)
 		{
-			if (current_life < max_life) mini_life_bar.Show();
+			if (current_life < max_life)
+				mini_life_bar.Show();
 		}
 		else  mini_life_bar.Hide();
 	}
 
 	// Barrack Tooltip Check
-
 	if (barracks_btn->state == 1 && barrack_tooltip->IsActive() == false)
 		barrack_tooltip->SetActive();
-
 	else if (barracks_btn->state != 1 && barrack_tooltip->IsActive() == true)
 		barrack_tooltip->SetInactive();
-
-	else
-		;
 	
 	// Tower Tooltip Check
-
 	if (tower_btn->state == 1 && tower_tooltip->IsActive() == false)
 		tower_tooltip->SetActive();
-
 	else if (tower_btn->state != 1 && tower_tooltip->IsActive() == true)
 		tower_tooltip->SetInactive();
-
-	else
-		;
 	
 	// Lab Tooltip Check
 
 	if (labBtn->state == 1 && lab_tooltip->IsActive() == false)
 		lab_tooltip->SetActive();
-
 	else if (labBtn->state != 1 && lab_tooltip->IsActive() == true)
 		lab_tooltip->SetInactive();
-
-	else
-		;
-
 }
 
 void Gatherer::CreatePanel()
@@ -317,6 +295,7 @@ void Gatherer::CreatePanel()
 	panel_tex_ID = App->tex.Load("textures/hud-sprites.png");
 
 	//------------------------- BASE PANEL --------------------------------------
+
 	selectionPanel = App->scene->AddGameobjectToCanvas("Gatherer Build Panel");
 
 	gatherer_icon = new C_Image(selectionPanel);
@@ -466,12 +445,14 @@ void Gatherer::CreatePanel()
 	cost1->offset = { 0, 0 };
 	cost1->section = { 225, 13, 35, 32 };
 	cost1->tex_id = App->tex.Load("textures/icons_price.png");
+
 	//Barracks price
 	C_Image* cost2 = new C_Image(prices);
 	cost2->target = { 0.11f, 0.1f, 0.8f, 0.8f };
 	cost2->offset = { 0, 0 };
 	cost2->section = { 268, 14, 35, 31 };
 	cost2->tex_id = App->tex.Load("textures/icons_price.png");
+
 	//Lab price
 	C_Image* cost3 = new C_Image(prices);
 	cost3->target = { 0.59f, 0.29f, 0.8f, 0.8f };

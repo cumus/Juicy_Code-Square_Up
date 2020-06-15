@@ -24,10 +24,10 @@ EnemyMeleeUnit::EnemyMeleeUnit(Gameobject* go) : B_Unit(go, ENEMY_MELEE, IDLE, B
 	new_state = IDLE;
 
 	SetColliders();
+
 	//SFX
 	deathFX = IA_MELEE_DIE_FX;
 	attackFX = IA_MELEE_ATK_FX;
-	//characteR->SetInactive();
 }
 
 EnemyMeleeUnit::~EnemyMeleeUnit() {}

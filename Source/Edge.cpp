@@ -29,9 +29,7 @@ void Edge::FreeWalkabilityTiles()
 
 void Edge::AfterDamageAction(UnitType from)
 {
-	
 	Event::Push(UPDATE_STAT, App->scene, CURRENT_EDGE, 10);
 	Event::Push(UPDATE_STAT, App->scene, EDGE_COLLECTED, 10);
-	
 }
 

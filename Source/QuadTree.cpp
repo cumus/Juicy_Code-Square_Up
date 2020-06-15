@@ -70,7 +70,6 @@ bool Quadtree::GotChilds()
 void Quadtree::DebugDrawBounds()
 {
 	SDL_Rect quad = GetBounds();
-//	LOG("Level:%d Bounds X:%d/Y:%d/W:%d/H:%d",level, boundary.x, boundary.y, boundary.w, boundary.h);
 	App->render->DrawQuad(SDL_Rect({ quad.x,quad.y,quad.w,quad.h }), { 255,0,0,255 }, false, DEBUG_SCENE, true);
 	if (GotChilds())
 	{
@@ -85,49 +84,37 @@ void Quadtree::Insert(Collider* obj)
 {
 	if (IntersectBounds(*obj))
 	{
-		//LOG("Intersects");
-
 		if (level >= maxLevels)
 		{
 			objects.push_back(obj);
-			//LOG("Max level");
+		}
+		else if (children[0] != nullptr)//Got childs
+		{
+			children[0]->Insert(obj);
+			children[1]->Insert(obj);
+			children[2]->Insert(obj);
+			children[3]->Insert(obj);
+		}
+		else if (objects.size() < maxObjects) //No childs
+		{
+			objects.push_back(obj);
 		}
 		else
 		{
-			if (children[0] != nullptr)//Got childs
+			Split();
+			objects.push_back(obj);
+			for (std::vector<Collider*>::iterator it = objects.begin(); it != objects.end(); ++it)
 			{
-				//LOG("For childrens");
-				children[0]->Insert(obj);
-				children[1]->Insert(obj);
-				children[2]->Insert(obj);
-				children[3]->Insert(obj);
+				children[0]->Insert(*it);
+				children[1]->Insert(*it);
+				children[2]->Insert(*it);
+				children[3]->Insert(*it);
 			}
-			else//No childs
-			{
-				//LOG("Split");
-				if (objects.size() < maxObjects)
-				{
-					objects.push_back(obj);
-					//LOG("For me");
-				}
-				else
-				{
-					Split();
-					objects.push_back(obj);
-					for (std::vector<Collider*>::iterator it = objects.begin(); it != objects.end(); ++it)
-					{
-						children[0]->Insert(*it);
-						children[1]->Insert(*it);
-						children[2]->Insert(*it);
-						children[3]->Insert(*it);
-					}
-					objects.clear();
-				}
-			}						
+			objects.clear();
 		}
 	}
-	//else LOG("No intersect");
 }
+
 
 void Quadtree::Remove(Collider* obj)
 {
@@ -176,9 +163,7 @@ void Quadtree::Search(Collider& obj, std::vector<Collider*>& list)
 		else//No childs -> last quad
 		{
 			for (std::vector<Collider*>::const_iterator it = objects.cbegin(); it != objects.cend(); ++it)
-			{
 				list.push_back(*it);
-			}
 		}
 	}
 }

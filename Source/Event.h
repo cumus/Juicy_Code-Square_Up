@@ -59,9 +59,6 @@ enum EventType : char
 	OPTIONS,
 	SAVE_SCENE,
 
-	//// Scene states
-	//NEXT_STATE,
-
 	// Gameobjects
 	ON_PLAY,
 	ON_PAUSE,

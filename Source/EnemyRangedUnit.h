@@ -12,6 +12,7 @@ class EnemyRangedUnit : public B_Unit
 public:
 	EnemyRangedUnit(Gameobject* go);
 	~EnemyRangedUnit();
+
 	void UnitAttackType() override;
 };
 

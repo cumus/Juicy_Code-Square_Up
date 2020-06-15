@@ -55,7 +55,6 @@ void Particle::Update()
 		game_object->GetTransform()->MoveX(direction.x * speed * App->time.GetGameDeltaTime());//Move X
 		game_object->GetTransform()->MoveY(direction.y * speed * App->time.GetGameDeltaTime());//Move Y
 
-
 		if (animCounter > animationSpeed)
 		{
 			if (spriteNum < animationSprites) spriteNum++;
@@ -76,11 +75,10 @@ void Particle::Update()
 			animCounter = 0;
 		}
 		else
-		{
 			animCounter += App->time.GetGameDeltaTime();
-		}
 	}
-	else alive = false;
+	else
+		alive = false;
 }
 
 
