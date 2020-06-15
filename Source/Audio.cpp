@@ -287,7 +287,7 @@ bool Audio::LoadFx(Audio_FX audio_fx)
 
 	switch (audio_fx)
 	{
-	case LOGO: audio_path += "soda-open-and-pour-left-right.wav"; break;
+	case LOGO: audio_path += "Intro_Sound.wav"; break;
 	case SELECT: audio_path += "Flashpoint001a.wav"; break;
 	case TITLE: audio_path += "Menu_Select.wav"; break;
 
