@@ -164,21 +164,22 @@ void Tower::CreatePanel()
 	panel = new C_Image(selectionPanel);
 	panel->target = { 0.0f, 0.764f, 1.5f, 1.5f };
 	panel->offset = { 0.0f, 0.0f };
-	panel->section = { 163, 343, 202, 114 };
+	panel->section = { 208, 1034, 202, 114 };
 	panel->tex_id = panel_tex_ID;
 
 	Gameobject* upgrade_btn_go = App->scene->AddGameobject("Upgrade Button", selectionPanel);
 
 	upgrade_btn = new C_Button(upgrade_btn_go, Event(DO_UPGRADE, this->AsBehaviour()));//Last option from the right
-	upgrade_btn->target = { 0.4190f, 0.6075, 1.5f, 1.5f };
+	upgrade_btn->target = { 0.45f, 0.6325, 1.5f, 1.5f };
 	upgrade_btn->offset = { 0.0f,0.0f };
 
-	upgrade_btn->section[0] = { 1075, 51, 56, 49 };
-	upgrade_btn->section[1] = { 1075, 0, 56, 49 };
-	upgrade_btn->section[2] = { 1075, 102, 56, 49 };
-	upgrade_btn->section[3] = { 1075, 102, 56, 49 };
+	upgrade_btn->section[0] = { 1081, 54, 46, 46 };
+	upgrade_btn->section[1] = { 1081, 3, 46, 46 };
+	upgrade_btn->section[2] = { 1081, 105, 46, 46 };
+	upgrade_btn->section[3] = { 1081, 105, 46, 46 };
 
 	upgrade_btn->tex_id = panel_tex_ID;
+
 
 	//Upgrade
 	Gameobject* prices = App->scene->AddGameobject("Prices", selectionPanel);;

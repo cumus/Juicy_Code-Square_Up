@@ -8,6 +8,7 @@
 #include "Canvas.h"
 #include "Sprite.h"
 #include "Log.h"
+#include "MeleeUnit.h"
 
 Barracks::Barracks(Gameobject* go, bool build_new) : BuildingWithQueue(go, BARRACKS, NO_UPGRADE, B_BARRACKS)
 {
@@ -28,6 +29,10 @@ Barracks::Barracks(Gameobject* go, bool build_new) : BuildingWithQueue(go, BARRA
 	CreatePanel();
 	selectionPanel->SetInactive();
 	unitInfo->SetInactive();
+	melee_tooltip->SetInactive();
+	ranged_tooltip->SetInactive();
+	super_tooltip->SetInactive();
+
 
 	if (t)
 	{
@@ -158,6 +163,39 @@ void Barracks::Update()
 			}
 		}
 	}
+
+	// Melee Tooltip Check
+
+	if (meleeUnit_btn->state == 1 && melee_tooltip->IsActive() == false)
+		melee_tooltip->SetActive();
+
+	else if (meleeUnit_btn->state != 1 && melee_tooltip->IsActive() == true)
+		melee_tooltip->SetInactive();
+
+	else
+		;
+
+	// Ranged Tooltip Check
+
+	if (rangedUnit_btn->state == 1 && ranged_tooltip->IsActive() == false)
+		ranged_tooltip->SetActive();
+
+	else if (rangedUnit_btn->state != 1 && ranged_tooltip->IsActive() == true)
+		ranged_tooltip->SetInactive();
+
+	else
+		;
+
+	// Super Tooltip Check
+
+	if (superUnit_btn->state == 1 && super_tooltip->IsActive() == false)
+		super_tooltip->SetActive();
+
+	else if (superUnit_btn->state != 1 && super_tooltip->IsActive() == true)
+		super_tooltip->SetInactive();
+
+	else
+		;
 }
 
 void Barracks::Upgrade()
@@ -213,58 +251,178 @@ void Barracks::CreatePanel()
 	panel = new C_Image(selectionPanel);
 	panel->target = { 0.0f, 0.764f, 1.5f, 1.5f };
 	panel->offset = { 0.0f, 0.0f };
-	panel->section = { 163, 343, 202, 114 };
+	panel->section = { 208, 1034, 202, 114 };
 	panel->tex_id = panel_tex_ID;
+
+	//------------------------- MELEE TOOLTIP --------------------------------------
+
+	melee_tooltip = App->scene->AddGameobject("Melee Tooltip", selectionPanel);
+
+	C_Image* melee_tooltip_bg = new C_Image(melee_tooltip);
+	melee_tooltip_bg->target = { 0.155f, -0.607, 2.5f, 2.5f };
+	melee_tooltip_bg->offset = { 0.0f, 0.0f };
+	melee_tooltip_bg->section = { 422, 376, 121, 40 };
+	melee_tooltip_bg->tex_id = panel_tex_ID;
+
+	std::stringstream melee_life;
+	melee_life << "Life: ";
+	melee_life << 100;
+
+	C_Text* melee_tooltip_life = new C_Text(melee_tooltip, melee_life.str().c_str());
+	melee_tooltip_life->target = { 0.38f, -0.507f, 1.0f , 1.0f };
+
+	std::stringstream melee_range;
+	melee_range << "Range: ";
+	melee_range << 2;
+
+	C_Text* melee_tooltip_range = new C_Text(melee_tooltip, melee_range.str().c_str());
+	melee_tooltip_range->target = { 0.672f, -0.507, 1.0f , 1.0f };
+
+	std::stringstream melee_damage;
+	melee_damage << "Dmg: ";
+	melee_damage << 5;
+
+	C_Text* melee_tooltip_damage = new C_Text(melee_tooltip, melee_damage.str().c_str());
+	melee_tooltip_damage->target = { 0.94f, -0.507, 1.0f , 1.0f };
+
+	std::stringstream melee_info;
+	melee_info << "Offensive ally unit";
+
+	C_Text* melee_tooltip_info = new C_Text(melee_tooltip, melee_info.str().c_str());
+	melee_tooltip_info->target = { 0.28f, -0.227f, 1.0f , 1.0f };
+
+	//------------------------- MELEE BUTTON --------------------------------------
 
 	Gameobject* melee_btn_go = App->scene->AddGameobject("Melee Button", selectionPanel);
 
 	meleeUnit_btn = new C_Button(melee_btn_go, Event(BUILD_MELEE, this, spawnPoint, 5.0f));//First option from the right
-	meleeUnit_btn->target = { -0.0535f, -0.007, 1.5f, 1.5f };
+	meleeUnit_btn->target = { -0.0235f, 0.027, 1.5f, 1.5f };
 	meleeUnit_btn->offset = { 0.0f,0.0f };
 
-	meleeUnit_btn->section[0] = { 1147, 51, 56, 49 };
-	meleeUnit_btn->section[1] = { 1147, 0, 56, 49 };
-	meleeUnit_btn->section[2] = { 1147, 102, 56, 49 };
-	meleeUnit_btn->section[3] = { 1147, 102, 56, 49 };
+	meleeUnit_btn->section[0] = { 1153, 54, 46, 46 };
+	meleeUnit_btn->section[1] = { 1153, 3, 46, 46 };
+	meleeUnit_btn->section[2] = { 1153, 105, 46, 46 };
+	meleeUnit_btn->section[3] = { 1153, 105, 46, 46 };
 
 	meleeUnit_btn->tex_id = panel_tex_ID;
 
+	//------------------------- RANGED TOOLTIP --------------------------------------
+
+	ranged_tooltip = App->scene->AddGameobject("Ranged Tooltip", selectionPanel);
+
+	C_Image* ranged_tooltip_bg = new C_Image(ranged_tooltip);
+	ranged_tooltip_bg->target = { 0.3885f, -0.63, 2.5f, 2.5f };
+	ranged_tooltip_bg->offset = { 0.0f, 0.0f };
+	ranged_tooltip_bg->section = { 422, 376, 121, 40 };
+	ranged_tooltip_bg->tex_id = panel_tex_ID;
+
+	std::stringstream ranged_life;
+	ranged_life << "Life: ";
+	ranged_life << 100;
+
+	C_Text* ranged_tooltip_life = new C_Text(ranged_tooltip, ranged_life.str().c_str());
+	ranged_tooltip_life->target = { 0.6135f, -0.53f, 1.0f , 1.0f };
+
+	std::stringstream ranged_range;
+	ranged_range << "Range: ";
+	ranged_range << 13;
+
+	C_Text* ranged_tooltip_range = new C_Text(ranged_tooltip, ranged_range.str().c_str());
+	ranged_tooltip_range->target = { 0.9055f, -0.53f, 1.0f , 1.0f };
+
+	std::stringstream ranged_damage;
+	ranged_damage << "Dmg: ";
+	ranged_damage << 15;
+
+	C_Text* ranged_tooltip_damage = new C_Text(ranged_tooltip, ranged_damage.str().c_str());
+	ranged_tooltip_damage->target = { 1.1735f, -0.53, 1.0f , 1.0f };
+
+	std::stringstream ranged_info;
+	ranged_info << "Offensive ally unit";
+
+	C_Text* ranged_tooltip_info = new C_Text(ranged_tooltip, ranged_info.str().c_str());
+	ranged_tooltip_info->target = { 0.5135f, -0.257f, 1.0f , 1.0f };
+
+	//------------------------- RANGED BUTTON --------------------------------------
+	
 	Gameobject* rangedUnit_btn_go = App->scene->AddGameobject("Ranged Unit Button", selectionPanel);
 
 	rangedUnit_btn = new C_Button(rangedUnit_btn_go, Event(BUILD_RANGED, this, spawnPoint, 5.0f));// Third option from the right
-	rangedUnit_btn->target = { 0.18f, -0.024, 1.5f, 1.5f };
+	rangedUnit_btn->target = { 0.21f, 0.004f, 1.5f, 1.5f };
 	rangedUnit_btn->offset = { 0.0f, 0.0f };
 
-	rangedUnit_btn->section[0] = { 1076, 727, 56, 49 };
-	rangedUnit_btn->section[1] = { 1076, 676, 56, 49 };
-	rangedUnit_btn->section[2] = { 1076, 778, 56, 49 };
-	rangedUnit_btn->section[3] = { 1076, 778, 56, 49 };
+	rangedUnit_btn->section[0] = { 1082, 730, 46, 46 };
+	rangedUnit_btn->section[1] = { 1082, 679, 46, 46 };
+	rangedUnit_btn->section[2] = { 1082, 781, 46, 46 };
+	rangedUnit_btn->section[3] = { 1028, 781, 46, 46 };
 
 	rangedUnit_btn->tex_id = panel_tex_ID;
+
+	//------------------------- SUPER TOOLTIP --------------------------------------
+
+	super_tooltip = App->scene->AddGameobject("Ranged Tooltip", selectionPanel);
+
+	C_Image* super_tooltip_bg = new C_Image(super_tooltip);
+	super_tooltip_bg->target = { 0.5885f, -0.414, 2.5f, 2.5f };
+	super_tooltip_bg->offset = { 0.0f, 0.0f };
+	super_tooltip_bg->section = { 422, 376, 121, 40 };
+	super_tooltip_bg->tex_id = panel_tex_ID;
+
+	std::stringstream super_life;
+	super_life << "Life: ";
+	super_life << 100;
+
+	C_Text* super_tooltip_life = new C_Text(super_tooltip, super_life.str().c_str());
+	super_tooltip_life->target = { 0.8155f, -0.314f, 1.0f , 1.0f };
+
+	std::stringstream super_range;
+	super_range << "Range: ";
+	super_range << 13;
+
+	C_Text* super_tooltip_range = new C_Text(super_tooltip, super_range.str().c_str());
+	super_tooltip_range->target = { 1.1075f, -0.314f, 1.0f , 1.0f };
+
+	std::stringstream super_damage;
+	super_damage << "Dmg: ";
+	super_damage << 15;
+
+	C_Text* super_tooltip_damage = new C_Text(super_tooltip, super_damage.str().c_str());
+	super_tooltip_damage->target = { 1.3755f, -0.314f, 1.0f , 1.0f };
+
+	std::stringstream super_info;
+	super_info << "Offensive ally unit";
+
+	C_Text* super_tooltip_info = new C_Text(super_tooltip, super_info.str().c_str());
+	super_tooltip_info->target = { 0.7155f, -0.041f, 1.0f , 1.0f };
+
+	//------------------------- SUPER BUTTON --------------------------------------
 	
 	Gameobject* superUnit_btn_go = App->scene->AddGameobject("Super Unit Button", selectionPanel);
 
 	superUnit_btn = new C_Button(superUnit_btn_go, Event(BUILD_SUPER, this, spawnPoint, 5.0f)); // Second option from the right
-	superUnit_btn->target = { 0.38f, 0.20f, 1.5f, 1.5f };
+	superUnit_btn->target = { 0.45f, 0.22f, 1.5f, 1.5f };
 	superUnit_btn->offset = { 0.0f, 0.0f };
 
-	superUnit_btn->section[0] = { 1147, 727, 56, 49 };
-	superUnit_btn->section[1] = { 1147, 676, 56, 49 };
-	superUnit_btn->section[2] = { 1147, 778, 56, 49 };
-	superUnit_btn->section[3] = { 1147, 778, 56, 49 };
+	superUnit_btn->section[0] = { 1153, 730, 46, 46 };
+	superUnit_btn->section[1] = { 1153, 679, 46, 46 };
+	superUnit_btn->section[2] = { 1153, 781, 46, 46 };
+	superUnit_btn->section[3] = { 1153, 781, 46, 46 };
 
 	superUnit_btn->tex_id = panel_tex_ID;
+
+	//------------------------- UPGRADE BUTTON --------------------------------------
 
 	Gameobject* upgrade_btn_go = App->scene->AddGameobject("Upgrade Button", selectionPanel);
 
 	upgrade_btn = new C_Button(upgrade_btn_go, Event(DO_UPGRADE, this->AsBehaviour()));//Last option from the right
-	upgrade_btn->target = { 0.4190f, 0.6075, 1.5f, 1.5f };
+	upgrade_btn->target = { 0.45f, 0.6325, 1.5f, 1.5f };
 	upgrade_btn->offset = { 0.0f,0.0f };
 
-	upgrade_btn->section[0] = { 1075, 51, 56, 49 };
-	upgrade_btn->section[1] = { 1075, 0, 56, 49 };
-	upgrade_btn->section[2] = { 1075, 102, 56, 49 };
-	upgrade_btn->section[3] = { 1075, 102, 56, 49 };
+	upgrade_btn->section[0] = { 1081, 54, 46, 46 };
+	upgrade_btn->section[1] = { 1081, 3, 46, 46 };
+	upgrade_btn->section[2] = { 1081, 105, 46, 46 };
+	upgrade_btn->section[3] = { 1081, 105, 46, 46 };
+
 
 	upgrade_btn->tex_id = panel_tex_ID;
 
@@ -283,7 +441,7 @@ void Barracks::CreatePanel()
 	cost2->tex_id = App->tex.Load("textures/icons_price.png");
 	//Super price
 	C_Image* cost3 = new C_Image(prices);
-	cost3->target = { 0.52f, 0.29f, 0.8f, 0.8f };
+	cost3->target = { 0.59f, 0.29f, 0.8f, 0.8f };
 	cost3->offset = { 0, 0 };
 	cost3->section = { 183, 12, 37, 32 };
 	cost3->tex_id = App->tex.Load("textures/icons_price.png");

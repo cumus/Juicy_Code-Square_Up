@@ -150,7 +150,7 @@ void Lab::CreatePanel()
 	panel = new C_Image(selectionPanel);
 	panel->target = { 0.0f, 0.764f, 1.5f, 1.5f };
 	panel->offset = { 0.0f, 0.0f };
-	panel->section = { 163, 343, 202, 114 };
+	panel->section = { 208, 1034, 202, 114 };
 	panel->tex_id = panel_tex_ID;
 
 	Gameobject* gUnit = App->scene->AddGameobject("Gatherer Button", selectionPanel);
@@ -159,49 +159,49 @@ void Lab::CreatePanel()
 	gatherer_btn->target = { -0.0535f, -0.007, 1.5f, 1.5f };
 	gatherer_btn->offset = { 0.0f, 0.0f };
 
-	gatherer_btn->section[0] = { 1075, 223, 56, 49 };
-	gatherer_btn->section[1] = { 1075, 172, 56, 49 };
-	gatherer_btn->section[2] = { 1075, 274, 56, 49 };
-	gatherer_btn->section[3] = { 1075, 274, 56, 49 };
+	gatherer_btn->section[0] = { 1075, 223, 52, 48 };
+	gatherer_btn->section[1] = { 1075, 172, 52, 48 };
+	gatherer_btn->section[2] = { 1075, 274, 52, 48 };
+	gatherer_btn->section[3] = { 1075, 274, 52, 48 };
 
 	gatherer_btn->tex_id = panel_tex_ID;
 
 	Gameobject* mUnit_btn_go = App->scene->AddGameobject("Melee Button", selectionPanel);
 
 	meleeUnit_btn = new C_Button(mUnit_btn_go, Event(UPGRADE_MELEE, App->scene));//Second option from the right
-	meleeUnit_btn->target = { 0.18f, -0.024, 1.5f, 1.5f };
+	meleeUnit_btn->target = { 0.21f, 0.004, 1.5f, 1.5f };
 	meleeUnit_btn->offset = { 0.0f, 0.0f };
 
-	meleeUnit_btn->section[0] = { 1147, 51, 56, 49 };
-	meleeUnit_btn->section[1] = { 1147, 0, 56, 49 };
-	meleeUnit_btn->section[2] = { 1147, 102, 56, 49 };
-	meleeUnit_btn->section[3] = { 1147, 102, 56, 49 };
+	meleeUnit_btn->section[0] = { 1153, 54, 46, 46 };
+	meleeUnit_btn->section[1] = { 1153, 3, 46, 46 };
+	meleeUnit_btn->section[2] = { 1153, 105, 46, 46 };
+	meleeUnit_btn->section[3] = { 1153, 105, 46, 46 };
 
 	meleeUnit_btn->tex_id = panel_tex_ID;
 
 	Gameobject* rUnit_btn_go = App->scene->AddGameobject("Ranged Button", selectionPanel);
 
 	rangedUnit_btn = new C_Button(rUnit_btn_go, Event(UPGRADE_RANGED, App->scene));//Third option from the right
-	rangedUnit_btn->target = { 0.38f, 0.20f, 1.5f, 1.5f };
+	rangedUnit_btn->target = { 0.44f, 0.22f, 1.5f, 1.5f };
 	rangedUnit_btn->offset = { 0.0f, 0.0f };
 
-	rangedUnit_btn->section[0] = { 1076, 727, 56, 49 };
-	rangedUnit_btn->section[1] = { 1076, 676, 56, 49 };
-	rangedUnit_btn->section[2] = { 1076, 778, 56, 49 };
-	rangedUnit_btn->section[3] = { 1076, 778, 56, 49 };
+	rangedUnit_btn->section[0] = { 1081, 730, 46, 46 };
+	rangedUnit_btn->section[1] = { 1081, 679, 46, 46 };
+	rangedUnit_btn->section[2] = { 1081, 781, 46, 46 };
+	rangedUnit_btn->section[3] = { 1081, 781, 46, 46 };
 
 	rangedUnit_btn->tex_id = panel_tex_ID;
 
 	Gameobject* sUnit_btn_go = App->scene->AddGameobject("Super Button", selectionPanel);
 
 	superUnit_btn = new C_Button(sUnit_btn_go, Event(UPGRADE_SUPER, App->scene));//Last option from the right
-	superUnit_btn->target = { 0.4190f, 0.6075, 1.5f, 1.5f };
+	superUnit_btn->target = { 0.45f, 0.6325, 1.5f, 1.5f };
 	superUnit_btn->offset = { 0.0f, 0.0f };
 
-	superUnit_btn->section[0] = { 1147, 727, 56, 49 };
-	superUnit_btn->section[1] = { 1147, 676, 56, 49 };
-	superUnit_btn->section[2] = { 1147, 778, 56, 49 };
-	superUnit_btn->section[3] = { 1147, 778, 56, 49 };
+	superUnit_btn->section[0] = { 1153, 730, 46, 46 };
+	superUnit_btn->section[1] = { 1153, 679, 46, 46 };
+	superUnit_btn->section[2] = { 1153, 781, 46, 46 };
+	superUnit_btn->section[3] = { 1153, 781, 46, 46 };
 
 	superUnit_btn->tex_id = panel_tex_ID;
 
@@ -220,7 +220,7 @@ void Lab::CreatePanel()
 	cost2->tex_id = App->tex.Load("textures/icons_price.png");
 	//Ranged price
 	C_Image* cost3 = new C_Image(prices);
-	cost3->target = { 0.52f, 0.29f, 0.8f, 0.8f };
+	cost3->target = { 0.59f, 0.29f, 0.8f, 0.8f };
 	cost3->offset = { 0, 0 };
 	cost3->section = { 104, 52, 33, 33 };
 	cost3->tex_id = App->tex.Load("textures/icons_price.png");

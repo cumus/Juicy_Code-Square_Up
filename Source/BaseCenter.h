@@ -35,6 +35,7 @@ protected:
 	C_Button* rangedUnit_btn;
 	C_Button* superUnit_btn;
 	C_Button* upgrade_btn;
+	Gameobject* gatherer_tooltip;
 };
 
 #endif // __BASECENTER_H__

@@ -33,6 +33,7 @@ Base_Center::Base_Center(Gameobject* go) : BuildingWithQueue(go, BASE_CENTER, NO
 	CreatePanel();
 	selectionPanel->SetInactive();
 	unitInfo->SetInactive();
+	gatherer_tooltip->SetInactive();
 
 	if (t)
 	{
@@ -158,6 +159,17 @@ void Base_Center::Update()
 	}
 
 	mini_life_bar.Update(float(current_life) / float(max_life), current_lvl);
+
+	// Gatherer Tooltip Check
+	
+	if (gatherer_btn->state == 1 && gatherer_tooltip->IsActive() == false)
+		gatherer_tooltip->SetActive();
+
+	else if (gatherer_btn->state != 1 && gatherer_tooltip->IsActive() == true)
+		gatherer_tooltip->SetInactive();
+
+	else
+		;
 }
 
 
@@ -210,19 +222,60 @@ void Base_Center::CreatePanel()
 	panel = new C_Image(selectionPanel);
 	panel->target = { 0.0f, 0.764f, 1.5f, 1.5f };
 	panel->offset = { 0.0f, 0.0f };
-	panel->section = { 163, 343, 202, 114 };
+	panel->section = { 208, 1034, 202, 114 };
 	panel->tex_id = panel_tex_ID;
 
+	
+	//------------------------- GATHERER TOOLTIP --------------------------------------
+	
+	gatherer_tooltip = App->scene->AddGameobject("Gatherer Tooltip", selectionPanel);
+
+	C_Image* gatherer_tooltip_bg = new C_Image(gatherer_tooltip);
+	gatherer_tooltip_bg->target = { 0.155f, -0.607f, 2.5f, 2.5f };
+	gatherer_tooltip_bg->offset = { 0.0f, 0.0f };
+	gatherer_tooltip_bg->section = { 422, 376, 121, 40 };
+	gatherer_tooltip_bg->tex_id = panel_tex_ID;
+
+	std::stringstream gather_life;
+	gather_life << "Life: ";
+	gather_life << 20;
+
+	C_Text* gatherer_tooltip_life = new C_Text(gatherer_tooltip, gather_life.str().c_str());
+	gatherer_tooltip_life->target = { 0.38f, -0.507f, 1.0f , 1.0f };
+
+	std::stringstream gather_range;
+	gather_range << "Range: ";
+	gather_range << 2;
+
+	C_Text * gatherer_tooltip_range = new C_Text(gatherer_tooltip, gather_range.str().c_str());
+	gatherer_tooltip_range->target = { 0.672f, -0.507, 1.0f , 1.0f };
+
+	std::stringstream gather_damage;
+	gather_damage << "Dmg: ";
+	gather_damage << 10;
+
+	C_Text* gatherer_tooltip_damage = new C_Text(gatherer_tooltip, gather_damage.str().c_str());
+	gatherer_tooltip_damage->target = { 0.94f, -0.507, 1.0f , 1.0f };
+
+	std::stringstream gather_info;
+	gather_info << "Ally unit capable of mining and building";
+
+	C_Text* gatherer_tooltip_info = new C_Text(gatherer_tooltip, gather_info.str().c_str());
+	gatherer_tooltip_info->target = { 0.28f, -0.227f, 1.0f , 1.0f };
+
+
+	//------------------------- GATHERER BUTTON --------------------------------------
+	
 	Gameobject* gatherer_btn_go = App->scene->AddGameobject("Gatherer Button", selectionPanel);
 
 	gatherer_btn = new C_Button(gatherer_btn_go, Event(BUILD_GATHERER, this, spawnPoint, 5.0f));//First option from the right
-	gatherer_btn->target = { -0.0535f, -0.007, 1.5f, 1.5f };
+	gatherer_btn->target = { -0.0235f, 0.027, 1.5f, 1.5f };
 	gatherer_btn->offset = { 0.0f, 0.0f };
 
-	gatherer_btn->section[0] = { 1075, 223, 56, 49 };
-	gatherer_btn->section[1] = { 1075, 172, 56, 49 };
-	gatherer_btn->section[2] = { 1075, 274, 56, 49 };
-	gatherer_btn->section[3] = { 1075, 274, 56, 49 };
+	gatherer_btn->section[0] = { 1081, 226, 46, 46 };
+	gatherer_btn->section[1] = { 1081, 175, 46, 46 };
+	gatherer_btn->section[2] = { 1081, 277, 46, 46 };
+	gatherer_btn->section[3] = { 1081, 277, 46, 46 };
 
 
 	gatherer_btn->tex_id = panel_tex_ID;
@@ -232,7 +285,7 @@ void Base_Center::CreatePanel()
 	Gameobject* capsule_btn_go = App->scene->AddGameobject("Capsule Button", selectionPanel);
 
 	capsule_button = new C_Button(capsule_btn_go, Event(BUILD_CAPSULE, this, spawnPoint, 5.0f));//First option from the right
-	capsule_button->target = { 0.21f, 0.005f, 1.5f, 1.5f };
+	capsule_button->target = { 0.21f, 0.004f, 1.5f, 1.5f };
 	capsule_button->offset = { 0.0f, 0.0f };
 
 	capsule_button->section[0] = { 503,249,46,46 };
@@ -272,16 +325,19 @@ void Base_Center::CreatePanel()
 	superUnit_btn->tex_id = panel_tex_ID;
 	*/
 
+	//-----------------------------UPGRADE BUTTON-------------------------------------------
+
+
 	Gameobject* upgrade_btn_go = App->scene->AddGameobject("Upgrade Button", selectionPanel);
 
 	upgrade_btn = new C_Button(upgrade_btn_go, Event(DO_UPGRADE, this->AsBehaviour()));//Last option from the right
-	upgrade_btn->target = { 0.4190f, 0.6075, 1.5f, 1.5f };
+	upgrade_btn->target = { 0.45f, 0.6325, 1.5f, 1.5f };
 	upgrade_btn->offset = { 0.0f,0.0f };
 
-	upgrade_btn->section[0] = { 1075, 51, 56, 49 };
-	upgrade_btn->section[1] = { 1075, 0, 56, 49 };
-	upgrade_btn->section[2] = { 1075, 102, 56, 49 };
-	upgrade_btn->section[3] = { 1075, 102, 56, 49 };
+	upgrade_btn->section[0] = { 1081, 54, 46, 46 };
+	upgrade_btn->section[1] = { 1081, 3, 46, 46 };
+	upgrade_btn->section[2] = { 1081, 105, 46, 46 };
+	upgrade_btn->section[3] = { 1081, 105, 46, 46 };
 
 	upgrade_btn->tex_id = panel_tex_ID;
 

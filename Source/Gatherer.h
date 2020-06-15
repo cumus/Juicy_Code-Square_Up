@@ -14,6 +14,7 @@ public:
 	Gatherer(Gameobject* go);
 	~Gatherer();
 
+	void Update() override;
 	void CreatePanel() override;
 
 public:
@@ -26,6 +27,9 @@ public:
 	C_Button* barracks_btn;
 	C_Button* tower_btn;
 	C_Button* labBtn;
+	Gameobject* barrack_tooltip;
+	Gameobject* tower_tooltip;
+	Gameobject* lab_tooltip;
 };
 
 #endif

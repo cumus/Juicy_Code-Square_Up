@@ -33,6 +33,9 @@ protected:
 	C_Button* rangedUnit_btn;
 	C_Button* superUnit_btn;
 	C_Button* upgrade_btn;
+	Gameobject* melee_tooltip;
+	Gameobject* ranged_tooltip;
+	Gameobject* super_tooltip;
 };
 
 #endif // __BARRACKS_H__
