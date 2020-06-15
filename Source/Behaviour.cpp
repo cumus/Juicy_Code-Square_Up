@@ -391,6 +391,18 @@ void Behaviour::OnDamage(int d, UnitType from)
 			}
 
 			if (!active) buildProgress = current_life;
+
+			if (selection_highlight != nullptr && selection_highlight->IsActive())
+			{
+
+				if (unitLife != nullptr)
+				{
+					std::stringstream ssLife;
+					ssLife << "Life: ";
+					ssLife << current_life;
+					unitLife->text->SetText(ssLife.str().c_str());
+				}
+			}
 		}
 	}
 }
@@ -804,8 +816,7 @@ void B_Unit::Update()
 			if (current_life < max_life)
 				mini_life_bar.Show();
 		}
-		else 
-			mini_life_bar.Hide();
+		else mini_life_bar.Hide();		
 	}
 }
 
