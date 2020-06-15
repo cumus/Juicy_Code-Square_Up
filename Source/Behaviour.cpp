@@ -588,7 +588,7 @@ void B_Unit::Update()
 
 	if (current_state != DESTROYED)
 	{
-		if (moveOrder) atkObj = nullptr;
+		if (moveOrder && !chasing) atkObj = nullptr;
 		if (atkObj != nullptr) //ATTACK
 		{
 			if (type == ENEMY_MELEE || type == ENEMY_RANGED || type == ENEMY_SUPER)//IA

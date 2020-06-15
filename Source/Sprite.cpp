@@ -118,7 +118,7 @@ AnimatedSprite::AnimatedSprite(Behaviour* unit) : Sprite(unit->GetGameobject(), 
 		tex_id = App->tex.Load("textures/Buildings.png"); //Tower
 		animations[NO_UPGRADE].Setup(section = { 38, 471, 57, 147 }, 1, 4.0f);
 		animations[FIRST_UPGRADE].Setup({ 734, 444, 125, 174 }, 4, 4.0f);
-		animations[SECOND_UPGRADE].Setup({ 1465, 411, 144, 208 }, 4, 4.0f);
+		animations[SECOND_UPGRADE].Setup({ 1465, 411, 144, 208 }, 1, 4.0f);
 		animations[DESTROYED].Setup({ 2106, 0, 130, 188 }, 5, 8.0f);
 		offset = { 6.0f, -160.0f + Map::GetBaseOffset(), 1.0f, 1.0f };
 		break;
