@@ -327,6 +327,12 @@ void Gatherer::CreatePanel()
 	C_Text* barrack_tooltip_life = new C_Text(barrack_tooltip, barrack_life.str().c_str());
 	barrack_tooltip_life->target = { 0.38f, -0.507f, 1.0f , 1.0f };
 
+	std::stringstream barrack_description;
+	barrack_description << "Barrack:";
+
+	C_Text* barrack_tooltip_description = new C_Text(barrack_tooltip, barrack_description.str().c_str());
+	barrack_tooltip_description->target = { 0.28f, -0.327f, 1.0f , 1.0f };
+
 	std::stringstream barrack_info;
 	barrack_info << "Bulding to create new units";
 
@@ -379,6 +385,12 @@ void Gatherer::CreatePanel()
 	C_Text* tower_tooltip_damage = new C_Text(tower_tooltip, tower_damage.str().c_str());
 	tower_tooltip_damage->target = { 1.1735f, -0.53, 1.0f , 1.0f };
 
+	std::stringstream tower_description;
+	tower_description << "Tower:";
+
+	C_Text* tower_tooltip_description = new C_Text(tower_tooltip, tower_description.str().c_str());
+	tower_tooltip_description->target = { 0.5135f, -0.357f, 1.0f , 1.0f };
+
 	std::stringstream tower_info;
 	tower_info << "Offensive building";
 
@@ -416,6 +428,12 @@ void Gatherer::CreatePanel()
 
 	C_Text* lab_tooltip_life = new C_Text(lab_tooltip, lab_life.str().c_str());
 	lab_tooltip_life->target = { 0.8155f, -0.314f, 1.0f , 1.0f };
+
+	std::stringstream lab_description;
+	lab_description << "Lab:";
+
+	C_Text* lab_tooltip_description = new C_Text(lab_tooltip, lab_description.str().c_str());
+	lab_tooltip_description->target = { 0.7155f, -0.141f, 1.0f , 1.0f };
 
 	std::stringstream lab_info;
 	lab_info << "Building to upgrade ally units";

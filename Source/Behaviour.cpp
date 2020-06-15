@@ -1272,10 +1272,10 @@ float BuildingWithQueue::QueuedUnit::Update()
 BuildingWithQueue::BuildingWithQueue(Gameobject* go, UnitType type, UnitState starting_state, ComponentType comp_type) : Behaviour(go, type, starting_state, comp_type)
 {
 	spawnPoint = game_object->GetTransform()->GetLocalPos();
-	int texture_id = App->tex.Load("textures/Iconos_square_up.png");
+	int texture_id = App->tex.Load("textures/hud-sprites.png");
 	Gameobject* back_bar = App->scene->AddGameobject("Creation Bar", game_object);
-	new Sprite(back_bar, texture_id, { 41, 698, 216, 16 }, FRONT_SCENE, { 0.f, 13.f, 0.29f, 0.2f });
-	progress_bar = new Sprite(back_bar, texture_id, bar_section = { 41, 721, 216, 16 }, FRONT_SCENE, { 0.f, 13.f, 0.29f, 0.2f });
+	new Sprite(back_bar, texture_id, { 276, 256, 216, 16 }, FRONT_SCENE, { 0.f, 13.f, 0.29f, 0.2f });
+	progress_bar = new Sprite(back_bar, texture_id, bar_section = { 276, 273, 216, 16 }, FRONT_SCENE, { 0.f, 13.f, 0.29f, 0.2f });
 	back_bar->SetInactive();
 
 	Gameobject* unit_icon = App->scene->AddGameobject("Unit Icon", game_object);
@@ -1342,9 +1342,10 @@ void BuildingWithQueue::Update()
 		{
 			switch (build_queue.front().type)
 			{
-			case GATHERER: icon->SetSection({ 75, 458, 48, 35 }); break;
-			case UNIT_MELEE: icon->SetSection({ 22, 463, 48, 35 }); break;
-			case UNIT_RANGED: icon->SetSection({ 22, 463, 48, 35 }); break;
+			case GATHERER: icon->SetSection({ 121, 292, 48, 35 }); break;
+			case UNIT_MELEE: icon->SetSection({ 121, 256, 48, 35 }); break;
+			case UNIT_RANGED: icon->SetSection({ 231, 310, 35, 33 }); break;
+			case UNIT_SUPER: icon->SetSection({ 121, 335, 35, 33 }); break;
 			}
 
 			SDL_Rect section = bar_section;

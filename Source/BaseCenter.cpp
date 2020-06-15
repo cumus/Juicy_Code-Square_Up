@@ -130,16 +130,12 @@ void Base_Center::Update()
 		{
 			switch (build_queue.front().type)
 			{
-			case GATHERER:
-				icon->SetSection({ 75, 458, 48, 35 });
-				break;
-			case UNIT_MELEE:
-				icon->SetSection({ 22, 463, 48, 35 });
-				break;
-			case UNIT_RANGED:
-				icon->SetSection({ 22, 463, 48, 35 });
-				break;
+			case GATHERER: icon->SetSection({ 121, 292, 48, 35 }); break;
+			case UNIT_MELEE: icon->SetSection({ 121, 256, 43, 35 }); break;
+			case UNIT_RANGED: icon->SetSection({ 231, 310, 35, 33 }); break;
+			case UNIT_SUPER: icon->SetSection({ 121, 335, 35, 33 }); break;
 			}
+
 			SDL_Rect section = bar_section;
 			section.w = int(float(section.w) * percent);
 			progress_bar->SetSection(section);
@@ -235,6 +231,12 @@ void Base_Center::CreatePanel()
 
 	C_Text* gatherer_tooltip_damage = new C_Text(gatherer_tooltip, gather_damage.str().c_str());
 	gatherer_tooltip_damage->target = { 0.94f, -0.507, 1.0f , 1.0f };
+
+	std::stringstream gather_description;
+	gather_description << "Gatherer:";
+
+	C_Text* gatherer_tooltip_description = new C_Text(gatherer_tooltip, gather_description.str().c_str());
+	gatherer_tooltip_description->target = { 0.28f, -0.327f, 1.0f , 1.0f };
 
 	std::stringstream gather_info;
 	gather_info << "Ally unit capable of mining and building";

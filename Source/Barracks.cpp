@@ -144,15 +144,10 @@ void Barracks::Update()
 			{
 				switch (build_queue.front().type)
 				{
-				case GATHERER:
-					icon->SetSection({ 75, 458, 48, 35 });
-					break;
-				case UNIT_MELEE:
-					icon->SetSection({ 22, 463, 48, 35 });
-					break;
-				case UNIT_RANGED:
-					icon->SetSection({ 22, 463, 48, 35 });
-					break;
+				case GATHERER: icon->SetSection({ 121, 292, 48, 35 }); break;
+				case UNIT_MELEE: icon->SetSection({ 121, 256, 48, 35 }); break;
+				case UNIT_RANGED: icon->SetSection({ 231, 310, 35, 33 }); break;
+				case UNIT_SUPER: icon->SetSection({ 121, 335, 35, 33 }); break;
 				}
 
 				SDL_Rect section = bar_section;
@@ -267,6 +262,12 @@ void Barracks::CreatePanel()
 	C_Text* melee_tooltip_damage = new C_Text(melee_tooltip, melee_damage.str().c_str());
 	melee_tooltip_damage->target = { 0.94f, -0.507, 1.0f , 1.0f };
 
+	std::stringstream melee_description;
+	melee_description << "Melee Unit:";
+
+	C_Text* melee_tooltip_description = new C_Text(melee_tooltip, melee_description.str().c_str());
+	melee_tooltip_description->target = { 0.28f, -0.327f, 1.0f , 1.0f };
+
 	std::stringstream melee_info;
 	melee_info << "Offensive ally unit";
 
@@ -319,6 +320,12 @@ void Barracks::CreatePanel()
 	C_Text* ranged_tooltip_damage = new C_Text(ranged_tooltip, ranged_damage.str().c_str());
 	ranged_tooltip_damage->target = { 1.1735f, -0.53, 1.0f , 1.0f };
 
+	std::stringstream ranged_description;
+	ranged_description << "Ranged Unit:";
+
+	C_Text* ranged_tooltip_description = new C_Text(ranged_tooltip, ranged_description.str().c_str());
+	ranged_tooltip_description->target = { 0.5135f, -0.357f, 1.0f , 1.0f };
+
 	std::stringstream ranged_info;
 	ranged_info << "Offensive ally unit";
 
@@ -368,6 +375,12 @@ void Barracks::CreatePanel()
 
 	C_Text* super_tooltip_damage = new C_Text(super_tooltip, super_damage.str().c_str());
 	super_tooltip_damage->target = { 1.3755f, -0.314f, 1.0f , 1.0f };
+
+	std::stringstream super_description;
+	super_description << "Super Unit:";
+
+	C_Text* super_tooltip_description = new C_Text(super_tooltip, super_description.str().c_str());
+	super_tooltip_description->target = { 0.7155f, -0.141f, 1.0f , 1.0f };
 
 	std::stringstream super_info;
 	super_info << "Offensive ally unit";
