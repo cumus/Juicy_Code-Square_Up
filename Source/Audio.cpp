@@ -295,8 +295,8 @@ bool Audio::LoadFx(Audio_FX audio_fx)
 	case B_DESTROYED: audio_path += "Laser_05.wav"; break;
 	case B_BUILDED: audio_path += "HamerNail4Hits.wav"; break;
 
-	case UNIT_DIES: audio_path += "Minimized.ogg"; break;
-	case UNIT_MOVES: audio_path += "footsteps.wav"; break;
+	case UNIT_DIES: audio_path += "Minimize.ogg"; break;
+	case UNIT_MOVES: audio_path += "Footsteps.wav"; break;
 
 	case GATHERER_ATK_FX: audio_path += ""; break;
 	case MELEE_ATK_FX: audio_path += "Laser_02.wav"; break;
