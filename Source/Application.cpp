@@ -357,7 +357,7 @@ void Application::StressTest()
 {
 	// HUD
 	tex.Load("textures/Intro_Sprite.png");
-	tex.Load("textures/Game_logo.png");
+	tex.Load("textures/Game_Logo.png");
 	tex.Load("textures/Hud_Sprites.png");
 	tex.Load("textures/Icons_Price.png");
 	tex.Load("textures/Iconos_square_up.png");
@@ -365,7 +365,7 @@ void Application::StressTest()
 	tex.Load("textures/icons.png");
 	tex.Load("textures/Mouse.png");
 	tex.Load("textures/background.png");
-	tex.Load("textures/Game_logo.png");
+	tex.Load("textures/Game_Logo.png");
 	tex.Load("textures/new-game.png");
 	tex.Load("textures/resume.png");
 	tex.Load("textures/options.png");
