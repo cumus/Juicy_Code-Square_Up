@@ -123,7 +123,9 @@ different frames.</p>
         <p>Text: handles surface rendering on changing text.</p>
       </li>
       <li>
-        <p>Minimap: draws map and updates fog of war texture displayed.</p>
+        <p>Minimap: draws map and updates fog of war  displayed using a double buffer.
+            Target textures are drawn through the span of several frames for a higher
+            performance.</p>
       </li>
     </ul>
   </li>
